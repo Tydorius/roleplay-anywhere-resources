@@ -28,6 +28,8 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "image_gallery.html"
 SETTINGS = HERE / "image_gallery.settings.json"
 BACKUPS = HERE / "gallery-backups"
+STATE = HERE / "image_gallery.state.json"  # ComfyUI results you kept or discarded, so they aren't offered again
+CLIENT_PREFIX = "anywhere-rpg-gallery-"
 
 # id prefix -> image kind, for things the game draws an image for
 PREFIX_KIND = {"otpl": "sprite", "itpl": "item", "npc": "portrait", "player": "portrait",
@@ -300,7 +302,10 @@ def submit(req, settings):
     url = settings["comfy"]
     wf, meta = build(req, settings, url)
     try:
-        r = json.loads(comfy(url, "/prompt", {"prompt": wf, "client_id": "anywhere-rpg-gallery-" + uuid.uuid4().hex[:8]}))
+        # extra_data is kept in ComfyUI's history, so a restarted gallery can find this result again
+        tag = {"source": req["source"], "id": req["id"], "kind": req["kind"], "meta": meta}
+        r = json.loads(comfy(url, "/prompt", {"prompt": wf, "client_id": CLIENT_PREFIX + uuid.uuid4().hex[:8],
+                                              "extra_data": {"anywhere_rpg_gallery": tag}}))
     except urllib.error.HTTPError as e:
         raise RuntimeError("ComfyUI refused the workflow: " + e.read().decode("utf-8", "replace")[:1500])
     job = {"pid": r["prompt_id"], "url": url, "source": req["source"], "id": req["id"], "kind": req["kind"],
@@ -365,6 +370,88 @@ def finish(j):
     q = urllib.parse.urlencode({k: imgs[0][k] for k in ("filename", "subfolder", "type")})
     j["png"] = comfy(j["url"], "/view?" + q, timeout=120)
     j["state"], j["finished"] = "done", time.time()
+
+
+def load_state():
+    try:
+        return set(json.loads(STATE.read_text("utf-8")).get("reviewed", []))
+    except (ValueError, OSError):
+        return set()
+
+
+def mark_reviewed(pid):
+    with _lock:
+        try:
+            done = json.loads(STATE.read_text("utf-8")).get("reviewed", [])
+        except (ValueError, OSError):
+            done = []
+        if pid not in done:
+            done.append(pid)
+        STATE.write_text(json.dumps({"reviewed": done[-5000:]}, indent=0) + "\n", "utf-8")
+
+
+def legacy_tag(wf, items):
+    """For results queued before jobs were tagged: the item whose description is in the prompt."""
+    kind = next((n["inputs"].get("filename_prefix", "").replace("anywhere-rpg-", "") for n in wf.values()
+                 if n.get("class_type") == "SaveImage"), "")
+    text = next((n["inputs"].get("text", "") for n in wf.values() if "text=PROMPT" in n.get("_meta", {}).get("title", "")), "")
+    hits = [i for i in items if i["kind"] == kind and i["desc"] and i["desc"] in text]
+    if not hits:
+        return None
+    it = max(hits, key=lambda i: len(i["desc"]))
+    size = next((n["inputs"] for n in wf.values() if "width=WIDTH" in n.get("_meta", {}).get("title", "")), {})
+    model = next((v for n in wf.values() for k, v in n["inputs"].items()
+                  if f"{k}=MODEL" in n.get("_meta", {}).get("title", "")), "")
+    return {"id": it["id"], "kind": kind, "meta": {"prompt": text, "negative": "", "seed": 0, "remover": "",
+                                                   "width": size.get("width", 0), "height": size.get("height", 0),
+                                                   "files": {"model": model}}}
+
+
+def adopt(src, url):
+    """Picks up finished gallery results from ComfyUI's history that this run doesn't know about
+    (the gallery or the page was restarted): the newest per image, if newer than the image on disk
+    and not already kept or discarded. Returns how many were added."""
+    hist = json.loads(comfy(url, "/history?max_items=2000", timeout=120))
+    items = {i["id"]: i for i in list_items(src)["items"]}
+    reviewed = load_state()
+    with _jobs_lock:
+        known = set(JOBS) | {(j["source"], j["id"]) for j in JOBS.values()}
+    best = {}
+    for pid, h in hist.items():
+        p = h.get("prompt") or []
+        if pid in known or pid in reviewed or len(p) < 4 or not isinstance(p[3], dict):
+            continue
+        extra = p[3]
+        if not str(extra.get("client_id", "")).startswith(CLIENT_PREFIX):
+            continue
+        status = h.get("status", {})
+        imgs = [i for o in h.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
+        if status.get("status_str") != "success" or not imgs:
+            continue
+        tag = extra.get("anywhere_rpg_gallery") or legacy_tag(p[2], items.values())
+        if not tag or tag.get("source", src["id"]) != src["id"] or tag["id"] not in items:
+            continue
+        it = items[tag["id"]]
+        created = (extra.get("create_time") or 0) / 1000
+        if (src["id"], it["id"]) in known or (it["file"] and created <= it["mtime"]):
+            continue
+        times = [m[1].get("timestamp", 0) / 1000 for m in status.get("messages", []) if isinstance(m[1], dict)]
+        if created > best.get(it["id"], {}).get("submitted", -1):
+            best[it["id"]] = {"pid": pid, "url": url, "source": src["id"], "id": it["id"], "kind": tag["kind"],
+                              "state": "done", "position": None, "submitted": created,
+                              "started": min(times) if times else created, "finished": max(times) if times else created,
+                              "error": None, "meta": tag["meta"], "png": None, "img": imgs[0], "misses": 0}
+    with _jobs_lock:
+        for j in best.values():
+            JOBS[j["pid"]] = j
+    return len(best)
+
+
+def result_png(j):
+    if j["png"] is None and j.get("img"):
+        q = urllib.parse.urlencode({k: j["img"][k] for k in ("filename", "subfolder", "type")})
+        j["png"] = comfy(j["url"], "/view?" + q, timeout=120)
+    return j["png"]
 
 
 def cancel(pid):
@@ -458,9 +545,9 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, {"jobs": jobs, "comfyQueue": totals, "error": err})
             if u.path == "/api/result":
                 j = JOBS.get(q["pid"][0])
-                if not j or not j["png"]:
+                if not j or j["state"] != "done":
                     raise LookupError("no image for that job")
-                return self.send(200, j["png"], "image/png")
+                return self.send(200, result_png(j), "image/png")
             if u.path == "/media":
                 src = self.source(q)
                 iid, name = q["id"][0], q["file"][0]
@@ -499,10 +586,13 @@ class Handler(BaseHTTPRequestHandler):
                 if not find_source(self.store, req.get("source", "")) or not ID_RE.match(req.get("id", "")):
                     raise ValueError("bad source or id")
                 return self.send(200, submit(req, load_settings()))
-            if u.path == "/api/forget":
+            if u.path == "/api/forget":  # kept or discarded
                 with _jobs_lock:
                     JOBS.pop(q["pid"][0], None)
+                mark_reviewed(q["pid"][0])
                 return self.send(200, {"ok": True})
+            if u.path == "/api/adopt":
+                return self.send(200, {"added": adopt(self.source(q), load_settings()["comfy"])})
             if u.path == "/api/cancel":
                 cancel(q["pid"][0])
                 return self.send(200, {"ok": True})

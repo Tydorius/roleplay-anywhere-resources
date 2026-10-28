@@ -5,3 +5,4 @@ __pycache__/
 # image_gallery.py local state
 /mods/better-images/image_gallery.settings.json
 /mods/better-images/gallery-backups/
+/mods/better-images/image_gallery.state.json

@@ -113,6 +113,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
     <span class="hint" id="queueInfo"></span>
     <button id="selAll">Select shown</button>
     <button id="selNone">Clear</button>
+    <label class="inline" title="Save each new image as soon as it finishes, without reviewing it"><input type="checkbox" id="autoKeep"> Keep automatically</label>
     <button id="keepAll" hidden>Keep all ready</button>
     <button id="regenSel" class="primary" disabled>Regenerate selected</button>
   </div>
@@ -234,7 +235,12 @@ async function loadItems() {
   S.items = r.items.map(i => ({...i, job: old[i.id]?.job, error: old[i.id]?.error,
                                editing: old[i.id]?.editing, editDesc: old[i.id]?.editDesc, subjectSel: old[i.id]?.subjectSel}));
   S.fmt = r.promptFormat;
-  renderChips(); renderGrid(); schedulePoll(0);
+  renderChips(); renderGrid();
+  try {  // results finished while the gallery or this page was closed
+    const {added} = await api("/api/adopt?source=" + encodeURIComponent(src), {method: "POST"});
+    if (added) toast(`Found ${added} finished image${added > 1 ? "s" : ""} on ComfyUI to review.`);
+  } catch (e) { toast(e.message); }
+  schedulePoll(0);
 }
 
 function shown() {
@@ -378,6 +384,7 @@ async function poll() {
     }
   } catch (e) { S.pollError = e.message; }
   updateBar();
+  if ($("autoKeep").checked && !S.keeping && S.items.some(i => i.job?.state === "done")) keepReady(true);
   schedulePoll(S.jobs.some(active) ? 2000 : 6000);
 }
 
@@ -412,12 +419,17 @@ $("regenSel").onclick = async () => {
   S.selected.clear(); renderGrid();
   for (const i of picked) await submit(i);  // each is queued on ComfyUI at once; ComfyUI runs them in order
 };
-$("keepAll").onclick = async () => {
+async function keepReady(auto) {
+  S.keeping = true;
   const ready = S.items.filter(i => i.job?.state === "done");
   let saved = 0;
   for (const i of ready) if (await keep(i, true)) saved++;
-  toast(`Saved ${saved} of ${ready.length}. Reload the scenario in the game to see them.`);
-};
+  S.keeping = false;
+  toast(`${auto ? "Kept automatically" : "Saved"}: ${saved} of ${ready.length}. Reload the scenario in the game to see them.`);
+}
+$("keepAll").onclick = () => { if (!S.keeping) keepReady(false); };
+$("autoKeep").checked = recall("autoKeep") === "1";
+$("autoKeep").onchange = () => { remember("autoKeep", $("autoKeep").checked ? "1" : "0"); if ($("autoKeep").checked) schedulePoll(0); };
 
 (async () => {
   const st = await api("/api/state");

@@ -61,8 +61,13 @@ choose **Keep**, **Retry** or **Discard**. You can also tick several and regener
 Each request goes straight onto ComfyUI's queue. The card shows where it is ("Waiting in ComfyUI: #3",
 "Generating… 0:24") and switches to the new image when it's done; **Keep all ready** saves every
 finished one at once. **Cancel** takes a waiting job off the queue or stops a running one (only
-that job). Finished results survive a page reload until you keep or discard them, but not a
-restart of the gallery itself.
+that job). Tick **Keep automatically** to save each image as soon as it finishes, without
+reviewing it.
+
+Finished results you haven't kept or discarded are picked up again from ComfyUI's history when the
+page loads, even after the gallery or your browser was closed. ComfyUI forgets its history when it
+restarts, so keep results before restarting ComfyUI. What you kept or discarded is noted in
+`image_gallery.state.json` so it isn't offered again.
 
 **No terminal needed:** double-click the launcher for your system in this folder. It finds Python,
 opens the page in your browser, and stops when you close its window.
