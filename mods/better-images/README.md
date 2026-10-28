@@ -58,6 +58,24 @@ map objects, items, perks and portraits, on a checkerboard so you can see which 
 their background. Each one has **Regenerate**. The new image appears next to the old one, and you
 choose **Keep**, **Retry** or **Discard**. You can also tick several and regenerate them in one go.
 
+Each request goes straight onto ComfyUI's queue. The card shows where it is ("Waiting in ComfyUI: #3",
+"Generating… 0:24") and switches to the new image when it's done; **Keep all ready** saves every
+finished one at once. **Cancel** takes a waiting job off the queue or stops a running one (only
+that job). Finished results survive a page reload until you keep or discard them, but not a
+restart of the gallery itself.
+
+**No terminal needed:** double-click the launcher for your system in this folder. It finds Python,
+opens the page in your browser, and stops when you close its window.
+
+| System | Launcher |
+|---|---|
+| Windows | `Start Image Gallery.bat` |
+| macOS | `Start Image Gallery.command`. The first time, right-click it and choose **Open** if macOS says it can't verify it. |
+| Linux | `start-image-gallery.sh` (run it, or mark it executable and double-click it) |
+
+They need Python 3.8 or newer ([python.org](https://www.python.org/downloads/); on Windows tick
+*Add python.exe to PATH*), and say so if it is missing. From a terminal it is:
+
 ```
 python image_gallery.py
 ```

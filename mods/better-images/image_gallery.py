@@ -9,6 +9,9 @@ Regenerate button on each that draws a new one on your ComfyUI.
 Standard library only. Pick a model family and model per image type on the page; the choice is
 kept in image_gallery.settings.json next to this file. The page only listens on 127.0.0.1.
 
+Each Regenerate is queued on ComfyUI straight away; the page follows it there (waiting, generating,
+done) and shows the result to keep or discard.
+
 What it writes: media/<id>/<id>-<kind>.webp in the New Game staging area or a save, the same file
 the game writes, plus a copy of the image it replaced in gallery-backups/. The game reads images
 when it loads, so reload the scenario (or the save) to see new ones.
@@ -25,7 +28,6 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "image_gallery.html"
 SETTINGS = HERE / "image_gallery.settings.json"
 BACKUPS = HERE / "gallery-backups"
-TIMEOUT = 600  # seconds, as the game
 
 # id prefix -> image kind, for things the game draws an image for
 PREFIX_KIND = {"otpl": "sprite", "itpl": "item", "npc": "portrait", "player": "portrait",
@@ -73,6 +75,11 @@ SUBJECT_NOUNS = ("auto", "woman", "man", "girl", "boy", "person", "creature", "n
 
 _lock = threading.Lock()
 _info_cache = {}
+# Generation jobs, by ComfyUI prompt id. Kept until the image is kept or discarded, so a reloaded
+# page picks them up again; lost when this program stops.
+JOBS = {}
+_jobs_lock = threading.Lock()
+LOST_AFTER = 5  # polls with the job neither queued nor in ComfyUI's history
 
 
 # ---------------------------------------------------------------- settings and store
@@ -288,32 +295,89 @@ def build(req, settings, url):
                 "files": files, "remover": remover}
 
 
-def generate(req, settings):
+def submit(req, settings):
+    """Queues one image on ComfyUI and returns the job; poll_jobs() follows it from there."""
     url = settings["comfy"]
     wf, meta = build(req, settings, url)
-    t0 = time.time()
     try:
         r = json.loads(comfy(url, "/prompt", {"prompt": wf, "client_id": "anywhere-rpg-gallery-" + uuid.uuid4().hex[:8]}))
     except urllib.error.HTTPError as e:
         raise RuntimeError("ComfyUI refused the workflow: " + e.read().decode("utf-8", "replace")[:1500])
-    pid = r["prompt_id"]
-    while time.time() - t0 < TIMEOUT:
-        time.sleep(1.5)
-        hist = json.loads(comfy(url, f"/history/{pid}")).get(pid)
-        if not hist:
-            continue
-        status = hist.get("status", {})
-        if status.get("status_str") == "error":
-            msgs = [m[1].get("exception_message", "") for m in status.get("messages", []) if m[0] == "execution_error"]
-            raise RuntimeError("ComfyUI error: " + ("; ".join(msgs) or json.dumps(status)[:800]))
-        imgs = [i for o in hist.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
-        if imgs:
-            q = urllib.parse.urlencode({k: imgs[0][k] for k in ("filename", "subfolder", "type")})
-            png = comfy(url, "/view?" + q, timeout=120)
-            return {**meta, "png": base64.b64encode(png).decode(), "secs": round(time.time() - t0, 1)}
-        if status.get("completed"):
-            raise RuntimeError("ComfyUI finished without an image")
-    raise RuntimeError(f"timed out after {TIMEOUT} s (the job may still be in ComfyUI's queue)")
+    job = {"pid": r["prompt_id"], "url": url, "source": req["source"], "id": req["id"], "kind": req["kind"],
+           "state": "pending", "position": None, "submitted": time.time(), "started": None, "finished": None,
+           "error": None, "meta": meta, "png": None, "misses": 0}
+    with _jobs_lock:
+        for old in [j for j in JOBS.values() if j["source"] == job["source"] and j["id"] == job["id"]]:
+            JOBS.pop(old["pid"], None)  # one job per image; a newer one replaces an unreviewed result
+        JOBS[job["pid"]] = job
+    return public(job)
+
+
+def public(job):
+    now = time.time()
+    end = job["finished"] or now
+    return {**{k: job[k] for k in ("pid", "source", "id", "kind", "state", "position", "error", "meta")},
+            "waited": round((job["started"] or end) - job["submitted"]),
+            "elapsed": round(end - job["started"]) if job["started"] else 0}
+
+
+def poll_jobs():
+    """Updates every unfinished job from ComfyUI's queue and history. Returns ComfyUI queue totals."""
+    with _jobs_lock:
+        active = [j for j in JOBS.values() if j["state"] in ("pending", "running")]
+    totals = {}
+    for url in {j["url"] for j in active}:
+        q = json.loads(comfy(url, "/queue"))
+        running = {e[1] for e in q.get("queue_running", [])}
+        pending = sorted(q.get("queue_pending", []), key=lambda e: e[0])
+        position = {e[1]: n + 1 for n, e in enumerate(pending)}
+        totals = {"running": len(running), "pending": len(pending)}
+        for j in (j for j in active if j["url"] == url):
+            if j["pid"] in running:
+                if j["state"] != "running":
+                    j["state"], j["started"], j["position"] = "running", time.time(), None
+            elif j["pid"] in position:
+                j["state"], j["position"] = "pending", position[j["pid"]]
+            else:
+                finish(j)
+    return totals
+
+
+def finish(j):
+    try:
+        hist = json.loads(comfy(j["url"], f"/history/{j['pid']}")).get(j["pid"])
+    except urllib.error.URLError:
+        return
+    j["started"] = j["started"] or time.time()
+    if not hist:
+        j["misses"] += 1
+        if j["misses"] >= LOST_AFTER:
+            j["state"], j["error"], j["finished"] = "error", "ComfyUI dropped this job (restarted or cleared?)", time.time()
+        return
+    status = hist.get("status", {})
+    imgs = [i for o in hist.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
+    if status.get("status_str") == "error" or not imgs:
+        msgs = [m[1].get("exception_message", "") for m in status.get("messages", []) if m[0] == "execution_error"]
+        interrupted = any(m[0] == "execution_interrupted" for m in status.get("messages", []))
+        j["error"] = ("Cancelled" if interrupted else "ComfyUI error: " + ("; ".join(msgs) or "no image produced"))
+        j["state"], j["finished"] = "error", time.time()
+        return
+    q = urllib.parse.urlencode({k: imgs[0][k] for k in ("filename", "subfolder", "type")})
+    j["png"] = comfy(j["url"], "/view?" + q, timeout=120)
+    j["state"], j["finished"] = "done", time.time()
+
+
+def cancel(pid):
+    with _jobs_lock:
+        j = JOBS.get(pid)
+    if not j:
+        return
+    if j["state"] == "pending":
+        comfy(j["url"], "/queue", {"delete": [pid]})
+    elif j["state"] == "running":
+        comfy(j["url"], "/interrupt", {"prompt_id": pid})  # only stops this job, not someone else's
+    with _jobs_lock:
+        JOBS.pop(pid, None)
 
 
 # ---------------------------------------------------------------- writing images
@@ -384,6 +448,19 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, model_menu(load_settings()["comfy"], refresh="refresh" in q))
             if u.path == "/api/items":
                 return self.send(200, list_items(self.source(q)))
+            if u.path == "/api/jobs":
+                try:
+                    totals, err = poll_jobs(), None
+                except urllib.error.URLError as e:
+                    totals, err = {}, f"can't reach ComfyUI: {e.reason}"
+                with _jobs_lock:
+                    jobs = [public(j) for j in JOBS.values()]
+                return self.send(200, {"jobs": jobs, "comfyQueue": totals, "error": err})
+            if u.path == "/api/result":
+                j = JOBS.get(q["pid"][0])
+                if not j or not j["png"]:
+                    raise LookupError("no image for that job")
+                return self.send(200, j["png"], "image/png")
             if u.path == "/media":
                 src = self.source(q)
                 iid, name = q["id"][0], q["file"][0]
@@ -415,11 +492,20 @@ class Handler(BaseHTTPRequestHandler):
                                                                           if r in sim.FAMILIES[v["family"]]["files"] and n}}
                 save_settings(s)
                 return self.send(200, s)
-            if u.path == "/api/generate":
+            if u.path == "/api/submit":
                 req = json.loads(self.body())
                 if req.get("family") not in sim.FAMILIES or req.get("kind") not in sim.KINDS:
                     raise ValueError("bad family or kind")
-                return self.send(200, generate(req, load_settings()))
+                if not find_source(self.store, req.get("source", "")) or not ID_RE.match(req.get("id", "")):
+                    raise ValueError("bad source or id")
+                return self.send(200, submit(req, load_settings()))
+            if u.path == "/api/forget":
+                with _jobs_lock:
+                    JOBS.pop(q["pid"][0], None)
+                return self.send(200, {"ok": True})
+            if u.path == "/api/cancel":
+                cancel(q["pid"][0])
+                return self.send(200, {"ok": True})
             if u.path in ("/api/save", "/api/delete"):
                 src = self.source(q)
                 iid, kind = q["id"][0], q["kind"][0]

@@ -113,6 +113,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
     <span class="hint" id="queueInfo"></span>
     <button id="selAll">Select shown</button>
     <button id="selNone">Clear</button>
+    <button id="keepAll" hidden>Keep all ready</button>
     <button id="regenSel" class="primary" disabled>Regenerate selected</button>
   </div>
   <p class="hint" id="emptyHint"></p>
@@ -125,7 +126,7 @@ const KIND_LABEL = {sprite: "Map objects", item: "Items", perk: "Perks", portrai
 const SUBJECT_LABEL = {auto: "Subject: automatic", woman: "One woman", man: "One man", girl: "One girl", boy: "One boy",
   person: "One person", creature: "One creature", none: "No subject words"};
 const S = {settings: null, sources: [], kinds: [], subjects: [], menu: null, items: [], fmt: "",
-           filter: "all", selected: new Set(), queue: [], running: null};
+           filter: "all", selected: new Set(), jobs: [], comfyQueue: null, pollError: null};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 
@@ -230,10 +231,10 @@ async function loadItems() {
   if (!src) { S.items = []; renderGrid(); return; }
   const r = await api("/api/items?source=" + encodeURIComponent(src));
   const old = Object.fromEntries(S.items.map(i => [i.id, i]));
-  S.items = r.items.map(i => ({...i, state: old[i.id]?.state || "idle", cand: old[i.id]?.cand, error: old[i.id]?.error,
+  S.items = r.items.map(i => ({...i, job: old[i.id]?.job, error: old[i.id]?.error,
                                editing: old[i.id]?.editing, editDesc: old[i.id]?.editDesc, subjectSel: old[i.id]?.subjectSel}));
   S.fmt = r.promptFormat;
-  renderChips(); renderGrid();
+  renderChips(); renderGrid(); schedulePoll(0);
 }
 
 function shown() {
@@ -260,24 +261,40 @@ function renderGrid() {
   updateBar();
 }
 
+const clock = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+const active = j => j && (j.state === "pending" || j.state === "running");
+
 function updateBar() {
   $("regenSel").disabled = !S.selected.size;
   $("regenSel").textContent = S.selected.size ? `Regenerate selected (${S.selected.size})` : "Regenerate selected";
-  const waiting = S.queue.length + (S.running ? 1 : 0);
-  $("queueInfo").textContent = waiting ? `${waiting} in queue` : "";
+  const mine = S.jobs.filter(j => j.source === source());
+  const n = st => mine.filter(j => j.state === st).length;
+  const run = n("running"), wait = n("pending"), ready = n("done");
+  const cq = S.comfyQueue || {};
+  const total = (cq.running || 0) + (cq.pending || 0);
+  $("queueInfo").textContent = S.pollError || [
+    run && `${run} generating`, wait && `${wait} waiting`,
+    total > run + wait && `ComfyUI queue ${total} in all`].filter(Boolean).join(" · ");
+  $("keepAll").hidden = !ready;
+  $("keepAll").textContent = `Keep all ready (${ready})`;
 }
 
 function thumbUrl(it) {
   return `/media?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&file=${encodeURIComponent(it.file)}&v=${it.mtime}`;
 }
+const resultUrl = job => `/api/result?pid=${encodeURIComponent(job.pid)}`;
 
 function card(it) {
   const el = document.createElement("div");
   el.className = "card" + (S.selected.has(it.id) ? " sel" : "");
   el.id = "c-" + it.id;
+  const job = it.job, st = job?.state;
   const cur = it.file ? `<img loading="lazy" src="${thumbUrl(it)}" alt="">` : `<span class="empty">No image yet</span>`;
-  const main = it.cand ? `<img src="data:image/png;base64,${it.cand.png}" alt="">${it.file ? `<img class="old" src="${thumbUrl(it)}" alt="" title="current image">` : ""}` : cur;
-  const busy = it.state === "queued" ? `<div class="busy">Queued</div>` : it.state === "running" ? `<div class="busy">Generating…</div>` : "";
+  const main = st === "done" ? `<img src="${resultUrl(job)}" alt="">${it.file ? `<img class="old" src="${thumbUrl(it)}" alt="" title="current image">` : ""}` : cur;
+  const busy = it.sending ? `<div class="busy">Sending…</div>`
+    : st === "pending" ? `<div class="busy">${job.position ? `Waiting in ComfyUI: #${job.position}` : "Sent to ComfyUI"}</div>`
+    : st === "running" ? `<div class="busy">Generating… ${clock(job.elapsed)}</div>` : "";
+  const error = it.error || (st === "error" ? job.error : "");
   el.innerHTML = `
     <div class="thumb">${main}${busy}
       <input type="checkbox" class="pick" ${S.selected.has(it.id) ? "checked" : ""} title="Select">
@@ -285,18 +302,20 @@ function card(it) {
     <div class="body">
       <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
       <div class="desc" title="${esc(it.desc)}">${esc(it.editDesc ?? it.desc)}</div>
-      ${it.error ? `<div class="err">${esc(it.error)}</div>` : ""}
-      ${it.cand ? `<div class="meta">${it.cand.width}×${it.cand.height}, ${it.cand.secs}s, ${esc(Object.values(it.cand.files)[0])}</div>` : ""}
+      ${error ? `<div class="err">${esc(error)}</div>` : ""}
+      ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}</div>` : ""}
       ${it.editing ? `<div class="edit">
           <textarea spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
           ${it.kind === "portrait" ? `<select>${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
             esc(s === "auto" ? `${SUBJECT_LABEL.auto} (${it.subject})` : SUBJECT_LABEL[s])}</option>`).join("")}</select>` : ""}
         </div>` : ""}
       <div class="actions">
-        ${it.cand
-          ? `<button class="primary" data-a="keep">Keep</button><button data-a="regen">Retry</button><button data-a="discard">Discard</button>`
-          : `<button class="primary" data-a="regen" ${it.state !== "idle" ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
+        ${st === "done"
+          ? `<button class="primary" data-a="keep">Keep</button><button data-a="regen">Retry</button><button data-a="forget">Discard</button>`
+          : active(job) ? `<button class="danger" data-a="cancel">Cancel</button>`
+          : `<button class="primary" data-a="regen" ${it.sending ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
              <button data-a="edit">${it.editing ? "Done" : "Edit prompt"}</button>
+             ${st === "error" ? `<button data-a="forget">Dismiss</button>` : ""}
              ${it.file ? `<button class="danger" data-a="delete" title="Delete; the game draws a new one when it next loads">Delete</button>` : ""}`}
       </div>
     </div>`;
@@ -315,9 +334,14 @@ function redraw(it) {
 
 async function act(it, a) {
   if (a === "edit") { it.editing = !it.editing; return redraw(it); }
-  if (a === "regen") { it.cand = null; enqueue(it); return; }
-  if (a === "discard") { it.cand = null; return redraw(it); }
+  if (a === "regen") return submit(it);
   if (a === "keep") return keep(it);
+  if (a === "forget" || a === "cancel") {
+    const pid = it.job.pid;
+    it.job = null; it.error = null; redraw(it);
+    try { await api(`/api/${a}?pid=${encodeURIComponent(pid)}`, {method: "POST"}); } catch (e) { toast(e.message); }
+    return schedulePoll(300);
+  }
   if (a === "delete") {
     if (!confirm(`Delete the image for "${it.name}"? A copy goes to gallery-backups/; the game draws a new one when it next loads.`)) return;
     try {
@@ -327,36 +351,51 @@ async function act(it, a) {
   }
 }
 
-// ---------------------------------------------------------------- generation queue (one job at a time)
-function enqueue(it) {
-  if (it.state !== "idle") return;
-  it.state = "queued"; it.error = null; S.queue.push(it); redraw(it); pump();
-}
-
-async function pump() {
-  if (S.running || !S.queue.length) return;
-  const it = S.running = S.queue.shift();
-  it.state = "running"; redraw(it);
+// ---------------------------------------------------------------- jobs: queued on ComfyUI, followed by polling
+async function submit(it) {
   const kind = it.kind, cfg = S.settings.kinds[kind];
+  it.sending = true; it.error = null; redraw(it);
   try {
-    it.cand = await api("/api/generate", {method: "POST", body: JSON.stringify({
-      kind, family: cfg.family, files: famFiles(kind), desc: it.editDesc ?? it.desc, aspect: it.aspect,
-      subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt})});
+    it.job = await api("/api/submit", {method: "POST", body: JSON.stringify({
+      source: source(), id: it.id, kind, family: cfg.family, files: famFiles(kind), desc: it.editDesc ?? it.desc,
+      aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt})});
   } catch (e) { it.error = e.message; }
-  it.state = "idle"; S.running = null; redraw(it); pump();
+  it.sending = false; redraw(it); schedulePoll(500);
 }
 
-async function keep(it) {
+let pollTimer;
+function schedulePoll(ms) { clearTimeout(pollTimer); pollTimer = setTimeout(poll, ms); }
+
+async function poll() {
   try {
-    const img = new Image(); img.src = "data:image/png;base64," + it.cand.png; await img.decode();
-    const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
-    c.getContext("2d").drawImage(img, 0, 0);
+    const r = await api("/api/jobs");
+    S.jobs = r.jobs; S.comfyQueue = r.comfyQueue; S.pollError = r.error;
+    const mine = new Map(r.jobs.filter(j => j.source === source()).map(j => [j.id, j]));
+    for (const it of S.items) {
+      if (it.sending) continue;
+      const j = mine.get(it.id) || null;
+      if (JSON.stringify(j) !== JSON.stringify(it.job || null)) { it.job = j; redraw(it); }
+    }
+  } catch (e) { S.pollError = e.message; }
+  updateBar();
+  schedulePoll(S.jobs.some(active) ? 2000 : 6000);
+}
+
+async function keep(it, quiet) {
+  try {
+    // createImageBitmap, not <img>.decode(): decode() stalls while the tab is in the background
+    const bmp = await createImageBitmap(await (await fetch(resultUrl(it.job))).blob());
+    const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
+    c.getContext("2d").drawImage(bmp, 0, 0); bmp.close();
     const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.85));  // the game's own quality
     if (!blob || blob.type !== "image/webp") throw new Error("This browser can't save WebP; open the page in Chrome, Edge or Firefox.");
     await api(`/api/save?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&kind=${it.kind}`, {method: "POST", body: blob});
-    it.cand = null; it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now();
-    redraw(it); toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
-  } catch (e) { it.error = e.message; redraw(it); }
+    await api(`/api/forget?pid=${encodeURIComponent(it.job.pid)}`, {method: "POST"});
+    it.job = null; it.error = null; it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now();
+    redraw(it);
+    if (!quiet) toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
+    return true;
+  } catch (e) { it.error = e.message; redraw(it); return false; }
 }
 
 // ---------------------------------------------------------------- wiring
@@ -368,9 +407,16 @@ $("search").oninput = renderGrid;
 $("missingOnly").onchange = renderGrid;
 $("selAll").onclick = () => { for (const i of shown()) S.selected.add(i.id); renderGrid(); };
 $("selNone").onclick = () => { S.selected.clear(); renderGrid(); };
-$("regenSel").onclick = () => {
-  for (const i of S.items.filter(i => S.selected.has(i.id))) { i.cand = null; enqueue(i); }
+$("regenSel").onclick = async () => {
+  const picked = S.items.filter(i => S.selected.has(i.id) && !active(i.job) && !i.sending);
   S.selected.clear(); renderGrid();
+  for (const i of picked) await submit(i);  // each is queued on ComfyUI at once; ComfyUI runs them in order
+};
+$("keepAll").onclick = async () => {
+  const ready = S.items.filter(i => i.job?.state === "done");
+  let saved = 0;
+  for (const i of ready) if (await keep(i, true)) saved++;
+  toast(`Saved ${saved} of ${ready.length}. Reload the scenario in the game to see them.`);
 };
 
 (async () => {
