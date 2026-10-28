@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Gallery</title>
+<style>
+:root {
+  --bg: #f4f3ef; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a64; --line: #dddbd3;
+  --accent: #2f6f5e; --accent-ink: #ffffff; --warn: #a2541a; --bad: #b3261e; --chip: #ecebe5;
+  --check-a: #e6e4dd; --check-b: #f7f6f2;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161715; --panel: #20211f; --ink: #ecebe6; --muted: #9c9b94; --line: #353632;
+    --accent: #6fbfa6; --accent-ink: #0f1a16; --warn: #e3a36a; --bad: #f08b80; --chip: #2a2b28;
+    --check-a: #2a2b28; --check-b: #333430;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161715; --panel: #20211f; --ink: #ecebe6; --muted: #9c9b94; --line: #353632;
+  --accent: #6fbfa6; --accent-ink: #0f1a16; --warn: #e3a36a; --bad: #f08b80; --chip: #2a2b28;
+  --check-a: #2a2b28; --check-b: #333430;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; z-index: 5; background: var(--panel); border-bottom: 1px solid var(--line); }
+.bar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 16px; max-width: 1600px; margin: 0 auto; }
+h1 { font-size: 16px; margin: 0 8px 0 0; letter-spacing: .01em; }
+label.inline { display: flex; gap: 6px; align-items: center; color: var(--muted); min-width: 0; max-width: 100%; }
+label.inline select, label.inline input[type=text] { min-width: 0; max-width: 100%; flex: 0 1 auto; }
+input[type=text], input[type=search], select, textarea {
+  font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0;
+}
+textarea { width: 100%; resize: vertical; min-height: 64px; }
+button { font: inherit; border: 1px solid var(--line); background: var(--chip); color: var(--ink); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+button:hover:not(:disabled) { border-color: var(--accent); }
+button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+button.danger { color: var(--bad); }
+button:disabled { opacity: .45; cursor: default; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.dot.ok { background: var(--accent); } .dot.bad { background: var(--bad); }
+main { max-width: 1600px; margin: 0 auto; padding: 14px 16px 60px; }
+details.models { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin-bottom: 14px; }
+details.models > summary { cursor: pointer; font-weight: 600; }
+.models-grid { display: grid; grid-template-columns: 110px minmax(140px, 220px) minmax(180px, 1fr); gap: 8px 12px; align-items: start; margin-top: 12px; }
+.models-grid .k { font-weight: 600; padding-top: 6px; }
+.models-grid select { width: 100%; }
+.roles { display: grid; grid-template-columns: 70px 1fr; gap: 4px 8px; margin-top: 6px; font-size: 12px; color: var(--muted); }
+.roles select { font-size: 12px; padding: 3px 6px; }
+.note { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.note.warn { color: var(--warn); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.chip { border-radius: 999px; padding: 4px 12px; }
+.chip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.spacer { flex: 1; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
+.card.sel { outline: 2px solid var(--accent); outline-offset: -1px; }
+.thumb { position: relative; aspect-ratio: 1; background: repeating-conic-gradient(var(--check-a) 0 25%, var(--check-b) 0 50%) 0 0 / 18px 18px; display: grid; place-items: center; }
+.thumb img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.thumb .empty { color: var(--muted); font-size: 12px; }
+.thumb .pick { position: absolute; top: 6px; left: 6px; width: 18px; height: 18px; accent-color: var(--accent); }
+.thumb .tag { position: absolute; top: 6px; right: 6px; font-size: 11px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+.thumb .old { position: absolute; bottom: 6px; left: 6px; width: 34%; border: 2px solid var(--panel); border-radius: 6px; background: var(--check-b); }
+.thumb .busy { position: absolute; inset: 0; display: grid; place-items: center; background: color-mix(in srgb, var(--panel) 65%, transparent); font-weight: 600; }
+.body { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.desc { font-size: 12px; color: var(--muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.err { font-size: 12px; color: var(--bad); word-break: break-word; }
+.actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+.actions button { padding: 4px 9px; font-size: 13px; }
+.edit { display: flex; flex-direction: column; gap: 6px; }
+.edit select { font-size: 12px; }
+.meta { font-size: 11px; color: var(--muted); word-break: break-word; }
+.toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
+.toast.show { opacity: 1; }
+.hint { color: var(--muted); font-size: 13px; }
+@media (max-width: 640px) {
+  .models-grid { grid-template-columns: 1fr; }
+  .models-grid .k { padding-top: 10px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>Image Gallery</h1>
+    <label class="inline">ComfyUI <input type="text" id="comfy" size="24" spellcheck="false"></label>
+    <button id="connect">Connect</button>
+    <span class="dot" id="dot" title="not connected"></span>
+    <label class="inline">Scenario <select id="source"></select></label>
+    <button id="reload" title="Re-read the images from disk">Reload</button>
+  </div>
+</header>
+<main>
+  <details class="models" id="models" open>
+    <summary>Models per image type</summary>
+    <div class="models-grid" id="modelsGrid"></div>
+    <div class="models-grid" style="margin-top:14px">
+      <div class="k">Cutouts</div>
+      <div><select id="remover"></select></div>
+      <div class="note">Background remover for map objects and items, which need a transparent background.</div>
+    </div>
+  </details>
+
+  <div class="toolbar">
+    <span id="chips"></span>
+    <input type="search" id="search" placeholder="Search names and descriptions">
+    <label class="inline"><input type="checkbox" id="missingOnly"> Missing only</label>
+    <span class="spacer"></span>
+    <span class="hint" id="queueInfo"></span>
+    <button id="selAll">Select shown</button>
+    <button id="selNone">Clear</button>
+    <button id="regenSel" class="primary" disabled>Regenerate selected</button>
+  </div>
+  <p class="hint" id="emptyHint"></p>
+  <div class="grid" id="grid"></div>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+const KIND_LABEL = {sprite: "Map objects", item: "Items", perk: "Perks", portrait: "Portraits"};
+const SUBJECT_LABEL = {auto: "Subject: automatic", woman: "One woman", man: "One man", girl: "One girl", boy: "One boy",
+  person: "One person", creature: "One creature", none: "No subject words"};
+const S = {settings: null, sources: [], kinds: [], subjects: [], menu: null, items: [], fmt: "",
+           filter: "all", selected: new Set(), queue: [], running: null};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+
+async function api(path, opts = {}) {
+  const r = await fetch(path, opts);
+  const ct = r.headers.get("Content-Type") || "";
+  const body = ct.includes("json") ? await r.json() : await r.text();
+  if (!r.ok) throw new Error(body.error || body || r.statusText);
+  return body;
+}
+function toast(msg) {
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 3500);
+}
+const source = () => $("source").value;
+const remember = (k, v) => { try { localStorage.setItem("gallery." + k, v); } catch {} };
+const recall = k => { try { return localStorage.getItem("gallery." + k); } catch { return null; } };
+
+// ---------------------------------------------------------------- settings / models
+async function saveSettings() {
+  S.settings = await api("/api/settings", {method: "POST", body: JSON.stringify(S.settings)});
+}
+
+async function connect(refresh) {
+  $("dot").className = "dot"; $("dot").title = "connecting";
+  try {
+    S.menu = await api("/api/models" + (refresh ? "?refresh=1" : ""));
+    $("dot").className = "dot ok"; $("dot").title = "connected";
+  } catch (e) {
+    S.menu = null; $("dot").className = "dot bad"; $("dot").title = e.message;
+    toast(e.message);
+  }
+  renderModels();
+}
+
+function famFiles(kind) {
+  const cfg = S.settings.kinds[kind];
+  const fam = S.menu?.families[cfg.family];
+  const out = {};
+  if (fam) for (const r of fam.roles) out[r.role] = cfg.files[r.role] || r.detected;
+  return out;
+}
+
+function renderModels() {
+  const g = $("modelsGrid"); g.innerHTML = "";
+  for (const kind of S.kinds) {
+    const cfg = S.settings.kinds[kind];
+    const fams = S.menu ? Object.entries(S.menu.families).filter(([, f]) => f.kinds.includes(kind)) : [];
+    const famSel = document.createElement("select");
+    famSel.innerHTML = fams.length
+      ? fams.map(([k, f]) => `<option value="${k}" ${k === cfg.family ? "selected" : ""}>${esc(f.title)}${f.missing.length ? " (files missing)" : ""}</option>`).join("")
+      : `<option>${esc(cfg.family)}</option>`;
+    famSel.onchange = async () => { cfg.family = famSel.value; cfg.files = {}; await saveSettings(); renderModels(); };
+
+    const right = document.createElement("div");
+    const fam = S.menu?.families[cfg.family];
+    if (fam) {
+      const files = famFiles(kind);
+      const [main, ...rest] = fam.roles;
+      const roleSelect = r => {
+        const sel = document.createElement("select");
+        const opts = r.options.includes(files[r.role]) ? r.options : [files[r.role], ...r.options];
+        sel.innerHTML = opts.map((n, i) => `<option ${n === files[r.role] ? "selected" : ""}>${esc(n)}</option>`
+          + (i === r.matches - 1 && r.matches < opts.length ? `<option disabled>──────────</option>` : "")).join("");
+        sel.onchange = async () => { cfg.files[r.role] = sel.value; await saveSettings(); };
+        return sel;
+      };
+      right.append(roleSelect(main));
+      const missing = fam.missing.filter(r => !cfg.files[r]);
+      const note = document.createElement("div");
+      note.className = "note" + (missing.length || !fam.loaderInstalled ? " warn" : "");
+      note.textContent = !fam.loaderInstalled ? "This ComfyUI lacks a loader node this family needs."
+        : missing.length ? `Not found on this ComfyUI: ${missing.join(", ")}. Pick a file or install it (${missing.map(r => fam.roles.find(x => x.role === r).folder).join(", ")}).`
+        : fam.summary;
+      right.append(note);
+      if (rest.length) {
+        const d = document.createElement("details");
+        d.innerHTML = `<summary class="note">Encoders and VAE</summary>`;
+        const roles = document.createElement("div"); roles.className = "roles";
+        for (const r of rest) { const l = document.createElement("span"); l.textContent = r.role; roles.append(l, roleSelect(r)); }
+        d.append(roles); right.append(d);
+      }
+    } else {
+      right.innerHTML = `<div class="note">Connect to ComfyUI to list models.</div>`;
+    }
+    const label = document.createElement("div"); label.className = "k"; label.textContent = KIND_LABEL[kind];
+    const mid = document.createElement("div"); mid.append(famSel);
+    g.append(label, mid, right);
+  }
+  const rm = $("remover");
+  const avail = S.menu?.removers || {};
+  rm.innerHTML = ["auto", "rembg", "ben2", "none"].map(k => {
+    const t = k === "auto" ? `Automatic${S.menu ? " (" + S.menu.autoRemover + ")" : ""}` : k === "none" ? "None (keep white background)"
+      : k + (S.menu && !avail[k] ? " (not installed)" : "");
+    return `<option value="${k}" ${k === S.settings.remover ? "selected" : ""}>${esc(t)}</option>`;
+  }).join("");
+}
+
+// ---------------------------------------------------------------- items
+async function loadItems() {
+  const src = source();
+  if (!src) { S.items = []; renderGrid(); return; }
+  const r = await api("/api/items?source=" + encodeURIComponent(src));
+  const old = Object.fromEntries(S.items.map(i => [i.id, i]));
+  S.items = r.items.map(i => ({...i, state: old[i.id]?.state || "idle", cand: old[i.id]?.cand, error: old[i.id]?.error,
+                               editing: old[i.id]?.editing, editDesc: old[i.id]?.editDesc, subjectSel: old[i.id]?.subjectSel}));
+  S.fmt = r.promptFormat;
+  renderChips(); renderGrid();
+}
+
+function shown() {
+  const q = $("search").value.trim().toLowerCase();
+  return S.items.filter(i => (S.filter === "all" || i.kind === S.filter)
+    && (!$("missingOnly").checked || !i.file)
+    && (!q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q)));
+}
+
+function renderChips() {
+  const counts = {all: S.items.length};
+  for (const i of S.items) counts[i.kind] = (counts[i.kind] || 0) + 1;
+  $("chips").innerHTML = ["all", ...S.kinds].map(k =>
+    `<button class="chip ${S.filter === k ? "on" : ""}" data-k="${k}">${k === "all" ? "All" : KIND_LABEL[k]} <span>${counts[k] || 0}</span></button>`).join(" ");
+  for (const b of $("chips").querySelectorAll("button")) b.onclick = () => { S.filter = b.dataset.k; renderChips(); renderGrid(); };
+}
+
+function renderGrid() {
+  const list = shown();
+  $("grid").innerHTML = "";
+  for (const it of list) $("grid").append(card(it));
+  $("emptyHint").textContent = !S.sources.length ? "No scenario found. Start a New Game in Anywhere RPG (or load a save) first."
+    : list.length ? "" : "Nothing matches.";
+  updateBar();
+}
+
+function updateBar() {
+  $("regenSel").disabled = !S.selected.size;
+  $("regenSel").textContent = S.selected.size ? `Regenerate selected (${S.selected.size})` : "Regenerate selected";
+  const waiting = S.queue.length + (S.running ? 1 : 0);
+  $("queueInfo").textContent = waiting ? `${waiting} in queue` : "";
+}
+
+function thumbUrl(it) {
+  return `/media?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&file=${encodeURIComponent(it.file)}&v=${it.mtime}`;
+}
+
+function card(it) {
+  const el = document.createElement("div");
+  el.className = "card" + (S.selected.has(it.id) ? " sel" : "");
+  el.id = "c-" + it.id;
+  const cur = it.file ? `<img loading="lazy" src="${thumbUrl(it)}" alt="">` : `<span class="empty">No image yet</span>`;
+  const main = it.cand ? `<img src="data:image/png;base64,${it.cand.png}" alt="">${it.file ? `<img class="old" src="${thumbUrl(it)}" alt="" title="current image">` : ""}` : cur;
+  const busy = it.state === "queued" ? `<div class="busy">Queued</div>` : it.state === "running" ? `<div class="busy">Generating…</div>` : "";
+  el.innerHTML = `
+    <div class="thumb">${main}${busy}
+      <input type="checkbox" class="pick" ${S.selected.has(it.id) ? "checked" : ""} title="Select">
+      <span class="tag">${KIND_LABEL[it.kind].replace(/s$/, "").replace("Map object", "Object")}</span></div>
+    <div class="body">
+      <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
+      <div class="desc" title="${esc(it.desc)}">${esc(it.editDesc ?? it.desc)}</div>
+      ${it.error ? `<div class="err">${esc(it.error)}</div>` : ""}
+      ${it.cand ? `<div class="meta">${it.cand.width}×${it.cand.height}, ${it.cand.secs}s, ${esc(Object.values(it.cand.files)[0])}</div>` : ""}
+      ${it.editing ? `<div class="edit">
+          <textarea spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
+          ${it.kind === "portrait" ? `<select>${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
+            esc(s === "auto" ? `${SUBJECT_LABEL.auto} (${it.subject})` : SUBJECT_LABEL[s])}</option>`).join("")}</select>` : ""}
+        </div>` : ""}
+      <div class="actions">
+        ${it.cand
+          ? `<button class="primary" data-a="keep">Keep</button><button data-a="regen">Retry</button><button data-a="discard">Discard</button>`
+          : `<button class="primary" data-a="regen" ${it.state !== "idle" ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
+             <button data-a="edit">${it.editing ? "Done" : "Edit prompt"}</button>
+             ${it.file ? `<button class="danger" data-a="delete" title="Delete; the game draws a new one when it next loads">Delete</button>` : ""}`}
+      </div>
+    </div>`;
+  el.querySelector(".pick").onchange = e => { e.target.checked ? S.selected.add(it.id) : S.selected.delete(it.id); el.classList.toggle("sel", e.target.checked); updateBar(); };
+  const ta = el.querySelector("textarea"); if (ta) ta.oninput = () => { it.editDesc = ta.value; };
+  const sub = el.querySelector(".edit select"); if (sub) sub.onchange = () => { it.subjectSel = sub.value; };
+  for (const b of el.querySelectorAll("[data-a]")) b.onclick = () => act(it, b.dataset.a);
+  return el;
+}
+
+function redraw(it) {
+  const old = document.getElementById("c-" + it.id);
+  if (old) old.replaceWith(card(it));
+  updateBar();
+}
+
+async function act(it, a) {
+  if (a === "edit") { it.editing = !it.editing; return redraw(it); }
+  if (a === "regen") { it.cand = null; enqueue(it); return; }
+  if (a === "discard") { it.cand = null; return redraw(it); }
+  if (a === "keep") return keep(it);
+  if (a === "delete") {
+    if (!confirm(`Delete the image for "${it.name}"? A copy goes to gallery-backups/; the game draws a new one when it next loads.`)) return;
+    try {
+      await api(`/api/delete?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&kind=${it.kind}`, {method: "POST"});
+      it.file = null; redraw(it); toast("Deleted " + it.name);
+    } catch (e) { toast(e.message); }
+  }
+}
+
+// ---------------------------------------------------------------- generation queue (one job at a time)
+function enqueue(it) {
+  if (it.state !== "idle") return;
+  it.state = "queued"; it.error = null; S.queue.push(it); redraw(it); pump();
+}
+
+async function pump() {
+  if (S.running || !S.queue.length) return;
+  const it = S.running = S.queue.shift();
+  it.state = "running"; redraw(it);
+  const kind = it.kind, cfg = S.settings.kinds[kind];
+  try {
+    it.cand = await api("/api/generate", {method: "POST", body: JSON.stringify({
+      kind, family: cfg.family, files: famFiles(kind), desc: it.editDesc ?? it.desc, aspect: it.aspect,
+      subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt})});
+  } catch (e) { it.error = e.message; }
+  it.state = "idle"; S.running = null; redraw(it); pump();
+}
+
+async function keep(it) {
+  try {
+    const img = new Image(); img.src = "data:image/png;base64," + it.cand.png; await img.decode();
+    const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+    c.getContext("2d").drawImage(img, 0, 0);
+    const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.85));  // the game's own quality
+    if (!blob || blob.type !== "image/webp") throw new Error("This browser can't save WebP; open the page in Chrome, Edge or Firefox.");
+    await api(`/api/save?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&kind=${it.kind}`, {method: "POST", body: blob});
+    it.cand = null; it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now();
+    redraw(it); toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
+  } catch (e) { it.error = e.message; redraw(it); }
+}
+
+// ---------------------------------------------------------------- wiring
+$("connect").onclick = async () => { S.settings.comfy = $("comfy").value.trim(); await saveSettings(); connect(true); };
+$("remover").onchange = async () => { S.settings.remover = $("remover").value; await saveSettings(); };
+$("source").onchange = () => { remember("source", source()); S.selected.clear(); S.items = []; loadItems().catch(e => toast(e.message)); };
+$("reload").onclick = () => loadItems().catch(e => toast(e.message));
+$("search").oninput = renderGrid;
+$("missingOnly").onchange = renderGrid;
+$("selAll").onclick = () => { for (const i of shown()) S.selected.add(i.id); renderGrid(); };
+$("selNone").onclick = () => { S.selected.clear(); renderGrid(); };
+$("regenSel").onclick = () => {
+  for (const i of S.items.filter(i => S.selected.has(i.id))) { i.cand = null; enqueue(i); }
+  S.selected.clear(); renderGrid();
+};
+
+(async () => {
+  const st = await api("/api/state");
+  Object.assign(S, {settings: st.settings, sources: st.sources, kinds: st.kinds, subjects: st.subjects});
+  $("comfy").value = S.settings.comfy;
+  $("source").innerHTML = S.sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("");
+  const last = recall("source");
+  if (last && S.sources.some(s => s.id === last)) $("source").value = last;
+  renderModels();
+  await Promise.all([connect(false), loadItems().catch(e => toast(e.message))]);
+})();
+</script>
+</body>
+</html>

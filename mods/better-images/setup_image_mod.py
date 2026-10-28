@@ -78,9 +78,12 @@ SDXL_NEG = {
               "sprite sheet, pixel art, cast shadow, person",
     "item": "multiple objects, collage, hands, person, scenery, table, cast shadow",
     "perk": "letters, words, user interface, screenshot, photo",
+    # The game's portrait prompt can't say whether it is a man or a woman, so the packs name every
+    # "more than one person" tag; image_gallery.py adds the exact subject per character.
     "portrait": "nsfw, nude, nipples, cleavage, underwear, lewd, ahegao, multiple views, character sheet, "
-                "reference sheet, expression sheet, comic, grid, collage, multiple people, bad anatomy, bad hands, "
-                "extra fingers, missing fingers, extra limbs, cropped head",
+                "reference sheet, expression sheet, comic, grid, collage, multiple people, two people, 2girls, "
+                "2boys, multiple girls, multiple boys, group, crowd, bad anatomy, bad hands, extra fingers, "
+                "missing fingers, extra limbs, cropped head",
 }
 SDXL_NEG_COMMON = "text, watermark, signature, logo, frame, border, blurry, lowres, jpeg artifacts, worst quality, low quality"
 
@@ -118,6 +121,23 @@ FAMILIES = {
         "folders": {"unet": "models/diffusion_models", "clip": "models/text_encoders", "vae": "models/vae"},
         "graph": "qwen",
     },
+    "flux1": {
+        "title": "Better Images: Flux.1",
+        "summary": "Flux.1 [dev] or [schnell] for every image type: 20 steps (use 4 for schnell). Good prompt "
+                   "following; slower than Flux.2 klein.",
+        "kinds": KINDS,
+        "prompts": NATURAL,
+        "files": {
+            "unet": ("flux1-dev.safetensors", "UNETLoader", "unet_name",
+                     [r"flux1-dev", r"flux1-schnell", r"flux1", r"flux\.1"]),
+            "clip_l": ("clip_l.safetensors", "DualCLIPLoader", "clip_name1", [r"clip_l"]),
+            "t5": ("t5xxl_fp16.safetensors", "DualCLIPLoader", "clip_name2", [r"t5xxl_fp16", r"t5xxl"]),
+            "vae": ("ae.safetensors", "VAELoader", "vae_name", [r"(^|/)ae\.safetensors", r"flux.*ae"]),
+        },
+        "folders": {"unet": "models/diffusion_models", "clip_l": "models/text_encoders",
+                    "t5": "models/text_encoders", "vae": "models/vae"},
+        "graph": "flux1",
+    },
     "sdxl": {
         "title": "Better Images: SDXL",
         "summary": "Any SDXL checkpoint at 1024 px for every image type (the game's default workflow is "
@@ -145,16 +165,31 @@ FAMILIES = {
         "folders": {"ckpt": "models/checkpoints"},
         "graph": "sdxl",
     },
+    "sd15": {
+        "title": "Better Images: SD1.5",
+        "summary": "Any Stable Diffusion 1.5 checkpoint at 512 px for every image type: runs on small GPUs, "
+                   "but follows descriptions the least closely of these packs.",
+        "kinds": KINDS,
+        "prompts": TAGS,
+        "files": {
+            "ckpt": ("v1-5-pruned-emaonly-fp16.safetensors", "CheckpointLoaderSimple", "ckpt_name",
+                     [r"v1-5", r"sd_?1\.?5", r"sd15"]),
+        },
+        "folders": {"ckpt": "models/checkpoints"},
+        "graph": "sdxl",
+        "base": 512,
+        "ksampler": {"steps": 25, "cfg": 7.0},
+    },
 }
 
 SIZE_TITLE = "width=WIDTH height=HEIGHT"
 
 
-def _size():
-    return {"width": BASE, "height": BASE}
+def _size(base=BASE):
+    return {"width": base, "height": base}
 
 
-def graph_flux2(f, kind):
+def graph_flux2(f, kind, fam):
     return {
         "1": {"class_type": "UNETLoader", "inputs": {"unet_name": f["unet"], "weight_dtype": "default"},
               "_meta": {"title": "Load Diffusion Model unet_name=MODEL"}},
@@ -182,7 +217,32 @@ def graph_flux2(f, kind):
     }
 
 
-def graph_qwen(f, kind):
+def graph_flux1(f, kind, fam):
+    return {
+        "1": {"class_type": "UNETLoader", "inputs": {"unet_name": f["unet"], "weight_dtype": "default"},
+              "_meta": {"title": "Load Diffusion Model unet_name=MODEL"}},
+        "10": {"class_type": "DualCLIPLoader", "inputs": {"clip_name1": f["clip_l"], "clip_name2": f["t5"],
+                                                          "type": "flux", "device": "default"},
+               "_meta": {"title": "Load Text Encoders"}},
+        "11": {"class_type": "VAELoader", "inputs": {"vae_name": f["vae"]}, "_meta": {"title": "Load VAE"}},
+        "2": {"class_type": "CLIPTextEncode", "inputs": {"text": "", "clip": ["10", 0]},
+              "_meta": {"title": "Positive text=PROMPT"}},
+        "12": {"class_type": "FluxGuidance", "inputs": {"conditioning": ["2", 0], "guidance": 3.5},
+               "_meta": {"title": "Guidance"}},
+        "3": {"class_type": "ConditioningZeroOut", "inputs": {"conditioning": ["2", 0]},
+              "_meta": {"title": "Empty negative"}},
+        "4": {"class_type": "EmptySD3LatentImage", "inputs": {**_size(), "batch_size": 1},
+              "_meta": {"title": "Empty Latent " + SIZE_TITLE}},
+        "5": {"class_type": "KSampler",
+              "inputs": {"seed": 0, "steps": 20, "cfg": 1.0, "sampler_name": "euler", "scheduler": "simple",
+                         "denoise": 1, "model": ["1", 0], "positive": ["12", 0], "negative": ["3", 0],
+                         "latent_image": ["4", 0]}, "_meta": {"title": "KSampler seed=SEED"}},
+        "6": {"class_type": "VAEDecode", "inputs": {"samples": ["5", 0], "vae": ["11", 0]},
+              "_meta": {"title": "VAE Decode"}},
+    }
+
+
+def graph_qwen(f, kind, fam):
     return {
         "1": {"class_type": "UNETLoader", "inputs": {"unet_name": f["unet"], "weight_dtype": "default"},
               "_meta": {"title": "Load Diffusion Model unet_name=MODEL"}},
@@ -206,7 +266,8 @@ def graph_qwen(f, kind):
     }
 
 
-def graph_sdxl(f, kind):
+def graph_sdxl(f, kind, fam):
+    ks = {"steps": 28, "cfg": 5.5, **fam.get("ksampler", {})}
     return {
         "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": f["ckpt"]},
               "_meta": {"title": "Load Checkpoint ckpt_name=MODEL"}},
@@ -215,10 +276,10 @@ def graph_sdxl(f, kind):
         "3": {"class_type": "CLIPTextEncode",
               "inputs": {"text": f"{SDXL_NEG[kind]}, {SDXL_NEG_COMMON}", "clip": ["1", 1]},
               "_meta": {"title": "Negative"}},
-        "4": {"class_type": "EmptyLatentImage", "inputs": {**_size(), "batch_size": 1},
+        "4": {"class_type": "EmptyLatentImage", "inputs": {**_size(fam.get("base", BASE)), "batch_size": 1},
               "_meta": {"title": "Empty Latent Image " + SIZE_TITLE}},
         "5": {"class_type": "KSampler",
-              "inputs": {"seed": 0, "steps": 28, "cfg": 5.5, "sampler_name": "dpmpp_2m", "scheduler": "karras",
+              "inputs": {"seed": 0, "steps": ks["steps"], "cfg": ks["cfg"], "sampler_name": "dpmpp_2m", "scheduler": "karras",
                          "denoise": 1, "model": ["1", 0], "positive": ["2", 0], "negative": ["3", 0],
                          "latent_image": ["4", 0]}, "_meta": {"title": "KSampler seed=SEED"}},
         "6": {"class_type": "VAEDecode", "inputs": {"samples": ["5", 0], "vae": ["1", 2]},
@@ -226,11 +287,11 @@ def graph_sdxl(f, kind):
     }
 
 
-GRAPHS = {"flux2": graph_flux2, "qwen": graph_qwen, "sdxl": graph_sdxl}
+GRAPHS = {"flux2": graph_flux2, "flux1": graph_flux1, "qwen": graph_qwen, "sdxl": graph_sdxl}
 
 
 def workflow(fam, files, kind, remover):
-    wf = GRAPHS[fam["graph"]](files, kind)
+    wf = GRAPHS[fam["graph"]](files, kind, fam)
     image = ["6", 0]
     rm = REMOVERS[remover]
     if kind in CUTOUT_KINDS and rm["build"]:

@@ -11,8 +11,10 @@ These mod packs replace the workflow and prompts for each image type.
 |---|---|---|---|
 | `better-images-flux2-klein` | all | Flux.2 [klein] 9B | fast (4 steps) |
 | `better-images-qwen-image` | all | Qwen-Image | slow (20 steps), most literal |
+| `better-images-flux1` | all | Flux.1 [dev] or [schnell] | medium (20 steps) |
 | `better-images-sdxl` | all | any SDXL checkpoint, 1024 px | medium |
 | `better-images-sdxl-portraits` | portraits only (add-on) | an SDXL / Illustrious checkpoint | medium |
+| `better-images-sd15` | all | any SD1.5 checkpoint, 512 px | fast, small GPUs; loosest |
 
 Each pack's `PACK-NOTES.md` lists the exact files it expects and where they go.
 
@@ -48,6 +50,34 @@ lists; it does not queue any work.
 **Why the names matter:** the game has no model menu for map objects. It uses the file named in
 the sprite workflow, and if that file is missing, the first model on ComfyUI's list, which may not
 even be an image model.
+
+## Image Gallery: see and redo every image
+
+`image_gallery.py` opens a page in your browser showing every image of a scenario or a save:
+map objects, items, perks and portraits, on a checkerboard so you can see which cutouts kept
+their background. Each one has **Regenerate**. The new image appears next to the old one, and you
+choose **Keep**, **Retry** or **Discard**. You can also tick several and regenerate them in one go.
+
+```
+python image_gallery.py
+```
+
+- **Models per image type:** pick a model family (Flux.2 klein, Flux.1, Qwen-Image, SDXL, SDXL
+  portraits, SD1.5) and then a model from the ones your ComfyUI actually has. Encoders and VAE are
+  matched for you and can be changed under *Encoders and VAE*. Your choices are kept in
+  `image_gallery.settings.json`.
+- **Edit prompt** changes the description for that one image only; the scenario isn't changed.
+- **Portraits** get a subject: "one woman", "one man", "one girl", "one boy" or "one creature",
+  read from the character's gender, age and animation, which you can override. It is worded for
+  the model: booru tags (`1girl, solo` against `2girls, multiple girls`) for Illustrious, Pony
+  and other anime checkpoints; plain words (`one woman, solo` against `two women, group`) for
+  other SDXL and SD1.5 checkpoints; a sentence for Flux and Qwen.
+- **Keep** writes the same WebP file the game writes, deletes the shadow and outline files the
+  game made from the old map-object image (it remakes them), and moves the old image to
+  `gallery-backups/`. **Delete** removes an image so the game draws a new one when it next loads.
+- The game reads images when it loads: **reload the scenario or save** to see the new ones.
+- The page is served on `127.0.0.1:8765` only (`--port` to change, `--store` if the game's data
+  folder is elsewhere). Python standard library only; save pages in Chrome, Edge or Firefox.
 
 ## How it plugs into the game
 

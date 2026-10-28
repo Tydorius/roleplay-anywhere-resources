@@ -24,7 +24,7 @@
   "3": {
     "class_type": "CLIPTextEncode",
     "inputs": {
-      "text": "nsfw, nude, nipples, cleavage, underwear, lewd, ahegao, multiple views, character sheet, reference sheet, expression sheet, comic, grid, collage, multiple people, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, cropped head, text, watermark, signature, logo, frame, border, blurry, lowres, jpeg artifacts, worst quality, low quality",
+      "text": "nsfw, nude, nipples, cleavage, underwear, lewd, ahegao, multiple views, character sheet, reference sheet, expression sheet, comic, grid, collage, multiple people, two people, 2girls, 2boys, multiple girls, multiple boys, group, crowd, bad anatomy, bad hands, extra fingers, missing fingers, extra limbs, cropped head, text, watermark, signature, logo, frame, border, blurry, lowres, jpeg artifacts, worst quality, low quality",
       "clip": [
         "1",
         1

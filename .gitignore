@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 /local-packs/
+
+# image_gallery.py local state
+/mods/better-images/image_gallery.settings.json
+/mods/better-images/gallery-backups/

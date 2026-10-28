@@ -1,0 +1,1 @@
+A single game map prop seen from directly overhead in a straight-down orthographic top-down view: ${DESC}. The object is centered and isolated on a plain white background with nothing else around it. Hand-painted fantasy RPG asset, natural muted colours, soft even lighting, no cast shadow, no text.

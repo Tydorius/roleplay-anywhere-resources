@@ -1,0 +1,4 @@
+{
+  "title": "Better Images: SD1.5",
+  "description": "Any Stable Diffusion 1.5 checkpoint at 512 px for every image type: runs on small GPUs, but follows descriptions the least closely of these packs. Needs WAS Node Suite (was-node-suite-comfyui) for background removal."
+}

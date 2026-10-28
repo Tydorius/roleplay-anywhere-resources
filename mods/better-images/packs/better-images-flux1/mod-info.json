@@ -1,0 +1,4 @@
+{
+  "title": "Better Images: Flux.1",
+  "description": "Flux.1 [dev] or [schnell] for every image type: 20 steps (use 4 for schnell). Good prompt following; slower than Flux.2 klein. Needs WAS Node Suite (was-node-suite-comfyui) for background removal."
+}
