@@ -60,7 +60,7 @@ choose **Keep**, **Retry** or **Discard**. You can also tick several and regener
 
 Each request goes straight onto ComfyUI's queue. The card shows where it is ("Waiting in ComfyUI: #3",
 "Generating… 0:24") and switches to the new image when it's done; **Keep all ready** saves every
-finished one at once. **Cancel** takes a waiting job off the queue or stops a running one (only
+finished one at once, and **Needs review** narrows the page to just those. **Cancel** takes a waiting job off the queue or stops a running one (only
 that job). Tick **Keep automatically** to save each image as soon as it finishes, without
 reviewing it.
 

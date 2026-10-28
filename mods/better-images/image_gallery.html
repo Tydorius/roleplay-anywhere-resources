@@ -109,6 +109,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
     <span id="chips"></span>
     <input type="search" id="search" placeholder="Search names and descriptions">
     <label class="inline"><input type="checkbox" id="missingOnly"> Missing only</label>
+    <label class="inline" title="Only new images waiting for Keep or Discard"><input type="checkbox" id="reviewOnly"> Needs review <span id="reviewCount"></span></label>
     <span class="spacer"></span>
     <span class="hint" id="queueInfo"></span>
     <button id="selAll">Select shown</button>
@@ -244,12 +245,14 @@ async function loadItems() {
   schedulePoll(0);
 }
 
-function shown() {
+function matches(i) {
   const q = $("search").value.trim().toLowerCase();
-  return S.items.filter(i => (S.filter === "all" || i.kind === S.filter)
+  return (S.filter === "all" || i.kind === S.filter)
     && (!$("missingOnly").checked || !i.file)
-    && (!q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q)));
+    && (!$("reviewOnly").checked || i.job?.state === "done")
+    && (!q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
 }
+const shown = () => S.items.filter(matches);
 
 function renderChips() {
   const counts = {all: S.items.length};
@@ -276,13 +279,15 @@ function updateBar() {
   $("regenSel").textContent = S.selected.size ? `Regenerate selected (${S.selected.size})` : "Regenerate selected";
   const mine = S.jobs.filter(j => j.source === source());
   const n = st => mine.filter(j => j.state === st).length;
-  const run = n("running"), wait = n("pending"), ready = n("done");
+  const run = n("running"), wait = n("pending");
+  const ready = S.items.filter(i => i.job?.state === "done").length;  // current right after a Keep, before the next poll
   const cq = S.comfyQueue || {};
   const total = (cq.running || 0) + (cq.pending || 0);
   $("queueInfo").textContent = S.pollError || [
     run && `${run} generating`, wait && `${wait} waiting`,
     total > run + wait && `ComfyUI queue ${total} in all`].filter(Boolean).join(" · ");
   $("keepAll").hidden = !ready;
+  $("reviewCount").textContent = ready ? `(${ready})` : "";
   $("keepAll").textContent = `Keep all ready (${ready})`;
 }
 
@@ -333,9 +338,11 @@ function card(it) {
   return el;
 }
 
-function redraw(it) {
-  const old = document.getElementById("c-" + it.id);
-  if (old) old.replaceWith(card(it));
+function redraw(it) {  // a card that now passes or fails the filters appears or goes
+  const old = document.getElementById("c-" + it.id), want = matches(it);
+  if (old && want) old.replaceWith(card(it));
+  else if (old) old.remove();
+  else if (want) return renderGrid();
   updateBar();
 }
 
@@ -416,6 +423,7 @@ $("source").onchange = () => { remember("source", source()); S.selected.clear();
 $("reload").onclick = () => loadItems().catch(e => toast(e.message));
 $("search").oninput = renderGrid;
 $("missingOnly").onchange = renderGrid;
+$("reviewOnly").onchange = renderGrid;
 $("selAll").onclick = () => { for (const i of shown()) S.selected.add(i.id); renderGrid(); };
 $("selNone").onclick = () => { S.selected.clear(); renderGrid(); };
 $("regenSel").onclick = async () => {
