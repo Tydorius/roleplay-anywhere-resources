@@ -1,0 +1,4 @@
+{
+  "title": "Better Images: Qwen-Image",
+  "description": "Qwen-Image (20B) for every image type: the most literal prompt-follower, but slow (20 steps); best on a big GPU. Needs WAS Node Suite (was-node-suite-comfyui) for background removal."
+}

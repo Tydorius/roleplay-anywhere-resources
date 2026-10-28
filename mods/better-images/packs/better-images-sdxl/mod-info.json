@@ -1,0 +1,4 @@
+{
+  "title": "Better Images: SDXL",
+  "description": "Any SDXL checkpoint at 1024 px for every image type (the game's default workflow is SD1.5 at 512 px). Pick checkpoints per type in Options -> AI Images. Needs WAS Node Suite (was-node-suite-comfyui) for background removal."
+}

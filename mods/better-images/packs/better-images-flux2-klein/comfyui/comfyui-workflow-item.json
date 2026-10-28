@@ -1,0 +1,196 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux-2-klein-9b.safetensors",
+      "weight_dtype": "default"
+    },
+    "_meta": {
+      "title": "Load Diffusion Model unet_name=MODEL"
+    }
+  },
+  "10": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_3_8b.safetensors",
+      "type": "flux2",
+      "device": "default"
+    },
+    "_meta": {
+      "title": "Load Text Encoder"
+    }
+  },
+  "11": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    },
+    "_meta": {
+      "title": "Load VAE"
+    }
+  },
+  "2": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "",
+      "clip": [
+        "10",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Positive text=PROMPT"
+    }
+  },
+  "3": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "2",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Empty negative"
+    }
+  },
+  "12": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "2",
+        0
+      ],
+      "negative": [
+        "3",
+        0
+      ],
+      "cfg": 1.0
+    },
+    "_meta": {
+      "title": "CFG Guider"
+    }
+  },
+  "4": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    },
+    "_meta": {
+      "title": "Empty Latent width=WIDTH height=HEIGHT"
+    }
+  },
+  "13": {
+    "class_type": "Flux2Scheduler",
+    "inputs": {
+      "steps": 4,
+      "width": 1024,
+      "height": 1024
+    },
+    "_meta": {
+      "title": "Flux2 Scheduler width=WIDTH height=HEIGHT"
+    }
+  },
+  "14": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 0
+    },
+    "_meta": {
+      "title": "Noise noise_seed=SEED"
+    }
+  },
+  "15": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "_meta": {
+      "title": "Sampler"
+    }
+  },
+  "5": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "14",
+        0
+      ],
+      "guider": [
+        "12",
+        0
+      ],
+      "sampler": [
+        "15",
+        0
+      ],
+      "sigmas": [
+        "13",
+        0
+      ],
+      "latent_image": [
+        "4",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "Sample"
+    }
+  },
+  "6": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "5",
+        0
+      ],
+      "vae": [
+        "11",
+        0
+      ]
+    },
+    "_meta": {
+      "title": "VAE Decode"
+    }
+  },
+  "8": {
+    "class_type": "Image Rembg (Remove Background)",
+    "inputs": {
+      "images": [
+        "6",
+        0
+      ],
+      "transparency": true,
+      "model": "isnet-general-use",
+      "post_processing": false,
+      "only_mask": false,
+      "alpha_matting": false,
+      "alpha_matting_foreground_threshold": 240,
+      "alpha_matting_background_threshold": 10,
+      "alpha_matting_erode_size": 10,
+      "background_color": "none"
+    },
+    "_meta": {
+      "title": "Remove background"
+    }
+  },
+  "7": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "8",
+        0
+      ],
+      "filename_prefix": "anywhere-rpg-item"
+    },
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}

@@ -1,0 +1,1 @@
+A single inventory item icon: ${DESC}. The object is centered and isolated on a plain white background, shown whole with a clean silhouette. Detailed painted fantasy RPG item illustration, natural colours, soft studio lighting, no text.

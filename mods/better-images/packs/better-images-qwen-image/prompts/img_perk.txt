@@ -1,0 +1,1 @@
+A square fantasy RPG ability icon: ${DESC}. One bold central emblem, painterly style, strong rim lighting, dark vignette background, no text or letters.

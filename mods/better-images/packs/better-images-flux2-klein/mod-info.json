@@ -1,0 +1,4 @@
+{
+  "title": "Better Images: Flux.2 klein",
+  "description": "Flux.2 [klein] 9B for every image type: 4 steps, about 15 s per image on a fast GPU. Follows long descriptions closely. Needs WAS Node Suite (was-node-suite-comfyui) for background removal."
+}
