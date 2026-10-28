@@ -124,6 +124,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 
 <script>
 const KIND_LABEL = {sprite: "Map objects", item: "Items", perk: "Perks", portrait: "Portraits"};
+const PROFILE_LABEL = {...KIND_LABEL, portrait: "People", creature: "Creatures"};
 const SUBJECT_LABEL = {auto: "Subject: automatic", woman: "One woman", man: "One man", girl: "One girl", boy: "One boy",
   person: "One person", creature: "One creature", none: "No subject words"};
 const S = {settings: null, sources: [], kinds: [], subjects: [], menu: null, items: [], fmt: "",
@@ -173,9 +174,9 @@ function famFiles(kind) {
 
 function renderModels() {
   const g = $("modelsGrid"); g.innerHTML = "";
-  for (const kind of S.kinds) {
+  for (const kind of S.profiles) {  // "creature": portraits of animals and monsters, with their own model
     const cfg = S.settings.kinds[kind];
-    const fams = S.menu ? Object.entries(S.menu.families).filter(([, f]) => f.kinds.includes(kind)) : [];
+    const fams = S.menu ? Object.entries(S.menu.families).filter(([, f]) => f.kinds.includes(kind === "creature" ? "portrait" : kind)) : [];
     const famSel = document.createElement("select");
     famSel.innerHTML = fams.length
       ? fams.map(([k, f]) => `<option value="${k}" ${k === cfg.family ? "selected" : ""}>${esc(f.title)}${f.missing.length ? " (files missing)" : ""}</option>`).join("")
@@ -213,7 +214,7 @@ function renderModels() {
     } else {
       right.innerHTML = `<div class="note">Connect to ComfyUI to list models.</div>`;
     }
-    const label = document.createElement("div"); label.className = "k"; label.textContent = KIND_LABEL[kind];
+    const label = document.createElement("div"); label.className = "k"; label.textContent = PROFILE_LABEL[kind];
     const mid = document.createElement("div"); mid.append(famSel);
     g.append(label, mid, right);
   }
@@ -358,12 +359,15 @@ async function act(it, a) {
 }
 
 // ---------------------------------------------------------------- jobs: queued on ComfyUI, followed by polling
+const profile = it => it.kind === "portrait" && (it.subjectSel && it.subjectSel !== "auto" ? it.subjectSel : it.subject) === "creature"
+  ? "creature" : it.kind;
+
 async function submit(it) {
-  const kind = it.kind, cfg = S.settings.kinds[kind];
+  const kind = it.kind, prof = profile(it), cfg = S.settings.kinds[prof];
   it.sending = true; it.error = null; redraw(it);
   try {
     it.job = await api("/api/submit", {method: "POST", body: JSON.stringify({
-      source: source(), id: it.id, kind, family: cfg.family, files: famFiles(kind), desc: it.editDesc ?? it.desc,
+      source: source(), id: it.id, kind, family: cfg.family, files: famFiles(prof), desc: it.editDesc ?? it.desc,
       aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt})});
   } catch (e) { it.error = e.message; }
   it.sending = false; redraw(it); schedulePoll(500);
@@ -433,7 +437,7 @@ $("autoKeep").onchange = () => { remember("autoKeep", $("autoKeep").checked ? "1
 
 (async () => {
   const st = await api("/api/state");
-  Object.assign(S, {settings: st.settings, sources: st.sources, kinds: st.kinds, subjects: st.subjects});
+  Object.assign(S, {settings: st.settings, sources: st.sources, kinds: st.kinds, profiles: st.profiles, subjects: st.subjects});
   $("comfy").value = S.settings.comfy;
   $("source").innerHTML = S.sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("");
   const last = recall("source");

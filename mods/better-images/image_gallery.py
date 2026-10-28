@@ -74,6 +74,19 @@ SUBJECTS = {
     },
 }
 SUBJECT_NOUNS = ("auto", "woman", "man", "girl", "boy", "person", "creature", "none")
+# Animals and monsters get their own portrait prompt: the game's asks for a "character portrait, head
+# and shoulders", which turns any beast into a person-shaped bust. "Monster or beast" rather than
+# "animal" keeps a "drake" from becoming a duck.
+CREATURE_PROMPTS = {
+    "natural": "Fantasy bestiary portrait of a monster or beast: ${DESC}. The creature's head and the front of "
+               "its body in a natural pose, with its real non-human anatomy: no human shoulders, arms, hands or "
+               "torso, not anthropomorphic, no clothing. Painted fantasy RPG bestiary art, detailed, soft "
+               "painterly lighting, simple muted background, no text.",
+    "tags": "feral, no humans, animal focus, solo, wild animal, natural pose, head and upper body, fantasy "
+            "bestiary, detailed painting, simple background, ${DESC}",
+}
+CREATURE_NEG = "anthro, anthropomorphic, humanoid, human body, human torso, shoulders, arms, hands, clothes, "                "bipedal, multiple animals"
+PROFILES = (*sim.KINDS, "creature")  # model settings: one per image type, plus portraits of creatures
 
 _lock = threading.Lock()
 _info_cache = {}
@@ -95,7 +108,7 @@ def default_store():
 
 def load_settings():
     s = {"comfy": "http://127.0.0.1:8188", "remover": "auto",
-         "kinds": {k: {"family": "flux2-klein", "files": {}} for k in sim.KINDS}}
+         "kinds": {k: {"family": "flux2-klein", "files": {}} for k in PROFILES}}
     if SETTINGS.exists():
         try:
             saved = json.loads(SETTINGS.read_text("utf-8"))
@@ -154,7 +167,10 @@ def index_things(o, out):
 
 
 def describe(kind, o):
-    """The text the game puts in ${DESC}."""
+    """The text the game puts in ${DESC}; for creatures, only what they look like (a name and a
+    gender push the model towards a person)."""
+    if kind == "portrait" and subject_noun(o) == "creature":
+        return o.get("physicalDescription") or o.get("description") or o.get("name") or ""
     if kind == "portrait":
         g = o.get("gender")
         who = f"{o.get('name', '')} ({g})" if g else o.get("name", "")
@@ -266,19 +282,23 @@ def build(req, settings, url):
     remover = sim.pick_remover(info, None) if remover == "auto" else remover
     wf = sim.workflow(fam, files, kind, remover)
 
-    prompt = fam["prompts"][kind].replace("${DESC}", req["desc"])
+    noun = (req.get("subject") or "auto") if kind == "portrait" else "none"
+    if noun == "auto":
+        noun = req.get("autoSubject") or "person"
+    style = prompt_style(family, files[next(iter(fam["files"]))])
+    template = (CREATURE_PROMPTS["natural" if style == "natural" else "tags"] if noun == "creature"
+                else fam["prompts"][kind])
+    prompt = template.replace("${DESC}", req["desc"])
     fmt = (req.get("promptFormat") or "").strip()
     if fmt and kind != "sprite":  # the world's prompt format, applied as the game does
         prompt = prompt.join(fmt.split("${prompt}")) if "${prompt}" in fmt else f"{fmt} {prompt}"
     negative_extra = ""
-    if kind == "portrait":
-        noun = req.get("subject") or "auto"
-        if noun == "auto":
-            noun = req.get("autoSubject") or "person"
-        if noun != "none":
-            style = SUBJECTS[prompt_style(family, files[next(iter(fam["files"]))])]
-            prompt = f"{style['pos'][noun]}{' ' if family in NATURAL_FAMILIES else ', '}{prompt}"
-            negative_extra = style["neg"][noun]
+    if noun == "creature":
+        negative_extra = CREATURE_NEG
+    elif noun != "none":
+        words = SUBJECTS[style]
+        prompt = f"{words['pos'][noun]}{' ' if family in NATURAL_FAMILIES else ', '}{prompt}"
+        negative_extra = words["neg"][noun]
 
     base = max(v for n in wf.values() for k, v in n["inputs"].items() if k in ("width", "height"))
     w, h = snap_size(base, float(req.get("aspect") or 1))
@@ -530,7 +550,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, {
                     "settings": load_settings(), "store": str(self.store),
                     "sources": [{"id": s["id"], "label": s["label"]} for s in sources(self.store)],
-                    "kinds": list(sim.KINDS), "subjects": list(SUBJECT_NOUNS)})
+                    "kinds": list(sim.KINDS), "profiles": list(PROFILES), "subjects": list(SUBJECT_NOUNS)})
             if u.path == "/api/models":
                 return self.send(200, model_menu(load_settings()["comfy"], refresh="refresh" in q))
             if u.path == "/api/items":

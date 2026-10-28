@@ -95,6 +95,13 @@ python image_gallery.py
   the model: booru tags (`1girl, solo` against `2girls, multiple girls`) for Illustrious, Pony
   and other anime checkpoints; plain words (`one woman, solo` against `two women, group`) for
   other SDXL and SD1.5 checkpoints; a sentence for Flux and Qwen.
+- **Creatures** (characters whose animation isn't a person, such as wolves, drakes and ghosts)
+  have their own row in the models panel and their own prompt: a bestiary portrait of the beast's
+  real anatomy, with `anthro, humanoid, shoulders, arms, hands` in the negative and no name or
+  gender in the description. The game's own portrait prompt asks for a "character portrait, head
+  and shoulders", which turns monsters into person-shaped busts. Flux.2 klein handles them well
+  with this prompt; for a stronger monster look, an SDXL checkpoint trained on *feral* (non-anthro)
+  animals does well.
 - **Keep** writes the same WebP file the game writes, deletes the shadow and outline files the
   game made from the old map-object image (it remakes them), and moves the old image to
   `gallery-backups/`. **Delete** removes an image so the game draws a new one when it next loads.
