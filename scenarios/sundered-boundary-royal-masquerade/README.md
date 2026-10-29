@@ -10,17 +10,18 @@ perks and map objects, made with Flux.2 klein), so nothing needs generating at S
 
 | | |
 |---|---|
-| Map | 110×96: the whole Athenaeum campus, its gardens, the Borderwood and the road to Aurex |
+| Map | 184×128: the Athenaeum quadrangle (four wings round the Solstice Courtyard and the Great Hall), its gardens, the Borderwood and the road to Aurex |
 | Cast | 27 students and staff, 5 creatures, 2 named threats |
 | Start | Week 1 of 56, day 1, 08:00. The entrance ceremony is at 09:00 in the Great Hall |
 
 ## The setting
 
 - **Campus:** the Solstice Courtyard and its 56-week sundial at the centre. Theory Hall (crimson)
-  east, Elemental Range (sapphire) west, Knights' Hall (emerald) south with the Proving Yard, and
-  the Alchemical Labs (obsidian) north. The Interdict is a black tower on the north corner. The
-  dormitory houses line the south wall, and the gardens run down the western slope. Past the
-  wards lies the Borderwood.
+  east, Elemental Range (sapphire) west, and Knights' Hall (emerald) south with the Proving Yard.
+  North across the Processional Way stands the Great Hall, between the chapel and the infirmary,
+  with the Alchemical Labs (obsidian) and the Ossian Library behind it. The Interdict is a black
+  tower on the north-east corner. The dormitory houses line the south wall, and the gardens run
+  down the western slope. Past the wards lies the Borderwood.
 - **Daily life:** Knights rise at 5, the refectory serves at 6:30, 12:30 and 18:30, and curfew is
   at 22.
 - **The cast keeps secrets.** Lady Sabine Vayne is investigating the Vesperine Order. Alys Wren
