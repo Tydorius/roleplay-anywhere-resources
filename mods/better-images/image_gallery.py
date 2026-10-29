@@ -74,7 +74,7 @@ SUBJECTS = {
                 "person": "two people, multiple people", "creature": "people, multiple animals"},
     },
 }
-SUBJECT_NOUNS = ("auto", "woman", "man", "girl", "boy", "person", "creature", "none")
+SUBJECT_NOUNS = ("auto", "woman", "man", "girl", "boy", "person", "creature", "spirit", "none", "custom")
 # Animals and monsters get their own portrait prompt: the game's asks for a "character portrait, head
 # and shoulders", which turns any beast into a person-shaped bust. "Monster or beast" rather than
 # "animal" keeps a "drake" from becoming a duck.
@@ -87,6 +87,18 @@ CREATURE_PROMPTS = {
             "bestiary, detailed painting, simple background, ${DESC}",
 }
 CREATURE_NEG = "anthro, anthropomorphic, humanoid, human body, human torso, shoulders, arms, hands, clothes, "                "bipedal, multiple animals"
+# Wisps, lights and other things with no body: the portrait prompt would give them a face and
+# shoulders, and the creature prompt a beast. Picked by hand ("A spirit or light"); never automatic,
+# since a "ghost" animation is as often a person-shaped wraith.
+SPIRIT_PROMPTS = {
+    "natural": "Fantasy RPG portrait of a spirit, light or apparition with no body: ${DESC}. It floats alone in "
+               "the centre of the frame against a dark, misty background. No person, no face, no human or "
+               "animal figure, no armour or clothing. Painted fantasy RPG art, soft glow, atmospheric, no text.",
+    "tags": "no humans, solo, glowing, floating, magical light, ${DESC}, dark misty background, atmospheric, "
+            "fantasy, detailed painting, simple background",
+}
+SPIRIT_NEG = "1girl, 1boy, human, person, face, humanoid, body, animal, monster, armor, clothes, multiple"
+SPECIAL_SUBJECTS = {"creature": (CREATURE_PROMPTS, CREATURE_NEG), "spirit": (SPIRIT_PROMPTS, SPIRIT_NEG)}
 PROFILES = (*sim.KINDS, "creature")  # model settings: one per image type, plus portraits of creatures
 
 _lock = threading.Lock()
@@ -330,14 +342,33 @@ def snap_size(base, aspect):
     return (base, snap(base / aspect)) if aspect > 1 else (snap(base * aspect), base)
 
 
+def subject_prompt(family, files, kind, noun):
+    """(prompt template with ${DESC}, extra negative) for a subject, before the world's prompt format."""
+    fam = sim.FAMILIES[family]
+    style = prompt_style(family, files[next(iter(fam["files"]))])
+    special = SPECIAL_SUBJECTS.get(noun)
+    if special:
+        return special[0]["natural" if style == "natural" else "tags"], special[1]
+    template = fam["prompts"][kind]
+    if noun in ("none", "custom") or noun not in SUBJECTS[style]["pos"]:
+        return template, ""
+    words = SUBJECTS[style]
+    return f"{words['pos'][noun]}{' ' if family in NATURAL_FAMILIES else ', '}{template}", words["neg"][noun]
+
+
+def resolve_files(info, family, wanted):
+    fam = sim.FAMILIES[family]
+    detected, _ = sim.detect(info, fam)
+    return {r: (wanted or {}).get(r) or detected[r] for r in fam["files"]}
+
+
 def build(req, settings, url):
     kind, family = req["kind"], req["family"]
     fam = sim.FAMILIES[family]
     if kind not in fam["kinds"]:
         raise ValueError(f"{family} has no {kind} workflow")
     info = object_info(url)
-    detected, _ = sim.detect(info, fam)
-    files = {r: (req.get("files") or {}).get(r) or detected[r] for r in fam["files"]}
+    files = resolve_files(info, family, req.get("files"))
     remover = settings.get("remover") or "auto"
     remover = sim.pick_remover(info, None) if remover == "auto" else remover
     wf = sim.workflow(fam, files, kind, remover)
@@ -345,20 +376,16 @@ def build(req, settings, url):
     noun = (req.get("subject") or "auto") if kind == "portrait" else "none"
     if noun == "auto":
         noun = req.get("autoSubject") or "person"
-    style = prompt_style(family, files[next(iter(fam["files"]))])
-    template = (CREATURE_PROMPTS["natural" if style == "natural" else "tags"] if noun == "creature"
-                else fam["prompts"][kind])
+    if noun == "custom":  # the card's own prompt; ${DESC} still stands for the description
+        template, negative_extra = str(req.get("customPrompt") or ""), str(req.get("customNegative") or "")
+        if not template.strip():
+            raise ValueError("the custom prompt is empty")
+    else:
+        template, negative_extra = subject_prompt(family, files, kind, noun)
     prompt = template.replace("${DESC}", req["desc"])
     fmt = (req.get("promptFormat") or "").strip()
     if fmt and kind != "sprite":  # the world's prompt format, applied as the game does
         prompt = prompt.join(fmt.split("${prompt}")) if "${prompt}" in fmt else f"{fmt} {prompt}"
-    negative_extra = ""
-    if noun == "creature":
-        negative_extra = CREATURE_NEG
-    elif noun != "none":
-        words = SUBJECTS[style]
-        prompt = f"{words['pos'][noun]}{' ' if family in NATURAL_FAMILIES else ', '}{prompt}"
-        negative_extra = words["neg"][noun]
 
     base = max(v for n in wf.values() for k, v in n["inputs"].items() if k in ("width", "height"))
     w, h = snap_size(base, float(req.get("aspect") or 1))
@@ -690,6 +717,13 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200, {"source": import_zip(self.body())})
             if u.path == "/api/workspace":
                 return self.send(200, {"source": copy_to_workspace(self.source(q))})
+            if u.path == "/api/template":  # to start a custom prompt from another subject's
+                req = json.loads(self.body())
+                if req.get("family") not in sim.FAMILIES or req.get("subject") not in SUBJECT_NOUNS:
+                    raise ValueError("bad family or subject")
+                files = resolve_files(object_info(load_settings()["comfy"]), req["family"], req.get("files"))
+                prompt, negative = subject_prompt(req["family"], files, "portrait", req["subject"])
+                return self.send(200, {"prompt": prompt, "negative": negative})
             if u.path == "/api/adopt":
                 return self.send(200, {"added": adopt(self.source(q), load_settings()["comfy"])})
             if u.path == "/api/cancel":

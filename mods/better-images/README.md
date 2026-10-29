@@ -119,6 +119,11 @@ python image_gallery.py
   and shoulders", which turns monsters into person-shaped busts. Flux.2 klein handles them well
   with this prompt; for a stronger monster look, an SDXL checkpoint trained on *feral* (non-anthro)
   animals does well.
+- **Spirits and custom prompts:** *A spirit or light* draws a bodiless glowing thing (wisps,
+  lights, apparitions) instead of a person or a beast. For anything else (robots, aliens, statues),
+  pick **Custom prompt…** and write the whole prompt yourself, or fill it from another subject with
+  *Start from…* and edit it. `${DESC}` stands for the description, so one custom prompt works for
+  many cards; the last one you wrote is offered on the next card.
 - **Keep** writes the same WebP file the game writes, deletes the shadow and outline files the
   game made from the old map-object image (it remakes them), and moves the old image to
   `gallery-backups/`. **Delete** removes an image so the game draws a new one when it next loads.

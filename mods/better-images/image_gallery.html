@@ -73,6 +73,9 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 .actions button { padding: 4px 9px; font-size: 13px; }
 .edit { display: flex; flex-direction: column; gap: 6px; }
 .edit select { font-size: 12px; }
+.edit .custom { display: flex; flex-direction: column; gap: 6px; }
+.edit .custom textarea.prompt { min-height: 120px; }
+.edit .hint { font-size: 11px; color: var(--muted); }
 .meta { font-size: 11px; color: var(--muted); word-break: break-word; }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
 .toast.show { opacity: 1; }
@@ -132,7 +135,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 const KIND_LABEL = {sprite: "Map objects", item: "Items", perk: "Perks", portrait: "Portraits"};
 const PROFILE_LABEL = {...KIND_LABEL, portrait: "People", creature: "Creatures"};
 const SUBJECT_LABEL = {auto: "Subject: automatic", woman: "One woman", man: "One man", girl: "One girl", boy: "One boy",
-  person: "One person", creature: "One creature", none: "No subject words"};
+  person: "One person", creature: "One creature", spirit: "A spirit or light", none: "No subject words", custom: "Custom prompt…"};
 const S = {settings: null, sources: [], kinds: [], subjects: [], menu: null, items: [], fmt: "",
            filter: "all", selected: new Set(), jobs: [], comfyQueue: null, pollError: null};
 const $ = id => document.getElementById(id);
@@ -322,9 +325,16 @@ function card(it) {
       ${error ? `<div class="err">${esc(error)}</div>` : ""}
       ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}</div>` : ""}
       ${it.editing ? `<div class="edit">
-          <textarea spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
-          ${it.kind === "portrait" ? `<select>${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
+          <textarea class="desc-edit" spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
+          ${it.kind === "portrait" ? `<select class="subject">${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
             esc(s === "auto" ? `${SUBJECT_LABEL.auto} (${it.subject})` : SUBJECT_LABEL[s])}</option>`).join("")}</select>` : ""}
+          ${it.subjectSel === "custom" ? `<div class="custom">
+            <select class="from"><option value="">Start from…</option>${S.subjects.filter(s => s !== "custom").map(s =>
+              `<option value="${s}">${esc(s === "auto" ? `${SUBJECT_LABEL.auto} (${it.subject})` : SUBJECT_LABEL[s])}</option>`).join("")}</select>
+            <textarea class="prompt" spellcheck="true" placeholder="The whole prompt. \${DESC} is replaced by the description above.">${esc(it.customPrompt ?? "")}</textarea>
+            <textarea class="neg" spellcheck="false" placeholder="Added to the negative prompt (SDXL and SD1.5 only)">${esc(it.customNegative ?? "")}</textarea>
+            <div class="hint">\${DESC} is replaced by the description above. The last custom prompt you write is offered on the next card.</div>
+          </div>` : ""}
         </div>` : ""}
       <div class="actions">
         ${st === "done"
@@ -337,8 +347,19 @@ function card(it) {
       </div>
     </div>`;
   el.querySelector(".pick").onchange = e => { e.target.checked ? S.selected.add(it.id) : S.selected.delete(it.id); el.classList.toggle("sel", e.target.checked); updateBar(); };
-  const ta = el.querySelector("textarea"); if (ta) ta.oninput = () => { it.editDesc = ta.value; };
-  const sub = el.querySelector(".edit select"); if (sub) sub.onchange = () => { it.subjectSel = sub.value; };
+  const ta = el.querySelector(".desc-edit"); if (ta) ta.oninput = () => { it.editDesc = ta.value; };
+  const sub = el.querySelector(".edit .subject"); if (sub) sub.onchange = () => {
+    it.subjectSel = sub.value;
+    if (sub.value === "custom" && it.customPrompt == null) {  // start from the last custom prompt, or this card's own
+      const last = recall("customPrompt");
+      if (last) { it.customPrompt = last; it.customNegative = recall("customNegative") || ""; }
+      else return fillCustom(it, "auto");
+    }
+    redraw(it);
+  };
+  const from = el.querySelector(".custom .from"); if (from) from.onchange = () => from.value && fillCustom(it, from.value);
+  const cp = el.querySelector(".custom .prompt"); if (cp) cp.oninput = () => { it.customPrompt = cp.value; remember("customPrompt", cp.value); };
+  const cn = el.querySelector(".custom .neg"); if (cn) cn.oninput = () => { it.customNegative = cn.value; remember("customNegative", cn.value); };
   for (const b of el.querySelectorAll("[data-a]")) b.onclick = () => act(it, b.dataset.a);
   return el;
 }
@@ -370,9 +391,20 @@ async function act(it, a) {
   }
 }
 
+async function fillCustom(it, from) {  // a custom prompt starting from another subject's
+  const subject = from === "auto" ? it.subject : from, prof = subject === "creature" ? "creature" : "portrait";
+  try {
+    const t = await api("/api/template", {method: "POST", body: JSON.stringify({
+      family: S.settings.kinds[prof].family, files: famFiles(prof), subject})});
+    Object.assign(it, {customPrompt: t.prompt, customNegative: t.negative, customFrom: subject});
+    remember("customPrompt", t.prompt); remember("customNegative", t.negative);
+  } catch (e) { toast(e.message); }
+  redraw(it);
+}
+
 // ---------------------------------------------------------------- jobs: queued on ComfyUI, followed by polling
-const profile = it => it.kind === "portrait" && (it.subjectSel && it.subjectSel !== "auto" ? it.subjectSel : it.subject) === "creature"
-  ? "creature" : it.kind;
+const subjectOf = it => it.subjectSel === "custom" ? it.customFrom : it.subjectSel && it.subjectSel !== "auto" ? it.subjectSel : it.subject;
+const profile = it => it.kind === "portrait" && subjectOf(it) === "creature" ? "creature" : it.kind;
 
 async function submit(it) {
   const kind = it.kind, prof = profile(it), cfg = S.settings.kinds[prof];
@@ -380,7 +412,8 @@ async function submit(it) {
   try {
     it.job = await api("/api/submit", {method: "POST", body: JSON.stringify({
       source: source(), id: it.id, kind, family: cfg.family, files: famFiles(prof), desc: it.editDesc ?? it.desc,
-      aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt})});
+      aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt,
+      customPrompt: it.customPrompt, customNegative: it.customNegative})});
   } catch (e) { it.error = e.message; }
   it.sending = false; redraw(it); schedulePoll(500);
 }
