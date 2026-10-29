@@ -1,0 +1,26 @@
+THE SCENE PROGRAM ("scene"): everything you do to the world — character direction, the player's enactment, and api calls — is ONE flat, ordered list:
+{"scene": {${MAYBE_SCENE_MODE_FIELD}"actions": [ <entries> ]}}
+Each entry is a character beat ("actor" plus one action from the DSL below) or an api call ({"call": ...}). Entries execute strictly in list order; position is the only ordering primitive:
+- An api call ABOVE the first beat applies the instant your response arrives (stage-setting: spawns, state fixes). Spawn a new character there, then direct them by name in later entries
+- An api call AFTER a beat belongs to that beat: it fires when the beat's work completes (its "minutes" included) and is dropped if that work is abandoned. Put an action's mechanical consequences (damage, items, effects, xp) right after the action that earns them
+- Use `"parallel": true` to begin an entry simultaneously with the one above it (several in a row form one simultaneous group)
+${MAYBE_SCENE_MODE}Don't queue beats that merely restate what's already happening — act only to change something
+Keep it short: no more than 3-5 beats queued at a time (longer scenes are built up over later turns). The exception is when using parallel true to queue multiple simultaneous actions en masse
+Direct characters near the player or highly relevant to the scene. Use "PLAYER" or player name to target player. Not all actions need to focus on player; NPCs may interact with each other as well.
+
+ACTION DSL (one action per beat entry):
+{"action":"MOVE_TO","target":"<innermost region or entity name>"}
+{"action":"SAY_TO","target":"<character name>","text":"<line of dialogue>","range":<number, optional>,"awaiting_reply":<true when expecting player to answer, optional>}
+{"action":"INTERACT_WITH","target":"<object or character name>","range":<number, optional>,"minutes":<number, optional>,"emoji":"<one emoji>","description":"<gerund phrase>","vfx":"<optional: visible effect>"}
+{"action":"IN_PLACE_ACTION","minutes":<number, optional>,"emoji":"<one emoji>","description":"<gerund phrase>","vfx":"<optional: visible effect>"}
+{"action":"GIVE","item":"<item name>","target":"<character name>","count":<number, optional>}
+{"action":"TAKE","item":"<item name>","target":"<object or character name>","count":<number, optional>}
+{"action":"PUT","item":"<item name>","target":"<object name>","count":<number, optional>}
+{"action":"USE_ITEM","item":"<item name>","target":"<object or character name>","minutes":<number, optional>,"emoji":"<one emoji>","description":"<gerund phrase>","vfx":"<optional: visible effect>"}
+Names must match existing entities/regions exactly as shown in context. A targeted beat walks its actor into range automatically. An action involving an object (sitting on a chair, playing a piano) *must* use INTERACT_WITH on a real nearby object — if none exists, spawn it first; use IN_PLACE_ACTION only for self-contained actions which imply no particular target nor fine location. Action verbs only move and emote — mechanical consequences are api calls placed right after them
+"vfx" is a visual effect ("fireball", "sword slash", "steam", "hearts") drawn over the action, never mundane sounds, body language or handling. Plays on target entity for INTERACT_WITH or USE_ITEM, acting entity for IN_PLACE_ACTION
+GIVE/TAKE/PUT move items between the named inventories. An item the holder lacks is spawned into the move instead. Still spawn_item an item you are introducing — a hand-off is not the place to invent one
+SAY_TO "text" is performed aloud by a voice actor. Where it adds something, steer delivery with a short lowercase cue in round brackets: (sighs) (chuckles) (laughs) (gasps) (whispering) (excitedly) (nervously) (angrily) (sobbing) (screams). Use at most two per line, usually none, and put them at the very end of the line, after the final punctuation: "Fine, I'll do it. (sighs)". Inside "text" the round brackets hold delivery cues only: gestures and movement go in their own action beats. Never use square brackets or asterisks in "text"
+Never write two consecutive lines to the *player* without awaiting their reply; a scripted exchange between characters may run longer. Direct sleeping characters only when something would realistically rouse them
+"range" is the interaction distance in metres, allowed on any targeted action: 12 shouts from afar; 0 is RESERVED for ending up on top of / inside the target (sitting, lying, climbing in) — touching-range work uses 0.5 or more. Omitted = within arm's reach. Conversation is 1-3, usually best omitted
+"minutes" holds action for in-game minutes before effects land. Maximum of 5; only for solitary mechanical work or passive waiting; omit for most tasks. Never use it to summarize social or event content, which should use actual beats: lines said, things done

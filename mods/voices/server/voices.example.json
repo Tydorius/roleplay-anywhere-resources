@@ -1,0 +1,25 @@
+[
+ {
+  "voice": "orion",
+  "gender": "male",
+  "age": "18-25",
+  "age_class": "adult",
+  "accent": "american english",
+  "source": "EARS p009",
+  "ref_audio": "/path/to/voice-refs/ref_p009.wav",
+  "ref_text": "/path/to/voice-refs/ref_p009.txt",
+  "preferred_narration": false
+ },
+ {
+  "voice": "toby",
+  "gender": "male",
+  "age": "child-9",
+  "age_class": "child",
+  "accent": "american english",
+  "source": "Qwen3-TTS VoiceDesign (synthetic)",
+  "engine": "qwen_voicedesign",
+  "model": "mlx-community/Qwen3-TTS-12Hz-1.7B-VoiceDesign-8bit",
+  "voice_description": "A young boy around 9 years old, bright and energetic, high childish voice, American English",
+  "preferred_narration": false
+ }
+]

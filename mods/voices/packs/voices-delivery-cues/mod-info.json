@@ -1,0 +1,4 @@
+{
+  "title": "Voices: Delivery Cues",
+  "description": "Tells the GM to end spoken lines with a short delivery cue such as (sighs) or (laughs), which a Drama 3 endpoint performs instead of reading aloud. Needs a server that guards against runaway clips (see mods/voices). Overrides overseer/scene_dsl.txt."
+}

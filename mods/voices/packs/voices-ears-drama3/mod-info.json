@@ -1,0 +1,4 @@
+{
+  "title": "Voices: EARS + Drama 3",
+  "description": "Matches NPCs to named voices on a Custom (OpenAI-compatible) speech endpoint by gender and age, Child to Senior, instead of picking at random. Written for the voices-service registry in mods/voices; edit tts/custom-tts-config.json to match your own endpoint's voice ids."
+}
