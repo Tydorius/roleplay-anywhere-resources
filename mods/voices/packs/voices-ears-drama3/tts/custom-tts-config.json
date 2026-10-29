@@ -17,8 +17,18 @@
     {"id": "dom", "name": "Dom (26-35)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "sam", "name": "Sam (26-35)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "grant", "name": "Grant (36-45)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "owen", "name": "Owen (36-45)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "reid", "name": "Reid (36-45)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "jerome", "name": "Jerome (36-45)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "walter", "name": "Walter (46-55)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "frank", "name": "Frank (46-55)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "glen", "name": "Glen (46-55)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "arthur", "name": "Arthur (56-65)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "harold", "name": "Harold (56-65)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "wes", "name": "Wes (56-65)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "lloyd", "name": "Lloyd (56-65)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "nigel", "name": "Nigel (56-65, British)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": ["British"], "allowed_for_matching": true},
+    {"id": "ezra", "name": "Ezra (old man, ~78)", "language": "en", "speed": 1.0, "gender": "Male", "age": ["Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
 
     {"id": "lily", "name": "Lily (girl, ~8)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Child"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "maya", "name": "Maya (teen girl, ~15)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Teen"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
@@ -34,8 +44,18 @@
     {"id": "iris", "name": "Iris (26-35)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "cleo", "name": "Cleo (26-35)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "diane", "name": "Diane (36-45)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "renee", "name": "Renee (36-45)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "holly", "name": "Holly (36-45)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "dana", "name": "Dana (36-45)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Adult", "MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "margot", "name": "Margot (46-55)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "joan", "name": "Joan (46-55)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "linda", "name": "Linda (46-55)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "gloria", "name": "Gloria (46-55)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
     {"id": "bea", "name": "Bea (56-65)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
-    {"id": "eleanor", "name": "Eleanor (66-75)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true}
+    {"id": "ruth", "name": "Ruth (56-65)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "carol", "name": "Carol (56-65)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "vera", "name": "Vera (56-65)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["MiddleAged", "Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "eleanor", "name": "Eleanor (66-75)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true},
+    {"id": "edith", "name": "Edith (66-75)", "language": "en", "speed": 1.0, "gender": "Female", "age": ["Senior"], "pitch": [], "required_tags": [], "tags": [], "allowed_for_matching": true}
   ]
 }
