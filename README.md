@@ -5,6 +5,7 @@ Community resources for Anywhere RPG (Roleplay Anywhere).
 | Folder | What it is |
 |---|---|
 | [`mods/better-images`](mods/better-images) | ComfyUI image-generation mods for Anywhere RPG: better workflows and prompts per image type, background removal for map objects and items, a setup script that adapts them to your ComfyUI's model files, and an **Image Gallery** page for viewing and regenerating any scenario image. |
+| [`scenarios/sundered-boundary-forgotten-village`](scenarios/sundered-boundary-forgotten-village) | **The Sundered Boundary: The Forgotten Village**, a xianxia "weakest village" scenario with all images included. Import the `.scenario.zip` from **New Game → Import…**. |
 | [`scenarios/sundered-boundary-royal-masquerade`](scenarios/sundered-boundary-royal-masquerade) | **The Sundered Boundary: Royal Masquerade**, an otome-isekai academy scenario with all images included. Import the `.scenario.zip` from **New Game → Import…**. |
 
 ### Mod packs
