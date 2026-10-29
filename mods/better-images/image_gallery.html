@@ -33,10 +33,11 @@ input[type=text], input[type=search], select, textarea {
   font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; min-width: 0;
 }
 textarea { width: 100%; resize: vertical; min-height: 64px; }
-button { font: inherit; border: 1px solid var(--line); background: var(--chip); color: var(--ink); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
-button:hover:not(:disabled) { border-color: var(--accent); }
+a.button, button { font: inherit; text-decoration: none; border: 1px solid var(--line); background: var(--chip); color: var(--ink); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+a.button:hover, button:hover:not(:disabled) { border-color: var(--accent); }
 button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 button.danger { color: var(--bad); }
+[hidden] { display: none !important; }
 button:disabled { opacity: .45; cursor: default; }
 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; }
 .dot.ok { background: var(--accent); } .dot.bad { background: var(--bad); }
@@ -92,6 +93,10 @@ details.models > summary { cursor: pointer; font-weight: 600; }
     <span class="dot" id="dot" title="not connected"></span>
     <label class="inline">Scenario <select id="source"></select></label>
     <button id="reload" title="Re-read the images from disk">Reload</button>
+    <button id="openZip" title="Open a scenario zip as a workspace the game won't touch">Open zip…</button>
+    <input type="file" id="zipFile" accept=".zip" hidden>
+    <button id="toWork" title="Copy this scenario and its images into a workspace, so starting another New Game can't wipe them">Copy to workspace</button>
+    <a id="download" class="button" title="Download this workspace as a zip for New Game → Import">Download zip</a>
   </div>
 </header>
 <main>
@@ -266,7 +271,7 @@ function renderGrid() {
   const list = shown();
   $("grid").innerHTML = "";
   for (const it of list) $("grid").append(card(it));
-  $("emptyHint").textContent = !S.sources.length ? "No scenario found. Start a New Game in Anywhere RPG (or load a save) first."
+  $("emptyHint").textContent = !S.sources.length ? "No scenario found. Start a New Game in Anywhere RPG (or load a save), or open a scenario zip."
     : list.length ? "" : "Nothing matches.";
   updateBar();
 }
@@ -419,8 +424,42 @@ async function keep(it, quiet) {
 // ---------------------------------------------------------------- wiring
 $("connect").onclick = async () => { S.settings.comfy = $("comfy").value.trim(); await saveSettings(); connect(true); };
 $("remover").onchange = async () => { S.settings.remover = $("remover").value; await saveSettings(); };
-$("source").onchange = () => { remember("source", source()); S.selected.clear(); S.items = []; loadItems().catch(e => toast(e.message)); };
+$("source").onchange = () => { remember("source", source()); sourceButtons(); S.selected.clear(); S.items = []; loadItems().catch(e => toast(e.message)); };
 $("reload").onclick = () => loadItems().catch(e => toast(e.message));
+const isWork = () => source().startsWith("work/");
+function sourceButtons() {
+  $("toWork").hidden = !source() || isWork() || source().startsWith("saves/");
+  $("download").hidden = !isWork();
+  $("download").href = "/api/export?source=" + encodeURIComponent(source());
+}
+async function refreshSources(select) {
+  const st = await api("/api/state");
+  S.sources = st.sources;
+  $("source").innerHTML = S.sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("");
+  if (select) { $("source").value = select; remember("source", select); }
+  sourceButtons();
+  S.selected.clear(); S.items = [];
+  await loadItems();
+}
+$("openZip").onclick = () => $("zipFile").click();
+$("zipFile").onchange = async () => {
+  const f = $("zipFile").files[0];
+  $("zipFile").value = "";
+  if (!f) return;
+  try {
+    toast(`Opening ${f.name}…`);
+    const r = await api("/api/import", {method: "POST", body: f});
+    await refreshSources(r.source);
+    toast(`Opened ${f.name} as a workspace. Download zip when you're done, then import it in the game.`);
+  } catch (e) { toast(e.message); }
+};
+$("toWork").onclick = async () => {
+  try {
+    const r = await api("/api/workspace?source=" + encodeURIComponent(source()), {method: "POST"});
+    await refreshSources(r.source);
+    toast("Copied into a workspace. Changes here no longer touch the game until you download and import the zip.");
+  } catch (e) { toast(e.message); }
+};
 $("search").oninput = renderGrid;
 $("missingOnly").onchange = renderGrid;
 $("reviewOnly").onchange = renderGrid;
@@ -437,7 +476,7 @@ async function keepReady(auto) {
   let saved = 0;
   for (const i of ready) if (await keep(i, true)) saved++;
   S.keeping = false;
-  toast(`${auto ? "Kept automatically" : "Saved"}: ${saved} of ${ready.length}. Reload the scenario in the game to see them.`);
+  toast(`${auto ? "Kept automatically" : "Saved"}: ${saved} of ${ready.length}. ${isWork() ? "Download the zip to take them to the game." : "Reload the scenario in the game to see them."}`);
 }
 $("keepAll").onclick = () => { if (!S.keeping) keepReady(false); };
 $("autoKeep").checked = recall("autoKeep") === "1";
@@ -450,6 +489,7 @@ $("autoKeep").onchange = () => { remember("autoKeep", $("autoKeep").checked ? "1
   $("source").innerHTML = S.sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("");
   const last = recall("source");
   if (last && S.sources.some(s => s.id === last)) $("source").value = last;
+  sourceButtons();
   renderModels();
   await Promise.all([connect(false), loadItems().catch(e => toast(e.message))]);
 })();

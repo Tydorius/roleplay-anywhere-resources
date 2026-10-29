@@ -16,7 +16,7 @@ What it writes: media/<id>/<id>-<kind>.webp in the New Game staging area or a sa
 the game writes, plus a copy of the image it replaced in gallery-backups/. The game reads images
 when it loads, so reload the scenario (or the save) to see new ones.
 """
-import argparse, base64, json, os, random, re, shutil, sys, threading, time, urllib.error
+import argparse, base64, io, json, os, random, re, shutil, sys, threading, time, urllib.error, zipfile
 import urllib.parse, urllib.request, uuid, webbrowser
 from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -28,6 +28,7 @@ HERE = Path(__file__).resolve().parent
 PAGE = HERE / "image_gallery.html"
 SETTINGS = HERE / "image_gallery.settings.json"
 BACKUPS = HERE / "gallery-backups"
+WORK = HERE / "gallery-scenarios"  # workspaces: scenarios opened from a zip or copied out of the game
 STATE = HERE / "image_gallery.state.json"  # ComfyUI results you kept or discarded, so they aren't offered again
 CLIENT_PREFIX = "anywhere-rpg-gallery-"
 
@@ -126,8 +127,15 @@ def save_settings(s):
 
 
 def sources(store):
-    """[{id, label, dir, data}]: the New Game staging area and every save that has images."""
+    """[{id, label, dir, data}]: workspaces, the New Game staging area and every save that has images."""
     out = []
+    if WORK.is_dir():
+        seen = {}
+        for d in sorted((p for p in WORK.iterdir() if (p / "scenario.json").exists()), key=lambda p: p.stat().st_ctime):
+            label = "Workspace: " + scenario_name(d / "scenario.json", "name")
+            seen[label] = seen.get(label, 0) + 1
+            out.append({"id": "work/" + d.name, "dir": d, "data": d / "scenario.json",
+                        "label": label + (f" ({seen[label]})" if seen[label] > 1 else "")})
     st = store / "staging"
     if (st / "scenario.json").exists():
         out.append({"id": "staging", "dir": st, "data": st / "scenario.json",
@@ -151,6 +159,58 @@ def scenario_name(path, key):
 
 def find_source(store, sid):
     return next((s for s in sources(store) if s["id"] == sid), None)
+
+
+def new_workspace(name):
+    slug = re.sub(r"[^A-Za-z0-9]+", "-", name).strip("-")[:60] or "scenario"
+    WORK.mkdir(exist_ok=True)
+    d, n = WORK / slug, 2
+    while d.exists():
+        d, n = WORK / f"{slug}-{n}", n + 1
+    return d
+
+
+def import_zip(data):
+    """A scenario zip (scenario.json + media/<id>/<file>) -> a new workspace. Returns its source id."""
+    z = zipfile.ZipFile(io.BytesIO(data))
+    try:
+        scn = json.loads(z.read("scenario.json"))
+    except KeyError:
+        raise ValueError("no scenario.json at the top of that zip")
+    d = new_workspace(str(scn.get("name") or "scenario"))
+    (d / "media").mkdir(parents=True)
+    (d / "scenario.json").write_bytes(z.read("scenario.json"))
+    for n in z.namelist():
+        parts = n.split("/")
+        if (len(parts) == 3 and parts[0] == "media" and ID_RE.match(parts[1])
+                and re.match(r"^[A-Za-z0-9_.-]+\.(webp|png)$", parts[2])):
+            (d / "media" / parts[1]).mkdir(exist_ok=True)
+            (d / "media" / parts[1] / parts[2]).write_bytes(z.read(n))
+    return "work/" + d.name
+
+
+def copy_to_workspace(src):
+    """The scenario and images of a game source -> a new workspace the game won't touch."""
+    if src["id"].startswith("work/"):
+        raise ValueError("that is already a workspace")
+    scn = json.loads(src["data"].read_text("utf-8"))
+    if "regions" not in scn:
+        raise ValueError("only New Game scenarios can be copied, not saves")
+    d = new_workspace(str(scn.get("name") or "scenario"))
+    shutil.copytree(src["dir"] / "media", d / "media")
+    shutil.copyfile(src["data"], d / "scenario.json")
+    return "work/" + d.name
+
+
+def export_zip(src):
+    """A workspace -> zip bytes for New Game -> Import."""
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:
+        z.write(src["data"], "scenario.json")
+        for f in sorted((src["dir"] / "media").rglob("*")):
+            if f.is_file():
+                z.write(f, f.relative_to(src["dir"]).as_posix())
+    return buf.getvalue()
 
 
 # ---------------------------------------------------------------- what needs an image
@@ -428,9 +488,10 @@ def legacy_tag(wf, items):
 
 
 def adopt(src, url):
-    """Picks up finished gallery results from ComfyUI's history that this run doesn't know about
-    (the gallery or the page was restarted): the newest per image, if newer than the image on disk
-    and not already kept or discarded. Returns how many were added."""
+    """Picks up finished results from ComfyUI's history that this run doesn't know about (the
+    gallery or the page was restarted, or a New Game reset wiped what the game had saved): the
+    newest per image, if newer than the image on disk and not already kept or discarded. Returns
+    how many were added."""
     hist = json.loads(comfy(url, "/history?max_items=2000", timeout=120))
     items = {i["id"]: i for i in list_items(src)["items"]}
     reviewed = load_state()
@@ -442,14 +503,15 @@ def adopt(src, url):
         if pid in known or pid in reviewed or len(p) < 4 or not isinstance(p[3], dict):
             continue
         extra = p[3]
-        if not str(extra.get("client_id", "")).startswith(CLIENT_PREFIX):
-            continue
+        mine = str(extra.get("client_id", "")).startswith(CLIENT_PREFIX)
         status = h.get("status", {})
         imgs = [i for o in h.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
         if status.get("status_str") != "success" or not imgs:
             continue
-        tag = extra.get("anywhere_rpg_gallery") or legacy_tag(p[2], items.values())
-        if not tag or tag.get("source", src["id"]) != src["id"] or tag["id"] not in items:
+        # the game's own results are matched by the description in their prompt; they come back
+        # only when the image on disk is older (lost to a New Game reset, say)
+        tag = (extra.get("anywhere_rpg_gallery") if mine else None) or legacy_tag(p[2], items.values())
+        if not tag or tag["id"] not in items:
             continue
         it = items[tag["id"]]
         created = (extra.get("create_time") or 0) / 1000
@@ -563,6 +625,19 @@ class Handler(BaseHTTPRequestHandler):
                 with _jobs_lock:
                     jobs = [public(j) for j in JOBS.values()]
                 return self.send(200, {"jobs": jobs, "comfyQueue": totals, "error": err})
+            if u.path == "/api/export":
+                src = self.source(q)
+                if not src["id"].startswith("work/"):
+                    raise ValueError("only workspaces can be downloaded")
+                name = re.sub(r"[^A-Za-z0-9]+", "-", scenario_name(src["data"], "name")).strip("-") + ".scenario.zip"
+                body = export_zip(src)
+                self.send_response(200)
+                self.send_header("Content-Type", "application/zip")
+                self.send_header("Content-Disposition", f'attachment; filename="{name}"')
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
             if u.path == "/api/result":
                 j = JOBS.get(q["pid"][0])
                 if not j or j["state"] != "done":
@@ -611,6 +686,10 @@ class Handler(BaseHTTPRequestHandler):
                     JOBS.pop(q["pid"][0], None)
                 mark_reviewed(q["pid"][0])
                 return self.send(200, {"ok": True})
+            if u.path == "/api/import":
+                return self.send(200, {"source": import_zip(self.body())})
+            if u.path == "/api/workspace":
+                return self.send(200, {"source": copy_to_workspace(self.source(q))})
             if u.path == "/api/adopt":
                 return self.send(200, {"added": adopt(self.source(q), load_settings()["comfy"])})
             if u.path == "/api/cancel":
@@ -632,7 +711,7 @@ class Handler(BaseHTTPRequestHandler):
                         path.parent.rmdir()
                 return self.send(200, {"ok": True, "backup": str(backup) if backup else None})
             return self.send(404, {"error": "not found"})
-        except (LookupError, ValueError, KeyError, OSError) as e:
+        except (LookupError, ValueError, KeyError, OSError, zipfile.BadZipFile) as e:
             return self.send(400, {"error": str(e)})
         except urllib.error.URLError as e:
             return self.send(502, {"error": f"can't reach ComfyUI: {e.reason}"})

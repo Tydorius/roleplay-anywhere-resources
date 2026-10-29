@@ -67,7 +67,18 @@ reviewing it.
 Finished results you haven't kept or discarded are picked up again from ComfyUI's history when the
 page loads, even after the gallery or your browser was closed. ComfyUI forgets its history when it
 restarts, so keep results before restarting ComfyUI. What you kept or discarded is noted in
-`image_gallery.state.json` so it isn't offered again.
+`image_gallery.state.json` so it isn't offered again. Images the game generated itself are
+recovered the same way when the copy on disk is older (a New Game reset wiped it, say), matched by
+the description in their prompt.
+
+**Workspaces: work outside the game.** Starting or importing a New Game replaces the game's staging
+area, and with it every image you made there. To keep your work safe:
+
+- **Copy to workspace** copies the current New Game (scenario and images) into
+  `gallery-scenarios/`, where the game never touches it.
+- **Open zip…** opens any scenario zip (an export, or one from this repo) as a workspace, so you
+  can make its images without loading it in the game first.
+- **Download zip** saves a workspace as a zip for **New Game → Import** when you're done.
 
 **No terminal needed:** double-click the launcher for your system in this folder. It finds Python,
 opens the page in your browser, and stops when you close its window.
