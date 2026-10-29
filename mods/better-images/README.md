@@ -58,11 +58,15 @@ map objects, items, perks and portraits, on a checkerboard so you can see which 
 their background. Each one has **Regenerate**. The new image appears next to the old one, and you
 choose **Keep**, **Retry** or **Discard**. You can also tick several and regenerate them in one go.
 
+![New portraits ready to keep, retry or discard, each with the old image in the corner](media/image-gallery-2.png)
+
 Each request goes straight onto ComfyUI's queue. The card shows where it is ("Waiting in ComfyUI: #3",
 "Generating… 0:24") and switches to the new image when it's done; **Keep all ready** saves every
 finished one at once, and **Needs review** narrows the page to just those. **Cancel** takes a waiting job off the queue or stops a running one (only
 that job). Tick **Keep automatically** to save each image as soon as it finishes, without
 reviewing it.
+
+![Cards following their jobs on ComfyUI: one generating, the rest waiting in order](media/image-gallery-3.png)
 
 Finished results you haven't kept or discarded are picked up again from ComfyUI's history when the
 page loads, even after the gallery or your browser was closed. ComfyUI forgets its history when it
@@ -95,6 +99,8 @@ They need Python 3.8 or newer ([python.org](https://www.python.org/downloads/); 
 ```
 python image_gallery.py
 ```
+
+![The models panel: a model family and model for each image type, and the background remover](media/image-gallery-1.png)
 
 - **Models per image type:** pick a model family (Flux.2 klein, Flux.1, Qwen-Image, SDXL, SDXL
   portraits, SD1.5) and then a model from the ones your ComfyUI actually has. Encoders and VAE are
