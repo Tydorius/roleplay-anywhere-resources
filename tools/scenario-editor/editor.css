@@ -181,3 +181,13 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .mention small { display: block; color: var(--muted); }
 .mention mark { background: color-mix(in srgb, var(--sel) 45%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
 .del-bar { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; gap: 8px; align-items: center; }
+
+/* map size dialog */
+.tools .tsep { width: 1px; background: var(--line); margin: 2px 2px; }
+.msize { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; align-items: start; }
+.msize canvas { width: 220px; height: 180px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); }
+.anchor { display: grid; grid-template-columns: repeat(3, 40px); grid-template-rows: repeat(3, 40px); gap: 2px; margin-top: 4px; }
+.anchor button { padding: 0; font-size: 20px; line-height: 1; border-radius: 4px; background: var(--bg); }
+.anchor button.on { background: var(--chip); border-color: var(--accent); }
+#msSummary .warn { color: var(--warn); }
+@media (max-width: 640px) { .msize { grid-template-columns: 1fr; } }

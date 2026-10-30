@@ -510,8 +510,13 @@ function setTool(id) {
   renderToolOpts(); draw();
 }
 function buildTools() {
-  $("tools").innerHTML = TOOLS.map(t => `<button data-tool="${t.id}" title="${esc(t.label)} (${t.key.toUpperCase()})"><span aria-hidden="true">${t.icon}</span> ${esc(t.label)}</button>`).join("");
-  $("tools").onclick = e => { const b = e.target.closest("button"); if (b) setTool(b.dataset.tool); };
+  $("tools").innerHTML = TOOLS.map(t => `<button data-tool="${t.id}" title="${esc(t.label)} (${t.key.toUpperCase()})"><span aria-hidden="true">${t.icon}</span> ${esc(t.label)}</button>`).join("")
+    + `<span class="tsep"></span><button data-act="mapsize" title="Grow or shrink the map, choosing which sides change">⤢ Map size…</button>`;
+  $("tools").onclick = e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.act === "mapsize") mapSizeDialog(); else setTool(b.dataset.tool);
+  };
   setTool("select");
 }
 function renderToolOpts() {
@@ -587,6 +592,74 @@ document.addEventListener("keydown", e => {
 });
 document.addEventListener("keyup", e => { if (e.key === " ") { S.space = false; cv.style.cursor = ""; } });
 window.addEventListener("blur", () => { S.space = false; });
+
+// ---------------------------------------------------------------- map size
+// Rows of the anchor grid run north to south and columns west to east, like the map on screen.
+const ANCHOR_V = ["n", "c", "s"], ANCHOR_H = ["w", "c", "e"];
+const ARROW = {"-1,-1": "↖", "0,-1": "↑", "1,-1": "↗", "-1,0": "←", "1,0": "→", "-1,1": "↙", "0,1": "↓", "1,1": "↘"};
+
+async function mapSizeDialog() {
+  if (!S.scn) return;
+  if (!S.editable) return toast("Read only: copy it to a workspace to edit");
+  const [gw, gh] = S.scn.gridSize, used = MapOps.usedBounds(S.scn);
+  const st = {w: gw, h: gh, ar: 1, ac: 1};
+  const body = `<div class="msize">
+      <div>
+        <p class="note">Now ${gw} × ${gh} cells (1 cell ≈ 2 m)${used ? `. Things fill x ${used[0]}–${used[2]}, y ${used[1]}–${used[3]}.` : "."}</p>
+        <div class="row2">
+          <label class="field"><span>Width</span><input type="number" id="msW" min="8" max="1024" value="${gw}"></label>
+          <label class="field"><span>Height</span><input type="number" id="msH" min="8" max="1024" value="${gh}"></label>
+        </div>
+        <div class="field"><span>Anchor: where the current map stays</span><div class="anchor" id="msAnchor"></div></div>
+      </div>
+      <div><canvas id="msPreview" width="220" height="180"></canvas></div>
+    </div>
+    <p id="msSummary" class="note"></p>`;
+  const update = dlg => {
+    st.w = Math.round(+$("msW").value || 0); st.h = Math.round(+$("msH").value || 0);
+    const anchor = {h: ANCHOR_H[st.ac], v: ANCHOR_V[st.ar]};
+    $("msAnchor").innerHTML = [0, 1, 2].map(r => [0, 1, 2].map(c => {
+      const d = [Math.sign(c - st.ac), Math.sign(r - st.ar)], near = Math.max(Math.abs(c - st.ac), Math.abs(r - st.ar)) === 1;
+      const here = r === st.ar && c === st.ac, mark = here ? "●" : near ? ARROW[d.join(",")] : "";
+      return `<button type="button" data-r="${r}" data-c="${c}" class="${here ? "on" : ""}" title="${ANCHOR_V[r]}${ANCHOR_H[c]}">${mark}</button>`;
+    }).join("")).join("");
+    $("msAnchor").querySelectorAll("button").forEach(b => b.onclick = () => { st.ar = +b.dataset.r; st.ac = +b.dataset.c; update(dlg); });
+    const ok = st.w >= 8 && st.h >= 8 && st.w <= 1024 && st.h <= 1024;
+    const {dx, dy} = MapOps.anchorShift(S.scn, st.w, st.h, anchor);
+    // west and south change by dx and dy; east and north by the rest
+    const sides = [["west", dx], ["east", st.w - gw - dx], ["south", dy], ["north", st.h - gh - dy]].filter(([, n]) => n)
+      .map(([side, n]) => `${n > 0 ? "adds" : "removes"} ${Math.abs(n)} ${side === "west" || side === "east" ? "column" : "row"}${Math.abs(n) === 1 ? "" : "s"} on the ${side}`);
+    const fits = r => r[0] + dx >= 0 && r[1] + dy >= 0 && r[2] + dx < st.w && r[3] + dy < st.h;
+    const cut = ok ? [...regions(), ...entities()].filter(o => !fits(MapOps.rect(o))).map(o => o.name) : [];
+    let msg = !ok ? `<span class="bad">Each side must be 8 to 1024 cells.</span>`
+      : cut.length ? `<span class="bad">That would cut off ${cut.length} thing${cut.length === 1 ? "" : "s"}: ${esc(cut.slice(0, 6).join(", "))}${cut.length > 6 ? "…" : ""}. Choose a bigger size or another anchor.</span>`
+      : sides.length ? `This ${esc(sides.join(", "))}.${dx || dy ? ` Everything moves ${dx} across and ${dy} up, so it stays put relative to the anchor.` : ""}`
+      : "No change.";
+    if (ok && (st.w > 200 || st.h > 200)) msg += `<br><span class="warn">Maps beyond about 200 cells a side are untested in the game; the published ones go up to 184 × 128.</span>`;
+    $("msSummary").innerHTML = msg;
+    dlg.querySelector('[data-btn="1"]').disabled = !ok || cut.length > 0 || !sides.length;
+    // preview: the new map (outline), the old map placed inside it (dashed) and the area things fill
+    const cv = $("msPreview"), g = cv.getContext("2d");
+    const nw = ok ? st.w : gw, nh = ok ? st.h : gh;
+    const ox0 = Math.min(0, dx), oy0 = Math.min(0, dy), spanW = Math.max(nw, gw + dx) - ox0, spanH = Math.max(nh, gh + dy) - oy0;
+    const k = Math.min((cv.width - 10) / spanW, (cv.height - 10) / spanH);
+    const px = x => 5 + (x - ox0) * k, py = y => cv.height - 5 - (y - oy0) * k;
+    g.clearRect(0, 0, cv.width, cv.height);
+    g.fillStyle = "rgba(127,168,101,.35)"; g.fillRect(px(dx), py(dy + gh), gw * k, gh * k);
+    if (used) { g.fillStyle = "rgba(155,133,102,.85)"; g.fillRect(px(used[0] + dx), py(used[3] + 1 + dy), (used[2] - used[0] + 1) * k, (used[3] - used[1] + 1) * k); }
+    if (ok) { g.strokeStyle = cut.length ? "#d0443a" : "#e0a100"; g.lineWidth = 2; g.strokeRect(px(0), py(nh), nw * k, nh * k); }
+    g.strokeStyle = "rgba(255,255,255,.6)"; g.setLineDash([4, 3]); g.lineWidth = 1; g.strokeRect(px(dx), py(dy + gh), gw * k, gh * k); g.setLineDash([]);
+  };
+  const go = await openDialog("Map size", body, [{label: "Cancel", value: null}, {label: "Resize", value: "go", primary: true}], dlg => {
+    $("msW").oninput = $("msH").oninput = () => update(dlg);
+    update(dlg);
+  });
+  if (go !== "go") return;
+  let res;
+  const anchor = {h: ANCHOR_H[st.ac], v: ANCHOR_V[st.ar]};
+  edit(`Map size ${gw} × ${gh} to ${st.w} × ${st.h}`, () => { res = MapOps.resizeMap(S.scn, st.w, st.h, anchor, set); if (res.error) throw new Error(res.error); });
+  if (res && !res.error) { fit(); draw(); toast(`The map is now ${st.w} × ${st.h}`); }
+}
 
 // ---------------------------------------------------------------- minimap
 const minimap = new Minimap($("minimap"), {onJump: (x, y) => center(x - .5, y - .5, 0)});

@@ -327,6 +327,45 @@
     if (scn.regions.some(r => gone.has(r.id))) set(scn, "regions", scn.regions.filter(r => !gone.has(r.id)));
   }
 
+  // ---------------------------------------------------------------- map size
+  /** How far everything moves when the map becomes w × h with the old map pinned at `anchor`:
+   *  {h: "w" | "c" | "e", v: "n" | "c" | "s"} (the side or centre it stays against, like a canvas
+   *  resize). Growing adds the new cells on the other sides; shrinking takes them from there. */
+  function anchorShift(scn, w, h, anchor) {
+    const [gw, gh] = scn.gridSize, a = anchor || {h: "c", v: "c"};
+    const dx = a.h === "w" ? 0 : a.h === "e" ? w - gw : Math.floor((w - gw) / 2);
+    const dy = a.v === "s" ? 0 : a.v === "n" ? h - gh : Math.floor((h - gh) / 2);
+    return {dx, dy};
+  }
+
+  /** Makes the map w × h cells, keeping everything where it was relative to the anchor. Regions,
+   *  their doors and every entity move by the same amount. Refuses (changing nothing) when anything
+   *  would end up off the new map, naming what. Returns {dx, dy} or {error, outside: [names]}. */
+  function resizeMap(scn, w, h, anchor, set) {
+    w = Math.round(w); h = Math.round(h);
+    if (!(w >= 8 && h >= 8 && w <= 1024 && h <= 1024)) return {error: "The map must be between 8 and 1024 cells on each side"};
+    const {dx, dy} = anchorShift(scn, w, h, anchor);
+    const fits = r => r[0] + dx >= 0 && r[1] + dy >= 0 && r[2] + dx < w && r[3] + dy < h;
+    const outside = [...scn.regions.filter(r => !fits(rect(r))), ...scn.entities.filter(e => !fits(rect(e)))].map(o => o.name);
+    if (outside.length) return {error: `${outside.length} thing${outside.length === 1 ? "" : "s"} would end up off the map`, outside};
+    if (dx || dy) {
+      for (const r of scn.regions) {
+        set(r, "position", [r.position[0] + dx, r.position[1] + dy]);
+        set(r, "openings", (r.openings || []).map(c => [c[0] + dx, c[1] + dy]));
+      }
+      for (const e of scn.entities) set(e, "pos", [e.pos[0] + dx, e.pos[1] + dy]);
+    }
+    set(scn, "gridSize", [w, h]);
+    return {dx, dy};
+  }
+
+  /** The smallest rectangle (inclusive [x0, y0, x1, y1]) holding every region and entity, or null. */
+  function usedBounds(scn) {
+    const rs = [...scn.regions.map(rect), ...scn.entities.map(rect)];
+    if (!rs.length) return null;
+    return [Math.min(...rs.map(r => r[0])), Math.min(...rs.map(r => r[1])), Math.max(...rs.map(r => r[2])), Math.max(...rs.map(r => r[3]))];
+  }
+
   // ---------------------------------------------------------------- copy and paste
   /** A region with the rooms and objects inside it, for pasting elsewhere. People are left out. */
   function copyRegion(scn, region) {
@@ -365,5 +404,5 @@
 
   return {rect, inRect, containsRect, disjoint, partial, onEdge, nearestEdgeCell, snapOpenings, contents, parentOf,
     regionAt, nestingProblem, newId, nextName, moveRegion, moveEntities, rotateObject, resizeRegion, edgeAt, doorSet,
-    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion};
+    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds};
 });

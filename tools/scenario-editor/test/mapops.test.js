@@ -270,6 +270,50 @@ test("nextName counts past the highest number", () => {
   assert.equal(M.nextName("Bed (big)", []), "Bed (big) 1");
 });
 
+test("resizeMap grows away from the anchor and moves everything with it", () => {
+  const s = world();                                            // 30 × 30
+  assert.deepEqual(M.resizeMap(s, 40, 36, {h: "e", v: "n"}, set), {dx: 10, dy: 6});
+  assert.deepEqual(s.gridSize, [40, 36]);
+  assert.deepEqual(R(s, "house").position, [12, 8]);
+  assert.deepEqual(R(s, "kitchen").openings, [[16, 8], [16, 10]]);
+  assert.deepEqual(E(s, "cow").pos, [30, 26]);
+});
+
+test("resizeMap: south-west anchor adds cells north and east and moves nothing", () => {
+  const s = world(), before = snap(s.regions) + snap(s.entities);
+  assert.deepEqual(M.resizeMap(s, 50, 45, {h: "w", v: "s"}, set), {dx: 0, dy: 0});
+  assert.equal(snap(s.regions) + snap(s.entities), before);
+  assert.deepEqual(s.gridSize, [50, 45]);
+});
+
+test("resizeMap: centre anchor splits the new cells, odd ones to the far side", () => {
+  const s = world();
+  assert.deepEqual(M.resizeMap(s, 35, 31, {h: "c", v: "c"}, set), {dx: 2, dy: 0});
+  assert.deepEqual(M.anchorShift({gridSize: [30, 30]}, 20, 24, {h: "c", v: "c"}), {dx: -5, dy: -3});
+});
+
+test("resizeMap can shrink when everything still fits", () => {
+  const s = world();                                            // things reach x 24, y 24
+  assert.deepEqual(M.resizeMap(s, 26, 26, {h: "w", v: "s"}, set), {dx: 0, dy: 0});
+  assert.deepEqual(s.gridSize, [26, 26]);
+  const t = world();                                            // trimming 2 off the west and south
+  assert.deepEqual(M.resizeMap(t, 28, 28, {h: "e", v: "n"}, set), {dx: -2, dy: -2});
+  assert.deepEqual(R(t, "house").position, [0, 0]);
+});
+
+test("resizeMap refuses to cut anything off, names it, and changes nothing", () => {
+  const s = world(), before = snap(s);
+  const res = M.resizeMap(s, 20, 20, {h: "w", v: "s"}, set);
+  assert.ok(res.error);
+  assert.deepEqual(new Set(res.outside), new Set(["Field", "Cow"]));
+  assert.equal(snap(s), before);
+  assert.ok(M.resizeMap(s, 4, 30, {h: "w", v: "s"}, set).error, "too small");
+});
+
+test("usedBounds covers every region and entity", () => {
+  assert.deepEqual(M.usedBounds(world()), [2, 2, 24, 24]);
+});
+
 // ---------------------------------------------------------------- minimap helpers
 test("Minimap.fit centres the grid at the largest scale", () => {
   assert.deepEqual(Minimap.fit(100, 50, 200, 200, 0), {scale: 2, ox: 0, oy: 50});
