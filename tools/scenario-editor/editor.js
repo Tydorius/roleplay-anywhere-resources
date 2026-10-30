@@ -1,6 +1,6 @@
 "use strict";
-// Scenario Editor page: state, saving, undo, references, the side panels and the inspector. The map
-// itself is in mapview.js and the map edits in mapops.js. The scenario lives in S.scn and is changed
+// Scenario Editor page: state, saving, undo, references and the side panels. The inspector is in
+// inspector.js, the map in mapview.js, the map edits in mapops.js and schedule logic in schedule.js. The scenario lives in S.scn and is changed
 // only through edit() or a live drag, which record every change so it can be undone.
 // Coordinates: [0,0] is the bottom-left cell and y grows north.
 
@@ -52,6 +52,7 @@ function toast(msg) {
 const q = () => "source=" + encodeURIComponent(S.source);
 
 async function loadSources(select) {
+  if (!S.meta) S.meta = await api("/api/meta");
   S.sources = (await api("/api/scenarios")).sources;
   const sel = $("source");
   sel.innerHTML = S.sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("")
@@ -279,150 +280,6 @@ function renderProblems() {
   });
 }
 $("showWarnings").onchange = $("showInfo").onchange = renderProblems;
-
-// ---------------------------------------------------------------- inspector
-function field(lbl, html) { return `<label class="field"><span>${esc(lbl)}</span>${html}</label>`; }
-function facts(rows) { return `<dl class="facts">${rows.filter(Boolean).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join("")}</dl>`; }
-function refsHtml(list, empty) {
-  if (!list.length) return `<p class="note">${esc(empty)}</p>`;
-  return `<div class="refs">${list.map((r, i) => `<button class="ref" data-ref="${i}">${esc(r.text)} <small>${esc(r.detail)}</small></button>`).join("")}</div>`;
-}
-function bindRefs(root, list) {
-  root.querySelectorAll("[data-ref]").forEach(b => b.onclick = () => { const r = list[+b.dataset.ref]; if (r.id) jump(r.id); });
-}
-const picUrl = (id, kind) => S.media.has(`media/${id}/${id}-${kind}.webp`)
-  ? `/media?${q()}&id=${encodeURIComponent(id)}&file=${encodeURIComponent(id + "-" + kind + ".webp")}` : null;
-const ro = () => S.editable ? "" : "readonly";
-
-function inspect() {
-  const box = $("inspector"), p = primary();
-  const o = p && byId(p.id);
-  if (!S.scn || !o) { box.innerHTML = `<p class="hint">${S.scn ? "Click something on the map to see it here." : ""}</p>`; return; }
-  if (S.sels.length > 1) return inspectMany(box);
-  if (p.kind === "region") return inspectRegion(box, o);
-  if (p.kind === "template") return inspectTemplate(box, o);
-  if (o.type === "object") return inspectObject(box, o);
-  return inspectPerson(box, o);
-}
-
-function inspectMany(box) {
-  const items = S.sels.map(t => byId(t.id)).filter(Boolean);
-  const n = k => items.filter(k).length;
-  box.innerHTML = `<div class="kind">Selection</div><h3>${items.length} selected</h3>
-    ${facts([["Regions", n(o => o.position)], ["Objects", n(o => o.type === "object")], ["People", n(o => o.type === "npc" || o.type === "player")]])}
-    <p class="note">Drag any selected object or person to move them all; arrows nudge (Shift: 5 cells); R turns the objects; Delete removes them.</p>
-    <div class="refs">${items.map((o, i) => `<button class="ref" data-i="${i}">${esc(o.name)}</button>`).join("")}</div>`;
-  box.querySelectorAll("[data-i]").forEach(b => b.onclick = () => jump(items[+b.dataset.i].id));
-}
-
-function inspectRegion(box, r) {
-  const refs = usedBy(r.id);
-  const inside = regions().filter(c => c !== r && contains(r, c));
-  const people = entities().filter(e => e.type !== "object" && inRect(r, e.pos[0], e.pos[1])).length;
-  const objs = entities().filter(e => e.type === "object" && inRect(r, e.pos[0], e.pos[1])).length;
-  const parent = regions().filter(p => p !== r && contains(p, r) && !(contains(r, p) && p.id > r.id)).sort((a, b) => area(a) - area(b))[0];
-  box.innerHTML = `<div class="kind">${r.wall ? "Walled region" : "Open area"}${r.hostile ? " · hostile" : ""}</div>
-    <h3>${esc(r.name)}</h3>
-    ${field("Name", `<div class="row"><input type="text" id="fName" value="${esc(r.name)}" ${ro()} style="flex:1"><button id="fRename" ${S.editable ? "" : "disabled"}>Rename</button></div>`)}
-    <p class="note">Renaming also updates every schedule and calendar event that names this region.</p>
-    ${field("Description", `<textarea id="fDesc" ${ro()}>${esc(r.description || "")}</textarea>`)}
-    ${facts([
-      ["Inside", parent ? `<button class="linkish" data-jump="${esc(parent.id)}">${esc(parent.name)}</button>` : "the open map"],
-      ["Position", `${r.position.join(", ")}`], ["Size", `${r.size.join(" × ")}`],
-      ["Ground", esc([r.ground, r.groundTexture].filter(Boolean).join(" · ") || "—")],
-      r.wall && ["Wall", esc(r.wall)], r.wall && ["Doors", esc((r.openings || []).map(c => `[${c}]`).join(" ") || "none: sealed")],
-      ["Ambience", esc(typeof r.ambience === "string" ? r.ambience : [r.ambience?.day, r.ambience?.night && "night: " + r.ambience.night].filter(Boolean).join(" · ") || "—")],
-      ["Contains", `${inside.length} regions · ${objs} objects · ${people} people`],
-    ])}
-    <div class="kind">Used by</div>${refsHtml(refs, "Nothing names this region.")}`;
-  bindRefs(box, refs);
-  box.querySelectorAll("[data-jump]").forEach(b => b.onclick = () => jump(b.dataset.jump));
-  $("fRename").onclick = () => renameRegion(r, $("fName").value);
-  $("fName").onkeydown = e => { if (e.key === "Enter") renameRegion(r, $("fName").value); };
-  $("fDesc").onchange = () => edit(`Edit description of ${r.name}`, () => set(r, "description", $("fDesc").value));
-}
-
-function renameRegion(r, name) {
-  name = name.trim();
-  if (!name || name === r.name) return;
-  if (regions().some(o => o !== r && o.name === name)) return toast(`Another region is already called "${name}"`);
-  const old = r.name;
-  let n = 0;
-  edit(`Rename ${old} to ${name}`, () => {
-    set(r, "name", name);
-    for (const e of entities()) for (const b of e.schedule || []) if (b.location === old) { set(b, "location", name); n++; }
-    for (const c of S.scn.calendar || []) if (c.location === old) { set(c, "location", name); n++; }
-  });
-  toast(`Renamed; ${n} schedule and calendar entr${n === 1 ? "y" : "ies"} updated`);
-}
-
-function inspectPerson(box, e) {
-  const pic = picUrl(e.id, "portrait");
-  const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
-  const tpl = e.templateId && byId(e.templateId);
-  box.innerHTML = `<div class="kind">${e.type === "player" ? "Player" : e.hostile ? "Hostile NPC" : "NPC"}${tpl ? " · " + esc(tpl.name) : ""}</div>
-    <h3>${esc(e.name)}</h3>
-    ${pic ? `<img class="pic" src="${pic}" alt="">` : `<p class="note">No portrait yet; the game makes one, or add one in Images.</p>`}
-    ${field("Name", `<input type="text" id="fName" value="${esc(e.name)}" ${ro()}>`)}
-    ${field("Description (the GM sees this)", `<textarea id="fDesc" ${ro()}>${esc(e.description || "")}</textarea>`)}
-    ${facts([
-      ["Stands at", `${e.pos.join(", ")}${where ? ` in <button class="linkish" data-jump="${esc(where.id)}">${esc(where.name)}</button>` : ""}`],
-      ["Sprite", esc(e.animationId || "—")], ["Gender", esc(e.gender || "—")], ["Level", esc(e.level ?? "—")],
-      e.stance && ["Stance", esc(e.stance)], e.merchant && ["Merchant", "yes"],
-    ])}
-    ${(e.schedule || []).length ? `<div class="kind">Schedule</div><table class="sched">${e.schedule.map(b => {
-      const r = regions().find(x => x.name === b.location);
-      return `<tr><td class="t">${esc(b.start)}–${esc(b.end)}</td><td>${esc(b.role)}</td><td>${r
-        ? `<button class="linkish" data-jump="${esc(r.id)}">${esc(b.location)}</button>` : `<span style="color:var(--bad)">${esc(b.location)} (no such region)</span>`}</td></tr>`;
-    }).join("")}</table>` : ""}`;
-  box.querySelectorAll("[data-jump]").forEach(b => b.onclick = () => jump(b.dataset.jump));
-  $("fName").onchange = () => {
-    const v = $("fName").value.trim();
-    if (v) edit(`Rename ${e.name} to ${v}`, () => set(e, "name", v));
-  };
-  $("fDesc").onchange = () => edit(`Edit description of ${e.name}`, () => set(e, "description", $("fDesc").value));
-}
-
-function inspectObject(box, e) {
-  const t = objTpl(e.templateId);
-  const placed = entities().filter(o => o.templateId === e.templateId).length;
-  const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
-  const pic = t && picUrl(t.id, "sprite");
-  box.innerHTML = `<div class="kind">Object</div><h3>${esc(e.name)}</h3>
-    ${pic ? `<img class="pic" src="${pic}" alt="">` : ""}
-    ${field("Name", `<input type="text" id="fName" value="${esc(e.name)}" ${ro()}>`)}
-    <div class="row" style="margin-bottom:10px"><button id="fRotL" ${S.editable ? "" : "disabled"} title="Shift+R">Turn left</button><button id="fRotR" ${S.editable ? "" : "disabled"} title="R">Turn right</button></div>
-    ${facts([
-      ["Type", t ? `<button class="linkish" data-tpl="${esc(t.id)}">${esc(t.name)}</button> (${placed} placed)` : `<span style="color:var(--bad)">missing template</span>`],
-      ["Position", e.pos.join(", ") + (where ? ` in <button class="linkish" data-jump="${esc(where.id)}">${esc(where.name)}</button>` : "")],
-      ["Size", entSize(e).join(" × ") + (e.rot ? ` · turned ${e.rot * 90}°` : "")], ["HP", `${e.hp ?? "—"} / ${e.maxHp ?? "—"}`],
-      ["Holds", `${(e.inventory || []).length} item stack${(e.inventory || []).length === 1 ? "" : "s"}`],
-    ])}`;
-  box.querySelectorAll("[data-jump]").forEach(b => b.onclick = () => jump(b.dataset.jump));
-  box.querySelectorAll("[data-tpl]").forEach(b => b.onclick = () => select({kind: "template", id: b.dataset.tpl}));
-  $("fRotL").onclick = () => rotateSelection(3); $("fRotR").onclick = () => rotateSelection(1);
-  $("fName").onchange = () => {
-    const v = $("fName").value.trim();
-    if (v) edit(`Rename ${e.name} to ${v}`, () => set(e, "name", v));
-  };
-}
-
-function inspectTemplate(box, t) {
-  const refs = usedBy(t.id), kind = t.id.split("_")[0];
-  const pic = picUrl(t.id, kind === "otpl" ? "sprite" : kind === "itpl" ? "item" : "x");
-  const walk = t.walkability ?? 0;
-  box.innerHTML = `<div class="kind">${kind === "otpl" ? "Object type" : kind === "itpl" ? "Item" : kind === "htpl" ? "Hostile type" : "Template"}</div>
-    <h3>${esc(t.name)}</h3>
-    ${pic ? `<img class="pic" src="${pic}" alt="">` : ""}
-    ${facts([
-      t.size && ["Size", t.size.join(" × ")],
-      kind === "otpl" && ["Movement", walk <= 0 ? "blocks" : walk >= 1 ? "walk over" : `slows (${walk})`],
-      t.forSleep && ["Sleep", "can be slept on"], t.craftStation && ["Crafting", "station"],
-      t.tags && ["Tags", esc(t.tags.join(", "))], t.description && ["About", esc(t.description)],
-    ])}
-    <div class="kind">Used by</div>${refsHtml(refs, "Nothing uses this.")}`;
-  bindRefs(box, refs);
-}
 
 // ---------------------------------------------------------------- top bar, tabs, keys
 function render() {

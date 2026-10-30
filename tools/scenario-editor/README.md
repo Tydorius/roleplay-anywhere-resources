@@ -69,7 +69,31 @@ unchanged. The gallery still works on its own.
 - **Layers:** lock a layer so clicks go through it, or hide it.
 - **Problems:** the scenario is checked after every change (`scenario_checks.py`). Click a problem
   to jump to it.
-- **Inspector:** details of what you selected, and everything that uses it, each one clickable.
+- **Inspector:** the right-hand panel edits whatever you selected. Every field change is one undo
+  step.
+  - **Nothing selected:** browse object types, hostile types, people and regions by name. You can
+    also make a new object type here.
+  - **Region:**
+    - name, description, walls (or none), hostile, ground, texture, tints and day and night
+      ambience;
+    - its doors, each removable along with its matching other side;
+    - beds against the people who sleep there;
+    - **who is here when:** a 24-hour strip of everyone whose schedule brings them here, by role.
+      Click an hour to list them.
+  - **Object:**
+    - name, HP, and what it holds;
+    - turn it, or change its type.
+    - **Edit type** opens the object type, where changes apply to every one placed: size,
+      movement, bed, crafting, light, height, HP, money tier, tags and loot.
+  - **Person:**
+    - name, gender, description, looks, mindset, sprite and colour, level, money, hostility and
+      stance, and voice;
+    - what they carry, wear and sell, and what they remember;
+    - their schedule: a 24-hour bar where you drag the line between two blocks to change the
+      time (in 15-minute steps), and click a block to change where they are and what they're
+      doing, split it or remove it.
+  - **Hostile type:** where they spawn, how many, sprite, level and loot.
+  - Every inspector lists what uses the selected thing, each item clickable.
 - **Rename a region:** every schedule and calendar event that names it is updated as well.
 - **Undo and redo** (Ctrl+Z, Ctrl+Y), with a whole drag as one step. **Save** (Ctrl+S) and
   **Download zip**. Each save first backs up the previous `scenario.json` to

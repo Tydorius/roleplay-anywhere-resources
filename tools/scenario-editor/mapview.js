@@ -548,7 +548,8 @@ function renderToolOpts() {
   if (S.tool === "object") {
     html += `<input type="search" id="tFilter" placeholder="Filter types" style="width:100%;margin-bottom:6px">
       <select id="tTpl" size="9" style="width:100%"></select>
-      <p class="note" id="tTplInfo"></p>`;
+      <p class="note" id="tTplInfo"></p>
+      ${S.editable ? `<div class="row"><button id="tNewType" class="mini">New type…</button><button id="tEditType" class="mini">Edit this type</button></div>` : ""}`;
   }
   box.innerHTML = html;
   if (S.tool === "object") {
@@ -563,6 +564,7 @@ function renderToolOpts() {
       $("tTplInfo").textContent = t ? `${t.size.join(" × ")} · ${(t.walkability ?? 0) <= 0 ? "blocks movement" : (t.walkability >= 1 ? "walk over" : "slows")}${t.forSleep ? " · bed" : ""}${S.placeRot ? ` · turned ${S.placeRot * 90}°` : ""}` : "No type picked.";
     };
     $("tFilter").oninput = fill;
+    if ($("tNewType")) { $("tNewType").onclick = () => { newObjectType(); renderToolOpts(); }; $("tEditType").onclick = () => S.placeTpl && select({kind: "template", id: S.placeTpl}); }
     $("tTpl").onchange = () => { S.placeTpl = $("tTpl").value; S.placeRot = 0; remember("editor.placeTpl", S.placeTpl); info(); draw(); };
     renderToolOpts.info = info;
     fill();

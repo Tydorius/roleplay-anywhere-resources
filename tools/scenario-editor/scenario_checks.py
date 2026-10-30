@@ -46,6 +46,20 @@ ATTRS = {"strength", "dexterity", "intellect", "perception", "charisma"}
 AGES = {"Child", "Teen", "Adult", "MiddleAged", "Senior"}
 PITCH = {"Deeper", "Average", "Brighter"}
 ROLES = {"work", "leisure", "sleep"}
+OBJECT_TAGS = ["bed", "table", "social", "chair", "light", "work", "food", "storage", "filler", "landmark", "plant"]
+VOICE_TAGS = ["Announcer", "Australian", "British", "Eager", "Emphatic", "Southern", "Villain", "Whispering", "Smooth",
+              "Yelling", "Scottish", "Indian", "WestAfrican", "EasternEuropean", "Demonic", "Ghostly", "Robotic"]
+
+
+def meta():
+    """The value lists the editor offers, from the same sets the checks use."""
+    return {"animations": sorted(ANIMATIONS), "ground": sorted(GROUND), "textures": sorted(TEXTURES),
+            "walls": sorted(WALLS), "ambience": sorted(AMBIENCE - {"none"}), "itemTypes": sorted(ITEM_TYPES),
+            "slots": [s for s in ("head", "face", "necklace", "innerTorso", "torso", "wieldable1", "wieldable2",
+                                  "gloves", "pants", "boots", "ring")],
+            "quality": ["common", "uncommon", "rare", "epic", "legendary"], "attributes": sorted(ATTRS),
+            "ages": ["Child", "Teen", "Adult", "MiddleAged", "Senior"], "pitch": ["Deeper", "Average", "Brighter"],
+            "roles": ["work", "leisure", "sleep"], "objectTags": OBJECT_TAGS, "voiceTags": VOICE_TAGS}
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 HOSTILE_BUFFER = 15  # cells between a hostile region and anywhere peaceful NPCs spend their day
 

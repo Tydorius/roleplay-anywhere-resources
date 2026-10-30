@@ -36,6 +36,8 @@ STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/mapview.js": ("mapview.js", "text/javascript; charset=utf-8"),
           "/mapops.js": ("mapops.js", "text/javascript; charset=utf-8"),
           "/minimap.js": ("minimap.js", "text/javascript; charset=utf-8"),
+          "/inspector.js": ("inspector.js", "text/javascript; charset=utf-8"),
+          "/schedule.js": ("schedule.js", "text/javascript; charset=utf-8"),
           "/editor.css": ("editor.css", "text/css; charset=utf-8")}
 
 
@@ -72,6 +74,8 @@ class Handler(ig.Handler):
                 return self.send(200, (HERE / name).read_bytes(), ctype)
             if u.path == "/gallery":
                 return self.send(200, ig.PAGE.read_bytes(), "text/html; charset=utf-8")
+            if u.path == "/api/meta":
+                return self.send(200, scenario_checks.meta())
             if u.path == "/api/scenarios":
                 return self.send(200, {"sources": scenario_sources(self.store)})
             if u.path == "/api/scenario":
