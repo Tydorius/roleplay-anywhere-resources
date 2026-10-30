@@ -37,6 +37,9 @@ Examples:
 - `examples/performance` caches the game's movement grid (it was rebuilt about 570 times a
   second) and stops the game drawing things far off screen. See
   [its README](examples/performance/README.md).
+- `examples/region-groups` makes touching rectangles with the same name act as one region, so
+  you can build L-shaped houses or a forest wrapped round a village. See
+  [its README](examples/region-groups/README.md).
 
 Tests: `node --test` in this folder.
 

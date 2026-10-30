@@ -186,7 +186,11 @@
     for (const e of world.entities ?? []) {
       if (e.type !== 'npc' || e.dead || e === traveller || knows(edge, e)) continue;
       const c = cellOf(e.pos);
-      const saw = spots.find(s => cheb(s.c, c) <= WITNESS_RANGE && walledRoom(world, c) === s.room);
+      const saw = spots.find(s => {
+        if (cheb(s.c, c) > WITNESS_RANGE) return false;
+        const room = walledRoom(world, c);
+        return room === s.room || !!arpg.sameRegion?.(world, room, s.room); // pieces of one room (region-groups)
+      });
       if (!saw || !learn(world, edge.portal, e.name)) continue;
       const text = saw === spots[0]
         ? `Saw ${traveller.name} slip through a hidden way at ${where} and vanish.`

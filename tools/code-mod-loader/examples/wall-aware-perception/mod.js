@@ -55,7 +55,8 @@
     const other = a === player ? b : a;
     if (!other?.pos) return true;
     const pc = centerCell(player), oc = centerCell(other);
-    if (walledRoom(world, pc) === walledRoom(world, oc)) return true;
+    const pr = walledRoom(world, pc), or = walledRoom(world, oc);
+    if (pr === or || arpg.sameRegion?.(world, pr, or)) return true; // pieces of one room (region-groups)
     return reachable(world, oc, pc, other.type === 'object' ? undefined : other, range, search);
   });
 

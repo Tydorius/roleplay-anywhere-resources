@@ -58,6 +58,32 @@ const PATCHES = [
       `function __arpgPathOrig(${t},${from},${dest},${ent},${opts}={}){`,
   },
   {
+    name: 'region-arrival',
+    // "Is this cell in that region?" for arrivals and destination picking: the innermost region
+    // at the cell must be that very region. Mods may also accept another piece of the same region.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+)\)\{return ([\w$]+)\(\2,\4\)===\3\}/g,
+    replace: (_m, fn, t, region, cell, innermost) =>
+      `function ${fn}(${t},${region},${cell}){const r=${innermost}(${t},${cell});` +
+      `return r===${region}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},r,${region}))}`,
+  },
+  {
+    name: 'region-destination',
+    // Picks a standing spot inside a region for a mover (MOVE_TO, schedules, teleports). Mods may
+    // swap the region for another piece of it, such as the one nearest the mover.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+),([\w$]+)\)\{(?=const [\w$]+=new [\w$]+\(\2,\4\),[\w$]+=[\w$]+\(\2,\4\),[\w$]+=Math\.floor\(\3\.size\[0\]\/4\))/g,
+    replace: (_m, fn, t, region, mover, rng) =>
+      `function ${fn}(${t},${region},${mover},${rng}){` +
+      `if(globalThis.__arpg&&globalThis.__arpg.pieceFor)${region}=globalThis.__arpg.pieceFor(${t},${region},${mover})??${region};`,
+  },
+  {
+    name: 'region-same-room',
+    // The GM prompt's "in the same space as the player" test compares walled rooms by identity.
+    find: /const ([\w$]+)=([\w$]+)\(([\w$]+),([\w$]+)\(([\w$]+)\)\),([\w$]+)=([\w$]+)=>\2\(\3,\4\(\7\)\)===\1/g,
+    replace: (_m, room, walled, t, cellOf, player, test, other) =>
+      `const ${room}=${walled}(${t},${cellOf}(${player})),${test}=${other}=>{const g=${walled}(${t},${cellOf}(${other}));` +
+      `return g===${room}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},g,${room}))}`,
+  },
+  {
     name: 'nav-cache-get',
     // Start of the movement grid's constructor: a mod may hand back a recent, equal grid
     // instead of building a new one (a constructor may return an existing object).
