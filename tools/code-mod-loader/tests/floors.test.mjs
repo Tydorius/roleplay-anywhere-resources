@@ -120,3 +120,12 @@ test('a floor whose regions are missing is skipped with a warning', () => {
   assert.equal(arpg.floors.floorsOf(world).length, 0);
   assert.match(warnings[0], /"Attic" not found/);
 });
+
+test('the view below defaults to a slight blur and darkening, and a floor can change it', () => {
+  const { arpg } = load();
+  const world = makeWorld();
+  assert.deepEqual({ ...arpg.floors.floorsOf(world)[0].view }, { blur: 0.6, brightness: 0.8 });
+  const other = makeWorld();
+  other.arpgMods.floors[0].view = { blur: 0, brightness: 0.7 };
+  assert.deepEqual({ ...arpg.floors.floorsOf(other)[0].view }, { blur: 0, brightness: 0.7 });
+});

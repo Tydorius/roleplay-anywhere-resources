@@ -22,6 +22,9 @@
   const arpg = globalThis.__arpg;
   arpg.registerMod('floors');
 
+  // How the room below looks through an opening: a slight softening, as at a distance, and
+  // a little darker. A floor can override either with "view": {"blur": 0.6, "brightness": 0.8}.
+  const VIEW = { blur: 0.6, brightness: 0.8 };
   const RAIL_REACH = 2; // cells from an opening at which someone upstairs can look down
   const UNDER_REACH = 2; // cells around the spot under an opening that can be seen from above
   const CELL_PX = 32; // the game's cell size in pixels (gt)
@@ -56,7 +59,9 @@
       const openings = (d.openings ?? []).map(n => region(n) ?? (warnOnce(`"${name}": opening "${n}" not found`), null)).filter(Boolean);
       // Cell offset from this storey down to the room below.
       const offset = [below.position[0] - area.position[0], below.position[1] - area.position[1]];
-      floors.push({ name, area, below, openings, offset });
+      const num = (v, dflt) => (typeof v === 'number' && v >= 0 ? v : dflt);
+      const view = { blur: num(d.view?.blur, VIEW.blur), brightness: num(d.view?.brightness, VIEW.brightness) };
+      floors.push({ name, area, below, openings, offset, view });
     });
     cache.set(world, { rev, defs, floors });
     return floors;
@@ -165,8 +170,9 @@
         if (!cam) {
           cam = scene.cameras.add(cx0, cy0, cx1 - cx0, cy1 - cy0, false, `arpg-below-${o.name}`);
           if (cam.postFX) {
-            cam.postFX.addBlur(1, 2, 2, 1);
-            cam.postFX.addColorMatrix().brightness(0.65);
+            // Phaser's blur: quality 0 (low), 1px offsets, a short 2-step pass.
+            if (f.view.blur > 0) cam.postFX.addBlur(0, 1, 1, f.view.blur, 0xffffff, 2);
+            if (f.view.brightness !== 1) cam.postFX.addColorMatrix().brightness(f.view.brightness);
           }
           mine.set(o, cam);
         }
