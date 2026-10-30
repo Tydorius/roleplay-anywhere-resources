@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scenario Editor</title>
+<link rel="stylesheet" href="/editor.css">
+</head>
+<body>
+<header>
+  <div class="bar">
+    <h1>Scenario Editor</h1>
+    <div class="tabs"><button id="tabMap" class="on">Map</button><button id="tabImages">Images</button></div>
+    <label class="inline">Scenario <select id="source"></select></label>
+    <button id="openZip" title="Open a scenario zip as a workspace the game won't touch">Open zip…</button>
+    <input type="file" id="zipFile" accept=".zip" hidden>
+    <button id="toWork" title="Copy the New Game scenario and its images into a workspace you can edit" hidden>Copy to workspace</button>
+    <span class="readonly" id="readonly" hidden>Read only: copy it to a workspace to edit</span>
+    <span class="spacer"></span>
+    <input type="search" id="find" placeholder="Find a place, person or object" list="findList" size="26">
+    <datalist id="findList"></datalist>
+    <button id="undo" title="Undo (Ctrl+Z)" disabled>Undo</button>
+    <button id="redo" title="Redo (Ctrl+Y)" disabled>Redo</button>
+    <span class="dirty" id="dirty" hidden>Unsaved changes</span>
+    <button id="save" class="primary" title="Save (Ctrl+S)" disabled>Save</button>
+    <a id="download" class="button off" title="Download this workspace as a zip for New Game → Import">Download zip</a>
+  </div>
+</header>
+
+<div class="work" id="mapView">
+  <aside class="side">
+    <h2>Tool</h2>
+    <div id="toolOpts"></div>
+    <h2>Layers</h2>
+    <table class="layers" id="layers">
+      <thead><tr><th></th><th title="Can't be selected or moved">Lock</th><th title="Not drawn">Hide</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <p class="note">Locked things can't be selected, so a click goes through to what's underneath.</p>
+    <h2>Problems</h2>
+    <div class="filters">
+      <label><input type="checkbox" id="showWarnings" checked> warnings</label>
+      <label><input type="checkbox" id="showInfo"> notes</label>
+    </div>
+    <div class="problems" id="problems"><p class="hint">Open a scenario to check it.</p></div>
+  </aside>
+  <div class="mapwrap">
+    <canvas id="map"></canvas>
+    <div class="tools" id="tools" role="toolbar" aria-label="Map tools"></div>
+    <canvas id="minimap" title="Click or drag to move the view"></canvas>
+    <div class="coords" id="coords"></div>
+    <div class="maphint">Drag empty space to pan · wheel zooms · Space+drag always pans · right-click cancels</div>
+  </div>
+  <aside class="side right insp" id="inspector"><p class="hint">Click something on the map to see it here.</p></aside>
+</div>
+<iframe id="images" title="Images" hidden></iframe>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast"></div>
+<script src="/mapops.js"></script>
+<script src="/minimap.js"></script>
+<script src="/schedule.js"></script>
+<script src="/editor.js"></script>
+<script src="/refs.js"></script>
+<script src="/inspector.js"></script>
+<script src="/refsui.js"></script>
+<script src="/mapview.js"></script>
+</body>
+</html>

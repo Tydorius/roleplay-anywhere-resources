@@ -75,6 +75,19 @@ restarts, so keep results before restarting ComfyUI. What you kept or discarded 
 recovered the same way when the copy on disk is older (a New Game reset wiped it, say), matched by
 the description in their prompt.
 
+**Use your own pictures.** **Browse…** on a card, or dropping an image file onto its picture,
+opens a crop window, so you can use asset packs or art you already have:
+- **Portraits, items and perks** get a square frame. A portrait's frame starts at the top, where
+  faces usually are. Drag the frame and use **Size** to choose what's kept; it's saved at
+  512 × 512.
+- **Map objects** keep the shape the game draws their footprint at. **Fit** shows the whole
+  picture, padded with transparency; **Crop to fill** fills the shape and cuts the rest. The
+  window warns you when the picture has no transparent background (anything around the object
+  would show on the map), or when its shape is far off the footprint's.
+
+Saving converts the picture to WebP at the game's quality and backs up the old image, the same as
+**Keep**.
+
 **Workspaces: work outside the game.** Starting or importing a New Game replaces the game's staging
 area, and with it every image you made there. To keep your work safe:
 
