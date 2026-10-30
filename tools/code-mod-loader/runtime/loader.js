@@ -9,6 +9,7 @@
   const pathHooks = [];
   const perceiveHooks = [];
   const navHooks = [];
+  let navCache = null;
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -84,6 +85,26 @@
     },
     // Called whenever the game builds its movement grid.
     nav(world, grid) { runHooks('nav', navHooks, [world, grid]); },
+    // The movement grid's constructor asks navGet for a cached grid before building one, and
+    // offers each new grid to navPut. Arguments: (world, entity to leave out, walls only).
+    navGet(world, entity, wallsOnly) {
+      try {
+        return navCache?.get(world, entity, !!wallsOnly) ?? null;
+      } catch (e) {
+        console.error('[arpg] nav cache failed', e);
+        return null;
+      }
+    },
+    navPut(world, entity, wallsOnly, grid) {
+      try {
+        navCache?.put(world, entity, !!wallsOnly, grid);
+      } catch (e) {
+        console.error('[arpg] nav cache failed', e);
+      }
+    },
+    // One mod may provide a movement-grid cache: {get(world, entity, wallsOnly) → grid|null,
+    // put(world, entity, wallsOnly, grid)}. Grids are read-only after they're built.
+    setNavCache(cache) { navCache = cache; },
     // Called for every path search. Hooks are chained; the last `next` is the game's A*.
     path(world, from, dest, entity, opts, original) {
       arpg.pathOriginal = original; // for debugging: the game's own search

@@ -34,6 +34,9 @@ Examples:
 - `examples/floors` emulates upper floors, cellars and galleries on the flat map. Floors notice
   each other only through openings, and each opening shows the room below. See
   [its README](examples/floors/README.md).
+- `examples/performance` caches the game's movement grid (it was rebuilt about 570 times a
+  second) and stops the game drawing things far off screen. See
+  [its README](examples/performance/README.md).
 
 Tests: `node --test` in this folder.
 
@@ -71,6 +74,7 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `onWorldCreate((world, scenario, editing) => void)` | Runs when a scenario becomes a world. Use it to copy your own scenario keys (put them under `arpgMods`) onto the world. World fields are saved with the game. |
 | `onPrompt(({head, sections, tail}, world) => void)` | Edits the GM prompt. Each part is a list of `{kind, title, content}`. The game trims its own kinds to a budget, but a new kind isn't trimmed, so limit your own size. |
 | `onNav((world, grid) => void)` | Runs whenever the game builds its movement grid, which every walk, path search and collision uses. Set `grid.blocked[y * grid.w + x] = 1` to make a cell impassable. It's rebuilt for every search, so keep it cheap. |
+| `setNavCache({get, put})` | Lets one mod supply a cache for the movement grid. `get(world, entity, wallsOnly)` returns a grid or null; `put(world, entity, wallsOnly, grid)` is offered each new one. Grids are read-only after they're built. |
 | `onTick(world => void)` | Runs at the start of every unpaused simulation step, so keep it cheap. |
 | `onPath((world, from, dest, entity, opts, next) => cells \| null)` | Wraps the game's grid pathfinder, which every walk uses. `next(...)` runs the plain search. Return the cells to walk, excluding the start cell. `entity` is unset for queries that aren't walks. |
 | `onPerceive((world, a, b, range, search, answer) => boolean \| undefined, {order})` | Runs whenever the game asks whether `a` and `b` are within notice range. `answer` is the answer so far, starting from the game's straight-line test. Return a boolean to replace it, or nothing to leave it. Hooks with a higher `order` run later and have the last word. `search` is the game's path search. |

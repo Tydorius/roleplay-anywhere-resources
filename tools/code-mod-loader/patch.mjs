@@ -58,6 +58,35 @@ const PATCHES = [
       `function __arpgPathOrig(${t},${from},${dest},${ent},${opts}={}){`,
   },
   {
+    name: 'nav-cache-get',
+    // Start of the movement grid's constructor: a mod may hand back a recent, equal grid
+    // instead of building a new one (a constructor may return an existing object).
+    find: /;this\.world=([\w$]+),this\.w=\1\.gridSize\[0\],this\.h=\1\.gridSize\[1\],this\.walls=/g,
+    replace: (_m, world) =>
+      `;{const c=globalThis.__arpg&&globalThis.__arpg.navGet&&globalThis.__arpg.navGet(arguments[0],arguments[1],arguments[2]);if(c)return c}` +
+      `this.world=${world},this.w=${world}.gridSize[0],this.h=${world}.gridSize[1],this.walls=`,
+  },
+  {
+    name: 'nav-cache-put',
+    // End of the same constructor: offer the finished grid to the cache.
+    find: /(&&\(this\.speed\[[\w$]+\]=[\w$]+\)\}\})\}speedAt\(/g,
+    replace: (_m, tail) =>
+      `${tail};globalThis.__arpg&&globalThis.__arpg.navPut&&globalThis.__arpg.navPut(arguments[0],arguments[1],arguments[2],this)}speedAt(`,
+  },
+  {
+    name: 'edge-memo',
+    // The grid's wall test between two cells loops over every walled region on the map, and
+    // path searches call it for each step considered. When a mod sets __arpg.memoEdges, each
+    // grid remembers its answers (its walls are fixed when it's built).
+    find: /edgeBlocked\(([\w$]+),([\w$]+)\)\{for\(const ([\w$]+) of this\.walls\)\{/g,
+    replace: (_m, a, b, r) =>
+      `edgeBlocked(${a},${b}){if(!(globalThis.__arpg&&globalThis.__arpg.memoEdges))return this.__arpgEdge(${a},${b});` +
+      `const k=(((${a}[0]+1)*4096+(${a}[1]+1))*4096+(${b}[0]+1))*4096+(${b}[1]+1);` +
+      `const m=this.__arpgEdges??(this.__arpgEdges=new Map());let v=m.get(k);` +
+      `if(v===void 0){v=this.__arpgEdge(${a},${b});m.set(k,v)}return v}` +
+      `__arpgEdge(${a},${b}){for(const ${r} of this.walls){`,
+  },
+  {
     name: 'nav-grid',
     // The movement grid every walk, path search and collision uses. Mods may mark extra
     // cells blocked (blocked[y*w+x] = 1) before the game adds its objects.
