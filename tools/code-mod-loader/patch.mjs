@@ -38,6 +38,23 @@ const PATCHES = [
       `return h?h(${arg},()=>__arpgCfgOrig(${arg})):__arpgCfgOrig(${arg})}` +
       `function __arpgCfgOrig(${arg}){${flag}||${log}.warn("config",\`getConfigFile before loadConfig`,
   },
+  {
+    name: 'world-create',
+    // The scenario → world builder copies fields one by one, so extra scenario keys
+    // would be lost. Hand mods the new world and its scenario just before it returns.
+    find: /imageSettings:([\w$]+)\.imageSettings\};return ([\w$]+)\|\|\(([\w$]+)\.player&&/g,
+    replace: (_m, scn, flag, world) =>
+      `imageSettings:${scn}.imageSettings};globalThis.__arpg&&globalThis.__arpg.worldCreated&&` +
+      `globalThis.__arpg.worldCreated(${world},${scn},${flag});return ${flag}||(${world}.player&&`,
+  },
+  {
+    name: 'gm-prompt',
+    // Where the GM prompt's head/sections/tail are taken for rendering; mods may add sections.
+    find: /const\{head:([\w$]+),sections:([\w$]+),tail:([\w$]+)\}=([\w$]+)\(([\w$]+)\)/g,
+    replace: (_m, head, sections, tail, build, world) =>
+      `const{head:${head},sections:${sections},tail:${tail}}=` +
+      `(globalThis.__arpg&&globalThis.__arpg.prompt?globalThis.__arpg.prompt(${build}(${world}),${world}):${build}(${world}))`,
+  },
 ];
 
 function parseArgs(argv) {

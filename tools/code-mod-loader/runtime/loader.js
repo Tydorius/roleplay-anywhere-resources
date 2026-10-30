@@ -3,7 +3,20 @@
 (() => {
   const pendingCalls = [];
   const cfgHooks = [];
+  const worldHooks = [];
+  const promptHooks = [];
   let api = null;
+
+  // A broken mod must never take the game down with it.
+  function runHooks(kind, hooks, args) {
+    for (const hook of hooks) {
+      try {
+        hook(...args);
+      } catch (e) {
+        console.error(`[arpg] ${kind} hook failed`, e);
+      }
+    }
+  }
 
   function addCall(name, build) {
     if (!api) return void pendingCalls.push([name, build]);
@@ -38,10 +51,23 @@
       }
       return out !== undefined ? out : original();
     },
+    // Called by the game when it builds a world from a scenario (a new game, or the
+    // World editor's preview when `editing` is true).
+    worldCreated(world, scenario, editing) { runHooks('world', worldHooks, [world, scenario, !!editing]); },
+    // Called by the game with the GM prompt's {head, sections, tail} before rendering.
+    prompt(parts, world) {
+      runHooks('prompt', promptHooks, [parts, world]);
+      return parts;
+    },
     // The mod-facing API.
     registerMod(name) { arpg.mods.push(name); },
     addCall,
     onConfig(hook) { cfgHooks.push(hook); },
+    // hook(world, scenario, editing): copy scenario data onto the world. World fields are saved.
+    onWorldCreate(hook) { worldHooks.push(hook); },
+    // hook({head, sections, tail}, world): each part is a list of {kind, title, content}.
+    // The game trims known kinds to a budget; a new kind is not trimmed, so keep it short.
+    onPrompt(hook) { promptHooks.push(hook); },
     // Adds a header file to the GM's api-call list, after `after` (a header name) or at the end.
     addApiHeader(name, text, after) {
       const dir = 'overseer/api-actions/';

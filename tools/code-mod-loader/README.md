@@ -21,8 +21,13 @@ Mods live in `%APPDATA%\Anywhere RPG\code-mods\<mod name>\mod.js`, beside the ga
 folder for config packs. Copy a mod folder there, then run `node patch.mjs install` again. The
 patcher copies mods into the game, so **re-run install after adding, changing or removing a mod**.
 
-Example: `examples/memory-add` gives the GM a `memory_add` call. It writes a memory onto a
-character, and the memory shows in that character's panel under Memories.
+Examples:
+- `examples/memory-add` gives the GM a `memory_add` call. It writes a memory onto a character,
+  and the memory shows in that character's panel under Memories.
+- `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
+  `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
+
+Tests: `node --test` in this folder.
 
 ## After a game update or "Verify integrity"
 
@@ -41,7 +46,7 @@ All the original files are kept as `*.arpg-orig` beside the patched ones.
 
 | File | Change |
 |---|---|
-| `resources/app/dist/assets/index-*.js` | The GM's API-call registry (the object literal starting `{flavor_text:`) is also stored as `__arpg.api`. The config-file getter (found by its `getConfigFile before loadConfig` warning) is wrapped so every prompt/config read goes through `__arpg.cfg`. |
+| `resources/app/dist/assets/index-*.js` | The GM's API-call registry (the object literal starting `{flavor_text:`) is also stored as `__arpg.api`. The config-file getter (found by its `getConfigFile before loadConfig` warning) is wrapped so every prompt/config read goes through `__arpg.cfg`. The scenario → world builder calls `__arpg.worldCreated` before it returns. The GM prompt's parts go through `__arpg.prompt` before they're rendered. |
 | `resources/app/dist/index.html` | `<script>` tags for `arpg-mods/loader.js` and each mod, placed before the game bundle. |
 | `resources/app/dist/arpg-mods/` | The loader and the copied mods. |
 
@@ -55,6 +60,8 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `addCall(name, api => ({schema, run}))` | Adds a GM API call. `schema` is a zod object. Fields whose schema is described as `entity`, `entity?`, `region` or `place` are resolved from names to game objects for you. The easiest way to get one is to reuse another call's field, e.g. `api.hp_delta.schema.pick({target:true})`. `run(world, args)` returns `null` on success, or an error string, which the GM log shows as `rejected: …`. |
 | `addApiHeader(name, text, after?)` | Describes a call to the GM. It adds `overseer/api-actions/<name>.txt` and slots it into `ordered-api-calls.json` after the header named `after`. |
 | `onConfig((path, readOriginal) => string \| undefined)` | Rewrites any config/prompt file as the game reads it. Return `undefined` to leave the file alone. |
+| `onWorldCreate((world, scenario, editing) => void)` | Runs when a scenario becomes a world. Use it to copy your own scenario keys (put them under `arpgMods`) onto the world. World fields are saved with the game. |
+| `onPrompt(({head, sections, tail}, world) => void)` | Edits the GM prompt. Each part is a list of `{kind, title, content}`. The game trims its own kinds to a budget, but a new kind isn't trimmed, so limit your own size. |
 | `api` | The live registry, once the game has built it. |
 
 ## Debugging
