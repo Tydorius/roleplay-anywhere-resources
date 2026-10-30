@@ -85,6 +85,13 @@ function wireForm(root, prefix, obj, defs, what, after) {
     edit(`Clear ${b.dataset.clear} of ${what()}`, () => setPath(obj, b.dataset.clear, undefined)));
 }
 
+/** A button that opens the Images tab on this one picture, to regenerate it or browse for your own. */
+function imageButton(name, kind) {
+  return `<div class="row" style="margin-bottom:10px"><button class="mini" data-img="${esc(name)}">${kind === "portrait" ? "Portrait" : kind === "sprite" ? "Sprite" : "Image"}…</button>
+    <small class="note">Regenerate it, or use your own picture.</small></div>`;
+}
+document.addEventListener("click", e => { const b = e.target.closest?.("[data-img]"); if (b) openImages(b.dataset.img); });
+
 // ---------------------------------------------------------------- dispatch
 function inspect() {
   inspectBody();
@@ -264,6 +271,7 @@ function inspectObject(box, e) {
   ];
   box.innerHTML = `<div class="kind">Object</div><h3>${esc(e.name)}</h3>
     ${pic ? `<img class="pic" src="${pic}" alt="">` : ""}
+    ${t ? imageButton(t.name, "sprite") : ""}
     ${formHtml("ob", e, defs)}
     ${field("Type", `<div class="row"><select id="oType" ${dis()} style="flex:1">${typeOptions(e.templateId)}</select>${t ? `<button id="oEditType" class="mini">Edit type</button>` : ""}</div>`,
       t ? `${placed} placed. Changing the type swaps this one only; editing the type changes all ${placed}.` : "Its type is missing.")}
@@ -301,7 +309,8 @@ function inspectObjectType(box, t) {
     {key: "lootPoolIds", label: "Loot", type: "multi", options: items},
   ];
   box.innerHTML = `<div class="kind">Object type</div><h3>${esc(t.name)}</h3>
-    ${pic ? `<img class="pic" src="${pic}" alt="">` : `<p class="note">No sprite yet; the game draws one, or make one in Images.</p>`}
+    ${pic ? `<img class="pic" src="${pic}" alt="">` : `<p class="note">No sprite yet; the game draws one when it starts.</p>`}
+    ${imageButton(t.name, "sprite")}
     <p class="note warn">Changes here apply to all ${placed.length} placed.</p>
     <div class="row2">${field("Width", `<input type="number" id="tW" min="1" max="20" value="${t.size[0]}" ${dis()}>`)}${field("Height", `<input type="number" id="tH" min="1" max="20" value="${t.size[1]}" ${dis()}>`)}</div>
     ${formHtml("ot", t, defs)}
@@ -394,7 +403,8 @@ function inspectPerson(box, e) {
   ];
   box.innerHTML = `<div class="kind">${e.type === "player" ? "Player" : e.hostile ? "Hostile NPC" : "NPC"}${tpl ? ` · ${linkTo(tpl)}` : ""}</div>
     <h3>${esc(e.name)}</h3>
-    ${pic ? `<img class="pic" src="${pic}" alt="">` : `<p class="note">No portrait yet; the game makes one, or add one in Images.</p>`}
+    ${pic ? `<img class="pic" src="${pic}" alt="">` : `<p class="note">No portrait yet; the game makes one when it starts.</p>`}
+    ${imageButton(e.name, "portrait")}
     ${facts([["Stands at", `${e.pos.join(", ")}${where ? ` in ${linkTo(where)}` : ""}`]])}
     ${formHtml("pi", e, ident)}
     ${section("Schedule", `<div id="schedBox"></div>`, e.type !== "player")}
@@ -550,6 +560,7 @@ function inspectTemplate(box, t) {
   box.innerHTML = `<div class="kind">${kind === "itpl" ? "Item" : "Template"}</div>
     <h3>${esc(t.name)}</h3>
     ${pic ? `<img class="pic" src="${pic}" alt="">` : ""}
+    ${kind === "itpl" ? imageButton(t.name, "item") : ""}
     ${facts([t.type && ["Type", esc(t.type)], t.quality && ["Quality", esc(t.quality)], t.value != null && ["Value", esc(t.value)], t.description && ["About", esc(t.description)]])}
     <div class="kind">Used by</div>${refsHtml(refs, "Nothing uses this.")}`;
   bindRefs(box, refs);

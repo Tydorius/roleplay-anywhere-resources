@@ -80,6 +80,22 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
 .toast.show { opacity: 1; }
 .hint { color: var(--muted); font-size: 13px; }
+.thumb.drop { outline: 3px dashed var(--accent); outline-offset: -6px; }
+dialog.crop { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); padding: 0; width: min(760px, calc(100vw - 32px)); }
+dialog.crop::backdrop { background: rgba(0,0,0,.5); }
+.crop-head { padding: 14px 18px 4px; }
+.crop-head h3 { margin: 0 0 2px; font-size: 16px; }
+.crop-main { display: grid; grid-template-columns: minmax(0, 1fr) 190px; gap: 14px; padding: 8px 18px; }
+.crop-stage { position: relative; background: repeating-conic-gradient(var(--check-a) 0 25%, var(--check-b) 0 50%) 0 0 / 18px 18px;
+  border-radius: 8px; overflow: hidden; touch-action: none; }
+.crop-stage canvas { display: block; width: 100%; height: auto; cursor: move; }
+.crop-side { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.crop-side .out { width: 100%; border-radius: 8px; border: 1px solid var(--line);
+  background: repeating-conic-gradient(var(--check-a) 0 25%, var(--check-b) 0 50%) 0 0 / 14px 14px; }
+.crop-side label { display: flex; gap: 6px; align-items: center; }
+.crop-side input[type=range] { width: 100%; }
+.crop-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 10px 18px 14px; border-top: 1px solid var(--line); }
+@media (max-width: 640px) { .crop-main { grid-template-columns: 1fr; } }
 @media (max-width: 640px) {
   .models-grid { grid-template-columns: 1fr; }
   .models-grid .k { padding-top: 10px; }
@@ -130,6 +146,8 @@ details.models > summary { cursor: pointer; font-weight: 600; }
   <div class="grid" id="grid"></div>
 </main>
 <div class="toast" id="toast"></div>
+<input type="file" id="imgFile" accept="image/*" hidden>
+<dialog class="crop" id="crop"></dialog>
 
 <script>
 const KIND_LABEL = {sprite: "Map objects", item: "Items", perk: "Perks", portrait: "Portraits"};
@@ -341,6 +359,7 @@ function card(it) {
           ? `<button class="primary" data-a="keep">Keep</button><button data-a="regen">Retry</button><button data-a="forget">Discard</button>`
           : active(job) ? `<button class="danger" data-a="cancel">Cancel</button>`
           : `<button class="primary" data-a="regen" ${it.sending ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
+             <button data-a="browse" title="Use an image of your own (or drop one on the picture)">Browse…</button>
              <button data-a="edit">${it.editing ? "Done" : "Edit prompt"}</button>
              ${st === "error" ? `<button data-a="forget">Dismiss</button>` : ""}
              ${it.file ? `<button class="danger" data-a="delete" title="Delete; the game draws a new one when it next loads">Delete</button>` : ""}`}
@@ -361,6 +380,10 @@ function card(it) {
   const cp = el.querySelector(".custom .prompt"); if (cp) cp.oninput = () => { it.customPrompt = cp.value; remember("customPrompt", cp.value); };
   const cn = el.querySelector(".custom .neg"); if (cn) cn.oninput = () => { it.customNegative = cn.value; remember("customNegative", cn.value); };
   for (const b of el.querySelectorAll("[data-a]")) b.onclick = () => act(it, b.dataset.a);
+  const th = el.querySelector(".thumb");
+  th.ondragover = e => { if (!active(it.job) && [...e.dataTransfer.items].some(x => x.kind === "file")) { e.preventDefault(); th.classList.add("drop"); } };
+  th.ondragleave = () => th.classList.remove("drop");
+  th.ondrop = e => { e.preventDefault(); th.classList.remove("drop"); const f = e.dataTransfer.files[0]; if (f) openCrop(it, f); };
   return el;
 }
 
@@ -374,6 +397,7 @@ function redraw(it) {  // a card that now passes or fails the filters appears or
 
 async function act(it, a) {
   if (a === "edit") { it.editing = !it.editing; return redraw(it); }
+  if (a === "browse") { const inp = $("imgFile"); inp.onchange = () => { const f = inp.files[0]; inp.value = ""; if (f) openCrop(it, f); }; return inp.click(); }
   if (a === "regen") return submit(it);
   if (a === "keep") return keep(it);
   if (a === "forget" || a === "cancel") {
@@ -452,6 +476,122 @@ async function keep(it, quiet) {
     if (!quiet) toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
     return true;
   } catch (e) { it.error = e.message; redraw(it); return false; }
+}
+
+// ---------------------------------------------------------------- your own images: crop, size, save as WebP
+// Portraits, items and perks are square, 512 × 512. A map object keeps the aspect the game draws its
+// footprint at, (width + 0.5) / (height + 0.5) cells, at up to 1024 px on the long side, and needs a
+// transparent background. The result is WebP at the game's quality, saved like a kept ComfyUI image.
+const SQUARE = 512, SPRITE_LONG = 1024;
+
+async function openCrop(it, file) {
+  let bmp;
+  try { bmp = await createImageBitmap(file); }   // not <img>.decode(), which stalls in a background tab
+  catch { return toast(`Can't read ${file.name} as an image`); }
+  const target = it.kind === "sprite" ? it.aspect : 1;
+  const st = {bmp, target, mode: it.kind === "sprite" ? "fit" : "crop", box: null, alpha: hasAlpha(bmp)};
+  // the largest box of the target aspect inside the picture; a portrait starts at the top (faces are up there)
+  const full = bmp.width / bmp.height > target ? {w: bmp.height * target, h: bmp.height} : {w: bmp.width, h: bmp.width / target};
+  st.box = {w: full.w, h: full.h, x: (bmp.width - full.w) / 2, y: it.kind === "portrait" ? 0 : (bmp.height - full.h) / 2};
+  st.maxW = full.w;
+  const off = Math.abs(Math.log((bmp.width / bmp.height) / target)) > Math.log(1.15);
+  const warn = [
+    it.kind === "sprite" && !st.alpha && "This picture has no transparent background. Map objects are drawn on the ground, so anything that isn't the object will show.",
+    it.kind === "sprite" && off && `Its shape (${bmp.width} × ${bmp.height}) is far from this object's footprint; fit leaves empty space, crop cuts some off.`,
+    Math.min(bmp.width, bmp.height) < 256 && "It's small, so it will look soft when enlarged.",
+  ].filter(Boolean);
+  const dlg = $("crop");
+  dlg.innerHTML = `<div class="crop-head"><h3>${esc(it.name)}</h3>
+      <div class="hint">${esc(KIND_LABEL[it.kind].replace(/s$/, ""))} · ${esc(file.name)} · ${bmp.width} × ${bmp.height}</div></div>
+    <div class="crop-main">
+      <div class="crop-stage"><canvas id="cropCanvas"></canvas></div>
+      <div class="crop-side">
+        ${it.kind === "sprite" ? `<label><input type="radio" name="cm" value="fit" checked> Fit the whole picture</label>
+          <label><input type="radio" name="cm" value="crop"> Crop to fill</label>` : ""}
+        <label id="zoomRow">Size <input type="range" id="cropZoom" min="0.1" max="1" step="0.01" value="1"></label>
+        <div class="hint">Drag the frame to choose what's kept.</div>
+        <canvas class="out" id="cropOut"></canvas>
+        <div class="hint" id="cropSize"></div>
+        ${warn.map(w => `<div class="note warn">${esc(w)}</div>`).join("")}
+      </div>
+    </div>
+    <div class="crop-foot"><button id="cropCancel">Cancel</button><button class="primary" id="cropSave">Save</button></div>`;
+  const cv = $("cropCanvas"), scale = Math.min(1, 520 / Math.max(bmp.width, bmp.height));
+  cv.width = Math.round(bmp.width * scale); cv.height = Math.round(bmp.height * scale);
+  const draw = () => {
+    const g = cv.getContext("2d");
+    g.clearRect(0, 0, cv.width, cv.height); g.drawImage(bmp, 0, 0, cv.width, cv.height);
+    $("zoomRow").hidden = st.mode !== "crop";
+    if (st.mode === "crop") {
+      const b = st.box, x = b.x * scale, y = b.y * scale, w = b.w * scale, h = b.h * scale;
+      g.fillStyle = "rgba(0,0,0,.5)";
+      g.fillRect(0, 0, cv.width, y); g.fillRect(0, y + h, cv.width, cv.height - y - h);
+      g.fillRect(0, y, x, h); g.fillRect(x + w, y, cv.width - x - w, h);
+      g.strokeStyle = "#fff"; g.lineWidth = 2; g.strokeRect(x + 1, y + 1, w - 2, h - 2);
+    }
+    const out = render(st);
+    const o = $("cropOut"); o.width = out.width; o.height = out.height; o.getContext("2d").drawImage(out, 0, 0);
+    $("cropSize").textContent = `Saved as ${out.width} × ${out.height} WebP`;
+  };
+  const clamp = () => {
+    const b = st.box;
+    b.x = Math.max(0, Math.min(bmp.width - b.w, b.x)); b.y = Math.max(0, Math.min(bmp.height - b.h, b.y));
+  };
+  let drag = null;
+  cv.onpointerdown = e => { if (st.mode !== "crop") return; cv.setPointerCapture(e.pointerId); drag = {x: e.clientX, y: e.clientY, bx: st.box.x, by: st.box.y}; };
+  cv.onpointermove = e => {
+    if (!drag) return;
+    const k = bmp.width / cv.getBoundingClientRect().width;
+    st.box.x = drag.bx + (e.clientX - drag.x) * k; st.box.y = drag.by + (e.clientY - drag.y) * k; clamp(); draw();
+  };
+  cv.onpointerup = cv.onpointercancel = () => { drag = null; };
+  $("cropZoom").oninput = () => {
+    const b = st.box, cx = b.x + b.w / 2, cy = b.y + b.h / 2, z = +$("cropZoom").value;
+    b.w = st.maxW * z; b.h = b.w / target; b.x = cx - b.w / 2; b.y = it.kind === "portrait" && b.y === 0 ? 0 : cy - b.h / 2; clamp(); draw();
+  };
+  dlg.querySelectorAll("[name=cm]").forEach(r => r.onchange = () => { st.mode = r.value; draw(); });
+  const close = () => { dlg.close(); bmp.close(); };
+  $("cropCancel").onclick = close;
+  dlg.oncancel = e => { e.preventDefault(); close(); };
+  $("cropSave").onclick = async () => {
+    $("cropSave").disabled = true;
+    try {
+      const blob = await new Promise(r => render(st).toBlob(r, "image/webp", 0.85));
+      if (!blob || blob.type !== "image/webp") throw new Error("This browser can't save WebP; open the page in Chrome, Edge or Firefox.");
+      await api(`/api/save?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&kind=${it.kind}`, {method: "POST", body: blob});
+      it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now(); it.error = null;
+      close(); redraw(it); toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
+    } catch (e) { $("cropSave").disabled = false; toast(e.message); }
+  };
+  dlg.showModal();
+  draw();
+}
+
+/** The finished image: the crop box scaled to size, or (fit) the whole picture centred on transparency. */
+function render(st) {
+  const {bmp, target} = st;
+  const [w, h] = target === 1 ? [SQUARE, SQUARE]
+    : target > 1 ? [SPRITE_LONG, Math.round(SPRITE_LONG / target)] : [Math.round(SPRITE_LONG * target), SPRITE_LONG];
+  const c = document.createElement("canvas"); c.width = w; c.height = h;
+  const g = c.getContext("2d"); g.imageSmoothingQuality = "high";
+  if (st.mode === "fit") {
+    const k = Math.min(w / bmp.width, h / bmp.height), dw = bmp.width * k, dh = bmp.height * k;
+    g.drawImage(bmp, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  } else {
+    const b = st.box;
+    g.drawImage(bmp, b.x, b.y, b.w, b.h, 0, 0, w, h);
+  }
+  return c;
+}
+
+/** Whether any pixel is see-through, checked on a small copy. */
+function hasAlpha(bmp) {
+  const c = document.createElement("canvas"), k = Math.min(1, 128 / Math.max(bmp.width, bmp.height));
+  c.width = Math.max(1, Math.round(bmp.width * k)); c.height = Math.max(1, Math.round(bmp.height * k));
+  const g = c.getContext("2d"); g.drawImage(bmp, 0, 0, c.width, c.height);
+  const d = g.getImageData(0, 0, c.width, c.height).data;
+  for (let i = 3; i < d.length; i += 4) if (d[i] < 250) return true;
+  return false;
 }
 
 // ---------------------------------------------------------------- wiring

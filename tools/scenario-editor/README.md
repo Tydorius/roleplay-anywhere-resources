@@ -24,8 +24,11 @@ It needs Python 3.8 or newer, and nothing else. From a terminal: `python scenari
 The editor runs on the [Image Gallery](../../mods/better-images)'s code and leaves the gallery itself
 unchanged. The gallery still works on its own.
 - **Same workspaces.** A scenario you open in one shows up in the other.
-- **Images tab.** This is the gallery's own page, open on the same scenario: regenerate images
-  through ComfyUI, then keep or discard them.
+- **Images tab.** This is the gallery's own page, open on the same scenario. Regenerate images
+  through ComfyUI, then keep or discard them, or **Browse…** for a picture of your own; a crop
+  window sizes it and saves it as WebP.
+- **Portrait…** and **Sprite…** buttons in the inspector open the Images tab showing just that
+  one picture.
 
 ## What it does now
 

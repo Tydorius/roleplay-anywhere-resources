@@ -286,16 +286,23 @@ function find() {
 $("find").onkeydown = e => { if (e.key === "Enter") find(); };
 $("find").oninput = e => { if (!e.inputType || e.inputType === "insertReplacementText") find(); };  // picked from the list
 
-function showImages() {
+function showImages(find) {
   remember("gallery.source", S.source);   // the gallery page opens the scenario it last showed
-  $("images").src = "/gallery";
+  const fr = $("images");
+  fr.onload = () => {                     // narrow the gallery to one thing by typing into its search box
+    const box = find && fr.contentDocument?.getElementById("search");
+    if (box) { box.value = find; box.dispatchEvent(new Event("input")); }
+  };
+  fr.src = "/gallery";
 }
-function setTab(t) {
+/** Opens the Images tab showing only the images whose name or description matches `find`. */
+function openImages(find) { if (S.tab === "images") showImages(find); else setTab("images", find); }
+function setTab(t, find) {
   if (t === S.tab) return;
   S.tab = t;
   $("tabMap").classList.toggle("on", t === "map"); $("tabImages").classList.toggle("on", t === "images");
   $("mapView").hidden = t !== "map"; $("images").hidden = t !== "images";
-  if (t === "images") showImages(); else { $("images").src = "about:blank"; refreshMedia().catch(() => {}); draw(); }
+  if (t === "images") showImages(find); else { $("images").src = "about:blank"; refreshMedia().catch(() => {}); draw(); }
 }
 $("tabMap").onclick = () => setTab("map");
 $("tabImages").onclick = () => setTab("images");
