@@ -64,6 +64,11 @@ unchanged. The gallery still works on its own.
     the pointer is;
   - F centres the selection;
   - Esc cancels a drag or goes back to Select, and so does a right-click.
+- **Map size…** (at the end of the tool strip) grows or shrinks the map. Set the width and height,
+  and pick an anchor on the 3 × 3 grid: the side or corner the current map stays against, as in
+  an image editor's canvas resize. New cells go on the other sides, and everything moves with the
+  map, doors included. A preview shows the old map inside the new one. A size that would cut
+  anything off is refused, naming what.
 - **Nothing breaks the map.** A move, resize, new region or paste that would leave two regions
   partly overlapping is refused, and so is anything that would leave the map.
 - **Delete is safe.** Delete removes what nothing uses. Something in use opens a dialog that
