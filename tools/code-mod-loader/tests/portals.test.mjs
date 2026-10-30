@@ -17,10 +17,11 @@ function load() {
   }
   const arpg = ctx.__arpg;
   // Just enough of a zod object schema for addCall builders to succeed.
-  const fakeSchema = { extend() { return this; }, omit() { return this; }, shape: { text: {} } };
+  const fakeSchema = { extend() { return this; }, omit() { return this; }, pick() { return this; }, shape: { text: {} } };
   // Stand-in for the game's teleport call: land on the cell east of the target.
   arpg.api = {
     flavor_text: { schema: fakeSchema },
+    hp_delta: { schema: fakeSchema },
     teleport: {
       run(world, { entity, target }) {
         if (target.region) {
@@ -211,28 +212,108 @@ test('only those in the know route walks through an undiscovered secret portal',
   assert.equal(arpg.path(world, player.pos, [18, 8], player, {}, bfs), null, "the player's own walks don't give it away");
 });
 
-test('a townsman stepping on a secret pad stays put; the player goes through and discovers it', () => {
+test('an NPC wandering across an ordinary pad stays put; one whose walk uses it goes through', () => {
+  const { arpg } = load();
+  const { world } = makeWorld({ objects: { Trapdoor: [8, 5], Ladder: [12, 5] }, portals: [cellar] });
+  const moth = { type: 'npc', name: 'Moth swarm', pos: [7, 5] };
+  world.entities.push(moth);
+  arpg.tick(world);
+  moth.pos = [8, 5];
+  arpg.tick(world);
+  assert.equal(cellKey(moth.pos), '8,5', 'wandered on: nothing happens');
+  moth.pos = [2, 2];
+  arpg.tick(world);
+  arpg.path(world, moth.pos, [18, 8], moth, {}, bfs); // a planned walk through the portal
+  moth.pos = [8, 5];
+  arpg.tick(world);
+  assert.equal(cellKey(moth.pos), '13,5');
+});
+
+test('the player finds a secret portal by using it; only nearby onlookers learn it too', () => {
   const { arpg } = load();
   const { world, player, townsman } = secretWorld();
+  const farmer = { type: 'npc', name: 'Godric Thorne', pos: [1, 9] };
+  world.entities.push(farmer);
+  townsman.pos = [5, 5]; // 3 cells from the trapdoor, same room
   arpg.tick(world);
-  townsman.pos = [8, 5];
-  arpg.tick(world);
-  assert.equal(cellKey(townsman.pos), '8,5');
   player.pos = [8, 5];
   arpg.tick(world);
   assert.equal(cellKey(player.pos), '13,5');
   assert.equal(world.arpgMods.portalState.discovered[0], true);
-  townsman.pos = [12, 5]; // now anyone can use it
-  arpg.tick(world);
-  assert.equal(cellKey(townsman.pos), '9,5');
+  assert.deepEqual([...world.arpgMods.portalState.known[0]], ['Hal Sedge']);
+  assert.match(townsman.memories[0].text, /Saw Hero slip through a hidden way at Trapdoor/);
+  assert.equal(farmer.memories, undefined, 'too far away to see it');
+  assert.equal(cellKey(arpg.path(world, player.pos, [2, 2], player, {}, bfs).at(-1)), '12,5', 'the player now routes through it');
+  assert.equal(cellKey(arpg.path(world, townsman.pos, [18, 8], townsman, {}, bfs).at(-1)), '8,5', 'so does the onlooker');
+  assert.equal(arpg.path(world, farmer.pos, [18, 8], farmer, {}, bfs), null, 'but not the farmer');
 });
 
-test('portal_reveal discovers a secret portal by name', () => {
+// The player uses the secret trapdoor in front of Hal; returns whether Hal learned it.
+function watchedUse(setup) {
   const { arpg } = load();
-  const { world, townsman } = secretWorld();
+  const { world, player, townsman } = secretWorld();
+  townsman.pos = [5, 5];
+  world.gameTimeSecs = 10 * 3600;
+  world.overseerHistory = [];
+  setup(world, player);
+  arpg.tick(world);
+  player.pos = [8, 5];
+  arpg.tick(world);
+  assert.equal(cellKey(player.pos), '13,5', 'the player still goes through');
+  return !!world.arpgMods.portalState.known?.[0]?.includes('Hal Sedge');
+}
+
+const turn = (t, playerAction, roll) => ({ t, playerAction, events: [], response: roll ? { roll } : { plaus: { verdict: 'trivial' } } });
+
+test('nobody sees a player who just sneaked successfully', () => {
+  const sneaked = (w, roll) => w.overseerHistory.push(turn(w.gameTimeSecs - 120, '(Creep toward the cabin)', roll));
+  assert.equal(watchedUse(w => sneaked(w, { relevant_skill: 'Stealth', outcome: 'major_success' })), false);
+  assert.equal(watchedUse(w => sneaked(w, null)), false, 'judged trivial: still sneaking');
+  assert.equal(watchedUse(w => sneaked(w, { relevant_skill: 'Stealth', outcome: 'failure' })), true, 'a failed roll is seen');
+});
+
+test('stealth is read from the roll skill, statuses, the current action and scenario words', () => {
+  const roll = skill => w => w.overseerHistory.push(turn(w.gameTimeSecs - 60, '(Go to the pallet)', { relevant_skill: skill, outcome: 'success' }));
+  assert.equal(watchedUse(roll('Stealth')), false);
+  assert.equal(watchedUse(roll('Street Smarts')), true, 'not a stealth skill');
+  assert.equal(watchedUse((w, p) => { p.statusEffects = [{ desc: 'Hidden in the shadows' }]; }), false);
+  assert.equal(watchedUse((w, p) => { p.activity = { summary: 'sneaking along the wall' }; }), false);
+  assert.equal(watchedUse(w => {
+    w.arpgMods.portalSettings = { stealthWords: ['Shadowstep'] };
+    roll('Shadowstep')(w);
+  }), false);
+});
+
+test('an old sneak no longer hides the player', () => {
+  assert.equal(watchedUse(w => w.overseerHistory.push(turn(w.gameTimeSecs - 20 * 60, '(Sneak in)', null))), true);
+  assert.equal(watchedUse(w => {
+    w.overseerHistory.push(turn(w.gameTimeSecs - 5 * 60, '(Sneak in)', null));
+    w.overseerHistory.push(turn(w.gameTimeSecs - 60, '(Wave at Hal)', null));
+  }), true, 'the latest action counts');
+});
+
+test('portal_reveal tells the player only; portal_tell tells one character', () => {
+  const { arpg } = load();
+  const { world, player, townsman } = secretWorld();
   assert.match(arpg.api.portal_reveal.run(world, { name: 'Front door' }), /no secret passage/);
   assert.equal(arpg.api.portal_reveal.run(world, { name: "smugglers' TUNNEL" }), null);
+  assert.equal(cellKey(arpg.path(world, player.pos, [18, 8], player, {}, bfs).at(-1)), '8,5');
+  assert.equal(arpg.path(world, townsman.pos, [18, 8], townsman, {}, bfs), null);
+  assert.equal(arpg.api.portal_tell.run(world, { name: "Smugglers' tunnel", target: townsman }), null);
   assert.equal(cellKey(arpg.path(world, townsman.pos, [18, 8], townsman, {}, bfs).at(-1)), '8,5');
+  assert.match(townsman.memories.at(-1).text, /Learned of a hidden way: Smugglers' tunnel/);
+});
+
+test('an ordinary portal with a knownBy list is known only to those characters', () => {
+  const { arpg } = load();
+  const ferry = { name: 'Ferry', from: { object: 'Trapdoor' }, to: { object: 'Ladder' }, knownBy: ['Hal Sedge'] };
+  const { world, player } = makeWorld({ objects: { Trapdoor: [8, 5], Ladder: [12, 5] }, portals: [ferry] });
+  const hal = { type: 'npc', name: 'Hal Sedge', pos: [2, 2] };
+  const moth = { type: 'npc', name: 'Moth swarm', pos: [3, 3] };
+  world.entities.push(hal, moth);
+  assert.equal(cellKey(arpg.path(world, hal.pos, [18, 8], hal, {}, bfs).at(-1)), '8,5');
+  assert.equal(arpg.path(world, moth.pos, [18, 8], moth, {}, bfs), null);
+  assert.equal(cellKey(arpg.path(world, player.pos, [18, 8], player, {}, bfs).at(-1)), '8,5', 'not secret: the player knows it');
 });
 
 test('the GM hears about secret passages separately until they are found', () => {

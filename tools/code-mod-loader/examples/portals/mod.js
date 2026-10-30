@@ -11,10 +11,12 @@
 //     ]
 //   }
 //
-// Anyone who steps onto a `from` end comes out beside the `to` end. Walks route through
-// portals on their own (GM beats, schedules, followers), so the GM just uses MOVE_TO.
-// A secret portal works only for the player and its `knownBy` characters until it is
-// discovered: by the player using it, or by the GM's portal_reveal call.
+// The player goes through any pad they step onto. NPCs go through only when their walk
+// was planned through the portal (GM beats, schedules, followers), so the GM just uses
+// MOVE_TO and nobody falls through one by wandering. Only those who know a portal route
+// through it: everyone for an ordinary one; for a secret one (or one with a knownBy list),
+// its knownBy characters, onlookers who saw it used, and anyone the GM's portal_tell
+// names. The player knows a secret one after using it or the GM's portal_reveal.
 (() => {
   const arpg = globalThis.__arpg;
   arpg.registerMod('portals');
@@ -80,11 +82,24 @@
   }
 
   const portalName = (p, i) => p.name || `Portal ${i + 1}`;
-  const discovered = (world, i) => !!world.arpgMods?.portalState?.discovered?.[i];
+  const lower = s => String(s ?? '').trim().toLowerCase();
+
+  // Who knows which portal. Saved with the game in arpgMods.portalState:
+  //   discovered: {portal index: true}         the player knows it
+  //   known:      {portal index: [names...]}   characters who learned it in play
+  const portalState = world => (world.arpgMods.portalState ??= {});
+  const playerKnows = (world, i) => !!world.arpgMods?.portalState?.discovered?.[i];
   function discover(world, i) {
-    const s = (world.arpgMods.portalState ??= {});
-    (s.discovered ??= {})[i] = true;
+    (portalState(world).discovered ??= {})[i] = true;
     cache.delete(world);
+  }
+  // Returns true when `name` didn't know the portal before.
+  function learn(world, i, name) {
+    const list = ((portalState(world).known ??= {})[i] ??= []);
+    if (list.some(n => same(n, name))) return false;
+    list.push(String(name).trim());
+    cache.delete(world);
+    return true;
   }
 
   function edgesOf(world) {
@@ -92,9 +107,12 @@
     (world.arpgMods?.portals ?? []).forEach((p, i) => {
       if (!p || p.enabled === false) return;
       const name = portalName(p, i);
-      const secret = !!p.secret && !discovered(world, i);
-      const knownByNames = (Array.isArray(p.knownBy) ? p.knownBy : []).map(n => String(n).trim()).filter(Boolean);
-      const knownBy = new Set(knownByNames.map(n => n.toLowerCase()));
+      const secret = !!p.secret && !playerKnows(world, i);
+      // A portal without a knownBy list is common knowledge, unless it's secret.
+      const everyone = !p.secret && !Array.isArray(p.knownBy);
+      const knownByNames = [...(Array.isArray(p.knownBy) ? p.knownBy : []), ...(world.arpgMods?.portalState?.known?.[i] ?? [])]
+        .map(n => String(n).trim()).filter((n, k, all) => n && all.findIndex(m => same(m, n)) === k);
+      const knownBy = new Set(knownByNames.map(lower));
       const a = resolveEnd(world, p.from, `${i}:from`);
       const b = resolveEnd(world, p.to, `${i}:to`);
       if (!a || !b) return warnOnce(`"${name}": ${!a ? 'from' : 'to'} end not found on this map`);
@@ -103,17 +121,66 @@
           warnOnce(`"${name}": "${spec.object}" blocks movement, so nobody can step on it; give its template a walkability above 0`);
         }
       }
-      edges.push({ id: `${i}>`, portal: i, name, secret, knownBy, knownByNames, from: a, to: b });
-      if (p.twoWay) edges.push({ id: `${i}<`, portal: i, name, secret, knownBy, knownByNames, from: b, to: a });
+      const restricted = !everyone;
+      const player = !p.secret || playerKnows(world, i);
+      edges.push({ id: `${i}>`, portal: i, name, secret, restricted, everyone, player, knownBy, knownByNames, from: a, to: b });
+      if (p.twoWay) edges.push({ id: `${i}<`, portal: i, name, secret, restricted, everyone, player, knownBy, knownByNames, from: b, to: a });
     });
     return edges;
   }
 
-  const knows = (edge, entity) => !edge.secret || edge.knownBy.has(String(entity?.name ?? '').trim().toLowerCase());
-  // Undiscovered secret portals: walks route through them only for those in the know, and
-  // only they and the player (who discovers it that way) can step through.
-  const canRoute = (edge, entity) => knows(edge, entity);
-  const canTrigger = (edge, entity) => entity.type === 'player' || knows(edge, entity);
+  const knows = (edge, entity) =>
+    entity?.type === 'player' ? edge.player : edge.everyone || edge.knownBy.has(lower(entity?.name));
+
+  // NPCs within this many cells of either end, in the same room, see someone use a portal.
+  const WITNESS_RANGE = 6;
+  // The engine has no stealth state; scenarios bring their own skills ("Stealth",
+  // "Street Smarts"...). So sneaking is read from words in what the GM resolved.
+  const STEALTH_WORDS = /\b(stealth\w*|sneak\w*|hid(e|es|ing|den)|conceal\w*|unseen|unnoticed|invisib\w*|creep\w*|skulk\w*|prowl\w*|lurk\w*|camouflag\w*|tiptoe\w*|silently)\b/i;
+  const STEALTH_MINUTES = 15;
+
+  // Whether the traveller is sneaking: a stealthy status or current action, or for the
+  // player, a stealthy action (by its words or its roll's skill) in the last few game
+  // minutes whose roll didn't fail.
+  function sneaking(world, entity) {
+    const extra = (world.arpgMods?.portalSettings?.stealthWords ?? []).map(w => String(w).trim()).filter(Boolean);
+    const stealthy = text => !!text && (STEALTH_WORDS.test(text) || extra.some(w => String(text).toLowerCase().includes(w.toLowerCase())));
+    if ((entity.statusEffects ?? []).some(s => stealthy(s?.desc))) return true;
+    if (stealthy(entity.activity?.summary)) return true;
+    if (entity.type !== 'player') return false;
+    const now = world.gameTimeSecs ?? 0;
+    const history = world.overseerHistory ?? [];
+    for (let k = history.length - 1; k >= 0; k--) {
+      const turn = history[k];
+      if (now - (turn.t ?? 0) > STEALTH_MINUTES * 60) break;
+      if (!turn.playerAction) continue;
+      let response = turn.response;
+      if (typeof response === 'string') {
+        try { response = JSON.parse(response); } catch { response = null; }
+      }
+      const roll = response?.roll;
+      if (roll && /fail/i.test(String(roll.outcome ?? ''))) return false;
+      return stealthy(turn.playerAction) || stealthy(roll?.relevant_skill);
+    }
+    return false;
+  }
+
+  // When a restricted portal is used openly, onlookers learn it and remember what they saw.
+  function witnesses(world, traveller, edge, landed) {
+    if (sneaking(world, traveller)) return;
+    const spots = [edge.from.center, landed].map(c => ({ c, room: innermostRegion(world, c) }));
+    const where = edge.from.label;
+    for (const e of world.entities ?? []) {
+      if (e.type !== 'npc' || e.dead || e === traveller || knows(edge, e)) continue;
+      const c = cellOf(e.pos);
+      const saw = spots.find(s => cheb(s.c, c) <= WITNESS_RANGE && innermostRegion(world, c) === s.room);
+      if (!saw || !learn(world, edge.portal, e.name)) continue;
+      const text = saw === spots[0]
+        ? `Saw ${traveller.name} slip through a hidden way at ${where} and vanish.`
+        : `Saw ${traveller.name} appear out of nowhere by ${edge.to.label}.`;
+      e.memories = [...(e.memories ?? []), { t: world.gameTimeSecs ?? 0, text }];
+    }
+  }
 
   // Resolved portals per world, refreshed every few seconds so moved or destroyed objects count.
   const cache = new WeakMap();
@@ -133,7 +200,7 @@
   // portal to take and its total cost, or null when no chain beats `limit`.
   function route(world, start, goal, entity, opts, next, limit) {
     const { legs } = state(world);
-    const edges = state(world).edges.filter(e => canRoute(e, entity));
+    const edges = state(world).edges.filter(e => knows(e, entity));
     const leg = (a, b) => {
       if (a[0] === b[0] && a[1] === b[1]) return 0;
       const k = `${key(a)}>${key(b)}`;
@@ -194,26 +261,31 @@
   function travel(world, entity, edge, edges) {
     pending.delete(entity);
     const err = arpg.api?.teleport?.run(world, { entity, target: edge.to.target });
-    if (err) warnOnce(`"${edge.name}": ${err}`);
-    if (edge.secret && entity.type === 'player' && !err) discover(world, edge.portal);
+    if (err) return warnOnce(`"${edge.name}": ${err}`);
+    if (entity.type === 'player' && !edge.player) discover(world, edge.portal);
     const landed = cellOf(entity.pos);
+    if (edge.restricted) witnesses(world, entity, edge, landed);
     lastZone.set(entity, edges.find(e => e.from.set.has(key(landed)))?.from.id ?? null);
   }
 
+  // The player goes through any pad they step onto (finding a secret one that way).
+  // NPCs only go through when their walk was planned through that portal, so nobody
+  // falls through one by wandering across it.
   arpg.onTick(world => {
     const { edges } = state(world);
     if (!edges.length) return;
     for (const e of world.entities ?? []) {
       if ((e.type !== 'npc' && e.type !== 'player') || e.dead || e.attachment) continue;
       const k = key(cellOf(e.pos));
-      const here = edges.filter(x => x.from.set.has(k) && canTrigger(x, e));
+      const here = edges.filter(x => x.from.set.has(k));
       const zone = here[0]?.from.id ?? null;
       if (!lastZone.has(e)) {
         lastZone.set(e, zone); // a game loaded with someone standing on a pad doesn't fire it
         continue;
       }
       const wanted = here.find(x => x.id === pending.get(e));
-      if (wanted || (here.length && zone !== lastZone.get(e))) travel(world, e, wanted ?? here[0], edges);
+      const stepped = e.type === 'player' && here.length && zone !== lastZone.get(e);
+      if (wanted || stepped) travel(world, e, wanted ?? here[0], edges);
       else lastZone.set(e, zone);
     }
   });
@@ -228,21 +300,21 @@
     for (const e of edges) {
       if (e.id.endsWith('<')) continue;
       const twoWay = edges.some(x => x.id === `${e.portal}<`);
-      const line = `- ${e.name}: ${e.from.label} ${twoWay ? '<->' : '->'} ${e.to.label}`;
-      if (!e.secret) open.push(line);
-      else secret.push(e.knownByNames.length ? `${line} (known to: ${e.knownByNames.join(', ')})` : line);
+      const who = e.restricted ? ` (known to: ${[...(e.player ? ['the player'] : []), ...e.knownByNames].join(', ') || 'nobody yet'})` : '';
+      const line = `- ${e.name}: ${e.from.label} ${twoWay ? '<->' : '-> (one way)'} ${e.to.label}${who}`;
+      (e.secret ? secret : open).push(line);
     }
     if (open.length) {
       parts.sections.push({
         kind: 'passages',
-        title: 'Passages (stepping onto one end brings a character out at the other; MOVE_TO a place beyond one and they walk through it on their own):',
+        title: 'Passages. A character who steps onto one end comes out at the other. To send someone through, MOVE_TO a place beyond it and they walk through it themselves; never use teleport for this, and never send anyone back through a one-way passage. Passage names are not entities to target. Only those who know a passage use it:',
         content: open.slice(0, MAX_PROMPT_LINES).join('\n'),
       });
     }
     if (secret.length) {
       parts.sections.push({
         kind: 'secret_passages',
-        title: 'Secret passages (the player has not found these; hint at them through play, never state them outright. Only those listed as knowing one can use it. When the player finds one by searching or being shown, call portal_reveal):',
+        title: 'Secret passages the player has not found. Hint at them through play; never state them outright. Only those who know one can use it. When the player finds one by searching or is shown it, call portal_reveal; when a character tells another, call portal_tell:',
         content: secret.slice(0, MAX_PROMPT_LINES).join('\n'),
       });
     }
@@ -250,17 +322,36 @@
 
   arpg.addApiHeader('header_portals', [
     '-- Secret passages --',
-    '{"call":"portal_reveal","name":"secret passage name"} // the player found or was shown a secret passage: from now on anyone can use it',
+    '{"call":"portal_reveal","name":"passage name"} // the player found or was shown a secret passage',
+    '{"call":"portal_tell","name":"passage name","target":"character name"} // someone who knows a secret passage told this character (gossip, a bribe, a confession). Only then can they use it',
   ].join('\n'), 'header_movement');
+
+  // Portals whose knowledge is tracked per character: secret ones and those with a knownBy list.
+  const findRestricted = (world, name) =>
+    (world.arpgMods?.portals ?? []).findIndex((p, n) => p && (p.secret || Array.isArray(p.knownBy)) && same(portalName(p, n), name));
 
   arpg.addCall('portal_reveal', api => ({
     // Reuse the game's plain text field type for the name.
     schema: api.flavor_text.schema.extend({ name: api.flavor_text.schema.shape.text }).omit({ text: true }),
     run(world, { name }) {
-      const i = (world.arpgMods?.portals ?? []).findIndex((p, n) => p?.secret && same(portalName(p, n), name));
-      if (i < 0) return `no secret passage named "${name}"`;
-      if (discovered(world, i)) return null;
+      const i = findRestricted(world, name);
+      if (i < 0 || !world.arpgMods.portals[i].secret) return `no secret passage named "${name}"`;
       discover(world, i);
+      return null;
+    },
+  }));
+
+  arpg.addCall('portal_tell', api => ({
+    // An entity field the engine resolves from a name, plus the passage name.
+    schema: api.hp_delta.schema.pick({ target: true }).extend({ name: api.flavor_text.schema.shape.text }),
+    run(world, { name, target }) {
+      const i = findRestricted(world, name);
+      if (i < 0) return `no secret passage named "${name}"`;
+      if (target.type === 'player') return discover(world, i), null;
+      if (target.type !== 'npc') return 'portal_tell target must be a character';
+      if (learn(world, i, target.name)) {
+        target.memories = [...(target.memories ?? []), { t: world.gameTimeSecs ?? 0, text: `Learned of a hidden way: ${portalName(world.arpgMods.portals[i], i)}.` }];
+      }
       return null;
     },
   }));
