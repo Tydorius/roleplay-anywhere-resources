@@ -12,7 +12,8 @@
 //
 // `area` and `above` line up corner to corner: the area's top-left cell is directly over the
 // top-left cell of `above`. `openings` are regions inside the area with no floor (a stairwell,
-// an atrium, a gallery over a hall). Give each a wall and no doorways and it becomes a railing.
+// an atrium, a gallery over a hall). Nobody can walk into one. Leave it unwalled for an open
+// drop; walls make a full-height parapet that hides much of the view.
 //
 // - People on different storeys notice each other only through an opening: one at or near
 //   the railing, the other in the room below, under or near the opening.
@@ -100,6 +101,18 @@
     return s.floor ? throughOpening(s.floor, s.upper, s.lower, range) : false;
   }, { order: 10 }); // after same-storey rules such as wall-aware perception
 
+  // An opening has no floor: nobody walks into it, whether or not it has a wall round it.
+  arpg.onNav((world, grid) => {
+    for (const f of floorsOf(world)) {
+      for (const o of f.openings) {
+        const [x0, y0] = o.position, [w, h] = o.size;
+        for (let x = Math.max(0, x0); x < Math.min(grid.w, x0 + w); x++) {
+          for (let y = Math.max(0, y0); y < Math.min(grid.h, y0 + h); y++) grid.blocked[y * grid.w + x] = 1;
+        }
+      }
+    }
+  });
+
   // --- The GM ---------------------------------------------------------------------------
 
   const describe = e => {
@@ -140,8 +153,20 @@
 
   // --- The view below an opening --------------------------------------------------------
 
-  // One extra camera per opening shows the room below, lined up with the opening on screen.
-  const views = new WeakMap(); // scene → Map(opening region → camera)
+  // Each opening gets two extra cameras over it, drawn after the game's own:
+  //   below: the room under the opening, softened and darkened;
+  //   top:   this floor again, minus its ground and lighting layers, so walls, railings,
+  //          people and labels at the opening's edge stay on top of the view below.
+  // The game draws ground at depth 1 to 9 (region floors, then full-map lighting layers at
+  // 8.9 to 9.5); walls, objects and characters start at 10.
+  const ABOVE_FLOOR_DEPTH = 10;
+  const views = new WeakMap(); // scene → Map(opening region → {below, top})
+
+  // Keeps the top camera from drawing ground and lighting, including layers the game adds later.
+  function hideFloorFrom(scene, cam) {
+    const low = scene.children.list.filter(o => o.depth < ABOVE_FLOOR_DEPTH && !(o.cameraFilter & cam.id));
+    if (low.length) cam.ignore(low);
+  }
 
   function syncViews(scene) {
     const world = scene.world;
@@ -153,7 +178,7 @@
     for (const f of floorsOf(world)) {
       for (const o of f.openings) {
         live.add(o);
-        let cam = mine.get(o);
+        let pair = mine.get(o);
         // The opening's rectangle in world pixels, then on screen (the game's y axis is flipped).
         const x0 = scene.sx(o.position[0]), x1 = scene.sx(o.position[0] + o.size[0]);
         const yTop = scene.sy(o.position[1]), yBottom = scene.sy(o.position[1] + o.size[1]);
@@ -164,29 +189,40 @@
         const cy0 = Math.max(main.y, Math.floor(sy0)), cy1 = Math.min(main.y + main.height, Math.ceil(sy1));
         const onScreen = cx1 - cx0 > 1 && cy1 - cy0 > 1;
         if (!onScreen) {
-          if (cam) cam.setVisible(false);
+          if (pair) {
+            pair.below.setVisible(false);
+            pair.top.setVisible(false);
+          }
           continue;
         }
-        if (!cam) {
-          cam = scene.cameras.add(cx0, cy0, cx1 - cx0, cy1 - cy0, false, `arpg-below-${o.name}`);
-          if (cam.postFX) {
+        if (!pair) {
+          const below = scene.cameras.add(cx0, cy0, cx1 - cx0, cy1 - cy0, false, `arpg-below-${o.name}`);
+          if (below.postFX) {
             // Phaser's blur: quality 0 (low), 1px offsets, a short 2-step pass.
-            if (f.view.blur > 0) cam.postFX.addBlur(0, 1, 1, f.view.blur, 0xffffff, 2);
-            if (f.view.brightness !== 1) cam.postFX.addColorMatrix().brightness(f.view.brightness);
+            if (f.view.blur > 0) below.postFX.addBlur(0, 1, 1, f.view.blur, 0xffffff, 2);
+            if (f.view.brightness !== 1) below.postFX.addColorMatrix().brightness(f.view.brightness);
           }
-          mine.set(o, cam);
+          const top = scene.cameras.add(cx0, cy0, cx1 - cx0, cy1 - cy0, false, `arpg-above-${o.name}`);
+          top.transparent = true;
+          pair = { below, top, frames: 0 };
+          mine.set(o, pair);
         }
-        cam.setVisible(true);
-        cam.setViewport(cx0, cy0, cx1 - cx0, cy1 - cy0);
-        cam.setZoom(main.zoom);
-        // The world point at the centre of the visible part of the opening, moved down a storey.
+        if (pair.frames++ % 60 === 0) hideFloorFrom(scene, pair.top);
+        // The world point at the centre of the visible part of the opening.
         const mid = main.getWorldPoint((cx0 + cx1) / 2, (cy0 + cy1) / 2);
-        cam.centerOn(mid.x + f.offset[0] * CELL_PX, mid.y - f.offset[1] * CELL_PX);
+        for (const cam of [pair.below, pair.top]) {
+          cam.setVisible(true);
+          cam.setViewport(cx0, cy0, cx1 - cx0, cy1 - cy0);
+          cam.setZoom(main.zoom);
+        }
+        pair.top.centerOn(mid.x, mid.y);
+        pair.below.centerOn(mid.x + f.offset[0] * CELL_PX, mid.y - f.offset[1] * CELL_PX); // a storey down
       }
     }
-    for (const [o, cam] of mine) {
+    for (const [o, pair] of mine) {
       if (!live.has(o)) {
-        scene.cameras.remove(cam);
+        scene.cameras.remove(pair.below);
+        scene.cameras.remove(pair.top);
         mine.delete(o);
       }
     }

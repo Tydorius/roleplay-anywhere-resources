@@ -129,3 +129,13 @@ test('the view below defaults to a slight blur and darkening, and a floor can ch
   other.arpgMods.floors[0].view = { blur: 0, brightness: 0.7 };
   assert.deepEqual({ ...arpg.floors.floorsOf(other)[0].view }, { blur: 0, brightness: 0.7 });
 });
+
+test('nobody can walk into an opening', () => {
+  const { arpg } = load();
+  const world = makeWorld();
+  const grid = { w: 40, h: 20, blocked: new Uint8Array(800), speed: new Float32Array(800).fill(1) };
+  arpg.nav(world, grid);
+  const blocked = [];
+  for (let i = 0; i < grid.blocked.length; i++) if (grid.blocked[i]) blocked.push(`${i % 40},${Math.floor(i / 40)}`);
+  assert.deepEqual(blocked, ['4,2', '5,2', '4,3', '5,3']);
+});

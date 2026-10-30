@@ -58,6 +58,15 @@ const PATCHES = [
       `function __arpgPathOrig(${t},${from},${dest},${ent},${opts}={}){`,
   },
   {
+    name: 'nav-grid',
+    // The movement grid every walk, path search and collision uses. Mods may mark extra
+    // cells blocked (blocked[y*w+x] = 1) before the game adds its objects.
+    find: /this\.occupied=new Uint8Array\(this\.w\*this\.h\);for\(const ([\w$]+) of ([\w$]+)\.entities\)\{/g,
+    replace: (_m, ent, world) =>
+      `this.occupied=new Uint8Array(this.w*this.h);globalThis.__arpg&&globalThis.__arpg.nav&&globalThis.__arpg.nav(${world},this);` +
+      `for(const ${ent} of ${world}.entities){`,
+  },
+  {
     name: 'sim-tick',
     // The start of each unpaused simulation step.
     find: /\.moving=!1;if\(([\w$]+)\.paused\)\{([\w$]+)\(\1\);return\}/g,

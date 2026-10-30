@@ -28,7 +28,7 @@ renderer, the map format and the editor. So this mod **emulates** extra floors:
 | `name` | For the GM and for warnings. |
 | `area` | The region that *is* this floor. |
 | `above` | The region directly below it. The two line up corner to corner: the area's top-left cell sits over the top-left cell of `above`. |
-| `openings` | Regions inside the area with no floor, such as a stairwell, an atrium or a gallery over a hall. **Give each a wall and no doorways**, so it works as a railing and nobody walks into it. |
+| `openings` | Regions inside the area with no floor, such as a stairwell, an atrium or a gallery over a hall. **Nobody can walk into one**: the mod blocks its cells in the game's movement grid. **Leave it unwalled** for an open drop that shows the most. The game's walls are all full height (wood, brick, stone, steel), so a walled opening becomes a tall parapet that hides much of the view. |
 | `view` | Optional. How the room below looks through the openings: `{"blur": 0.6, "brightness": 0.8}` are the defaults. `blur` is the softening (0 turns it off; around 1 or more starts to look like frosted glass). `brightness` is a multiplier (1 means no darkening). |
 
 Floors stack: a floor's `above` can itself be another floor's `area`.
@@ -44,9 +44,16 @@ Floors stack: a floor's `above` can itself be another floor's `area`.
   Inn Common Room; openings to look down through: Gallery well"*. It's also told who can be seen
   through an opening right now: *"Gareth Stone: below, in Inn Common Room"*, or *"…: above, at
   Weary Hound Gallery"*.
-- **Each opening shows the room below on screen,** slightly softened and darkened, as if at a distance. This uses an extra
-  Phaser camera lined up with the opening, so it follows panning and zoom and shows the real,
-  live room: people walking about, lighting, everything.
+- **Each opening shows the room below on screen,** slightly softened and darkened, as if at a
+  distance. Two extra Phaser cameras are lined up with each opening, so they follow panning and
+  zoom:
+  - **The view below** shows the real, live room under the opening: people walking about,
+    lighting, everything.
+  - **A second camera on top** redraws this floor without its ground and lighting layers. That
+    keeps walls, railing posts, objects, people and their labels at the edge of the opening on
+    top of the view instead of hidden under it.
+- **Openings can't be walked into.** That applies to everyone, by any route: clicks, direct
+  movement, NPC paths and hostiles.
 
 It runs after other perception mods (`order: 10`), so wall-aware perception can't block a view
 through an opening.
@@ -56,9 +63,14 @@ through an opening.
 On the Thornbury test map, a 16×6 gallery was placed in a field and declared above the
 Weary Hound common room, with a 6×2 railed well.
 - **Getting there:** the stairs portal took the player up.
-- **The view below:** at the railing, the well showed the common room's stools and Gareth
-  Stone. The first setting looked like frosted glass, so the default was eased to a slight
-  softening and 20% darker.
+- **The view below:** at the railing, the well showed the common room's stools and the people
+  under it.
+  - The first setting looked like frosted glass, so the default was eased to a slight softening
+    and 20% darker.
+  - The first version also drew the view over the railing posts. The top camera fixed that.
+  - A full-height wooden railing then hid most of the view, so the test well is now an
+    unwalled open drop.
+- **Blocking:** a path into the open well finds nothing, while a path along its edge works.
 - **Perception:**
   - Gareth, under the well, was seen.
   - Hal, by the door, wasn't.

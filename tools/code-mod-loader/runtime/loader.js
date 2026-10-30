@@ -8,6 +8,7 @@
   const tickHooks = [];
   const pathHooks = [];
   const perceiveHooks = [];
+  const navHooks = [];
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -81,6 +82,8 @@
       }
       return current;
     },
+    // Called whenever the game builds its movement grid.
+    nav(world, grid) { runHooks('nav', navHooks, [world, grid]); },
     // Called for every path search. Hooks are chained; the last `next` is the game's A*.
     path(world, from, dest, entity, opts, original) {
       arpg.pathOriginal = original; // for debugging: the game's own search
@@ -120,6 +123,10 @@
     // hook(world, a, b, range, search, answer) → true or false to replace `answer` (whether
     // a and b notice each other so far), anything else to leave it. `search` is the game's
     // own path search, as `next` is for onPath. Runs very often: keep it cheap.
+    // hook(world, grid): the game's movement grid as it's built. grid.w, grid.h, and
+    // grid.blocked / grid.speed indexed [y * w + x]; set blocked to 1 to make a cell impassable.
+    // It's rebuilt for every search, so keep it cheap.
+    onNav(hook) { navHooks.push(hook); },
     // `order` (default 0) sorts hooks: higher runs later and has the last word.
     onPerceive(hook, { order = 0 } = {}) {
       hook.arpgOrder = order;
