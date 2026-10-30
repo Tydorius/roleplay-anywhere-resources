@@ -109,6 +109,10 @@ cached for 2 seconds.
 
 ## Ideas not built yet
 
+- A visible marker for `cell` and `region` ends. They're invisible now, so the player can only
+  find one by its coordinates in the breadcrumb. An `object` end with a walkable object (a rug, a
+  trapdoor sprite) shows where it is. Keep cell ends on open ground: a cell squeezed between
+  blocking objects is hard to click onto.
 - Onlookers with a perception skill ("Observation") spotting even a sneaking traveller.
 - A per-portal option to keep hostiles out (a warded door).
 - Locked portals tied to an item or a variable.
