@@ -161,3 +161,23 @@ details.sec[open] > summary { color: var(--ink); }
 .sblock { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 8px; margin: 6px 0 8px; }
 .sched tr { cursor: pointer; }
 .sched tr.on td { background: color-mix(in srgb, var(--sel) 18%, transparent); }
+
+/* dialogs: force delete and mentions */
+dialog#dlg { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); padding: 0;
+             width: min(620px, calc(100vw - 32px)); max-height: calc(100vh - 48px); }
+dialog#dlg::backdrop { background: rgba(0,0,0,.45); }
+dialog#dlg form { display: flex; flex-direction: column; max-height: calc(100vh - 50px); }
+dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
+.dlg-body { padding: 0 18px; overflow: auto; }
+.dlg-body .field { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+.dlg-body .field > span { font-size: 12px; color: var(--muted); }
+.dlg-body select { width: 100%; }
+.dlg-buttons { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px 14px; border-top: 1px solid var(--line); margin-top: 10px; }
+.fd-preview ul { margin: 4px 0 8px; padding-left: 18px; font-size: 13px; max-height: 260px; overflow: auto; }
+.fd-preview li { margin: 2px 0; }
+.mentions { display: flex; flex-direction: column; gap: 6px; max-height: 320px; overflow: auto; margin-bottom: 6px; }
+.mention { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; background: var(--bg); border: 1px solid var(--line);
+           border-radius: 8px; padding: 6px 8px; }
+.mention small { display: block; color: var(--muted); }
+.mention mark { background: color-mix(in srgb, var(--sel) 45%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
+.del-bar { border-top: 1px solid var(--line); margin-top: 10px; padding-top: 10px; display: flex; gap: 8px; align-items: center; }

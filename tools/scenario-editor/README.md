@@ -3,8 +3,8 @@
 Edit an Anywhere RPG scenario by hand after the game (or a script) has generated it: look over the
 map, find problems, fix names and descriptions, and download a zip for **New Game → Import…**.
 
-**Early version.** The map editing works: move, resize, draw, place, doors and delete. The object,
-NPC and schedule editors come next.
+The map, the editors and the reference safety from the plan are all in. Quests, the calendar,
+items and perks are still edited in the game's own New Game screen.
 
 ## Start it
 
@@ -63,9 +63,27 @@ unchanged. The gallery still works on its own.
   - Esc cancels a drag or goes back to Select, and so does a right-click.
 - **Nothing breaks the map.** A move, resize, new region or paste that would leave two regions
   partly overlapping is refused, and so is anything that would leave the map.
-- **Delete is safe.** A region that schedules, calendar events or hostile types use is not deleted;
-  "Used by" lists what to change first. Deleting a region leaves its rooms and objects where they
-  are. The player can't be deleted.
+- **Delete is safe.** Delete removes what nothing uses. Something in use opens a dialog that
+  previews exactly what will change; **Shift+Delete** opens it straight away. Confirming deletes
+  it, and repairs everything that used it with the smallest change that keeps it working:
+  - a schedule block at a deleted region is removed, and the block before takes over its time. The
+    person stays; you can choose to move those blocks to another region instead.
+  - calendar events there become "anywhere";
+  - hostile types that live there move to the replacement region (its parent, unless you pick
+    another);
+  - deleting an object type deletes its placed copies, which can't exist without it, and only the
+    effect entries that spawn it;
+  - deleting an item removes only the stacks, equipment, loot entries and effect entries that hold
+    it.
+
+  Rooms and objects inside a deleted region stay unless you tick "also delete". People are never
+  deleted that way, and the player can't be deleted at all. Every inspector has a Delete button too.
+- **Rename everywhere.** Renaming a region, person, object, type or item updates every place that
+  names it: schedules and calendar events for regions, effect entries for items. Then, if the old
+  name still appears as a whole word in free text (descriptions, mindsets, memories, quests, rules,
+  the world background), a dialog lists each one in context to tick and replace. Words that only
+  contain it, like "Millie" for "Mill", aren't listed.
+- **Download zip** warns first if the Problems panel lists errors.
 - **Layers:** lock a layer so clicks go through it, or hide it.
 - **Problems:** the scenario is checked after every change (`scenario_checks.py`). Click a problem
   to jump to it.
@@ -105,8 +123,8 @@ unchanged. The gallery still works on its own.
 node --test
 ```
 
-Run this from this folder. It tests the map operations (`mapops.js`) and the minimap's coordinate
-helpers. It needs Node 18 or newer and nothing else.
+Run this from this folder. It tests the map operations (`mapops.js`), schedules (`schedule.js`), references
+(`refs.js`) and the minimap's coordinate helpers. It needs Node 18 or newer and nothing else.
 
 ## Checks on their own
 

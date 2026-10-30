@@ -62,6 +62,7 @@ function wireForm(root, prefix, obj, defs, what, after) {
     if (!el) continue;
     const commit = value => {
       if (d.validate) { const err = d.validate(value); if (err) { toast(err); inspect(); return; } }
+      if (d.rename) return renameThing(obj, value);
       edit(`${d.label} of ${what()}`, () => { if (d.apply) d.apply(value); else setPath(obj, d.key, value); after?.(value); });
     };
     if (d.type === "multi") {
@@ -86,6 +87,18 @@ function wireForm(root, prefix, obj, defs, what, after) {
 
 // ---------------------------------------------------------------- dispatch
 function inspect() {
+  inspectBody();
+  const p = primary(), o = p && byId(p.id);
+  if (S.editable && o && S.sels.length >= 1 && o.id !== S.scn?.playerId) {
+    const bar = document.createElement("div");
+    bar.className = "del-bar";
+    bar.innerHTML = `<button class="mini" id="iDel">Delete${S.sels.length > 1 ? ` ${S.sels.length}` : ""}</button>
+      <small class="note">Shift+Delete removes it even if something uses it, fixing what did.</small>`;
+    $("inspector").appendChild(bar);
+    $("iDel").onclick = ev => deleteThings(S.sels, ev.shiftKey);
+  }
+}
+function inspectBody() {
   const box = $("inspector"), p = primary();
   const o = p && byId(p.id);
   if (!S.scn) { box.innerHTML = ""; return; }
@@ -180,8 +193,8 @@ function inspectRegion(box, r) {
     ${section(`Used by (${refs.length})`, refsHtml(refs, "Nothing names this region."), refs.length > 0 && refs.length < 12)}`;
   bindRefs(box, refs); bindJumps(box);
   wireForm(box, "rg", r, defs, () => r.name);
-  $("fRename").onclick = () => renameRegion(r, $("fName").value);
-  $("fName").onkeydown = e => { if (e.key === "Enter") renameRegion(r, $("fName").value); };
+  $("fRename").onclick = () => renameThing(r, $("fName").value);
+  $("fName").onkeydown = e => { if (e.key === "Enter") renameThing(r, $("fName").value); };
   const setAmb = () => {
     const day = $("fAmbDay").value, night = $("fAmbNight").value;
     edit(`Ambience of ${r.name}`, () => set(r, "ambience", day ? (night ? {day, night} : {day}) : undefined));
@@ -192,20 +205,6 @@ function inspectRegion(box, r) {
     edit(`Remove door at [${c}]`, () => MapOps.toggleDoor(S.scn, r, c, set));
   });
   wireOccupancy(box);
-}
-
-function renameRegion(r, name) {
-  name = name.trim();
-  if (!name || name === r.name) return;
-  if (regions().some(o => o !== r && o.name === name)) return toast(`Another region is already called "${name}"`);
-  const old = r.name;
-  let n = 0;
-  edit(`Rename ${old} to ${name}`, () => {
-    set(r, "name", name);
-    for (const e of entities()) for (const b of e.schedule || []) if (b.location === old) { set(b, "location", name); n++; }
-    for (const c of S.scn.calendar || []) if (c.location === old) { set(c, "location", name); n++; }
-  });
-  toast(`Renamed; ${n} schedule and calendar entr${n === 1 ? "y" : "ies"} updated`);
 }
 
 // A strip of 24 hours: how many people are in the region in each hour, by role.
@@ -260,7 +259,7 @@ function inspectObject(box, e) {
   const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
   const pic = t && picUrl(t.id, "sprite");
   const defs = [
-    {key: "name", label: "Name", required: true},
+    {key: "name", label: "Name", required: true, rename: true},
     {key: "hp", label: "HP", type: "number", min: 0, max: e.maxHp ?? 9999},
   ];
   box.innerHTML = `<div class="kind">Object</div><h3>${esc(e.name)}</h3>
@@ -288,7 +287,7 @@ function inspectObjectType(box, t) {
   const pic = picUrl(t.id, "sprite"), items = itemOptions();
   const placedList = placed.map(o => ({id: o.id, text: o.name, detail: o.pos.join(", ")}));
   const defs = [
-    {key: "name", label: "Name", required: true, validate: v => (S.scn.objectTemplates || []).some(o => o !== t && o.name === v) ? `Another object type is already called "${v}"` : null},
+    {key: "name", label: "Name", required: true, rename: true, validate: v => (S.scn.objectTemplates || []).some(o => o !== t && o.name === v) ? `Another object type is already called "${v}"` : null},
     {key: "description", label: "Description", type: "textarea", rows: 2},
     {key: "physicalDescription", label: "Looks (for the image)", type: "textarea", rows: 2, hint: "The image service draws the sprite from this."},
     {key: "walkability", label: "Movement", type: "number", min: 0, max: 1, step: .1, hint: "0 blocks the cell, 1 can be walked over, between slows."},
@@ -307,8 +306,8 @@ function inspectObjectType(box, t) {
     <div class="row2">${field("Width", `<input type="number" id="tW" min="1" max="20" value="${t.size[0]}" ${dis()}>`)}${field("Height", `<input type="number" id="tH" min="1" max="20" value="${t.size[1]}" ${dis()}>`)}</div>
     ${formHtml("ot", t, defs)}
     ${section(`Placed (${placed.length})`, refsHtml(placedList, "None placed.", "placed"), placed.length > 0 && placed.length < 12)}
-    ${section(`Used by (${refs.filter(r => r.detail !== "placed").length})`, refsHtml(refs.filter(r => r.detail !== "placed"), "Nothing else refers to it."), false)}`;
-  bindRefs(box, refs.filter(r => r.detail !== "placed")); bindRefs(box, placedList, "placed");
+    ${section(`Used by (${refs.filter(r => r.kind !== "placed").length})`, refsHtml(refs.filter(r => r.kind !== "placed"), "Nothing else refers to it."), false)}`;
+  bindRefs(box, refs.filter(r => r.kind !== "placed")); bindRefs(box, placedList, "placed");
   wireForm(box, "ot", t, defs, () => t.name, () => {
     if (t.maxHp) for (const o of placed) if ((o.maxHp ?? 0) !== t.maxHp) { set(o, "maxHp", t.maxHp); set(o, "hp", Math.min(o.hp ?? t.maxHp, t.maxHp)); }
   });
@@ -370,7 +369,7 @@ function inspectPerson(box, e) {
   const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
   const tpl = e.templateId && byId(e.templateId);
   const ident = [
-    {key: "name", label: "Name", required: true},
+    {key: "name", label: "Name", required: true, rename: true},
     {key: "gender", label: "Gender", type: "select", options: ["female", "male"]},
     {key: "description", label: "Description (the GM sees this when they're near)", type: "textarea", rows: 3, hint: "Personality, wants, relationships. 15–60 words."},
     {key: "physicalDescription", label: "Looks (for the portrait)", type: "textarea", rows: 2},
@@ -524,7 +523,7 @@ function inspectHostileType(box, t) {
   const M = S.meta, placed = entities().filter(e => e.templateId === t.id);
   const regs = [...regions()].sort((a, b) => (b.hostile ? 1 : 0) - (a.hostile ? 1 : 0) || a.name.localeCompare(b.name));
   const defs = [
-    {key: "name", label: "Name", required: true},
+    {key: "name", label: "Name", required: true, rename: true},
     {key: "description", label: "Description (the GM sees this)", type: "textarea", rows: 3},
     {key: "physicalDescription", label: "Looks (for the portrait)", type: "textarea", rows: 2},
     {key: "regionId", label: "Lives in (spawns and respawns here)", type: "select", options: regs.map(r => [r.id, `${r.name}${r.hostile ? " ☠" : ""}`])},

@@ -180,37 +180,11 @@ const entSize = e => e.size || objTpl(e.templateId)?.size || [1, 1];
 const label = o => o ? (o.name || o.title || o.id) : "(missing)";
 
 // Everything that refers to a thing by id or by name: [{text, id (to jump to), detail}]
+const REF_WORD = {schedule: "", calendar: "calendar event", hostileHome: "hostile type, spawns here", placed: "placed",
+  effectSpawn: "effect spawns it", carried: "carries it", equipped: "wears it", stock: "sells it", loot: "loot", effectItem: "effect makes it"};
 function usedBy(id) {
-  const out = [], scn = S.scn, r = regions().find(x => x.id === id);
-  if (r) {
-    for (const e of entities()) (e.schedule || []).forEach(b => {
-      if (b.location === r.name) out.push({id: e.id, text: e.name, detail: `${b.start}–${b.end} ${b.role}`});
-    });
-    for (const c of scn.calendar || []) if (c.location === r.name) out.push({id: null, text: c.name, detail: "calendar event"});
-    for (const t of scn.hostileNpcTemplates || []) if (t.regionId === id) out.push({id: t.id, text: t.name, detail: "hostile type, spawns here"});
-  }
-  const ot = (scn.objectTemplates || []).find(t => t.id === id);
-  if (ot) {
-    for (const e of entities()) if (e.type === "object" && e.templateId === id) out.push({id: e.id, text: e.name, detail: "placed"});
-    for (const t of scn.objectTemplates) for (const ef of t.startingEffects || []) for (const es of ef.endState || [])
-      if (es.templateId === id) out.push({id: t.id, text: t.name, detail: `effect: ${ef.desc || es.type}`});
-  }
-  const it = (scn.itemTemplates || []).find(t => t.id === id);
-  if (it) {
-    for (const e of entities()) {
-      const stacks = [...(e.inventory || []), ...Object.values(e.equipment || {}), ...((e.merchant || {}).stock || [])];
-      const n = stacks.filter(s => s && s.templateId === id).length;
-      if (n) out.push({id: e.id, text: e.name, detail: "carries it"});
-    }
-    for (const t of [...(scn.objectTemplates || []), ...(scn.hostileNpcTemplates || [])]) {
-      if ((t.lootPoolIds || []).includes(id)) out.push({id: t.id, text: t.name, detail: "loot"});
-      for (const ef of t.startingEffects || []) for (const es of ef.endState || [])
-        if (es.item?.name === it.name) out.push({id: t.id, text: t.name, detail: `effect: ${ef.desc || es.type}`});
-    }
-  }
-  const ht = (scn.hostileNpcTemplates || []).find(t => t.id === id);
-  if (ht) for (const e of entities()) if (e.templateId === id) out.push({id: e.id, text: e.name, detail: "placed"});
-  return out;
+  return Refs.findRefs(S.scn, id).map(r => ({id: r.ownerId, kind: r.kind, text: r.ownerName || "",
+    detail: [REF_WORD[r.kind], r.detail !== r.ownerName ? r.detail : null].filter(Boolean).join(" · ")}));
 }
 
 // ---------------------------------------------------------------- selection
@@ -339,6 +313,10 @@ $("toWork").onclick = async () => {
   catch (e) { toast(e.message); }
 };
 $("save").onclick = () => save().catch(e => toast(e.message));
+$("download").onclick = e => {
+  const n = S.problems.filter(p => p.level === "error").length;
+  if (n && !confirm(`The Problems panel lists ${n} error${n === 1 ? "" : "s"}; the game may refuse this scenario or play it badly. Download anyway?`)) e.preventDefault();
+};
 $("undo").onclick = undo; $("redo").onclick = redo;
 document.addEventListener("keydown", e => {
   const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName);

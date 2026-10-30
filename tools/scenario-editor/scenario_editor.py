@@ -38,6 +38,8 @@ STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/minimap.js": ("minimap.js", "text/javascript; charset=utf-8"),
           "/inspector.js": ("inspector.js", "text/javascript; charset=utf-8"),
           "/schedule.js": ("schedule.js", "text/javascript; charset=utf-8"),
+          "/refs.js": ("refs.js", "text/javascript; charset=utf-8"),
+          "/refsui.js": ("refsui.js", "text/javascript; charset=utf-8"),
           "/editor.css": ("editor.css", "text/css; charset=utf-8")}
 
 

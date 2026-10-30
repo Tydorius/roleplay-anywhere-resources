@@ -12,7 +12,7 @@ const wy = py => H() - (py - S.view.oy) / S.view.s;
 
 const TOOLS = [
   {id: "select", key: "v", label: "Select", icon: "⬚",
-    hint: "Click to select (again for what's underneath; Shift adds). Drag a selected thing to move it, a selected region by its centre handle, or its edge to resize (Alt: only its own wall). Shift+drag selects everything wholly inside a box. Arrows nudge, R rotates objects."},
+    hint: "Click to select (again for what's underneath; Shift adds). Drag a selected thing to move it, a selected region by its centre handle, or its edge to resize (Alt: only its own wall). Shift+drag selects everything wholly inside a box. Arrows nudge, R rotates objects. Delete removes; Shift+Delete removes even what's in use, fixing what used it."},
   {id: "region", key: "b", label: "Region", icon: "▭", hint: "Name it below, then drag a rectangle on the map."},
   {id: "object", key: "o", label: "Object", icon: "▣", hint: "Pick a type below, then click the map to place it (repeat for more). R turns it first."},
   {id: "npc", key: "n", label: "NPC", icon: "●", hint: "Name them below, then click the map. They start with a schedule of the region they stand in."},
@@ -336,26 +336,6 @@ function drawRegionDone(a, b) {
   if (res?.region) { $("tName").value = ""; S.sels = [{kind: "region", id: res.region.id}]; inspect(); draw(); }
 }
 
-function deleteSelection() {
-  if (!S.sels.length) return;
-  const blocked = [], ids = [];
-  for (const sel of S.sels) {
-    const o = byId(sel.id);
-    if (!o || sel.kind === "template") continue;
-    if (o.id === S.scn.playerId) { blocked.push(`${o.name} is the player`); continue; }
-    const refs = sel.kind === "region" ? usedBy(o.id) : [];
-    if (refs.length) blocked.push(`${o.name} is used by ${refs.length} thing${refs.length === 1 ? "" : "s"} (see "Used by")`);
-    else ids.push(o.id);
-  }
-  if (blocked.length) {
-    toast(`Not deleted: ${blocked.join("; ")}. Change those first.`);
-    if (S.sels.length === 1) inspect();
-    return;
-  }
-  edit(ids.length === 1 ? `Delete ${byId(ids[0]).name}` : `Delete ${ids.length} things`, () => MapOps.remove(S.scn, ids, set));
-  S.sels = []; inspect(); draw();
-}
-
 function rotateSelection(q) {
   const objs = S.sels.map(t => byId(t.id)).filter(o => o?.type === "object" && !S.layers.objects.lock);
   if (!objs.length) return;
@@ -586,7 +566,7 @@ document.addEventListener("keydown", e => {
     if (S.tool !== "select") return setTool("select");
     return select(null);
   }
-  if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); return deleteSelection(); }
+  if (e.key === "Delete" || e.key === "Backspace") { e.preventDefault(); return deleteThings(S.sels, e.shiftKey); }
   const arrows = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1]};
   if (arrows[e.key] && S.sels.length) {
     e.preventDefault();
