@@ -65,6 +65,17 @@ const PATCHES = [
       `.moving=!1;if(${world}.paused){${idle}(${world});return}globalThis.__arpg&&globalThis.__arpg.tick&&globalThis.__arpg.tick(${world});`,
   },
   {
+    name: 'perception',
+    // The "within notice range" test (straight-line distance only) behind the player's
+    // vicinity events, which NPC actions reach the GM, and the prompt's nearby lists.
+    // Identified as the distance function that the player-relative wrapper right after it calls.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+),([\w$]+)=([\w$]+)\)\{return ([\w$]+)\(\3,\4\)<=\5\}(?=function [\w$]+\([\w$]+,[\w$]+,[\w$]+=\6\)\{return \1\()/g,
+    // Hands mods the game's own path search too (__arpgPathOrig, from the pathfinder patch).
+    replace: (_m, fn, t, a, b, range, def, dist) =>
+      `function ${fn}(${t},${a},${b},${range}=${def}){const n=${dist}(${a},${b})<=${range};` +
+      `return n&&globalThis.__arpg&&globalThis.__arpg.perceive?globalThis.__arpg.perceive(${t},${a},${b},${range},__arpgPathOrig):n}`,
+  },
+  {
     name: 'prompt-budgets',
     // Per-kind character budgets for GM prompt sections. A kind missing from the table
     // is kept whole but tagged "(0 more lines omitted)", so mods add their own kinds here.
