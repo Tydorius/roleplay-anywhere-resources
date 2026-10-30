@@ -11,7 +11,9 @@ A scenario carries them in its own `scenario.json`.
   "portals": [
     {"name": "Cellar stairs", "from": {"object": "Kitchen trapdoor"}, "to": {"object": "Cellar ladder"}, "twoWay": true},
     {"name": "Ferry", "from": {"region": "North Dock"}, "to": {"region": "South Dock"}, "twoWay": true},
-    {"name": "Mirror", "from": {"cell": [10, 4]}, "to": {"cell": [80, 70]}}
+    {"name": "Mirror", "from": {"cell": [10, 4]}, "to": {"cell": [80, 70]}},
+    {"name": "Smugglers' tunnel", "from": {"object": "Straw pallet 8"}, "to": {"cell": [62, 12]},
+     "twoWay": true, "secret": true, "knownBy": ["Marrow Jack", "Bran Hollyoak"]}
   ]
 }
 ```
@@ -23,6 +25,8 @@ A scenario carries them in its own `scenario.json`.
 | `to` | Where you come out. An object or cell: on a free cell beside it. A region: anywhere inside it. |
 | `twoWay` | `true` also makes the `to` end lead back to the `from` end. |
 | `enabled` | `false` turns the portal off. |
+| `secret` | `true` makes it a secret door or passage until it's discovered. See below. |
+| `knownBy` | For a secret portal: the characters who know it and use it, by name. |
 
 **An object pad must be something you can stand on.** Its template's `walkability` has to be
 above 0: a rug, a trapdoor, a stair tile, a barrel at 0.2. An object with walkability 0 blocks
@@ -47,6 +51,23 @@ skipped, with one console warning.
   `- Cellar stairs: Kitchen trapdoor in Inn Kitchen <-> Cellar ladder`. It never needs to
   pathfind itself. It writes `MOVE_TO "Cellar"`, and characters walk through.
 - Characters attached to another (`attach`) ride along instead of using pads.
+
+## Secret doors and passages
+
+Until a secret portal is discovered:
+
+- **Only the player and its `knownBy` characters trigger it.** Anyone else crosses the pad as
+  ordinary floor.
+- **Only `knownBy` characters route walks through it.** The player's own click-to-walk ignores
+  it, so the route doesn't give it away.
+- **The GM sees it in a separate "Secret passages" list**, with who knows it. It's told to hint
+  at it through play and not to state it outright. The GM can still send a `knownBy` character
+  through it, for example a smuggler slipping away.
+
+It's **discovered** when the player goes through it, or when the GM issues
+`{"call": "portal_reveal", "name": "Smugglers' tunnel"}`. The GM is told to do that when the
+player finds it by searching or is shown it. From then on it's an ordinary passage for everyone.
+The discovered state is saved with the game (`arpgMods.portalState`).
 
 ## Cost
 

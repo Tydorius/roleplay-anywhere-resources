@@ -16,8 +16,11 @@ function load() {
     vm.runInContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), ctx, { filename: f });
   }
   const arpg = ctx.__arpg;
+  // Just enough of a zod object schema for addCall builders to succeed.
+  const fakeSchema = { extend() { return this; }, omit() { return this; }, shape: { text: {} } };
   // Stand-in for the game's teleport call: land on the cell east of the target.
   arpg.api = {
+    flavor_text: { schema: fakeSchema },
     teleport: {
       run(world, { entity, target }) {
         if (target.region) {
@@ -188,6 +191,62 @@ test('missing ends are skipped with one warning', () => {
   assert.equal(arpg.portals.edgesOf(world).length, 0);
   assert.equal(warnings.length, 1);
   assert.match(warnings[0], /Cellar stairs.*to end not found/);
+});
+
+const tunnel = { name: "Smugglers' tunnel", from: { object: 'Trapdoor' }, to: { object: 'Ladder' }, twoWay: true, secret: true, knownBy: ['Marrow Jack'] };
+
+function secretWorld() {
+  const made = makeWorld({ objects: { Trapdoor: [8, 5], Ladder: [12, 5] }, portals: [tunnel] });
+  const jack = { type: 'npc', name: 'Marrow Jack', pos: [2, 2] };
+  const townsman = { type: 'npc', name: 'Hal Sedge', pos: [3, 3] };
+  made.world.entities.push(jack, townsman);
+  return { ...made, jack, townsman };
+}
+
+test('only those in the know route walks through an undiscovered secret portal', () => {
+  const { arpg } = load();
+  const { world, player, jack, townsman } = secretWorld();
+  assert.equal(cellKey(arpg.path(world, jack.pos, [18, 8], jack, {}, bfs).at(-1)), '8,5');
+  assert.equal(arpg.path(world, townsman.pos, [18, 8], townsman, {}, bfs), null);
+  assert.equal(arpg.path(world, player.pos, [18, 8], player, {}, bfs), null, "the player's own walks don't give it away");
+});
+
+test('a townsman stepping on a secret pad stays put; the player goes through and discovers it', () => {
+  const { arpg } = load();
+  const { world, player, townsman } = secretWorld();
+  arpg.tick(world);
+  townsman.pos = [8, 5];
+  arpg.tick(world);
+  assert.equal(cellKey(townsman.pos), '8,5');
+  player.pos = [8, 5];
+  arpg.tick(world);
+  assert.equal(cellKey(player.pos), '13,5');
+  assert.equal(world.arpgMods.portalState.discovered[0], true);
+  townsman.pos = [12, 5]; // now anyone can use it
+  arpg.tick(world);
+  assert.equal(cellKey(townsman.pos), '9,5');
+});
+
+test('portal_reveal discovers a secret portal by name', () => {
+  const { arpg } = load();
+  const { world, townsman } = secretWorld();
+  assert.match(arpg.api.portal_reveal.run(world, { name: 'Front door' }), /no secret passage/);
+  assert.equal(arpg.api.portal_reveal.run(world, { name: "smugglers' TUNNEL" }), null);
+  assert.equal(cellKey(arpg.path(world, townsman.pos, [18, 8], townsman, {}, bfs).at(-1)), '8,5');
+});
+
+test('the GM hears about secret passages separately until they are found', () => {
+  const { arpg } = load();
+  const { world } = secretWorld();
+  arpg.promptBudgets = {};
+  const before = { head: [], sections: [], tail: [] };
+  arpg.prompt(before, world);
+  assert.deepEqual(before.sections.map(s => s.kind), ['secret_passages']);
+  assert.equal(before.sections[0].content, "- Smugglers' tunnel: Trapdoor in West Room <-> Ladder (known to: Marrow Jack)");
+  arpg.api.portal_reveal.run(world, { name: "Smugglers' tunnel" });
+  const after = { head: [], sections: [], tail: [] };
+  arpg.prompt(after, world);
+  assert.deepEqual(after.sections.map(s => s.kind), ['passages']);
 });
 
 test('the GM is told about the passages', () => {
