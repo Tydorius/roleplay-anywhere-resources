@@ -105,3 +105,17 @@ test('things come back as the view moves, and the game\'s own hidden objects sta
   arpg.performance.uncull(s, cam);
   assert.equal(hiddenByGame.cameraFilter, 1);
 });
+
+test('wall runs (containers at 0,0 with pieces placed on the map) are judged by their real extent', () => {
+  const { arpg } = load();
+  const { s, cam } = scene();
+  const wall = { type: 'Container', depth: 20, x: 0, y: 0, list: [{}, {}], cameraFilter: 0,
+    getBounds: () => ({ x: 300, y: 100, width: 400, height: 34 }) };
+  const farWall = { type: 'Container', depth: 20, x: 0, y: 0, list: [{}], cameraFilter: 0,
+    getBounds: () => ({ x: 2400, y: 2400, width: 400, height: 34 }) };
+  s.children.list.push(wall, farWall);
+  Object.assign(cam.worldView, { x: 500, y: 0, right: 900, bottom: 300 }); // 0,0 itself is off view
+  arpg.performance.cullMain(s, cam);
+  assert.equal(wall.cameraFilter, 0, 'partly in view: drawn');
+  assert.equal(farWall.cameraFilter, 1);
+});

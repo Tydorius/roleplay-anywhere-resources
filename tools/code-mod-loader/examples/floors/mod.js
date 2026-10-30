@@ -174,8 +174,9 @@
 
   function overlaps(o, v) {
     let b;
-    // People and objects are small containers that move: their position is enough.
-    if (o.type === 'Container' && (o.list?.length ?? 0) <= 12 && o.depth >= ABOVE_FLOOR_DEPTH) {
+    // People and objects are small containers that move: their position is enough. Wall runs
+    // are containers at 0,0 with their pieces at map positions, so they need real bounds.
+    if (o.type === 'Container' && (o.list?.length ?? 0) <= 12 && o.depth >= ABOVE_FLOOR_DEPTH && (o.x || o.y)) {
       return o.x >= v.left && o.x <= v.right && o.y >= v.top && o.y <= v.bottom;
     }
     b = bigBounds.get(o);

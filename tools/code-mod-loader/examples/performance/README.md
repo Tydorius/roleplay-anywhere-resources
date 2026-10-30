@@ -13,7 +13,7 @@ frames in other engines, so the cost grows with frame rate × characters × map 
 A grid is never changed after it's built, so this mod reuses a recent one. It's rebuilt when:
 - it's older than **0.1 s**, or
 - the walls change (the game's `regionsRev`), or
-- objects are added or removed (checked at most every 0.1 s).
+- doorways or objects are added or removed (checked on every request).
 
 Only the grid-building is cached. The simulation still steps every frame, so movement stays
 smooth.
@@ -39,6 +39,9 @@ screen shows about 4% of the map. This mod tells the game's camera to skip anyth
 the view, with 160 px of margin for labels and shadows:
 
 - **Characters and objects** are tested by position.
+- **Wall runs** are tested by their real extent, measured once. They're containers sitting at
+  (0, 0) with their pieces placed at map positions. The first version tested them by position
+  too, which hid most walls (their shadows and collision stayed).
 - **Ground and wall tiles** are tested by bounds, measured once and cached, since they never
   move.
 - **Full-map layers**, such as lighting, are always kept.

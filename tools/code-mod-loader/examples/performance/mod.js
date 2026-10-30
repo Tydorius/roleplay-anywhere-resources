@@ -113,9 +113,13 @@
     const id = cam.id;
     for (const o of scene.children.list) {
       const kids = o.type === 'Container' ? o.list ?? [] : null;
-      if (kids && kids.length <= ENTITY_KIDS && o.depth >= STATIC_DEPTH) {
-        // A character or object: its position is enough.
+      if (kids && kids.length <= ENTITY_KIDS && o.depth >= STATIC_DEPTH && (o.x || o.y)) {
+        // A character or object (and its label): its position is enough.
         show(o, id, o.x >= v.left && o.x <= v.right && o.y >= v.top && o.y <= v.bottom);
+      } else if (kids && o.depth >= STATIC_DEPTH && !o.x && !o.y) {
+        // A wall run: a container at 0,0 whose pieces sit at their map positions. Static.
+        const b = boundsOf(o, true);
+        show(o, id, !b || overlaps(b, v));
       } else if (kids && o.depth < STATIC_DEPTH) {
         // A static ground layer: cull its tiles one by one.
         for (const k of kids) {
