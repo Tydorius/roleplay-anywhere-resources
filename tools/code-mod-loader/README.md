@@ -27,7 +27,11 @@ character, and the memory shows in that character's panel under Memories.
 ## After a game update or "Verify integrity"
 
 Steam puts the original files back, so the mods stop loading. Run `node patch.mjs install`
-again. If the update changed the code the patcher anchors on, install stops with
+again, or use the shortcut scripts beside it. Both work from any folder and pass extra arguments
+such as `--game` through:
+
+- Windows: double-click `reinstall.cmd`. The window stays open so you can read the result.
+- Linux/macOS: `./reinstall.sh`. If the update changed the code the patcher anchors on, install stops with
 `patch "<name>" matched N times` and changes nothing. Then the anchors in `patch.mjs` need
 updating.
 
