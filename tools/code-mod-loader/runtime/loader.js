@@ -5,6 +5,8 @@
   const cfgHooks = [];
   const worldHooks = [];
   const promptHooks = [];
+  const tickHooks = [];
+  const pathHooks = [];
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -53,7 +55,32 @@
     },
     // Called by the game when it builds a world from a scenario (a new game, or the
     // World editor's preview when `editing` is true).
-    worldCreated(world, scenario, editing) { runHooks('world', worldHooks, [world, scenario, !!editing]); },
+    // Mod data in the scenario's `arpgMods` key is copied onto the world (and so into saves).
+    worldCreated(world, scenario, editing) {
+      if (scenario && scenario.arpgMods && typeof scenario.arpgMods === 'object') {
+        world.arpgMods = JSON.parse(JSON.stringify(scenario.arpgMods));
+      }
+      runHooks('world', worldHooks, [world, scenario, !!editing]);
+    },
+    // Called at the start of every unpaused simulation step.
+    tick(world) { runHooks('tick', tickHooks, [world]); },
+    // Called for every path search. Hooks are chained; the last `next` is the game's A*.
+    path(world, from, dest, entity, opts, original) {
+      arpg.pathOriginal = original; // for debugging: the game's own search
+      let next = (...a) => original(...a);
+      for (const hook of pathHooks) {
+        const inner = next;
+        next = (w, f, d, e, o) => {
+          try {
+            return hook(w, f, d, e, o, inner);
+          } catch (err) {
+            console.error('[arpg] path hook failed', err);
+            return inner(w, f, d, e, o);
+          }
+        };
+      }
+      return next(world, from, dest, entity, opts);
+    },
     // Called by the game with the GM prompt's {head, sections, tail} before rendering.
     prompt(parts, world) {
       runHooks('prompt', promptHooks, [parts, world]);
@@ -68,6 +95,11 @@
     // hook({head, sections, tail}, world): each part is a list of {kind, title, content}.
     // The game trims known kinds to a budget; a new kind is not trimmed, so keep it short.
     onPrompt(hook) { promptHooks.push(hook); },
+    // hook(world): runs every simulation step, so keep it cheap.
+    onTick(hook) { tickHooks.push(hook); },
+    // hook(world, from, dest, entity, opts, next) → list of cells to walk, or null.
+    // `next` is the game's own search (or the next mod's); call it for plain grid paths.
+    onPath(hook) { pathHooks.push(hook); },
     // Adds a header file to the GM's api-call list, after `after` (a header name) or at the end.
     addApiHeader(name, text, after) {
       const dir = 'overseer/api-actions/';

@@ -48,6 +48,23 @@ const PATCHES = [
       `globalThis.__arpg.worldCreated(${world},${scn},${flag});return ${flag}||(${world}.player&&`,
   },
   {
+    name: 'pathfinder',
+    // The grid A* that every walk uses (GM beats, schedules, followers). Renamed and
+    // wrapped so mods can route through places the grid doesn't connect.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+),([\w$]+),([\w$]+)=\{\}\)\{(?=const [\w$]+=\5\?\[Math\.round\(\3\[0\]\),Math\.round\(\3\[1\]\)\])/g,
+    replace: (_m, fn, t, from, dest, ent, opts) =>
+      `function ${fn}(${t},${from},${dest},${ent},${opts}={}){const h=globalThis.__arpg&&globalThis.__arpg.path;` +
+      `return h?h(${t},${from},${dest},${ent},${opts},__arpgPathOrig):__arpgPathOrig(${t},${from},${dest},${ent},${opts})}` +
+      `function __arpgPathOrig(${t},${from},${dest},${ent},${opts}={}){`,
+  },
+  {
+    name: 'sim-tick',
+    // The start of each unpaused simulation step.
+    find: /\.moving=!1;if\(([\w$]+)\.paused\)\{([\w$]+)\(\1\);return\}/g,
+    replace: (_m, world, idle) =>
+      `.moving=!1;if(${world}.paused){${idle}(${world});return}globalThis.__arpg&&globalThis.__arpg.tick&&globalThis.__arpg.tick(${world});`,
+  },
+  {
     name: 'prompt-budgets',
     // Per-kind character budgets for GM prompt sections. A kind missing from the table
     // is kept whole but tagged "(0 more lines omitted)", so mods add their own kinds here.

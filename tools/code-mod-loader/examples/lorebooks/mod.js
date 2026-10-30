@@ -107,10 +107,6 @@
     return [...sections.map(s => s.content), lastTurn].join('\n');
   }
 
-  arpg.onWorldCreate((world, scenario) => {
-    if (scenario?.arpgMods) world.arpgMods = JSON.parse(JSON.stringify(scenario.arpgMods));
-  });
-
   arpg.onPrompt((parts, world) => {
     const mods = world.arpgMods;
     const entries = entriesOf(mods);
