@@ -292,6 +292,24 @@ test('an old sneak no longer hides the player', () => {
   }), true, 'the latest action counts');
 });
 
+test('unwalled areas do not block the view; walls do', () => {
+  const { arpg } = load();
+  const { world, player, townsman } = secretWorld();
+  // The trapdoor sits in an unwalled camp; Hal stands just outside it, 3 cells away.
+  world.regions.push({ name: 'Camp', position: [6, 3], size: [4, 4] });
+  townsman.pos = [5, 5];
+  // Godric is as close, but behind the walls of a shed.
+  const godric = { type: 'npc', name: 'Godric Thorne', pos: [7, 8] };
+  world.entities.push(godric);
+  world.regions.push({ name: 'Shed', position: [6, 8], size: [3, 2], wall: 'wood' });
+  arpg.tick(world);
+  player.pos = [8, 5];
+  arpg.tick(world);
+  const known = [...world.arpgMods.portalState.known[0]];
+  assert.ok(known.includes('Hal Sedge'));
+  assert.ok(!known.includes('Godric Thorne'));
+});
+
 test('portal_reveal tells the player only; portal_tell tells one character', () => {
   const { arpg } = load();
   const { world, player, townsman } = secretWorld();

@@ -166,14 +166,27 @@
   }
 
   // When a restricted portal is used openly, onlookers learn it and remember what they saw.
+  // Walls block sight; unwalled areas (a camp inside a forest) don't, as in the game's own
+  // "same space" rule. So a place's room is its innermost walled region, or null outdoors.
+  function walledRoom(world, c) {
+    let best = null;
+    for (const r of world.regions ?? []) {
+      if (!r.wall) continue;
+      const [x, y] = r.position, [w, h] = r.size;
+      if (c[0] < x || c[1] < y || c[0] >= x + w || c[1] >= y + h) continue;
+      if (!best || w * h < best.size[0] * best.size[1]) best = r;
+    }
+    return best;
+  }
+
   function witnesses(world, traveller, edge, landed) {
     if (sneaking(world, traveller)) return;
-    const spots = [edge.from.center, landed].map(c => ({ c, room: innermostRegion(world, c) }));
+    const spots = [edge.from.center, landed].map(c => ({ c, room: walledRoom(world, c) }));
     const where = edge.from.label;
     for (const e of world.entities ?? []) {
       if (e.type !== 'npc' || e.dead || e === traveller || knows(edge, e)) continue;
       const c = cellOf(e.pos);
-      const saw = spots.find(s => cheb(s.c, c) <= WITNESS_RANGE && innermostRegion(world, c) === s.room);
+      const saw = spots.find(s => cheb(s.c, c) <= WITNESS_RANGE && walledRoom(world, c) === s.room);
       if (!saw || !learn(world, edge.portal, e.name)) continue;
       const text = saw === spots[0]
         ? `Saw ${traveller.name} slip through a hidden way at ${where} and vanish.`

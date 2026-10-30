@@ -73,7 +73,7 @@ list**. Ordinary portals without a list are common knowledge.
 |---|---|
 | `knownBy` characters | Know it from the start. |
 | The player | Ordinary portal: always. Secret portal: by stepping onto it, or through the GM's `{"call": "portal_reveal", "name": "Smugglers' tunnel"}`. Until then, the player's own click-to-walk ignores it, so the route doesn't give it away. |
-| Onlookers | NPCs within 6 cells of either end, in the same room, when someone uses it openly. Each gets a memory such as *"Saw Wren Ashdown slip through a hidden way at Straw pallet 8 in Woodcutter's Cabin and vanish."* The GM sees that memory whenever the onlooker is near the player, so gossip can come up in play. |
+| Onlookers | NPCs within 6 cells of either end when someone uses it openly. Walls block the view; unwalled areas such as a camp in a forest do not, which matches the game's own "nearby" rule. Each gets a memory such as *"Saw Wren Ashdown slip through a hidden way at Straw pallet 8 in Woodcutter's Cabin and vanish."* The GM sees that memory whenever the onlooker is near the player, so gossip can come up in play. |
 | Anyone else | Only when the GM issues `{"call": "portal_tell", "name": "Smugglers' tunnel", "target": "Alys Sedge"}` (gossip, a bribe, a confession). They get a memory of it too. |
 
 Knowledge never spreads by itself. The barmaid who saw you use the trapdoor knows it, but the
