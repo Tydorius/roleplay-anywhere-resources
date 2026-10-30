@@ -162,10 +162,44 @@
   const ABOVE_FLOOR_DEPTH = 10;
   const views = new WeakMap(); // scene → Map(opening region → {below, top})
 
-  // Keeps the top camera from drawing ground and lighting, including layers the game adds later.
-  function hideFloorFrom(scene, cam) {
-    const low = scene.children.list.filter(o => o.depth < ABOVE_FLOOR_DEPTH && !(o.cameraFilter & cam.id));
-    if (low.length) cam.ignore(low);
+  // Phaser doesn't skip off-screen objects, so every extra camera would otherwise draw the
+  // whole map (600+ containers, about as long as the game's own camera takes), dropping the
+  // frame rate to a third. So each floor camera is told to ignore everything outside its small
+  // view, re-checked every few frames as people move. `floorless` also drops the ground and
+  // lighting layers (for the top camera).
+  const CULL_EVERY = 10; // frames
+  const CULL_MARGIN = 96; // world pixels around the view, so people walking in don't pop
+  const bigBounds = new WeakMap(); // static layer → its bounds, measured once
+  const scratch = { x: 0, y: 0, width: 0, height: 0 };
+
+  function overlaps(o, v) {
+    let b;
+    // People and objects are small containers that move: their position is enough.
+    if (o.type === 'Container' && (o.list?.length ?? 0) <= 12 && o.depth >= ABOVE_FLOOR_DEPTH) {
+      return o.x >= v.left && o.x <= v.right && o.y >= v.top && o.y <= v.bottom;
+    }
+    b = bigBounds.get(o);
+    if (!b) {
+      try {
+        const g = o.getBounds ? o.getBounds(scratch) : null;
+        b = g ? { x: g.x, y: g.y, width: g.width, height: g.height } : null;
+      } catch {
+        b = null;
+      }
+      if (!b || (!b.width && !b.height)) return true; // can't tell: draw it
+      bigBounds.set(o, b);
+    }
+    return !(b.x > v.right || b.x + b.width < v.left || b.y > v.bottom || b.y + b.height < v.top);
+  }
+
+  function cull(scene, cam, floorless) {
+    const wv = cam.worldView;
+    const v = { left: wv.x - CULL_MARGIN, right: wv.right + CULL_MARGIN, top: wv.y - CULL_MARGIN, bottom: wv.bottom + CULL_MARGIN };
+    for (const o of scene.children.list) {
+      const skip = (floorless && o.depth < ABOVE_FLOOR_DEPTH) || !overlaps(o, v);
+      if (skip) o.cameraFilter |= cam.id;
+      else o.cameraFilter &= ~cam.id;
+    }
   }
 
   function syncViews(scene) {
@@ -207,7 +241,7 @@
           pair = { below, top, frames: 0 };
           mine.set(o, pair);
         }
-        if (pair.frames++ % 60 === 0) hideFloorFrom(scene, pair.top);
+        const appearing = !pair.below.visible; // cull at once, not up to CULL_EVERY frames later
         // The world point at the centre of the visible part of the opening.
         const mid = main.getWorldPoint((cx0 + cx1) / 2, (cy0 + cy1) / 2);
         for (const cam of [pair.below, pair.top]) {
@@ -217,6 +251,12 @@
         }
         pair.top.centerOn(mid.x, mid.y);
         pair.below.centerOn(mid.x + f.offset[0] * CELL_PX, mid.y - f.offset[1] * CELL_PX); // a storey down
+        if (appearing || pair.frames++ % CULL_EVERY === 0) {
+          pair.below.preRender(); // bring worldView up to date before culling against it
+          pair.top.preRender();
+          cull(scene, pair.below, false);
+          cull(scene, pair.top, true);
+        }
       }
     }
     for (const [o, pair] of mine) {

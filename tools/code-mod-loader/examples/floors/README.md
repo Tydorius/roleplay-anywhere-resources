@@ -78,6 +78,19 @@ Weary Hound common room, with a 6×2 railed well.
     nearby.
 - **Routing:** Hal, sent to the gallery, routed via the stairs.
 
+## Cost
+
+Phaser doesn't skip off-screen objects, so an extra camera normally redraws the whole map:
+600+ containers, about as long as the game's own camera takes (about 20 ms a frame on
+Thornbury). With an opening on screen, the first version's two cameras cut the frame rate from
+roughly 20–26 to 7–10 fps. Now each floor camera ignores everything outside its small view.
+Moving people are tested by position and big static layers by cached bounds, re-checked every
+10 frames and as soon as an opening comes on screen. Nothing extra runs while no opening is on
+screen.
+
+The blur itself turned out not to matter (24.8 fps with it, 23–26 without), but `"blur": 0`
+remains the cheapest setting.
+
 ## Limits
 
 - **You can't see up.** From below, nothing is drawn of the floor above. The GM is still told
