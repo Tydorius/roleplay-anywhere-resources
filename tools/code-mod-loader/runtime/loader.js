@@ -65,18 +65,21 @@
     },
     // Called at the start of every unpaused simulation step.
     tick(world) { runHooks('tick', tickHooks, [world]); },
-    // Called when the game asks whether two entities are within notice range and they are
-    // by straight-line distance. Any hook answering false makes the answer false.
-    perceive(world, a, b, range, search) {
+    // Called whenever the game asks whether two entities are within notice range; `answer` is
+    // the game's own (straight-line distance). Hooks run in order, each seeing the answer so
+    // far; one returning a boolean replaces it.
+    perceive(world, a, b, range, search, answer = true) {
       if (search) arpg.pathOriginal = search;
+      let current = answer;
       for (const hook of perceiveHooks) {
         try {
-          if (hook(world, a, b, range, search ?? arpg.pathOriginal) === false) return false;
+          const r = hook(world, a, b, range, search ?? arpg.pathOriginal, current);
+          if (typeof r === 'boolean') current = r;
         } catch (err) {
           console.error('[arpg] perceive hook failed', err);
         }
       }
-      return true;
+      return current;
     },
     // Called for every path search. Hooks are chained; the last `next` is the game's A*.
     path(world, from, dest, entity, opts, original) {
@@ -114,10 +117,15 @@
     // hook(world, from, dest, entity, opts, next) → list of cells to walk, or null.
     // `next` is the game's own search (or the next mod's); call it for plain grid paths.
     onPath(hook) { pathHooks.push(hook); },
-    // hook(world, a, b, range, search) → false to say "b can't be noticed from a" (or the
-    // reverse) although they're within range in a straight line. `search` is the game's own
-    // path search, as `next` is for onPath. Runs often: keep it cheap.
-    onPerceive(hook) { perceiveHooks.push(hook); },
+    // hook(world, a, b, range, search, answer) → true or false to replace `answer` (whether
+    // a and b notice each other so far), anything else to leave it. `search` is the game's
+    // own path search, as `next` is for onPath. Runs very often: keep it cheap.
+    // `order` (default 0) sorts hooks: higher runs later and has the last word.
+    onPerceive(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      perceiveHooks.push(hook);
+      perceiveHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
     // Adds a header file to the GM's api-call list, after `after` (a header name) or at the end.
     addApiHeader(name, text, after) {
       const dir = 'overseer/api-actions/';

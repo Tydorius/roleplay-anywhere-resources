@@ -123,3 +123,9 @@ test('the patched game hands over its path search, so it works from the first ti
   assert.equal(arpg.perceive(world, world.player, npc('Skeleton', [12, 2]), 14, search), false);
   assert.equal(arpg.pathOriginal, search);
 });
+
+test("it never turns the game's no into a yes", () => {
+  const arpg = load();
+  const world = makeWorld(3);
+  assert.equal(arpg.perceive(world, world.player, npc('Hal', [2, 15]), 14, search, false), false);
+});

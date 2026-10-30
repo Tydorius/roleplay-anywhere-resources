@@ -48,7 +48,8 @@
     return c.answers.get(k);
   }
 
-  arpg.onPerceive((world, a, b, range, search) => {
+  arpg.onPerceive((world, a, b, range, search, answer) => {
+    if (!answer) return; // only ever takes a "yes" away
     const player = world.player ?? world.entities?.find(e => e.type === 'player');
     if (!player || (a !== player && b !== player) || a === b) return true;
     const other = a === player ? b : a;
