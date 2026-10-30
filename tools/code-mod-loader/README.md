@@ -63,6 +63,7 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `onWorldCreate((world, scenario, editing) => void)` | Runs when a scenario becomes a world. Use it to copy your own scenario keys (put them under `arpgMods`) onto the world. World fields are saved with the game. |
 | `onPrompt(({head, sections, tail}, world) => void)` | Edits the GM prompt. Each part is a list of `{kind, title, content}`. The game trims its own kinds to a budget, but a new kind isn't trimmed, so limit your own size. |
 | `api` | The live registry, once the game has built it. |
+| `promptBudgets` | The game's per-kind character budgets for prompt sections, scaled by the text-service tier. When you add a section kind, add a budget for it too. Without one, the game tags your section with "(0 more lines omitted)". |
 
 ## Debugging
 

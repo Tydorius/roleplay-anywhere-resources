@@ -48,6 +48,13 @@ const PATCHES = [
       `globalThis.__arpg.worldCreated(${world},${scn},${flag});return ${flag}||(${world}.player&&`,
   },
   {
+    name: 'prompt-budgets',
+    // Per-kind character budgets for GM prompt sections. A kind missing from the table
+    // is kept whole but tagged "(0 more lines omitted)", so mods add their own kinds here.
+    find: /const ([\w$]+)=\{world:(\d+),rules:/g,
+    replace: (_m, name, world) => `const ${name}=(globalThis.__arpg??={}).promptBudgets={world:${world},rules:`,
+  },
+  {
     name: 'gm-prompt',
     // Where the GM prompt's head/sections/tail are taken for rendering; mods may add sections.
     find: /const\{head:([\w$]+),sections:([\w$]+),tail:([\w$]+)\}=([\w$]+)\(([\w$]+)\)/g,

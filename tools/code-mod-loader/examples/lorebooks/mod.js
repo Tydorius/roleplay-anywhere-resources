@@ -117,6 +117,9 @@
     if (!entries.length) return;
     const state = (mods.lorebookState ??= {});
     const budget = Number(mods.lorebookBudget) > 0 ? Number(mods.lorebookBudget) : DEFAULT_BUDGET;
+    // The mod enforces its own budget; this only stops the game's trimmer from
+    // tagging an unknown section kind with "(0 more lines omitted)".
+    if (arpg.promptBudgets && !('lore' in arpg.promptBudgets)) arpg.promptBudgets.lore = 1e6;
     const chosen = select(entries, scanText(parts, world), world.gameTimeSecs ?? 0, state, budget);
     arpg.lore.last = chosen.map(({ e, why }) => ({ book: e.book, id: e.id, why }));
     if (!chosen.length) return;

@@ -149,6 +149,15 @@ test('worlds without lorebooks are left alone', () => {
   assert.equal(lore(p), '');
 });
 
+test('registers a budget for the lore section kind with the game', () => {
+  const arpg = load();
+  arpg.promptBudgets = { world: 650 };
+  const w = world();
+  arpg.worldCreated(w, scenario, false);
+  arpg.prompt(parts('Vellan'), w);
+  assert.ok(arpg.promptBudgets.lore >= 1e6);
+});
+
 test('a failing mod hook does not break the prompt', () => {
   const arpg = load();
   arpg.onPrompt(() => { throw new Error('boom'); });
