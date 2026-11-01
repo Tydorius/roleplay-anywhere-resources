@@ -90,7 +90,13 @@ def build_spec(world, plan):
             spec_t["forSleep"] = True
         if t.extras.get("craftStation"):
             spec_t["craftStation"] = True
-        for k in ("light", "money", "lootPool"):
+        light = t.extras.get("light")
+        if "lights" in getattr(world, "extensions", ()):
+            from .extensions.lights import light_for
+            light = light_for(t)
+        if isinstance(light, (int, float)) and not isinstance(light, bool) and light > 0:
+            spec_t["light"] = light
+        for k in ("money", "lootPool"):
             if k in t.extras:
                 spec_t[k] = t.extras[k]
         if t.name in by_template:
@@ -145,9 +151,15 @@ def build_spec(world, plan):
         "npcs": [character(c) for c in world.characters if not c.is_player],
         "player": character(world.player),
     }
+    arpg_mods = {}
     if getattr(world, "floors", None):
-        from .extensions.floors import arpg_mods
-        spec["arpgMods"] = arpg_mods(world)
+        from .extensions import floors
+        arpg_mods.update(floors.arpg_mods(world))
+    if "lights" in getattr(world, "extensions", ()):
+        from .extensions import lights
+        arpg_mods.update(lights.arpg_mods(world))
+    if arpg_mods:
+        spec["arpgMods"] = arpg_mods
     return spec
 
 

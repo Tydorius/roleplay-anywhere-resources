@@ -78,7 +78,7 @@ function wgFormHtml() {
       <span class="note">All off: the plain world imports and plays in the unmodded game.</span>
       ${wgMeta.extensions.map(e => `
         <label class="check"><input type="checkbox" data-ext="${esc(e.id)}"> ${esc(e.title)}</label>
-        <span class="note">needs ${e.mods.map(m => `<b>${esc(m)}</b>`).join(" + ")} game mod${e.mods.length > 1 ? "s" : ""} — the world won't work right without ${e.mods.length > 1 ? "them" : "it"}</span>`).join("")}
+        <span class="note">needs ${e.mods.map(m => `<b>${esc(m)}</b>`).join(" + ")} game mod${e.mods.length > 1 ? "s" : ""} — ${esc(e.withoutMod)}</span>`).join("")}
     </div>
     <div class="note" id="wgEstimate"></div>`;
 }

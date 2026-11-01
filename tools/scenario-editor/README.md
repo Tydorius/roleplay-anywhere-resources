@@ -57,10 +57,11 @@ only drives it — it still runs on its own from the command line.
   | Floors | Upper storeys reached by stair portals | `portals`, `floors` |
   | Portals | Two-way portal pads linking two cells | `portals` |
   | Region groups | A zone may wrap around the map and still be one region | `region-groups` |
+  | Lights | Each light source gets a kind (candle, hearth fire, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour | `lights` |
 
   Ticking Floors turns Portals on with it (its stairs are portals). The mods come from
   `../code-mod-loader`; without the ones an extension names installed in the game, a world built
-  with it won't work right.
+  with it won't work right. Lights is the exception: without its mod, the lamps just look plain.
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
   again from its saved `plan.json` under a new seed — no model calls, a few seconds — and it opens
   as a new workspace; the old one stays untouched.

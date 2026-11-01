@@ -274,6 +274,13 @@ def check_scenario_mods(scenario_path, arpg_mods):
         issues += [f"built scenario.json arpgMods.{k} does not match the spec"
                    for k in sorted(bad)]
     by_name = {r.get("name"): r for r in scn.get("regions", [])}
+    # the lights mod finds its templates by exact name, and lights only those the game lights
+    lit = {t.get("name"): t for t in scn.get("objectTemplates", [])}
+    for name in ((arpg_mods.get("lights") or {}).get("templates") or {}):
+        if name not in lit:
+            issues.append(f"arpgMods.lights names {name!r}, which is not an object template")
+        elif not lit[name].get("light"):
+            issues.append(f"arpgMods.lights gives {name!r} a kind, but its light is 0")
     for f in arpg_mods.get("floors") or []:
         area = by_name.get(f.get("area"))
         if area is None:

@@ -73,9 +73,18 @@ in the game:
 | `floors` | Upper storeys on buildings — bedrooms and halls upstairs, stair portals, in a lit band beyond a dark world's edge | `portals`, `floors` |
 | `portals` | Two-way portal pads linking two cells | `portals` |
 | `region-groups` | A zone may wrap around the map and still act as one region | `region-groups` |
+| `lights` | Each light source gets a kind (candle, torch, hearth fire, ember, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour, written as `arpgMods.lights` | `lights` |
 
 `floors` needs `portals` (its stairs are portals): enabling floors turns
-portals on with it. Example:
+portals on with it.
+
+Light strengths (`light`, 0.2 to 1.0) are plain game data, asked for on every
+run: they are what the unmodded game lights at night. The `lights` extension
+adds the kinds and colours on top. Without the `lights` mod installed, a world
+built with it simply looks plain. Plans made before light strengths were asked
+for have none, so re-rolling one adds no lamps; generate it again instead.
+
+Example:
 `python -m worldgen generate --idea "…" --provider zai --out out/x --ext floors`.
 
 ## Import the zip

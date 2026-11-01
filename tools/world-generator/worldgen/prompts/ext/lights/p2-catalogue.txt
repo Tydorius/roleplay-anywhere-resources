@@ -1,0 +1,11 @@
+LIGHT KINDS (the lights extension)
+- Give every template whose "light" is above 0 a "lightKind", one of: candle,
+  torch, fire, ember, lantern, electric, neon, screen, magic. Say what the
+  thing really is: a hearth, brazier or forge is fire, an oil lamp is lantern,
+  a streetlight or desk lamp is electric, a computer terminal is screen, a
+  rune-stone or glowing crystal is magic.
+- Add "lightColor": "#rrggbb" only when the light is not its kind's usual
+  colour: green witch-fire, a red neon sign, a blue spirit lantern. Leave it
+  out otherwise.
+- Let the lighting suit the setting and vary it: candles and hearths in a
+  medieval inn; neon, screens and bare bulbs in a cyberpunk alley.

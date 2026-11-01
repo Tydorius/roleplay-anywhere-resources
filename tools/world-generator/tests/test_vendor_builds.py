@@ -27,7 +27,8 @@ for _name in REAL_PLANS:
 SLAB = "The World's Edge"             # the boundary slab object
 BOUNDARY = "The Edge of the World"    # the region under it
 MOD_WORDS = ("arpgmods", "storey", "stair", "portal", "region group",
-             "regiongroup", "upper floor", "z-level", "mezzanine")
+             "regiongroup", "upper floor", "z-level", "mezzanine", "lightkind",
+             "lightcolor", "lights extension")
 
 
 def load(name):

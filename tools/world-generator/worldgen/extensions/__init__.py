@@ -12,8 +12,8 @@ storeys and writes the game-mod data (``arpgMods``). A run without an
 extension never mentions its features to the model and never runs its code.
 
 The game mods live in ``roleplay-anywhere-resources/tools/code-mod-loader``
-(``portals``, ``floors``, ``region-groups``); an extension's ``mods`` names
-the ones it needs.
+(``portals``, ``floors``, ``region-groups``, ``lights``); an extension's ``mods``
+names the ones it needs.
 
 ``floors`` needs ``portals`` (its stairs are portal pads): enabling floors
 turns portals on too — :func:`expand` records that, and :func:`expand_notes`
@@ -25,17 +25,20 @@ class Extension:
     """One labelled toggle. ``default`` is False for every extension: the
     plain path must need no mods."""
 
-    def __init__(self, id, title, mods, description, requires=()):
+    def __init__(self, id, title, mods, description, requires=(), without_mod=None):
         self.id = id
         self.title = title
         self.mods = tuple(mods)            # game mods needed (code-mod-loader names)
         self.description = description
         self.requires = tuple(requires)    # extensions turned on with it
+        self.without_mod = without_mod     # what a world built with it is like without its mods
         self.default = False
 
     def as_dict(self):
         return {"id": self.id, "title": self.title, "mods": list(self.mods),
                 "description": self.description, "requires": list(self.requires),
+                "withoutMod": self.without_mod or "the world won't work right without "
+                              + ("them" if len(self.mods) > 1 else "it"),
                 "default": self.default}
 
 
@@ -50,6 +53,11 @@ REGISTRY = (
     Extension("region-groups", "Region groups", ("region-groups",),
               "A zone may wrap around the map and still act as one region; "
               "wilder zone shapes for large plans."),
+    Extension("lights", "Lights (kinds and colours)", ("lights",),
+              "Each light source gets a kind (candle, hearth fire, lantern, "
+              "electric, neon, screen, magic) and, where the setting calls "
+              "for it, a colour: flicker, embers and coloured glow in game.",
+              without_mod="without it the world still plays; its lamps just look plain"),
 )
 
 BY_ID = {e.id: e for e in REGISTRY}

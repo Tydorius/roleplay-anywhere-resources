@@ -484,8 +484,8 @@ def parse_plan(data):
     templates = []
     for t in data.get("templates", []):
         extras = {k: v for k, v in t.items()
-                  if k in ("forSleep", "craftStation", "light", "money", "maxHp", "heightM",
-                           "passableAtBuild")}
+                  if k in ("forSleep", "craftStation", "light", "lightKind", "lightColor",
+                           "money", "maxHp", "heightM", "passableAtBuild")}
         size = t.get("size", [1, 1])
         templates.append(ObjectTemplate(
             name=_require(t, "name", "template"), size=(int(size[0]), int(size[1])),

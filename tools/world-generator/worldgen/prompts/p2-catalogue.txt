@@ -13,6 +13,7 @@ Reply with ONE JSON object:
    "size": [w, h],
    "walkability": 0.0,
    "forSleep": false,
+   "light": 0,
    "description": "one in-world sentence",
    "physicalDescription": "what it looks like from above, for the map",
    "tags": ["2-4 short tags: bed, table, storage, work, plant, landmark..."],
@@ -28,6 +29,11 @@ Reply with ONE JSON object:
 - "forSleep" is true only for things a person sleeps in or on: beds, cots,
   bunks, pallets, hammocks. Every other template is false. Every home needs
   at least one forSleep template in its furniture.
+- "light" is 0 for anything that gives off no light. A light source gets 0.2
+  to 1.0 by how far its light reaches: a candle about 0.2, a lantern or
+  streetlight 0.5 to 0.7, a hearth or bonfire 0.8 to 1.0. Tag it "light". The
+  game lights the map at night only from these, so homes, inns and streets
+  each need some.
 - Every "rule" must be concrete and setting-specific. In a medieval village:
   wells are private behind a home, or one large well in the village centre. In
   a city: no wells, but AC units against outside walls. "Somewhere suitable"

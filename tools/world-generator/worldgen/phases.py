@@ -403,6 +403,7 @@ def sanitize_p2(d, log):
             t["forSleep"] = _sleeps(t["name"], t.get("tags"))
         if not isinstance(t.get("tags", []), list):
             t["tags"] = []
+        _sanitize_light(t, log)
         for k in ("description", "physicalDescription", "rule"):
             if not _is_str(t.get(k)):
                 t[k] = {"description": t["name"], "physicalDescription": t["name"],
@@ -411,6 +412,34 @@ def sanitize_p2(d, log):
         out.append(t)
     d["templates"] = out
     return d
+
+
+def _sanitize_light(t, log):
+    """``light`` is a strength 0..1 (clamped; anything else dropped). The
+    lights extension's ``lightKind`` must be one of its kinds and
+    ``lightColor`` a #rrggbb colour; a bad one is dropped, never retried."""
+    from .extensions.lights import COLOR_RE, KINDS
+    v = t.get("light")
+    if v is not None:
+        if isinstance(v, (int, float)) and not isinstance(v, bool):
+            if not 0 <= v <= 1:
+                log.append((f"template {t['name']}", f"light {v!r} -> {min(1, max(0, v))}"))
+                t["light"] = min(1, max(0, v))
+        else:
+            log.append((f"template {t['name']}", f"light {v!r} dropped"))
+            del t["light"]
+    kind = t.get("lightKind")
+    if kind is not None:
+        k = kind.strip().lower() if isinstance(kind, str) else None
+        if k in KINDS:
+            t["lightKind"] = k
+        else:
+            log.append((f"template {t['name']}", f"lightKind {kind!r} dropped"))
+            del t["lightKind"]
+    color = t.get("lightColor")
+    if color is not None and not (isinstance(color, str) and COLOR_RE.match(color)):
+        log.append((f"template {t['name']}", f"lightColor {color!r} dropped"))
+        del t["lightColor"]
 
 
 # --------------------------------------------------------- P3 one building

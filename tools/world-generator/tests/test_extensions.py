@@ -54,12 +54,19 @@ class TestRegistry(unittest.TestCase):
         for e in exts:
             with self.subTest(e["id"]):
                 for key in ("id", "title", "mods", "description",
-                            "requires", "default"):
+                            "requires", "withoutMod", "default"):
                     self.assertIn(key, e)
                 self.assertIs(e["default"], False)
                 self.assertTrue(e["mods"], "an extension needs at least one game mod")
                 self.assertTrue(e["title"].strip())
                 self.assertTrue(e["description"].strip())
+
+    def test_lights_says_it_degrades_gracefully(self):
+        from worldgen.extensions import BY_ID, registry
+        self.assertEqual(BY_ID["lights"].mods, ("lights",))
+        by_id = {e["id"]: e for e in registry()}
+        self.assertIn("look plain", by_id["lights"]["withoutMod"])
+        self.assertIn("won't work right", by_id["floors"]["withoutMod"])
 
     def test_floors_pulls_in_portals(self):
         from worldgen.extensions import BY_ID, IDS
@@ -91,7 +98,7 @@ class TestPromptExtensions(unittest.TestCase):
     def test_known_extensions_do_not_touch_phases_they_do_not_extend(self):
         # every fragment that exists must be for a real phase template, and
         # the phases no enabled extension covers stay byte-identical
-        for ext in ("portals", "floors", "region-groups"):
+        for ext in ("portals", "floors", "region-groups", "lights"):
             frags = set()
             for implied in expand([ext]):
                 frags |= fragment_names(implied)

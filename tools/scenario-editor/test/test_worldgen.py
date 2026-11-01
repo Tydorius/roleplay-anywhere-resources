@@ -130,7 +130,7 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertEqual(by_name["mockp"]["keyHint"], "\u2026abcd")
         self.assertEqual(by_name["mockp"]["model"], "mock-model")
         exts = {e["id"]: e for e in m["extensions"]}
-        self.assertEqual(set(exts), {"floors", "portals", "region-groups"})
+        self.assertEqual(set(exts), {"floors", "portals", "region-groups", "lights"})
         self.assertFalse(any(e["default"] for e in exts.values()))
         self.assertEqual(exts["floors"]["mods"], ["portals", "floors"])
         self.assertEqual(exts["floors"]["requires"], ["portals"])
