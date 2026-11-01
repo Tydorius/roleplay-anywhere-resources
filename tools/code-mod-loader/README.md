@@ -5,25 +5,57 @@ calls, or changes to the prompts the game builds. It works like BepInEx does for
 but for this Electron app. A patcher makes two small changes to the installed renderer bundle and
 loads your mod scripts before the game starts.
 
-Requires Node 18 or later. Close the game before running the patcher.
+**Game version:** built and play-tested against **Anywhere RPG 0.18** (bundle `index-DSU_zx7g.js`).
+The patcher prints the game's version and warns if it isn't 0.18. On another version it still
+installs only when every patch anchor matches exactly once; otherwise it stops and changes nothing.
+
+## Install
+
+You need [Node.js](https://nodejs.org/) 18 or later. Close the game first.
+
+| System | Install every mod | Undo |
+|---|---|---|
+| Windows | double-click `install.cmd` | double-click `uninstall.cmd` |
+| Linux / macOS | `./install.sh` | `./uninstall.sh` |
+
+That copies every bundled mod except the `memory-add` sample into your code-mods folder and
+patches the game. To pick mods, name them: `install.cmd portals floors lights`. The game is found
+in any of your Steam libraries; if it lives somewhere else, add `--game "<install folder>"`.
+
+The same from a terminal:
 
 ```bash
-node patch.mjs status      # is the game patched, which mods were found, do the anchors still match
-node patch.mjs install     # patch (or re-patch) and copy in the mods
-node patch.mjs uninstall   # restore the original files
+node patch.mjs status              # game version, patched or not, which mods are installed
+node patch.mjs add [mods…]         # copy bundled mods in (none named: all but memory-add), then install
+node patch.mjs remove <mods…>      # take mods out, then install the rest
+node patch.mjs install             # patch (or re-patch) with whatever is in the code-mods folder
+node patch.mjs uninstall           # restore the original files
 ```
 
-`--game "<install dir>"` overrides the default `D:\SteamLibrary\steamapps\common\Anywhere RPG`.
+Every command takes `--game "<install folder>"`.
 
-## Installing a mod
+Linux and macOS: the patcher and scripts are written for them, but so far they have only been
+run on Windows.
 
-Mods live in `%APPDATA%\Anywhere RPG\code-mods\<mod name>\mod.js`, beside the game's own `mods`
-folder for config packs. Copy a mod folder there, then run `node patch.mjs install` again. The
-patcher copies mods into the game, so **re-run install after adding, changing or removing a mod**.
+## Your own mods
 
-Examples:
-- `examples/memory-add` gives the GM a `memory_add` call. It writes a memory onto a character,
-  and the memory shows in that character's panel under Memories.
+Mods live in a code-mods folder, one folder per mod with a `mod.js` in it:
+
+| System | Folder |
+|---|---|
+| Windows | `%APPDATA%\Anywhere RPG\code-mods`, beside the game's own `mods` folder for config packs |
+| macOS | `~/Library/Application Support/Anywhere RPG/code-mods` |
+| Linux | `~/.config/Anywhere RPG/code-mods` (or under `$XDG_CONFIG_HOME`) |
+
+Put a mod folder there, then run `node patch.mjs install` again. The patcher copies mods into the
+game, so **re-run install after adding, changing or removing a mod**.
+
+## Bundled mods
+
+`add`, `install.cmd` and `install.sh` take these from `examples/`:
+- `examples/memory-add` is a sample for mod writers, so it's only installed when you name it. It
+  gives the GM a `memory_add` call that writes a memory onto a character, shown in that
+  character's panel under Memories. The GM hasn't yet been seen using it in a real turn.
 - `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
   `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
 - `examples/portals` adds doors, stairs and teleporters between parts of the map. Walks route
@@ -54,9 +86,11 @@ again, or use the shortcut scripts beside it. Both work from any folder and pass
 such as `--game` through:
 
 - Windows: double-click `reinstall.cmd`. The window stays open so you can read the result.
-- Linux/macOS: `./reinstall.sh`. If the update changed the code the patcher anchors on, install stops with
+- Linux/macOS: `./reinstall.sh`.
+
+If the update changed the code the patcher anchors on, install stops with
 `patch "<name>" matched N times` and changes nothing. Then the anchors in `patch.mjs` need
-updating.
+updating, and the mods need play-testing on the new version.
 
 ## What the patcher changes
 
