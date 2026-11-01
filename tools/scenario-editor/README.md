@@ -19,6 +19,8 @@ Double-click the launcher for your system in this folder. It opens the editor in
 
 It needs Python 3.8 or newer, and nothing else. From a terminal: `python scenario_editor.py`.
 
+Built for Anywhere RPG 0.18. Its checks follow the 0.18 scenario format and map rules.
+
 ## Works with the Image Gallery
 
 The editor runs on the [Image Gallery](../../mods/better-images)'s code and leaves the gallery itself
