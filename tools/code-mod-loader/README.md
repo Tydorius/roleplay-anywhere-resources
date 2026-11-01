@@ -40,6 +40,10 @@ Examples:
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md).
+- `examples/lights` gives each light source a kind: candles flicker small and warm, hearths
+  throw embers, bulbs hold steady, arcane crystals pulse blue. It also stops lamp light reaching
+  objects and characters through walls. It works on existing scenarios as they are. See
+  [its README](examples/lights/README.md).
 
 Tests: `node --test` in this folder.
 
