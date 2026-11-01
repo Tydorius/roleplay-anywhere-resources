@@ -89,4 +89,10 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 Launch with `"Anywhere RPG.exe" --remote-debugging-port=9222`, then open `chrome://inspect` in
 Chrome or Edge to get DevTools for the game window. `__arpg.mods`, `__arpg.calls` and
 `__arpg.cfgSeen` (every config path read so far) show what loaded. The game's own console
-(backtick key) has `dumpLastPrompt`, which shows the last prompt sent to the GM.
+(backtick key) has `dumpctx`, which prints the last prompt sent to the GM.
+
+Every AI call is also written to `<install dir>/logs/`, which is usually easier:
+`overseer/turnNNNN-aiNNNN-request-*.txt` is each GM turn's full prompt and the matching
+`-response-*.txt` is its reply, while `anywhere-rpg-ai.log` has every call (GM, images, TTS) with
+prompt and response. `dumpctx` only holds the single most recent call, and a later TTS or image
+call overwrites it.

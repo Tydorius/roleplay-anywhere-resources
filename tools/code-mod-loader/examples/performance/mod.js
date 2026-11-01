@@ -114,8 +114,19 @@
     for (const o of scene.children.list) {
       const kids = o.type === 'Container' ? o.list ?? [] : null;
       if (kids && kids.length <= ENTITY_KIDS && o.depth >= STATIC_DEPTH && (o.x || o.y)) {
-        // A character or object (and its label): its position is enough.
-        show(o, id, o.x >= v.left && o.x <= v.right && o.y >= v.top && o.y <= v.bottom);
+        // A character or object (and its label): its position is enough — unless the
+        // thing is big (a tower, a boundary slab), whose sprite reaches far past its
+        // anchor cell. Those are judged by their real bounds, like wall runs: a cheap
+        // size read on the kids decides which, and only off-view candidates pay for
+        // getBounds. Unknown bounds mean "show it" (the safe side).
+        if (o.x >= v.left && o.x <= v.right && o.y >= v.top && o.y <= v.bottom) {
+          show(o, id, true);
+        } else if (kids.some(k => (k.displayWidth || 0) > MARGIN || (k.displayHeight || 0) > MARGIN)) {
+          const b = boundsOf(o);
+          show(o, id, !b || overlaps(b, v));
+        } else {
+          show(o, id, false);
+        }
       } else if (kids && o.depth >= STATIC_DEPTH && !o.x && !o.y) {
         // A wall run: a container at 0,0 whose pieces sit at their map positions. Static.
         const b = boundsOf(o, true);

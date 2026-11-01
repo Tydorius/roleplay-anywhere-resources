@@ -119,3 +119,21 @@ test('wall runs (containers at 0,0 with pieces placed on the map) are judged by 
   assert.equal(wall.cameraFilter, 0, 'partly in view: drawn');
   assert.equal(farWall.cameraFilter, 1);
 });
+
+test('a big object whose anchor cell is off view still draws while its sprite reaches the view', () => {
+  const { arpg } = load();
+  const { s, cam } = scene();
+  // a boundary-sized slab: anchor at (2400, 100), far off view, sprite 3800 px wide
+  const slab = { type: 'Container', depth: 20, x: 2400, y: 100, list: [{ displayWidth: 3800, displayHeight: 6400 }], cameraFilter: 0,
+    getBounds: () => ({ x: -400, y: 100, width: 3800, height: 6400 }) };
+  const farSlab = { type: 'Container', depth: 20, x: 5200, y: 100, list: [{ displayWidth: 3800, displayHeight: 6400 }], cameraFilter: 0,
+    getBounds: () => ({ x: 5200, y: 100, width: 3800, height: 6400 }) };
+  s.children.list.push(slab, farSlab);
+  arpg.performance.cullMain(s, cam);
+  assert.equal(slab.cameraFilter, 0, 'its sprite reaches into the view: drawn');
+  assert.equal(farSlab.cameraFilter, 1, 'nowhere near: skipped');
+  // and it hides once the view moves away from its whole extent
+  Object.assign(cam.worldView, { x: 20000, y: 20000, right: 20400, bottom: 20300 });
+  arpg.performance.cullMain(s, cam);
+  assert.equal(slab.cameraFilter, 1);
+});
