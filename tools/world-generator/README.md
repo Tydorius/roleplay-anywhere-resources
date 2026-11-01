@@ -11,6 +11,10 @@ It runs on Python 3.8+ with the standard library only (Pillow is optional,
 just for map previews), and the scenario builder, validator and preview
 renderer are vendored — nothing outside this folder is needed.
 
+**Game version:** built for Anywhere RPG 0.18. Its only contract with the game is the
+0.18 scenario format; the Floors, Portals and Region groups extensions also need the 0.18
+code-mod loader mods.
+
 ## Set up a provider
 
 The model calls go through **your own** OpenAI-compatible provider and key;
