@@ -1,7 +1,8 @@
 # Scenario Editor
 
-Edit an Anywhere RPG scenario by hand after the game (or a script) has generated it: look over the
-map, find problems, fix names and descriptions, and download a zip for **New Game → Import…**.
+Edit an Anywhere RPG scenario by hand after the game (or a script) has generated it — or make one
+from an idea with **New world…** — then look over the map, find problems, fix names and
+descriptions, and download a zip for **New Game → Import…**.
 
 The map, the editors and the reference safety from the plan are all in. Quests, the calendar,
 items and perks are still edited in the game's own New Game screen.
@@ -29,6 +30,40 @@ unchanged. The gallery still works on its own.
   window sizes it and saves it as WebP.
 - **Portrait…** and **Sprite…** buttons in the inspector open the Images tab showing just that
   one picture.
+
+## Make a world (world generation)
+
+**New world…** in the toolbar generates a whole scenario from a one-line idea: the model describes
+the world in phases (world plan, prop catalogue, one call per building, one per zone, people) and
+deterministic, seeded code places everything, checks that every room is reachable, and builds the
+scenario. When it finishes, the world opens here as a new workspace, ready to edit or download.
+The generator is the standalone tool in [`../world-generator`](../world-generator); the editor
+only drives it — it still runs on its own from the command line.
+
+- **Your own key.** The model calls go through your own OpenAI-compatible provider (z.ai,
+  OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
+  subscription. Add one in the dialog under **Provider settings**: it is stored in the generator's
+  gitignored `providers.json`, and only the last four characters of the key are ever shown again.
+- **Cost and time.** A world takes **13–18 model calls, 100–150k tokens, 20–35 minutes** (the
+  dialog shows the estimate before you start). On a flash-tier model that is cents on a typical
+  API plan.
+- **Progress and cancel.** The dialog shows the phase as it goes (world plan, catalogue,
+  building n/N, zone n/N, people) with a Cancel button. If a run fails, it shows the error and
+  the folder holding every call's prompt and reply.
+- **Extensions** — all off by default, so the plain world imports and plays in the unmodded game:
+
+  | Extension | What it adds | Game mods needed |
+  |---|---|---|
+  | Floors | Upper storeys reached by stair portals | `portals`, `floors` |
+  | Portals | Two-way portal pads linking two cells | `portals` |
+  | Region groups | A zone may wrap around the map and still be one region | `region-groups` |
+
+  Ticking Floors turns Portals on with it (its stairs are portals). The mods come from
+  `../code-mod-loader`; without the ones an extension names installed in the game, a world built
+  with it won't work right.
+- **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
+  again from its saved `plan.json` under a new seed — no model calls, a few seconds — and it opens
+  as a new workspace; the old one stays untouched.
 
 ## What it does now
 
@@ -129,10 +164,13 @@ unchanged. The gallery still works on its own.
 
 ```
 node --test
+python -m unittest discover -s test -p "test_worldgen.py"
 ```
 
-Run this from this folder. It tests the map operations (`mapops.js`), schedules (`schedule.js`), references
-(`refs.js`) and the minimap's coordinate helpers. It needs Node 18 or newer and nothing else.
+Run these from this folder. The node tests cover the map operations (`mapops.js`), schedules
+(`schedule.js`), references (`refs.js`) and the minimap's coordinate helpers (Node 18 or newer).
+The python tests cover the world generation endpoints against a mocked generator (no model calls);
+the generator's own suite runs from `../world-generator` with `python -m unittest`.
 
 ## Checks on their own
 
