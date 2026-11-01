@@ -70,6 +70,7 @@ async function openSource(id) {
   const r = await api("/api/scenario?" + q());
   S.scn = r.scenario; S.media = new Set(r.media); S.editable = r.editable;
   minimapScenario(); renderToolOpts(); fit(); render(); inspect(); fillFind(); check();
+  updateRerollButton();
   if (S.tab === "images") showImages();
 }
 

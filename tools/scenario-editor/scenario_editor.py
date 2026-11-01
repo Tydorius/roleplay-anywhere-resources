@@ -55,6 +55,14 @@ def scenario_sources(store):
             for s in ig.sources(store) if s["id"] == "staging" or s["id"].startswith("work/")]
 
 
+def req_json(body):
+    """A POST body that must be a JSON object (None, lists and bad JSON all 400)."""
+    req = json.loads(body or b"{}")
+    if not isinstance(req, dict):
+        raise ValueError("expected a JSON object")
+    return req
+
+
 def save_scenario(src, body):
     if not src["id"].startswith("work/"):
         raise ValueError("only workspaces can be saved; copy this one to a workspace first")
@@ -114,17 +122,17 @@ class Handler(ig.Handler):
                 scn = json.loads(self.body())
                 return self.send(200, {"problems": scenario_checks.check(scn, scenario_checks.media_of(src["dir"]))})
             if u.path == "/api/worldgen/generate":
-                req = json.loads(self.body())
+                req = req_json(self.body())
                 return self.send(200, {"job": wg.start_generate(
                     req.get("idea"), req.get("provider"), req.get("extensions") or [], req.get("seed", 1))})
             if u.path == "/api/worldgen/cancel":
                 return self.send(200, {"ok": True, "job": wg.cancel()})
             if u.path == "/api/worldgen/reroll":
-                req = json.loads(self.body())
+                req = req_json(self.body())
                 return self.send(200, {"job": wg.start_reroll(
                     (q.get("source") or [""])[0], req.get("seed", 1))})
             if u.path == "/api/worldgen/providers":
-                req = json.loads(self.body())
+                req = req_json(self.body())
                 return self.send(200, {"providers": wg.save_provider(
                     req.get("name"), req.get("base_url"), req.get("api_key"),
                     req.get("model"), req.get("max_tokens"))})
