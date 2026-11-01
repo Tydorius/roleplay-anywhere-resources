@@ -7,6 +7,10 @@ image service removes it on its server, but the ComfyUI path never does.
 
 These mod packs replace the workflow and prompts for each image type.
 
+**Game version:** built for Anywhere RPG 0.18. The packs replace the game's `prompts/img_*.txt` and
+`comfyui/comfyui-workflow*.json`. If an update changes those defaults, compare them with the
+pack's copies.
+
 | Pack | Image types | Models | Speed |
 |---|---|---|---|
 | `better-images-flux2-klein` | all | Flux.2 [klein] 9B | fast (4 steps) |

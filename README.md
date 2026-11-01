@@ -2,6 +2,10 @@
 
 Community resources for Anywhere RPG (Roleplay Anywhere).
 
+> **Game version:** everything here was built and tested against **Anywhere RPG 0.18**. Updates can
+> change the config files and code these resources depend on, so check each folder's README for
+> what to re-check after an update.
+
 | Folder | What it is |
 |---|---|
 | [`mods/better-images`](mods/better-images) | ComfyUI image-generation mods for Anywhere RPG: better workflows and prompts per image type, background removal for map objects and items, a setup script that adapts them to your ComfyUI's model files, and an **Image Gallery** page for viewing and regenerating any scenario image. |

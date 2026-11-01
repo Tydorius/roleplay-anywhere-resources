@@ -10,7 +10,10 @@ The engine can do much more than that. This folder covers:
 | [`packs/voices-delivery-cues`](packs/voices-delivery-cues) | Lets the GM add delivery cues such as `(sighs)` to spoken lines. |
 | [`server/`](server) | A small OpenAI-compatible proxy with a named voice registry. It runs over [mlx-audio](https://github.com/Blaizzy/mlx-audio) with Fish Audio Drama 3 and Qwen3-TTS, and guards against runaway clips. |
 
-Everything here was worked out from game version 0.16's config files and code, then tested against a live server.
+**Game version:** built for Anywhere RPG 0.18. The voice-picking rules below were worked out from
+version 0.16's config files and code and tested against a live server. The pack files were
+re-checked against 0.18's defaults: `voices-delivery-cues` is 0.18's `overseer/scene_dsl.txt`
+plus its one paragraph, and the game still reads `tts/custom-tts-config.json` and `voiceProfile`.
 
 ## How the game picks a voice
 

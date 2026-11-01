@@ -8,6 +8,8 @@ another life, along with every doom flag waiting in it.
 `Sundered-Boundary-Royal-Masquerade.scenario.zip`. All images are included (portraits, items,
 perks and map objects, made with Flux.2 klein), so nothing needs generating at Start Game.
 
+Made for Anywhere RPG 0.18.
+
 | | |
 |---|---|
 | Map | 184×128: the Athenaeum quadrangle (four wings round the Solstice Courtyard and the Great Hall), its gardens, the Borderwood and the road to Aurex |
