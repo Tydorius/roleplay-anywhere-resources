@@ -22,7 +22,9 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXAMPLES = path.join(HERE, 'examples');
 const MARKER = '/*arpg-modloader*/';
 const ORIG = '.arpg-orig';
-// The game version these patches and mods were built and play-tested against.
+// This loader's release (README's version table), and the game version its patches and mods
+// were built and play-tested against.
+const LOADER_VERSION = '1.0.0';
 const TESTED = '0.18';
 // memory-add only shows how to add a GM call, so "add" with no names leaves it out.
 const SAMPLES = new Set(['memory-add']);
@@ -395,6 +397,7 @@ function main() {
   if (args.names.length && !['add', 'remove'].includes(args.cmd)) throw new Error(`unknown argument: ${args.names[0]}\n${USAGE}`);
   const loc = locate(args.game ?? findGame());
   const version = gameVersion(fs.readFileSync(loc.bundle, 'utf8'));
+  console.log(`code-mod loader ${LOADER_VERSION}`);
   console.log(`game: ${loc.game} (Anywhere RPG ${version ?? 'version unknown'})`);
   if (version !== TESTED) {
     console.log(`note: these mods were built and tested against Anywhere RPG ${TESTED}. ` +

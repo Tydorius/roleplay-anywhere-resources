@@ -1,4 +1,4 @@
-# Code-mod loader (prototype)
+# Code-mod loader 1.0.0
 
 Adds JavaScript mods to Anywhere RPG, beyond what config packs can do: for example new GM API
 calls, or changes to the prompts the game builds. It works like BepInEx does for Unity games,
@@ -8,6 +8,10 @@ loads your mod scripts before the game starts.
 **Game version:** built and play-tested against **Anywhere RPG 0.18** (bundle `index-DSU_zx7g.js`).
 The patcher prints the game's version and warns if it isn't 0.18. On another version it still
 installs only when every patch anchor matches exactly once; otherwise it stops and changes nothing.
+
+| Version | Date | Changes |
+|---|---|---|
+| 1.0.0 | 2026-11-01 | First release, for Anywhere RPG 0.18: the loader, seven mods (lorebooks, portals, wall-aware perception, floors, performance, region groups, lights) and one-step install. |
 
 ## Install
 
