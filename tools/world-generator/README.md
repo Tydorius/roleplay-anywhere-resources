@@ -12,13 +12,40 @@ just for map previews), and the scenario builder, validator and preview
 renderer are vendored — nothing outside this folder is needed.
 
 **Game version:** built for Anywhere RPG 0.18. Its only contract with the game is the
-0.18 scenario format; the Floors, Portals and Region groups extensions also need the 0.18
-code-mod loader mods.
+0.18 scenario format; the extensions also need the 0.18 code-mod loader mods.
 
-## Set up a provider
+## Start it
+
+Double-click the launcher for your system in this folder. It asks its questions in a terminal
+window, so there are no commands to type.
+
+| System | Launcher |
+|---|---|
+| Windows | `Start World Generator.bat` |
+| macOS | `Start World Generator.command` |
+| Linux | `start-world-generator.sh` |
+
+It needs Python 3.8 or newer, and nothing else.
+
+- **The first time**, it sets up your model provider: pick a preset (z.ai, OpenRouter, OpenAI,
+  Ollama, LM Studio, llama-swap) or any other OpenAI-compatible server, confirm the URL and
+  model, and type your key (hidden). It saves them to `providers.json` and can send one tiny
+  test request.
+- **Make a new world:** type a one-line idea, turn extensions on or off, and confirm the
+  estimate. Progress shows as it goes; Ctrl+C stops it. The world lands in `out/<idea>-<time>/`
+  as a `.scenario.zip` for **New Game → Import…** (or **Open zip…** in the Scenario Editor).
+- **Re-roll a world** made earlier: the same world placed again under a new seed, with no model
+  calls.
+- **Set up or test a provider** any time from the same menu.
+
+The Scenario Editor's **New world…** dialog does the same in your browser, and opens the result
+for editing.
+
+## Set up a provider by hand
 
 The model calls go through **your own** OpenAI-compatible provider and key;
-nothing uses the game's built-in subscription.
+nothing uses the game's built-in subscription. The launcher writes this file for you; to do it
+by hand:
 
 1. Copy `providers.example.json` to `providers.json` (same folder).
 2. Fill in your key for the preset you want (or add your own entry — any

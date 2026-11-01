@@ -245,6 +245,11 @@ def check_provider(name, providers_path=PROVIDERS_PATH):
     except urllib.error.URLError as e:
         return {"ok": False, "provider": name, "model": cfg["model"],
                 "error": f"cannot reach the provider: {e.reason}"}
+    except OSError as e:
+        # a read timeout (TimeoutError / socket.timeout) or a dropped connection
+        return {"ok": False, "provider": name, "model": cfg["model"],
+                "error": f"no reply within {CHECK_TIMEOUT}s ({e or type(e).__name__}); a local "
+                         f"server may be busy with another request or still loading the model"}
     except (ValueError, KeyError) as e:
         return {"ok": False, "provider": name, "model": cfg["model"],
                 "error": f"malformed provider response: {e}"}
