@@ -1,0 +1,4 @@
+STOREYS (the floors extension)
+- A building entry may add "storeys": 1-3. Use upper floors where the setting
+  has them: inns, town houses, apartment stacks, towers. Most buildings stay
+  single-storey (omit the field, or use 1).

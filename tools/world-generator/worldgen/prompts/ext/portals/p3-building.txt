@@ -1,0 +1,6 @@
+STAIRS (the portals extension)
+- A staircase is a portal pad: the game links the stair below to the stair
+  above as a two-way passage people and NPCs walk through. The code places
+  both stair objects; you only name the rooms they rise from.
+- Any stair-like furniture you list must be a template a person can stand on
+  (walkability above 0), for the same reason.

@@ -1,0 +1,310 @@
+{
+  "name": "Thornfield",
+  "worldBackground": "Thornfield is a poor farming village of forty souls at the edge of the king's wood: one street, one well, one inn that sees a cart a week. The harvest is in, the tithe barn is half full, and the first frost is late this year. Travellers on the road bring news of trouble in the towns and leave before dark. The forest keeps its own counsel, and the villagers like it that way.",
+  "setting": {
+    "era": "medieval",
+    "technology": "iron and wood",
+    "density": "sparse",
+    "climate": "temperate"
+  },
+  "mapSize": "small",
+  "currency": {
+    "name": "Copper penny",
+    "description": "The small coin of the market towns; four make a silver bit.",
+    "format": "5 pennies"
+  },
+  "startingCurrency": 6,
+  "attributes": {"strength": 6, "dexterity": 4, "intellect": 5, "perception": 5, "charisma": 5},
+  "skills": {"Farming": 2, "Foraging": 2, "Cooking": 1, "Woodcraft": 1, "Haggling": 1, "Brawling": 1},
+  "weatherKinds": ["clear", "fog", "rain", "thunderstorm"],
+  "narrativeRules": [
+    "Poverty is specific: count things. One well, one forge, two carts, a known number of chickens.",
+    "The forest is ordinary by day and reasonless by night; never explain what lives in it.",
+    "Villagers are wary of strangers but bound by hospitality; a shared meal creates obligation.",
+    "The lord's reeve visits at Martinmas; the tithe barn is counted, and the count is short."
+  ],
+  "zones": [
+    {
+      "name": "Village Green",
+      "kind": "village",
+      "sizeClass": "large",
+      "description": "The whole of Thornfield: a green with a well, four buildings around it, and the road out.",
+      "ground": "grass",
+      "adjacentTo": ["Millfield", "King's Wood"],
+      "outdoor": ["village well", "market cross"],
+      "buildings": [
+        {"name": "The Green Dragon Inn", "kind": "inn", "sizeClass": "large", "purpose": "ale, food and beds for travellers", "yard": null},
+        {"name": "Smithy", "kind": "smithy", "sizeClass": "small", "purpose": "the village forge", "yard": {"kind": "workyard", "side": "back"}},
+        {"name": "Oak Cottage", "kind": "cottage", "sizeClass": "small", "purpose": "a rented cottage", "yard": {"kind": "kitchen garden", "side": "back"}},
+        {"name": "Rose Cottage", "kind": "cottage", "sizeClass": "small", "purpose": "the weaver's cottage", "yard": {"kind": "kitchen garden", "side": "back"}}
+      ],
+      "dressing": {
+        "paths": "dirt",
+        "props": [
+          {"template": "Village well", "count": 1, "hint": "center"},
+          {"template": "Market cross", "count": 1, "hint": "center"}
+        ],
+        "filler": [{"template": "Oak tree", "density": "low"}]
+      }
+    },
+    {
+      "name": "Millfield",
+      "kind": "farmland",
+      "sizeClass": "large",
+      "description": "The villagers' strips: wheat and barley in long rows, scarecrows at the corners.",
+      "ground": "dirt",
+      "adjacentTo": ["Village Green"],
+      "outdoor": ["scarecrows", "wheat rows"],
+      "buildings": [
+        {"name": "Tithe Barn", "kind": "barn", "sizeClass": "medium", "purpose": "the lord's tenth, counted and short", "yard": null}
+      ],
+      "dressing": {
+        "paths": "dirt",
+        "props": [
+          {"template": "Wheat row", "count": 12, "hint": "scatter"},
+          {"template": "Scarecrow", "count": 3, "hint": "scatter"}
+        ],
+        "filler": [{"template": "Bramble bush", "density": "low"}]
+      }
+    },
+    {
+      "name": "King's Wood",
+      "kind": "forest",
+      "sizeClass": "huge",
+      "description": "The king's wood: pines deep enough to swallow a road, cut for firewood at the edges and nowhere else.",
+      "ground": "grass",
+      "adjacentTo": ["Village Green"],
+      "outdoor": ["pine trees", "brambles"],
+      "buildings": [],
+      "dressing": {
+        "paths": "dirt",
+        "props": [],
+        "filler": [
+          {"template": "Pine tree", "density": "high"},
+          {"template": "Bramble bush", "density": "medium"},
+          {"template": "Oak tree", "density": "low"}
+        ]
+      }
+    }
+  ],
+  "roads": [
+    {"from": "Village Green", "to": "Millfield", "kind": "dirt"},
+    {"from": "Village Green", "to": "King's Wood", "kind": "dirt"}
+  ],
+  "templates": [
+    {"name": "Straw bed", "size": [1, 2], "walkability": 0, "tags": ["bed"], "forSleep": true,
+     "description": "A straw palliasse on a plank frame.",
+     "physicalDescription": "wooden plank bed frame with straw mattress and rough blanket",
+     "rule": "along the wall of a sleeping room, never blocking a door"},
+    {"name": "Trestle table", "size": [2, 1], "walkability": 0, "tags": ["table", "social"],
+     "description": "A trestle table with two benches' worth of elbows.",
+     "physicalDescription": "rough wooden trestle table with plank top",
+     "rule": "in the middle of the room where people eat and work"},
+    {"name": "Wooden stool", "size": [1, 1], "walkability": 0, "tags": ["chair"],
+     "description": "A three-legged stool.",
+     "physicalDescription": "small three-legged wooden stool",
+     "rule": "around the tables"},
+    {"name": "Long bench", "size": [2, 1], "walkability": 0, "tags": ["social"],
+     "description": "A bench that seats two.",
+     "physicalDescription": "plain wooden bench seating two people",
+     "rule": "along the walls of the common room"},
+    {"name": "Clay hearth", "size": [2, 1], "walkability": 0, "tags": ["light", "food"], "light": 0.6, "craftStation": true,
+     "description": "The clay hearth: every meal and all the warmth.",
+     "physicalDescription": "clay cooking hearth with iron pot and low fire",
+     "rule": "against a wall, away from the door"},
+    {"name": "Stone forge", "size": [2, 1], "walkability": 0, "tags": ["work", "light"], "light": 0.5, "craftStation": true,
+     "description": "The smith's forge, never quite cold.",
+     "physicalDescription": "stone forge with charcoal fire and bellows",
+     "rule": "against the back wall of the forge room"},
+    {"name": "Anvil", "size": [1, 1], "walkability": 0, "tags": ["work"],
+     "description": "The anvil, worn smooth at the edges.",
+     "physicalDescription": "black iron anvil on oak block",
+     "rule": "beside the forge, one pace from the fire"},
+    {"name": "Firewood stack", "size": [2, 1], "walkability": 0, "tags": ["storage", "filler"],
+     "description": "Split firewood, stacked.",
+     "physicalDescription": "neat stack of split firewood logs",
+     "rule": "along a wall out of the way, or in the yard"},
+    {"name": "Oak barrel", "size": [1, 1], "walkability": 0, "tags": ["storage"],
+     "description": "An oak barrel: ale, salt, or nails.",
+     "physicalDescription": "wooden barrel with iron hoops",
+     "rule": "in corners, or beside the hearth"},
+    {"name": "Village well", "size": [2, 2], "walkability": 0, "tags": ["landmark", "social"],
+     "description": "The village well: the reason Thornfield is here.",
+     "physicalDescription": "round stone well with wooden windlass and shingled roof",
+     "rule": "one public well in the open centre of the village, never indoors"},
+    {"name": "Market cross", "size": [1, 1], "walkability": 0, "tags": ["landmark"],
+     "description": "The market cross, where notices are read out.",
+     "physicalDescription": "weathered stone market cross on stepped base",
+     "rule": "at the heart of the village green"},
+    {"name": "Oak tree", "size": [2, 2], "walkability": 0, "tags": ["plant", "filler"],
+     "description": "An oak, acorns under it.",
+     "physicalDescription": "broad oak tree seen from above",
+     "rule": "at the village edges and through the wood, never blocking a path"},
+    {"name": "Pine tree", "size": [2, 2], "walkability": 0, "tags": ["plant", "filler"],
+     "description": "A tall pine.",
+     "physicalDescription": "tall dark pine tree seen from above",
+     "rule": "dense in the king's wood, kept off paths and clearings"},
+    {"name": "Bramble bush", "size": [1, 1], "walkability": 0.5, "tags": ["plant", "filler"],
+     "description": "A bramble bush, blackberries in season.",
+     "physicalDescription": "tangled green bramble bush with blackberries",
+     "rule": "at field edges and under the trees"},
+    {"name": "Wheat row", "size": [3, 1], "walkability": 0.6, "tags": ["plant"],
+     "description": "A row of wheat stooks.",
+     "physicalDescription": "row of golden wheat stooks in a ploughed field",
+     "rule": "in long rows across the open fields"},
+    {"name": "Scarecrow", "size": [1, 1], "walkability": 0, "tags": ["filler"],
+     "description": "A scarecrow in a coat older than its wearer's.",
+     "physicalDescription": "ragged scarecrow on a cross of poles",
+     "rule": "standing watch in the fields"},
+    {"name": "Hay bale", "size": [2, 2], "walkability": 0, "tags": ["filler", "storage"],
+     "description": "A bale of hay.",
+     "physicalDescription": "large round hay bale",
+     "rule": "in the barn and near the fields"},
+    {"name": "Herb bed", "size": [2, 1], "walkability": 0.6, "tags": ["plant"],
+     "description": "A kitchen-herb bed: sage, thyme, feverfew.",
+     "physicalDescription": "small garden bed of culinary herbs with stepping stones",
+     "rule": "in the kitchen gardens behind the cottages"}
+  ],
+  "buildings": [
+    {
+      "name": "The Green Dragon Inn",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Common Room", "share": "large", "purpose": "ale, talk and the evening fire"},
+        {"name": "Kitchen", "share": "small", "purpose": "cooking and the water pump"},
+        {"name": "Guest Chamber", "share": "small", "purpose": "beds for paying guests"},
+        {"name": "Keeper's Room", "share": "small", "purpose": "the innkeeper's own bed"}
+      ],
+      "connections": [
+        ["Common Room", "Kitchen"],
+        ["Common Room", "Guest Chamber"],
+        ["Common Room", "Keeper's Room"]
+      ],
+      "entrance": {"room": "Common Room", "side": "south"},
+      "furniture": [
+        {"template": "Clay hearth", "room": "Common Room", "count": 1, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Common Room", "count": 2, "hint": "center"},
+        {"template": "Wooden stool", "room": "Common Room", "count": 6, "hint": "around:Trestle table"},
+        {"template": "Long bench", "room": "Common Room", "count": 2, "hint": "wall:east"},
+        {"template": "Clay hearth", "room": "Kitchen", "count": 1, "hint": "wall:west"},
+        {"template": "Trestle table", "room": "Kitchen", "count": 1, "hint": "center"},
+        {"template": "Oak barrel", "room": "Kitchen", "count": 2, "hint": "beside:Clay hearth"},
+        {"template": "Straw bed", "room": "Guest Chamber", "count": 2, "hint": "wall:north"},
+        {"template": "Straw bed", "room": "Keeper's Room", "count": 1, "hint": "wall:north"},
+        {"template": "Oak barrel", "room": "Keeper's Room", "count": 1, "hint": "corner"}
+      ],
+      "yard": null
+    },
+    {
+      "name": "Smithy",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Forge", "share": "medium", "purpose": "the fire, the anvil, and a pallet for the smith"},
+        {"name": "Store", "share": "small", "purpose": "stock, scrap and charcoal"}
+      ],
+      "connections": [["Forge", "Store"]],
+      "entrance": {"room": "Forge", "side": "south"},
+      "furniture": [
+        {"template": "Stone forge", "room": "Forge", "count": 1, "hint": "wall:north"},
+        {"template": "Anvil", "room": "Forge", "count": 1, "hint": "beside:Stone forge"},
+        {"template": "Firewood stack", "room": "Forge", "count": 1, "hint": "wall:west"},
+        {"template": "Straw bed", "room": "Forge", "count": 1, "hint": "corner"},
+        {"template": "Oak barrel", "room": "Store", "count": 2, "hint": "corner"}
+      ],
+      "yard": {"props": [{"template": "Firewood stack", "count": 2, "hint": "scatter"}]}
+    },
+    {
+      "name": "Oak Cottage",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Main Room", "share": "medium", "purpose": "hearth and table"},
+        {"name": "Sleeping Loft", "share": "small", "purpose": "a bed under the thatch"}
+      ],
+      "connections": [["Main Room", "Sleeping Loft"]],
+      "entrance": {"room": "Main Room", "side": "south"},
+      "furniture": [
+        {"template": "Clay hearth", "room": "Main Room", "count": 1, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Main Room", "count": 1, "hint": "center"},
+        {"template": "Wooden stool", "room": "Main Room", "count": 2, "hint": "around:Trestle table"},
+        {"template": "Straw bed", "room": "Sleeping Loft", "count": 1, "hint": "wall:north"}
+      ],
+      "yard": {"props": [{"template": "Herb bed", "count": 2, "hint": "scatter"}]}
+    },
+    {
+      "name": "Rose Cottage",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Main Room", "share": "medium", "purpose": "hearth, table and the loom"},
+        {"name": "Sleeping Loft", "share": "small", "purpose": "a bed under the thatch"}
+      ],
+      "connections": [["Main Room", "Sleeping Loft"]],
+      "entrance": {"room": "Main Room", "side": "south"},
+      "furniture": [
+        {"template": "Clay hearth", "room": "Main Room", "count": 1, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Main Room", "count": 1, "hint": "center"},
+        {"template": "Wooden stool", "room": "Main Room", "count": 2, "hint": "around:Trestle table"},
+        {"template": "Firewood stack", "room": "Main Room", "count": 1, "hint": "wall:west"},
+        {"template": "Straw bed", "room": "Sleeping Loft", "count": 1, "hint": "wall:north"}
+      ],
+      "yard": {"props": [{"template": "Herb bed", "count": 2, "hint": "scatter"}]}
+    },
+    {
+      "name": "Tithe Barn",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Barn Floor", "share": "large", "purpose": "hay, carts and the counting floor"},
+        {"name": "Granary", "share": "small", "purpose": "sacks and bins, counted twice"}
+      ],
+      "connections": [["Barn Floor", "Granary"]],
+      "entrance": {"room": "Barn Floor", "side": "south"},
+      "furniture": [
+        {"template": "Hay bale", "room": "Barn Floor", "count": 2, "hint": "corner"},
+        {"template": "Oak barrel", "room": "Granary", "count": 2, "hint": "corner"}
+      ],
+      "yard": null
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Maribel Dabney",
+      "gender": "female",
+      "role": "innkeeper",
+      "home": "The Green Dragon Inn",
+      "work": "The Green Dragon Inn",
+      "description": "The Green Dragon's keeper: broad, cheerful, and remembers every unpaid ale. Wants a second cart for market days.",
+      "physicalDescription": "Stout middle-aged woman, apron, sleeves rolled, ale-soiled towel over one shoulder"
+    },
+    {
+      "name": "Ordwin Blake",
+      "gender": "male",
+      "role": "blacksmith",
+      "home": "Smithy",
+      "work": "Smithy",
+      "description": "The smith: quiet, exact, sleeps by his forge. Owes the reeve a bad debt and knows it.",
+      "physicalDescription": "Bare-armed smith with burn-scarred forearms, leather apron, soot in his beard"
+    },
+    {
+      "name": "Tilly Reed",
+      "gender": "female",
+      "role": "weaver",
+      "home": "Rose Cottage",
+      "work": "Rose Cottage",
+      "description": "The weaver: quick-tongued, keeps the village's news and its cloth. Sells to the market towns at a fair markup.",
+      "physicalDescription": "Thin young woman, yarn-threaded skirt, quick eyes, distaff in hand"
+    }
+  ],
+  "player": {
+    "name": "Robin Hale",
+    "gender": "female",
+    "role": "traveler",
+    "home": "Oak Cottage",
+    "work": "Village Green",
+    "description": "A traveller who took the Oak Cottage for the winter: handy with a hoe, cagey about the road behind you.",
+    "physicalDescription": "Lean young traveler, patched wool coat, walking staff, hood down"
+  }
+}

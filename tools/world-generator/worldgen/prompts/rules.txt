@@ -1,0 +1,50 @@
+HOW TO DESCRIBE A MAP (read all of this; code turns your words into a real map)
+
+PLACEMENT HINTS - THE ONLY WORDS CODE UNDERSTANDS
+Furniture inside a room:
+  wall:north  wall:south  wall:east  wall:west  wall:any     against that wall
+  corner                                                     in a corner
+  center                                                     in the middle of the room
+  row:north  row:south  row:east  row:west                   a row along that wall
+  beside:<template>                                          right next to that kind of object
+  around:<template>                                          a ring around it (chairs round a table)
+  near_door  away_from_door                                  relative to the room's doors
+  symmetric                                                  mirrored pairs
+Outdoors (in a yard or a zone):
+  behind:<building>  front:<building>  beside:<building>     relative to that building
+  along_path                                                 beside the paths
+  center  edge                                               of the zone
+  cluster  scatter                                           grouped together / spread out
+Join hints with + when both apply, for example wall:north+corner or cluster+edge.
+A hint outside this vocabulary is an ERROR. Never describe positions in prose.
+
+SIZES - grid cells, where one cell is 2 m x 2 m
+A bed is 1x2. A table is 2x1 or 2x2. A chair, stool, crate or lamp is 1x1.
+A tree is 1x1 to 3x3. A cart or market stall is 2x2. Nothing needs to be bigger
+than 3x3. Size every template honestly.
+
+WALKABILITY - 0.0 to 1.0
+0.0 means solid: a person cannot walk through it. Give a value above 0 ONLY when
+a person could realistically step over or onto the thing (grass, a rug, a low
+fence you vault, a shallow ford). Beds, tables, forges, trees, wells: 0.
+
+BELIEVABILITY - same standards in any setting (medieval, modern, sci-fi, ...)
+- Furnish every room for its purpose. A bedroom has a bed, storage and a light
+  source. A kitchen has a hearth or stove, a worktable and storage. A workshop
+  has workstations, materials and somewhere to sit.
+- Counts fit the room. A tavern's common room has several tables and seats for
+  them. A chapel has pews in rows. One bed per sleeper.
+- Outdoor spaces get setting-appropriate props: carts, fences, troughs, wells
+  and woodpiles for a medieval village; benches, streetlights, bins, parked
+  cars and AC units against outside walls for a modern town; antennae, crates
+  and conduits for a sci-fi colony.
+- Each catalogue template's "rule" is ONE concrete placement guideline for THIS
+  setting. Example, medieval: "one public well in the village centre, or a
+  private well behind a home; never indoors". Example, city: "AC units sit
+  against outside walls". Vague rules ("somewhere suitable") are useless.
+- Prefer few, reusable templates: one "Wooden stool" serves every room. Do not
+  make one template per single object.
+
+REPLIES
+Reply with ONE JSON object and nothing else: no markdown fences, no commentary
+before or after. Field names are binding; use the exact names in the contract.

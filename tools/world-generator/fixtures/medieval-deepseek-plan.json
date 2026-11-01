@@ -1,0 +1,1492 @@
+{
+ "name": "Hollowmere",
+ "worldBackground": "Hollowmere is a small farming hamlet pressed against the eaves of an old, dark forest. Its people gather at the green around the inn and chapel, while the millrace clatters at the village edge and woodcutters keep wary watch on the tree line. The mood is quiet and practical, but tension simmers over shrinking fields, thinning firewood, and strange tracks found after dusk.",
+ "setting": {
+  "era": "medieval",
+  "technology": "pre-industrial; watermill, hand tools, oil lamps",
+  "density": "sparse",
+  "climate": "temperate, cool and damp with misty mornings"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Hollowmere Green",
+   "kind": "village",
+   "sizeClass": "medium",
+   "description": "The trampled heart of the hamlet, ringed by cottages and busy with daily village life.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Millrace Bank",
+    "Old Forest Edge"
+   ],
+   "outdoor": [
+    "village well",
+    "market stalls",
+    "notice board",
+    "woodpile"
+   ],
+   "buildings": [
+    {
+     "name": "The Wayfarer's Rest",
+     "kind": "inn",
+     "sizeClass": "large",
+     "purpose": "serve travelers and villagers food, drink, and beds",
+     "yard": null
+    },
+    {
+     "name": "Chapel of Saint Aethel",
+     "kind": "chapel",
+     "sizeClass": "small",
+     "purpose": "hold prayers, weddings, and quiet refuge",
+     "yard": null
+    },
+    {
+     "name": "Thatcher's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "house a farming family",
+     "yard": null
+    },
+    {
+     "name": "Hollowmere Smithy",
+     "kind": "smithy",
+     "sizeClass": "small",
+     "purpose": "shoe horses and mend tools",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Village well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Market stall",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Notice board",
+      "count": 1,
+      "hint": "edge+beside:Village well"
+     },
+     {
+      "template": "Woodpile",
+      "count": 2,
+      "hint": "behind:Thatcher's Cottage+beside:The Wayfarer's Rest"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Oak tree",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Millrace Bank",
+   "kind": "mill hamlet",
+   "sizeClass": "small",
+   "description": "A muddy bank where the stream turns the old mill wheel and carts haul sacks to and from the green.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Hollowmere Green",
+    "Old Forest Edge"
+   ],
+   "outdoor": [
+    "mill pond",
+    "footbridge",
+    "sack cart",
+    "willow trees"
+   ],
+   "buildings": [
+    {
+     "name": "Old Mill",
+     "kind": "mill",
+     "sizeClass": "large",
+     "purpose": "grind village grain with the millrace",
+     "yard": null
+    },
+    {
+     "name": "Granary Shed",
+     "kind": "granary",
+     "sizeClass": "small",
+     "purpose": "store sacks of flour and seed grain",
+     "yard": null
+    },
+    {
+     "name": "Miller's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "house the miller and family",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Mill pond",
+      "count": 1,
+      "hint": "beside:Old Mill"
+     },
+     {
+      "template": "Footbridge",
+      "count": 1,
+      "hint": "beside:Old Mill+along_path"
+     },
+     {
+      "template": "Sack cart",
+      "count": 2,
+      "hint": "front:Old Mill+front:Granary Shed"
+     },
+     {
+      "template": "Willow tree",
+      "count": 3,
+      "hint": "along_path+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Oak tree",
+      "density": "low"
+     },
+     {
+      "template": "Bramble bush",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Old Forest Edge",
+   "kind": "forest",
+   "sizeClass": "large",
+   "description": "Where fields give way to ancient oaks, brambles, and a path kept open only by woodcutters.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Hollowmere Green",
+    "Millrace Bank"
+   ],
+   "outdoor": [
+    "woodcutters' path",
+    "boundary stones",
+    "fallen logs",
+    "mushroom rings"
+   ],
+   "buildings": [
+    {
+     "name": "Woodcutter's Hut",
+     "kind": "hut",
+     "sizeClass": "hut",
+     "purpose": "shelter woodcutters and their tools",
+     "yard": null
+    },
+    {
+     "name": "Charcoal Burner's Lean-to",
+     "kind": "workshop",
+     "sizeClass": "hut",
+     "purpose": "cover charcoal burning gear",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Oak tree",
+      "count": 8,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Bramble bush",
+      "count": 8,
+      "hint": "along_path"
+     },
+     {
+      "template": "Boundary stone",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Fallen log",
+      "count": 5,
+      "hint": "scatter"
+     },
+     {
+      "template": "Mushroom ring",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "Charcoal mound",
+      "count": 1,
+      "hint": "behind:Charcoal Burner's Lean-to"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Oak tree",
+      "density": "high"
+     },
+     {
+      "template": "Bramble bush",
+      "density": "medium"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Hollowmere Green",
+   "to": "Millrace Bank",
+   "kind": "dirt"
+  },
+  {
+   "from": "Hollowmere Green",
+   "to": "Old Forest Edge",
+   "kind": "dirt"
+  },
+  {
+   "from": "Millrace Bank",
+   "to": "Old Forest Edge",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Wooden table",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A scrubbed trestle table where villagers share bread, ale, and the day's news.",
+   "physicalDescription": "A pale rectangular plank top on two trestle legs, grain lines and knife scars visible from above.",
+   "tags": [
+    "table",
+    "furniture",
+    "social"
+   ],
+   "rule": "Scatter several through the inn's common room away from the door; a cottage keeps one against wall:east."
+  },
+  {
+   "name": "Wooden stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.2,
+   "description": "A three-legged stool, worn smooth by years of sitting.",
+   "physicalDescription": "A small round seat with three splayed leg dots around it, dark with hand-polish.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "rule": "Place around:Wooden table, two or three per table, and one beside:Workbench."
+  },
+  {
+   "name": "Straw bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A straw tick under coarse blankets, the only bed most folk here will ever know.",
+   "physicalDescription": "A narrow rectangle of heaped pale straw with a darker folded blanket at one end.",
+   "tags": [
+    "bed",
+    "sleep",
+    "furniture"
+   ],
+   "rule": "One per sleeping room, wall:north or wall:west with the head against the wall."
+  },
+  {
+   "name": "Cottage hearth",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A banked stone fire that keeps the damp out of the cottage and the pot simmering.",
+   "physicalDescription": "A square of grey fieldstone with a dark soot-black centre and an iron pot ring.",
+   "tags": [
+    "fire",
+    "cooking",
+    "heat"
+   ],
+   "rule": "One per cottage on wall:south or wall:west, never within two cells of the bed."
+  },
+  {
+   "name": "Oil lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A clay lamp of fish oil whose small flame is all the light Hollowmere has after dusk.",
+   "physicalDescription": "A tiny dark oval with a bright pinprick of flame and a faint glow halo.",
+   "tags": [
+    "light",
+    "furniture"
+   ],
+   "rule": "One on the inn's bar counter and on every cottage table; none in the granary or the charcoal lean-to."
+  },
+  {
+   "name": "Storage chest",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "An iron-banded chest holding winter wool, seed, and whatever must stay dry.",
+   "physicalDescription": "A small dark rectangle with two iron bands across the lid and a hasp at the front.",
+   "tags": [
+    "storage",
+    "furniture"
+   ],
+   "rule": "At the foot of every straw bed, and one against wall:west of the chapel for vestments."
+  },
+  {
+   "name": "Barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "An oak barrel of ale, salt fish, or rain water, hooped tight against the damp.",
+   "physicalDescription": "A round cask seen from above: concentric dark rings with a lighter lid and a bung dot.",
+   "tags": [
+    "storage",
+    "drink"
+   ],
+   "rule": "Behind:Inn bar counter stacked two deep against the wall, and a pair in the granary corner."
+  },
+  {
+   "name": "Inn bar counter",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "The long plank counter where the innkeeper pours ale and settles accounts.",
+   "physicalDescription": "A long stout board on end-grain supports, cups and a lamp dotting its top.",
+   "tags": [
+    "work",
+    "social",
+    "counter"
+   ],
+   "rule": "Against wall:north of the inn's common room, facing the tables and opposite the door."
+  },
+  {
+   "name": "Chapel pew",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.3,
+   "description": "A plain oak bench where the hamlet kneels and fidgets through the saint's day service.",
+   "physicalDescription": "A long narrow bench with a low back rail, dark wood with pale worn seats.",
+   "tags": [
+    "seat",
+    "worship"
+   ],
+   "rule": "Three or four in rows on row:east and row:west, all facing the altar at the chapel's north end."
+  },
+  {
+   "name": "Stone altar",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A slab of grey stone under a horn lantern, where Saint Aethel's few rites are spoken.",
+   "physicalDescription": "A pale square block with a cloth runner and two candle dots at its corners.",
+   "tags": [
+    "worship",
+    "landmark"
+   ],
+   "rule": "Center of the chapel's north end, against wall:north, with pews facing it."
+  },
+  {
+   "name": "Smith's forge",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A soot-blackened hearth where the smith coaxes charcoal into horseshoe heat.",
+   "physicalDescription": "A blocky stone hearth with a glowing orange core and a hood shadow spreading north.",
+   "tags": [
+    "fire",
+    "work"
+   ],
+   "rule": "Against wall:east of the smithy with its chimney breast, well clear of the tool rack."
+  },
+  {
+   "name": "Anvil",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A stub of iron on a stump, ringing out every repair in Hollowmere.",
+   "physicalDescription": "A small dark square with a pointed horn jutting toward the forge side.",
+   "tags": [
+    "work",
+    "iron"
+   ],
+   "rule": "Center of the smithy floor, one pace from the forge and clear of the door."
+  },
+  {
+   "name": "Workbench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A scarred bench of tools and half-finished work, always underfoot.",
+   "physicalDescription": "A narrow plank bench scattered with small dark tool shapes and shavings.",
+   "tags": [
+    "work",
+    "tools"
+   ],
+   "rule": "Wall:west of the smithy, wall:south of the woodcutter's hut, and wall:north of the lean-to."
+  },
+  {
+   "name": "Tool rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Pegs of axes, tongs, and billhooks kept sharp against damp and rust.",
+   "physicalDescription": "A dark rail with short tool hafts hanging in a row like small teeth.",
+   "tags": [
+    "storage",
+    "tools"
+   ],
+   "rule": "Wall:any in the smithy beside the forge, and wall:north inside the woodcutter's hut."
+  },
+  {
+   "name": "Millstone",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "The great stone that turns the hamlet's grain into flour all winter long.",
+   "physicalDescription": "A pale circular stone with radial grooves and a dark square hole at its centre.",
+   "tags": [
+    "work",
+    "mill"
+   ],
+   "rule": "Center of the Old Mill floor, with the millrace shaft entering from the stream side."
+  },
+  {
+   "name": "Grain sack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A bulging sack of flour or seed, tied at the neck and stencilled with the miller's mark.",
+   "physicalDescription": "A rounded pale lump with a darker cinched top and a small ink mark.",
+   "tags": [
+    "storage",
+    "grain"
+   ],
+   "rule": "Cluster in the granary beside:Workbench, and two or three beside:Millstone in the Old Mill."
+  },
+  {
+   "name": "Village well",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "The one well on the green, its rope groaning every misty morning.",
+   "physicalDescription": "A ring of grey stones around a black water circle, with a timber frame and windlass bar.",
+   "tags": [
+    "water",
+    "landmark"
+   ],
+   "rule": "Exactly one, center of Hollowmere Green where the trampled paths cross."
+  },
+  {
+   "name": "Market stall",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A trestle under sacking where eggs, turnips, and wool change hands on market day.",
+   "physicalDescription": "A square canopy of grey-brown cloth over a plank top dotted with produce.",
+   "tags": [
+    "market",
+    "work"
+   ],
+   "rule": "Cluster along the green's south edge with fronts facing the village well."
+  },
+  {
+   "name": "Notice board",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A leaning board of nailed scraps: tithes, lost goats, and warnings about the tree line.",
+   "physicalDescription": "A small dark post with a pale pinned square showing two or three pale paper flecks.",
+   "tags": [
+    "landmark",
+    "notice"
+   ],
+   "rule": "Edge of the green beside:Village well, angled to face the inn's door."
+  },
+  {
+   "name": "Woodpile",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Split logs stacked under a leak of thatch, counted and hoarded against the cold.",
+   "physicalDescription": "A tight grid of pale log ends stacked in rows, darker bark at the edges.",
+   "tags": [
+    "firewood",
+    "storage"
+   ],
+   "rule": "Behind:Thatcher's Cottage and beside the inn's kitchen wall; never within the chapel."
+  },
+  {
+   "name": "Mill pond",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "description": "Still brown water above the wheel, misted over until mid-morning.",
+   "physicalDescription": "A wide dark blue-green patch with pale ripple lines and reeds specking the shore.",
+   "tags": [
+    "water",
+    "landmark"
+   ],
+   "rule": "Beside:Old Mill on the upstream side, feeding the millrace."
+  },
+  {
+   "name": "Footbridge",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 1.0,
+   "description": "Two planks and a handrail, the quickest way over the millrace with a sack on your shoulder.",
+   "physicalDescription": "A narrow plank span in brown wood with a thin rail line along one side.",
+   "tags": [
+    "crossing",
+    "path"
+   ],
+   "rule": "Across the millrace beside:Old Mill, on the woodcutters' side of the bank."
+  },
+  {
+   "name": "Sack cart",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A two-wheeled cart of flour sacks and chaff, parked where the mud is firmest.",
+   "physicalDescription": "A small brown rectangle with two dark wheel dots, heaped pale sacks on top.",
+   "tags": [
+    "cart",
+    "transport"
+   ],
+   "rule": "Front:Old Mill on the dirt track, and a second one front:Granary Shed."
+  },
+  {
+   "name": "Willow tree",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "description": "A bowed willow trailing its pale branches in the millrace.",
+   "physicalDescription": "A rounded pale-green crown with long drooping strands over the water side.",
+   "tags": [
+    "tree",
+    "plant"
+   ],
+   "rule": "Along the millrace bank at the edge of Millrace Bank, three or four spread along the water."
+  },
+  {
+   "name": "Oak tree",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "description": "An old dark oak, one of the eaves the hamlet has never dared cut back.",
+   "physicalDescription": "A broad dark-green crown with a knotty trunk hole at its centre and deep shadow.",
+   "tags": [
+    "tree",
+    "plant"
+   ],
+   "rule": "Scatter through Old Forest Edge, densest along the zone edge away from the woodcutters' path."
+  },
+  {
+   "name": "Bramble bush",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A snarl of thorn and blackberry that tears at sleeves and hides the tree line.",
+   "physicalDescription": "A small dark tangle of thorny arcs with a few dull berry dots.",
+   "tags": [
+    "plant",
+    "bramble"
+   ],
+   "rule": "Scatter along_path of the woodcutters' path, thickening to a wall at the forest edge."
+  },
+  {
+   "name": "Boundary stone",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A mossy marker stone showing where the last tilled field ends and the forest begins.",
+   "physicalDescription": "A small grey upright stone with a pale lichen cap and a chiselled line.",
+   "tags": [
+    "landmark",
+    "marker"
+   ],
+   "rule": "Along_path where the fields meet the trees, one every few cells of cleared ground."
+  },
+  {
+   "name": "Fallen log",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.2,
+   "description": "A moss-eaten trunk brought down by wind, too far in to be worth hauling out.",
+   "physicalDescription": "A long brown cylinder with a pale sawn end, speckled with green moss patches.",
+   "tags": [
+    "wood",
+    "wild"
+   ],
+   "rule": "Scatter in Old Forest Edge well away from the woodcutters' path, never across a doorway."
+  },
+  {
+   "name": "Mushroom ring",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "description": "A pale ring of toadstools on the damp grass, which the woodcutters will not step inside.",
+   "physicalDescription": "A faint circle of small cream caps on a darker green patch of grass.",
+   "tags": [
+    "plant",
+    "landmark"
+   ],
+   "rule": "Edge of Old Forest Edge in damp shade, never on the woodcutters' path."
+  },
+  {
+   "name": "Charcoal mound",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A turf-covered clamp of slow-burning wood, smoking for days under the burner's eye.",
+   "physicalDescription": "A dark earth dome ringed with sod, a thin grey smoke plume and a black vent hole.",
+   "tags": [
+    "work",
+    "fire"
+   ],
+   "rule": "Behind:Charcoal Burner's Lean-to in a cleared circle, well clear of the oak trunks."
+  }
+ ],
+ "buildings": [
+  {
+   "name": "The Wayfarer's Rest",
+   "wall": "wood",
+   "ground": "plank floor",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "large",
+     "purpose": "tavern hall for food, drink, and village gossip"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "cooking and food preparation for guests"
+    },
+    {
+     "name": "Dormitory",
+     "share": "medium",
+     "purpose": "shared sleeping room for travelers"
+    },
+    {
+     "name": "Private Guest Room",
+     "share": "small",
+     "purpose": "private bed for a paying traveler"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Kitchen"
+    ],
+    [
+     "Common Room",
+     "Dormitory"
+    ],
+    [
+     "Common Room",
+     "Private Guest Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Inn bar counter",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Common Room",
+     "count": 4,
+     "hint": "away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Common Room",
+     "count": 12,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Cottage hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Barrel",
+     "room": "Common Room",
+     "count": 4,
+     "hint": "wall:north+beside:Inn bar counter"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:north+beside:Inn bar counter"
+    },
+    {
+     "template": "Cottage hearth",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Dormitory",
+     "count": 3,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Dormitory",
+     "count": 3,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Dormitory",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Private Guest Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Private Guest Room",
+     "count": 1,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Private Guest Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Chapel of Saint Aethel",
+   "wall": "stone",
+   "ground": "flagstone",
+   "rooms": [
+    {
+     "name": "Nave",
+     "share": "medium",
+     "purpose": "Prayers, weddings, and quiet refuge before the altar"
+    },
+    {
+     "name": "Vestry",
+     "share": "small",
+     "purpose": "Storage for vestments and chapel linens"
+    }
+   ],
+   "connections": [
+    [
+     "Nave",
+     "Vestry"
+    ]
+   ],
+   "entrance": {
+    "room": "Nave",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone altar",
+     "room": "Nave",
+     "count": 1,
+     "hint": "wall:north+center"
+    },
+    {
+     "template": "Chapel pew",
+     "room": "Nave",
+     "count": 2,
+     "hint": "row:east+symmetric"
+    },
+    {
+     "template": "Chapel pew",
+     "room": "Nave",
+     "count": 2,
+     "hint": "row:west+symmetric"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Vestry",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Thatcher's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Living Room",
+     "share": "medium",
+     "purpose": "cooking, eating, and family life"
+    },
+    {
+     "name": "Bedroom",
+     "share": "small",
+     "purpose": "sleeping"
+    }
+   ],
+   "connections": [
+    [
+     "Living Room",
+     "Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Living Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Cottage hearth",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Living Room",
+     "count": 3,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "beside:Storage chest"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Hollowmere Smithy",
+   "wall": "stone",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Forge Floor",
+     "share": "large",
+     "purpose": "shoeing horses and mending farm tools"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Forge Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Smith's forge",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "Anvil",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Workbench",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tool rack",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:north+beside:Smith's forge"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:west+beside:Workbench"
+    },
+    {
+     "template": "Barrel",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "corner+beside:Smith's forge"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Old Mill",
+   "wall": "stone",
+   "ground": "packed dirt",
+   "rooms": [
+    {
+     "name": "Mill Floor",
+     "share": "large",
+     "purpose": "grinding floor around the water-driven millstone"
+    },
+    {
+     "name": "Sack Store",
+     "share": "medium",
+     "purpose": "grain storage and sack mending beside the mill floor"
+    },
+    {
+     "name": "Miller's Rest",
+     "share": "small",
+     "purpose": "sleeping nook and meals for the miller"
+    }
+   ],
+   "connections": [
+    [
+     "Mill Floor",
+     "Sack Store"
+    ],
+    [
+     "Mill Floor",
+     "Miller's Rest"
+    ]
+   ],
+   "entrance": {
+    "room": "Mill Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Millstone",
+     "room": "Mill Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Mill Floor",
+     "count": 3,
+     "hint": "beside:Millstone"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Mill Floor",
+     "count": 1,
+     "hint": "beside:Millstone"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Mill Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Workbench",
+     "room": "Sack Store",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Sack Store",
+     "count": 5,
+     "hint": "cluster+beside:Workbench"
+    },
+    {
+     "template": "Barrel",
+     "room": "Sack Store",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Sack Store",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Miller's Rest",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Miller's Rest",
+     "count": 1,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Miller's Rest",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Miller's Rest",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Miller's Rest",
+     "count": 2,
+     "hint": "around:Wooden table"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Granary Shed",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Sack Store",
+     "share": "large",
+     "purpose": "Raised, dry storage for flour sacks hauled up from the millrace carts, kept off the damp ground on a plank floor"
+    },
+    {
+     "name": "Seed Room",
+     "share": "small",
+     "purpose": "Small partitioned bay holding next season's seed grain in sacks, kept dark and cool away from the door"
+    }
+   ],
+   "connections": [
+    [
+     "Sack Store",
+     "Seed Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Sack Store",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Sack Store",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Sack Store",
+     "count": 8,
+     "hint": "cluster+beside:Workbench"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Sack Store",
+     "count": 3,
+     "hint": "wall:east+corner"
+    },
+    {
+     "template": "Barrel",
+     "room": "Sack Store",
+     "count": 2,
+     "hint": "corner+wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Sack Store",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Seed Room",
+     "count": 5,
+     "hint": "cluster+wall:north"
+    },
+    {
+     "template": "Barrel",
+     "room": "Seed Room",
+     "count": 1,
+     "hint": "corner+wall:west"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Miller's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Main Room",
+     "share": "medium",
+     "purpose": "family living and cooking room with the cottage table and hearth"
+    },
+    {
+     "name": "Sleeping Room",
+     "share": "small",
+     "purpose": "small sleeping room for the miller's family"
+    }
+   ],
+   "connections": [
+    [
+     "Main Room",
+     "Sleeping Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Room",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Cottage hearth",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Room",
+     "count": 2,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "beside:Storage chest"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Woodcutter's Hut",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Main Hut",
+     "share": "medium",
+     "purpose": "Shelter for woodcutters with sleeping, eating, and tool storage"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Main Hut",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Straw bed",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "beside:Straw bed"
+    },
+    {
+     "template": "Cottage hearth",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "Oil lamp",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Hut",
+     "count": 2,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Workbench",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Tool rack",
+     "room": "Main Hut",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Charcoal Burner's Lean-to",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Lean-to Workshop",
+     "share": "small",
+     "purpose": "Covered workspace and storage for charcoal burning gear"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Lean-to Workshop",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Lean-to Workshop",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Lean-to Workshop",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Lean-to Workshop",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    }
+   ],
+   "yard": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Alys Fletcher",
+   "gender": "female",
+   "role": "innkeeper",
+   "home": "The Wayfarer's Rest",
+   "work": "The Wayfarer's Rest",
+   "description": "Keeps six beds, two ale barrels, and a pot of barley stew going; wants a reliable lad to split firewood and worries the forest tracks will scare off winter travelers.",
+   "physicalDescription": "Broad-shouldered and red-cheeked, in a patched wool kirtle and apron, with a brass key ring at her belt."
+  },
+  {
+   "name": "Osric Miller",
+   "gender": "male",
+   "role": "miller",
+   "home": "Miller's Cottage",
+   "work": "Old Mill",
+   "description": "Runs the Old Mill with two flour-dusted helpers and one stubborn wheel; wants the millrace dredged before the freeze and worries the granary sacks are lighter each week.",
+   "physicalDescription": "Lean and stooped, in a flour-whitened tunic and leather cap, with a permanent squint from watching the wheel."
+  },
+  {
+   "name": "Maud Thatcher",
+   "gender": "female",
+   "role": "farmer",
+   "home": "Thatcher's Cottage",
+   "work": "Hollowmere Green",
+   "description": "Farms three narrow strips at the green’s edge and keeps eight hens; wants a fair price for her barley and worries the shrinking fields will not feed her family through winter.",
+   "physicalDescription": "Short and weathered, in a mud-hemmed gown and tied straw hat, with a sickle always tucked in her rope belt."
+  },
+  {
+   "name": "Edwin Smith",
+   "gender": "male",
+   "role": "smith",
+   "home": "The Wayfarer's Rest",
+   "work": "Hollowmere Smithy",
+   "description": "Shoes horses and mends tools at one cold forge with a hand bellows; wants a steady supply of charcoal and worries the woodcutters are cutting too near the old trees.",
+   "physicalDescription": "Thick-armed and soot-smudged, in a leather apron over a singed tunic, with a burn scar on his left thumb."
+  },
+  {
+   "name": "Wulfric Holt",
+   "gender": "male",
+   "role": "woodcutter",
+   "home": "Woodcutter's Hut",
+   "work": "Old Forest Edge",
+   "description": "Marks two hundred trees for winter felling and keeps a wary eye on the tree line; wants the strange tracks identified and worries his youngest lad will follow them alone.",
+   "physicalDescription": "Tall and grizzled, in a hooded green cloak and hobnailed boots, with a wood-axe notched from many winters."
+  }
+ ],
+ "player": {
+  "name": "Rowan Ashdown",
+  "gender": "male",
+  "role": "itinerant surveyor",
+  "home": "The Wayfarer's Rest",
+  "work": "Old Forest Edge",
+  "description": "A hired surveyor with a chain, a compass, and a reeve’s writ to map Hollowmere’s bounds before spring; wants a warm room through the winter and worries the fresh tracks will be blamed on outsiders.",
+  "physicalDescription": "Wiry and travel-stained, in an oiled cloak and mud-caked boots, with a brass compass tied at the wrist."
+ }
+}

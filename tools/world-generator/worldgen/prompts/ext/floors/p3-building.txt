@@ -1,0 +1,19 @@
+UPPER FLOORS (the floors extension)
+When this building's plan entry has "storeys" above 1, also reply with:
+  "stairs": {"room": "<a ground room name the stair rises from>"},
+  "upper": [ one object per extra storey, in storey order:
+    {"storey": 2,
+     "rooms": [{"name": "...", "share": "small|medium|large", "purpose": "..."}],
+     "connections": [["Room A", "Room B"]],
+     "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}],
+     "opening": null or {"over_room": "<a ground room name>", "kind": "gallery|atrium|stairwell"}}
+  ]
+- The stair rises from the named ground room; every storey's stair sits at
+  the same spot, so the room you name must have floor to spare.
+- People who live upstairs sleep there: their bedrooms move up a storey, one
+  bed per sleeper. Furnish the upper rooms for their purpose — a gallery over
+  a common room has seats at its rail, a landing has a lamp.
+- "opening" is the hole in that floor you look down through, directly over
+  the named ground room: a gallery over the common room, an atrium over a
+  workshop hall, a stairwell over the entrance hall. null when the floor is
+  solid.

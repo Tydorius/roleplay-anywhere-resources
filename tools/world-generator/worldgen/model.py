@@ -1,0 +1,517 @@
+"""Data model for the merged P1-P5 plan (see DESIGN.md) and shared geometry helpers.
+
+The plan is the one JSON object produced by merging every phase's parsed output:
+P1 zones/roads, P2 templates, P3 building designs, P4 zone dressing (attached to
+each zone), P5 people. Field names follow the DESIGN.md contracts exactly; the
+only merging choices are that P4 dressing lives under ``zones[i].dressing`` and
+P3 designs live in a top-level ``buildings`` list keyed by building name.
+"""
+import re
+from dataclasses import dataclass, field
+
+
+# ------------------------------------------------------------------ geometry
+
+@dataclass(frozen=True)
+class Rect:
+    """A grid rectangle. [0,0] is bottom-left, y grows north; (x, y) is the
+    bottom-left cell and x1/y1 the inclusive top-right cell."""
+
+    x: int
+    y: int
+    w: int
+    h: int
+
+    @property
+    def x1(self):
+        return self.x + self.w - 1
+
+    @property
+    def y1(self):
+        return self.y + self.h - 1
+
+    def contains_rect(self, other):
+        return (self.x <= other.x and self.y <= other.y
+                and other.x1 <= self.x1 and other.y1 <= self.y1)
+
+    def contains_cell(self, c):
+        x, y = c
+        return self.x <= x <= self.x1 and self.y <= y <= self.y1
+
+    def cells(self):
+        return {(x, y) for x in range(self.x, self.x1 + 1) for y in range(self.y, self.y1 + 1)}
+
+    def interior(self, n=1):
+        return Rect(self.x + n, self.y + n, max(1, self.w - 2 * n), max(1, self.h - 2 * n))
+
+    def intersects(self, other):
+        """True only on real area overlap; rects that merely touch an edge do not intersect."""
+        return not (self.x1 < other.x or other.x1 < self.x
+                    or self.y1 < other.y or other.y1 < self.y)
+
+    def gap(self, other):
+        """Cell distance between the rects: 0 when touching, negative when overlapping."""
+        dx = max(other.x - self.x1, self.x - other.x1, 0)
+        dy = max(other.y - self.y1, self.y - other.y1, 0)
+        if dx == 0 and dy == 0:
+            return -min(self._overlap_len(self.x, self.x1, other.x, other.x1),
+                        self._overlap_len(self.y, self.y1, other.y, other.y1))
+        return max(dx, dy)
+
+    @staticmethod
+    def _overlap_len(a0, a1, b0, b1):
+        return min(a1, b1) - max(a0, b0) + 1
+
+    def shifted(self, dx, dy):
+        return Rect(self.x + dx, self.y + dy, self.w, self.h)
+
+    def center(self):
+        return (self.x + (self.w - 1) / 2.0, self.y + (self.h - 1) / 2.0)
+
+    def as_tuple(self):
+        return (self.x, self.y, self.w, self.h)
+
+
+def door_inner_cell(rect, cell):
+    """The interior cell just inside a door cell on the rect's ring."""
+    x, y = cell
+    if x == rect.x:
+        return (x + 1, y)
+    if x == rect.x1:
+        return (x - 1, y)
+    if y == rect.y:
+        return (x, y + 1)
+    if y == rect.y1:
+        return (x, y - 1)
+    return (x, y)
+
+
+SIDE_DX_DY = {  # outward step of each side
+    "north": (0, 1),
+    "south": (0, -1),
+    "east": (1, 0),
+    "west": (-1, 0),
+}
+
+OPPOSITE_SIDE = {"north": "south", "south": "north", "east": "west", "west": "east"}
+
+
+def shared_wall_cells(a, b):
+    """Door cell(s) between two touching walled rects, mirroring the builder's
+    own rule: adjacent rooms (edges one cell apart) get a facing pair of cells,
+    rooms sharing one wall line get a single cell. [] when they do not touch."""
+    at = a.as_tuple()
+    bt = b.as_tuple()
+    ax0, ay0, ax1, ay1 = at[0], at[1], at[0] + at[2] - 1, at[1] + at[3] - 1
+    bx0, by0, bx1, by1 = bt[0], bt[1], bt[0] + bt[2] - 1, bt[1] + bt[3] - 1
+    for (ea, eb, horiz) in ((ay1, by0, True), (by1, ay0, True), (ax1, bx0, False), (bx1, ax0, False)):
+        if eb - ea in (0, 1):
+            if horiz:
+                lo, hi = max(ax0, bx0) + 1, min(ax1, bx1) - 1
+                if hi >= lo:
+                    xm = (lo + hi) // 2
+                    return [(xm, ea), (xm, eb)] if eb != ea else [(xm, ea)]
+            else:
+                lo, hi = max(ay0, by0) + 1, min(ay1, by1) - 1
+                if hi >= lo:
+                    ym = (lo + hi) // 2
+                    return [(ea, ym), (eb, ym)] if eb != ea else [(ea, ym)]
+    return []
+
+
+# ------------------------------------------------------------------ plan
+
+VALID_SHARES = ("small", "medium", "large")
+VALID_SIZE_CLASSES = ("hut", "small", "medium", "large", "hall")
+VALID_ZONE_SIZES = ("small", "medium", "large", "huge")
+
+
+@dataclass
+class RoomSpec:
+    name: str
+    share: str = "small"
+    purpose: str = ""
+
+
+@dataclass
+class FurniturePlan:
+    template: str
+    room: str
+    count: int = 1
+    hint: str = ""
+
+
+@dataclass
+class BuildingDesign:
+    """P3 output for one building, plus the P1 entry it refines."""
+    name: str
+    kind: str = "house"
+    size_class: str = "small"
+    purpose: str = ""
+    wall: str = "wood"
+    ground: str = "wood"
+    storeys: int = 1                                   # 1-3 (floors extension)
+    stairs_room: str = ""                              # ground room the stair rises from
+    upper: list = field(default_factory=list)          # [UpperStorey]
+    rooms: list = field(default_factory=list)          # [RoomSpec]
+    connections: list = field(default_factory=list)    # [[roomA, roomB]]
+    entrance_room: str = ""
+    entrance_side: str = "south"
+    furniture: list = field(default_factory=list)      # [FurniturePlan]
+    yard: object = None                                # YardSpec or None
+    yard_props: list = field(default_factory=list)     # [PropPlan]
+
+
+@dataclass
+class OpeningSpec:
+    """A hole in an upper floor you can look down through."""
+    over_room: str = ""      # ground room name the opening sits above
+    kind: str = "gallery"    # gallery|atrium|stairwell
+
+
+@dataclass
+class UpperStorey:
+    """One extra storey of a multi-storey building (floors extension)."""
+    storey: int = 2
+    rooms: list = field(default_factory=list)          # [RoomSpec]
+    connections: list = field(default_factory=list)    # [[roomA, roomB]]
+    furniture: list = field(default_factory=list)      # [FurniturePlan]
+    opening: object = None                              # OpeningSpec or None
+
+
+@dataclass
+class YardSpec:
+    kind: str = "yard"
+    side: str = "back"   # front|back|left|right
+
+
+@dataclass
+class PropPlan:
+    template: str
+    count: int = 1
+    hint: str = ""
+
+
+@dataclass
+class FillerPlan:
+    template: str
+    density: str = "low"   # low|medium|high
+
+
+@dataclass
+class Dressing:
+    paths: str = "dirt"   # none|dirt|cobble|paved
+    props: list = field(default_factory=list)   # [PropPlan]
+    filler: list = field(default_factory=list)  # [FillerPlan]
+
+
+@dataclass
+class Zone:
+    name: str
+    kind: str = "field"
+    size_class: str = "medium"
+    description: str = ""
+    ground: str = "grass"
+    adjacentTo: list = field(default_factory=list)
+    buildings: list = field(default_factory=list)  # [BuildingDesign]
+    outdoor: list = field(default_factory=list)    # short feature names from P1
+    dressing: Dressing = field(default_factory=Dressing)
+
+
+@dataclass
+class Road:
+    a: str   # zone name
+    b: str   # zone name
+    kind: str = "dirt"
+
+
+SLEEP_WORDS = ("bed", "bunk", "cot", "pallet", "hammock")
+
+# ------------------------------------------------------------------ zone kinds
+
+SETTLEMENT_WORDS = ("village", "town", "city", "district", "quarter", "street",
+                    "market", "hamlet", "square", "borough", "ward", "precinct",
+                    "suburb", "downtown", "sprawl", "centre", "center", "row",
+                    "block", "strip", "commercial", "residential", "industrial",
+                    "neighbourhood", "neighborhood", "enclave")
+AGRICULTURAL_WORDS = ("farmland", "farm", "field", "fields", "orchard", "meadow",
+                      "pasture", "pastureland", "cropland", "plantation",
+                      "vineyard", "grange", "acreage", "arable", "homestead",
+                      "ranch", "smallholding")
+WATER_WORDS = ("river", "lake", "sea", "ocean", "pond", "pool", "creek", "brook",
+               "stream", "bay", "cove", "coast", "shore", "beach", "water",
+               "waterfront", "harbor", "harbour", "lagoon", "estuary", "delta")
+WILD_WORDS = ("forest", "wood", "woods", "woodland", "marsh", "swamp", "moor",
+              "heath", "fen", "bog", "jungle", "thicket", "grove", "copse",
+              "park", "wilderness", "wilds", "scrub", "barrens", "steppe",
+              "tundra", "savanna", "green")
+URBAN_WORDS = ("city", "district", "quarter", "street", "market", "borough",
+               "ward", "precinct", "downtown", "sprawl", "row", "block",
+               "strip", "commercial", "residential", "industrial",
+               "neighbourhood", "neighborhood", "metropolitan")
+
+
+def _kind_words(kind):
+    return set(re.findall(r"[a-z]+", (kind or "").lower()))
+
+
+def zone_class(zone):
+    """The zone's map class from its kind: settlement, agricultural, wild
+    (the default open country) or water."""
+    words = _kind_words(zone.kind)
+    if words & set(SETTLEMENT_WORDS):
+        return "settlement"
+    if words & set(AGRICULTURAL_WORDS):
+        return "agricultural"
+    if words & set(WATER_WORDS):
+        return "water"
+    return "wild"
+
+
+def is_urban_zone(zone):
+    """A settlement that reads as a town/city district (alleys, tight blocks)
+    rather than a village or hamlet (wide lanes, yards)."""
+    return zone_class(zone) == "settlement" and bool(_kind_words(zone.kind) & set(URBAN_WORDS))
+
+
+TOWN_WORDS = ("town", "borough", "suburb", "burg")
+
+
+def is_town_zone(zone):
+    """A settlement between the two: a town, not yet a city district."""
+    return zone_class(zone) == "settlement" and bool(_kind_words(zone.kind) & set(TOWN_WORDS))
+
+
+def building_coverage_target(zone, setting=None):
+    """The share of a settlement zone's cells its buildings should cover:
+    packed blocks for a dense setting or city-like kinds, loose ground for
+    villages, towns in between."""
+    if (setting or {}).get("density") == "dense" or is_urban_zone(zone):
+        return 0.52
+    if is_town_zone(zone):
+        return 0.30
+    return 0.16
+
+
+def is_sleep_name(name, tags=()):
+    """True for names/tags of things a person sleeps on: beds, cots, bunks,
+    pallets, hammocks (a "Straw Bed" needs no bed tag to count)."""
+    n = (name or "").lower()
+    if any(w in n for w in SLEEP_WORDS):
+        return True
+    return any(w in (t or "").lower() for t in tags or () for w in SLEEP_WORDS)
+
+
+@dataclass
+class ObjectTemplate:
+    name: str
+    size: tuple = (1, 1)
+    walkability: float = 0.0
+    description: str = ""
+    physicalDescription: str = ""
+    tags: list = field(default_factory=list)
+    rule: str = ""
+    extras: dict = field(default_factory=dict)  # forSleep, craftStation, light, ...
+
+    @property
+    def for_sleep(self):
+        v = self.extras.get("forSleep")
+        if v is not None:
+            return bool(v)
+        return is_sleep_name(self.name, self.tags)
+
+
+@dataclass
+class Person:
+    name: str
+    gender: str = "female"
+    role: str = "villager"
+    home: str = ""
+    work: str = ""
+    description: str = ""
+    physicalDescription: str = ""
+    extras: dict = field(default_factory=dict)
+
+
+@dataclass
+class Plan:
+    name: str = "Generated World"
+    worldBackground: str = ""
+    setting: dict = field(default_factory=dict)
+    mapSize: str = "small"
+    zones: list = field(default_factory=list)      # [Zone]
+    roads: list = field(default_factory=list)      # [Road]
+    templates: list = field(default_factory=list)  # [ObjectTemplate]
+    npcs: list = field(default_factory=list)       # [Person]
+    player: Person = None
+    extras: dict = field(default_factory=dict)     # currency, attributes, skills, ...
+
+    def template(self, name):
+        for t in self.templates:
+            if t.name == name:
+                return t
+        raise KeyError(f"unknown object template {name!r}")
+
+
+# ------------------------------------------------------------------ parsing
+
+def _require(d, key, ctx):
+    if key not in d:
+        raise ValueError(f"{ctx}: missing required field {key!r}")
+    return d[key]
+
+
+def _parse_roomspec(d):
+    return RoomSpec(name=_require(d, "name", "room"),
+                    share=d.get("share", "small"),
+                    purpose=d.get("purpose", ""))
+
+
+def _parse_storeys(d):
+    """The P1 storey count, clamped to 1..3 (junk counts as one storey)."""
+    try:
+        s = int(d.get("storeys", 1) or 1)
+    except (TypeError, ValueError):
+        return 1
+    return max(1, min(3, s))
+
+
+def _parse_upper(specs, storeys, ground_rooms):
+    """[UpperStorey] from a design's "upper" entries, in storey order, keeping
+    only storeys 2..storeys."""
+    out = []
+    for u in specs:
+        if not isinstance(u, dict):
+            continue
+        try:
+            s = int(u.get("storey", 2))
+        except (TypeError, ValueError):
+            continue
+        if not 2 <= s <= storeys:
+            continue
+        op = u.get("opening")
+        if isinstance(op, dict) and op.get("over_room") in ground_rooms:
+            opening = OpeningSpec(over_room=op["over_room"],
+                                  kind=op.get("kind", "gallery"))
+        else:
+            opening = None
+        out.append(UpperStorey(
+            storey=s,
+            rooms=[_parse_roomspec(r) for r in u.get("rooms", []) if isinstance(r, dict)],
+            connections=[list(c) for c in u.get("connections", [])],
+            furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+                                     count=int(f.get("count", 1)), hint=f.get("hint", ""))
+                       for f in u.get("furniture", []) if isinstance(f, dict)],
+            opening=opening))
+    out.sort(key=lambda u: u.storey)
+    return out
+
+
+def _parse_building(d, designs):
+    name = _require(d, "name", "building")
+    yard = None
+    if d.get("yard"):
+        yard = YardSpec(kind=d["yard"].get("kind", "yard"), side=d["yard"].get("side", "back"))
+    g = designs.get(name)
+    if g is None:
+        # a P1 building with no P3 design: one room, no connections
+        g = {"rooms": [{"name": "Hall", "share": "medium", "purpose": d.get("purpose", "")}],
+             "connections": [], "entrance": {"room": "Hall", "side": "south"},
+             "furniture": [], "yard_props": []}
+    rooms = [_parse_roomspec(r) for r in g.get("rooms", [])]
+    storeys = _parse_storeys(d)
+    upper = _parse_upper(g.get("upper", []), storeys,
+                         {r.name for r in rooms}) if storeys > 1 else []
+    stairs_room = ""
+    if storeys > 1:
+        st = g.get("stairs")
+        if isinstance(st, dict) and st.get("room") in {r.name for r in rooms}:
+            stairs_room = st["room"]
+    design = BuildingDesign(
+        name=name, kind=d.get("kind", "house"), size_class=d.get("sizeClass", "small"),
+        purpose=d.get("purpose", ""), wall=g.get("wall", "wood"), ground=g.get("ground", "wood"),
+        storeys=1 + len(upper),
+        stairs_room=stairs_room if upper else "",
+        upper=upper,
+        rooms=rooms,
+        connections=[list(c) for c in g.get("connections", [])],
+        entrance_room=g.get("entrance", {}).get("room", rooms[0].name if rooms else "Hall"),
+        entrance_side=g.get("entrance", {}).get("side", "south"),
+        furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+                                 count=int(f.get("count", 1)), hint=f.get("hint", ""))
+                   for f in g.get("furniture", [])],
+        yard=yard,
+        yard_props=[PropPlan(template=p.get("template"), count=int(p.get("count", 1)),
+                             hint=p.get("hint", "")) for p in (g.get("yard") or {}).get("props", [])],
+    )
+    if design.size_class not in VALID_SIZE_CLASSES:
+        raise ValueError(f"building {name!r}: bad sizeClass {design.size_class!r}")
+    return design
+
+
+def parse_plan(data):
+    """Parse the merged plan dict into a Plan."""
+    designs = {}
+    for g in data.get("buildings", []):
+        designs[g["name"]] = g
+    zones = []
+    for z in data.get("zones", []):
+        name = _require(z, "name", "zone")
+        dressing_data = z.get("dressing", {})
+        dressing = Dressing(
+            paths=dressing_data.get("paths", "dirt"),
+            props=[PropPlan(template=p.get("template"), count=int(p.get("count", 1)),
+                            hint=p.get("hint", "")) for p in dressing_data.get("props", [])],
+            filler=[FillerPlan(template=f.get("template"), density=f.get("density", "low"))
+                    for f in dressing_data.get("filler", [])],
+        )
+        zone = Zone(
+            name=name, kind=z.get("kind", "field"), size_class=z.get("sizeClass", "medium"),
+            description=z.get("description", ""), ground=z.get("ground", "grass"),
+            adjacentTo=list(z.get("adjacentTo", [])),
+            buildings=[_parse_building(b, designs) for b in z.get("buildings", [])],
+            outdoor=list(z.get("outdoor", [])),
+            dressing=dressing,
+        )
+        if zone.size_class not in VALID_ZONE_SIZES:
+            raise ValueError(f"zone {name!r}: bad sizeClass {zone.size_class!r}")
+        zones.append(zone)
+    names = {z.name for z in zones}
+    for z in zones:
+        for n in z.adjacentTo:
+            if n not in names:
+                raise ValueError(f"zone {z.name!r}: adjacentTo unknown zone {n!r}")
+    templates = []
+    for t in data.get("templates", []):
+        extras = {k: v for k, v in t.items()
+                  if k in ("forSleep", "craftStation", "light", "money", "maxHp", "heightM",
+                           "passableAtBuild")}
+        size = t.get("size", [1, 1])
+        templates.append(ObjectTemplate(
+            name=_require(t, "name", "template"), size=(int(size[0]), int(size[1])),
+            walkability=float(t.get("walkability", 0)),
+            description=t.get("description", ""), physicalDescription=t.get("physicalDescription", ""),
+            tags=list(t.get("tags", [])), rule=t.get("rule", ""), extras=extras))
+    seen, dupes = set(), set()
+    for t in templates:
+        (dupes if t.name in seen else seen).add(t.name)
+    if dupes:
+        raise ValueError(f"duplicate template names: {sorted(dupes)}")
+
+    def person(d):
+        return Person(name=_require(d, "name", "person"), gender=d.get("gender", "female"),
+                      role=d.get("role", "villager"), home=d.get("home", ""), work=d.get("work", ""),
+                      description=d.get("description", ""), physicalDescription=d.get("physicalDescription", ""),
+                      extras={k: v for k, v in d.items() if k in ("animationId", "level")})
+
+    npcs = [person(n) for n in data.get("npcs", [])]
+    player = person(data.get("player", {"name": "Player"}))
+    extras = {k: v for k, v in data.items()
+              if k in ("currency", "attributes", "skills", "narrativeRules", "weatherKinds",
+                       "narrativeFlavor", "difficulty", "xpMultiplier", "startingCurrency")}
+    return Plan(name=data.get("name", "Generated World"),
+                worldBackground=data.get("worldBackground", ""),
+                setting=data.get("setting", {}), mapSize=data.get("mapSize", "small"),
+                zones=zones, roads=[Road(a=r.get("from"), b=r.get("to"), kind=r.get("kind", "dirt"))
+                                    for r in data.get("roads", [])],
+                templates=templates, npcs=npcs, player=player, extras=extras)

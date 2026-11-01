@@ -1,0 +1,31 @@
+People this world. Code builds each person's daily schedule from their home
+and work; give everyone a real home building and a real workplace.
+
+WORLD: ${setting_line}
+ZONES:
+${zone_lines}
+BUILDINGS:
+${building_lines}
+
+Reply with ONE JSON object:
+{
+  "npcs": [
+    {"name": "full name", "gender": "male|female", "role": "their trade or place",
+     "home": "building name from the list", "work": "building or zone name from the lists",
+     "description": "one sentence: who they are and what they want",
+     "physicalDescription": "build, clothes, one telling detail"}
+  ],
+  "player": {"name": "...", "gender": "...", "role": "...", "home": "...", "work": "...",
+             "description": "...", "physicalDescription": "..."}
+}
+
+- Roughly one npc per household or workplace: the innkeeper, the miller, the
+  smith, a farmer or two. 3 to 8 npcs for a village-sized world.
+- "home" must be a BUILDING from the list, and that building must have a bed
+  in it (people sleep at home). "work" must be a building or a zone from the
+  lists (a forester works in the forest zone).
+- The player is an outsider with a reason to stay the winter (or the season).
+- Names fit the setting; no two people share a name. Descriptions are
+  specific: count things, mention one want and one worry.
+
+${rules}

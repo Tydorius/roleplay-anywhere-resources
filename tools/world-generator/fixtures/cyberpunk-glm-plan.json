@@ -1,0 +1,1774 @@
+{
+ "name": "Rainline Market",
+ "worldBackground": "Rainline Market is a neon-drenched street quarter where the rain never quite stops and every puddle doubles the glow of the signs. Noodle bars steam in the dark, a crowded clinic patches up whoever can pay in cash or favors, and families live stacked in old apartment towers above the shopfronts. The tension: the block thrives on its independence, but the clinic's supplies and the market's power both flow through a syndicate that raises its rates a little more each season.",
+ "setting": {
+  "era": "near-future 2080s",
+  "technology": "cyberpunk: neon signage, cheap implants, street food tech, drones",
+  "density": "dense",
+  "climate": "perpetual cool rain, humid, misty nights"
+ },
+ "mapSize": "medium",
+ "zones": [
+  {
+   "name": "Neon Row",
+   "kind": "market quarter",
+   "sizeClass": "large",
+   "description": "The main eating and shopping street, loud with vendors, steam and flickering signage under a canopy of cables.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Stack Alley",
+    "Clinic Block"
+   ],
+   "outdoor": [
+    "market stalls",
+    "food carts",
+    "neon arch",
+    "steam vents",
+    "wiring poles"
+   ],
+   "buildings": [
+    {
+     "name": "Golden Dragon Noodles",
+     "kind": "noodle bar",
+     "sizeClass": "medium",
+     "purpose": "serves hot noodle bowls to market crowds late into the night",
+     "yard": null
+    },
+    {
+     "name": "Slurp 88",
+     "kind": "noodle bar",
+     "sizeClass": "small",
+     "purpose": "a cheap counter stall for quick take-away meals",
+     "yard": null
+    },
+    {
+     "name": "Static Bar",
+     "kind": "bar",
+     "sizeClass": "medium",
+     "purpose": "drinks, rumor trading and off-the-book deals",
+     "yard": null
+    },
+    {
+     "name": "Chrome Rack Bodega",
+     "kind": "convenience store",
+     "sizeClass": "small",
+     "purpose": "sells synth-food, batteries and rationed water",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Market stall",
+      "count": 10,
+      "hint": "along_path"
+     },
+     {
+      "template": "Food cart",
+      "count": 4,
+      "hint": "beside:Golden Dragon Noodles + beside:Slurp 88 + edge"
+     },
+     {
+      "template": "Neon arch",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Steam vent",
+      "count": 4,
+      "hint": "beside:Golden Dragon Noodles + beside:Slurp 88"
+     },
+     {
+      "template": "Wiring pole",
+      "count": 8,
+      "hint": "along_path+edge"
+     },
+     {
+      "template": "Streetlight",
+      "count": 8,
+      "hint": "along_path"
+     },
+     {
+      "template": "Vending machine",
+      "count": 4,
+      "hint": "front:Golden Dragon Noodles + front:Slurp 88 + front:Static Bar + front:Chrome Rack Bodega"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Stack Alley",
+   "kind": "residential block",
+   "sizeClass": "medium",
+   "description": "A narrow lane squeezed between stacked apartment towers where laundry dries under dripping walkways.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Neon Row",
+    "Clinic Block"
+   ],
+   "outdoor": [
+    "fire escape stairs",
+    "clotheslines",
+    "dumpsters",
+    "drying racks"
+   ],
+   "buildings": [
+    {
+     "name": "Kowloon Stack",
+     "kind": "apartment block",
+     "sizeClass": "large",
+     "purpose": "stacked family homes for the district's workers",
+     "yard": null
+    },
+    {
+     "name": "Bunk Capsule Hotel",
+     "kind": "capsule hotel",
+     "sizeClass": "medium",
+     "purpose": "cheap sleeping pods for travelers and drifters",
+     "yard": null
+    },
+    {
+     "name": "Wash Cycle Laundromat",
+     "kind": "laundromat",
+     "sizeClass": "small",
+     "purpose": "communal washing machines and gossip",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "Wiring pole",
+      "count": 6,
+      "hint": "along_path+edge"
+     },
+     {
+      "template": "Clothesline",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Drying rack",
+      "count": 3,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Streetlight",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "AC unit",
+      "count": 5,
+      "hint": "beside:Kowloon Stack"
+     },
+     {
+      "template": "Fire escape",
+      "count": 2,
+      "hint": "beside:Kowloon Stack"
+     },
+     {
+      "template": "Dumpster",
+      "count": 3,
+      "hint": "behind:Kowloon Stack"
+     },
+     {
+      "template": "Supply crates",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Vending machine",
+      "count": 2,
+      "hint": "front:Wash Cycle Laundromat"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Clinic Block",
+   "kind": "medical and services quarter",
+   "sizeClass": "small",
+   "description": "A quieter paved corner centered on the district clinic, where the hurt queue under canopies and med-drones come and go.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Neon Row",
+    "Stack Alley"
+   ],
+   "outdoor": [
+    "queue canopy",
+    "streetlights",
+    "drone landing pad",
+    "benches"
+   ],
+   "buildings": [
+    {
+     "name": "Saint Volt Clinic",
+     "kind": "clinic",
+     "sizeClass": "medium",
+     "purpose": "trauma care, implants and patched-up street injuries",
+     "yard": null
+    },
+    {
+     "name": "Glass Lotus Teahouse",
+     "kind": "teahouse",
+     "sizeClass": "small",
+     "purpose": "calm tea service and recovery tables for clinic visitors",
+     "yard": null
+    },
+    {
+     "name": "Doc Grady's Ripper Parlor",
+     "kind": "workshop",
+     "sizeClass": "small",
+     "purpose": "back-alley implant installation and repair",
+     "yard": null
+    },
+    {
+     "name": "Keystone Watch Post",
+     "kind": "security office",
+     "sizeClass": "small",
+     "purpose": "hired guards monitoring the block for the syndicate",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Queue canopy",
+      "count": 1,
+      "hint": "front:Saint Volt Clinic"
+     },
+     {
+      "template": "Drone landing pad",
+      "count": 1,
+      "hint": "beside:Saint Volt Clinic+edge"
+     },
+     {
+      "template": "Bench",
+      "count": 5,
+      "hint": "along_path"
+     },
+     {
+      "template": "Streetlight",
+      "count": 3,
+      "hint": "along_path"
+     },
+     {
+      "template": "Potted plant",
+      "count": 5,
+      "hint": "cluster"
+     },
+     {
+      "template": "Vending machine",
+      "count": 2,
+      "hint": "cluster"
+     },
+     {
+      "template": "Supply crates",
+      "count": 2,
+      "hint": "behind:Doc Grady's Ripper Parlor"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Potted plant",
+      "density": "low"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Neon Row",
+   "to": "Stack Alley",
+   "kind": "paved"
+  },
+  {
+   "from": "Neon Row",
+   "to": "Clinic Block",
+   "kind": "paved"
+  },
+  {
+   "from": "Stack Alley",
+   "to": "Clinic Block",
+   "kind": "paved"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Serving counter",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Grease-stained composite counter where noodle bowls, drinks and rationed goods change hands.",
+   "physicalDescription": "Long steel counter with a scuffed top, holo price tags along the customer edge and a worn staff gap behind.",
+   "tags": [
+    "table",
+    "work",
+    "storage"
+   ],
+   "rule": "Every noodle bar, the Static Bar and the bodega get one counter parallel to the entrance wall, staff side toward the back wall."
+  },
+  {
+   "name": "Counter stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Bolted plastic stool for slurpers, drinkers and rumor traders.",
+   "physicalDescription": "Dented round seat on a single chrome leg, neon reflections pooling in the wet-looking plastic.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "rule": "A row of stools lines the customer side of each serving counter, spaced one per counter section."
+  },
+  {
+   "name": "Wok range",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "High-BTU noodle station where the night's bowls are flash-fried in steam.",
+   "physicalDescription": "Blackened twin-wok range with gas lines to a strapped tank, steam haze rising above the burners.",
+   "tags": [
+    "work",
+    "fire"
+   ],
+   "rule": "One range against the back wall of each noodle kitchen, beside a wall shelf of ingredient tubs; never in the customer area."
+  },
+  {
+   "name": "Wall shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Bolted shelving holding bottles, ration tins and wrapped stock.",
+   "physicalDescription": "Wire shelves crammed with bottles, tins and sealed packs, a cheap strip-light glowing underneath.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "Mounted against the back wall behind every serving counter and on clinic walls beside exam beds; never across a door."
+  },
+  {
+   "name": "Refrigeration unit",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Humming cooler full of drink pouches and synth-meat.",
+   "physicalDescription": "Frost-fogged glass door stacked with glowing pouches, condensation running to a floor drain.",
+   "tags": [
+    "storage",
+    "appliance"
+   ],
+   "rule": "Stands against a wall beside the serving counter in noodle bars and the bodega; never inside sleeping rooms."
+  },
+  {
+   "name": "Booth table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Small bolted table for late bowls, card games and quiet deals.",
+   "physicalDescription": "Scratched metal table with sticky laminate top, a napkin dispenser and a flickering order tab.",
+   "tags": [
+    "table"
+   ],
+   "rule": "Scattered across Golden Dragon, the Static Bar and the Glass Lotus with a stool beside each, aisles kept wide for tray traffic."
+  },
+  {
+   "name": "Bunk bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Stacked-frame sleeper for capsule drifters and Kowloon Stack families alike.",
+   "physicalDescription": "Narrow frame with a thin mattress, privacy curtain rail on one side, charger cable and tucked belongings.",
+   "tags": [
+    "bed"
+   ],
+   "rule": "One per sleeper against a wall: capsule pods line both sides of the hotel corridor, apartment rooms get one against the far wall."
+  },
+  {
+   "name": "Storage locker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Dented personal locker with a keypad nobody trusts.",
+   "physicalDescription": "Tall steel locker layered in stickers, a faded family photo taped inside the door.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "Pushed against walls in apartment rooms, capsule pods and the ripper parlor's tool bay; never blocking a bunk or a bed."
+  },
+  {
+   "name": "Washer machine",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Communal launderer that eats coins and pumps out gossip with the gray water.",
+   "physicalDescription": "Row of chipped front-loaders with a detergent shelf above and suds creeping toward the drain.",
+   "tags": [
+    "appliance",
+    "work"
+   ],
+   "rule": "Wash Cycle lines its washers in rows along the side walls, leaving the center of the laundromat open."
+  },
+  {
+   "name": "Exam bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Patched trauma gurney where Saint Volt stitches the block back together.",
+   "physicalDescription": "Cracked vinyl pad on a steel frame, blood-pressure cuff coiled at the head, privacy curtain on a bent rail.",
+   "tags": [
+    "bed",
+    "medical"
+   ],
+   "rule": "Head against the wall in each clinic treatment bay, with a med console within reach of every bed."
+  },
+  {
+   "name": "Implant chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Reclining surgical chair in Doc Grady's back-alley ripper parlor.",
+   "physicalDescription": "Strapped leather recliner with articulated arm rests, a magnetic tool strip overhead and a drain grate below.",
+   "tags": [
+    "work",
+    "medical",
+    "seat"
+   ],
+   "rule": "One chair centered in each parlor bay under the surgical lamp, head end toward the wall shelf of tools."
+  },
+  {
+   "name": "Med console",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Rolling diagnostics stack for vitals, scans and implant firmware.",
+   "physicalDescription": "Wheeled cart with a green-glowing screen, dangling sensor leads and a taped battery brick.",
+   "tags": [
+    "work",
+    "medical"
+   ],
+   "rule": "Stationed beside every exam bed and the implant chair; never in dining rooms, shops or the watch post."
+  },
+  {
+   "name": "Security desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Keystone Watch monitoring desk fed by the block's street cameras.",
+   "physicalDescription": "Steel desk with stacked screens showing rainy street feeds, a chipped mug and stun baton clips.",
+   "tags": [
+    "work",
+    "table"
+   ],
+   "rule": "Sits inside the watch post facing the door, with the screen wall banked against the far wall."
+  },
+  {
+   "name": "Potted plant",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Hardy fern that thrives on the damp and ignores the neon glare.",
+   "physicalDescription": "Chipped ceramic pot with a rain-happy fern, leaves beaded with drift-in moisture.",
+   "tags": [
+    "plant"
+   ],
+   "rule": "Clusters at the Glass Lotus door and softens clinic corners; kept off the crowded pavement of Neon Row."
+  },
+  {
+   "name": "Supply crates",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Syndicate-stamped crates of stock, salvage and contraband.",
+   "physicalDescription": "Stacked plastic crates with faded stencils, ration bars and battery bricks peeking from the top one.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "Stacked behind counters in the bodega and against alley walls; never inside the clinic's queue or treatment space."
+  },
+  {
+   "name": "Vending machine",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Ration and hot-broth vending unit, card-skimmer included at no charge.",
+   "physicalDescription": "Graffiti-tagged cabinet glowing with a spiral-noodle hologram, coin slot worn bright.",
+   "tags": [
+    "landmark",
+    "appliance"
+   ],
+   "rule": "Butted against shopfront walls beside doors in all three zones, always under a working neon sign."
+  },
+  {
+   "name": "Market stall",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Tarpaulin stall selling synth-fruit, chargers and knockoff implants.",
+   "physicalDescription": "Folding frame under striped plastic sheeting, crates of goods displayed and a hanging price holo.",
+   "tags": [
+    "work",
+    "storage",
+    "shelter"
+   ],
+   "rule": "Rows of stalls run along the Neon Row path in front of the shopfronts, leaving the center lane clear."
+  },
+  {
+   "name": "Food cart",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Wheeled skewer and dumpling cart steaming into the rain.",
+   "physicalDescription": "Steel cart with a griddle top, gas bottle strapped below, sloped plastic awning shedding water.",
+   "tags": [
+    "work",
+    "fire",
+    "shelter"
+   ],
+   "rule": "Parked beside noodle bar fronts and at Neon Row corners, never inside the clinic block's quiet pavement."
+  },
+  {
+   "name": "Neon arch",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.9,
+   "description": "Tubing arch announcing the market, its glow doubled in every puddle.",
+   "physicalDescription": "Ribbed arch of multicolored neon on stanchions, open beneath, cables feeding down to a junction box.",
+   "tags": [
+    "landmark",
+    "light"
+   ],
+   "rule": "One arch spans the Neon Row lane at the street's entrance and one mid-row; never over the clinic or housing lanes."
+  },
+  {
+   "name": "Steam vent",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Pavement grate belching kitchen steam into the drizzle.",
+   "physicalDescription": "Rusted grate set in the stone with white steam coiling up, surrounding cobbles slick with condensation.",
+   "tags": [
+    "hazard"
+   ],
+   "rule": "Set into the pavement beside noodle kitchen walls on Neon Row, never under clotheslines or the clinic queue canopy."
+  },
+  {
+   "name": "Wiring pole",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Cable-strung pole carrying the block's tapped and tariffed power.",
+   "physicalDescription": "Leaning pole wrapped in taped cable bundles, a sparking junction box and conduit loops.",
+   "tags": [
+    "landmark",
+    "power"
+   ],
+   "rule": "Poles line both edges of Neon Row and Stack Alley with cables slung pole to pole above stall height."
+  },
+  {
+   "name": "Fire escape",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Rusted external staircase zigzagging up the tower face.",
+   "physicalDescription": "Grated iron stairs and landings bolted to the wall, dripping rails and a rust streak down the stone.",
+   "tags": [
+    "landmark"
+   ],
+   "rule": "Bolted to the rear and side walls of Kowloon Stack only, never covering windows or street-facing shopfronts."
+  },
+  {
+   "name": "Clothesline",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.7,
+   "description": "Dripping line strung between walkways, washing flapping over the lane.",
+   "physicalDescription": "Slack cable strung overhead with clipped shirts and sheets, water ticking onto the stones below.",
+   "tags": [
+    "laundry",
+    "landmark"
+   ],
+   "rule": "Strung high across Stack Alley between walkway posts and balconies, never across the lane at street level."
+  },
+  {
+   "name": "Drying rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Folding rack sagging with the alley's damp laundry.",
+   "physicalDescription": "Wire A-frame crowded with drip-hemmed shirts and sheets, shallow puddles spreading beneath.",
+   "tags": [
+    "laundry",
+    "storage"
+   ],
+   "rule": "Racks sit in the sheltered gaps under Stack Alley's dripping walkways, clear of the fire escape's drip line."
+  },
+  {
+   "name": "Dumpster",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Syndicate-locked waste hauler that residents pay twice for.",
+   "physicalDescription": "Dented green dumpster with a smart-lock lid, runoff streaking toward a clogged drain.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "Tucked behind buildings in Stack Alley beside service doors, never on the market street or near the clinic queue."
+  },
+  {
+   "name": "Queue canopy",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.8,
+   "description": "Clear-plastic shelter where the hurt wait their turn at Saint Volt.",
+   "physicalDescription": "Ribbed translucent shelter on stanchions, taped floor guides beneath, rain sheeting off the edges.",
+   "tags": [
+    "shelter",
+    "landmark"
+   ],
+   "rule": "One canopy in front of Saint Volt Clinic over the bench queue line, never covering the drone pad."
+  },
+  {
+   "name": "Streetlight",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Rain-haloed light pole with a scrolling ad panel bolted on.",
+   "physicalDescription": "Slim pole with a rain-diffused glow, an ad strip crawling with loan offers, reflections below.",
+   "tags": [
+    "landmark",
+    "light"
+   ],
+   "rule": "Lights line the paths of all three zones, on Neon Row spaced opposite the wiring poles."
+  },
+  {
+   "name": "Drone landing pad",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Marked pad where med-drones land with syndicate-billed supplies.",
+   "physicalDescription": "Painted circular pad with a glowing landing ring, guide lights and a cable to a charger post.",
+   "tags": [
+    "landmark",
+    "work"
+   ],
+   "rule": "A single pad on the open edge of Clinic Block beside the clinic, kept clear of canopies and overhead cables."
+  },
+  {
+   "name": "Bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Slatted bench for queuing, recovering and whispered favors.",
+   "physicalDescription": "Steel-slat bench with rain beading on the seats, a stripped ad frame at one end.",
+   "tags": [
+    "seat"
+   ],
+   "rule": "Benches line the Clinic Block paths under the queue canopy and face the teahouse; none along Neon Row's eating stretch."
+  },
+  {
+   "name": "AC unit",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Dripping heat exchanger bolted where the towers breathe.",
+   "physicalDescription": "Rusted fan-box with a condensation drip line and cable taped up the stone.",
+   "tags": [
+    "appliance"
+   ],
+   "rule": "Bolted against the outside walls of Kowloon Stack and above shop back doors, never on the Neon Row street front."
+  }
+ ],
+ "buildings": [
+  {
+   "name": "Golden Dragon Noodles",
+   "wall": "brick",
+   "ground": "worn tile",
+   "rooms": [
+    {
+     "name": "Dining Hall",
+     "share": "large",
+     "purpose": "counter service and booth seating for late-night market crowds"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "wok line and prep space for the noodle bar"
+    },
+    {
+     "name": "Staff Room",
+     "share": "small",
+     "purpose": "bunk and storage for the overnight crew"
+    }
+   ],
+   "connections": [
+    [
+     "Dining Hall",
+     "Kitchen"
+    ],
+    [
+     "Kitchen",
+     "Staff Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Dining Hall",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Serving counter",
+     "room": "Dining Hall",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Dining Hall",
+     "count": 3,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Dining Hall",
+     "count": 1,
+     "hint": "wall:south+beside:Serving counter"
+    },
+    {
+     "template": "Refrigeration unit",
+     "room": "Dining Hall",
+     "count": 1,
+     "hint": "wall:east+beside:Serving counter"
+    },
+    {
+     "template": "Booth table",
+     "room": "Dining Hall",
+     "count": 3,
+     "hint": "center+symmetric"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Dining Hall",
+     "count": 3,
+     "hint": "beside:Booth table"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Dining Hall",
+     "count": 1,
+     "hint": "near_door+wall:north"
+    },
+    {
+     "template": "Wok range",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:south+beside:Wok range"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Staff Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Staff Room",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Slurp 88",
+   "wall": "steel",
+   "ground": "sealed concrete",
+   "rooms": [
+    {
+     "name": "Stall",
+     "share": "small",
+     "purpose": "take-away noodle counter with open kitchen behind it"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Stall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Serving counter",
+     "room": "Stall",
+     "count": 1,
+     "hint": "center+away_from_door"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Stall",
+     "count": 3,
+     "hint": "row:south+beside:Serving counter"
+    },
+    {
+     "template": "Wok range",
+     "room": "Stall",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Stall",
+     "count": 1,
+     "hint": "wall:north+beside:Wok range"
+    },
+    {
+     "template": "Refrigeration unit",
+     "room": "Stall",
+     "count": 1,
+     "hint": "wall:east+beside:Serving counter"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Stall",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Static Bar",
+   "wall": "steel",
+   "ground": "stained concrete",
+   "rooms": [
+    {
+     "name": "Bar Room",
+     "share": "large",
+     "purpose": "drinks, rumor trading and neon-lit bargaining"
+    },
+    {
+     "name": "Back Room",
+     "share": "small",
+     "purpose": "staff storage and off-the-book deals"
+    }
+   ],
+   "connections": [
+    [
+     "Bar Room",
+     "Back Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Bar Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Serving counter",
+     "room": "Bar Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bar Room",
+     "count": 1,
+     "hint": "wall:north+beside:Serving counter"
+    },
+    {
+     "template": "Refrigeration unit",
+     "room": "Bar Room",
+     "count": 2,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Bar Room",
+     "count": 3,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Booth table",
+     "room": "Bar Room",
+     "count": 4,
+     "hint": "center+symmetric"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Bar Room",
+     "count": 4,
+     "hint": "beside:Booth table"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Bar Room",
+     "count": 1,
+     "hint": "near_door+wall:south"
+    },
+    {
+     "template": "Booth table",
+     "room": "Back Room",
+     "count": 1,
+     "hint": "away_from_door+corner"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Back Room",
+     "count": 2,
+     "hint": "beside:Booth table"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Back Room",
+     "count": 3,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Back Room",
+     "count": 3,
+     "hint": "corner+cluster"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Chrome Rack Bodega",
+   "wall": "steel",
+   "ground": "cracked tile",
+   "rooms": [
+    {
+     "name": "Shop Floor",
+     "share": "large",
+     "purpose": "retail floor selling synth-food, batteries and rationed water from behind a serving counter"
+    },
+    {
+     "name": "Stock Room",
+     "share": "small",
+     "purpose": "back-room storage for supply crates and restock overflow"
+    }
+   ],
+   "connections": [
+    [
+     "Shop Floor",
+     "Stock Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Shop Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Serving counter",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "wall:north+symmetric"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Shop Floor",
+     "count": 3,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Refrigeration unit",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "wall:east+beside:Serving counter"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Stock Room",
+     "count": 4,
+     "hint": "corner+wall:north"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Kowloon Stack",
+   "wall": "stone",
+   "ground": "scuffed tile",
+   "rooms": [
+    {
+     "name": "Rain Lobby",
+     "share": "small",
+     "purpose": "shared entrance lobby with mail lockers and a vending corner"
+    },
+    {
+     "name": "Family Unit 4A",
+     "share": "medium",
+     "purpose": "stacked family sleeping unit for four workers"
+    },
+    {
+     "name": "Family Unit 7B",
+     "share": "medium",
+     "purpose": "stacked family sleeping unit for four workers"
+    },
+    {
+     "name": "Shift Dorm",
+     "share": "large",
+     "purpose": "shared dormitory for rotating market shift workers"
+    }
+   ],
+   "connections": [
+    [
+     "Rain Lobby",
+     "Family Unit 4A"
+    ],
+    [
+     "Rain Lobby",
+     "Family Unit 7B"
+    ],
+    [
+     "Rain Lobby",
+     "Shift Dorm"
+    ]
+   ],
+   "entrance": {
+    "room": "Rain Lobby",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Storage locker",
+     "room": "Rain Lobby",
+     "count": 3,
+     "hint": "row:west"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Rain Lobby",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Family Unit 4A",
+     "count": 2,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Family Unit 4A",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Family Unit 7B",
+     "count": 2,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Family Unit 7B",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Shift Dorm",
+     "count": 3,
+     "hint": "row:east"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Shift Dorm",
+     "count": 3,
+     "hint": "row:west"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Bunk Capsule Hotel",
+   "wall": "steel",
+   "ground": "worn linoleum",
+   "rooms": [
+    {
+     "name": "Reception Lobby",
+     "share": "small",
+     "purpose": "check-in counter nook, guest luggage lockers and a humming vending wall by the door"
+    },
+    {
+     "name": "Capsule Hall",
+     "share": "large",
+     "purpose": "long sleeping corridor with rent-by-night pod bunks stacked along both walls"
+    },
+    {
+     "name": "Linen Store",
+     "share": "small",
+     "purpose": "housekeeping room holding fresh linen crates and staff lockers behind the pods"
+    }
+   ],
+   "connections": [
+    [
+     "Reception Lobby",
+     "Capsule Hall"
+    ],
+    [
+     "Capsule Hall",
+     "Linen Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Reception Lobby",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Vending machine",
+     "room": "Reception Lobby",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Reception Lobby",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Capsule Hall",
+     "count": 4,
+     "hint": "row:west"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Capsule Hall",
+     "count": 4,
+     "hint": "row:east"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Capsule Hall",
+     "count": 4,
+     "hint": "row:north"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Linen Store",
+     "count": 2,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Linen Store",
+     "count": 1,
+     "hint": "wall:south"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Wash Cycle Laundromat",
+   "wall": "brick",
+   "ground": "tiled concrete",
+   "rooms": [
+    {
+     "name": "Wash Floor",
+     "share": "medium",
+     "purpose": "communal washing machines lined along both side walls with an open center for folding and gossip"
+    },
+    {
+     "name": "Back Room",
+     "share": "small",
+     "purpose": "utility room holding detergent supplies and the attendant's storage"
+    }
+   ],
+   "connections": [
+    [
+     "Wash Floor",
+     "Back Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Wash Floor",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Washer machine",
+     "room": "Wash Floor",
+     "count": 4,
+     "hint": "row:east"
+    },
+    {
+     "template": "Washer machine",
+     "room": "Wash Floor",
+     "count": 4,
+     "hint": "row:west"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Wash Floor",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Wash Floor",
+     "count": 3,
+     "hint": "row:south"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Back Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Back Room",
+     "count": 1,
+     "hint": "wall:south"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Saint Volt Clinic",
+   "wall": "stone",
+   "ground": "antiseptic tile",
+   "rooms": [
+    {
+     "name": "Reception Hall",
+     "share": "medium",
+     "purpose": "intake desk, waiting space for the hurt, vending and sign-in"
+    },
+    {
+     "name": "Treatment Bay",
+     "share": "large",
+     "purpose": "trauma care and street injuries on rows of exam beds"
+    },
+    {
+     "name": "Implant Theater",
+     "share": "small",
+     "purpose": "sterile bay for cheap implant work under a surgical lamp"
+    },
+    {
+     "name": "Supply Store",
+     "share": "small",
+     "purpose": "locked storeroom for med supplies and syndicate crates"
+    }
+   ],
+   "connections": [
+    [
+     "Reception Hall",
+     "Treatment Bay"
+    ],
+    [
+     "Treatment Bay",
+     "Implant Theater"
+    ],
+    [
+     "Treatment Bay",
+     "Supply Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Reception Hall",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Vending machine",
+     "room": "Reception Hall",
+     "count": 1,
+     "hint": "near_door+wall:north"
+    },
+    {
+     "template": "Potted plant",
+     "room": "Reception Hall",
+     "count": 2,
+     "hint": "corner+symmetric"
+    },
+    {
+     "template": "Exam bed",
+     "room": "Treatment Bay",
+     "count": 3,
+     "hint": "row:south+wall:south"
+    },
+    {
+     "template": "Med console",
+     "room": "Treatment Bay",
+     "count": 3,
+     "hint": "beside:Exam bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Treatment Bay",
+     "count": 2,
+     "hint": "beside:Exam bed"
+    },
+    {
+     "template": "Potted plant",
+     "room": "Treatment Bay",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Implant chair",
+     "room": "Implant Theater",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Implant Theater",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Med console",
+     "room": "Implant Theater",
+     "count": 1,
+     "hint": "beside:Implant chair"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Supply Store",
+     "count": 4,
+     "hint": "corner+cluster"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Glass Lotus Teahouse",
+   "wall": "brick",
+   "ground": "worn tile",
+   "rooms": [
+    {
+     "name": "Tea Room",
+     "share": "medium",
+     "purpose": "calm tea service and recovery seating for clinic visitors"
+    },
+    {
+     "name": "Brew Room",
+     "share": "small",
+     "purpose": "tea brewing prep and supply store behind the counter"
+    }
+   ],
+   "connections": [
+    [
+     "Tea Room",
+     "Brew Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Tea Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Serving counter",
+     "room": "Tea Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Tea Room",
+     "count": 3,
+     "hint": "beside:Serving counter"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Tea Room",
+     "count": 2,
+     "hint": "wall:north+beside:Serving counter"
+    },
+    {
+     "template": "Booth table",
+     "room": "Tea Room",
+     "count": 3,
+     "hint": "away_from_door+symmetric"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Tea Room",
+     "count": 6,
+     "hint": "beside:Booth table"
+    },
+    {
+     "template": "Potted plant",
+     "room": "Tea Room",
+     "count": 2,
+     "hint": "near_door+symmetric"
+    },
+    {
+     "template": "Vending machine",
+     "room": "Tea Room",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Brew Room",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "wall:west+corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Doc Grady's Ripper Parlor",
+   "wall": "brick",
+   "ground": "worn tile",
+   "rooms": [
+    {
+     "name": "Waiting Nook",
+     "share": "small",
+     "purpose": "cramped front room where cash clients wait under a buzzing neon sign"
+    },
+    {
+     "name": "Parlor Bay",
+     "share": "medium",
+     "purpose": "the implant surgery bay with the chair, lamp and tool shelf"
+    },
+    {
+     "name": "Tool Bay",
+     "share": "small",
+     "purpose": "back workshop for implant repair, parts storage and dirty work"
+    }
+   ],
+   "connections": [
+    [
+     "Waiting Nook",
+     "Parlor Bay"
+    ],
+    [
+     "Parlor Bay",
+     "Tool Bay"
+    ]
+   ],
+   "entrance": {
+    "room": "Waiting Nook",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Vending machine",
+     "room": "Waiting Nook",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "Potted plant",
+     "room": "Waiting Nook",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Implant chair",
+     "room": "Parlor Bay",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Med console",
+     "room": "Parlor Bay",
+     "count": 1,
+     "hint": "beside:Implant chair"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Parlor Bay",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Parlor Bay",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Tool Bay",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Med console",
+     "room": "Tool Bay",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Tool Bay",
+     "count": 3,
+     "hint": "row:east"
+    },
+    {
+     "template": "Supply crates",
+     "room": "Tool Bay",
+     "count": 2,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Keystone Watch Post",
+   "wall": "stone",
+   "ground": "worn concrete",
+   "rooms": [
+    {
+     "name": "Monitoring Room",
+     "share": "medium",
+     "purpose": "guard post with surveillance screens watching the Clinic Block street and clinic queue"
+    },
+    {
+     "name": "Ready Room",
+     "share": "small",
+     "purpose": "bunks and gear lockers for off-shift syndicate guards"
+    }
+   ],
+   "connections": [
+    [
+     "Monitoring Room",
+     "Ready Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Monitoring Room",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Security desk",
+     "room": "Monitoring Room",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Monitoring Room",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Bunk bed",
+     "room": "Ready Room",
+     "count": 2,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Storage locker",
+     "room": "Ready Room",
+     "count": 3,
+     "hint": "row:north"
+    }
+   ],
+   "yard": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Mei-Lin Zhou",
+   "gender": "female",
+   "role": "owner-cook of Golden Dragon Noodles",
+   "home": "Kowloon Stack",
+   "work": "Golden Dragon Noodles",
+   "description": "She keeps twelve tables boiling past midnight on a syndicate power line that costs more every season, and she wants to buy her own generator before the spring rate hike; she worries her stuttering coolant unit will spoil a whole week of broth in one warm night.",
+   "physicalDescription": "Broad-shouldered and quick, in an oil-stained apron over a padded rain jacket, with a pale steam-burn scar across her left forearm that she scratches when counting the till."
+  },
+  {
+   "name": "Ruben Alkaev",
+   "gender": "male",
+   "role": "bartender and rumor-broker at Static Bar",
+   "home": "Bunk Capsule Hotel",
+   "work": "Static Bar",
+   "description": "He trades drinks for gossip behind the bar's ten flickering taps and wants to buy the bar's debt note out from under the syndicate; he worries the two Keystone men who drink for free are memorizing every name he says.",
+   "physicalDescription": "Lean and restless, in a rolled-sleeve shirt and knit cap pulled low over the data-jack behind his ear, polishing the same glass for an hour at a stretch."
+  },
+  {
+   "name": "Suri Pham",
+   "gender": "female",
+   "role": "owner of Chrome Rack Bodega",
+   "home": "Kowloon Stack",
+   "work": "Chrome Rack Bodega",
+   "description": "She counts every battery and water chit twice at her counter and wants to lock a direct synth-food supply run before syndicate couriers squeeze her shelves empty; she worries her rationed-water contract will be 'renegotiated' the way the noodle bars' power was.",
+   "physicalDescription": "Small and quick-moving, in layered thermals under a vendor's slicker, with a price-gun on a wrist lanyard and chipped red nail polish she never redoes."
+  },
+  {
+   "name": "Tamsin Okafor",
+   "gender": "female",
+   "role": "night nurse at Saint Volt Clinic",
+   "home": "Kowloon Stack",
+   "work": "Saint Volt Clinic",
+   "description": "She triages whoever can pay in cash or favors under the clinic's four treatment canopies and wants an independent line on antibiotics that doesn't pass through syndicate warehouses; she worries about the night the grid browns out while eight wounded are still on her tables.",
+   "physicalDescription": "Tall and hollow-eyed from double shifts, in clinic-green scrubs under a soaked rain shell, with glow-tape strips wound around her boot soles for blacked-out corridors."
+  },
+  {
+   "name": "Ivo Grady",
+   "gender": "male",
+   "role": "back-alley implant surgeon at Doc Grady's Ripper Parlor",
+   "home": "Bunk Capsule Hotel",
+   "work": "Doc Grady's Ripper Parlor",
+   "description": "He installs and patches street implants at his single swivel-mounted chair and wants to clear the loan that bought his surgical arm before the syndicate claims the parlor itself; he worries his aging sterilizer unit is one failed cycle from costing a patient an infection.",
+   "physicalDescription": "Heavyset and stooped over his tools, in a stained technician's smock, with a surgical magnifier band pushed up on his forehead even when he's eating."
+  },
+  {
+   "name": "Ansel Reyes",
+   "gender": "male",
+   "role": "attendant at Wash Cycle Laundromat",
+   "home": "Kowloon Stack",
+   "work": "Wash Cycle Laundromat",
+   "description": "He minds the laundromat's nine humming machines and collects the block's gossip with its lint, wanting to stay politely invisible; he worries a Keystone man will finally ask him directly what the noodle cooks say about the rate hikes.",
+   "physicalDescription": "Stooped and mild, in a buttoned cardigan and fingerless gloves, pushing a folding cart of other people's forgotten socks down Stack Alley every evening."
+  },
+  {
+   "name": "Li-Wen Chao",
+   "gender": "female",
+   "role": "keeper of the Glass Lotus Teahouse",
+   "home": "Kowloon Stack",
+   "work": "Glass Lotus Teahouse",
+   "description": "She pours six varieties of steeped tea at her four calm recovery tables and wants the teahouse to stay neutral ground where clinic families and syndicate men drink side by side; she worries the season's price war will turn her quiet corner into just another contested doorway.",
+   "physicalDescription": "Silver-braided hair coiled tight, in layered gray robes that never quite dry, with a faintly glowing jade implant at her temple that blinks when she suppresses a remark."
+  },
+  {
+   "name": "Dane Volkov",
+   "gender": "male",
+   "role": "shift captain at Keystone Watch Post",
+   "home": "Bunk Capsule Hotel",
+   "work": "Keystone Watch Post",
+   "description": "He runs the six-guard rota that keeps the block quiet for the syndicate and wants his skimming of the tariff ledgers to stay buried one more quarter; he worries the new regional auditor will pull the watch post's camera archives the way he pulled the noodle bar's power logs.",
+   "physicalDescription": "Slab-shouldered and deliberate, in a gray tactical coat with the Keystone badge freshly sewn on, with cracked plating across two knuckles he flexes before conversations."
+  },
+  {
+   "name": "Kex Marlow",
+   "gender": "female",
+   "role": "street runner and drone wrangler on Neon Row",
+   "home": "Bunk Capsule Hotel",
+   "work": "Neon Row",
+   "description": "She runs noodle orders, spare parts and unmarked parcels along the market's fourteen stall rows and wants to buy her capsule contract out of the hotel by year's end; she worries a syndicate collection drone will flag one of the parcels she didn't open.",
+   "physicalDescription": "Short and always half-jogging, in a reflective tarp poncho cinched with cargo cord, with three ear studs that are actually signal antennas she checks by touch."
+  },
+  {
+   "name": "Guan Yee Ho",
+   "gender": "female",
+   "role": "skewer vendor on Neon Row",
+   "home": "Kowloon Stack",
+   "work": "Neon Row",
+   "description": "Everyone calls her Auntie Ho, and she grills synth-eel skewers at her corner stall two doors from the noodle bars, wanting to keep her grandson out of Keystone's guard roster; she worries her propane permit will be 'reviewed' the way every independent stall's has been.",
+   "physicalDescription": "Round-faced and iron-gripped, in three sweaters under an oilcloth apron, with a bamboo fan she snaps open at anyone who lingers without buying."
+  }
+ ],
+ "player": {
+  "name": "Emil Varga",
+  "gender": "male",
+  "role": "stranded freight drone mechanic",
+  "home": "Bunk Capsule Hotel",
+  "work": "Doc Grady's Ripper Parlor",
+  "description": "An outsider whose cargo rig was impounded at the Keystone Watch Post pending a 'weather tariff' he can't pay, he works nights at Grady's parlor repairing med-drones to earn his release fees, and he wants his rig free before the winter monsoon grounds all freight for good; he worries the syndicate will discover what's actually in his sealed cargo pods before he does.",
+  "physicalDescription": "Pale from too many cockpit years, in a weatherproof field jacket with frayed cuff seams, with a gloved cyberhand missing two fingertips he never bothers to replace."
+ }
+}

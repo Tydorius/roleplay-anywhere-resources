@@ -1,0 +1,38 @@
+Design ONE building's interior for the world below. Code splits the footprint,
+adds the doors and places every object you list; you never give coordinates.
+
+SETTING: ${setting_line}
+ZONE: ${zone_line}
+BUILDING: ${building_line}
+
+CATALOGUE (name | size in cells | placement rule):
+${catalogue_lines}
+
+Reply with ONE JSON object with exactly these fields:
+{
+  "name": "${building_name}",
+  "wall": "wood|brick|stone|steel",
+  "ground": "floor material, one or two words",
+  "rooms": [{"name": "...", "share": "small|medium|large", "purpose": "..."}],
+  "connections": [["Room A", "Room B"]],
+  "entrance": {"room": "...", "side": "north|south|east|west"},
+  "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}],
+  "yard": null or {"props": [{"template": "catalogue name", "count": 1, "hint": "outdoor hint"}]}
+}
+
+- 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
+  door; the entrance room must be one of "rooms".
+- Furnish every room for its purpose, with counts that fit it: a bedroom has
+  one bed per sleeper plus storage and a light source; a tavern common room
+  has several tables with seats; a smithy has forge, anvil, water and stock.
+- "template" must be a catalogue name EXACTLY as listed. "room" must be one of
+  your own room names.
+- Furniture hints use ONLY the room vocabulary (wall:north, corner, center,
+  row:east, beside:<template>, around:<template>, near_door, away_from_door,
+  symmetric, joined with +). Put a hearth or stove against a wall away from
+  the door, seats around tables, storage in corners.
+- "name" must be exactly "${building_name}". Use "yard" only when the building
+  has outside space (its plan entry has a yard); yard props use the OUTDOOR
+  hint vocabulary (scatter, edge, behind:<building>, beside:<building>...).
+
+${rules}
