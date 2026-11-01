@@ -44,7 +44,7 @@ async function newWorldDialog() {
       extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
     };
   }, dlg => wgBindForm(dlg));
-  const {value} = await form.promise;
+  const value = await form.promise;   // openDialog resolves to the clicked value itself
   if (value !== "go") return;
   try {
     const r = await api("/api/worldgen/generate", {method: "POST", body: JSON.stringify(form.picked())});
@@ -105,6 +105,12 @@ function wgBindForm(dlg) {
       const el = dlg.querySelector(`[data-ext="${CSS.escape(need)}"]`);
       if (el && !el.checked) { el.checked = true; toast(`${ext.title} also needs the ${need} extension — both are on`); }
     }
+    // and turning portals off turns floors off, so floors never runs without its stairs
+    if (!cb.checked) for (const other of wgMeta.extensions) {
+      if (!(other.requires || []).includes(cb.dataset.ext)) continue;
+      const el = dlg.querySelector(`[data-ext="${CSS.escape(other.id)}"]`);
+      if (el && el.checked) { el.checked = false; toast(`${other.title} needs ${ext?.title || cb.dataset.ext} — both are off`); }
+    }
   });
   $("wgProvSave").onclick = async () => {
     try {
@@ -132,6 +138,8 @@ function wgProviderOptions() {
 async function wgTrackJob(first, title) {
   const j = await new Promise(resolve => {
     let result = null;
+    // Resolve from the poll and from openDialog's own promise, never from the "close" event:
+    // a dialog's close event can arrive late, or not at all, in a background tab.
     openDialog(title, `<div class="wg-prog" id="wgProg"></div>`,
       [{label: "Cancel", value: "cancel"}], dlg => {
         wgRenderProgress($("wgProg"), first);
@@ -142,23 +150,24 @@ async function wgTrackJob(first, title) {
             try { j = (await api("/api/worldgen/job")).job; } catch { continue; }
             if (!j || j.id !== first.id) continue;
             wgRenderProgress($("wgProg"), j);
-            if (j.state !== "running") { result = j; dlg.close(); }
+            if (j.state !== "running") { result = j; dlg.close(); resolve(j); }
           }
         })();
+      }).then(() => {
+        if (result) return;                  // finished: the poll already handed the job on
         // the user closed the dialog (Cancel button or Esc): ask the backend to stop
-        dlg.addEventListener("close", () => {
-          if (result) return;
-          api("/api/worldgen/cancel", {method: "POST"}).catch(() => {});
-          (async () => {
-            for (;;) {
-              let j = null;
-              try { j = (await api("/api/worldgen/job")).job; } catch {}
-              if (!j || j.id !== first.id || j.state !== "running") break;
-              await new Promise(r => setTimeout(r, 700));
-            }
-            resolve(null);
-          })();
-        }, {once: true});
+        api("/api/worldgen/cancel", {method: "POST"}).catch(() => {});
+        (async () => {
+          let j = null;
+          for (;;) {
+            j = null;
+            try { j = (await api("/api/worldgen/job")).job; } catch {}
+            if (!j || j.id !== first.id || j.state !== "running") break;
+            await new Promise(r => setTimeout(r, 700));
+          }
+          // a job can finish before the cancel lands: report how it really ended
+          resolve(j && j.id === first.id ? j : null);
+        })();
       });
   });
   if (j) await wgFinished(j);
@@ -207,7 +216,7 @@ async function rerollDialog() {
       ${field("New seed", `<input type="number" id="wgRrSeed" value="${1 + Math.floor(Math.random() * 9999)}" min="0" step="1">`,
               "A different seed places everything differently.")}`,
     dlg => ({seed: wgSeedOf($("wgRrSeed"))}));
-  const {value} = await form.promise;
+  const value = await form.promise;   // openDialog resolves to the clicked value itself
   if (value !== "go") return;
   try {
     const r = await api("/api/worldgen/reroll?source=" + encodeURIComponent(S.source),
