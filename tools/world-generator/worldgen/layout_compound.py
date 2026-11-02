@@ -516,7 +516,24 @@ def _spine_geometry(compound, plans):
     if compound.axis == "ew":
         geo["placements"] = {n: _transpose(r) for n, r in geo["placements"].items()}
         geo["corridors"] = [_transpose(r) for r in geo["corridors"]]
-        all_rects = list(geo["placements"].values()) + geo["corridors"]
+    # attached parts hang off their host's wall on a map side, so they go on
+    # after the transpose; they are part of the frame, so the block (and the
+    # compound region) holds them. A part may hang off another attached part
+    attached = [p for p in compound.parts if p.slot_kind == "attached"]
+    while attached:
+        ready = [p for p in attached if p.host in geo["placements"]]
+        if not ready:
+            break
+        for p in ready:
+            geo["placements"][p.building] = _attached_rect(
+                geo["placements"][p.host], p.side, _fp(plans, p))
+            attached.remove(p)
+    rects = list(geo["placements"].values()) + geo["corridors"]
+    x0 = min(r.x for r in rects)
+    y0 = min(r.y for r in rects)
+    geo["placements"] = {n: r.shifted(-x0, -y0) for n, r in geo["placements"].items()}
+    geo["corridors"] = [r.shifted(-x0, -y0) for r in geo["corridors"]]
+    all_rects = list(geo["placements"].values()) + geo["corridors"]
     w = max(r.x1 for r in all_rects) + 1
     h = max(r.y1 for r in all_rects) + 1
     return (w, h), geo, geo["corridors"]
@@ -836,13 +853,9 @@ def _place_spine_compound(zone, compound, rect, templates, rng, furnish,
                                          + (f" {i + 1}" if i else ""),
                                          r.shifted(rect.x, rect.y),
                                          out.wall_material))
-    for p in compound.parts:   # wings branch off any part
-        if p.slot_kind == "attached":
-            host_r = placed.get(p.host)
-            if host_r is not None:
-                fp = _fp(plans, p)
-                placed[p.building] = _attached_rect(host_r, p.side, fp)
-                sides[p.building] = p.side
+    for p in compound.parts:   # wings branch off any part (placed by the geometry)
+        if p.slot_kind == "attached" and p.building in placed:
+            sides[p.building] = p.side
     # the gate: the hub when there is one (facing away from the spine at its
     # end, or south/west from the centre), else the first part
     hub = geo["hub"]
