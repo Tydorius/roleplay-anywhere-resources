@@ -1,0 +1,271 @@
+{
+ "name": "Corvi Quarter",
+ "worldBackground": "A workers' quarter behind the station: one tall block of flats, a strip of shops over a shared parking lot, a pocket of park.",
+ "setting": {"era": "modern", "technology": "electricity", "density": "dense", "climate": "temperate"},
+ "mapSize": "small",
+ "extensions": ["floors"],
+ "currency": {"name": "Folded note", "description": "The city's paper small change.", "format": "5 notes"},
+ "attributes": {"strength": 5, "dexterity": 4, "intellect": 4, "perception": 5, "charisma": 5},
+ "zones": [
+  {
+   "name": "Corvi Street",
+   "kind": "shopping street",
+   "sizeClass": "medium",
+   "description": "the flats and the shop strip",
+   "ground": "grass",
+   "buildings": [
+    {"name": "Corvi Flats", "kind": "apartments", "sizeClass": "medium",
+     "purpose": "workers' housing, six floors", "storeys": 6,
+     "units": {"name": "Apartment", "count": 24, "perStorey": 4, "residents": 2,
+               "numbering": "plain"}},
+    {"name": "Bolt & Bias", "kind": "shop", "sizeClass": "small", "purpose": "the clothing store"},
+    {"name": "Fielder's Gear", "kind": "shop", "sizeClass": "small", "purpose": "the sporting goods store"},
+    {"name": "Left Kiosk", "kind": "kiosk", "sizeClass": "hut", "purpose": "the paper and ticket kiosk"},
+    {"name": "Right Kiosk", "kind": "kiosk", "sizeClass": "hut", "purpose": "the paper and ticket kiosk"}
+   ],
+   "dressing": {"paths": "paved", "props": [], "filler": []}
+  },
+  {
+   "name": "Pocket Park",
+   "kind": "park",
+   "sizeClass": "small",
+   "description": "a pocket of grass behind the strip",
+   "ground": "grass",
+   "buildings": [],
+   "dressing": {"paths": "dirt", "props": [{"template": "Park bench", "count": 2, "hint": "edge"}], "filler": []}
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Station Row",
+   "zone": "Corvi Street",
+   "shape": "row",
+   "frontage": "south",
+   "front": "parking",
+   "parts": [
+    {"building": "Bolt & Bias", "at": "row:0"},
+    {"building": "Fielder's Gear", "at": "row:1"},
+    {"building": "Left Kiosk", "at": "row:2"},
+    {"building": "Right Kiosk", "at": "row:3", "sameAs": "Left Kiosk"}
+   ]
+  }
+ ],
+ "roads": [
+  {"from": "Corvi Street", "to": "Pocket Park", "kind": "paved"}
+ ],
+ "templates": [
+  {"name": "Board bed", "size": [1, 2], "walkability": 0, "tags": ["bed"],
+   "forSleep": true, "description": "A plain board bed with a folded blanket.",
+   "physicalDescription": "plain pine bed frame with grey blanket",
+   "rule": "along the wall of a sleeping room, never blocking a door"},
+  {"name": "Deal table", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A deal table with two chairs' worth of elbows.",
+   "physicalDescription": "scarred deal table with mismatched legs",
+   "rule": "by the window wall, clear of the door"},
+  {"name": "Kitchenette", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A two-ring cooker and a shallow sink.",
+   "physicalDescription": "enamelled two-ring cooker with pipe-fed sink",
+   "rule": "against the wall farthest from the door"},
+  {"name": "Kitchen cupboard", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A wall cupboard over the worktop.",
+   "physicalDescription": "painted cupboard with a bowed door",
+   "rule": "in a corner, clear of the door"},
+  {"name": "Bathroom cabinet", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A mirrored cabinet over the sink.",
+   "physicalDescription": "mirrored cabinet with a chalked shelf",
+   "rule": "on a wall, clear of the door"},
+  {"name": "Shop counter", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A worn shop counter with a till.",
+   "physicalDescription": "scrolled counter front with brass till",
+   "rule": "facing the door, one stride in"},
+  {"name": "Store shelf", "size": [1, 2], "walkability": 0, "tags": ["container"],
+   "description": "A steel shelf unit, goods front-faced.",
+   "physicalDescription": "bolted steel shelving with price rails",
+   "rule": "along the walls, never blocking the door"},
+  {"name": "Kiosk rack", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A spinning rack of papers and sweets.",
+   "physicalDescription": "wire spinning rack with hanging stock",
+   "rule": "beside the counter, clear of the door"},
+  {"name": "Park bench", "size": [2, 1], "walkability": 0, "tags": ["table", "social"],
+   "description": "A slatted bench facing the grass.",
+   "physicalDescription": "green slatted bench with chewed armrests",
+   "rule": "at the edge of the open ground"},
+  {"name": "Parked van", "size": [2, 2], "walkability": 0, "tags": ["vehicle"],
+   "description": "A delivery van backed into its slot.",
+   "physicalDescription": "dented panel van with a roller door",
+   "rule": "inside a parking slot, clear of the walk"}
+ ],
+ "items": [
+  {"name": "Bread", "type": "consumable", "quality": "common", "value": 2,
+   "description": "A half loaf in wax paper.", "physicalDescription": "wax-paper half loaf of bread, white background"},
+  {"name": "Cereal box", "type": "consumable", "quality": "common", "value": 3,
+   "description": "A family-size box, half gone.", "physicalDescription": "bright cardboard cereal box, white background"},
+  {"name": "Tin of tea", "type": "consumable", "quality": "common", "value": 4,
+   "description": "A square tin of strong tea.", "physicalDescription": "square tea tin with a lid tab, white background"},
+  {"name": "Kitchen knife", "type": "wieldable", "quality": "common", "value": 5,
+   "description": "A cook's knife, kept sharp.", "physicalDescription": "steel cook's knife with a worn handle, white background"},
+  {"name": "Tin cup", "type": "misc", "quality": "common", "value": 1,
+   "description": "A dented enamel cup.", "physicalDescription": "dented enamel cup, white background"},
+  {"name": "Phone charger", "type": "misc", "quality": "common", "value": 5,
+   "description": "A charger with a frayed cable.", "physicalDescription": "white charger brick with frayed cable, white background"},
+  {"name": "Spare key", "type": "misc", "quality": "common", "value": 2,
+   "description": "A spare flat key on a bread-bag tie.", "physicalDescription": "brass flat key on a wire tie, white background"},
+  {"name": "Mouthwash", "type": "consumable", "quality": "common", "value": 3,
+   "description": "A bottle of mint mouthwash.", "physicalDescription": "tall green mouthwash bottle, white background"},
+  {"name": "Bar of soap", "type": "consumable", "quality": "common", "value": 1,
+   "description": "A sliver of soap in a dish.", "physicalDescription": "worn sliver of pink soap, white background"},
+  {"name": "Razor", "type": "misc", "quality": "common", "value": 4,
+   "description": "A safety razor with spare blades.", "physicalDescription": "chrome safety razor with blade packet, white background"},
+  {"name": "Aspirin bottle", "type": "consumable", "quality": "common", "value": 4,
+   "description": "A bottle of aspirin, cotton still in the neck.", "physicalDescription": "brown aspirin bottle with cotton neck, white background"},
+  {"name": "Shampoo bottle", "type": "misc", "quality": "common", "value": 2,
+   "description": "A near-empty shampoo bottle.", "physicalDescription": "squeezed shampoo bottle with flip cap, white background"},
+  {"name": "Denim jacket", "type": "torso", "quality": "common", "value": 18,
+   "description": "A denim work jacket, cuffs frayed.", "physicalDescription": "faded denim jacket with frayed cuffs, white background"},
+  {"name": "Wool scarf", "type": "necklace", "quality": "common", "value": 9,
+   "description": "A long knitted scarf.", "physicalDescription": "long mustard knitted scarf, white background"},
+  {"name": "Canvas sneakers", "type": "boots", "quality": "common", "value": 12,
+   "description": "Cheap canvas sneakers, one lace missing.", "physicalDescription": "grey canvas sneakers with one lace, white background"},
+  {"name": "Work gloves", "type": "gloves", "quality": "common", "value": 6,
+   "description": "Leather-palmed work gloves.", "physicalDescription": "leather-palm work gloves, white background"},
+  {"name": "Sun hat", "type": "head", "quality": "common", "value": 8,
+   "description": "A wide straw hat.", "physicalDescription": "wide straw sun hat with band, white background"},
+  {"name": "Cotton t-shirt", "type": "innerTorso", "quality": "common", "value": 5,
+   "description": "A folded cotton t-shirt.", "physicalDescription": "folded white cotton t-shirt, white background"},
+  {"name": "Cargo shorts", "type": "pants", "quality": "common", "value": 9,
+   "description": "Multi-pocket cargo shorts.", "physicalDescription": "khaki cargo shorts with cargo pockets, white background"},
+  {"name": "Baseball bat", "type": "wieldable", "quality": "uncommon", "value": 15,
+   "description": "An ash bat with grip tape.", "physicalDescription": "ash baseball bat with grip tape, white background"},
+  {"name": "Tennis racket", "type": "wieldable", "quality": "common", "value": 12,
+   "description": "A strung racket in a press.", "physicalDescription": "strung tennis racket with worn grip, white background"},
+  {"name": "Hex dumbbell", "type": "misc", "quality": "common", "value": 8,
+   "description": "A hex dumbbell, one plate loose.", "physicalDescription": "cast hex dumbbell with loose plate, white background"},
+  {"name": "Swim goggles", "type": "face", "quality": "common", "value": 6,
+   "description": "Goggles with a cracked strap.", "physicalDescription": "clear swim goggles with cracked strap, white background"},
+  {"name": "Skipping rope", "type": "misc", "quality": "common", "value": 4,
+   "description": "A leather skipping rope.", "physicalDescription": "coiled leather skipping rope, white background"},
+  {"name": "Bike helmet", "type": "head", "quality": "uncommon", "value": 14,
+   "description": "A vented helmet with a stuck buckle.", "physicalDescription": "vented bike helmet with stuck buckle, white background"},
+  {"name": "Fishing reel", "type": "misc", "quality": "common", "value": 10,
+   "description": "A spinning reel, oiled and boxed.", "physicalDescription": "metal spinning reel in its box, white background"},
+  {"name": "Boxing wraps", "type": "gloves", "quality": "common", "value": 5,
+   "description": "A pair of cotton hand wraps.", "physicalDescription": "rolled cotton boxing wraps, white background"},
+  {"name": "Newspaper", "type": "misc", "quality": "common", "value": 1,
+   "description": "Yesterday's paper, crosswords done.", "physicalDescription": "folded newspaper with done crosswords, white background"},
+  {"name": "Battery pack", "type": "misc", "quality": "common", "value": 4,
+   "description": "A card of batteries.", "physicalDescription": "blister card of batteries, white background"},
+  {"name": "Bag of sweets", "type": "consumable", "quality": "common", "value": 2,
+   "description": "A paper bag of sour sweets.", "physicalDescription": "paper bag of sweets with twist ends, white background"},
+  {"name": "Lottery ticket", "type": "misc", "quality": "common", "value": 1,
+   "description": "An unscratched ticket.", "physicalDescription": "silver-scratch lottery ticket, white background"},
+  {"name": "Umbrella", "type": "misc", "quality": "common", "value": 7,
+   "description": "A black umbrella, two ribs bent.", "physicalDescription": "black umbrella with bent ribs, white background"},
+  {"name": "Bus pass", "type": "misc", "quality": "common", "value": 1,
+   "description": "A monthly pass in a plastic sleeve.", "physicalDescription": "bus pass in a plastic sleeve, white background"}
+ ],
+ "lootPools": {
+  "Kitchen cupboard": {"items": ["Bread", "Cereal box", "Tin of tea", "Kitchen knife",
+                                  "Tin cup", "Phone charger", "Spare key"]},
+  "Bathroom cabinet": {"items": ["Mouthwash", "Bar of soap", "Razor",
+                                  "Aspirin bottle", "Shampoo bottle"]},
+  "Clothing shelf": {"items": ["Denim jacket", "Wool scarf", "Canvas sneakers",
+                                "Work gloves", "Sun hat", "Cotton t-shirt", "Cargo shorts"],
+                     "weights": {"Wool scarf": 0.5}},
+  "Sporting shelf": {"items": ["Baseball bat", "Tennis racket", "Hex dumbbell",
+                                "Swim goggles", "Skipping rope", "Bike helmet",
+                                "Fishing reel", "Boxing wraps"],
+                     "weights": {"Bike helmet": 0.4}},
+  "Kiosk stock": {"items": ["Newspaper", "Battery pack", "Bag of sweets",
+                             "Lottery ticket", "Umbrella", "Bus pass"]}
+ },
+ "buildings": [
+  {
+   "name": "Corvi Flats",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [
+    {"name": "Lobby", "share": "medium", "purpose": "the stair lobby and its noticeboard"}
+   ],
+   "connections": [],
+   "entrance": {"room": "Lobby", "side": "south"},
+   "stairs": {"room": "Lobby"},
+   "unit": {
+    "rooms": [
+     {"name": "Kitchen", "share": "small", "purpose": "the flat's kitchen and hall",
+      "lootPool": "Kitchen cupboard"},
+     {"name": "Bedroom", "share": "small", "purpose": "the flat's bedroom"},
+     {"name": "Bathroom", "share": "small", "purpose": "the flat's bathroom",
+      "lootPool": "Bathroom cabinet"}
+    ],
+    "connections": [["Kitchen", "Bedroom"], ["Bedroom", "Bathroom"]],
+    "entrance": {"room": "Kitchen", "side": "south"},
+    "furniture": [
+     {"template": "Kitchenette", "room": "Kitchen", "count": 1, "hint": "wall:north"},
+     {"template": "Kitchen cupboard", "room": "Kitchen", "count": 1, "hint": "corner"},
+     {"template": "Bathroom cabinet", "room": "Bathroom", "count": 1, "hint": "corner"}
+    ]
+   },
+   "furniture": [
+    {"template": "Deal table", "room": "Lobby", "count": 1, "hint": "wall:west"}
+   ]
+  },
+  {
+   "name": "Bolt & Bias",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [
+    {"name": "Shop Floor", "share": "medium", "purpose": "the racks and the counter",
+     "lootPool": "Clothing shelf"},
+    {"name": "Fitting Room", "share": "small", "purpose": "the curtained fitting room"}
+   ],
+   "connections": [["Shop Floor", "Fitting Room"]],
+   "entrance": {"room": "Shop Floor", "side": "south"},
+   "furniture": [
+    {"template": "Shop counter", "room": "Shop Floor", "count": 1, "hint": "center"},
+    {"template": "Store shelf", "room": "Shop Floor", "count": 2, "hint": "wall:north"}
+   ]
+  },
+  {
+   "name": "Fielder's Gear",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [
+    {"name": "Shop Floor", "share": "medium", "purpose": "the counter and the shelf wall",
+     "lootPool": "Sporting shelf"}
+   ],
+   "connections": [],
+   "entrance": {"room": "Shop Floor", "side": "south"},
+   "furniture": [
+    {"template": "Shop counter", "room": "Shop Floor", "count": 1, "hint": "center"},
+    {"template": "Store shelf", "room": "Shop Floor", "count": 3, "hint": "wall:north"}
+   ]
+  },
+  {
+   "name": "Left Kiosk",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [{"name": "Counter", "share": "small", "purpose": "the kiosk counter"}],
+   "connections": [],
+   "entrance": {"room": "Counter", "side": "south"},
+   "furniture": [
+    {"template": "Shop counter", "room": "Counter", "count": 1, "hint": "center"},
+    {"template": "Kiosk rack", "room": "Counter", "count": 2, "hint": "wall:north",
+     "lootPool": "Kiosk stock"}
+   ]
+  }
+ ],
+ "npcs": [
+  {"name": "Odile Fenn", "gender": "female", "role": "concierge", "home": "Corvi Flats Apartment 1", "work": "Bolt & Bias",
+   "description": "The block's concierge: keeps the stair rota and everyone's debts in one pencil ledger.",
+   "physicalDescription": "stout concierge in a print dress with a pencil behind each ear"},
+  {"name": "Ruben Fielder", "gender": "male", "role": "shopkeeper", "home": "Corvi Flats Apartment 12", "work": "Fielder's Gear",
+   "description": "Sells gear for games he no longer has time to play.",
+   "physicalDescription": "broad shopkeeper in a polo shirt with a tape measure round his neck"},
+  {"name": "Anya Po", "gender": "female", "role": "kiosk keeper", "home": "Corvi Flats Apartment 20", "work": "Right Kiosk",
+   "description": "Runs the east kiosk and knows every last train by ear.",
+   "physicalDescription": "young kiosk keeper in a quilted jacket with a card of tickets"}
+ ],
+ "player": {"name": "Theo Marsh", "gender": "male", "role": "courier", "home": "Corvi Flats Apartment 8", "work": "Left Kiosk",
+  "description": "A bike courier picking up parcels along the strip.",
+  "physicalDescription": "lean courier in a rain jacket with a courier bag strapped tight"}
+}

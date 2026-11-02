@@ -195,8 +195,256 @@
    "description": "An inn bed with a clean fold.",
    "physicalDescription": "roped inn bed with striped blanket",
    "rule": "along the wall of a sleeping room, never blocking a door"
+  },
+  {
+   "name": "Medicine cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A locked medicine cabinet.",
+   "physicalDescription": "steel medicine cabinet with a lock hasp",
+   "rule": "on a wall, clear of the door"
+  },
+  {
+   "name": "Filing cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A grey filing cabinet, one drawer stuck.",
+   "physicalDescription": "grey filing cabinet with a stuck drawer",
+   "rule": "against the wall, clear of the door"
+  },
+  {
+   "name": "Inn dresser",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A pine dresser with bowed drawers.",
+   "physicalDescription": "pine dresser with bowed drawer fronts",
+   "rule": "against the wall, clear of the door"
   }
  ],
+ "items": [
+  {
+   "name": "Water jug",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "A jug of water and its beaker.",
+   "physicalDescription": "enamel water jug with a beaker, white background"
+  },
+  {
+   "name": "Paper chart",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "The bed's chart, last shift signed.",
+   "physicalDescription": "clipboard chart with signed rows, white background"
+  },
+  {
+   "name": "Spectacles",
+   "type": "face",
+   "quality": "common",
+   "value": 6,
+   "description": "Reading spectacles, one arm mended with tape.",
+   "physicalDescription": "wire spectacles with taped arm, white background"
+  },
+  {
+   "name": "Ward slippers",
+   "type": "boots",
+   "quality": "common",
+   "value": 3,
+   "description": "Felt ward slippers, one heel crushed.",
+   "physicalDescription": "grey felt slippers with crushed heel, white background"
+  },
+  {
+   "name": "Granola bar",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A wrapped granola bar from the visitor shop.",
+   "physicalDescription": "wrapped granola bar with print date, white background"
+  },
+  {
+   "name": "Wool blanket",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A folded ward blanket.",
+   "physicalDescription": "folded grey wool blanket, white background"
+  },
+  {
+   "name": "Aspirin bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A bottle of aspirin from stores.",
+   "physicalDescription": "brown aspirin bottle with cotton neck, white background"
+  },
+  {
+   "name": "Bandage roll",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A clean bandage roll.",
+   "physicalDescription": "paper-wrapped bandage roll, white background"
+  },
+  {
+   "name": "Antiseptic wipe",
+   "type": "consumable",
+   "quality": "common",
+   "value": 1,
+   "description": "A sachet of antiseptic wipe.",
+   "physicalDescription": "foil sachet of antiseptic wipe, white background"
+  },
+  {
+   "name": "Thermometer",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A glass thermometer in its case.",
+   "physicalDescription": "glass thermometer in a plastic case, white background"
+  },
+  {
+   "name": "Morphine ampoule",
+   "type": "consumable",
+   "quality": "rare",
+   "value": 25,
+   "description": "A locked-box ampoule, counted twice a shift.",
+   "physicalDescription": "glass morphine ampoule with label, white background"
+  },
+  {
+   "name": "Rota clipboard",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "The ward rota on its clipboard.",
+   "physicalDescription": "clipboard rota with pencil column, white background"
+  },
+  {
+   "name": "Fountain pen",
+   "type": "misc",
+   "quality": "common",
+   "value": 4,
+   "description": "A chased fountain pen, nib worn to the angle of its writer.",
+   "physicalDescription": "chased fountain pen with worn nib, white background"
+  },
+  {
+   "name": "Biscuit tin",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "The night-shift biscuit tin, mostly crumbs.",
+   "physicalDescription": "round biscuit tin with crumbs, white background"
+  },
+  {
+   "name": "Ward key",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 8,
+   "description": "A ward door key on a red fob.",
+   "physicalDescription": "steel key on a red fob, white background"
+  },
+  {
+   "name": "Candle",
+   "type": "material",
+   "quality": "common",
+   "value": 1,
+   "description": "A stub of tallow candle.",
+   "physicalDescription": "tallow candle stub with drips, white background"
+  },
+  {
+   "name": "Playing cards",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A worn deck of cards, one card torn.",
+   "physicalDescription": "worn card deck with torn card, white background"
+  },
+  {
+   "name": "Clay pipe",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A clay pipe, bowl blackened.",
+   "physicalDescription": "blackened clay pipe with stem bite, white background"
+  },
+  {
+   "name": "Ale bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A bottle of brown ale, crown still on.",
+   "physicalDescription": "brown ale bottle with crown cap, white background"
+  },
+  {
+   "name": "Folded newspaper",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "Yesterday's paper, crossword half done.",
+   "physicalDescription": "folded newspaper with pencilled crossword, white background"
+  }
+ ],
+ "lootPools": {
+  "Bedside locker": {
+   "items": [
+    "Water jug",
+    "Paper chart",
+    "Spectacles",
+    "Ward slippers",
+    "Granola bar",
+    "Wool blanket"
+   ],
+   "weights": {
+    "Wool blanket": 0.5
+   }
+  },
+  "Ward medicine": {
+   "items": [
+    "Aspirin bottle",
+    "Bandage roll",
+    "Antiseptic wipe",
+    "Thermometer",
+    "Morphine ampoule"
+   ],
+   "weights": {
+    "Morphine ampoule": 0.2
+   }
+  },
+  "Station drawer": {
+   "items": [
+    "Rota clipboard",
+    "Fountain pen",
+    "Biscuit tin",
+    "Ward key"
+   ]
+  },
+  "Inn dresser": {
+   "items": [
+    "Candle",
+    "Playing cards",
+    "Clay pipe",
+    "Ale bottle",
+    "Folded newspaper"
+   ]
+  }
+ },
  "buildings": [
   {
    "name": "Nurses' Station",
@@ -220,6 +468,13 @@
      "room": "Station",
      "count": 1,
      "hint": "center"
+    },
+    {
+     "template": "Filing cabinet",
+     "room": "Station",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Station drawer"
     }
    ]
   },
@@ -244,7 +499,8 @@
      {
       "name": "Bedroom",
       "share": "small",
-      "purpose": "one patient room"
+      "purpose": "one patient room",
+      "lootPool": "Bedside locker"
      }
     ],
     "connections": [],
@@ -273,6 +529,13 @@
      "room": "Sluice",
      "count": 1,
      "hint": "corner"
+    },
+    {
+     "template": "Medicine cabinet",
+     "room": "Sluice",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Ward medicine"
     }
    ]
   },
@@ -314,6 +577,13 @@
      "room": "Guest Room",
      "count": 1,
      "hint": "wall:north"
+    },
+    {
+     "template": "Inn dresser",
+     "room": "Guest Room",
+     "count": 1,
+     "hint": "corner",
+     "lootPool": "Inn dresser"
     }
    ]
   }
