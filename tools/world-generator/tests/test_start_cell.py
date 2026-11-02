@@ -51,5 +51,18 @@ class TestStartCell(unittest.TestCase):
         self.assertEqual(region, "Village")
 
 
+class TestObjectsFiledElsewhere(unittest.TestCase):
+    """A field's fence posts are filed under the field but stand on the
+    farm's ground: a farmer starting in the farm never lands on one. Found
+    by Ashvale at seed 2 once the map grew past 160 (brief 012h)."""
+
+    def test_an_object_filed_under_another_region_still_blocks(self):
+        w = _world(full_room=False)
+        w.objects = [ObjectOut("Crate", (x, y), "North Field")
+                     for x in range(0, 40) for y in range(0, 40) if (x, y) != (30, 30)]
+        cell = schedule.free_cell(w, "Village")
+        self.assertEqual(cell, (30, 30))
+
+
 if __name__ == "__main__":
     unittest.main()

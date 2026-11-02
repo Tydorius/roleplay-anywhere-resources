@@ -156,11 +156,15 @@ def free_cell(world, region_name, taken=(), connected=None):
         return None
     rect = region.rect
     occupied = set(taken)
+    # every object on the region's floor, whatever region it was filed
+    # under (a field's fence posts sit on the farm's ground too)
     for o in world.objects:
-        if o.region == region_name:
-            w, h = world.templates[o.template].size
-            occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                         for y in range(o.pos[1], o.pos[1] + h)}
+        w, h = world.templates[o.template].size
+        if o.pos[0] + w <= rect.x or o.pos[0] > rect.x1 or \
+                o.pos[1] + h <= rect.y or o.pos[1] > rect.y1:
+            continue
+        occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
+                     for y in range(o.pos[1], o.pos[1] + h)}
     anchor = region.entrance_door or (rect.x + rect.w // 2, rect.y + rect.h // 2)
     cands = sorted(rect.cells(), key=lambda c: (abs(c[0] - anchor[0]) + abs(c[1] - anchor[1]),
                                                 c[1], c[0]))
