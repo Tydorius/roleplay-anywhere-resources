@@ -13,7 +13,12 @@ import unittest
 
 import launcher
 from worldgen import llm
+from tests.test_013_frame import a_frame
 from tests.test_model import ScriptedClient, canned_replies
+
+
+def _dump(obj):
+    return json.dumps(obj, ensure_ascii=False)
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
 KEY = "sk-test-secret-123456"
@@ -157,9 +162,11 @@ class TestWorlds(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def test_new_world_from_an_idea(self):
-        # idea, four extensions off, default seed, start
-        s = Session(["a mill village", "n", "n", "n", "n", "", ""], self.tmp,
-                    client=ScriptedClient(canned_replies()))
+        # quick mode, the idea, default population, use the frame, four
+        # extensions off, default seed, start
+        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "", ""],
+                    self.tmp,
+                    client=ScriptedClient([_dump(a_frame())] + canned_replies()))
         summary = s.launcher.new_world()
         self.assertTrue(summary["ok"], summary)
         self.assertTrue(os.path.exists(os.path.join(summary["out"], summary["zip"])))
@@ -167,6 +174,65 @@ class TestWorlds(unittest.TestCase):
         self.assertEqual(summary["extensions"], [])
         self.assertIn("Done:", s.text())
         self.assertIn("P1:", s.text())
+        self.assertIn("THE WORLD FRAME", s.text())
+        # the frame reached the plan and the questionnaire with it
+        with open(os.path.join(summary["out"], "plan.json"), encoding="utf-8") as f:
+            plan = json.load(f)
+        self.assertEqual(plan["questionnaire"]["mode"], "quick")
+        self.assertEqual(plan["questionnaire"]["population"], [20, 40])
+        self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
+
+    def test_short_questionnaire_walks_the_questions(self):
+        # mode short, no idea, then: genre Fantasy (Enter stops the second
+        # pick), extraordinary skipped, tone Other ("a warm hearth"), player
+        # and drive skipped, play Explore+Fight, avoid free text, population
+        # 10-30, use the frame, extensions off, seed, start
+        s = Session(["2", "",
+                     "1", "", "", "6", "a warm hearth", "", "",
+                     "1", "2", "no demons",
+                     "10-30", "1", "n", "n", "n", "n", "", ""],
+                    self.tmp,
+                    client=ScriptedClient([_dump(a_frame())] + canned_replies()))
+        summary = s.launcher.new_world()
+        self.assertTrue(summary["ok"], summary)
+        with open(os.path.join(summary["out"], "plan.json"), encoding="utf-8") as f:
+            plan = json.load(f)
+        q = plan["questionnaire"]
+        self.assertEqual(q["mode"], "short")
+        self.assertEqual(q["population"], [10, 30])
+        self.assertEqual(q["answers"]["genre"], {"choices": ["Fantasy"], "other": ""})
+        self.assertEqual(q["answers"]["tone"]["other"], "a warm hearth")
+        self.assertEqual(q["answers"]["play"]["choices"], ["Explore", "Fight"])
+        self.assertEqual(q["answers"]["avoid"]["other"], "no demons")
+        self.assertNotIn("stakes", q["answers"], "the short form has no Q8-14")
+        # the questions were asked, and the answers reached the P0 prompt
+        self.assertIn("What kind of world?", s.text())
+        self.assertIn("Anything to avoid?", s.text())
+        self.assertIn("a warm hearth", _dump(s.launcher.client.sent[0]))
+        self.assertIn("no demons", _dump(s.launcher.client.sent[0]))
+
+    def test_long_mode_runs_the_clarifying_turn(self):
+        # mode long, the idea, genre Fantasy then Enter (stop the second
+        # pick), the other 13 questions skipped, default population, the
+        # model's clarify question answered "Cozy", use the frame,
+        # extensions off, default seed, start
+        frame_replies = [_dump({"questions": [{"question": "Cozy or deadly?",
+                                               "options": ["Cozy", "Deadly"]}]}),
+                         _dump(a_frame())] + canned_replies()
+        s = Session(["4", "a mill village", "1", ""]
+                    + [""] * 13
+                    + ["", "1", "1", "n", "n", "n", "n", "", ""],
+                    self.tmp, client=ScriptedClient(frame_replies))
+        summary = s.launcher.new_world()
+        self.assertTrue(summary["ok"], summary)
+        self.assertIn("questions of its own", s.text())
+        self.assertIn("Cozy or deadly?", s.text())
+        # the clarification reached the frame call's prompt (the second call)
+        self.assertIn("A: Cozy", _dump(s.launcher.client.sent[1]))
+        with open(os.path.join(summary["out"], "plan.json"), encoding="utf-8") as f:
+            plan = json.load(f)
+        self.assertEqual(plan["questionnaire"]["mode"], "long")
+        self.assertEqual(plan["questionnaire"]["mode"], "long")
 
     def test_floors_turns_portals_on_without_asking(self):
         s = Session(["y", "n", "n"], self.tmp)       # floors yes; region groups, lights no
