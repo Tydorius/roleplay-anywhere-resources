@@ -1,0 +1,4096 @@
+{
+ "name": "Cedar Run",
+ "worldBackground": "Cedar Run is a few blocks of small-town America three weeks into the outbreak: the grid is dark, the phones are dead, and the walking dead outnumber the living. A few dozen survivors hold the barricaded courtyard of Barlow Court, a run-down apartment complex, and make armed runs to the half-picked storefronts of Pike's Crossing. The small hospital on Kettle Hill fell in the first days and has been feared and avoided ever since. The tension underneath everything: the mall is nearly stripped bare, and what's left isn't worth sharing.",
+ "setting": {
+  "era": "Present day",
+  "technology": "Modern but failing — grid and phones down, generators and hand tools",
+  "density": "sparse",
+  "climate": "Mild autumn, days shortening"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Barlow Court",
+   "kind": "barricaded apartment complex",
+   "sizeClass": "medium",
+   "description": "A run-down courtyard complex behind plywood-and-chain-link barricades, the living's last real stronghold in town.",
+   "ground": "gravel",
+   "adjacentTo": [
+    "Pike's Crossing",
+    "Kettle Hill"
+   ],
+   "outdoor": [
+    "barricade gate",
+    "lookout scaffold",
+    "courtyard fire barrels",
+    "rain barrels",
+    "garden boxes",
+    "dead parking lot cars"
+   ],
+   "buildings": [
+    {
+     "name": "Cedar Walk-Up",
+     "kind": "apartment building",
+     "sizeClass": "medium",
+     "purpose": "eight cramped two-room apartments stacked over two floors",
+     "units": {
+      "name": "Apartment",
+      "count": 8,
+      "residents": 2
+     }
+    },
+    {
+     "name": "Dogwood Walk-Up",
+     "kind": "apartment building",
+     "sizeClass": "small",
+     "purpose": "three one-bedroom flats, the quiet block for families and elders",
+     "units": {
+      "name": "Apartment",
+      "count": 3,
+      "residents": 2
+     }
+    },
+    {
+     "name": "Manager's Flat",
+     "kind": "residence",
+     "sizeClass": "small",
+     "purpose": "the on-site manager's flat, now the council's meeting room where she alone bunks",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Guard Shack",
+     "kind": "gatehouse",
+     "sizeClass": "hut",
+     "purpose": "gate watch and sign-in ledger, where the night volunteer sleeps",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Laundry Block",
+     "kind": "utility",
+     "sizeClass": "small",
+     "purpose": "hand-washed laundry, cisterns and boiling pots, with a boil-watch bunk",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Groundskeeper Shed",
+     "kind": "workshop",
+     "sizeClass": "hut",
+     "purpose": "salvage and tool shed in the outer lot, its caretaker bedded among the parts",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Barricade gate",
+      "count": 1,
+      "hint": "edge+front:Guard Shack"
+     },
+     {
+      "template": "Lookout scaffold",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "Plywood barricade",
+      "count": 9,
+      "hint": "scatter"
+     },
+     {
+      "template": "Fire barrel",
+      "count": 3,
+      "hint": "center+cluster"
+     },
+     {
+      "template": "Rain barrel",
+      "count": 8,
+      "hint": "scatter"
+     },
+     {
+      "template": "Garden box",
+      "count": 4,
+      "hint": "edge+cluster"
+     },
+     {
+      "template": "Dead car",
+      "count": 3,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Dumpster",
+      "count": 1,
+      "hint": "behind:Laundry Block"
+     },
+     {
+      "template": "Rubble pile",
+      "count": 4,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Dead streetlight",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Maple tree",
+      "count": 1,
+      "hint": "edge"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Pike's Crossing",
+   "kind": "strip mall and parking",
+   "sizeClass": "medium",
+   "description": "A half-picked strip mall of five storefronts behind a cracked parking lot, its scraps guarded by a wary little crew of squatters.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Barlow Court",
+    "Kettle Hill"
+   ],
+   "outdoor": [
+    "parking lot wrecks",
+    "dumpster corral",
+    "cart return",
+    "dead streetlights",
+    "loading bay"
+   ],
+   "buildings": [
+    {
+     "name": "Dollar Star",
+     "kind": "variety store",
+     "sizeClass": "small",
+     "purpose": "shelves stripped to cleaners and candles, a drifter nesting in the office",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Fielder's Clothing",
+     "kind": "clothing store",
+     "sizeClass": "small",
+     "purpose": "picked-over racks of coats and boots, one board in the fitting room",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Ironline Sporting Goods",
+     "kind": "sporting goods store",
+     "sizeClass": "medium",
+     "purpose": "empty gun counter over camping gear, the crew's watchman sleeping in the stockroom",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Cornerstone Pharmacy",
+     "kind": "pharmacy",
+     "sizeClass": "small",
+     "purpose": "locked medicine shelves every group wants opened, its keeper living behind the counter",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Hao's Wok Counter",
+     "kind": "takeout counter",
+     "sizeClass": "hut",
+     "purpose": "looted kitchen where run crews boil water and the youngest squatter bunks",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Dead car",
+      "count": 6,
+      "hint": "scatter"
+     },
+     {
+      "template": "Dead streetlight",
+      "count": 7,
+      "hint": "along_path"
+     },
+     {
+      "template": "Plywood barricade",
+      "count": 5,
+      "hint": "scatter+front:Ironline Sporting Goods"
+     },
+     {
+      "template": "Dumpster",
+      "count": 2,
+      "hint": "cluster+behind:Hao's Wok Counter"
+     },
+     {
+      "template": "Fire barrel",
+      "count": 1,
+      "hint": "behind:Ironline Sporting Goods"
+     },
+     {
+      "template": "Boiling pot",
+      "count": 1,
+      "hint": "behind:Ironline Sporting Goods"
+     },
+     {
+      "template": "Shopping cart nest",
+      "count": 3,
+      "hint": "edge+scatter"
+     },
+     {
+      "template": "Rubble pile",
+      "count": 6,
+      "hint": "scatter"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Maple tree",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Kettle Hill",
+   "kind": "small hospital campus",
+   "sizeClass": "medium",
+   "description": "The town's small community hospital, overrun in the outbreak's first days and shunned ever since — though not everyone inside is dead.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Barlow Court",
+    "Pike's Crossing"
+   ],
+   "outdoor": [
+    "ambulance bay",
+    "staff parking",
+    "memorial garden",
+    "overgrown lawn"
+   ],
+   "buildings": [
+    {
+     "name": "Admissions Lobby",
+     "kind": "hospital lobby",
+     "sizeClass": "medium",
+     "purpose": "reception and waiting hall where the first die-off happened, a lone holdout bedded at reception",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Mercy Ward",
+     "kind": "ward",
+     "sizeClass": "small",
+     "purpose": "patient rooms with the doors still hanging open, rooms now slept in one by one",
+     "units": {
+      "name": "Patient Room",
+      "count": 3,
+      "residents": 1
+     }
+    },
+    {
+     "name": "Clinics Wing",
+     "kind": "clinic wing",
+     "sizeClass": "small",
+     "purpose": "exam rooms, nurses' station and a ransacked supply closet, one survivor hiding out",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Emergency Department",
+     "kind": "emergency department",
+     "sizeClass": "medium",
+     "purpose": "triage bays behind the ambulance doors, a holdout barricaded in the on-call room",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    },
+    {
+     "name": "Maintenance Annex",
+     "kind": "boiler house",
+     "sizeClass": "hut",
+     "purpose": "dying generator, fuel store and the small morgue, a stray bunking in the boiler room",
+     "units": null,
+     "residents": 1,
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Ambulance",
+      "count": 2,
+      "hint": "beside:Emergency Department"
+     },
+     {
+      "template": "Dead car",
+      "count": 5,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Waiting bench",
+      "count": 1,
+      "hint": "front:Admissions Lobby"
+     },
+     {
+      "template": "Dead streetlight",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Rubble pile",
+      "count": 6,
+      "hint": "scatter"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Maple tree",
+      "density": "medium"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Barlow Court",
+   "to": "Pike's Crossing",
+   "kind": "paved"
+  },
+  {
+   "from": "Pike's Crossing",
+   "to": "Kettle Hill",
+   "kind": "paved"
+  },
+  {
+   "from": "Barlow Court",
+   "to": "Kettle Hill",
+   "kind": "paved"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Apartment bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "light": 0,
+   "description": "A sagging mattress on a cheap frame, doubled-up sleepers in the crowded flats.",
+   "physicalDescription": "A low rectangle bed with rumpled bedding pushed against a wall",
+   "tags": [
+    "bed",
+    "sleep",
+    "indoor"
+   ],
+   "rule": "One per sleeper along the bedroom wall of every Barlow apartment; crowded Cedar Walk-Up units may line two along the same wall."
+  },
+  {
+   "name": "Roll cot",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "light": 0,
+   "description": "A canvas camp cot where night watches and lone holdouts sleep.",
+   "physicalDescription": "A narrow canvas cot with a folded blanket at one end",
+   "tags": [
+    "bed",
+    "sleep",
+    "portable"
+   ],
+   "rule": "One per watch post: guard shack corner, laundry boil-watch, store offices, and hospital holdout corners, always away_from_door."
+  },
+  {
+   "name": "Hospital gurney",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "light": 0,
+   "description": "A wheeled hospital bed some holdout has claimed with a bedroll.",
+   "physicalDescription": "A narrow wheeled gurney with a thin mattress and hanging IV pole",
+   "tags": [
+    "bed",
+    "sleep",
+    "hospital"
+   ],
+   "rule": "One per Mercy Ward patient room in rows along the ward walls, and one per Emergency triage bay; the lobby keeps its benches instead."
+  },
+  {
+   "name": "Bedroom dresser",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A scratched veneer dresser holding everything a family had left.",
+   "physicalDescription": "A square four-drawer dresser with one drawer half open",
+   "tags": [
+    "storage",
+    "indoor"
+   ],
+   "rule": "Against the bedroom wall beside the apartment bed, one per apartment.",
+   "lootPool": "Dresser drawers"
+  },
+  {
+   "name": "Kitchen cupboard",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wall cupboard above the counter, stripped to cans and dust.",
+   "physicalDescription": "A small wall-mounted cupboard with sagging doors",
+   "tags": [
+    "storage",
+    "kitchen"
+   ],
+   "rule": "Against the wall nearest the door of every apartment kitchenette and in Hao's back kitchen.",
+   "lootPool": "Kitchen cupboard"
+  },
+  {
+   "name": "Kitchen table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wobbly table that serves meals, card games, and council arguments.",
+   "physicalDescription": "A plain rectangular table with a scarred top",
+   "tags": [
+    "table",
+    "indoor"
+   ],
+   "rule": "Center of each Barlow apartment's main room; the Manager's Flat uses one as the council table."
+  },
+  {
+   "name": "Kitchen chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A mismatched wooden chair, extras dragged wherever people argue.",
+   "physicalDescription": "A single wooden chair with a worn seat",
+   "tags": [
+    "chair",
+    "indoor"
+   ],
+   "rule": "Two to four around every kitchen table, plus one at the guard shack desk and each nurses' station."
+  },
+  {
+   "name": "Battery lantern",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "A battery lantern rationed like ammunition since the grid died.",
+   "physicalDescription": "A small glowing lantern casting a warm pool of light",
+   "tags": [
+    "light",
+    "indoor"
+   ],
+   "rule": "One per occupied room, set on tables, counters, and shelves; the only indoor light left in town."
+  },
+  {
+   "name": "Boiling pot",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.2,
+   "description": "A big pot over a propane burner, making water safe one batch at a time.",
+   "physicalDescription": "A steaming pot on a small burner with a faint flame glow beneath",
+   "tags": [
+    "work",
+    "kitchen",
+    "light"
+   ],
+   "rule": "In a row along the Laundry Block wall beside the wash tubs, and one on any crew kitchen fire."
+  },
+  {
+   "name": "Wash tub",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A galvanized tub where laundry is scrubbed by hand and dried on lines.",
+   "physicalDescription": "An oval galvanized tub with a washboard leaning inside",
+   "tags": [
+    "work",
+    "laundry"
+   ],
+   "rule": "Two or three in a row along the Laundry Block's back wall, beside the boiling pots."
+  },
+  {
+   "name": "Workbench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A scarred bench where weapons are taped, generators coaxed, and hinges pried.",
+   "physicalDescription": "A cluttered workbench with a vise and scattered hand tools",
+   "tags": [
+    "work",
+    "storage",
+    "tools"
+   ],
+   "rule": "One against the wall of the Groundskeeper Shed and one in the Maintenance Annex beside the generator.",
+   "lootPool": "Workbench"
+  },
+  {
+   "name": "Service counter",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A worn checkout or reception counter, now a barrier and a desk.",
+   "physicalDescription": "A long counter with a dead register and a bell on top",
+   "tags": [
+    "table",
+    "storage",
+    "work"
+   ],
+   "rule": "At the front of every Pike's Crossing storefront, plus hospital reception, the nurses' station, and the guard shack sign-in.",
+   "lootPool": "Service counter"
+  },
+  {
+   "name": "Clothing rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A picked-over rolling rack still holding coats and boots worth fighting over.",
+   "physicalDescription": "A clothing rack with a few hanging garments on hangers",
+   "tags": [
+    "storage",
+    "shop"
+   ],
+   "rule": "In rows across Fielder's floor from the door to the counter; a lone stripped rack may stand in Dollar Star.",
+   "lootPool": "Clothing rack"
+  },
+  {
+   "name": "Shelf rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tall metal shelf unit, its stock long since thinned by looters.",
+   "physicalDescription": "A tall shelf unit with bare spots and a few leftover boxes",
+   "tags": [
+    "storage",
+    "shop"
+   ],
+   "rule": "Along the back wall of every store, the hospital supply closet, and the Groundskeeper Shed.",
+   "lootPool": "Stripped shelf"
+  },
+  {
+   "name": "Pharmacy locker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A locked steel medicine cabinet every group in town wants opened.",
+   "physicalDescription": "A steel medicine cabinet with a padlock and mesh door",
+   "tags": [
+    "storage",
+    "locked",
+    "medical"
+   ],
+   "rule": "Behind the Cornerstone Pharmacy counter, locked, opened only by the pharmacy key.",
+   "lootPool": "Pharmacy locker"
+  },
+  {
+   "name": "Waiting bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.3,
+   "forSleep": false,
+   "light": 0,
+   "description": "A vinyl-upholstered waiting bench where the first frightened families sat.",
+   "physicalDescription": "A long bench with a vinyl seat, several in a row against a wall",
+   "tags": [
+    "bench",
+    "landmark"
+   ],
+   "rule": "In rows against the Admissions Lobby walls, and one bench in the Kettle Hill memorial garden."
+  },
+  {
+   "name": "Fire barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.8,
+   "description": "A burning oil barrel the whole courtyard gathers around after dark.",
+   "physicalDescription": "A standing barrel with bright flames and a glow of embers",
+   "tags": [
+    "light",
+    "landmark",
+    "fire"
+   ],
+   "rule": "Clustered at the Barlow courtyard center, and one at the Pike's Crossing loading bay for the squatter crew."
+  },
+  {
+   "name": "Barricade gate",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "light": 0,
+   "description": "The chain-link and plywood gate, the only way in or out of Barlow Court.",
+   "physicalDescription": "A wide gate of plywood sheets wired to a chain-link frame, closed with a bar",
+   "tags": [
+    "landmark",
+    "gate",
+    "barricade"
+   ],
+   "rule": "The single opening in Barlow Court's fence line, fronting the parking approach and flanked by the scaffolds."
+  },
+  {
+   "name": "Plywood barricade",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "light": 0,
+   "description": "Screwed-up plywood and scavenged boards sealing a window or gap.",
+   "physicalDescription": "Crossed plywood panels nailed over an opening, edges stuffed with scraps",
+   "tags": [
+    "barricade",
+    "prop"
+   ],
+   "rule": "In continuous lines over Barlow's ground-floor windows and doorways, and across the gaps between Pike's Crossing storefronts."
+  },
+  {
+   "name": "Lookout scaffold",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": false,
+   "light": 0,
+   "description": "A lumber scaffold where a watcher with a lantern scans the street.",
+   "physicalDescription": "A raised wooden platform on posts with a rail and ladder",
+   "tags": [
+    "landmark",
+    "watch"
+   ],
+   "rule": "At the two front corners of the Barlow barricade, each overlooking the gate."
+  },
+  {
+   "name": "Rain barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A food-grade barrel catching roof runoff for laundry and boiling.",
+   "physicalDescription": "A round barrel under a downspout with a ladle hanging on the rim",
+   "tags": [
+    "storage",
+    "water"
+   ],
+   "rule": "Under every Barlow Court downspout, with a cluster of three beside the Laundry Block."
+  },
+  {
+   "name": "Garden box",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.3,
+   "forSleep": false,
+   "light": 0,
+   "description": "A raised bed of late kale and stubborn greens, guarded like gold.",
+   "physicalDescription": "A wooden planter box with rows of green leaves and dirt",
+   "tags": [
+    "plant",
+    "food"
+   ],
+   "rule": "In a row along the courtyard's sunniest edge, where the whole complex can see them."
+  },
+  {
+   "name": "Dead car",
+   "size": [
+    3,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sedan abandoned where it stalled, doors open or windows starred.",
+   "physicalDescription": "A boxy parked sedan with flat tires and a shattered window",
+   "tags": [
+    "vehicle",
+    "landmark"
+   ],
+   "rule": "Scattered through the Barlow dead lot, Pike's Crossing parking, and Kettle Hill staff parking at skewed angles.",
+   "lootPool": "Dead car"
+  },
+  {
+   "name": "Ambulance",
+   "size": [
+    3,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ambulance abandoned mid-load in the first days, still faintly smelling of blood.",
+   "physicalDescription": "A boxy white ambulance with a red stripe and open rear doors",
+   "tags": [
+    "vehicle",
+    "landmark",
+    "medical"
+   ],
+   "rule": "Two parked in the Kettle Hill ambulance bay, rear doors hanging open toward the walk.",
+   "lootPool": "Ambulance cab"
+  },
+  {
+   "name": "Dumpster",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A dented dumpster looters still pick through for anything missed.",
+   "physicalDescription": "A rusted green dumpster with an open lid and trash spilling out",
+   "tags": [
+    "storage",
+    "trash"
+   ],
+   "rule": "In the corral behind the Pike's Crossing loading bay, and one behind Barlow's Laundry Block.",
+   "lootPool": "Dumpster corral"
+  },
+  {
+   "name": "Shopping cart nest",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.4,
+   "forSleep": false,
+   "light": 0,
+   "description": "A row of nested carts in the return rail, useful for hauling salvage.",
+   "physicalDescription": "Several shopping carts nested together inside a metal rail",
+   "tags": [
+    "prop",
+    "storage"
+   ],
+   "rule": "In the cart return at the Pike's Crossing lot edge, with two or three stray carts scattered across the lot."
+  },
+  {
+   "name": "Dead streetlight",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A streetlight that hasn't glowed since the grid failed three weeks back.",
+   "physicalDescription": "A curved metal pole with a dark lamp head, no light at all",
+   "tags": [
+    "landmark",
+    "street"
+   ],
+   "rule": "In a line along the Pike's Crossing storefront walk and the access road, every lamp dark."
+  },
+  {
+   "name": "Backup generator",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "The hospital's wheezing diesel generator, coaxed alive a few hours at a time.",
+   "physicalDescription": "A dented generator unit with pipes, gauges, and fuel cans stacked at its side",
+   "tags": [
+    "work",
+    "landmark",
+    "power"
+   ],
+   "rule": "Against the Maintenance Annex back wall with its exhaust piped through the roof, fuel cans stacked beside it."
+  },
+  {
+   "name": "Rubble pile",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "light": 0,
+   "description": "Broken glass, brick, and smashed shelving swept into a heap.",
+   "physicalDescription": "A scatter of gray rubble chunks and splintered boards",
+   "tags": [
+    "debris",
+    "prop"
+   ],
+   "rule": "Scattered at barricade bases, along the hospital lawn and walkways, and around the parking wrecks."
+  },
+  {
+   "name": "Maple tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A maple going red-gold over dead lawns and empty lots.",
+   "physicalDescription": "A round-canopy tree with red-orange autumn leaves and fallen-leaf ring",
+   "tags": [
+    "plant",
+    "tree"
+   ],
+   "rule": "Clustered on the Kettle Hill lawn and street edges; one old maple shades the Barlow courtyard corner."
+  }
+ ],
+ "items": [
+  {
+   "name": "Canned beans",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A dented can of beans, currency as much as food.",
+   "physicalDescription": "A small dented tin can with a faded label showing beans, white background"
+  },
+  {
+   "name": "Canned peaches",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "Syrup-heavy peaches that feel like a birthday.",
+   "physicalDescription": "A golden tin can with a peach illustration on the label, white background"
+  },
+  {
+   "name": "Peanut butter jar",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "Calories that keep, if you can spare the water to chase it.",
+   "physicalDescription": "A squat plastic jar of peanut butter with a brown lid, white background"
+  },
+  {
+   "name": "Ramen bricks",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A crumbled noodle pack, seasoning long since eaten dry for fun.",
+   "physicalDescription": "A shrink-wrapped noodle block with a tiny foil seasoning packet, white background"
+  },
+  {
+   "name": "Granola bar",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A chewy oat bar that fits in a jacket pocket.",
+   "physicalDescription": "A wrapped granola bar with visible oats and a torn corner, white background"
+  },
+  {
+   "name": "Bottled water",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "Sealed water, worth more than the plastic it comes in.",
+   "physicalDescription": "A clear plastic water bottle with a blue cap, full and sealed, white background"
+  },
+  {
+   "name": "Instant coffee tin",
+   "type": "consumable",
+   "quality": "common",
+   "value": 7,
+   "description": "Coffee crystals that trade for favors before dawn watch.",
+   "physicalDescription": "A red instant coffee tin with a plastic lid, white background"
+  },
+  {
+   "name": "Bourbon bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 15,
+   "description": "Half a bottle of Kentucky bourbon for pain, cold, or barter.",
+   "physicalDescription": "A square whiskey bottle with a cork and amber liquid half gone, white background"
+  },
+  {
+   "name": "Pain pills",
+   "type": "consumable",
+   "quality": "common",
+   "value": 10,
+   "description": "A pharmacy bottle of ibuprofen counted out tablet by tablet.",
+   "physicalDescription": "An orange prescription pill bottle with a white cap, white background"
+  },
+  {
+   "name": "Cough syrup",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "Bottled drowse for the coughing nights in the cold flats.",
+   "physicalDescription": "A dark amber cough syrup bottle with a measuring cup, white background"
+  },
+  {
+   "name": "Antibiotics",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 30,
+   "description": "A blister pack of pills worth a locked cabinet and an argument.",
+   "physicalDescription": "A foil blister pack of white pills with a pharmacy label, white background"
+  },
+  {
+   "name": "Bandage roll",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "A roll of gauze that buys goodwill at any barricade.",
+   "physicalDescription": "A white gauze bandage roll partially unwrapped, white background"
+  },
+  {
+   "name": "First-aid kit",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "A stocked kit in a red case, every run crew's prize.",
+   "physicalDescription": "A red first-aid case with a white cross and latches, white background"
+  },
+  {
+   "name": "Rubbing alcohol",
+   "type": "consumable",
+   "quality": "common",
+   "value": 6,
+   "description": "A bottle that cleans wounds and stubborn spirits.",
+   "physicalDescription": "A clear plastic bottle of rubbing alcohol with a white label, white background"
+  },
+  {
+   "name": "Insulin kit",
+   "type": "consumable",
+   "quality": "rare",
+   "value": 80,
+   "description": "A cooler-pack of insulin that someone at Barlow quietly needs to live.",
+   "physicalDescription": "A small medical cooler pouch with a vial and syringe, white background"
+  },
+  {
+   "name": "Kitchen knife",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 6,
+   "description": "A cheap chef's knife wrapped in tape at the handle.",
+   "physicalDescription": "A kitchen chef knife with a taped black handle, white background"
+  },
+  {
+   "name": "Claw hammer",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 8,
+   "description": "A claw hammer that builds barricades and occasionally ends arguments.",
+   "physicalDescription": "A steel claw hammer with a worn wooden handle, white background"
+  },
+  {
+   "name": "Crowbar",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 15,
+   "description": "A pry bar that opens doors, crates, and skulls.",
+   "physicalDescription": "A dark steel crowbar with a hooked end, white background"
+  },
+  {
+   "name": "Baseball bat",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "An aluminum bat, dented from three weeks of close work.",
+   "physicalDescription": "A dented aluminum baseball bat with grip tape, white background"
+  },
+  {
+   "name": "Hatchet",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A camp hatchet for wood, wire, and worse.",
+   "physicalDescription": "A small hand hatchet with a wooden handle and steel head, white background"
+  },
+  {
+   "name": "Hunting knife",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 18,
+   "description": "A belt knife with a bone handle, carried openly at Barlow.",
+   "physicalDescription": "A sheathed hunting knife with a stag handle, white background"
+  },
+  {
+   "name": "Bolt cutters",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 22,
+   "description": "Long-handled cutters that defeat fences, chains, and padlocks.",
+   "physicalDescription": "A pair of long red-handled bolt cutters, white background"
+  },
+  {
+   "name": "Bear spray",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "A can of bear spray everyone swears works on the dead, too.",
+   "physicalDescription": "A black pepper spray canister with an orange safety clip, white background"
+  },
+  {
+   "name": "Lever-action rifle",
+   "type": "wieldable",
+   "quality": "rare",
+   "value": 120,
+   "description": "A deer rifle with nine rounds left and a reputation at Barlow.",
+   "physicalDescription": "A wooden lever-action rifle with a worn blued barrel, white background"
+  },
+  {
+   "name": "Pump shotgun",
+   "type": "wieldable",
+   "quality": "epic",
+   "value": 200,
+   "description": "A pump twelve-gauge, the closest thing to authority left in town.",
+   "physicalDescription": "A pump-action shotgun with a walnut stock and shell holder, white background"
+  },
+  {
+   "name": "AA batteries",
+   "type": "misc",
+   "quality": "common",
+   "value": 6,
+   "description": "A card of AAs, hoarded harder than food since the lights went.",
+   "physicalDescription": "A blister card of four AA batteries, white background"
+  },
+  {
+   "name": "LED flashlight",
+   "type": "misc",
+   "quality": "common",
+   "value": 12,
+   "description": "A rubber-cased torch with a dying beam.",
+   "physicalDescription": "A black rubber LED flashlight standing upright, white background"
+  },
+  {
+   "name": "Butane lighter",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A gas lighter everyone pockets when nobody's looking.",
+   "physicalDescription": "A small transparent butane lighter with fuel visible, white background"
+  },
+  {
+   "name": "Candle box",
+   "type": "misc",
+   "quality": "common",
+   "value": 4,
+   "description": "Emergency candles burned down to stubs and shadows.",
+   "physicalDescription": "A cardboard box of white taper candles, one stub beside it, white background"
+  },
+  {
+   "name": "Duct tape roll",
+   "type": "material",
+   "quality": "common",
+   "value": 7,
+   "description": "A half roll of duct tape holding the whole town together.",
+   "physicalDescription": "A gray duct tape roll with the end peeled up, white background"
+  },
+  {
+   "name": "Cigarette carton",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 18,
+   "description": "A sealed carton that trades like silver at the courtyard fire.",
+   "physicalDescription": "A cellophane-wrapped cigarette carton with tax stamp, white background"
+  },
+  {
+   "name": "Banded cash",
+   "type": "misc",
+   "quality": "common",
+   "value": 10,
+   "description": "A rubber-banded wad of twenties nobody wants anymore.",
+   "physicalDescription": "A thick band of twenty dollar bills held with a rubber band, white background"
+  },
+  {
+   "name": "Dead smartphone",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A black-screened phone kept for photos of people gone.",
+   "physicalDescription": "A cracked smartphone with a dead black screen, white background"
+  },
+  {
+   "name": "Wind-up watch",
+   "type": "ring",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A wristwatch that still ticks, the only clock that matters now.",
+   "physicalDescription": "A silver wind-up wristwatch with a leather strap, white background"
+  },
+  {
+   "name": "Hand-crank radio",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 40,
+   "description": "A crank radio that catches nothing but static on every band.",
+   "physicalDescription": "A green hand-crank emergency radio with a fold-out handle, white background"
+  },
+  {
+   "name": "Deck of cards",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A dog-eared deck that settles watch shifts and grudges.",
+   "physicalDescription": "A worn playing card box with cards fanned beside it, white background"
+  },
+  {
+   "name": "Shotgun shells",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 45,
+   "description": "A partly full box of twelve-gauge shells, counted nightly.",
+   "physicalDescription": "An open red box of shotgun shells with brass visible, white background"
+  },
+  {
+   "name": "Rifle cartridges",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "A box of deer-rifle rounds thinned by three weeks of runs.",
+   "physicalDescription": "An open cardboard box of rifle cartridges, white background"
+  },
+  {
+   "name": "Pharmacy key",
+   "type": "misc",
+   "quality": "rare",
+   "value": 50,
+   "description": "The small key to Cornerstone's locked cabinets, carried by its keeper and wanted by all.",
+   "physicalDescription": "A small brass key with a paper pharmacy tag, white background"
+  },
+  {
+   "name": "Laundry soap bar",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A gray bar of soap that scrubs blood out of jacket cuffs.",
+   "physicalDescription": "A worn gray bar of laundry soap, white background"
+  },
+  {
+   "name": "Gasoline can",
+   "type": "material",
+   "quality": "common",
+   "value": 15,
+   "description": "A plastic jerry can of siphoned gas for the generator and the lanterns.",
+   "physicalDescription": "A red plastic fuel can with a spout and handle, white background"
+  },
+  {
+   "name": "Propane canister",
+   "type": "material",
+   "quality": "common",
+   "value": 9,
+   "description": "A green propane bottle that keeps the boil pots going.",
+   "physicalDescription": "A green propane canister with a threaded valve top, white background"
+  },
+  {
+   "name": "Paracord bundle",
+   "type": "material",
+   "quality": "uncommon",
+   "value": 12,
+   "description": "Fifty feet of paracord worth its weight in zip ties.",
+   "physicalDescription": "A coiled bundle of olive paracord tied off with a knot, white background"
+  },
+  {
+   "name": "Tarp sheet",
+   "type": "material",
+   "quality": "common",
+   "value": 9,
+   "description": "A folded blue tarp that patches roofs and hides loot.",
+   "physicalDescription": "A folded blue plastic tarp with grommet corners showing, white background"
+  },
+  {
+   "name": "Flannel shirt",
+   "type": "torso",
+   "quality": "common",
+   "value": 8,
+   "description": "A soft flannel shirt, extra layers meaning life by November.",
+   "physicalDescription": "A folded red-and-black plaid flannel shirt, white background"
+  },
+  {
+   "name": "Work jacket",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A canvas work coat that shrugs off rain and teeth alike.",
+   "physicalDescription": "A brown canvas work jacket with a corduroy collar, white background"
+  },
+  {
+   "name": "Rain poncho",
+   "type": "torso",
+   "quality": "common",
+   "value": 12,
+   "description": "A crinkled poncho that keeps watch shifts dry.",
+   "physicalDescription": "A folded clear-yellow rain poncho with a hood, white background"
+  },
+  {
+   "name": "Winter coat",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "A down winter coat the days keep making more worth stealing.",
+   "physicalDescription": "A puffy dark green down coat with a fur-lined hood, white background"
+  },
+  {
+   "name": "Denim jeans",
+   "type": "pants",
+   "quality": "common",
+   "value": 8,
+   "description": "Jeans worn four days running, like everything else.",
+   "physicalDescription": "A folded pair of blue denim jeans, white background"
+  },
+  {
+   "name": "Beanie",
+   "type": "head",
+   "quality": "common",
+   "value": 6,
+   "description": "A knit watch cap that marks you as one of Barlow's own.",
+   "physicalDescription": "A dark knit beanie cap, white background"
+  },
+  {
+   "name": "Headlamp",
+   "type": "head",
+   "quality": "uncommon",
+   "value": 16,
+   "description": "An elastic headlamp that keeps both hands free for a crowbar.",
+   "physicalDescription": "A black headlamp on a stretchy strap, white background"
+  },
+  {
+   "name": "Bandana mask",
+   "type": "face",
+   "quality": "common",
+   "value": 5,
+   "description": "A bandana over the nose, half habit and half armor.",
+   "physicalDescription": "A red bandana tied in a loop for wearing over the face, white background"
+  },
+  {
+   "name": "Particulate mask",
+   "type": "face",
+   "quality": "common",
+   "value": 8,
+   "description": "An N95 mask from the hospital stores, elastic gone slack.",
+   "physicalDescription": "A white N95 particulate mask with two straps, white background"
+  },
+  {
+   "name": "Work gloves",
+   "type": "gloves",
+   "quality": "common",
+   "value": 6,
+   "description": "Split-leather gloves that keep hands usable after rope and rubble.",
+   "physicalDescription": "A pair of brown leather work gloves with canvas cuffs, white background"
+  },
+  {
+   "name": "Hiking boots",
+   "type": "boots",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "Broken-in boots that can outrun trouble down Kettle Hill.",
+   "physicalDescription": "A pair of brown leather hiking boots with laces, white background"
+  },
+  {
+   "name": "Scrubs top",
+   "type": "innerTorso",
+   "quality": "common",
+   "value": 5,
+   "description": "A faded scrub shirt from the fallen hospital, warm enough to sleep in.",
+   "physicalDescription": "A folded teal hospital scrubs top, white background"
+  },
+  {
+   "name": "Thermal top",
+   "type": "innerTorso",
+   "quality": "common",
+   "value": 12,
+   "description": "A waffle-knit thermal that makes a thin jacket honest.",
+   "physicalDescription": "A folded white waffle-knit long-sleeve thermal shirt, white background"
+  },
+  {
+   "name": "Saint Christopher medal",
+   "type": "necklace",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A traveler's medal on a chain, left behind by someone who ran.",
+   "physicalDescription": "A small silver Saint Christopher medal on a chain, white background"
+  },
+  {
+   "name": "Gold chain",
+   "type": "necklace",
+   "quality": "rare",
+   "value": 70,
+   "description": "A real gold chain, the only thing from the mall still worth anything.",
+   "physicalDescription": "A fine gold necklace chain coiled in a loop, white background"
+  },
+  {
+   "name": "Wedding band",
+   "type": "ring",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "A gold band nobody at Barlow asks the story behind.",
+   "physicalDescription": "A simple gold wedding band standing on edge, white background"
+  }
+ ],
+ "lootPools": {
+  "Kitchen cupboard": {
+   "items": [
+    "Canned beans",
+    "Canned peaches",
+    "Peanut butter jar",
+    "Ramen bricks",
+    "Granola bar",
+    "Bottled water",
+    "Instant coffee tin"
+   ],
+   "weights": {
+    "Peanut butter jar": 0.6,
+    "Instant coffee tin": 0.5,
+    "Canned peaches": 0.7
+   }
+  },
+  "Dresser drawers": {
+   "items": [
+    "Flannel shirt",
+    "Thermal top",
+    "Beanie",
+    "Bandana mask",
+    "Work gloves",
+    "Dead smartphone",
+    "Butane lighter",
+    "Candle box",
+    "Wedding band",
+    "Wind-up watch"
+   ],
+   "weights": {
+    "Wedding band": 0.1,
+    "Wind-up watch": 0.25
+   }
+  },
+  "Service counter": {
+   "items": [
+    "LED flashlight",
+    "AA batteries",
+    "Butane lighter",
+    "Banded cash",
+    "Cigarette carton",
+    "Deck of cards",
+    "Bandage roll"
+   ],
+   "weights": {
+    "Cigarette carton": 0.3,
+    "Banded cash": 0.5
+   }
+  },
+  "Stripped shelf": {
+   "items": [
+    "Candle box",
+    "AA batteries",
+    "Butane lighter",
+    "Duct tape roll",
+    "Bottled water",
+    "Granola bar",
+    "Bandana mask",
+    "Deck of cards",
+    "Tarp sheet"
+   ],
+   "weights": {
+    "Tarp sheet": 0.4,
+    "Bottled water": 0.6
+   }
+  },
+  "Clothing rack": {
+   "items": [
+    "Flannel shirt",
+    "Denim jeans",
+    "Work jacket",
+    "Rain poncho",
+    "Beanie",
+    "Thermal top",
+    "Winter coat",
+    "Hiking boots"
+   ],
+   "weights": {
+    "Winter coat": 0.4,
+    "Hiking boots": 0.35,
+    "Work jacket": 0.6
+   }
+  },
+  "Sporting goods shelf": {
+   "items": [
+    "Baseball bat",
+    "Hatchet",
+    "Hunting knife",
+    "Bear spray",
+    "Paracord bundle",
+    "Tarp sheet",
+    "First-aid kit",
+    "Shotgun shells",
+    "Rifle cartridges"
+   ],
+   "weights": {
+    "First-aid kit": 0.4,
+    "Shotgun shells": 0.15,
+    "Rifle cartridges": 0.15
+   }
+  },
+  "Gun counter case": {
+   "items": [
+    "Pump shotgun",
+    "Lever-action rifle",
+    "Shotgun shells",
+    "Rifle cartridges",
+    "Bear spray",
+    "Hunting knife"
+   ],
+   "weights": {
+    "Pump shotgun": 0.05,
+    "Lever-action rifle": 0.06,
+    "Shotgun shells": 0.5,
+    "Rifle cartridges": 0.5
+   }
+  },
+  "Pharmacy locker": {
+   "items": [
+    "Pain pills",
+    "Cough syrup",
+    "Antibiotics",
+    "Bandage roll",
+    "Rubbing alcohol",
+    "First-aid kit",
+    "Insulin kit",
+    "Particulate mask"
+   ],
+   "weights": {
+    "Antibiotics": 0.3,
+    "Insulin kit": 0.05,
+    "First-aid kit": 0.35
+   }
+  },
+  "Medical supply shelf": {
+   "items": [
+    "Bandage roll",
+    "Rubbing alcohol",
+    "Pain pills",
+    "Cough syrup",
+    "Particulate mask",
+    "First-aid kit"
+   ],
+   "weights": {
+    "First-aid kit": 0.2
+   }
+  },
+  "Workbench": {
+   "items": [
+    "Claw hammer",
+    "Crowbar",
+    "Hatchet",
+    "Bolt cutters",
+    "Duct tape roll",
+    "Paracord bundle",
+    "Propane canister",
+    "Gasoline can",
+    "Tarp sheet"
+   ],
+   "weights": {
+    "Bolt cutters": 0.2,
+    "Gasoline can": 0.5
+   }
+  },
+  "Dumpster corral": {
+   "items": [
+    "Butane lighter",
+    "Candle box",
+    "Duct tape roll",
+    "Tarp sheet",
+    "Bandage roll",
+    "Bourbon bottle",
+    "Laundry soap bar"
+   ],
+   "weights": {
+    "Bourbon bottle": 0.1,
+    "Tarp sheet": 0.3
+   }
+  },
+  "Dead car": {
+   "items": [
+    "LED flashlight",
+    "Butane lighter",
+    "Dead smartphone",
+    "Gasoline can",
+    "Cigarette carton",
+    "Deck of cards",
+    "Rain poncho"
+   ],
+   "weights": {
+    "Gasoline can": 0.4,
+    "Cigarette carton": 0.2,
+    "Rain poncho": 0.4
+   }
+  },
+  "Ambulance cab": {
+   "items": [
+    "Bandage roll",
+    "First-aid kit",
+    "Pain pills",
+    "Rubbing alcohol",
+    "Particulate mask",
+    "Antibiotics"
+   ],
+   "weights": {
+    "Antibiotics": 0.15,
+    "First-aid kit": 0.4
+   }
+  },
+  "Laundry shelf": {
+   "items": [
+    "Laundry soap bar",
+    "Work gloves",
+    "Thermal top",
+    "Candle box",
+    "Bottled water"
+   ],
+   "weights": {}
+  }
+ },
+ "buildings": [
+  {
+   "name": "Cedar Walk-Up",
+   "wall": "wood",
+   "ground": "scuffed linoleum",
+   "rooms": [
+    {
+     "name": "Entry Hall",
+     "share": "small",
+     "purpose": "vestibule where the gate path meets the building door; boots, coats, and boards over the ground-floor windows"
+    },
+    {
+     "name": "Stairwell",
+     "share": "small",
+     "purpose": "switchback stairs and landing linking the two floors"
+    },
+    {
+     "name": "First-Floor Gallery",
+     "share": "medium",
+     "purpose": "inner corridor with the doors of apartments 1-4 along it"
+    },
+    {
+     "name": "Second-Floor Gallery",
+     "share": "medium",
+     "purpose": "upper corridor with the doors of apartments 5-8 and the plywood hatch out to the barricade walkway"
+    }
+   ],
+   "connections": [
+    [
+     "Entry Hall",
+     "Stairwell"
+    ],
+    [
+     "Stairwell",
+     "First-Floor Gallery"
+    ],
+    [
+     "Stairwell",
+     "Second-Floor Gallery"
+    ]
+   ],
+   "entrance": {
+    "room": "Entry Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Waiting bench",
+     "room": "Entry Hall",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Entry Hall",
+     "count": 1,
+     "hint": "beside:Waiting bench"
+    },
+    {
+     "template": "Plywood barricade",
+     "room": "Entry Hall",
+     "count": 2,
+     "hint": "symmetric"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Stairwell",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "First-Floor Gallery",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "First-Floor Gallery",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Plywood barricade",
+     "room": "First-Floor Gallery",
+     "count": 2,
+     "hint": "row:south"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Second-Floor Gallery",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Second-Floor Gallery",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Second-Floor Gallery",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Stripped shelf"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Main Room",
+      "share": "small",
+      "purpose": "kitchenette and sitting room where the apartment door opens in"
+     },
+     {
+      "name": "Bedroom",
+      "share": "small",
+      "purpose": "cramped sleeping room shared by the apartment's two residents"
+     }
+    ],
+    "connections": [
+     [
+      "Main Room",
+      "Bedroom"
+     ]
+    ],
+    "entrance": {
+     "room": "Main Room",
+     "side": "east"
+    },
+    "furniture": [
+     {
+      "template": "Kitchen table",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Kitchen chair",
+      "room": "Main Room",
+      "count": 3,
+      "hint": "around:Kitchen table"
+     },
+     {
+      "template": "Kitchen cupboard",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "near_door+corner",
+      "lootPool": "Kitchen cupboard"
+     },
+     {
+      "template": "Battery lantern",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "beside:Kitchen table"
+     },
+     {
+      "template": "Apartment bed",
+      "room": "Bedroom",
+      "count": 2,
+      "hint": "row:north"
+     },
+     {
+      "template": "Bedroom dresser",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:north+beside:Apartment bed",
+      "lootPool": "Dresser drawers"
+     },
+     {
+      "template": "Battery lantern",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "beside:Bedroom dresser"
+     }
+    ]
+   },
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Dogwood Walk-Up",
+   "wall": "wood",
+   "ground": "worn carpet",
+   "rooms": [
+    {
+     "name": "Ground Hall",
+     "share": "small",
+     "purpose": "street-door vestibule where the block's elders pull off boots and the residents' chalkboard of chores hangs by the stairs"
+    },
+    {
+     "name": "Upper Landing",
+     "share": "small",
+     "purpose": "upper corridor landing with the three apartment doors and the window that watches the courtyard"
+    }
+   ],
+   "connections": [
+    [
+     "Ground Hall",
+     "Upper Landing"
+    ]
+   ],
+   "entrance": {
+    "room": "Ground Hall",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Plywood barricade",
+     "room": "Ground Hall",
+     "count": 2,
+     "hint": "wall:west+symmetric"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Ground Hall",
+     "count": 2,
+     "hint": "wall:south+symmetric"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Ground Hall",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Plywood barricade",
+     "room": "Upper Landing",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Upper Landing",
+     "count": 1,
+     "hint": "wall:east"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Main Room",
+      "share": "small",
+      "purpose": "living room and kitchenette where two elders or a small family cook over canned heat and ration the lantern hours"
+     },
+     {
+      "name": "Bedroom",
+      "share": "small",
+      "purpose": "sleeping room with one bed per resident pushed along the same wall, dresser between them"
+     }
+    ],
+    "connections": [
+     [
+      "Main Room",
+      "Bedroom"
+     ]
+    ],
+    "entrance": {
+     "room": "Main Room",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Kitchen cupboard",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "near_door",
+      "lootPool": "Kitchen cupboard"
+     },
+     {
+      "template": "Kitchen table",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Kitchen chair",
+      "room": "Main Room",
+      "count": 3,
+      "hint": "around:Kitchen table"
+     },
+     {
+      "template": "Battery lantern",
+      "room": "Main Room",
+      "count": 1,
+      "hint": "beside:Kitchen table"
+     },
+     {
+      "template": "Apartment bed",
+      "room": "Bedroom",
+      "count": 2,
+      "hint": "row:north+away_from_door"
+     },
+     {
+      "template": "Bedroom dresser",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:north+beside:Apartment bed",
+      "lootPool": "Dresser drawers"
+     },
+     {
+      "template": "Battery lantern",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "beside:Bedroom dresser"
+     }
+    ]
+   },
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Manager's Flat",
+   "wall": "wood",
+   "ground": "faded carpet",
+   "rooms": [
+    {
+     "name": "Council Room",
+     "share": "medium",
+     "purpose": "main room and kitchenette where the survivor council meets around the old table",
+     "lootPool": "Kitchen cupboard"
+    },
+    {
+     "name": "Manager's Bedroom",
+     "share": "small",
+     "purpose": "the one private bunk room left in Barlow, kept by the manager herself"
+    },
+    {
+     "name": "Lease Office",
+     "share": "small",
+     "purpose": "the manager's old office, now storehouse for ledgers, spare keys and pooled supplies"
+    }
+   ],
+   "connections": [
+    [
+     "Council Room",
+     "Manager's Bedroom"
+    ],
+    [
+     "Council Room",
+     "Lease Office"
+    ]
+   ],
+   "entrance": {
+    "room": "Council Room",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Kitchen table",
+     "room": "Council Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Council Room",
+     "count": 4,
+     "hint": "around:Kitchen table"
+    },
+    {
+     "template": "Kitchen cupboard",
+     "room": "Council Room",
+     "count": 1,
+     "hint": "wall:west+near_door",
+     "lootPool": "Kitchen cupboard"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Council Room",
+     "count": 1,
+     "hint": "beside:Kitchen table"
+    },
+    {
+     "template": "Apartment bed",
+     "room": "Manager's Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Bedroom dresser",
+     "room": "Manager's Bedroom",
+     "count": 1,
+     "hint": "beside:Apartment bed",
+     "lootPool": "Dresser drawers"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Manager's Bedroom",
+     "count": 1,
+     "hint": "beside:Bedroom dresser"
+    },
+    {
+     "template": "Service counter",
+     "room": "Lease Office",
+     "count": 1,
+     "hint": "wall:north+away_from_door",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Lease Office",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Lease Office",
+     "count": 1,
+     "hint": "wall:east",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Lease Office",
+     "count": 1,
+     "hint": "beside:Service counter"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Guard Shack",
+   "wall": "wood",
+   "ground": "plywood",
+   "lootPool": "Service counter",
+   "rooms": [
+    {
+     "name": "Gate Watch Room",
+     "share": "small",
+     "purpose": "Gate watch and sign-in ledger for everyone passing the barricade gate, with a corner cot where the night volunteer sleeps; the shack's north door opens onto the courtyard and its south face sits against the gate walk.",
+     "lootPool": "Service counter"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Gate Watch Room",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Gate Watch Room",
+     "count": 1,
+     "hint": "near_door",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Gate Watch Room",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Gate Watch Room",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Gate Watch Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Laundry Block",
+   "wall": "wood",
+   "ground": "concrete floor",
+   "rooms": [
+    {
+     "name": "Wash Room",
+     "share": "medium",
+     "purpose": "hand-washing and boiling laundry in tubs and pots along the back wall, with a folding table for sorting"
+    },
+    {
+     "name": "Drying Room",
+     "share": "small",
+     "purpose": "hung lines and racks where clean laundry dries in the boiler warmth"
+    },
+    {
+     "name": "Boil-Watch Bunk",
+     "share": "small",
+     "purpose": "crash bunk for whoever draws boil-watch, keeping the pots tended through the night"
+    }
+   ],
+   "connections": [
+    [
+     "Wash Room",
+     "Drying Room"
+    ],
+    [
+     "Wash Room",
+     "Boil-Watch Bunk"
+    ]
+   ],
+   "entrance": {
+    "room": "Wash Room",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Wash tub",
+     "room": "Wash Room",
+     "count": 3,
+     "hint": "row:south"
+    },
+    {
+     "template": "Boiling pot",
+     "room": "Wash Room",
+     "count": 3,
+     "hint": "row:south+beside:Wash tub"
+    },
+    {
+     "template": "Kitchen table",
+     "room": "Wash Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Wash Room",
+     "count": 2,
+     "hint": "around:Kitchen table"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Wash Room",
+     "count": 1,
+     "hint": "wall:west+corner",
+     "lootPool": "Laundry shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Wash Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Clothing rack",
+     "room": "Drying Room",
+     "count": 2,
+     "hint": "symmetric",
+     "lootPool": "Clothing rack"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Drying Room",
+     "count": 1,
+     "hint": "beside:Clothing rack"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Boil-Watch Bunk",
+     "count": 1,
+     "hint": "away_from_door"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Boil-Watch Bunk",
+     "count": 1,
+     "hint": "corner",
+     "lootPool": "Laundry shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Boil-Watch Bunk",
+     "count": 1,
+     "hint": "away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Groundskeeper Shed",
+   "wall": "wood",
+   "ground": "concrete slab",
+   "lootPool": "Workbench",
+   "rooms": [
+    {
+     "name": "Workshop Floor",
+     "share": "small",
+     "purpose": "Single-room salvage and tool shed in the outer lot: the groundskeeper's workbench, racked parts and scrap, and a cot bedded down among them.",
+     "lootPool": "Workbench"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Workshop Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Workshop Floor",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Workbench"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Workshop Floor",
+     "count": 2,
+     "hint": "row:north",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Workshop Floor",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Workshop Floor",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Workshop Floor",
+     "count": 1,
+     "hint": "beside:Workbench"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Dollar Star",
+   "wall": "steel",
+   "ground": "linoleum tile",
+   "lootPool": "Stripped shelf",
+   "rooms": [
+    {
+     "name": "Sales Floor",
+     "share": "medium",
+     "purpose": "Picked-clean aisles of the variety store, shelf rows stripped down to candles and cleaning scraps, dust in the empty hangers"
+    },
+    {
+     "name": "Back Office",
+     "share": "small",
+     "purpose": "Cramped stockroom office where a lone drifter has nested among the leftover stock, watching the door"
+    }
+   ],
+   "connections": [
+    [
+     "Sales Floor",
+     "Back Office"
+    ]
+   ],
+   "entrance": {
+    "room": "Sales Floor",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "near_door",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Sales Floor",
+     "count": 3,
+     "hint": "row:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Clothing rack",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Clothing rack"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Back Office",
+     "count": 1,
+     "hint": "away_from_door"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Back Office",
+     "count": 1,
+     "hint": "wall:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Back Office",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Fielder's Clothing",
+   "wall": "brick",
+   "ground": "worn carpet",
+   "rooms": [
+    {
+     "name": "Sales Floor",
+     "share": "medium",
+     "purpose": "Picked-over sales floor with rows of coat and boot racks running from the front door to the counter",
+     "lootPool": "Clothing rack"
+    },
+    {
+     "name": "Fitting Room",
+     "share": "small",
+     "purpose": "Fitting stalls where the lone squatter boards over a plank bed and keeps out of sight"
+    },
+    {
+     "name": "Stock Room",
+     "share": "small",
+     "purpose": "Back stockroom stripped to bare shelving, with the rear door toward the neighboring stores"
+    }
+   ],
+   "connections": [
+    [
+     "Sales Floor",
+     "Fitting Room"
+    ],
+    [
+     "Sales Floor",
+     "Stock Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Sales Floor",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "wall:north+near_door",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Clothing rack",
+     "room": "Sales Floor",
+     "count": 3,
+     "hint": "center",
+     "lootPool": "Clothing rack"
+    },
+    {
+     "template": "Clothing rack",
+     "room": "Sales Floor",
+     "count": 2,
+     "hint": "row:west",
+     "lootPool": "Clothing rack"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Plywood barricade",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Rubble pile",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "beside:Plywood barricade"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Fitting Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Fitting Room",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Stock Room",
+     "count": 2,
+     "hint": "row:south",
+     "lootPool": "Stripped shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Ironline Sporting Goods",
+   "wall": "steel",
+   "ground": "concrete",
+   "rooms": [
+    {
+     "name": "Sales Floor",
+     "share": "medium",
+     "purpose": "Picked-over sporting goods storefront: checkout counter at the front, a long gun case swept clean along one wall, camping gear aisles thinned but not empty"
+    },
+    {
+     "name": "Stockroom",
+     "share": "small",
+     "purpose": "Cardboard-smelling back room where the squatter crew's watchman sleeps on a cot between stripped shelves and a small camp stove"
+    }
+   ],
+   "connections": [
+    [
+     "Sales Floor",
+     "Stockroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Sales Floor",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "wall:north+away_from_door",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Service counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Sales Floor",
+     "count": 3,
+     "hint": "row:south",
+     "lootPool": "Sporting goods shelf"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Sales Floor",
+     "count": 2,
+     "hint": "row:west",
+     "lootPool": "Sporting goods shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Stockroom",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Stockroom",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Stockroom",
+     "count": 2,
+     "hint": "row:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Boiling pot",
+     "room": "Stockroom",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Cornerstone Pharmacy",
+   "wall": "brick",
+   "ground": "worn linoleum",
+   "rooms": [
+    {
+     "name": "Sales Floor",
+     "share": "medium",
+     "purpose": "Half-stripped front shop opening north onto the Pike Row walk; aisles picked over, everything of value long since moved behind the counter."
+    },
+    {
+     "name": "Dispensary",
+     "share": "small",
+     "purpose": "Locked heart of the store behind the service counter, its steel lockers the thing every group in town wants opened; the shared doors to Ironline Sporting Goods and Hao's Wok Counter sit barred along the side walls."
+    },
+    {
+     "name": "Stockroom",
+     "share": "small",
+     "purpose": "Cardboard-cluttered stock room, mostly emptied during the first-week rush."
+    },
+    {
+     "name": "Keeper's Nook",
+     "share": "small",
+     "purpose": "The live-in keeper's bed-sit in the old office: cot, camp burner, hoarded tins, and the only warm corner in the building."
+    }
+   ],
+   "connections": [
+    [
+     "Sales Floor",
+     "Dispensary"
+    ],
+    [
+     "Dispensary",
+     "Stockroom"
+    ],
+    [
+     "Dispensary",
+     "Keeper's Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Sales Floor",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Sales Floor",
+     "count": 3,
+     "hint": "row:west",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "row:east",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Pharmacy locker",
+     "room": "Dispensary",
+     "count": 3,
+     "hint": "row:south",
+     "lootPool": "Pharmacy locker"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "beside:Shelf rack"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Stockroom",
+     "count": 1,
+     "hint": "row:north",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Stockroom",
+     "count": 1,
+     "hint": "row:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Keeper's Nook",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Kitchen cupboard",
+     "room": "Keeper's Nook",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Kitchen cupboard"
+    },
+    {
+     "template": "Boiling pot",
+     "room": "Keeper's Nook",
+     "count": 1,
+     "hint": "beside:Kitchen cupboard"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Keeper's Nook",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Dresser drawers"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Keeper's Nook",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Hao's Wok Counter",
+   "wall": "steel",
+   "ground": "greasy linoleum",
+   "rooms": [
+    {
+     "name": "Front Counter",
+     "share": "small",
+     "purpose": "Stripped takeout lobby facing the parking; run crews queue here for boiled water and the squatters hand out scraps over the counter."
+    },
+    {
+     "name": "Back Kitchen",
+     "share": "small",
+     "purpose": "Looted wok kitchen where run crews boil water over a can stove; the youngest squatter bunks in the corner, and a door in the shared wall opens into Cornerstone Pharmacy."
+    }
+   ],
+   "connections": [
+    [
+     "Front Counter",
+     "Back Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Front Counter",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Front Counter",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Front Counter",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Kitchen cupboard",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "near_door",
+     "lootPool": "Kitchen cupboard"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Boiling pot",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:east"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Admissions Lobby",
+   "wall": "brick",
+   "ground": "linoleum tile",
+   "rooms": [
+    {
+     "name": "Admissions Hall",
+     "share": "small",
+     "purpose": "Vestibule at the campus's outer gate, its chained double doors the only way in or out of the hospital block; the holdout checks the latch from here"
+    },
+    {
+     "name": "Waiting Hall",
+     "share": "medium",
+     "purpose": "Main waiting hall where the first die-off happened — rows of empty benches under three weeks of dust, the holdout's lantern the only light"
+    },
+    {
+     "name": "Reception",
+     "share": "small",
+     "purpose": "Admissions desk where the lone holdout has bedded down, keeping sight of the entrance and the hoard beyond the counter"
+    },
+    {
+     "name": "Records & Supply",
+     "share": "small",
+     "purpose": "Back office the holdout has claimed as a cache, medical shelves locked behind the desk"
+    }
+   ],
+   "connections": [
+    [
+     "Admissions Hall",
+     "Waiting Hall"
+    ],
+    [
+     "Waiting Hall",
+     "Reception"
+    ],
+    [
+     "Reception",
+     "Records & Supply"
+    ]
+   ],
+   "entrance": {
+    "room": "Admissions Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Waiting bench",
+     "room": "Admissions Hall",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Admissions Hall",
+     "count": 1,
+     "hint": "near_door+wall:east"
+    },
+    {
+     "template": "Waiting bench",
+     "room": "Waiting Hall",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Waiting bench",
+     "room": "Waiting Hall",
+     "count": 3,
+     "hint": "row:south"
+    },
+    {
+     "template": "Waiting bench",
+     "room": "Waiting Hall",
+     "count": 2,
+     "hint": "row:west"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Waiting Hall",
+     "count": 1,
+     "hint": "beside:Waiting bench"
+    },
+    {
+     "template": "Service counter",
+     "room": "Reception",
+     "count": 2,
+     "hint": "row:north",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Reception",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Reception",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Reception",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Records & Supply",
+     "count": 3,
+     "hint": "row:north",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Records & Supply",
+     "count": 1,
+     "hint": "beside:Shelf rack"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Mercy Ward",
+   "wall": "brick",
+   "ground": "linoleum tile",
+   "rooms": [
+    {
+     "name": "Ward Station",
+     "share": "small",
+     "purpose": "nurses' station at the corridor door, now the holdouts' watch post and gathering corner"
+    },
+    {
+     "name": "Supply Closet",
+     "share": "small",
+     "purpose": "linen and supply closet the holdouts guard closely, one rack still stocked, one picked clean"
+    }
+   ],
+   "connections": [
+    [
+     "Ward Station",
+     "Supply Closet"
+    ]
+   ],
+   "entrance": {
+    "room": "Ward Station",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Ward Station",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Ward Station",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Ward Station",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Ward Station",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "row:north",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "row:north",
+     "lootPool": "Stripped shelf"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Patient Room",
+      "share": "small",
+      "purpose": "single-patient room with its door left hanging open, now one holdout's sleeping cell, gurney still made"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Patient Room",
+     "side": "east"
+    },
+    "furniture": [
+     {
+      "template": "Hospital gurney",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "wall:north+away_from_door",
+      "lootPool": "Dresser drawers"
+     },
+     {
+      "template": "Battery lantern",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "beside:Hospital gurney"
+     }
+    ]
+   },
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Clinics Wing",
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Nurses' Station",
+     "share": "small",
+     "purpose": "Reception and records desk for the clinic wing, its door opening west onto the spine corridor from Admissions"
+    },
+    {
+     "name": "Exam Rooms",
+     "share": "medium",
+     "purpose": "A run of four exam rooms with gurneys along the walls; one survivor hides out at the far end, cooking quietly by their cot"
+    },
+    {
+     "name": "Supply Closet",
+     "share": "small",
+     "purpose": "Ransacked medical supply closet, shelves picked nearly clean in the first days"
+    }
+   ],
+   "connections": [
+    [
+     "Nurses' Station",
+     "Exam Rooms"
+    ],
+    [
+     "Exam Rooms",
+     "Supply Closet"
+    ]
+   ],
+   "entrance": {
+    "room": "Nurses' Station",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "wall:east+corner",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Hospital gurney",
+     "room": "Exam Rooms",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Hospital gurney",
+     "room": "Exam Rooms",
+     "count": 2,
+     "hint": "row:south"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Exam Rooms",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Exam Rooms",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Boiling pot",
+     "room": "Exam Rooms",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "row:north",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "row:south",
+     "lootPool": "Stripped shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Emergency Department",
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Triage Hall",
+     "share": "medium",
+     "purpose": "Entrance from the spine corridor; nurses' station and reception for the emergency department, dust-thick and dark",
+     "lootPool": "Service counter"
+    },
+    {
+     "name": "Triage Bays",
+     "share": "large",
+     "purpose": "Row of curtained triage bays behind the ambulance doors, gurneys abandoned where the first days fell apart"
+    },
+    {
+     "name": "Supply Closet",
+     "share": "small",
+     "purpose": "Hospital supply closet, mostly stripped by looters but not quite empty",
+     "lootPool": "Medical supply shelf"
+    },
+    {
+     "name": "On-Call Room",
+     "share": "small",
+     "purpose": "Barricaded holdout where one survivor from the hospital's fall still sleeps and keeps watch"
+    }
+   ],
+   "connections": [
+    [
+     "Triage Hall",
+     "Triage Bays"
+    ],
+    [
+     "Triage Hall",
+     "Supply Closet"
+    ],
+    [
+     "Triage Hall",
+     "On-Call Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Triage Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Service counter",
+     "room": "Triage Hall",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Service counter"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Triage Hall",
+     "count": 2,
+     "hint": "around:Service counter"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Triage Hall",
+     "count": 1,
+     "hint": "beside:Service counter"
+    },
+    {
+     "template": "Hospital gurney",
+     "room": "Triage Bays",
+     "count": 4,
+     "hint": "row:north"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Triage Bays",
+     "count": 1,
+     "hint": "beside:Hospital gurney"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Supply Closet",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Roll cot",
+     "room": "On-Call Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "On-Call Room",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "On-Call Room",
+     "count": 1,
+     "hint": "wall:south",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "On-Call Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Plywood barricade",
+     "room": "On-Call Room",
+     "count": 1,
+     "hint": "near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Maintenance Annex",
+   "wall": "brick",
+   "ground": "concrete",
+   "rooms": [
+    {
+     "name": "Boiler Room",
+     "share": "medium",
+     "purpose": "Boiler plant with the hospital's dying backup generator; a lone stray survivor bunks here in the machine warmth, away from the dead"
+    },
+    {
+     "name": "Fuel Store",
+     "share": "small",
+     "purpose": "Fuel and maintenance closet feeding the generator, long since stripped by scavengers",
+     "lootPool": "Stripped shelf"
+    },
+    {
+     "name": "Morgue",
+     "share": "small",
+     "purpose": "The hospital's tiny morgue, gurneys still holding remnants of the first days while the dead walk the halls outside",
+     "lootPool": "Medical supply shelf"
+    }
+   ],
+   "connections": [
+    [
+     "Boiler Room",
+     "Fuel Store"
+    ],
+    [
+     "Boiler Room",
+     "Morgue"
+    ]
+   ],
+   "entrance": {
+    "room": "Boiler Room",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Backup generator",
+     "room": "Boiler Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Workbench",
+     "room": "Boiler Room",
+     "count": 1,
+     "hint": "beside:Backup generator",
+     "lootPool": "Workbench"
+    },
+    {
+     "template": "Roll cot",
+     "room": "Boiler Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Battery lantern",
+     "room": "Boiler Room",
+     "count": 1,
+     "hint": "beside:Roll cot"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Fuel Store",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Hospital gurney",
+     "room": "Morgue",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Hospital gurney",
+     "room": "Morgue",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "Shelf rack",
+     "room": "Morgue",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Marge Barlow",
+   "gender": "female",
+   "role": "Apartment manager and council chair",
+   "home": "Manager's Flat",
+   "work": "Manager's Flat",
+   "description": "Sixty-one and running the complex her grandfather built, she chairs the five-seat council, wants the ration ledger to stay honest, and worries the food math only holds four more weeks.",
+   "physicalDescription": "Stout with a gray braid, flannel shirt and reading glasses on a chain, the master key ring never leaving her belt."
+  },
+  {
+   "name": "Dale Kesler",
+   "gender": "male",
+   "role": "Night gate watch",
+   "home": "Guard Shack",
+   "work": "Guard Shack",
+   "description": "A retired long-haul trucker who cannot sleep anyway, he logs every arrival and departure in the shack's ledger, wants enough diesel for one working floodlight, and worries about the plywood sagging on the barricade's south corner.",
+   "physicalDescription": "Gaunt and tall, red windbreaker over coveralls, fingerless gloves, a thermos he refills six times a shift."
+  },
+  {
+   "name": "June Okafor",
+   "gender": "female",
+   "role": "Laundry boil-watch",
+   "home": "Laundry Block",
+   "work": "Laundry Block",
+   "description": "Grandmother of the courtyard, she boils sheets and rags over the cistern fire to keep fever down, wants word from her son two towns over, and worries that one infected rag slips past her.",
+   "physicalDescription": "Short and sturdy, headwrap and rubber apron, forearms marked with old steam burns."
+  },
+  {
+   "name": "Hector Ramirez",
+   "gender": "male",
+   "role": "Groundskeeper and salvage chief",
+   "home": "Groundskeeper Shed",
+   "work": "Groundskeeper Shed",
+   "description": "The complex's fix-it man who sleeps among the parts bins, he wants the courtyard generator purring by month's end and worries the missing carburetor kit sits behind the dead in the hardware aisle.",
+   "physicalDescription": "Broad-shouldered, canvas work shirt streaked with grease, a magnetic wristband of screws he never takes off."
+  },
+  {
+   "name": "Marcus Reed",
+   "gender": "male",
+   "role": "Run-crew captain",
+   "home": "Cedar Walk-Up",
+   "work": "Pike's Crossing",
+   "description": "A former grocery shift lead who captains the twice-weekly runs to the strip mall, he wants the last pharmacy goods under council lock and key, and worries Tab's freelancing starts a feud they cannot afford.",
+   "physicalDescription": "Solid and heavy, orange store vest over a hoodie, left thumbnail gone black from a pry bar."
+  },
+  {
+   "name": "Tab Whitlock",
+   "gender": "female",
+   "role": "Rival run-crew leader",
+   "home": "Cedar Walk-Up",
+   "work": "Pike's Crossing",
+   "description": "A bowhunting mechanic who runs her own faster crews to the Crossing, she wants a private cache so she can never be voted out, and worries what she did on Chatham Street will reach the council.",
+   "physicalDescription": "Wire-thin, camouflage hunting jacket, hatchet at her hip, grin showing a chipped front tooth."
+  },
+  {
+   "name": "Rosa Delgado",
+   "gender": "female",
+   "role": "Courtyard cook and mender",
+   "home": "Dogwood Walk-Up",
+   "work": "Barlow Court",
+   "description": "Seventy and the courtyard's calmer of arguments, she tends the shared soup pot and mends clothes for eleven households, wants the children kept back from the fence line, and worries the generator's rumble draws the dead closer each night.",
+   "physicalDescription": "Small and round, hand-knit cardigan, wooden spoon tucked in her apron pocket, reading glasses pushed into gray hair."
+  },
+  {
+   "name": "Miguel Delgado",
+   "gender": "male",
+   "role": "Electrician on the generator crew",
+   "home": "Dogwood Walk-Up",
+   "work": "Groundskeeper Shed",
+   "description": "Rosa's son and the town's only electrician, he wants two working walkie-talkies charged for every run team, and worries his daughter keeps signing up for fence duty behind his back.",
+   "physicalDescription": "Lean, wire strippers holstered like a sidearm, pencil behind one ear, boots patched with electrical tape."
+  },
+  {
+   "name": "Lupita Delgado",
+   "gender": "female",
+   "role": "Dawn fence counter and courier",
+   "home": "Dogwood Walk-Up",
+   "work": "Barlow Court",
+   "description": "Fifteen and too useful to ground, she counts the dead at the fence each dawn and carries messages between buildings, wants a real machete instead of her broom-spear, and worries her father will read the watch ledger and find her name.",
+   "physicalDescription": "Long-limbed teenager, oversized hoodie and bicycle gloves, broom-handle spear notched with twenty-nine tally marks."
+  },
+  {
+   "name": "Wes Corrigan",
+   "gender": "male",
+   "role": "Strip-mall scout, former mall security",
+   "home": "Cedar Walk-Up",
+   "work": "Pike's Crossing",
+   "description": "The mall's old security guard who knows the loading tunnels nobody else will enter, he wants one clean run to prove himself to the courtyard, and worries someone will finally ask why the day-one doors got locked with people still outside.",
+   "physicalDescription": "Soft-bellied, grey security uniform still buttoned to the collar, Maglite carried like a baton, sweat-ringed cap."
+  },
+  {
+   "name": "Ellis Vann",
+   "gender": "male",
+   "role": "Dollar Star squatter and candle-hoarder",
+   "home": "Dollar Star",
+   "work": "Pike's Crossing",
+   "description": "A drifter nesting in the variety store office on three hundred-odd scavenged candles and jugs of cleaner, trading light for cans; he wants to be left alone, and worries the Ironline crew means to tax his hoard.",
+   "physicalDescription": "Reed-thin and fifty-something, three coats deep, fingertips waxed yellow from wicking."
+  },
+  {
+   "name": "Trudy Brant",
+   "gender": "female",
+   "role": "Fielder's boarder and coat-broker",
+   "home": "Fielder's Clothing",
+   "work": "Fielder's Clothing",
+   "description": "Runs coat-and-boot swaps from the fitting room where she boards, guarding eleven usable pairs of boots; she wants to trade with both crews while owing neither, and worries first frost will come before the racks are fairly split.",
+   "physicalDescription": "Broad-shouldered, men's flannel with the sleeves rolled, a cloth measuring tape worn as a necklace."
+  },
+  {
+   "name": "Cole Draper",
+   "gender": "male",
+   "role": "Ironline watchman",
+   "home": "Ironline Sporting Goods",
+   "work": "Ironline Sporting Goods",
+   "description": "Sleeps in the stockroom and guards the empty gun counter and nine tents' worth of camping gear with a bat and a shell-less twelve-gauge; he wants real shells, and worries a run crew will rush his door the night he sleeps too deep.",
+   "physicalDescription": "Ex-linesman thick through the chest, high-school letter jacket, keeps a bat hooked in his boot at all times."
+  },
+  {
+   "name": "Priya Nandi",
+   "gender": "female",
+   "role": "Cornerstone Pharmacy keeper",
+   "home": "Cornerstone Pharmacy",
+   "work": "Cornerstone Pharmacy",
+   "description": "Lives behind the counter of the pharmacy every group wants opened, trading doses at her own strict prices with fourteen antibiotic courses left in the locked cases; she wants her locks respected, and worries the last insulin vials went cloudy a week ago.",
+   "physicalDescription": "Small and precise, gray cardigan over old scrubs, forty-odd keys on a belt ring she never removes."
+  },
+  {
+   "name": "Casey Loomis",
+   "gender": "male",
+   "role": "Hao's bunk-squatter and boil-water boy",
+   "home": "Hao's Wok Counter",
+   "work": "Hao's Wok Counter",
+   "description": "Fifteen and the youngest of the squatters, keeps three propane wok burners roaring so run crews have clean water; he wants a knife and a crew spot at sixteen, and worries Tab Whitlock will trade him back to Barlow Court as a goodwill gesture.",
+   "physicalDescription": "Knobby-kneed and underfed, apron hanging to his shins, one forearm ribboned with old burn scars."
+  },
+  {
+   "name": "Marisol Vega",
+   "gender": "female",
+   "role": "Courtyard nurse, last out of Kettle Hill",
+   "home": "Dogwood Walk-Up",
+   "work": "Barlow Court",
+   "description": "The last nurse out of the hospital when Kettle Hill fell, having walked eleven wounded to the parking lot and chained the east stairwell behind her; she wants the courtyard's nine fever cases under her sole care, and worries someone will finally ask what the chain cost.",
+   "physicalDescription": "Tall with an iron-gray braid, still wearing her laminated hospital badge clipped to a borrowed coat."
+  },
+  {
+   "name": "Gil Tandy",
+   "gender": "male",
+   "role": "Ration bookkeeper",
+   "home": "Cedar Walk-Up",
+   "work": "Barlow Court",
+   "description": "Retired shop teacher who keeps the ration ledger for thirty-one mouths, weighing every jar and scraping every label; he wants counts that stay honest under both captains' pressure, and worries the numbers already point to half-rations by the first of December.",
+   "physicalDescription": "Stooped and tidy, glasses mended with electrical tape, a pencil tucked over each ear."
+  },
+  {
+   "name": "Bree Sansom",
+   "gender": "female",
+   "role": "Small-engine mechanic on the generator crew",
+   "home": "Cedar Walk-Up",
+   "work": "Barlow Court",
+   "description": "Keeps the courtyard generator coughing alongside Miguel Delgado with two fuel filters left in the shed; she wants a carburetor off any dead mower in town, and worries the genny drinks the last of the gas before mid-November.",
+   "physicalDescription": "Stocky and sure-handed, grease-dark half-moons on every nail, patched Carhartt vest over two shirts."
+  },
+  {
+   "name": "Tasha Killian",
+   "gender": "female",
+   "role": "Crèche keeper",
+   "home": "Dogwood Walk-Up",
+   "work": "Barlow Court",
+   "description": "Ex-waitress who watches the courtyard's five children through the shortening days with crayon stubs and half a chalkboard; she wants books and chalk from the next Dollar Star run, and worries her six-year-old hasn't spoken a word since the highway.",
+   "physicalDescription": "Wiry from rationing her own shares, waitress apron full of crayon stubs, taps five fingers when she counts heads."
+  },
+  {
+   "name": "Dez Holloway",
+   "gender": "male",
+   "role": "Corpse-burner",
+   "home": "Cedar Walk-Up",
+   "work": "Kettle Hill",
+   "description": "The one nobody talks to, who drags the fallen up Kettle Hill's lower slope and burns them well short of the hospital fence; he wants lime, dry wood, and a second pair of gloves, and worries the pyre smoke is calling the dead down out of the hospital's lot.",
+   "physicalDescription": "Rawboned and deliberate, rubber apron buckled over an army jacket, always standing upwind of everyone."
+  },
+  {
+   "name": "Otis Pruett",
+   "gender": "male",
+   "role": "Hospital greeter and dusk signal-keeper",
+   "home": "Admissions Lobby",
+   "work": "Admissions Lobby",
+   "description": "Seventy-one-year-old volunteer greeter who never went home, he keeps a handwritten tally of 214 names at reception and waves a towel at the glass each dusk hoping Barlow Court's watchers see him; he wants someone to come up and read his list, and worries his heart pills ran out nine days ago.",
+   "physicalDescription": "Thin and stooped in a cardigan over his pink volunteer vest, slippers swapped for hard-soled shoes, reading glasses on a chain; a towel knotted to a broom handle leans against the desk."
+  },
+  {
+   "name": "Yolanda Pike",
+   "gender": "female",
+   "role": "Charge nurse of Mercy Ward",
+   "home": "Mercy Ward",
+   "work": "Mercy Ward",
+   "description": "Charge nurse who stayed when the last doctor fled, she still makes rounds on the ward's living with a clipboard of supplies counted down to eleven rolls of gauze; she wants a real course of antibiotics for Rudy's stitches, and worries the ward's open patient doors let the corridor dead wander in at night.",
+   "physicalDescription": "Broad-shouldered and sturdy in scrub trousers, a hand-knit cardigan over two shirts, gray hair in a pinned braid; her supply clipboard hangs from a lanyard on her wrist."
+  },
+  {
+   "name": "Rudy Marsh",
+   "gender": "male",
+   "role": "Convalescent patient turned ward hand",
+   "home": "Mercy Ward",
+   "work": "Mercy Ward",
+   "description": "Day-one appendicitis patient who healed into the ward's muscle, he re-hangs fallen doors and hauls water up two flights in five-gallon buckets; he wants a real cane instead of a mop handle, and worries about the red creeping outward around his stitches.",
+   "physicalDescription": "Big and soft around the middle but strong, flannel shirt with the sleeves cut off, leaning on a mop-handle cane; surgical tape X's on his forearm mark off his remaining pills."
+  },
+  {
+   "name": "Aisha Farid",
+   "gender": "female",
+   "role": "Resident physician and drug keeper",
+   "home": "Clinics Wing",
+   "work": "Clinics Wing",
+   "description": "Second-year resident hiding out with the clinics' last drug cache locked in exam room four — nineteen boxes of antibiotics and one bottle of insulin she trades away tablet by tablet; she wants diesel for the Annex generator before the insulin spoils, and worries that Marisol Vega told Barlow Court the hill was empty.",
+   "physicalDescription": "Small and quick in a wrinkled white coat over a hoodie, dark hair twisted into a pen-bun; a brass combination lock hangs from her belt loop on a loop of wire."
+  },
+  {
+   "name": "Rhea Guthrie",
+   "gender": "female",
+   "role": "Cafeteria cook and boil-water keeper",
+   "home": "Clinics Wing",
+   "work": "Kettle Hill",
+   "description": "Cafeteria short-order cook who hid with her son when the kitchen fell, she boils rainwater on a hot plate and stretches eleven cans of chili across the week; she wants a safe road down to Barlow Court's courtyard for Davy's sake, and worries that one of his crawling trips won't come back.",
+   "physicalDescription": "Round-faced and strong-armed in a grease-spotted apron over a winter coat, hair bound under a kerchief; a meat thermometer rides her apron pocket like a knife."
+  },
+  {
+   "name": "Davy Guthrie",
+   "gender": "male",
+   "role": "Vent-runner and crawlspace scout",
+   "home": "Clinics Wing",
+   "work": "Maintenance Annex",
+   "description": "Twelve-year-old who fits the vents no adult can, mapping forty-odd hatch covers and fetching what the grown-ups can't reach alongside Silas; he wants a real flashlight instead of a glow stick, and worries about the dead that press against the vent grilles at night.",
+   "physicalDescription": "Small and wiry in a school hoodie two sizes too big, sneakers wrapped in duct tape; a glow stick hangs from a shoelace around his neck."
+  },
+  {
+   "name": "Bo Mercer",
+   "gender": "male",
+   "role": "Orthopedic surgeon of the Emergency Department",
+   "home": "Emergency Department",
+   "work": "Emergency Department",
+   "description": "Orthopedic surgeon barricaded in the on-call room since day three, operating by generator light on whoever Yolanda sends him; he wants suture thread and a steady second pair of hands, and worries the generator's next cough means his last surgery is done without light or anesthetic.",
+   "physicalDescription": "Tall and heavyset in surgical scrubs under a bloodstained fleece, close-cropped hair gone to salt; a fire axe stands blade-up beside his cot."
+  },
+  {
+   "name": "Camille Boyd",
+   "gender": "female",
+   "role": "Paramedic and ambulance-rig keeper",
+   "home": "Emergency Department",
+   "work": "Emergency Department",
+   "description": "Paramedic whose rig is still gassed up behind the ambulance doors, she keeps the tank under padlock and logs the campus dead from the bay's high windows; she wants enough fuel for one clean run carrying every living soul down the hill, and worries the rig key she wears is worth killing her for.",
+   "physicalDescription": "Compact and weathered in her ambulance-service windbreaker and work boots, a dead radio still clipped to her shoulder; the rig's single key hangs on a cord against her skin."
+  },
+  {
+   "name": "Silas Odom",
+   "gender": "male",
+   "role": "Boiler tech and generator tender",
+   "home": "Maintenance Annex",
+   "work": "Maintenance Annex",
+   "description": "Boiler tech who never clocked out, coaxing the dying generator two hours a night to keep the lights on and the little morgue freezer cold; he wants forty gallons of diesel, and worries about the steady thumping that started inside the morgue last week.",
+   "physicalDescription": "Wiry in coveralls gone gray at the knees, wool cap pulled low, black-rimmed fingernails; a torque wrench hangs from his belt like a sidearm."
+  },
+  {
+   "name": "Rafe Dunmore",
+   "gender": "male",
+   "role": "Trapped thief and stray hand",
+   "home": "Maintenance Annex",
+   "work": "Kettle Hill",
+   "description": "Petty thief who broke in through the boiler house on day two to strip the pharmacy and got sealed in by the dead, now half-prisoner and half-crew; he wants his duffel of two hundred-odd pill bottles and a clear road out, and worries the others have decided he knows too much about their caches to ever leave.",
+   "physicalDescription": "Lean and twitchy in a letterman jacket over a hoodie, sneakers gone to rags; a canvas duffel never leaves his arm's reach."
+  }
+ ],
+ "player": {
+  "name": "Norah Hale",
+  "gender": "female",
+  "role": "Capable newcomer and run-crew lockbreaker",
+  "home": "Cedar Walk-Up",
+  "work": "Pike's Crossing",
+  "description": "A drifting locksmith who talked her way through the gate a week ago and now springs stuck doors and stubborn locks for the run crews; she wants to keep her bunk at Cedar Walk-Up and keep the town she left behind unasked about.",
+  "physicalDescription": "Wiry and deliberate, in a scuffed work jacket over a thermal top, with a leather roll of pick-worn tools she never lets out of sight.",
+  "inventory": [
+   [
+    "Canned beans",
+    2
+   ],
+   [
+    "Bottled water",
+    1
+   ],
+   [
+    "Headlamp",
+    1
+   ]
+  ],
+  "equipment": {
+   "torso": "Work jacket",
+   "wieldable1": "Crowbar"
+  }
+ },
+ "compounds": [
+  {
+   "name": "Barlow Stronghold",
+   "zone": "Barlow Court",
+   "shape": "enclosure",
+   "courtyard": "medium",
+   "walls": "walkable",
+   "parts": [
+    {
+     "building": "Guard Shack",
+     "at": "edge:south:center",
+     "gate": true
+    },
+    {
+     "building": "Cedar Walk-Up",
+     "at": "inside:north"
+    },
+    {
+     "building": "Dogwood Walk-Up",
+     "at": "inside:west"
+    },
+    {
+     "building": "Manager's Flat",
+     "at": "inside:east"
+    },
+    {
+     "building": "Laundry Block",
+     "at": "attached:Manager's Flat:south",
+     "linked": false
+    }
+   ]
+  },
+  {
+   "name": "Pike Row",
+   "zone": "Pike's Crossing",
+   "shape": "row",
+   "frontage": "north",
+   "front": "parking",
+   "parts": [
+    {
+     "building": "Dollar Star",
+     "at": "row:0",
+     "linked": true
+    },
+    {
+     "building": "Fielder's Clothing",
+     "at": "row:1",
+     "linked": true
+    },
+    {
+     "building": "Ironline Sporting Goods",
+     "at": "row:2",
+     "linked": true
+    },
+    {
+     "building": "Cornerstone Pharmacy",
+     "at": "row:3",
+     "linked": true
+    },
+    {
+     "building": "Hao's Wok Counter",
+     "at": "row:4",
+     "linked": true
+    }
+   ]
+  },
+  {
+   "name": "Kettle Spine",
+   "zone": "Kettle Hill",
+   "shape": "spine",
+   "axis": "ns",
+   "spineWidth": 3,
+   "hub": "start",
+   "parts": [
+    {
+     "building": "Admissions Lobby",
+     "at": "spine:hub"
+    },
+    {
+     "building": "Mercy Ward",
+     "at": "spine:left:0"
+    },
+    {
+     "building": "Clinics Wing",
+     "at": "spine:right:0"
+    },
+    {
+     "building": "Emergency Department",
+     "at": "spine:end:end"
+    },
+    {
+     "building": "Maintenance Annex",
+     "at": "attached:Emergency Department:east"
+    }
+   ]
+  }
+ ],
+ "narrativeRules": [
+  "Keep the whole world inside Cedar Run's few blocks: Barlow Court, Pike's Crossing, and Kettle Hill are all there is.",
+  "Keep the dead ordinary — slow, mindless, and lethal only in numbers or when someone gets careless.",
+  "Never let rescue, soldiers, or outside authority appear; any signal from beyond town is a rumor that proves false.",
+  "Treat the newcomer as valued and watched in the same breath — skills earn supper, history earns suspicion.",
+  "Tighten every scene with scarcity: the mall is nearly stripped, and each find costs more risk than the last.",
+  "Keep trust frayed but never pointless — alliances shift, secrets surface, and nobody shares everything.",
+  "End scenes on quiet dread: a cough behind a door, a light on Kettle Hill, a name struck from the ledger.",
+  "Make every run a negotiation over what's worth carrying back and who gets told about it."
+ ],
+ "narrativeFlavor": "intense",
+ "difficulty": "medium",
+ "currency": {
+  "name": "Chits",
+  "description": "Paper chits inked by the Barlow council, honored for a share of the courtyard stores and haggled hard at Pike's Crossing.",
+  "format": "5 chits"
+ },
+ "startingCurrency": 10,
+ "attributes": {
+  "strength": 5,
+  "dexterity": 6,
+  "intellect": 5,
+  "perception": 5,
+  "charisma": 4
+ },
+ "skills": {
+  "Scavenging": 3,
+  "Melee": 2,
+  "Stealth": 2,
+  "First Aid": 2,
+  "Negotiation": 2,
+  "Scouting": 2,
+  "Deadcraft": 2,
+  "Athletics": 2,
+  "Firearms": 1,
+  "Lockpicking": 1,
+  "Carpentry": 1,
+  "Mechanics": 1,
+  "Cooking": 1,
+  "Mending": 1,
+  "Deception": 1,
+  "Driving": 1,
+  "Intimidation": 1,
+  "Leadership": 0
+ },
+ "weatherKinds": [
+  "clear",
+  "rain",
+  "fog",
+  "wind",
+  "snow"
+ ],
+ "variables": [
+  {
+   "name": "Supplies",
+   "emoji": "🍲",
+   "type": "number",
+   "value": 8,
+   "initial": 8,
+   "min": 0,
+   "max": 12,
+   "ratePerHour": -0.1,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "hunger pains",
+    "emoji": "⚠"
+   }
+  },
+  {
+   "name": "Barlow Trust",
+   "emoji": "🤝",
+   "type": "number",
+   "value": 5,
+   "initial": 5,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": 0,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "under suspicion",
+    "emoji": "👁"
+   }
+  },
+  {
+   "name": "Barricade Integrity",
+   "emoji": "🪵",
+   "type": "number",
+   "value": 7,
+   "initial": 7,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.05,
+   "lowZone": {
+    "threshold": 3,
+    "effectDesc": "breach risk",
+    "emoji": "⚠"
+   }
+  },
+  {
+   "name": "Generator Fuel",
+   "emoji": "⛽",
+   "type": "number",
+   "value": 6,
+   "initial": 6,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.08,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "lights dying",
+    "emoji": "🔋"
+   }
+  },
+  {
+   "name": "Noise Drawn",
+   "emoji": "📢",
+   "type": "number",
+   "value": 0,
+   "initial": 0,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": 0,
+   "highZone": {
+    "threshold": 7,
+    "effectDesc": "the dead converge",
+    "emoji": "🧟"
+   }
+  },
+  {
+   "name": "Outbreak Day",
+   "emoji": "📅",
+   "type": "number",
+   "value": 21,
+   "initial": 21,
+   "min": 21,
+   "max": 60,
+   "ratePerHour": 0.04,
+   "highZone": {
+    "threshold": 40,
+    "effectDesc": "first frost nearing",
+    "emoji": "❄"
+   }
+  },
+  {
+   "name": "Rumours",
+   "emoji": "🗣",
+   "type": "text",
+   "value": "A light still burns in a window up on Kettle Hill.",
+   "initial": "A light still burns in a window up on Kettle Hill."
+  },
+  {
+   "name": "Watch Ledger",
+   "emoji": "📖",
+   "type": "text",
+   "value": "Newcomer: skilled, history unknown — bunk in Cedar Walk-Up.",
+   "initial": "Newcomer: skilled, history unknown — bunk in Cedar Walk-Up."
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Dawn Fence Count",
+   "location": "Barlow Court",
+   "day": 1,
+   "start": "06:30",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "Lupita Delgado walks the line alone and logs the gap; the north rung goes unwalked all morning, and her courier report to Marge Barlow names Norah a no-show."
+  },
+  {
+   "name": "Ration Call at the Courtyard",
+   "location": "Barlow Court",
+   "day": 1,
+   "start": "08:00",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "Gil Tandy strikes Norah's chit for the day — she eats only what neighbors spare, and the missed mark sits in the book where the council reads it."
+  },
+  {
+   "name": "Run-Crew Muster at the Crossing",
+   "location": "Pike's Crossing",
+   "day": 1,
+   "start": "09:30",
+   "hours": 4,
+   "recurrence": "daily",
+   "missedConsequence": "Marcus Reed runs short a lockbreaker; the day's pick goes to Tab Whitlock's crew, and Norah forfeits her share of whatever the storefronts give up."
+  },
+  {
+   "name": "Council Session",
+   "location": "Manager's Flat",
+   "day": 2,
+   "start": "19:00",
+   "hours": 2,
+   "recurrence": "weekly",
+   "missedConsequence": "Shares and rules are divided without her voice; Marge Barlow reads the empty chair as the newcomer keeping her own counsel, and the watching deepens."
+  },
+  {
+   "name": "Gate Watch Shift",
+   "location": "Guard Shack",
+   "day": 3,
+   "start": "22:00",
+   "hours": 6,
+   "recurrence": "weekly",
+   "missedConsequence": "Dale Kesler stands a double and enters the no-show in the ledger; the council doubles Norah's fence rotations and trust thins another layer."
+  },
+  {
+   "name": "Cistern Boil-Watch",
+   "location": "Laundry Block",
+   "day": 4,
+   "start": "13:00",
+   "hours": 3,
+   "recurrence": "weekly",
+   "missedConsequence": "June Okafor boils alone, a pot tips, and a batch fouls; Dogwood's families drink thin that night and Tasha Killian keeps the crèche children inside the next day."
+  },
+  {
+   "name": "Corpse-Burn Detail",
+   "location": "Kettle Hill",
+   "day": 5,
+   "start": "06:00",
+   "hours": 3,
+   "recurrence": "weekly",
+   "missedConsequence": "The fence-dead go uncarted and stack at the north wire; by nightfall the smell pulls a tighter knot of walkers against the barricade."
+  },
+  {
+   "name": "Generator Stretch",
+   "location": "Groundskeeper Shed",
+   "day": 6,
+   "start": "14:00",
+   "hours": 2,
+   "recurrence": "weekly",
+   "missedConsequence": "The generator starves before morning; Dogwood's hall goes dark, the laundry pots go cold, and Miguel Delgado and Bree Sansom burn a whole day of salvage restarting it."
+  },
+  {
+   "name": "Council Review of the Newcomer",
+   "location": "Manager's Flat",
+   "day": 1,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "Gil Tandy logs the absence in the ration ledger; Norah's provisional status stands unvoted, her chits halved and her run-crew shares withheld until Marge Barlow calls another session."
+  },
+  {
+   "name": "The Cornerstone Bargain",
+   "location": "Cornerstone Pharmacy",
+   "day": 2,
+   "start": "13:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "With no lockbreaker to open the shelves cleanly, Tab Whitlock's crew jimmies the door after dark; Priya Nandi stops trading with Barlow Court and the locked stock goes to whoever grabs first."
+  },
+  {
+   "name": "Dusk Press at the North Fence",
+   "location": "Barlow Court",
+   "day": 4,
+   "start": "17:30",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "The chain-link buckles a full panel before volunteers rally; Lupita Delgado is dragged to the wire, Dale Kesler covers her post bleeding, and the council asks aloud why the newcomer was elsewhere."
+  },
+  {
+   "name": "The Dark Lantern",
+   "location": "Kettle Hill",
+   "day": 6,
+   "start": "17:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "No one goes; Otis Pruett is written off as dead and the council votes to strike Kettle Hill from the map, sealing the hospital's holdouts and stores away for good."
+  }
+ ],
+ "quests": [
+  {
+   "title": "The Last Inventory of Pike's Crossing",
+   "objectives": [
+    {
+     "text": "Bring a full day's pick from the Crossing into Barlow Court's stores",
+     "prerequisites": [
+      {
+       "text": "Crack the loading-bolt shutter of Dollar Star for Marcus Reed under Marge Barlow's terms",
+       "primary": true
+      },
+      {
+       "text": "Back Tab Whitlock's after-hours pick of Ironline Sporting Goods instead",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Open the locked shelves of Cornerstone Pharmacy without breaking Priya Nandi's trust",
+     "prerequisites": [
+      {
+       "text": "Carry the council's terms from the Manager's Flat and pick the shelf locks under Priya Nandi's eye",
+       "primary": true
+      },
+      {
+       "text": "Pick the pharmacy's back door at night for Tab Whitlock's crew",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Put a medicine share in Marisol Vega's sick-tent at Barlow Court",
+     "prerequisites": [
+      {
+       "text": "Cart the stock home behind Dez Holloway's burn crew once the north fence is cleared",
+       "primary": true
+      },
+      {
+       "text": "Send it ahead with Lupita Delgado's dawn courier run and hope the fence count holds",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "The Dark Lantern of Kettle Hill",
+   "objectives": [
+    {
+     "text": "Reach the silent reception desk in the Admissions Lobby",
+     "prerequisites": [
+      {
+       "text": "Follow Davy Guthrie's vent-route chalk marks down from the Maintenance Annex",
+       "primary": true
+      },
+      {
+       "text": "Take Camille Boyd's rig keys from the Emergency Department and run the ambulance bay as a decoy",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Bring Aisha Farid's drug cache out of the Clinics Wing",
+     "prerequisites": [
+      {
+       "text": "Free Rafe Dunmore from the jammed boiler-room door in exchange for the cache's hiding place",
+       "primary": true
+      },
+      {
+       "text": "Trade Silas Odom generator fuel for the annex side-door key",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "frame": {
+  "genre": {
+   "primary": "Horror",
+   "influences": [
+    "zombie apocalypse",
+    "survival drama",
+    "small-town grit"
+   ]
+  },
+  "premise": "Three weeks into the outbreak, the dead outnumber the living in this small American town; a few dozen survivors hold a barricaded, run-down apartment complex while uneasy groups risk runs to a half-picked strip mall nearby.",
+  "reality": "Anyone who dies rises again as one of the walking dead, and three weeks in they own most of the town.",
+  "setting": {
+   "era": "Present-day small-town America",
+   "technology": "Modern but failing — grid and phones down, generators and hand tools",
+   "climate": "Mild autumn, days shortening"
+  },
+  "tone": "Gritty, tense survival horror with frayed trust",
+  "conflict": "Dwindling supplies in the strip mall force wary survivor groups into bargains and standoffs while the dead press closer to the complex's barricades.",
+  "playerRole": "A capable newcomer taken in at the apartment complex — valued for their skills, watched for their unknown history, and staying because there is nowhere safer.",
+  "themes": [
+   "scarcity and rationing",
+   "trust and uneasy alliance",
+   "the price of mercy",
+   "holding a community together",
+   "loss of the everyday"
+  ],
+  "constraints": [
+   "Stay inside the town's few blocks: apartment complex, strip mall, hospital",
+   "House 20-40 named residents, aiming near 30",
+   "No military, rescue, or working outside authority on the horizon",
+   "Keep the dead ordinary — no mutant or special zombies"
+  ],
+  "summary": "Three weeks into the outbreak, the dead own most of this small American town. The living hold two fragments: a run-down apartment complex, barricaded and home to a few dozen survivors, and a half-picked strip mall — clothing store, sporting goods store, pharmacy — that every group still risks runs to. The small hospital fell in the outbreak's first days and has been feared and avoided ever since. Food, medicine and ammunition are thinning; every ration is argued over and every scavenge is planned like a battle. The survivors sharing the complex trade help and suspicion in equal measure, alliances held together by need rather than trust. The player arrives outside those barricades with useful skills and no safer place to be.",
+  "unresolved": [
+   "Era pinned to present day; grid and phone service decided as already down",
+   "Climate decided as mild, shortening autumn",
+   "The dead decided as ordinary walkers — no mutations or special infected",
+   "No rescue or functioning outside authority — the town is on its own",
+   "The player cast as a newly arrived survivor rather than a founding resident",
+   "Why the hospital fell and what remains inside is left open",
+   "How many survivor groups exist and who leads them is left to later phases",
+   "All proper names — town, complex, stores — are left to later phases"
+  ]
+ },
+ "questionnaire": {
+  "mode": "quick",
+  "answers": {},
+  "population": [
+   20,
+   40
+  ]
+ }
+}
