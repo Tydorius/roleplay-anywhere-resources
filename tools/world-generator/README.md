@@ -114,6 +114,69 @@ for have none, so re-rolling one adds no lamps; generate it again instead.
 Example:
 `python -m worldgen generate --idea "…" --provider zai --out out/x --ext floors`.
 
+## Compounds and zone arrangements
+
+One place built from several connected structures — four towers joined by
+walls with a keep inside, a walled monastery, a fenced compound — is a
+**compound**. The model names the parts as ordinary buildings of one zone,
+then lists them in a top-level `compounds` entry with a slot each; code adds
+the walls, the doors and the courtyard. The same vocabulary describes a
+castle, a monastery, a prison or a walled campus: code knows only geometry.
+
+```json
+{"compounds": [
+  {"name": "Ashvale Castle", "zone": "Castle Rise",
+   "shape": "enclosure", "courtyard": "small|medium|large",
+   "walls": "walkable|solid|none",
+   "parts": [
+     {"building": "NW Tower",   "at": "corner:nw"},
+     {"building": "Gatehouse",  "at": "edge:south:center", "gate": true},
+     {"building": "Keep",       "at": "inside:north"},
+     {"building": "Chapel",     "at": "attached:Keep:east"}
+   ]}]}
+```
+
+- Slots: `corner:<nw|ne|sw|se>`, `edge:<side>:<start|center|end>` (at most
+  two marked `gate`), `inside:<center|side>` and `attached:<part>:<side>`.
+- A zone may also set `"arrangement"`: `around_green` (one open green, its
+  centre props on it, buildings facing it on every side with the largest at
+  the head opposite the road — no side streets), `along_street`, `scattered`,
+  or `fields` (fenced crop plots, the buildings gathered at the road-side
+  corner). A zone too small for its green falls back to the usual street.
+- With compounds the plan's building cap rises from 12 to 16 — towers and
+  gatehouses are buildings. P3 is told each part's slot and neighbours, so
+  entrances, inner doors and stairs make sense inside the structure.
+
+What code does with it (`worldgen/layout_compound.py`): the parts keep their
+P3 designs (rooms, furniture, storeys) and are placed on the enclosure's
+perimeter and courtyard as **one block** the zone's other buildings pack
+around. `walkable` walls are 3-wide single-room corridors whose end doors
+come from the builder's auto-connect (parts and walls nest under one
+unwalled compound region, so nothing outside the compound grows a door into
+it); `solid` walls are 1-thick walkability-0 object strips. The gate (marked
+or the edge part nearest a road mouth) gets an outside entrance and a
+courtyard door, and 1-wide courtyard paths run gate → inside parts; nothing
+of the zone dresses inside the walls. With `floors` on, each part's upper
+storeys sit in the band **in the compound's ground arrangement** — storeys
+at the same level touch where their ground regions touch, and a walkable
+wall gets its wall-walk storey 2 wherever both ends have one, so the towers
+and the gatehouse join along the walk upstairs. With floors off, a compound
+is ground floor only and plays in the unmodded game.
+
+The feasibility answers behind those choices are in
+`reports/012-feasibility.md`, each pinned by builder specs in
+`tests/test_compound_feasibility.py`: doors between parts come from the
+unwalled compound region (the courtyard is a named region and strangers
+cannot auto-connect in); a 1-cell wall interior builds, walks and passes
+every check, so walkable walls are 3 wide; solid strips block without any
+passability trick; touching upper storeys auto-connect, and the floors seal
+keeps those shared doors while stripping the fiction ones. The end-to-end
+proof is `fixtures/ashvale-compound.plan.json` — four 3-storey towers, a
+gatehouse and a keep in a walled compound, the village `around_green`, the
+farm in `fields` — which builds and validates with zero errors and full
+reachability in all four combinations of `floors` and `region-groups`
+(renders in `out/012-*.png`).
+
 ## Import the zip
 
 1. Start Anywhere RPG and open the scenario/import screen.
