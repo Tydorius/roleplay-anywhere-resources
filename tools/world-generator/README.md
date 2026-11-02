@@ -177,6 +177,69 @@ farm in `fields` — which builds and validates with zero errors and full
 reachability in all four combinations of `floors` and `region-groups`
 (renders in `out/012-*.png`).
 
+## Units, storeys, rows, spines and void zones
+
+Brief 012e added the shapes modern and interior worlds need, all in the same
+vocabulary of slots, flags and counts (no genre words in the layout code).
+
+**Repeated units.** A building may carry
+`"units": {"name": "Apartment", "count": 12, "perStorey": 4, "residents": 2,
+"numbering": "plain|storey"}`. P3 designs **one** nested `unit` (its rooms,
+connections and furniture) plus the building's shared rooms; code lays the
+shared rooms round a corridor spine that runs to the entrance edge and
+stamps the unit copies down both sides of it, mirrored so each copy's door
+faces the corridor (the builder's own auto-connect pair). Copies are named
+`Apartment 4` plainly or `Room 204` by storey. The 28x22 footprint cap
+applies to the unit, not the block: the building's length follows from the
+count. One bed per resident is stamped inside each copy, and
+`BuildingLayout.residents` reports the total for the population work. Proven
+by `fixtures/apartment-block.plan.json`.
+
+**Taller buildings.** `storeys` runs 1-6 for a unit building or a compound
+part (3 otherwise). A unit building's upper storeys repeat the ground stamp —
+corridor and stair positions identical, numbering continuing — with no
+per-storey design. In the `floors` band a stack taller than the play area's
+height wraps into columns; a block whose ground entrance faces east has its
+storeys' build-time doors flipped west onto the boundary strip, so the
+builder's flat walk still reaches every storey.
+
+**A row of parts** (`"shape": "row"`, `"frontage": "north|south|east|west"`,
+`"front": "street|parking|walkway|none"`) lines parts up side by side facing
+the frontage, `linked` neighbours butting (the builder joins them with a
+door) and the rest one clear cell apart — the builder would open a door
+between any two butted siblings, so strangers keep the gap. `parking` paves
+the front strip and fills it with parked-vehicle slots from the plan's own
+catalogue (registered as intentional solids); slots are `row:<index>` or the
+plan's order. A row part may itself carry `units` (a terrace of identical
+houses is one part), and `sameAs` copies another part's whole P3 design so
+P3 runs once for a strip of identical shops (`fixtures/shop-strip.plan.json`).
+
+**A spine** (`"shape": "spine"`, `"axis": "ns|ew"`, `"spineWidth": 3-5`) is a
+code-made walled corridor with parts butted along it at
+`spine:<left|right>:<index>`, end caps at `spine:end:<start|end>`, and an
+optional hub part (`spine:hub`, at `"hub": "center|start|end"`) whose
+outward entrance gates the block — every part auto-connects to the spine.
+`cluster` is the `spineWidth: 0` special case: no corridor, the parts packed
+round the hub. Wings branch further with `attached:<part>:<side>` off any
+part. The hospital proof is `fixtures/hospital-spine.plan.json` — a station
+hub at the corridor's foot, two wards of six one-bed rooms.
+
+**Void zones** (`"exterior": "void"` on a zone) turn everything outside the
+zone's walled regions into out of bounds: walkability-0 slab objects over
+ground tinted the boundary colour, exactly the World's Edge treatment
+(`passableAtBuild` so the build-time walk crosses, hardened to 0 by
+`inject_arpg_mods` — it plays in the unmodded game). Filler, props and paths
+never land there. Roads to and from a void zone become walled corridor
+tubes (a mouth too thin for an interior is widened to 3), and each zone with
+a gated compound gets a connector arm from the tube to its gate — a
+clearance-routed 3-wide corridor, split along the zone and compound borders
+it crosses so every piece nests under what contains it, with facing doors on
+every seam cell. A plan whose zones are **all** void gets a void default
+tile, so no walkable open ground survives anywhere. The proof is
+`fixtures/ship-void.plan.json` — six compartments on a spine, a dock, and a
+tube between: every walkable cell of the map is inside a walled region
+(`tests/test_void.py`).
+
 ## How zones are sized
 
 A zone's ground follows what stands on it, not its size class alone. A zone
