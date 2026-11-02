@@ -1,6 +1,7 @@
 """The P1 compound contract (raw plan validation, the 16-building cap when
 compounds are used, sanitizing) and P3's one line per part on its slot and
 its neighbours."""
+import json
 import os
 import unittest
 
@@ -90,6 +91,151 @@ class TestCompoundLine(unittest.TestCase):
         comp = castle_compound()
         comp["walls"] = "solid"
         self.assertNotIn("walkable", self.line("Castle Rise Building 1", comp))
+
+
+class TestCompoundLineRowSpine(unittest.TestCase):
+    """012f change 2: one line per part for the row and spine slots too."""
+
+    def line(self, compound, building):
+        d = world(compounds=[compound])
+        zone = next(z for z in d["zones"] if z["name"] == compound["zone"])
+        b = next(x for x in zone["buildings"] if x["name"] == building)
+        return phases._compound_line(d["compounds"], zone, b)
+
+    def test_row_part_names_position_frontage_and_front(self):
+        comp = {"name": "Farrow Row", "zone": "Castle Rise", "shape": "row",
+                "frontage": "north", "front": "parking",
+                "parts": [{"building": f"Castle Rise Building {i + 1}",
+                           "at": f"row:{i}"} for i in range(5)]}
+        line = self.line(comp, "Castle Rise Building 3")
+        self.assertIn("part of Farrow Row", line)
+        self.assertIn("third of five in a row facing north", line)
+        self.assertIn("parking strip in front", line)
+        self.assertIn("one clear cell from Castle Rise Building 2", line)
+
+    def test_row_linked_part_butts_its_neighbour(self):
+        comp = {"name": "The Terrace", "zone": "Castle Rise", "shape": "row",
+                "frontage": "south", "front": "street",
+                "parts": [{"building": "Castle Rise Building 1", "at": "row:0"},
+                          {"building": "Castle Rise Building 2", "at": "row:1",
+                           "linked": True}]}
+        line = self.line(comp, "Castle Rise Building 2")
+        self.assertIn("butts Castle Rise Building 1 with a door between them", line)
+        self.assertNotIn("one clear cell", line)
+
+    def test_spine_part_names_its_side_and_the_hub(self):
+        comp = {"name": "Ruan's Spine", "zone": "Castle Rise", "shape": "spine",
+                "axis": "ns", "spineWidth": 3, "hub": "start",
+                "parts": [{"building": "Castle Rise Building 1", "at": "spine:hub"},
+                          {"building": "Castle Rise Building 2", "at": "spine:left:0"},
+                          {"building": "Castle Rise Building 3", "at": "spine:left:1"},
+                          {"building": "Castle Rise Building 4", "at": "spine:right:0"}]}
+        line = self.line(comp, "Castle Rise Building 3")
+        self.assertIn("second of two on the left of a 3-wide corridor", line)
+        self.assertIn("running north-south", line)
+        self.assertIn("the hub Castle Rise Building 1 gates the block", line)
+        hub = self.line(comp, "Castle Rise Building 1")
+        self.assertIn("the hub at the start of the corridor", hub)
+
+    def test_cluster_hub_line(self):
+        comp = {"name": "The Cluster", "zone": "Castle Rise", "shape": "cluster",
+                "axis": "ns", "hub": "center",
+                "parts": [{"building": "Castle Rise Building 1", "at": "spine:hub"},
+                          {"building": "Castle Rise Building 2", "at": "spine:left:0"}]}
+        line = self.line(comp, "Castle Rise Building 1")
+        self.assertIn("the hub everything packs round", line)
+        self.assertIn("gates the block", line)
+
+
+class TestP3Units(unittest.TestCase):
+    """012f change 2: a unit building's P3 reply carries ONE nested unit
+    design; a stray unit on a plain building is an error."""
+
+    TEMPLATES = {"Bed", "Table", "Cupboard"}
+
+    def reply(self, unit=...):
+        d = {"name": "Grendel Flats", "wall": "brick", "ground": "wood",
+             "rooms": [{"name": "Lobby", "share": "medium", "purpose": "p"}],
+             "connections": [], "entrance": {"room": "Lobby", "side": "south"},
+             "furniture": []}
+        if unit is not ...:
+            d["unit"] = unit
+        return d
+
+    def unit(self, **over):
+        u = {"rooms": [{"name": "Bedroom", "share": "small", "purpose": "p"}],
+             "connections": [],
+             "entrance": {"room": "Bedroom", "side": "south"},
+             "furniture": [{"template": "Bed", "room": "Bedroom", "count": 2}]}
+        u.update(over)
+        return u
+
+    def units_spec(self):
+        return {"name": "Apartment", "count": 12, "perStorey": 4, "residents": 2}
+
+    def test_unit_building_needs_one_unit_design(self):
+        errs = phases.check_p3(self.reply(), "Grendel Flats", self.TEMPLATES,
+                               False, units=self.units_spec())
+        self.assertTrue(any(".unit: required" in e for e in errs))
+        errs = phases.check_p3(self.reply(unit=self.unit()), "Grendel Flats",
+                               self.TEMPLATES, False, units=self.units_spec())
+        self.assertEqual(errs, [])
+
+    def test_unit_design_errors(self):
+        bad = self.unit(furniture=[{"template": "Nope", "room": "Bedroom"}],
+                        entrance={"room": "Nowhere", "side": "up"})
+        errs = phases.check_p3(self.reply(unit=bad), "Grendel Flats",
+                               self.TEMPLATES, False, units=self.units_spec())
+        self.assertTrue(any("not in the catalogue" in e for e in errs))
+        self.assertTrue(any("entrance.room" in e for e in errs))
+        self.assertTrue(any("side" in e for e in errs))
+
+    def test_stray_unit_on_a_plain_building(self):
+        errs = phases.check_p3(self.reply(unit=self.unit()), "Grendel Flats",
+                               self.TEMPLATES, False)
+        self.assertTrue(any("repeats no units" in e for e in errs))
+
+    def test_sanitize_keeps_and_cleans_the_unit(self):
+        log = []
+        d = phases.sanitize_p3(self.reply(unit=self.unit(
+            furniture=[{"template": "Nope", "room": "Bedroom"}])), "Grendel Flats",
+            self.TEMPLATES, log, units=True)
+        self.assertEqual(d["unit"]["furniture"], [])
+        self.assertTrue(any("unit furniture" in r for (_w, r) in log))
+        log = []
+        d = phases.sanitize_p3(self.reply(), "Grendel Flats", self.TEMPLATES,
+                               log, units=True)
+        self.assertEqual(d["unit"]["rooms"][0]["name"], "Room")
+        d = phases.sanitize_p3(self.reply(unit=self.unit()), "Grendel Flats",
+                               self.TEMPLATES, log)
+        self.assertNotIn("unit", d)
+
+    def test_units_line_tells_p3_what_to_reply(self):
+        line = phases._units_line({"units": self.units_spec()})
+        self.assertIn("THIS BUILDING REPEATS UNITS", line)
+        self.assertIn("12 copies of one 'Apartment'", line)
+        self.assertIn("2 residents (one bed each) per copy", line)
+        self.assertIn("never design the copies one by one", line)
+        self.assertIn("none", phases._units_line({}))
+
+    def test_p3_prompt_carries_units_and_compound_lines(self):
+        t = phases._template("p3-building").substitute(
+            rules="", setting_line="", zone_line="", building_line="",
+            catalogue_lines="", compound_line="LINE", units_line="UNITS",
+            building_name="B")
+        self.assertIn("COMPOUND: LINE", t)
+        self.assertIn("UNITS: UNITS", t)
+        self.assertIn("never list or design the copies one by one", t)
+
+    def test_estimate_skips_same_as_parts(self):
+        from worldgen import api
+        with open(os.path.join(os.path.dirname(__file__),
+                               "..", "fixtures", "shop-strip.plan.json"),
+                  encoding="utf-8") as f:
+            plan = json.load(f)
+        e = api.estimate(plan)
+        # five buildings, four of them sameAs copies: one P3 call
+        self.assertIn("1 buildings (4 sameAs copies skipped)", e["basis"])
 
 
 def errors(d):
@@ -243,8 +389,10 @@ class TestPromptText(unittest.TestCase):
     def test_p3_prompt_carries_the_compound_line(self):
         t = phases._template("p3-building").substitute(
             rules="", setting_line="", zone_line="", building_line="",
-            catalogue_lines="", compound_line="LINE", building_name="B")
+            catalogue_lines="", compound_line="LINE", units_line="none",
+            building_name="B")
         self.assertIn("COMPOUND: LINE", t)
+        self.assertIn("UNITS: none", t)
 
 
 class TestCheckP1UnitsAndShapes(unittest.TestCase):

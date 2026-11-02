@@ -108,7 +108,12 @@ def estimate(idea_or_plan):
                 "basis": "measured full runs (an idea gives no plan to count)"}
     zones = plan.get("zones") or []
     buildings = sum(len(z.get("buildings") or []) for z in zones)
-    calls = 3 + buildings + len(zones)   # P1, P2, P5 + one P3 per building + one P4 per zone
+    # a sameAs compound part copies another part's P3 design: no call for it
+    same_as = sum(1 for c in (plan.get("compounds") or []) if isinstance(c, dict)
+                  for p in (c.get("parts") or [])
+                  if isinstance(p, dict) and p.get("sameAs"))
+    p3_calls = max(0, buildings - same_as)
+    calls = 3 + p3_calls + len(zones)   # P1, P2, P5 + P3 per own design + P4 per zone
     retries = 6                          # the most a measured run needed
     tokens = TOKENS_PER_CALL * calls
     return {"calls": calls, "calls_range": [calls, calls + retries],
@@ -117,7 +122,8 @@ def estimate(idea_or_plan):
             "minutes_range": [round(tokens / float(TOKENS_PER_MINUTE), 1),
                               round(TOKENS_PER_CALL * (calls + retries) / float(TOKENS_PER_MINUTE), 1)],
             "basis": f"plan {plan.get('name', '')!r}: 3 phase calls "
-                     f"+ {buildings} buildings + {len(zones)} zones (+ retries)"}
+                     f"+ {p3_calls} buildings ({same_as} sameAs copies skipped) "
+                     f"+ {len(zones)} zones (+ retries)"}
 
 
 def _mid(pair):

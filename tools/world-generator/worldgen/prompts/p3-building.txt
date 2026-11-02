@@ -5,6 +5,7 @@ SETTING: ${setting_line}
 ZONE: ${zone_line}
 BUILDING: ${building_line}
 COMPOUND: ${compound_line}
+UNITS: ${units_line}
 
 CATALOGUE (name | size in cells | placement rule):
 ${catalogue_lines}
@@ -18,19 +19,31 @@ Reply with ONE JSON object with exactly these fields:
   "connections": [["Room A", "Room B"]],
   "entrance": {"room": "...", "side": "north|south|east|west"},
   "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}],
+  "unit": null,
   "yard": null or {"props": [{"template": "catalogue name", "count": 1, "hint": "outdoor hint"}]}
 }
 
 - 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
   door; the entrance room must be one of "rooms".
+- The UNITS line says when this building repeats one unit many times (the
+  count and the residents per copy are there): reply with the building's
+  SHARED rooms in "rooms" (the entrance hall, corridor rooms, a reception or
+  common room, whatever it needs) and design ONE copy in "unit" — {"rooms", "connections", "entrance",
+  "furniture"} like a tiny building. Code stamps every copy and gives each
+  its own door; give the unit one bed per resident. When a building has many
+  rooms of the same kind (apartments, classrooms, hospital rooms, hotel
+  rooms, cells, cabins), design ONE of them and give a count in the plan —
+  never list or design the copies one by one.
 - The COMPOUND line says when the building is one part of a connected
-  structure (its slot and the walls or hosts beside it): its entrance and
-  inner doors must make sense against those neighbours — a gate part is
-  walked through, a corner part is joined by its walls, an attached part
-  shares one wall with its host.
-- Furnish every room for its purpose, with counts that fit it: a bedroom has
-  one bed per sleeper plus storage and a light source; a tavern common room
-  has several tables with seats; a smithy has forge, anvil, water and stock.
+  structure (its slot and the walls, corridor or hosts beside it): its
+  entrance and inner doors must make sense against those neighbours — a gate
+  part is walked through, a row part's entrance faces the frontage, a spine
+  part opens onto the corridor, an attached part shares one wall with its host.
+- Furnish every room for its purpose, with counts that fit it and whatever
+  this setting's rooms hold: a bedroom has one bed per sleeper plus storage
+  and a light source; a common room has several tables with seats; a workshop
+  has its tools, materials and somewhere to sit; a shop has a counter and
+  shelves; a sickbay or lab has beds and equipment.
 - "template" must be a catalogue name EXACTLY as listed. "room" must be one of
   your own room names.
 - Furniture hints use ONLY the room vocabulary (wall:north, corner, center,

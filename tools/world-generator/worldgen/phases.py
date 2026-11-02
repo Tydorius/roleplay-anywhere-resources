@@ -107,6 +107,24 @@ def _building_line(b):
     return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}: {b.get('purpose', '')}{y}"
 
 
+def _units_line(b):
+    """P3's line on a building's repeating units: what to reply (shared rooms
+    plus ONE unit design) and the per-copy resident count, so beds match."""
+    u = b.get("units")
+    if not isinstance(u, dict) or not u.get("count"):
+        return "none; design this building's rooms as one list"
+    bits = [f"{u['count']} copies of one '{u.get('name', 'Apartment')}'"]
+    if _check_int(u.get("perStorey")) and u["perStorey"] > 0:
+        bits.append(f"{u['perStorey']} to a floor")
+    if _check_int(u.get("residents")) and u["residents"] > 0:
+        bits.append(f"{u['residents']} residents (one bed each) per copy")
+    return ("THIS BUILDING REPEATS UNITS: " + ", ".join(bits) +
+            ". Reply with the building's SHARED rooms in \"rooms\" and ONE copy in "
+            "\"unit\": {\"rooms\", \"connections\", \"entrance\", \"furniture\"} like a "
+            "tiny building. Code stamps every copy and gives each its own door onto "
+            "the corridor; never design the copies one by one")
+
+
 def _catalogue_lines(templates):
     return "\n".join(f"- {t['name']} | {t['size'][0]}x{t['size'][1]} | {t.get('rule', '')}"
                      for t in templates)
@@ -151,6 +169,34 @@ def _perimeter_cycle(parts):
     return cycle
 
 
+def _row_order(parts):
+    """A row compound's parts in slot order: explicit row:<index> first by
+    index, then the no-`at` parts in plan order."""
+    keyed, plain = [], []
+    for i, p in enumerate(parts):
+        bits = _slot_bits(p)
+        if bits[:1] == ["row"] and len(bits) == 2 and bits[1].isdigit():
+            keyed.append((int(bits[1]), 0, i, p))
+        elif bits == []:
+            keyed.append((10 ** 6, 0, i, p))
+    keyed.sort(key=lambda t: t[:3])
+    return [p for (_a, _b, _i, p) in keyed]
+
+
+_ORDINALS = {1: "first", 2: "second", 3: "third", 4: "fourth", 5: "fifth",
+             6: "sixth", 7: "seventh", 8: "eighth"}
+_COUNTS = {1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six",
+           7: "seven", 8: "eight"}
+
+
+def _ordinal(n):
+    return _ORDINALS.get(n, f"{n}th")
+
+
+def _count_word(n):
+    return _COUNTS.get(n, str(n))
+
+
 def _compound_line(compounds, zone, building):
     """P3's one line on a part's slot and neighbours, so its entrance, inner
     doors and stairs make sense inside the structure."""
@@ -163,6 +209,54 @@ def _compound_line(compounds, zone, building):
     parts = [p for p in comp["parts"] if isinstance(p, dict)]
     part = next(p for p in parts if p.get("building") == building["name"])
     bits = _slot_bits(part)
+    shape = comp.get("shape", "enclosure")
+    name = comp.get("name", "the compound")
+    if shape != "enclosure" and bits[:1] == ["attached"]:
+        slot = f"attached to {bits[1] if len(bits) > 1 else '?'}" + \
+               (f" on its {bits[2]} side, sharing that wall" if len(bits) > 2 else "")
+        return f"part of {name}: {slot}"
+    if shape == "row" and bits[:1] in (["row"], []):
+        ordered = _row_order(parts)
+        i = ordered.index(part)
+        front = {"street": " with a street in front",
+                 "parking": " with a parking strip in front",
+                 "walkway": " with a walkway in front"}.get(comp.get("front", "none"), "")
+        slot = (f"{_ordinal(i + 1)} of {_count_word(len(ordered))} in a row facing "
+                f"{comp.get('frontage', 'south')}{front}")
+        nb = []
+        if part.get("linked") and i > 0:
+            nb.append(f"butts {ordered[i - 1]['building']} with a door between them")
+        if i + 1 < len(ordered) and ordered[i + 1].get("linked"):
+            nb.append(f"butts {ordered[i + 1]['building']} with a door between them")
+        if not part.get("linked") and i > 0:
+            nb.append(f"stands one clear cell from {ordered[i - 1]['building']}")
+        return f"part of {name}: {slot}" + (f"; {'; '.join(nb)}" if nb else "")
+    if shape in ("spine", "cluster"):
+        width = comp.get("spineWidth", 3)
+        runs = "north-south" if comp.get("axis", "ns") == "ns" else "east-west"
+        corridor = "the hub" if shape == "cluster" else f"a {width}-wide corridor running {runs}"
+        hub = next((p for p in parts if _slot_bits(p)[:2] == ["spine", "hub"]), None)
+        hub_note = "" if hub is part else \
+            f", the hub {hub['building']} gates the block" if hub else ""
+        if bits[:2] == ["spine", "hub"]:
+            slot = (f"the hub everything packs round, its outward entrance "
+                    f"gates the block" if shape == "cluster" else
+                    f"the hub at the {comp.get('hub', 'center')} of the corridor; "
+                    f"its outward entrance gates the block, every part opens onto it")
+        elif bits[:2] == ["spine", "end"]:
+            slot = f"the end cap on the {bits[2]} of {corridor}"
+        elif bits[:1] == ["spine"]:
+            same = sorted((p for p in parts
+                           if _slot_bits(p)[:1] == ["spine"] and len(_slot_bits(p)) == 3
+                           and _slot_bits(p)[1] == bits[1]
+                           and _slot_bits(p)[2].isdigit()),
+                          key=lambda p: int(_slot_bits(p)[2]))
+            slot = (f"{_ordinal(same.index(part) + 1)} of {_count_word(len(same))} on the "
+                    f"{bits[1]} of {corridor}{hub_note}")
+        else:   # attached off another part
+            slot = f"attached to {bits[1] if len(bits) > 1 else '?'}" + \
+                   (f" on its {bits[2]} side, sharing that wall" if len(bits) > 2 else "")
+        return f"part of {name}: {slot}"
     walls_kind = comp.get("walls", "walkable")
     walls = "" if walls_kind == "none" else \
         " (the walls are walkable upstairs)" if walls_kind == "walkable" else ""
@@ -805,9 +899,11 @@ def _sanitize_light(t, log):
 OPENING_KINDS = ("gallery", "atrium", "stairwell")
 
 
-def check_p3(d, building_name, templates, has_yard, storeys=None):
+def check_p3(d, building_name, templates, has_yard, storeys=None, units=None):
     """``storeys`` is the building's P1 storey count with the floors
-    extension enabled (None when it is off, so upper/stairs are ignored)."""
+    extension enabled (None when it is off, so upper/stairs are ignored).
+    ``units`` is the P1 units dict when the building repeats units, so the
+    reply must carry one nested "unit" design."""
     errors = []
     ctx = f"building {building_name}"
     if not isinstance(d, dict):
@@ -841,22 +937,16 @@ def check_p3(d, building_name, templates, has_yard, storeys=None):
         if e.get("room") not in rnames:
             errors.append(f"{ctx}.entrance.room: must be one of the rooms")
         _enum(e, "side", SIDES, f"{ctx}.entrance", errors)
-    furn = d.get("furniture", [])
-    if not isinstance(furn, list):
-        errors.append(f"{ctx}.furniture: must be a list")
-    else:
-        for i, f in enumerate(furn):
-            if not isinstance(f, dict):
-                errors.append(f"{ctx}.furniture[{i}]: must be an object")
-                continue
-            if f.get("template") not in templates:
-                errors.append(f"{ctx}.furniture[{i}]: template {f.get('template')!r} is not in the catalogue")
-            if f.get("room") not in rnames:
-                errors.append(f"{ctx}.furniture[{i}]: room {f.get('room')!r} is not one of the rooms")
-            c = f.get("count", 1)
-            if not _check_int(c) or not 1 <= c <= MAX_COUNT:
-                errors.append(f"{ctx}.furniture[{i}]: count must be 1..{MAX_COUNT}, not {c!r}")
-            errors.extend(hint_errors(f.get("hint", ""), templates=templates))
+    errors.extend(_furniture_errors(d.get("furniture", []), ctx, rnames, templates))
+    if units:
+        u = d.get("unit")
+        if not isinstance(u, dict):
+            errors.append(f"{ctx}.unit: required (this building repeats "
+                          f"{units.get('name', 'Apartment')} x {units.get('count')})")
+        else:
+            errors.extend(_unit_design_errors(u, f"{ctx}.unit", templates))
+    elif isinstance(d.get("unit"), dict) and d.get("unit"):
+        errors.append(f"{ctx}.unit: this building repeats no units; reply unit: null")
     y = d.get("yard")
     if y is not None:
         if not isinstance(y, dict) or not isinstance(y.get("props", []), list):
@@ -873,6 +963,57 @@ def check_p3(d, building_name, templates, has_yard, storeys=None):
                           f"room, not {st!r}")
         errors.extend(_upper_errors(d.get("upper", []), rnames, templates, storeys, ctx))
     return errors[:MAX_ERRORS]
+
+
+def _furniture_errors(furn, ctx, rnames, templates):
+    """Contract violations in one furniture list."""
+    errors = []
+    if not isinstance(furn, list):
+        return [f"{ctx}.furniture: must be a list"]
+    for i, f in enumerate(furn):
+        if not isinstance(f, dict):
+            errors.append(f"{ctx}.furniture[{i}]: must be an object")
+            continue
+        if f.get("template") not in templates:
+            errors.append(f"{ctx}.furniture[{i}]: template {f.get('template')!r} is not in the catalogue")
+        if f.get("room") not in rnames:
+            errors.append(f"{ctx}.furniture[{i}]: room {f.get('room')!r} is not one of the rooms")
+        c = f.get("count", 1)
+        if not _check_int(c) or not 1 <= c <= MAX_COUNT:
+            errors.append(f"{ctx}.furniture[{i}]: count must be 1..{MAX_COUNT}, not {c!r}")
+        errors.extend(hint_errors(f.get("hint", ""), templates=templates))
+    return errors
+
+
+def _unit_design_errors(u, ctx, templates):
+    """Contract violations in a P3 reply's nested "unit" design."""
+    errors = []
+    rooms = u.get("rooms")
+    if not isinstance(rooms, list) or not rooms:
+        return [f"{ctx}.rooms: required, 1-3 rooms for one copy"]
+    rnames = set()
+    for i, r in enumerate(rooms):
+        if not isinstance(r, dict) or not _is_str(r.get("name")):
+            errors.append(f"{ctx}.rooms[{i}].name: required")
+            continue
+        if r["name"] in rnames:
+            errors.append(f"{ctx}.rooms[{i}].name: {r['name']!r} used twice")
+        else:
+            rnames.add(r["name"])
+        _enum(r, "share", SHARES, f"{ctx}.room {r['name']}", errors)
+    for i, c in enumerate(u.get("connections", []) or []):
+        if not (isinstance(c, list) and len(c) == 2 and all(x in rnames for x in c)):
+            errors.append(f"{ctx}.connections[{i}]: must be two of the unit's "
+                          f"room names, not {c!r}")
+    e = u.get("entrance")
+    if not isinstance(e, dict):
+        errors.append(f"{ctx}.entrance: required {{room, side}}")
+    else:
+        if e.get("room") not in rnames:
+            errors.append(f"{ctx}.entrance.room: must be one of the unit's rooms")
+        _enum(e, "side", SIDES, f"{ctx}.entrance", errors)
+    errors.extend(_furniture_errors(u.get("furniture", []), ctx, rnames, templates))
+    return errors
 
 
 def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
@@ -941,9 +1082,57 @@ def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
     return errors
 
 
-def sanitize_p3(d, building_name, templates, log, storeys=None):
+def _sanitize_unit(u, building_name, templates, log):
+    """One nested unit design cleaned the way a whole building is: rooms kept
+    and de-duplicated, furniture lines dropped against unknown templates or
+    rooms, the entrance defaulted. Returns the cleaned dict."""
+    rooms = [r for r in (u.get("rooms") or [])
+             if isinstance(r, dict) and _is_str(r.get("name"))]
+    if not rooms:
+        log.append((f"building {building_name}",
+                    "unit has no usable rooms; using one 'Room'"))
+        rooms = [{"name": "Room", "share": "small", "purpose": "one unit copy"}]
+    rnames = []
+    for r in rooms:
+        if r["name"] in rnames:
+            log.append((f"building {building_name}",
+                        f"unit room {r['name']!r} renamed duplicate"))
+            r["name"] = r["name"] + " 2"
+        rnames.append(r["name"])
+        if r.get("share") not in SHARES:
+            r["share"] = "small"
+    u["rooms"] = rooms
+    u["connections"] = [c for c in (u.get("connections") or [])
+                        if isinstance(c, list) and len(c) == 2
+                        and c[0] in rnames and c[1] in rnames and c[0] != c[1]]
+    e = u.get("entrance") if isinstance(u.get("entrance"), dict) else {}
+    if e.get("room") not in rnames:
+        e["room"] = rnames[0]
+    if e.get("side") not in SIDES:
+        e["side"] = "south"
+    u["entrance"] = e
+    furn = []
+    for f in (u.get("furniture") or []):
+        if not isinstance(f, dict) or f.get("template") not in templates or f.get("room") not in rnames:
+            log.append((f"building {building_name}",
+                        f"unit furniture {f.get('template') if isinstance(f, dict) else f!r} dropped: "
+                        "unknown template or room"))
+            continue
+        if not _check_int(f.get("count", 1)) or not 1 <= f["count"] <= MAX_COUNT:
+            f["count"] = 1
+        if hint_errors(f.get("hint", ""), templates=templates):
+            log.append((f"building {building_name}",
+                        f"unit furniture {f['template']} hint {f.get('hint')!r} -> ''"))
+            f["hint"] = ""
+        furn.append(f)
+    u["furniture"] = furn
+    return u
+
+
+def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
     """``storeys`` is the building's P1 storey count with floors enabled
-    (None when it is off, so upper/stairs are stripped)."""
+    (None when it is off, so upper/stairs are stripped). ``units`` is true
+    for a unit building: its nested "unit" design is kept and cleaned."""
     d["name"] = building_name
     if d.get("wall") not in WALLS:
         log.append((f"building {building_name}", f"wall {d.get('wall')!r} -> 'wood'"))
@@ -1005,6 +1194,19 @@ def sanitize_p3(d, building_name, templates, log, storeys=None):
     else:
         d["yard"] = None
     d["upper"], d["stairs"] = _sanitize_upper(d, building_name, rnames, templates, log, storeys)
+    if units:
+        if isinstance(d.get("unit"), dict) and d["unit"]:
+            d["unit"] = _sanitize_unit(d["unit"], building_name, templates, log)
+        else:
+            log.append((f"building {building_name}",
+                        "unit design missing; using one bare room per copy"))
+            d["unit"] = {"rooms": [{"name": "Room", "share": "small",
+                                    "purpose": "one unit copy"}],
+                         "connections": [], "entrance": {"room": "Room", "side": "south"},
+                         "furniture": []}
+    elif d.pop("unit", None) is not None:
+        log.append((f"building {building_name}",
+                    "unit design dropped: this building repeats no units"))
     return d
 
 
@@ -1278,31 +1480,48 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
     tnames = {t["name"] for t in templates}
     catalogue = _catalogue_lines(templates)
 
-    # ---- P3: one call per building
+    # ---- P3: one call per building. A sameAs part is not called at all:
+    # parse_plan copies its design from the part it points at, so the design
+    # exists once and every copy carries its own name.
+    same_as_parts = {}
+    for c in p1.get("compounds") or []:
+        for p in (c.get("parts") or []):
+            if isinstance(p, dict) and p.get("sameAs"):
+                same_as_parts[p["building"]] = p["sameAs"]
     designs = []
-    n_buildings = sum(len(z["buildings"]) for z in p1["zones"])
+    n_buildings = sum(1 for z in p1["zones"] for b in z["buildings"]
+                      if b["name"] not in same_as_parts)
     seen_buildings = 0
     for z in p1["zones"]:
         keep = []
         for b in z["buildings"]:
             seen_buildings += 1
+            if b["name"] in same_as_parts:
+                stats["dropped"].append(
+                    (f"building {b['name']}",
+                     f"P3 skipped: sameAs copies {same_as_parts[b['name']]!r}'s design"))
+                keep.append(b)
+                continue
             zl = _zone_line(z)
             d = call(f"p3-{slug(b['name'])}", "p3-building",
                      event=("P3", f"building {seen_buildings}/{n_buildings}: {b['name']}"),
                      setting_line=setting_line, zone_line=zl,
                      building_line=_building_line(b), catalogue_lines=catalogue,
                      compound_line=_compound_line(p1.get("compounds") or [], z, b),
+                     units_line=_units_line(b),
                      building_name=b["name"],
                      _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
-                     s=(b.get("storeys", 1) if floors else None):
-                     check_p3(x, n, tnames, y, storeys=s))
+                     s=(b.get("storeys", 1) if floors else None),
+                     u=b.get("units"):
+                     check_p3(x, n, tnames, y, storeys=s, units=u))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
                 keep.append(b)   # parse_plan furnishes a one-room fallback
                 continue
             designs.append(sanitize_p3(d, b["name"], tnames, stats["dropped"],
-                                       storeys=(b.get("storeys", 1) if floors else None)))
+                                       storeys=(b.get("storeys", 1) if floors else None),
+                                       units=bool(b.get("units"))))
             keep.append(b)
         z["buildings"] = keep
 
