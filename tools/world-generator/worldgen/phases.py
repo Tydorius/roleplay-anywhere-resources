@@ -1858,6 +1858,18 @@ def _person_errors(p, ctx, buildings, zones, bedded=None, roster=()):
     return errors
 
 
+# the game's equipment slots (guide §6.1); a slot outside them fails validation
+EQUIP_SLOTS = ("head", "face", "necklace", "innerTorso", "torso", "wieldable1",
+               "wieldable2", "gloves", "pants", "boots", "ring")
+# what models call slots when they use the setting's own words
+SLOT_ALIASES = {"weapon": "wieldable1", "mainhand": "wieldable1", "main_hand": "wieldable1",
+                "hand": "wieldable1", "hands": "gloves", "tool": "wieldable1",
+                "offhand": "wieldable2", "off_hand": "wieldable2", "shield": "wieldable2",
+                "chest": "torso", "body": "torso", "armor": "torso", "armour": "torso",
+                "shirt": "innerTorso", "legs": "pants", "feet": "boots", "neck": "necklace",
+                "helmet": "head", "hat": "head", "mask": "face", "finger": "ring"}
+
+
 def _player_item_errors(p, ctx, items):
     """The player's starting inventory and equipment: real items, 2-5 of them
     (skipped entirely when the catalogue carries no items)."""
@@ -1879,7 +1891,10 @@ def _player_item_errors(p, ctx, items):
         errors.append(f"{ctx}.equipment: slot -> item name, or omit it")
     else:
         for slot, name in eq.items():
-            if name not in items:
+            if slot not in EQUIP_SLOTS and slot not in SLOT_ALIASES:
+                errors.append(f"{ctx}.equipment: slot {slot!r} is not a game slot "
+                              f"({', '.join(EQUIP_SLOTS)})")
+            elif name not in items:
                 errors.append(f"{ctx}.equipment.{slot}: {name!r} is not an item "
                               f"of this catalogue")
             else:
@@ -1959,11 +1974,20 @@ def _sanitize_player_items(player, log, items):
     for slot, name in (player.get("equipment") or {}).items():
         if seen >= 5:
             break
-        if isinstance(name, str) and name in names:
-            eq[slot] = name
-            seen += 1
-        else:
+        if not (isinstance(name, str) and name in names):
             log.append(("player", f"equipment {name!r} dropped: not in the catalogue"))
+            continue
+        real = slot if slot in EQUIP_SLOTS else SLOT_ALIASES.get(str(slot).lower())
+        if real is None or real in eq:
+            # no game slot for it (or the slot is taken): carry it instead
+            log.append(("player", f"equipment slot {slot!r} is not free or not a game slot: "
+                                  f"{name!r} moved to the inventory"))
+            inv.append([name, 1])
+        else:
+            if real != slot:
+                log.append(("player", f"equipment slot {slot!r} -> {real!r}"))
+            eq[real] = name
+        seen += 1
     if inv:
         player["inventory"] = inv
     if eq:

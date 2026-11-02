@@ -15,12 +15,14 @@ Reply with ONE JSON object:
             "description": "one sentence: who they are and what they want",
             "physicalDescription": "build, clothes, one telling detail",
             "inventory": [["Item name", 1], ["Item name", 2]],
-            "equipment": {"torso": "Item name", "weapon": "Item name"}}}
+            "equipment": {"torso": "Item name", "wieldable1": "Item name"}}}
 
 - The ROLE line is who this world's frame says the player is; keep it.
 - They carry 2-5 items from the list between inventory ([item, count] pairs)
-  and equipment (one item a slot, named what the setting calls them: torso,
-  weapon, head, legs...). Omit both fields when the list is empty.
+  and equipment (one item a slot). Equipment slots are exactly the game's:
+  head, face, necklace, innerTorso, torso, wieldable1, wieldable2, gloves,
+  pants, boots, ring. A weapon or tool in hand is wieldable1 (a second one or a
+  shield wieldable2). Omit both fields when the list is empty.
 - "home" must be a BUILDING from the list with a bed free; "work" a building
   or a zone from the lists. The name fits the setting and repeats nobody on
   the roster.

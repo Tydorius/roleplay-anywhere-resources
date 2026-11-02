@@ -170,10 +170,21 @@ def build_spec(world, plan):
             ent.pop("level")
         if c.person.extras.get("animationId"):
             ent["animationId"] = c.person.extras["animationId"]
-        if c.person.extras.get("inventory"):
-            ent["inventory"] = list(c.person.extras["inventory"])
-        if c.person.extras.get("equipment"):
-            ent["equipment"] = dict(c.person.extras["equipment"])
+        inventory = list(c.person.extras.get("inventory") or [])
+        equipment = {}
+        # plans saved before slot checks may name a slot the game lacks
+        # ("weapon"): map it, or carry the item when there is no free slot
+        from .phases import EQUIP_SLOTS, SLOT_ALIASES
+        for slot, item in (c.person.extras.get("equipment") or {}).items():
+            real = slot if slot in EQUIP_SLOTS else SLOT_ALIASES.get(str(slot).lower())
+            if real is None or real in equipment:
+                inventory.append([item, 1])
+            else:
+                equipment[real] = item
+        if inventory:
+            ent["inventory"] = inventory
+        if equipment:
+            ent["equipment"] = equipment
         if "innkeeper" in (c.person.role or "").lower() or "merchant" in (c.person.role or "").lower():
             ent["merchant"] = {}
         return ent

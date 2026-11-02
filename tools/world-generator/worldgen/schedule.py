@@ -173,3 +173,52 @@ def free_cell(world, region_name, taken=(), connected=None):
             continue
         return c
     return None
+
+
+def start_cell(world, region_name, taken=(), connected=None):
+    """(cell, region name) for a character's start: a free cell in the
+    region, else in a sibling room of the same building, else the nearest
+    free reachable cell anywhere, with the innermost region that holds it.
+    A crowded room never strands its people at a made-up spot whose
+    room-relative position lands outside the room."""
+    cell = free_cell(world, region_name, taken, connected)
+    if cell is not None:
+        return cell, region_name
+    region = world.regions_by_name.get(region_name)
+    if region is None:
+        return None, region_name
+    for sib in world.regions:
+        if sib is region or not sib.wall or sib.parent is None or sib.parent != region.parent:
+            continue
+        cell = free_cell(world, sib.name, taken, connected)
+        if cell is not None:
+            return cell, sib.name
+    if connected is None:
+        return None, region_name
+    occupied = set(taken)
+    for o in world.objects:
+        w, h = world.templates[o.template].size
+        occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
+                     for y in range(o.pos[1], o.pos[1] + h)}
+    cx, cy = region.rect.x + region.rect.w // 2, region.rect.y + region.rect.h // 2
+    for c in sorted(connected - occupied,
+                    key=lambda c: (abs(c[0] - cx) + abs(c[1] - cy), c[1], c[0])):
+        holder = _innermost(world, c)
+        if holder is not None:
+            return c, holder.name
+    return None, region_name
+
+
+def _innermost(world, cell):
+    """The smallest region whose floor holds the cell (a walled region's ring
+    is wall, not floor), or None."""
+    best = None
+    for r in world.regions:
+        rect = r.rect
+        if not rect.contains_cell(cell):
+            continue
+        if r.wall and (cell[0] in (rect.x, rect.x1) or cell[1] in (rect.y, rect.y1)):
+            continue
+        if best is None or rect.w * rect.h < best.rect.w * best.rect.h:
+            best = r
+    return best

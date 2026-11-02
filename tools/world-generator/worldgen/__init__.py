@@ -990,7 +990,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     for person in plan.npcs + [plan.player]:
         is_player = person is plan.player
         sched, start_region = schedule_mod.make_schedule(world, person)
-        pos = schedule_mod.free_cell(world, start_region, taken, connected)
+        pos, start_region = schedule_mod.start_cell(world, start_region, taken, connected)
         if pos is None:
             world.failures.append((f"character {person.name}", f"no free cell in {start_region}"))
             pos = (world.grid[0] // 2, world.grid[1] // 2)

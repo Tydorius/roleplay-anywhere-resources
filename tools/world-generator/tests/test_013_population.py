@@ -189,7 +189,8 @@ class TestP5Batches(unittest.TestCase):
         client = ScriptedClient(replies)
         plan, _stats = phases.run_phases("a mill village", client)
         self.assertEqual(plan["player"]["inventory"], [["Rain cloak", 1], ["Ledger", 1]])
-        self.assertEqual(plan["player"]["equipment"], {"weapon": "Walking staff"})
+        # "weapon" is no game slot: it maps to wieldable1 (see test_player_slots)
+        self.assertEqual(plan["player"]["equipment"], {"wieldable1": "Walking staff"})
 
     def test_player_items_must_be_real_and_two_to_five(self):
         p = dict(CANNED_P5_PLAYER["player"], inventory=[["Ghost item", 1]])
