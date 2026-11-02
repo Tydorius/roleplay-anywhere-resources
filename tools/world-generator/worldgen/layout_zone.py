@@ -13,6 +13,7 @@ filler then spread over the remaining free ground, clear of paths, doors and
 yards, to a density scaled by the setting.
 """
 import dataclasses
+import random
 from collections import deque
 
 from . import layout_compound
@@ -300,6 +301,81 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         if count < target:
             out.failures.append((f"filler {f.template}", f"placed {count} of {target} (zone full)"))
     return out
+
+
+# ------------------------------------------------------------------ measuring
+
+MEASURE_MARGIN = 2        # cells of slack for the zone's own paths and dressing
+MEASURE_TRIES = 12        # frames tried, each bigger, before giving up growing
+
+
+def _entry_mouths(w, h, sides, rng):
+    """Road-mouth cells on the given sides of a w x h frame, one 3-wide
+    mouth per side at a seeded position in its middle half: what the map's
+    roads will leave on those sides."""
+    cells = set()
+    for s in dict.fromkeys(x for x in sides if x in SIDE_DX_DY):
+        if s in ("west", "east"):
+            a = rng.randint(max(1, h // 4), max(2, min(h - 2, (3 * h) // 4)))
+            cells |= ({(0, a + d) for d in (-1, 0, 1)} if s == "west"
+                      else {(w - 1, a + d) for d in (-1, 0, 1)})
+        else:
+            a = rng.randint(max(1, w // 4), max(2, min(w - 2, (3 * w) // 4)))
+            cells |= ({(a + d, 0) for d in (-1, 0, 1)} if s == "south"
+                      else {(a + d, h - 1) for d in (-1, 0, 1)})
+    return cells
+
+
+def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0):
+    """(w, h) the zone's real layout needs, measured by laying it out: the
+    zone runs in a local frame at the size its content is estimated at
+    (``scale`` inflates that start — the growth passes' second chance),
+    with road mouths on ``entry_sides`` (the sides its roads arrive on, so
+    gates and streets face the way they will on the map). A frame that
+    cannot hold the content grows until everything places, and the size
+    that held it — plus a margin for the zone's own paths and dressing —
+    is the measurement, never below the content minimums. A zone with
+    nothing to build is not measured (None): it fills the space left over.
+
+    Every attempt lays the zone out with the same inner seed, so the same
+    rng state always measures the same size."""
+    from .layout_map import (FIT_SLACK, MIN_ZONE_SIDE, _lightly_built,
+                             _loose_blocks, _zone_fit, _zone_mins)
+    if not (zone.buildings or getattr(zone, "compounds", None)):
+        return None
+    seed = rng.randrange(1 << 30)
+    fit = _zone_fit(zone, templates)
+    mins = _zone_mins(zone, templates)
+    loose, blocks = _loose_blocks(zone, templates)
+    # a blocks-only zone's fit (or a lone building's one placement) is a
+    # measurement already: trust it at full size; a loose packing's fit is
+    # an estimate that runs hot, so the search starts below it
+    slack = 1.0 if ((blocks and not loose) or _lightly_built(zone, templates)) \
+        else FIT_SLACK
+    w = max(MIN_ZONE_SIDE, mins[0], int(round(fit[1] * slack * scale)))
+    h = max(MIN_ZONE_SIDE, mins[1], int(round(fit[2] * slack * scale)))
+    want_buildings = len(zone.buildings)
+    want_compounds = len(getattr(zone, "compounds", None) or [])
+
+    def places(w, h, inner_seed):
+        """One seeded layout at this frame size: everything placed?"""
+        lrng = random.Random(inner_seed)
+        mouths = _entry_mouths(w, h, entry_sides, lrng)
+        out = layout_zone(zone, Rect(0, 0, w, h), templates, lrng,
+                          road_reserved=mouths)
+        lost = [r for (_what, r) in out.failures if "no space in zone" in r]
+        return (len(out.buildings) == want_buildings
+                and len(out.compounds) == want_compounds and not lost)
+
+    # a size only counts as measured when two different inner seeds both
+    # place everything there — one seed's luck is not a measurement
+    for _ in range(MEASURE_TRIES):
+        if places(w, h, seed) and places(w, h, seed ^ 0x5F3759DF):
+            return (max(w + MEASURE_MARGIN, mins[0], MIN_ZONE_SIDE),
+                    max(h + MEASURE_MARGIN, mins[1], MIN_ZONE_SIDE))
+        w += max(3, w // 6)
+        h += max(3, h // 6)
+    return (w, h)   # nothing fit: the biggest frame tried, the map's problem
 
 
 # ------------------------------------------------------------------ the path

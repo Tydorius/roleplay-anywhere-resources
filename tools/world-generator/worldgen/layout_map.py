@@ -24,7 +24,8 @@ import math
 
 from .model import Rect, is_urban_zone, zone_class
 
-GRID_MIN, GRID_MAX = 48, 160
+GRID_MIN = 48
+GRID_WARN = 256                 # past this on an axis the map warns, never caps
 MIN_GUTTER, MAX_GUTTER = 2, 3   # empty cells between neighbouring zones
 MIN_ZONE_SIDE = 12              # thinnest zone the partition ever cuts
 AREA_HEADROOM = 1.15            # grid area over the zones' target area
@@ -76,6 +77,7 @@ class MapOut:
         self.roads = []          # [RoadOut]
         self.zone_road_reserve = {}  # zone name -> cells that must stay clear (road mouths)
         self.failures = []
+        self.warnings = []       # non-fatal notes (a grid past GRID_WARN)
         self.default_ground = ("grass", "grass")  # the plan's dominant wild ground
         self.density_scale = 1.0                 # setting density -> filler scale
         self.extensions = set()
@@ -85,177 +87,212 @@ class MapOut:
         return [(name, r) for name, rects in self.zone_pieces.items() for r in rects]
 
 
+def _ring_fit(z, fps):
+    """(area, cross, along) the around_green arrangement needs: buildings
+    ring the green on every side, so the zone is the green plus its ring
+    path plus a building depth and a lot line on each side."""
+    from .layout_zone import green_size
+    gw, gh = green_size(z, fps, is_urban_zone(z))
+    depths = sorted((min(f) for f in fps), reverse=True)
+    head, rest = depths[0], max(depths[1:4] + [0])
+    cross = 2 * rest + 2 * 3 + gw + 4
+    along = head + rest + 2 * 3 + gh + 4
+    return cross * along, cross, along
+
+
+def _loose_blocks(z, tmap):
+    """(loose, blocks): the zone's freestanding building footprints and
+    its compound blocks, each block placed whole, like one very large
+    building (a block's parts are inside it, so they are not loose)."""
+    from .layout_compound import compound_footprint
+    from .layout_building import building_footprint
+    compounds = getattr(z, "compounds", None) or []
+    parts = {p.building for c in compounds for p in c.parts}
+    loose = [building_footprint(b, tmap) for b in z.buildings
+             if b.name not in parts]
+    blocks = [compound_footprint(z, c, tmap) for c in compounds]
+    return loose, blocks
+
+
+def _lightly_built(z, tmap):
+    """True of a non-urban settlement whose whole content is one loose
+    building: it places whole beside its street, like a compound block,
+    so its size is its one placement, not a packing of many lots — the
+    band caps and the lone centre's caps hold it at its minimums. An
+    urban zone's buildings fill their lots wall to wall and a farmstead
+    keeps its fields besides, so neither is sized this way."""
+    loose, blocks = _loose_blocks(z, tmap)
+    return zone_class(z) == "settlement" and not is_urban_zone(z) \
+        and not blocks and len(loose) <= 1
+
+
+def _lone_widest(design, tmap):
+    """The least width the packer will ever need for one lone building:
+    it tries the street-facing orientation first, and the resolved
+    footprint depends on the entrance side (it picks the strip
+    direction), so the smallest of the facing variants is the one it
+    places whenever it fits."""
+    from .layout_building import building_footprint
+    fps = [building_footprint(design, tmap)]
+    fps += [building_footprint(
+                dataclasses.replace(design, entrance_side=s), tmap)
+            for s in SIDES]
+    return min(max(fp) for fp in fps)
+
+
+def _zone_fit(z, tmap):
+    """(area, cross, along) the zone's content needs: the widest pair of
+    buildings facing across the street, the fuller side's row along it,
+    and (for a settlement grid) the side streets' bite out of the street's
+    length. A zone ringing a green is sized as the green and its ring
+    instead. A zone of nothing but compound blocks is sized by the blocks
+    themselves: each places whole beside one street at its real footprint
+    — the row's front strip and the spine's corridor and wings included —
+    so its fit is exact, not an estimate."""
+    from .layout_zone import (PATH_WIDTH, YARD_DEPTH, FIELDS_FIT_BUMP,
+                              lot_gap, lot_spacing, side_street_count)
+    loose, blocks = _loose_blocks(z, tmap)
+    fps = sorted(loose + blocks, key=lambda f: (-f[0], -f[1]))
+    spacing = lot_spacing(z)
+    gap = sum(lot_gap(z)) / 2.0   # the gaps the packer really leaves
+    if z.arrangement == "around_green" and fps:
+        return _ring_fit(z, fps)
+    if blocks and not loose:
+        cross = 4 + spacing + PATH_WIDTH + max(w for (w, _h) in blocks)
+        along = 4 + PATH_WIDTH + sum(h for (_w, h) in blocks) \
+            + gap * max(0, len(blocks) - 1)
+        area = cross * along
+        if zone_class(z) == "agricultural" or z.arrangement == "fields":
+            area += FIELDS_FIT_BUMP
+        return area, cross, along
+    sides = ([], [])
+    for f in fps:   # big first, alternating sides like the band packer
+        sides[1 if len(sides[1]) < len(sides[0]) else 0].append(f)
+    cross = 4 + spacing + PATH_WIDTH + \
+        sum((max(f[0] for f in s) if s else 0) for s in sides)
+    along = 6 + max((sum(f[1] + gap for f in s) for s in sides), default=0)
+    if any(b.yard for b in z.buildings):
+        # a yard runs YARD_DEPTH deep beside its building
+        cross += 2 * (YARD_DEPTH + 1)
+        along += YARD_DEPTH + 1
+    if zone_class(z) == "settlement":
+        if not is_urban_zone(z):
+            # a village or town keeps its crossroads square and its
+            # buildings stand loose round it — looser the more buildings
+            # there are; a lone inn is sized to its inn
+            n = max(0, len(z.buildings) - 1)
+            cross += min(6, 2 * n)
+            along += min(9, 3 * n)
+        k = side_street_count(along, len(z.buildings))
+        along += k * (spacing + 3)
+    area = cross * along
+    if zone_class(z) == "agricultural" or z.arrangement == "fields":
+        # the crop plots are content too: room for the two smallest the
+        # layout always plants, with their tracks
+        area += FIELDS_FIT_BUMP
+    return area, cross, along
+
+
+def _zone_weight(z, tmap):
+    """The zone's target area. Zones with buildings or compounds are sized
+    by what they contain — their fit already carries the streets, yards and
+    lot spacing, each compound block at its real footprint with the row's
+    front strip included — scaled by the size class. The size class is no
+    floor on the area: a huge zone with a hamlet in it is hamlet-sized.
+    Wild and water zones with nothing in them keep their nominal size."""
+    from .layout_zone import ZONE_SIZES
+    nominal = ZONE_SIZES[z.size_class][0] * ZONE_SIZES[z.size_class][1]
+    if not (z.buildings or getattr(z, "compounds", None)):
+        return nominal
+    return _zone_fit(z, tmap)[0] * SIZE_CLASS_MULT[z.size_class]
+
+
+def _zone_mins(z, tmap):
+    """(min w, min h) the zone's rect must meet on each axis. Loose
+    buildings rotate freely, so their floor is the same on both axes; a
+    compound block places whole in its declared orientation (its frontage
+    or axis is absolute), so a row's length — front strip included —
+    floors one axis and its depth the other, and a spine's wing spread
+    floors the axis the wings run along. A loose-built zone is also never
+    cut thinner than its weight admits (the band packer's aspect cap must
+    not squeeze the zone below the area its content needs); a zone with compound
+    blocks needs no such floor — its per-axis minimums are exact."""
+    from .layout_zone import PATH_WIDTH, lot_spacing
+    loose, blocks = _loose_blocks(z, tmap)
+    base = MIN_ZONE_SIDE
+    widest = 0
+    if loose:
+        widest = max(max(f) for f in loose)
+        # lot spacing only ever separates two lots, and a lone building
+        # places whole beside its street with just its lot ring and the
+        # inner margin besides — the packer tries the street-facing
+        # orientation first, so the least of its variants is the width
+        # it needs
+        sp = lot_spacing(z) if len(loose) > 1 else 0
+        if _lightly_built(z, tmap):
+            base = max(base, _lone_widest(z.buildings[0], tmap)
+                       + PATH_WIDTH + 3)
+        else:
+            base = max(base, widest + sp + PATH_WIDTH + 4)
+        if not blocks and not _lightly_built(z, tmap):
+            base = max(base, round(math.sqrt(
+                _zone_weight(z, tmap) / MAX_BAND_ASPECT)))
+    sp = lot_spacing(z)
+    min_w = min_h = base
+    for (w, h) in blocks:
+        min_w = max(min_w, w + sp + PATH_WIDTH + 2)
+        min_h = max(min_h, h + sp + PATH_WIDTH + 2)
+    return (min_w, min_h)
+
+
+def _fields_along_floor(z, tmap):
+    """The least length a fields zone's rect needs along its street: the
+    farmstead plus the two crop plots the layout always plants beside it,
+    with their tracks. It floors the band cut's length axis only — the
+    cross axis keeps the ordinary building floor, so a farmland band
+    member runs long without starving the map's coverage."""
+    if zone_class(z) != "agricultural" and z.arrangement != "fields":
+        return 0
+    loose, _blocks = _loose_blocks(z, tmap)
+    if not loose:
+        return 0
+    return max(max(f) for f in loose) + 13
+
+
+def _settlement_group(plan, weights):
+    """([settlement zones], [surrounding zones]): the settlement sits in
+    the middle of the map; with no settlement zone the busiest zone takes
+    the middle instead."""
+    classes = {z.name: zone_class(z) for z in plan.zones}
+    settle = [z for z in plan.zones if classes[z.name] == "settlement"]
+    if not settle:
+        settle = [max(plan.zones, key=lambda z: (len(z.buildings), weights[z.name]))]
+    settle_names = {z.name for z in settle}
+    outer = [z for z in plan.zones if z.name not in settle_names]
+    return settle, outer
+
+
+def tmap_of(plan):
+    """{template name: template} for the plan's catalogue."""
+    return {t.name: t for t in plan.templates}
+
+
+def _zone_aspect(z):
+    """The zone's nominal aspect (the size class's own shape)."""
+    from .layout_zone import ZONE_SIZES
+    return ZONE_SIZES[z.size_class][0] / float(ZONE_SIZES[z.size_class][1])
+
+
 def layout_map(plan, rng, extensions=(), weight_scale=None):
     """Place the zones on the grid and lay the roads; returns a MapOut.
     ``weight_scale`` multiplies selected zones' weights (a second pass
     nudging zones whose measured building coverage missed its target)."""
-    from .layout_zone import (ZONE_SIZES, PATH_WIDTH, YARD_DEPTH, FIELDS_FIT_BUMP,
-                              lot_gap, lot_spacing, side_street_count)
-    from .layout_building import building_footprint
-
-    tmap = {t.name: t for t in plan.templates}
-
-    def _ring_fit(z, fps, spacing):
-        """(area, cross, along) the around_green arrangement needs: buildings
-        ring the green on every side, so the zone is the green plus its ring
-        path plus a building depth and a lot line on each side."""
-        from .layout_zone import green_size
-        gw, gh = green_size(z, fps, is_urban_zone(z))
-        depths = sorted((min(f) for f in fps), reverse=True)
-        head, rest = depths[0], max(depths[1:4] + [0])
-        cross = 2 * rest + 2 * 3 + gw + 4
-        along = head + rest + 2 * 3 + gh + 4
-        return cross * along, cross, along
-
-    def _loose_blocks(z):
-        """(loose, blocks): the zone's freestanding building footprints and
-        its compound blocks, each block placed whole, like one very large
-        building (a block's parts are inside it, so they are not loose)."""
-        from .layout_compound import compound_footprint
-        compounds = getattr(z, "compounds", None) or []
-        parts = {p.building for c in compounds for p in c.parts}
-        loose = [building_footprint(b, tmap) for b in z.buildings
-                 if b.name not in parts]
-        blocks = [compound_footprint(z, c, tmap) for c in compounds]
-        return loose, blocks
-
-    def _lightly_built(z):
-        """True of a non-urban settlement whose whole content is one loose
-        building: it places whole beside its street, like a compound block,
-        so its size is its one placement, not a packing of many lots — the
-        band caps and the lone centre's caps hold it at its minimums. An
-        urban zone's buildings fill their lots wall to wall and a farmstead
-        keeps its fields besides, so neither is sized this way."""
-        loose, blocks = _loose_blocks(z)
-        return zone_class(z) == "settlement" and not is_urban_zone(z) \
-            and not blocks and len(loose) <= 1
-
-    def _lone_widest(design):
-        """The least width the packer will ever need for one lone building:
-        it tries the street-facing orientation first, and the resolved
-        footprint depends on the entrance side (it picks the strip
-        direction), so the smallest of the facing variants is the one it
-        places whenever it fits."""
-        fps = [building_footprint(design, tmap)]
-        fps += [building_footprint(
-                    dataclasses.replace(design, entrance_side=s), tmap)
-                for s in SIDES]
-        return min(max(fp) for fp in fps)
-
-    def zone_fit(z):
-        """(area, cross, along) the zone's content needs: the widest pair of
-        buildings facing across the street, the fuller side's row along it,
-        and (for a settlement grid) the side streets' bite out of the street's
-        length. A zone ringing a green is sized as the green and its ring
-        instead. A zone of nothing but compound blocks is sized by the blocks
-        themselves: each places whole beside one street at its real footprint
-        — the row's front strip and the spine's corridor and wings included —
-        so its fit is exact, not an estimate."""
-        loose, blocks = _loose_blocks(z)
-        fps = sorted(loose + blocks, key=lambda f: (-f[0], -f[1]))
-        spacing = lot_spacing(z)
-        gap = sum(lot_gap(z)) / 2.0   # the gaps the packer really leaves
-        if z.arrangement == "around_green" and fps:
-            return _ring_fit(z, fps, spacing)
-        if blocks and not loose:
-            cross = 4 + spacing + PATH_WIDTH + max(w for (w, _h) in blocks)
-            along = 4 + PATH_WIDTH + sum(h for (_w, h) in blocks) \
-                + gap * max(0, len(blocks) - 1)
-            area = cross * along
-            if zone_class(z) == "agricultural" or z.arrangement == "fields":
-                area += FIELDS_FIT_BUMP
-            return area, cross, along
-        sides = ([], [])
-        for f in fps:   # big first, alternating sides like the band packer
-            sides[1 if len(sides[1]) < len(sides[0]) else 0].append(f)
-        cross = 4 + spacing + PATH_WIDTH + \
-            sum((max(f[0] for f in s) if s else 0) for s in sides)
-        along = 6 + max((sum(f[1] + gap for f in s) for s in sides), default=0)
-        if any(b.yard for b in z.buildings):
-            # a yard runs YARD_DEPTH deep beside its building
-            cross += 2 * (YARD_DEPTH + 1)
-            along += YARD_DEPTH + 1
-        if zone_class(z) == "settlement":
-            if not is_urban_zone(z):
-                # a village or town keeps its crossroads square and its
-                # buildings stand loose round it — looser the more buildings
-                # there are; a lone inn is sized to its inn
-                n = max(0, len(z.buildings) - 1)
-                cross += min(6, 2 * n)
-                along += min(9, 3 * n)
-            k = side_street_count(along, len(z.buildings))
-            along += k * (spacing + 3)
-        area = cross * along
-        if zone_class(z) == "agricultural" or z.arrangement == "fields":
-            # the crop plots are content too: room for the two smallest the
-            # layout always plants, with their tracks
-            area += FIELDS_FIT_BUMP
-        return area, cross, along
-
-    def zone_weight(z):
-        """The zone's target area. Zones with buildings or compounds are sized
-        by what they contain — their fit already carries the streets, yards and
-        lot spacing, each compound block at its real footprint with the row's
-        front strip included — scaled by the size class. The size class is no
-        floor on the area: a huge zone with a hamlet in it is hamlet-sized.
-        Wild and water zones with nothing in them keep their nominal size."""
-        nominal = ZONE_SIZES[z.size_class][0] * ZONE_SIZES[z.size_class][1]
-        if not (z.buildings or getattr(z, "compounds", None)):
-            return nominal
-        return zone_fit(z)[0] * SIZE_CLASS_MULT[z.size_class]
-
-    def zone_mins(z):
-        """(min w, min h) the zone's rect must meet on each axis. Loose
-        buildings rotate freely, so their floor is the same on both axes; a
-        compound block places whole in its declared orientation (its frontage
-        or axis is absolute), so a row's length — front strip included —
-        floors one axis and its depth the other, and a spine's wing spread
-        floors the axis the wings run along. A loose-built zone is also never
-        cut thinner than its weight admits (the band packer's aspect cap must
-        not squeeze the zone below the area its content needs); a zone with compound
-        blocks needs no such floor — its per-axis minimums are exact."""
-        loose, blocks = _loose_blocks(z)
-        base = MIN_ZONE_SIDE
-        widest = 0
-        if loose:
-            widest = max(max(f) for f in loose)
-            # lot spacing only ever separates two lots, and a lone building
-            # places whole beside its street with just its lot ring and the
-            # inner margin besides — the packer tries the street-facing
-            # orientation first, so the least of its variants is the width
-            # it needs
-            sp = lot_spacing(z) if len(loose) > 1 else 0
-            if _lightly_built(z):
-                base = max(base, _lone_widest(z.buildings[0])
-                           + PATH_WIDTH + 3)
-            else:
-                base = max(base, widest + sp + PATH_WIDTH + 4)
-            if not blocks and not _lightly_built(z):
-                base = max(base, round(math.sqrt(
-                    zone_weight(z) / MAX_BAND_ASPECT)))
-        sp = lot_spacing(z)
-        min_w = min_h = base
-        for (w, h) in blocks:
-            min_w = max(min_w, w + sp + PATH_WIDTH + 2)
-            min_h = max(min_h, h + sp + PATH_WIDTH + 2)
-        return (min_w, min_h)
-
-    def _fields_along_floor(z):
-        """The least length a fields zone's rect needs along its street: the
-        farmstead plus the two crop plots the layout always plants beside it,
-        with their tracks. It floors the band cut's length axis only — the
-        cross axis keeps the ordinary building floor, so a farmland band
-        member runs long without starving the map's coverage."""
-        if zone_class(z) != "agricultural" and z.arrangement != "fields":
-            return 0
-        loose, _blocks = _loose_blocks(z)
-        if not loose:
-            return 0
-        return max(max(f) for f in loose) + 13
-
+    tmap = tmap_of(plan)
     scale = weight_scale or {}
-    weights = {z.name: zone_weight(z) * scale.get(z.name, 1.0) for z in plan.zones}
-    mins = {z.name: zone_mins(z) for z in plan.zones}
+
+    weights = {z.name: _zone_weight(z, tmap) * scale.get(z.name, 1.0)
+               for z in plan.zones}
+    mins = {z.name: _zone_mins(z, tmap) for z in plan.zones}
     # a blocks-only zone's fit is exact (the blocks place verbatim), so its
     # caps are its own fit dims per axis, never above them — the band and
     # centre caps for loose-built zones carry slack for estimates that run
@@ -269,15 +306,14 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
         parts = {p.building for c in compounds for p in c.parts}
         if not all(b.name in parts for b in z.buildings):
             continue
-        fc, fa = zone_fit(z)[1:]
+        fc, fa = _zone_fit(z, tmap)[1:]
         exact[z.name] = (max(mins[z.name][0], round(fc)),
                          max(mins[z.name][1], round(fa)))
     for z in plan.zones:
-        if _lightly_built(z):
+        if _lightly_built(z, tmap):
             exact[z.name] = mins[z.name]
-    aspects = {z.name: ZONE_SIZES[z.size_class][0] / float(ZONE_SIZES[z.size_class][1])
-               for z in plan.zones}
-    fits = {z.name: tuple(c * FIT_SLACK for c in zone_fit(z)) for z in plan.zones
+    aspects = {z.name: _zone_aspect(z) for z in plan.zones}
+    fits = {z.name: tuple(c * FIT_SLACK for c in _zone_fit(z, tmap)) for z in plan.zones
             if zone_class(z) == "settlement" and z.buildings}
     margin = rng.randint(2, 3)
     gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
@@ -296,9 +332,9 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
     m.density_scale = {"sparse": 0.6, "normal": 1.0, "dense": 1.4}.get(
         (plan.setting or {}).get("density"), 1.0)
     _place_centred(plan, m, weights, mins, aspects, rng, fits, margin, gut,
-                   exact=exact, fit_of={z.name: zone_fit(z) for z in plan.zones},
-                   along_floor={z.name: _fields_along_floor(z)
-                                for z in plan.zones if _fields_along_floor(z)})
+                   exact=exact, fit_of={z.name: _zone_fit(z, tmap) for z in plan.zones},
+                   along_floor={z.name: _fields_along_floor(z, tmap)
+                                for z in plan.zones if _fields_along_floor(z, tmap)})
     m.roads, road_failures = _place_roads(plan, m.zones, m.grid, rng, m.all_pieces())
     m.failures.extend(road_failures)
     m.zone_road_reserve = _road_mouths(m.all_pieces(), m.roads)
@@ -329,18 +365,15 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     along_floor = along_floor or {}
     W, H = m.grid
     classes = {z.name: zone_class(z) for z in plan.zones}
-    settle = [z for z in plan.zones if classes[z.name] == "settlement"]
-    if not settle:
-        settle = [max(plan.zones, key=lambda z: (len(z.buildings), weights[z.name]))]
+    settle, outer = _settlement_group(plan, weights)
     settle_names = {z.name for z in settle}
-    outer = [z for z in plan.zones if z.name not in settle_names]
     # minimums are per axis ((min w, min h)): west/east cuts read the width
     # floor, south/north cuts the height floor
     mnx = lambda names: max([mins[n][0] for n in names] + [0])
     mny = lambda names: max([mins[n][1] for n in names] + [0])
     side_axis = lambda s: 0 if s in ("west", "east") else 1
 
-    sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
+    sides, _entry = _assign_sides(plan, settle, outer, weights, rng, W, H)
     built = {z.name for z in plan.zones
              if z.buildings or getattr(z, "compounds", None)}
 
@@ -432,7 +465,7 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             break
         W, H = stretched
         m.grid = (W, H)
-        sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
+        sides, _entry = _assign_sides(plan, settle, outer, weights, rng, W, H)
 
     # the core's blocks also pin the centre's least size on each axis: cut
     # as a row on a wide map (blocks side by side), as a column on a tall one
@@ -758,7 +791,12 @@ def _assign_sides(plan, settle, outer, weights, rng, W, H):
     """Each surrounding zone goes to the side its settlement adjacency points
     at: the direction from the settlement zone it touches towards the middle
     of the map. Zones with no settlement neighbour follow an adjacent outer
-    zone, and loads are balanced so the sides fill evenly."""
+    zone, and loads are balanced so the sides fill evenly. Returns
+    ({side: [zone names]}, {zone name: (entry side, ...)}) — the sides each
+    zone's roads arrive on, read off the same nominal placement: a
+    settlement neighbour from the compass direction between the nominal
+    positions, an outer neighbour from its band's side (a same-band
+    neighbour along the band)."""
     settle_names = {z.name for z in settle}
     adj = _symmetric_adjacency(plan)
     # a nominal central partition learns where each settlement zone sits
@@ -843,7 +881,34 @@ def _assign_sides(plan, settle, outer, weights, rng, W, H):
             sides[resolved[mover]].remove(mover)
             sides[new_side].append(mover)
             resolved[mover] = new_side
-    return sides
+
+    def entry_of(z):
+        """The sides z's roads arrive on, from where its neighbours sit: a
+        settlement neighbour across the nominal centre, an outer neighbour
+        across its band (a same-band neighbour along the band)."""
+        out = set()
+        here = pos.get(z.name)
+        for n in z.adjacentTo:
+            if n in pos:
+                if here is None:
+                    continue
+                px, py = pos[n].center()
+                qx, qy = here.center()
+                if abs(px - qx) >= abs(py - qy):
+                    out.add("east" if px > qx else "west")
+                else:
+                    out.add("north" if py > qy else "south")
+            elif n in resolved:
+                if resolved[n] == resolved.get(z.name):
+                    # same band: the road runs along it
+                    out |= {"north", "south"} if resolved[n] in ("west", "east") \
+                        else {"west", "east"}
+                else:
+                    out.add(resolved[n])
+        return tuple(sorted(out))
+
+    entry = {z.name: entry_of(z) for z in plan.zones}
+    return sides, entry
 
 
 def _choose_wraps(outer, sides, classes, weights, rng, built=()):
@@ -884,18 +949,20 @@ def _choose_wraps(outer, sides, classes, weights, rng, built=()):
     return wraps
 
 def _grid_size(weights, core=None):
-    """Grid area from the zone weights. ``core`` is (w, h, weight): the
-    settlement core's own span when it is a row of blocks — the greater of
-    that rectangle and the settlement weights shapes the grid, so the core's
-    blocks stay blocks instead of stretching into bands."""
+    """Grid area from the zone weights — the initial shape only: the
+    placed zones' own sizes stretch it further, and nothing caps it.
+    ``core`` is (w, h, weight): the settlement core's own span when it is
+    a row of blocks — the greater of that rectangle and the settlement
+    weights shapes the grid, so the core's blocks stay blocks instead of
+    stretching into bands."""
     area = float(sum(weights.values()))
     aspect = 1.0
     if core:
         area = area - core[2] + max(core[2], core[0] * core[1])
         aspect = core[0] / float(core[1])
     area *= AREA_HEADROOM
-    gw = max(GRID_MIN, min(GRID_MAX, int(round(math.sqrt(area * aspect)))))
-    gh = max(GRID_MIN, min(GRID_MAX, int(round(area / gw))))
+    gw = max(GRID_MIN, int(round(math.sqrt(area * aspect))))
+    gh = max(GRID_MIN, int(round(area / gw)))
     return (gw, gh)
 
 
