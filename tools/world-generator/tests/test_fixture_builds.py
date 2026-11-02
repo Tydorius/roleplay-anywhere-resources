@@ -99,6 +99,43 @@ class TestAshvaleCompoundFixture(unittest.TestCase):
                           if r.kind == "field" and r.parent == "Millfield Farms"]
                 self.assertGreaterEqual(len(fields), 2)
 
+    def test_every_built_zone_fills_at_least_45_percent(self):
+        world = self.worlds[()]
+        for name, area in world.zone_building_area.items():
+            if not area:
+                continue   # an empty wild zone has no content to fill it
+            ratio = world.metrics["zone_fill"][name]["ratio"]
+            self.assertGreaterEqual(ratio, 0.45,
+                                    f"{name} is mostly empty ground (fill {ratio})")
+
+    def test_castle_compound_covers_55_percent_of_its_zone(self):
+        world = self.worlds[()]
+        zrect = world.zones_by_name["Castle Rise"]
+        carea = sum(r.rect.w * r.rect.h for r in world.regions
+                    if r.kind == "compound" and r.parent == "Castle Rise")
+        self.assertGreaterEqual(carea / float(zrect.w * zrect.h), 0.55)
+
+    def test_the_green_has_buildings_on_three_sides(self):
+        world = self.worlds[()]
+        g = next(r for r in world.regions if r.name == "The Green").rect
+        zrect = world.zones_by_name["Emberwick Village"]
+        sides = set()
+        for b in world.buildings:
+            r = b.layout.rect
+            if not zrect.contains_rect(r):
+                continue
+            across_x = not (r.x1 < g.x - 2 or r.x > g.x1 + 2)
+            across_y = not (r.y1 < g.y - 2 or r.y > g.y1 + 2)
+            if r.y > g.y1 and across_x:
+                sides.add("north")
+            elif r.y1 < g.y and across_x:
+                sides.add("south")
+            elif r.x > g.x1 and across_y:
+                sides.add("east")
+            elif r.x1 < g.x and across_y:
+                sides.add("west")
+        self.assertGreaterEqual(len(sides), 3, sorted(sides))
+
     def test_wall_walk_joins_the_upper_storeys(self):
         world = self.worlds[("floors",)]
         walks = [r for r in world.regions
