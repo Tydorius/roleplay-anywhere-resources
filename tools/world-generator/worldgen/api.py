@@ -48,13 +48,17 @@ def _check_extensions(extensions):
 
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
-             emit=None):
+             emit=None, frame=None, questionnaire=None):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
-    pre-built ``client`` instead (it is used as-is). Raises llm.LLMError for
-    an unusable provider, phases.PhaseError when P1/P2 cannot be salvaged,
-    and Cancelled when ``cancel()`` turns true. Returns the summary dict."""
+    pre-built ``client`` instead (it is used as-is). ``frame`` is an approved
+    World Frame from :func:`frame` (every phase gets it in place of the bare
+    idea); a ``questionnaire`` ``{"mode", "answers", "population"}`` without
+    a frame runs P0 first. Both are kept on plan.json, so a re-roll never
+    asks again. Raises llm.LLMError for an unusable provider,
+    phases.PhaseError when P0/P1/P2 cannot be salvaged, and Cancelled when
+    ``cancel()`` turns true. Returns the summary dict."""
     extensions = _check_extensions(extensions)
     if client is None:
         from . import llm
@@ -62,7 +66,8 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions,
-                                    progress=progress, cancel=cancel)
+                                    progress=progress, cancel=cancel,
+                                    frame=frame, questionnaire=questionnaire)
     if extensions:
         plan["extensions"] = sorted(set(plan.get("extensions", [])) | set(extensions))
     phases.write_plan(plan, os.path.join(out_dir, "plan.json"))
@@ -72,6 +77,27 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
                              extra_exts=extensions,
                              gen=(client, stats, minutes, idea),
                              progress=progress, cancel=cancel, emit=emit)
+
+
+def frame(mode, idea="", answers=None, population=None, clarify=None,
+          provider=None, providers_path=None, client=None, log_dir=None,
+          progress=None, cancel=None):
+    """P0, the World Frame, as its own step (brief 013 change 2). Long mode
+    without ``clarify`` runs the clarifying turn and returns
+    ``{"questions": [...], "frame": None}``; call again with the answers as
+    ``clarify`` (``[{"question", "answer"}]``) to get ``{"questions": [],
+    "frame": {...}}``. Every other mode frames in one call. Returns the dict
+    with the frame's phase stats under ``"stats"``."""
+    if client is None:
+        from . import llm
+        kwargs = {"providers_path": providers_path} if providers_path else {}
+        if log_dir:
+            kwargs["log_dir"] = log_dir
+        client = llm.Client(provider, **kwargs)
+    frm, questions_out, stats = phases.run_frame(
+        client, mode, answers=answers, idea=idea, population=population,
+        clarify=clarify, progress=progress, cancel=cancel)
+    return {"frame": frm, "questions": questions_out, "stats": stats}
 
 
 def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,

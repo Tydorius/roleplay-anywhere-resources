@@ -86,12 +86,19 @@ def assemble_prompt(name, exts=(), **kw):
     return body if not frag else body + "\n\n" + frag
 
 
-def _setting_line(p1):
+def _setting_line(p1, frame=None):
     s = p1.get("setting", {}) or {}
     bits = [f"{k}: {s.get(k)}" for k in ("era", "technology", "density", "climate") if s.get(k)]
     bg = (p1.get("worldBackground") or "").strip()
     head = f"{p1.get('name', 'the world')} - " + ", ".join(bits)
-    return head + ("\n" + bg if bg else "")
+    out = head + ("\n" + bg if bg else "")
+    if frame:
+        out += ("\nFRAME (the user approved this): " + (frame.get("premise") or "")
+                + " Tone: " + (frame.get("tone") or "")
+                + ". Player: " + (frame.get("playerRole") or ""))
+        if frame.get("constraints"):
+            out += "\nConstraints: " + "; ".join(frame["constraints"])
+    return out
 
 
 def _zone_line(zone):
@@ -497,6 +504,207 @@ def _prop_errors(props, ctx, templates, buildings=None, max_count=MAX_COUNT):
             errors.append(f"{ctx}[{i}]: template {name!r} listed twice; merge the counts")
         names.add(name)
     return errors
+
+
+# -------------------------------------------------------- P0 the frame
+
+FRAME_SUMMARY_WORDS = (60, 200)   # the prompt asks 80-150; the check leaves room
+MAX_CLARIFY = 5                   # clarifying questions in the long form
+MAX_FRAME_LIST = 8                # influences, themes, constraints, unresolved
+
+
+def check_p0(d):
+    """The World Frame contract (brief 013 change 2)."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["P0: the reply is not a JSON object"]
+    g = d.get("genre")
+    if not isinstance(g, dict) or not _is_str(g.get("primary")):
+        errors.append("genre: required {primary, influences}")
+    elif not isinstance(g.get("influences", []), list):
+        errors.append("genre.influences: a list of short flavour words")
+    for k in ("premise", "reality", "tone", "conflict", "playerRole"):
+        if not _is_str(d.get(k)):
+            errors.append(f"{k}: required, one sentence or short phrase")
+    s = d.get("setting")
+    if not isinstance(s, dict):
+        errors.append("setting: required {era, technology, climate}")
+    else:
+        for k in ("era", "technology", "climate"):
+            if not _is_str(s.get(k)):
+                errors.append(f"setting.{k}: required, a short phrase")
+    for k in ("themes", "constraints", "unresolved"):
+        if not isinstance(d.get(k, []), list):
+            errors.append(f"{k}: a list of short phrases (or [])")
+    summary = d.get("summary")
+    if not _is_str(summary):
+        errors.append("summary: required, one paragraph of 80-150 words")
+    else:
+        n = len(summary.split())
+        if not FRAME_SUMMARY_WORDS[0] <= n <= FRAME_SUMMARY_WORDS[1]:
+            errors.append(f"summary: {n} words; write ONE paragraph of 80-150 "
+                          f"({FRAME_SUMMARY_WORDS[0]}-{FRAME_SUMMARY_WORDS[1]} at the least)")
+    return errors[:MAX_ERRORS]
+
+
+def sanitize_p0(d, log):
+    """Fill every frame field with something usable; drop junk list entries."""
+    if not isinstance(d, dict):
+        d = {}
+    fallback = d.get("premise") if _is_str(d.get("premise")) else "a small corner of a larger world"
+    g = d.get("genre") if isinstance(d.get("genre"), dict) else {}
+    if not _is_str(g.get("primary")):
+        g["primary"] = "unspecified"
+    g["influences"] = [x for x in (g.get("influences") or [])
+                       if _is_str(x)][:MAX_FRAME_LIST]
+    d["genre"] = g
+    for k in ("premise", "reality", "tone", "conflict", "playerRole"):
+        if not _is_str(d.get(k)):
+            log.append(("frame", f"{k} missing -> a placeholder"))
+            d[k] = {"premise": fallback, "reality": "the ordinary world, as far as anyone knows",
+                    "tone": "grounded", "conflict": "the situation the player walks into",
+                    "playerRole": "a newcomer with a reason to stay"}[k]
+    s = d.get("setting") if isinstance(d.get("setting"), dict) else {}
+    for k, v in (("era", "indeterminate"), ("technology", "everyday tools"),
+                 ("climate", "temperate")):
+        if not _is_str(s.get(k)):
+            s[k] = v
+    d["setting"] = s
+    for k in ("themes", "constraints", "unresolved"):
+        vals = [x for x in (d.get(k) or []) if _is_str(x)][:MAX_FRAME_LIST]
+        if len(vals) != len(d.get(k) or []):
+            log.append(("frame", f"{k}: kept {len(vals)} of {len(d.get(k) or [])} entries"))
+        d[k] = vals
+    if not _is_str(d.get("summary")):
+        log.append(("frame", "summary missing -> built from the premise"))
+        d["summary"] = (d["premise"] + " " + d["tone"].capitalize() +
+                        " in temperate streets.").strip()
+    return d
+
+
+def check_p0_clarify(d):
+    """The clarifying-turn contract: up to 5 questions of 2-4 options."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["P0-clarify: the reply is not a JSON object"]
+    qs = d.get("questions", [])
+    if not isinstance(qs, list):
+        return ["P0-clarify.questions: a list of {question, options}, or []"]
+    if len(qs) > MAX_CLARIFY:
+        errors.append(f"questions: {len(qs)} is too many; at most {MAX_CLARIFY}")
+    for i, q in enumerate(qs):
+        if not isinstance(q, dict) or not _is_str(q.get("question")):
+            errors.append(f"questions[{i}].question: required, one clear question")
+        opts = q.get("options")
+        if not (isinstance(opts, list) and 2 <= len(opts) <= 4
+                and all(_is_str(o) for o in opts)):
+            errors.append(f"questions[{i}].options: 2-4 short options, not {opts!r}")
+    return errors[:MAX_ERRORS]
+
+
+def sanitize_p0_clarify(d, log):
+    if not isinstance(d, dict) or not isinstance(d.get("questions"), list):
+        return {"questions": []}
+    out = []
+    for q in d["questions"]:
+        if len(out) >= MAX_CLARIFY:
+            break
+        if isinstance(q, dict) and _is_str(q.get("question")) \
+                and isinstance(q.get("options"), list) \
+                and 2 <= len(q["options"]) <= 4 \
+                and all(_is_str(o) for o in q["options"]):
+            out.append({"question": q["question"], "options": list(q["options"])})
+        else:
+            log.append(("clarify", f"question {q.get('question')!r} dropped: bad shape"))
+    if len(out) != len(d["questions"]):
+        log.append(("clarify", f"kept {len(out)} of {len(d['questions'])} questions"))
+    return {"questions": out}
+
+
+def _mode_line(mode):
+    from . import questions as questions_mod
+    n = len(questions_mod.form_questions(mode))
+    if mode == "quick":
+        return "quick - no questionnaire; expand the idea itself"
+    return f"{mode} - the answers of the {n}-question {mode} form below"
+
+
+def _population_line(population):
+    from . import questions as questions_mod
+    lo, hi = questions_mod.sanitize_population(population)
+    return f"house {lo}-{hi} residents (aim near {(lo + hi) // 2}); the map must bed them"
+
+
+def frame_brief(frame, population=None):
+    """The frame as prompt text for P1 (and P6): every field, a line each.
+    Empty string when there is no frame."""
+    if not frame:
+        return ""
+    lines = ["WORLD FRAME (the user approved this; stay true to it):"]
+    g = frame.get("genre") or {}
+    bits = [f"{g.get('primary', '?')}"]
+    if g.get("influences"):
+        bits.append("influences: " + ", ".join(g["influences"]))
+    lines.append("- Genre: " + "; ".join(bits))
+    for k in ("premise", "reality", "tone", "conflict", "playerRole"):
+        if frame.get(k):
+            lines.append(f"- {k}: {frame[k]}")
+    s = frame.get("setting") or {}
+    lines.append("- Setting: era {era}, technology {technology}, climate {climate}".format(
+        era=s.get("era", "?"), technology=s.get("technology", "?"),
+        climate=s.get("climate", "?")))
+    for k, label in (("themes", "Themes"), ("constraints", "Constraints"),
+                     ("unresolved", "The framer left open")):
+        if frame.get(k):
+            lines.append(f"- {label}: " + "; ".join(frame[k]))
+    if population:
+        lines.append(f"- {_population_line(population)}")
+    lines.append("- Summary: " + (frame.get("summary") or ""))
+    return "\n".join(lines)
+
+
+def run_frame(client, mode, answers=None, idea="", population=None, clarify=None,
+              progress=None, cancel=None):
+    """P0: the World Frame. In long mode the first call (without ``clarify``)
+    asks up to 5 clarifying questions and returns them unanswered; call again
+    with ``clarify`` as [{question, answer}] to get the frame. Every other
+    mode frames in one call. Returns ``(frame, clarify_questions, stats)``;
+    the frame is None while clarifications wait for answers. Raises
+    PhaseError when P0 cannot be salvaged, Cancelled between calls."""
+    from . import questions as questions_mod
+    if mode not in questions_mod.MODES:
+        raise ValueError(f"unknown mode {mode!r}")
+    stats = {"phase_log": [], "dropped": []}
+    call = _make_caller(client, stats, progress, cancel)
+    answer_lines = questions_mod.render_answers(mode, answers)
+    idea_line = idea or "(no idea text; the answers are everything)"
+    clarify_qs = []
+    if mode == "long" and not clarify:
+        d = call("p0-clarify", "p0-clarify", event=("P0", "clarifying questions"),
+                 idea_line=idea_line,
+                 answer_lines="\n".join(answer_lines) or "- (none)",
+                 _validate=check_p0_clarify)
+        if d is None:
+            raise PhaseError("P0-clarify produced no JSON at all")
+        d = sanitize_p0_clarify(d, stats["dropped"])
+        clarify_qs = d["questions"]
+        if clarify_qs:
+            return None, clarify_qs, stats
+        # nothing worth asking: fall through and frame at once
+    cblock = ""
+    if clarify:
+        cblock = ("CLARIFICATIONS (asked because the answers left them open, "
+                  "now answered):\n" + "\n".join(
+                      f"- Q: {c.get('question', '')}  A: {c.get('answer', '')}"
+                      for c in clarify if isinstance(c, dict)))
+    d = call("p0", "p0-frame", event=("P0", "the world frame"),
+             idea_line=idea_line, mode_line=_mode_line(mode),
+             population_line=_population_line(population),
+             answer_lines="\n".join(answer_lines) or "- (none: frame the idea itself)",
+             clarify_block=cblock, _validate=check_p0)
+    if d is None:
+        raise PhaseError("P0 produced no JSON at all")
+    return sanitize_p0(d, stats["dropped"]), clarify_qs, stats
 
 
 # ---------------------------------------------------------- P1 world plan
@@ -1597,18 +1805,9 @@ def sanitize_p5(d, buildings, zones, log, bedded=()):
 
 # ------------------------------------------------------------------ the run
 
-def run_phases(idea, client, extensions=(), progress=None, cancel=None):
-    """Run P1-P5 with `client`. Returns (plan_dict, stats). Raises PhaseError
-    when a structural phase (P1, P2) cannot be salvaged, Cancelled when
-    ``cancel()`` turns true between calls. ``extensions`` adds the enabled
-    mod extensions' prompt fragments and contract checks. ``progress`` gets
-    one dict per model call, before it is made:
-    ``{"phase": "P3", "label": "building 3/10: The Old Mill", "calls": 5,
-    "tokens": 1234}`` — ``calls`` counts the call about to happen."""
-    from .extensions import expand
-    exts = expand(extensions)
-    floors = "floors" in exts
-    stats = {"phase_log": [], "dropped": []}
+def _make_caller(client, stats, progress, cancel, exts=()):
+    """The shared model-call helper: one progress event per call, phase
+    timings and retries into ``stats``, cancellation between calls."""
 
     def call(phase, tname, event=None, **kw):
         if cancel is not None and cancel():
@@ -1632,8 +1831,43 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
         })
         return result
 
-    # ---- P1: the world plan
-    p1 = call("p1", "p1-world", event=("P1", "the world plan"), idea=idea,
+    return call
+
+
+def run_phases(idea, client, extensions=(), progress=None, cancel=None,
+               frame=None, questionnaire=None):
+    """Run the model phases and return (plan_dict, stats). ``frame`` is an
+    approved World Frame from P0 (every phase gets it in place of the bare
+    idea); ``questionnaire`` ``{"mode", "answers", "population"}`` runs P0
+    first when no frame came in, and is kept on the plan so a re-roll never
+    asks again. Raises PhaseError when a structural phase (P0, P1, P2 cannot
+    be salvaged, Cancelled when ``cancel()`` turns true between calls.
+    ``extensions`` adds the enabled mod extensions' prompt fragments and
+    contract checks. ``progress`` gets one dict per model call, before it is
+    made: ``{"phase": "P3", "label": "building 3/10: The Old Mill",
+    "calls": 5, "tokens": 1234}`` — ``calls`` counts the call about to
+    happen."""
+    from .extensions import expand
+    exts = expand(extensions)
+    floors = "floors" in exts
+    stats = {"phase_log": [], "dropped": []}
+    call = _make_caller(client, stats, progress, cancel, exts)
+
+    population = (questionnaire or {}).get("population") if questionnaire else None
+    if frame is None and questionnaire is not None:
+        # a questionnaire without an approved frame: P0 runs inline (the
+        # long form's clarifying turn needs a user, so it frames without it)
+        frame, _qs, p0_stats = run_frame(
+            client, questionnaire.get("mode", "quick"),
+            answers=questionnaire.get("answers"), idea=idea,
+            population=population, progress=progress, cancel=cancel)
+        for k in ("phase_log", "dropped"):
+            stats[k] = p0_stats[k] + stats[k]
+
+    # ---- P1: the world plan (the frame in place of the bare idea)
+    fbrief = frame_brief(frame, population)
+    p1 = call("p1", "p1-world", event=("P1", "the world plan"),
+              idea=(f"{idea}\n{fbrief}" if fbrief else idea),
               _validate=lambda x: check_p1(x, floors=floors))
     if p1 is None:
         raise PhaseError("P1 produced no JSON at all")
@@ -1642,7 +1876,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
         raise PhaseError("P1 produced no usable zones")
 
     # ---- P2: the prop catalogue
-    setting_line = _setting_line(p1)
+    setting_line = _setting_line(p1, frame)
     zone_lines = "\n".join(
         f"- {_zone_line(z)}\n"
         f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
@@ -1776,6 +2010,10 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
         "npcs": p5["npcs"],
         "player": p5["player"],
     }
+    if frame is not None:
+        plan["frame"] = frame
+    if questionnaire is not None:
+        plan["questionnaire"] = questionnaire
     return plan, stats
 
 

@@ -1,0 +1,30 @@
+Frame the world for a Roleplay Anywhere scenario. This frame steers every
+later phase - the map, its buildings, its people, its rules - so make it the
+world the answers describe, and no more.
+
+IDEA: ${idea_line}
+FORM: ${mode_line}
+POPULATION: ${population_line}
+
+ANSWERS (each may be skipped; Other holds the user's own words):
+${answer_lines}
+${clarify_block}
+Reply with ONE JSON object with exactly these fields:
+{
+  "genre": {"primary": "one genre word", "influences": ["0-3 other flavours picked above"]},
+  "premise": "1-2 sentences: the situation the player walks into",
+  "reality": "one sentence: what the extraordinary is here and how common it is",
+  "setting": {"era": "a short phrase", "technology": "a short phrase", "climate": "a short phrase"},
+  "tone": "a short phrase",
+  "conflict": "one sentence: what drives the story",
+  "playerRole": "one sentence: who the player is and why they stay",
+  "themes": ["3-6 short phrases"],
+  "constraints": ["what to avoid, as short rules; empty when nothing was asked"],
+  "summary": "one paragraph, 80-150 words",
+  "unresolved": ["each thing you decided because the answers did not say; [] when you decided nothing"]
+}
+
+- The summary is the truth the player meets first. Stay true to the answers:
+  no lore the user did not ask for, no genre they did not pick.
+- Everything you decided yourself goes in "unresolved", never in "summary".
+- Keep every field short and concrete; later phases quote them back.
