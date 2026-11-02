@@ -93,7 +93,7 @@ def apply(world, plan_data, rng):
         comp = getattr(b, "compound", None)
         if comp and any(c.name == comp for c in getattr(world, "compounds", []) or []):
             groups.setdefault(comp, ([], next(c for c in world.compounds
-                                              if c.name == comp)))[0].append(b)
+                                              if c.name == comp)))[0].append((b, uppers))
         else:
             singles.append((b, uppers))
     if not singles and not groups:
@@ -101,7 +101,7 @@ def apply(world, plan_data, rng):
     stairs = {id(b): _stair_templates(world, plan_data, b.layout.design.name)
               for (b, _u) in singles}
     for (bs, _comp) in groups.values():
-        for b in bs:
+        for (b, _u) in bs:
             stairs[id(b)] = _stair_templates(world, plan_data, b.layout.design.name)
 
     # ---- the band: east of everything, behind the boundary strip, floors
@@ -144,12 +144,12 @@ def apply(world, plan_data, rng):
     walks = []      # [(CompoundOut, CorridorOut, Rect)]
     group_extras = {}   # id(b) -> {upper index: [door cells]}
     for (bs, comp) in groups.values():
-        max_storey = max(b.layout.design.storeys for b in bs)
+        max_storey = max(b.layout.design.storeys for (b, _u) in bs)
         levels = max_storey - 1
         base = reserve(levels * comp.rect.h + (levels - 1) * FLOOR_GAP)
         for storey in range(2, max_storey + 1):
             level_rects = []   # [(b or None, corridor or None, rect)]
-            for b in bs:
+            for (b, _u) in bs:
                 if b.layout.design.storeys < storey:
                     continue
                 i = storey - 2
@@ -188,8 +188,8 @@ def apply(world, plan_data, rng):
     for (b, uppers) in singles:
         _build_storeys(world, b, uppers, rects[id(b)], stairs[id(b)], rng)
     for (bs, comp) in groups.values():
-        for b in bs:
-            _build_storeys(world, b, list(b.layout.design.upper), rects[id(b)],
+        for (b, uppers) in bs:
+            _build_storeys(world, b, uppers, rects[id(b)],
                            stairs[id(b)], rng,
                            extra_doors=group_extras.get(id(b)))
     for (comp, corridor, r) in walks:

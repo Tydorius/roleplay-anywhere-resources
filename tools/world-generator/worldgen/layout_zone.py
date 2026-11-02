@@ -918,9 +918,11 @@ def _place_buildings_grid(zone, rect, out, rng, templates, fits, put, rollback):
     over the least-filled slots so the buildings cover the zone."""
     slots = _grid_slots(rect, out.street, out.side_streets, out.grid_vertical)
     rng.shuffle(slots)
-    designs = sorted(zone.buildings,
-                     key=lambda d: (-(building_footprint(d, templates)[0]
-                                      * building_footprint(d, templates)[1]), d.name))
+    designs = sorted(
+        (d for d in zone.buildings if d.name not in {
+            p.building for c in getattr(zone, "compounds", []) or [] for p in c.parts}),
+        key=lambda d: (-(building_footprint(d, templates)[0]
+                         * building_footprint(d, templates)[1]), d.name))
     for design in designs:
         order = sorted(slots, key=lambda s: (s["used"] / float(s["len"])
                                              - (0.2 if s["extreme"] else 0.0)))
@@ -1069,14 +1071,15 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
             out.buildings.append(b)
         targets = []
         by_name = {b.layout.design.name: b for b in comp.parts}
-        for part in compound.parts:
-            b = by_name.get(part.building)
-            if part.slot_kind != "inside" or b is None:
-                continue
-            dx, dy = SIDE_DX_DY[b.layout.entrance_side]
-            targets.append((b.layout.entrance_door[0] + dx,
-                            b.layout.entrance_door[1] + dy))
-        comp.paths = layout_compound.courtyard_paths(comp, targets)
+        if compound.shape == "enclosure":
+            for part in compound.parts:
+                b = by_name.get(part.building)
+                if part.slot_kind != "inside" or b is None:
+                    continue
+                dx, dy = SIDE_DX_DY[b.layout.entrance_side]
+                targets.append((b.layout.entrance_door[0] + dx,
+                                b.layout.entrance_door[1] + dy))
+            comp.paths = layout_compound.courtyard_paths(comp, targets)
         for pr in comp.paths:
             out.reserved |= pr.cells()
         # nothing of the zone dresses inside the walls: the block keeps its

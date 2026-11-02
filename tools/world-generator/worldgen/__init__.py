@@ -535,6 +535,31 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                         "path", parent=comp.name, ground="dirt", ground_texture="dirt",
                         ambience={"day": "nature_outdoors", "night": "crickets"},
                         description=f"The path through {comp.name}."))
+                if comp.front_rect is not None and comp.front_kind != "none":
+                    # a row's front strip: walkable ground (a street or
+                    # walkway) or a paved yard with parked vehicles
+                    fname = f"{comp.name} Front"
+                    if comp.parking is not None:
+                        fname, frect = comp.parking[0], comp.parking[1]
+                        world.regions.append(RegionOut(
+                            fname, frect, "yard", parent=comp.name,
+                            ground="stone", ground_texture="flagstone-light",
+                            ambience={"day": "nature_outdoors", "night": "crickets"},
+                            description=f"The yard in front of {comp.name}."))
+                        for (tname, pos) in comp.parking[2]:
+                            world.objects.append(ObjectOut(tname, pos, fname))
+                            tw, th = world.templates[tname].size
+                            world.solid_walls |= {
+                                (x, y) for x in range(pos[0], pos[0] + tw)
+                                for y in range(pos[1], pos[1] + th)}
+                    else:
+                        fg, ftex = ("stone", "cobblestone") if comp.front_kind == "street" \
+                            else ("gravel", "gravel")
+                        world.regions.append(RegionOut(
+                            fname, comp.front_rect, "path", parent=comp.name,
+                            ground=fg, ground_texture=ftex,
+                            ambience={"day": "nature_outdoors", "night": "crickets"},
+                            description=f"The way along the front of {comp.name}."))
             for b in zout.buildings:
                 bl = b.layout
                 design = bl.design

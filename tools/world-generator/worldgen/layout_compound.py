@@ -59,9 +59,12 @@ class CompoundOut:
         self.rect = rect             # the whole block
         self.courtyard = rect        # the open ground inside the walls
         self.parts = []              # [BuildingOut], also in the zone's buildings
-        self.corridors = []          # [CorridorOut] (walkable walls)
+        self.corridors = []          # [CorridorOut] (walkable walls, a spine)
         self.wall_strips = []        # [WallStrip] (solid walls)
         self.paths = []              # [Rect] courtyard path pieces
+        self.front_rect = None       # a row's front strip (street/walkway)
+        self.front_kind = "none"     # street|parking|walkway|none
+        self.parking = None          # (region name, Rect, [(template, pos)])
         self.gate_side = ""          # outward side of the first gate part
         self.gates = []              # [CompoundPart] with doors on both faces
         self.wall_material = "stone"
@@ -101,17 +104,28 @@ def part_plans(zone, compound, templates):
     """{building: (design, inward side, {side: (w, h)})} — each part's design
     with the entrance side the compound gives it, plus its footprint under
     every entrance side it could end up with (a gate's flips outward), so
-    the enclosure can size its bands for the widest case and place with the
+    the compound can size its bands for the widest case and place with the
     exact one."""
     out = {}
     for part in compound.parts:
         design = _design_of(zone, part.building)
         if design is None:
             continue
-        inward = _inward_side(part)
-        sides = [inward]
-        if part.slot_kind in ("edge", "corner"):
-            sides.append(_outward_side(part))
+        if compound.shape == "row":
+            inward = compound.frontage      # every entrance faces the front
+            sides = [inward]
+        elif compound.shape in ("spine", "cluster"):
+            inward = _spine_side(part, compound.axis)
+            sides = [inward]
+            outward = _spine_outward(part, compound.axis)
+            for s in (outward if isinstance(outward, tuple) else (outward,)):
+                if s != inward:
+                    sides.append(s)
+        else:
+            inward = _inward_side(part)
+            sides = [inward]
+            if part.slot_kind in ("edge", "corner"):
+                sides.append(_outward_side(part))
         fps = {}
         for s in dict.fromkeys(sides):
             fps[s] = building_footprint(
@@ -284,7 +298,226 @@ def compound_footprint(zone, compound, templates):
     plans = part_plans(zone, compound, templates)
     if not plans:
         return (MIN_BAND * 3, MIN_BAND * 3)
+    if compound.shape == "row":
+        return _row_geometry(compound, plans)[0]
+    if compound.shape in ("spine", "cluster"):
+        return _spine_geometry(compound, plans)[0]
     return _plan_geometry(zone, compound, templates, plans)["outer"]
+
+
+# ------------------------------------------------------------------ row
+
+FRONT_DEPTH = {"street": 3, "walkway": 3, "parking": 5, "none": 0}
+VEHICLE_WORDS = ("cart", "wagon", "car", "van", "truck", "vehicle",
+                 "transport", "coach", "carriage", "dray", "pod")
+
+
+def _vehicle_template(templates):
+    """The catalogue's parked-vehicle piece, biggest first (a cart over a
+    scooter), or None."""
+    hits = [t for t in templates.values()
+            if any(w in t.name.lower() or w in " ".join(t.tags).lower()
+                   for w in VEHICLE_WORDS)]
+    return max(hits, key=lambda t: (t.size[0] * t.size[1], t.name)) if hits else None
+
+
+def _row_geometry(compound, plans):
+    """The row's own frame: parts side by side along the axis the frontage
+    faces, butted directly against a linked predecessor (the builder joins
+    them with a door) and one cell clear of the rest (no door between
+    strangers), the front strip in front of them. Returns ((w, h), placements,
+    front rect or None)."""
+    frontage = compound.frontage
+    along_x = frontage in ("north", "south")
+    parts = sorted((p for p in compound.parts if p.slot_kind == "row"),
+                   key=lambda p: (p.index, p.building))
+    fps, pos, cursor = {}, {}, 0
+    for i, p in enumerate(parts):
+        fp = plans[p.building][2][frontage]
+        fps[p.building] = fp
+        if i:
+            cursor += 0 if parts[i].linked else 1
+        pos[p.building] = (cursor, fp)
+        cursor += fp[0] if along_x else fp[1]
+    depth = max((fp[1] if along_x else fp[0]) for fp in fps.values()) if fps else MIN_BAND
+    length = cursor
+    front_d = FRONT_DEPTH[compound.front]
+    if along_x:
+        # the strip lies between the row and the frontage edge of the block
+        front = Rect(0, 0 if frontage == "south" else depth,
+                     max(1, length), front_d) if front_d else None
+        block = (max(1, length), depth + front_d)
+    else:
+        front = Rect(0 if frontage == "west" else depth, 0,
+                     front_d, max(1, length)) if front_d else None
+        block = (depth + front_d, max(1, length))
+    return block, (parts, fps, pos, depth, front), front
+
+
+def _place_row(compound, rect, plans, geo):
+    """The row's parts inside its block rect: same frame, shifted."""
+    (parts, fps, pos, depth, front) = geo
+    frontage = compound.frontage
+    along_x = frontage in ("north", "south")
+    front_d = FRONT_DEPTH[compound.front]
+    out = {}
+    for p in parts:
+        (a, fp) = pos[p.building]
+        if along_x:
+            y = 0 if frontage == "north" else front_d
+            out[p.building] = Rect(rect.x + a, rect.y + y, fp[0], fp[1])
+        else:
+            x = 0 if frontage == "east" else front_d
+            out[p.building] = Rect(rect.x + x, rect.y + a, fp[0], fp[1])
+    frect = front.shifted(rect.x, rect.y) if front is not None else None
+    return out, frect
+
+
+# ------------------------------------------------------------------ spine
+
+def _spine_side(part, axis):
+    """The side a spine part's entrance faces: into the spine."""
+    if part.slot_kind == "hub":
+        return {"ns": "south", "ew": "west"}[axis]
+    if part.slot_kind == "spine_end":
+        return "north" if part.side == "start" else "south" if axis == "ns" else \
+               "east" if part.side == "start" else "west"
+    if axis == "ns":
+        return "east" if part.side == "left" else "west"
+    return "north" if part.side == "left" else "south"
+
+
+def _spine_outward(part, axis):
+    """The side a spine part's outside entrance faces (the gate into the
+    block)."""
+    if part.slot_kind == "hub":
+        return {"ns": ("south", "north"), "ew": ("west", "east")}[axis]
+    if part.slot_kind == "spine_end":
+        return {"ns": ("south", "north"), "ew": ("west", "east")}[axis]
+    if axis == "ns":
+        return "west" if part.side == "left" else "east"
+    return "south" if part.side == "left" else "north"
+
+
+def _spine_geometry(compound, plans):
+    """The spine's own frame: a walled corridor (the spine, spineWidth wide)
+    with parts butted along it on the left and right, end parts capping it,
+    and an optional hub part at its centre or one end. ``cluster`` is the
+    width-0 special case: no corridor, the parts pack round the hub. All the
+    geometry runs in a north-south frame and transposes for an east-west
+    axis. Returns ((w, h), geo, [corridor rects])."""
+    sw = compound.spine_width
+    hub = next((p for p in compound.parts if p.slot_kind == "hub"), None)
+    lefts = sorted((p for p in compound.parts
+                    if p.slot_kind == "spine" and p.side == "left"),
+                   key=lambda p: (p.index, p.building))
+    rights = sorted((p for p in compound.parts
+                     if p.slot_kind == "spine" and p.side == "right"),
+                    key=lambda p: (p.index, p.building))
+    cap_s = next((p for p in compound.parts
+                  if p.slot_kind == "spine_end" and p.side == "start"), None)
+    cap_n = next((p for p in compound.parts
+                  if p.slot_kind == "spine_end" and p.side == "end"), None)
+
+    def fp(part, side=None):
+        design, inward, fps = plans[part.building]
+        return fps[side or _spine_side(part, compound.axis)]
+
+    # every part's cross extent (its depth into its column) and along extent
+    cross_of = {p.building: fp(p)[0] for p in lefts + rights}
+    along_of = {p.building: fp(p)[1] for p in lefts + rights}
+    ld = max([cross_of[p.building] for p in lefts] + [0])
+    rd = max([cross_of[p.building] for p in rights] + [0])
+    hub_w = hub_a = 0
+    if hub is not None:
+        hub_w, hub_a = fp(hub)[0], fp(hub)[1]
+    cross = max(ld + sw + rd, 2 * max(ld, rd) + sw if hub else 0, hub_w + 2)
+    scx = (cross - sw) // 2
+
+    placements, corridors = {}, []
+
+    def put(part, rect):
+        placements[part.building] = rect
+
+    # the start cap, then the spine's first row
+    y = 0
+    if cap_s is not None:
+        f = fp(cap_s)
+        put(cap_s, Rect(scx + sw // 2 - f[0] // 2, y, f[0], f[1]))
+        y += f[1] + 1
+    spine_y0 = y
+
+    # where the hub sits on the along axis, from the columns' extent alone
+    col_span = max(sum(along_of[p.building] + 1 for p in lefts),
+                   sum(along_of[p.building] + 1 for p in rights))
+    hub_rect = None
+    if hub is not None:
+        if compound.hub_pos == "start":
+            hub_y = spine_y0
+        elif compound.hub_pos == "end":
+            hub_y = spine_y0 + col_span
+        else:
+            hub_y = spine_y0 + max(0, (col_span - hub_a) // 2)
+        hub_rect = Rect(scx + sw // 2 - hub_w // 2, hub_y, hub_w, hub_a)
+        put(hub, hub_rect)
+
+    # the columns, stacked with one clear cell between parts (no doors
+    # between strangers), skipping the hub's rows either side
+    def column(parts_list, side):
+        cy = spine_y0
+        for p in parts_list:
+            if hub_rect is not None and cy < hub_rect.y1 + 2:
+                cy = hub_rect.y1 + 2
+            c = cross_of[p.building]
+            a = along_of[p.building]
+            put(p, Rect(scx - c if side == "left" else scx + sw, cy, c, a))
+            cy += a + 1
+        return cy
+
+    col_end = max(column(lefts, "left"), column(rights, "right"))
+    top = col_end - 1
+    if hub_rect is not None:
+        top = max(top, hub_rect.y1)
+
+    # the end cap above everything
+    if cap_n is not None:
+        f = fp(cap_n)
+        put(cap_n, Rect(scx + sw // 2 - f[0] // 2, top + 1, f[0], f[1]))
+        top = top + 1 + f[1] - 1
+
+    # the spine run(s), split around a centre hub
+    if sw > 0:
+        runs = [(spine_y0, top)]
+        if hub_rect is not None and compound.hub_pos == "center":
+            runs = [(spine_y0, hub_rect.y - 1), (hub_rect.y1 + 1, top)]
+        elif hub_rect is not None and compound.hub_pos == "start":
+            runs = [(hub_rect.y1 + 1, top)]
+        elif hub_rect is not None and compound.hub_pos == "end":
+            runs = [(spine_y0, hub_rect.y - 1)]
+        for (a0, a1) in runs:
+            if a1 >= a0:
+                corridors.append(Rect(scx, a0, sw, a1 - a0 + 1))
+
+    rects = list(placements.values()) + corridors
+    x0 = min(r.x for r in rects)
+    y0 = min(r.y for r in rects)
+    geo = {"placements": {n: r.shifted(-x0, -y0) for n, r in placements.items()},
+           "corridors": [r.shifted(-x0, -y0) for r in corridors],
+           "hub": hub, "order": lefts + rights + [cap_s, cap_n],
+           "cross": cross}
+    all_rects = list(geo["placements"].values()) + geo["corridors"]
+    if compound.axis == "ew":
+        geo["placements"] = {n: _transpose(r) for n, r in geo["placements"].items()}
+        geo["corridors"] = [_transpose(r) for r in geo["corridors"]]
+        all_rects = list(geo["placements"].values()) + geo["corridors"]
+    w = max(r.x1 for r in all_rects) + 1
+    h = max(r.y1 for r in all_rects) + 1
+    return (w, h), geo, geo["corridors"]
+
+
+def _transpose(rect):
+    """A rect in the mirrored frame: (x, y, w, h) -> (y, x, h, w)."""
+    return Rect(rect.y, rect.x, rect.h, rect.w)
 
 
 # ------------------------------------------------------------------ placing
@@ -468,6 +701,162 @@ def place_compound(zone, compound, rect, templates, rng, furnish, mouths=None):
     if not plans:
         out.failures.append((f"compound {compound.name}", "no part buildings"))
         return out
+    if compound.shape == "row":
+        return _place_row_compound(zone, compound, rect, templates, rng,
+                                   furnish, mouths, out, plans)
+    if compound.shape in ("spine", "cluster"):
+        return _place_spine_compound(zone, compound, rect, templates, rng,
+                                     furnish, mouths, out, plans)
+    return _place_enclosure(zone, compound, rect, templates, rng,
+                            furnish, mouths, out, plans)
+
+
+def _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
+                 furnish, doors_extra=None):
+    """Every part's BuildingOut under its final orientation, furnished, with
+    the auto-connect door cells the builder will open between touching
+    parts and corridors recorded on the rooms behind them."""
+    from .layout_zone import BuildingOut
+
+    rects = []
+    for part in compound.parts:
+        r = placed.get(part.building)
+        if r is None:
+            out.failures.append((f"compound {compound.name} part {part.building}",
+                                 "no slot placed it"))
+            continue
+        design = _design_of(zone, part.building)
+        side = sides.get(part.building, design.entrance_side)
+        d = dataclasses.replace(design, entrance_side=side)
+        b = BuildingOut(None, r, None)
+        b.layout = layout_building(d, (r.x, r.y), rng, templates)
+        b.lot = r
+        b.compound = compound.name
+        if b.layout.rect != r:
+            out.failures.append((f"compound {compound.name} part {part.building}",
+                                 "its layout rect moved under re-resolution"))
+            placed[part.building] = r = b.layout.rect
+        for cell in (doors_extra or {}).get(part.building, []):
+            _door_into_room(b.layout, cell)
+        out.parts.append(b)
+        rects.append((b.layout, r))
+    for i, (bl_a, ra) in enumerate(rects):
+        for (bl_b, rb) in rects[i + 1:]:
+            for cell in shared_wall_cells(ra, rb):
+                if ra.contains_cell(cell):
+                    _door_into_room(bl_a, cell)
+                if rb.contains_cell(cell):
+                    _door_into_room(bl_b, cell)
+        for corridor in out.corridors:
+            for cell in shared_wall_cells(ra, corridor.rect):
+                if ra.contains_cell(cell):
+                    _door_into_room(bl_a, cell)
+    for b in out.parts:
+        furnish(b)
+
+
+def _place_row_compound(zone, compound, rect, templates, rng, furnish,
+                        mouths, out, plans):
+    """A row: parts side by side facing the frontage, a street, walkway or
+    parking strip in front. Every part's entrance opens onto the strip, so
+    every part is its own gate; linked neighbours butt (and join by a door),
+    the rest keep one clear cell (no door between strangers)."""
+    _block, geo, front = _row_geometry(compound, plans)
+    placed, frect = _place_row(compound, rect, plans, geo)
+    sides = {p.building: compound.frontage
+             for p in compound.parts if p.slot_kind == "row"}
+    for p in compound.parts:   # an attached part keeps its own side
+        if p.slot_kind == "attached":
+            host_r = placed.get(p.host)
+            if host_r is not None:
+                fp = _fp(plans, p)
+                placed[p.building] = _attached_rect(host_r, p.side, fp)
+                sides[p.building] = p.side
+    materials = [d.wall for d in zone.buildings if d.name in plans]
+    out.wall_material = max(set(materials), key=materials.count) if materials else "stone"
+    if frect is not None:
+        out.front_rect, out.front_kind = frect, compound.front
+        if compound.front == "parking":
+            veh = _vehicle_template(templates)
+            slots = []
+            if veh is not None:
+                vw, vh = veh.size
+                along_x = frect.w >= frect.h
+                n = max(0, ((frect.w if along_x else frect.h) - 2) // (vw + 1))
+                for i in range(n):
+                    if along_x:
+                        pos = (frect.x + 1 + i * (vw + 1),
+                               frect.y + max(0, (frect.h - vh) // 2))
+                    else:
+                        pos = (frect.x + max(0, (frect.w - vw) // 2),
+                               frect.y + 1 + i * (vh + 1))
+                    if pos[0] + vw <= frect.x1 and pos[1] + vh <= frect.y1:
+                        slots.append((veh.name, pos))
+            out.parking = (f"{compound.name} Parking", frect, slots)
+    out.gates = [p for p in compound.parts if p.slot_kind == "row"]
+    out.gate_side = compound.frontage
+    _build_parts(zone, compound, out, placed, sides, plans, templates, rng, furnish)
+    return out
+
+
+def _attached_rect(host_r, side, fp):
+    """A part attached to its host's side, sharing that wall."""
+    if side == "east":
+        return Rect(host_r.x1 + 1, host_r.y + (host_r.h - fp[1]) // 2, fp[0], fp[1])
+    if side == "west":
+        return Rect(host_r.x - fp[0], host_r.y + (host_r.h - fp[1]) // 2, fp[0], fp[1])
+    if side == "north":
+        return Rect(host_r.x + (host_r.w - fp[0]) // 2, host_r.y1 + 1, fp[0], fp[1])
+    return Rect(host_r.x + (host_r.w - fp[0]) // 2, host_r.y - fp[1], fp[0], fp[1])
+
+
+def _place_spine_compound(zone, compound, rect, templates, rng, furnish,
+                          mouths, out, plans):
+    """A spine: a walled corridor with parts butted along it (each touching
+    it, so the builder's auto-connect gives every one a door onto it), end
+    parts capping it and an optional hub at its centre or an end. The hub —
+    or the first part — faces outward and is the block's gate."""
+    _block, geo, _corr = _spine_geometry(compound, plans)
+    placed = {n: r.shifted(rect.x, rect.y)
+              for n, r in geo["placements"].items()}
+    sides = {p.building: _spine_side(p, compound.axis)
+             for p in compound.parts
+             if p.slot_kind in ("spine", "spine_end", "hub")}
+    materials = [d.wall for d in zone.buildings if d.name in plans]
+    out.wall_material = max(set(materials), key=materials.count) if materials else "stone"
+    for i, r in enumerate(geo["corridors"]):
+        out.corridors.append(CorridorOut(f"{compound.name} Spine"
+                                         + (f" {i + 1}" if i else ""),
+                                         r.shifted(rect.x, rect.y),
+                                         out.wall_material))
+    for p in compound.parts:   # wings branch off any part
+        if p.slot_kind == "attached":
+            host_r = placed.get(p.host)
+            if host_r is not None:
+                fp = _fp(plans, p)
+                placed[p.building] = _attached_rect(host_r, p.side, fp)
+                sides[p.building] = p.side
+    # the gate: the hub when there is one (facing away from the spine at its
+    # end, or south/west from the centre), else the first part
+    hub = geo["hub"]
+    gate = hub or next((p for p in geo["order"] if p is not None), None)
+    if gate is not None:
+        outward = _spine_outward(gate, compound.axis)
+        if isinstance(outward, tuple):
+            pick = {"start": 0, "center": 0, "end": 1}[compound.hub_pos] \
+                if gate is hub else 0
+            outward = outward[pick]
+        sides[gate.building] = outward
+        out.gates = [gate]
+        out.gate_side = outward
+    _build_parts(zone, compound, out, placed, sides, plans, templates, rng, furnish)
+    return out
+
+
+def _place_enclosure(zone, compound, rect, templates, rng, furnish,
+                     mouths, out, plans):
+    from .layout_zone import BuildingOut
+
     geo = _plan_geometry(zone, compound, templates, plans)
     out.courtyard = Rect(rect.x + geo["west"], rect.y + geo["south"],
                          geo["court_w"], geo["court_h"])
