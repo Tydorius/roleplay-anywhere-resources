@@ -87,9 +87,10 @@ def frame(mode, idea="", answers=None, population=None, clarify=None,
     """P0, the World Frame, as its own step (brief 013 change 2). Long mode
     without ``clarify`` runs the clarifying turn and returns
     ``{"questions": [...], "frame": None}``; call again with the answers as
-    ``clarify`` (``[{"question", "answer"}]``) to get ``{"questions": [],
-    "frame": {...}}``. Every other mode frames in one call. Returns the dict
-    with the frame's phase stats under ``"stats"``."""
+    ``clarify`` (``[{"question", "answer"}]``, or ``[]`` to skip the turn)
+    to get ``{"questions": [], "frame": {...}}``. Every other mode frames in
+    one call. Returns the dict with the frame's phase stats under
+    ``"stats"``."""
     if client is None:
         from . import llm
         kwargs = {"providers_path": providers_path} if providers_path else {}

@@ -683,7 +683,9 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
     answer_lines = questions_mod.render_answers(mode, answers)
     idea_line = idea or "(no idea text; the answers are everything)"
     clarify_qs = []
-    if mode == "long" and not clarify:
+    if mode == "long" and clarify is None:
+        # clarify None: ask (the interactive flow). A list, even empty, means
+        # the turn already happened - frame at once (the inline path).
         d = call("p0-clarify", "p0-clarify", event=("P0", "clarifying questions"),
                  idea_line=idea_line,
                  answer_lines="\n".join(answer_lines) or "- (none)",
@@ -2457,7 +2459,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         frame, _qs, p0_stats = run_frame(
             client, questionnaire.get("mode", "quick"),
             answers=questionnaire.get("answers"), idea=idea,
-            population=population, progress=progress, cancel=cancel)
+            population=population, clarify=[], progress=progress, cancel=cancel)
         for k in ("phase_log", "dropped"):
             stats[k] = p0_stats[k] + stats[k]
 

@@ -8,6 +8,8 @@ import shutil
 import tempfile
 import unittest
 
+from tests.test_013_frame import a_frame
+from tests.test_model import ScriptedClient, canned_replies
 from worldgen import api
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
@@ -22,6 +24,49 @@ def scenario_of(summary):
     path = os.path.join(summary["out"], summary["zip"][:-len(".zip")], "scenario.json")
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _dump(obj):
+    return json.dumps(obj, ensure_ascii=False)
+
+
+class MockedRunsPerMode(unittest.TestCase):
+    """A mocked run in each mode builds a scenario with every system filled
+    in, and the default population of 20-40 is asked for, kept and reached
+    (the canned batch is topped up to twenty by three scripted batches)."""
+
+    @staticmethod
+    def _replies():
+        from tests.test_model import CANNED_P5
+        base = [_dump(a_frame())] + canned_replies()
+        topups = []
+        for n in range(3):
+            people = [dict(p, name=f"{p['name'].split()[0]} {chr(66 + n)}{i}")
+                      for i, p in enumerate(CANNED_P5["npcs"])]
+            topups.append(_dump({"npcs": people}))
+        # the zone batch is base[8]; the top-ups run after it, before the player
+        return base[:9] + topups + base[9:]
+
+    def test_each_mode_fills_the_five_systems(self):
+        for mode in ("quick", "short", "medium", "long"):
+            with self.subTest(mode), tempfile.TemporaryDirectory() as tmp:
+                client = ScriptedClient(self._replies())
+                s = api.generate("a mill village", client=client, seed=1,
+                                 out_dir=tmp,
+                                 questionnaire={"mode": mode, "answers": {},
+                                                "population": [20, 40]})
+                self.assertTrue(s["ok"], s)
+                self.assertEqual(s["validator_errors"], 0, s)
+                self.assertEqual(s["npcs"], 20, "topped up to the range floor")
+                scn = scenario_of(s)
+                for key in ("narrativeRules", "variables", "perkTrees",
+                            "calendar", "quests", "skills"):
+                    self.assertTrue(scn[key], f"{key} empty in {mode}")
+                with open(os.path.join(s["out"], "plan.json"), encoding="utf-8") as f:
+                    plan = json.load(f)
+                self.assertEqual(plan["questionnaire"]["population"], [20, 40])
+                self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy",
+                                 "inline P0 framed the idea")
 
 
 class FramedBuilds(unittest.TestCase):

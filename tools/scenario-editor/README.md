@@ -33,23 +33,39 @@ unchanged. The gallery still works on its own.
 
 ## Make a world (world generation)
 
-**New world…** in the toolbar generates a whole scenario from a one-line idea: the model describes
-the world in phases (world plan, prop catalogue, one call per building, one per zone, people) and
-deterministic, seeded code places everything, checks that every room is reachable, and builds the
-scenario. When it finishes, the world opens here as a new workspace, ready to edit or download.
-The generator is the standalone tool in [`../world-generator`](../world-generator); the editor
-only drives it — it still runs on its own from the command line.
+**New world…** in the toolbar generates a whole scenario, framed before it is built: pick a
+form, answer with option chips, **Frame it** (one short model call) and read the World Frame;
+**Generate world** then has the model describe the world in phases (world plan, prop
+catalogue, one call per building, one per zone, people in batches, then rules, perks and the
+story clock) while deterministic, seeded code places everything, checks that every room is
+reachable, and builds the scenario. When it finishes, the world opens here as a new workspace,
+ready to edit or download. The generator is the standalone tool in
+[`../world-generator`](../world-generator); the editor only drives it — it still runs on its
+own from the command line.
+
+The dialog's steps:
+
+1. **Pick a form** — quick (the idea alone), or the short (7 questions), medium (14) or long
+   (14, and the model asks up to five more of its own) questionnaire from the generator's
+   question bank.
+2. **Answer the questions** with option chips (a question may allow two picks; **Other**
+   opens a text box; everything can be skipped) and set the **resident count** (20–40 by
+   default, 5–60 allowed).
+3. **Frame it** runs P0 as a short job and shows the frame — its whole contract under an
+   **editable summary**. In the long form the model's own questions come back first and are
+   answered the same way. Frame it again for another try; changing the form resets the frame.
+4. **Generate world** starts the full job with the approved frame (a frame is needed first).
 
 - **Your own key.** The model calls go through your own OpenAI-compatible provider (z.ai,
   OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
   subscription. Add one in the dialog under **Provider settings**: it is stored in the generator's
   gitignored `providers.json`, and only the last four characters of the key are ever shown again.
-- **Cost and time.** A world takes **13–18 model calls, 100–150k tokens, 20–35 minutes** (the
+- **Cost and time.** A world takes **18–27 model calls, 130–220k tokens, 25–50 minutes** (the
   dialog shows the estimate before you start). On a flash-tier model that is cents on a typical
   API plan.
-- **Progress and cancel.** The dialog shows the phase as it goes (world plan, catalogue,
-  building n/N, zone n/N, people) with a Cancel button. If a run fails, it shows the error and
-  the folder holding every call's prompt and reply.
+- **Progress and cancel.** The dialog shows the phase as it goes (the frame, world plan,
+  catalogue, building n/N, zone n/N, people, systems) with a Cancel button. If a run fails, it
+  shows the error and the folder holding every call's prompt and reply.
 - **Extensions** — all off by default, so the plain world imports and plays in the unmodded game:
 
   | Extension | What it adds | Game mods needed |
@@ -64,7 +80,8 @@ only drives it — it still runs on its own from the command line.
   with it won't work right. Lights is the exception: without its mod, the lamps just look plain.
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
   again from its saved `plan.json` under a new seed — no model calls, a few seconds — and it opens
-  as a new workspace; the old one stays untouched.
+  as a new workspace; the old one stays untouched. A framed world keeps its frame: the plan
+  carries it, so the re-roll never asks the questionnaire again.
 
 ## What it does now
 

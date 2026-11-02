@@ -170,6 +170,15 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         self.assertEqual(client.calls, 12, "P0 ran, then the eleven canned calls")
         self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
 
+    def test_an_inline_long_questionnaire_skips_the_clarify_turn(self):
+        # no user is there to answer it: one P0 call, frame at once
+        client = ScriptedClient([_dump(a_frame())] + canned_replies())
+        plan, _stats = phases.run_phases(
+            "a mill village", client,
+            questionnaire={"mode": "long", "answers": {}, "population": [5, 6]})
+        self.assertEqual(client.calls, 12, "no p0-clarify call was made")
+        self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
+
     def test_no_frame_no_questionnaire_is_yesterdays_path(self):
         client = ScriptedClient(canned_replies())
         plan, _stats = phases.run_phases("a mill village", client)

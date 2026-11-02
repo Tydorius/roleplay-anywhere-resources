@@ -1,11 +1,12 @@
 # arpg-worldgen
 
 A standalone world generator for **Anywhere RPG / Roleplay Anywhere**: you give
-it a one-line idea, a language model describes the world, and deterministic
+it a one-line idea (or answer a short questionnaire that frames the world
+first), a language model describes the world, and deterministic
 code places everything — **models describe, code places**. The model decides
-what the world contains (zones, buildings, rooms, furniture, people); the
-layout engine decides exactly where it all sits, checks that every room is
-reachable, and writes a ready-to-import scenario zip.
+what the world contains (zones, buildings, rooms, furniture, people, rules and
+quests); the layout engine decides exactly where it all sits, checks that every
+room is reachable, and writes a ready-to-import scenario zip.
 
 It runs on Python 3.8+ with the standard library only (Pillow is optional,
 just for map previews), and the scenario builder, validator and preview
@@ -31,8 +32,11 @@ It needs Python 3.8 or newer, and nothing else.
   Ollama, LM Studio, llama-swap) or any other OpenAI-compatible server, confirm the URL and
   model, and type your key (hidden). It saves them to `providers.json` and can send one tiny
   test request.
-- **Make a new world:** type a one-line idea, turn extensions on or off, and confirm the
-  estimate. Progress shows as it goes; Ctrl+C stops it. The world lands in `out/<idea>-<time>/`
+- **Make a new world:** pick how much framing to do — a **quick** one-line idea, or the
+  **short** (7 questions), **medium** (14) or **long** (14 plus the model's own clarifying
+  questions) questionnaire — then the resident count, the World Frame P0 wrote (use it, edit
+  its summary, or have another try), the extensions and the estimate. Progress shows as it
+  goes; Ctrl+C stops it. The world lands in `out/<idea>-<time>/`
   as a `.scenario.zip` for **New Game → Import…** (or **Open zip…** in the Scenario Editor).
 - **Re-roll a world** made earlier: the same world placed again under a new seed, with no model
   calls.
@@ -69,24 +73,75 @@ python -m worldgen check-provider zai
 python -m unittest          # the test suite
 ```
 
-- `generate` runs the model phases (P1 world plan, P2 prop catalogue, P3 one
-  call per building, P4 one per zone, P5 people) and builds the scenario.
-  The last line is a JSON summary.
+- `generate` runs the model phases (P0 the world frame, P1 world plan, P2 prop
+  catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
+  P6 rules, perks and the story clock) and builds the scenario. The last line
+  is a JSON summary.
 - `layout` re-places a saved plan with a new seed and **no model calls** —
   re-roll the map, keep the world.
 - Each run writes `plan.json`, `spec.json`, `metrics.json`, the llm call logs,
   `<Name>.scenario.zip` and (with Pillow) `preview.png`.
 
 Programs (like the Scenario Editor) drive the same thing through
-`worldgen/api.py`: `generate()`, `relayout()`, `estimate()`, with progress
-events and cancellation.
+`worldgen/api.py`: `generate()`, `relayout()`, `estimate()`, `frame()` and the
+question bank, with progress events and cancellation.
+
+## The World Frame: questionnaires, population and systems
+
+A one-line idea is enough, but a short questionnaire shapes the whole world
+before the map is planned. **P0** turns the mode, the answers and the idea
+into a **frame** — genre, premise, reality, setting, tone, conflict, the
+player's role, themes, constraints and a 80-150-word summary — shown for a
+use / edit / redo choice before anything is built. Every later phase (P1-P6)
+gets the approved frame in place of the bare idea, and it lands on
+`plan.json`, so a re-roll never asks again.
+
+- **quick**: the idea alone; one P0 call expands it into a frame.
+- **short**: seven questions (kind of world, the extraordinary, tone, who the
+  player is, what drives the story, what you mostly do, anything to avoid).
+- **medium**: those seven plus seven deeper ones (stakes, power, where power
+  comes from, growth, danger, time pressure, inspirations).
+- **long**: the medium fourteen, then a clarifying turn — the model asks up
+  to five questions of its own about real ambiguities (cozy *and* deadly:
+  which wins?), you answer, and the final P0 call takes both.
+
+The bank lives in `worldgen/questions.json` as plain data: edit it to change a
+question's wording or options without touching code. Every question records
+the frame fields it `feeds`, `multi` caps how many options may be picked, and
+`free` questions take text only. **Other** and **skip** never appear in the
+bank — the UIs add them. `questions.py` checks the bank on load (ids unique,
+options non-empty, the population range sane), so a malformed edit fails
+loudly.
+
+Beside every form sits the **resident count**, defaulting to 20-40 (the
+game's own default) and allowed 5-60. P1 plans enough homes and lodgings to
+bed them (a building may carry `residents: n`, and a unit building's count is
+units x residents), P3 must give each promise real beds, and P5 people the
+place in batches — one call per zone with buildings, at most ten people each,
+the roster carried forward so names never repeat, then the player in a call
+of their own from the frame's role, carrying 2-5 starting items from the
+catalogue. Below the asked-for range the run tops up with further batches
+rather than failing.
+
+**P6, the systems**, runs after the people in three calls — 6a rules and
+economy (narrative rules, flavor and difficulty, a currency whose format
+names a digit, a 25-point attribute spread, about 18 skills, weather from the
+game's ten, 4-8 variables with a countdown whenever the answers ask for time
+pressure), 6b three perk trees of 5-8 perks, and 6c the story clock (recurring
+calendar obligations plus 2-4 one-off events in the first week, and 1-2
+starting quests whose steps name real places and people). A call that still
+fails after retries falls back for that part alone and the log says so — it
+never fails the world. Plans from before P6 keep building with genre-neutral
+defaults (the Coin, an even 25-point spread).
 
 ## Cost and time
 
-From measured runs: **13–18 model calls, 100–150k tokens, 20–35 minutes**
+From measured runs: **18–27 model calls, 130–220k tokens, 25–50 minutes**
 per world (a reasoning-friendly `max_tokens` of 16000 is preset; flash-tier
 models are cheap — expect cents on a typical API plan). `estimate()` reports
-these numbers; for a saved plan it counts the calls exactly.
+these numbers; for a saved plan it counts the calls exactly (P0 when the plan
+carries a frame, P1 and P2, one call per building and zone, the people
+batches and the three systems calls).
 
 ## Extensions (all off by default)
 
