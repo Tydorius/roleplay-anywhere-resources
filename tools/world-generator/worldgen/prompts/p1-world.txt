@@ -18,6 +18,7 @@ Reply with ONE JSON object with exactly these fields:
       "ground": "grass|dirt|gravel|stone",
       "adjacentTo": ["names of other zones in this list"],
       "outdoor": ["short names of outdoor features this zone needs, e.g. 'village well', 'market stalls'"],
+      "arrangement": "optional, omit for today's default: around_green|along_street|scattered|fields",
       "buildings": [
         {"name": "unique building name", "kind": "inn|cottage|smithy|...",
          "sizeClass": "hut|small|medium|large|hall",
@@ -26,12 +27,40 @@ Reply with ONE JSON object with exactly these fields:
       ]
     }
   ],
+  "compounds": [
+    {"name": "unique compound name", "zone": "a zone name from this list",
+     "shape": "enclosure", "courtyard": "small|medium|large",
+     "walls": "walkable|solid|none",
+     "parts": [
+       {"building": "a building of that zone", "at": "corner:nw|corner:ne|corner:sw|corner:se"},
+       {"building": "...", "at": "edge:north|south|east|west:start|center|end", "gate": true},
+       {"building": "...", "at": "inside:center|north|south|east|west"},
+       {"building": "...", "at": "attached:<a part's building>:north|south|east|west"}
+     ]}
+  ],
   "roads": [{"from": "zone name", "to": "zone name", "kind": "dirt|cobble|paved"}]
 }
 
+- "compounds" is optional: omit the field when no place needs one. Use a
+  compound when ONE place is built from several connected structures — four
+  towers joined by walls with a keep inside — and name its parts as ordinary
+  buildings of that zone first. Most buildings are not in a compound.
+- Compound slots: corner parts sit on the enclosure's four corners
+  (corner:nw ... corner:se), edge parts sit in a wall (edge:<side>:<start|
+  center|end>, at most two of them marked "gate": true — the gate gets doors
+  through it on both faces), inside parts stand in the courtyard
+  (inside:<center or a side>), and an attached part shares a wall with
+  another part (attached:<that part's building>:<side>).
+- The same shape reads many ways: a castle (four towers, a gatehouse, a keep
+  inside) or a walled monastery (a chapel and cloister inside, a gatehouse
+  and two corner lodges round them). Do not take either as a template.
+- A zone's "arrangement", when set: "around_green" puts its buildings facing
+  one open green (the largest opposite the road), "along_street" lines them
+  on a street, "scattered" spreads them loosely, "fields" fills the zone
+  with fenced crop plots and gathers its buildings at the road-side corner.
 - 2 to 4 zones, each with a distinct kind. Every name in "adjacentTo" and in
-  "roads" must be a zone in this same reply. No more than 12 buildings in the
-  whole plan.
+  "roads" must be a zone in this same reply. No more than 12 buildings in
+  the whole plan (16 when the reply uses compounds — towers are buildings).
 - Buildings are lived in: an inn, homes, a workshop or two, a chapel or mill if
   the idea asks for one. A "yard" is null for most buildings; omit it (null)
   unless the building truly needs outside space.

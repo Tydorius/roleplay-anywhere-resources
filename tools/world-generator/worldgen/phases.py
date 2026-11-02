@@ -14,7 +14,8 @@ import string
 import time
 
 from . import hints as hints_mod
-from .model import is_sleep_name as _sleeps
+from .model import (COMPOUND_SHAPES, COMPOUND_SHAPES_KNOWN, COMPOUND_WALLS,
+                    COURTYARD_SIZES, VALID_ARRANGEMENTS, is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -30,6 +31,7 @@ YARD_SIDES = ("front", "back", "left", "right")
 FILL_DENSITY = ("low", "medium", "high")
 
 MAX_BUILDINGS = 12      # across the whole P1 plan
+MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
 MAX_TEMPLATE_SIDE = 4   # cells; a tree is 3x3 at most
 MAX_COUNT = 12          # one furniture/prop line
 MAX_ERRORS = 12         # cap on the error list fed back to the model
@@ -103,6 +105,177 @@ def _building_line(b):
 def _catalogue_lines(templates):
     return "\n".join(f"- {t['name']} | {t['size'][0]}x{t['size'][1]} | {t.get('rule', '')}"
                      for t in templates)
+
+
+# ------------------------------------------------- compounds in the raw plan
+
+def _slot_bits(part):
+    at = part.get("at") or ""
+    return at.split(":") if isinstance(at, str) else []
+
+
+def _perimeter_cycle(parts):
+    """The perimeter parts of an enclosure in walk order (south, east,
+    north-reversed, west-reversed), corners first and last on their sides,
+    edge parts between them start -> center -> end."""
+    corners, edges = {}, {}
+    for p in parts:
+        bits = _slot_bits(p)
+        if bits[:1] == ["corner"] and len(bits) == 2:
+            corners[bits[1]] = p
+        elif bits[:1] == ["edge"] and len(bits) == 3:
+            edges.setdefault(bits[1], []).append(p)
+    rank = {"start": 0, "center": 1, "end": 2}
+
+    def edge_rank(p):
+        bits = _slot_bits(p)
+        return (rank.get(bits[2] if len(bits) > 2 else "", 1), p.get("building", ""))
+
+    side_corners = {"south": ("sw", "se"), "west": ("sw", "nw"),
+                    "north": ("nw", "ne"), "east": ("se", "ne")}
+    cycle = []
+    for side, rev in (("south", False), ("east", False),
+                      ("north", True), ("west", True)):
+        first, last = side_corners[side]
+        seq = ([corners[first]] if first in corners else []) + \
+            sorted(edges.get(side, ()), key=edge_rank) + \
+            ([corners[last]] if last in corners else [])
+        for p in (reversed(seq) if rev else seq):
+            if p not in cycle:
+                cycle.append(p)
+    return cycle
+
+
+def _compound_line(compounds, zone, building):
+    """P3's one line on a part's slot and neighbours, so its entrance, inner
+    doors and stairs make sense inside the structure."""
+    comp = next((c for c in compounds if isinstance(c, dict)
+                 and c.get("zone") == zone.get("name")
+                 and any(isinstance(p, dict) and p.get("building") == building["name"]
+                         for p in (c.get("parts") or []))), None)
+    if comp is None:
+        return "none; this building stands on its own"
+    parts = [p for p in comp["parts"] if isinstance(p, dict)]
+    part = next(p for p in parts if p.get("building") == building["name"])
+    bits = _slot_bits(part)
+    walls_kind = comp.get("walls", "walkable")
+    walls = "" if walls_kind == "none" else \
+        " (the walls are walkable upstairs)" if walls_kind == "walkable" else ""
+    if bits[:1] == ["corner"]:
+        facing = {"nw": ("west", "north"), "ne": ("east", "north"),
+                  "sw": ("west", "south"), "se": ("east", "south")}.get(bits[1])
+        slot = f"corner slot {bits[1].upper()}; walls join it on the {facing[0]} and the {facing[1]}"
+    elif bits[:1] == ["edge"]:
+        along = ("west", "east") if bits[1] in ("south", "north") else ("south", "north")
+        slot = f"set in the {bits[1]} wall ({bits[2]}); walls join it on the {along[0]} and the {along[1]}"
+        if part.get("gate"):
+            slot += "; it is the GATE, walked through on both faces"
+    elif bits[:1] == ["inside"]:
+        slot = "standing in the courtyard" + \
+               (f" towards the {bits[1]}" if len(bits) == 2 and bits[1] != "center" else "") + \
+               "; no walls touch it, the gate's path leads to its door"
+    else:   # attached (or junk, which check_p1 will have flagged)
+        slot = f"attached to {bits[1] if len(bits) > 1 else '?'}" + \
+               (f" on its {bits[2]} side, sharing that wall" if len(bits) > 2 else "")
+    cycle = _perimeter_cycle(parts)
+    neighbours = ""
+    if part in cycle and len(cycle) > 1:
+        i = cycle.index(part)
+        beside = [cycle[i - 1]["building"], cycle[(i + 1) % len(cycle)]["building"]]
+        neighbours = "; next along the walls: " + ", ".join(beside)
+    return f"part of {comp.get('name', 'the compound')}: {slot}{walls}{neighbours}"
+
+
+def compound_errors(compounds, zone_names, building_zone):
+    """Structural errors in a raw P1 compounds list: shape, slots, unknown or
+    foreign buildings, duplicate slots, gate rules, attached hosts that are
+    missing or loop. Mirrors the plan parser's own validation so the model
+    gets its mistakes back on a retry."""
+    errors = []
+    names = set()
+    for i, c in enumerate(compounds):
+        ctx = f"compounds[{i}]"
+        if not isinstance(c, dict):
+            errors.append(f"{ctx}: must be an object")
+            continue
+        name = c.get("name")
+        if not _is_str(name):
+            errors.append(f"{ctx}: name required")
+            name = f"compounds[{i}]"
+            ctx = name
+        elif name in names:
+            errors.append(f"{ctx}: name {name!r} used twice")
+        else:
+            names.add(name)
+            ctx = f"compound {name!r}"
+        zone = c.get("zone")
+        if zone not in zone_names:
+            errors.append(f"{ctx}: zone {zone!r} is not a zone of this plan")
+        shape = c.get("shape", "enclosure")
+        if shape in COMPOUND_SHAPES_KNOWN:
+            errors.append(f"{ctx}: shape {shape!r} is not implemented; use enclosure")
+        elif shape not in COMPOUND_SHAPES:
+            errors.append(f"{ctx}: shape must be enclosure, not {shape!r}")
+        if c.get("courtyard", "medium") not in COURTYARD_SIZES:
+            errors.append(f"{ctx}: courtyard must be small, medium or large")
+        if c.get("walls", "walkable") not in COMPOUND_WALLS:
+            errors.append(f"{ctx}: walls must be walkable, solid or none")
+        parts = c.get("parts")
+        if not isinstance(parts, list) or not parts:
+            errors.append(f"{ctx}: parts must be a non-empty list")
+            continue
+        slots, gates, hosts = set(), [], {}
+        for j, p in enumerate(parts):
+            pctx = f"{ctx} part {j + 1}"
+            if not isinstance(p, dict):
+                errors.append(f"{pctx}: must be an object")
+                continue
+            bname = p.get("building")
+            pctx = f"{ctx} part {bname!r}" if _is_str(bname) else pctx
+            if bname not in building_zone:
+                errors.append(f"{pctx}: building {bname!r} is not in the plan")
+            elif zone in zone_names and building_zone[bname] != zone:
+                errors.append(f"{pctx}: building {bname!r} belongs to zone "
+                              f"{building_zone[bname]!r}, not {zone!r}")
+            at = p.get("at", "")
+            bits = at.split(":") if isinstance(at, str) else []
+            ok = (bits[:1] == ["corner"] and len(bits) == 2 and bits[1] in ("nw", "ne", "sw", "se")) or \
+                 (bits[:1] == ["edge"] and len(bits) == 3 and bits[1] in SIDES
+                  and bits[2] in ("start", "center", "end")) or \
+                 (bits[:1] == ["inside"] and len(bits) == 2
+                  and bits[1] in ("center",) + SIDES) or \
+                 (bits[:1] == ["attached"] and len(bits) == 3 and bits[2] in SIDES)
+            if not ok:
+                errors.append(f"{pctx}: bad slot {at!r} (corner:<nw|ne|sw|se>, "
+                              f"edge:<side>:<start|center|end>, inside:<center|side> "
+                              f"or attached:<part>:<side>)")
+                continue
+            if at in slots:
+                errors.append(f"{pctx}: slot {at!r} used twice in {name!r}")
+            slots.add(at)
+            if p.get("gate"):
+                if bits[0] != "edge":
+                    errors.append(f"{pctx}: only an edge part can be the gate")
+                gates.append(bname)
+            if bits[0] == "attached":
+                hosts[bname] = bits[1]
+            elif _is_str(bname):
+                hosts[bname] = None
+        if len(gates) > 2:
+            errors.append(f"{ctx}: at most two gates, got {len(gates)}")
+        for bname, host in hosts.items():
+            if host is not None and host not in hosts:
+                errors.append(f"{ctx} part {bname!r}: attached host {host!r} "
+                              f"is not a part of {name!r}")
+        for bname in hosts:
+            walk, seen = bname, set()
+            while walk in hosts and hosts[walk] is not None:
+                if walk in seen:
+                    errors.append(f"{ctx} part {bname!r}: attached parts form a cycle")
+                    break
+                seen.add(walk)
+                walk = hosts[walk]
+    return errors
 
 
 def slug(text):
@@ -211,6 +384,10 @@ def check_p1(d, floors=False):
             errors.append(f"{ctx}.description: required, one sentence")
         if not _is_str(z.get("ground")):
             errors.append(f"{ctx}.ground: required (grass|dirt|gravel|stone)")
+        arrangement = z.get("arrangement", "")
+        if arrangement not in ("",) + VALID_ARRANGEMENTS:
+            errors.append(f"{ctx}.arrangement: must be one of "
+                          f"{list(VALID_ARRANGEMENTS)}, not {arrangement!r}")
         adj = z.get("adjacentTo", [])
         if not isinstance(adj, list):
             errors.append(f"{ctx}.adjacentTo: must be a list of zone names")
@@ -220,8 +397,15 @@ def check_p1(d, floors=False):
         if not isinstance(bl, list):
             errors.append(f"{ctx}.buildings: must be a list")
     total = sum(len(z.get("buildings", []) or []) for z in zones if isinstance(z, dict))
-    if total > MAX_BUILDINGS:
-        errors.append(f"buildings: {total} in total is too many; at most {MAX_BUILDINGS}")
+    compounds = [c for c in (d.get("compounds") or []) if isinstance(c, dict)]
+    cap = MAX_BUILDINGS_COMPOUNDS if compounds else MAX_BUILDINGS
+    if total > cap:
+        errors.append(f"buildings: {total} in total is too many; at most {cap}"
+                      f"{' with compounds' if compounds else ''}")
+    zn = {z.get("name") for z in zones if isinstance(z, dict) and _is_str(z.get("name"))}
+    bz = {b.get("name"): z.get("name") for z in zones if isinstance(z, dict)
+          for b in (z.get("buildings") or []) if isinstance(b, dict)}
+    errors.extend(compound_errors(d.get("compounds") or [], zn, bz))
     bnames = set()
     for z in zones:
         if not isinstance(z, dict):
@@ -289,6 +473,10 @@ def sanitize_p1(d, log, floors=False):
         if z.get("sizeClass") not in ZONE_SIZES:
             log.append((f"zone {z['name']}", f"sizeClass {z.get('sizeClass')!r} -> 'medium'"))
             z["sizeClass"] = "medium"
+        if z.get("arrangement", "") not in ("",) + VALID_ARRANGEMENTS:
+            log.append((f"zone {z['name']}",
+                        f"arrangement {z.get('arrangement')!r} dropped"))
+            z.pop("arrangement", None)
         z["adjacentTo"] = [n for n in (z.get("adjacentTo") or [])
                            if isinstance(n, str) and n != z["name"]]
         z.setdefault("outdoor", [])
@@ -305,7 +493,8 @@ def sanitize_p1(d, log, floors=False):
         else:
             log.append((f"road {r.get('from')}-{r.get('to')}", "dropped: bad endpoints"))
     d["roads"] = roads
-    # one pass across zones so the 12-building cap is global
+    # one pass across zones so the building cap is global; compounds raise
+    # it, since a compound's towers and gatehouse are buildings too
     seen, total = set(), 0
     for z in zones:
         keep = []
@@ -330,12 +519,51 @@ def sanitize_p1(d, log, floors=False):
             seen.add(b["name"])
             keep.append(b)
         z["buildings"] = keep
-    while sum(len(z["buildings"]) for z in zones) > MAX_BUILDINGS:
+    zn = {z["name"] for z in zones}
+    bz = {b["name"]: z["name"] for z in zones for b in z["buildings"]}
+    compounds = []
+    for c in d.get("compounds") or []:
+        label = f"compound {c.get('name')}" if isinstance(c, dict) and _is_str(c.get("name")) \
+            else "compound"
+        if not isinstance(c, dict) or compound_errors([c], zn, bz):
+            log.append((label, "dropped from P1: bad structure"))
+            continue
+        compounds.append(c)
+    cap = MAX_BUILDINGS_COMPOUNDS if compounds else MAX_BUILDINGS
+    part_names = {p.get("building") for c in compounds
+                  for p in (c.get("parts") or []) if isinstance(p, dict)}
+    while sum(len(z["buildings"]) for z in zones) > cap:
+        # loose buildings go over the cap before any compound part does
+        victim = None
         for z in reversed(zones):
-            if z["buildings"]:
-                b = z["buildings"].pop()
-                log.append((f"building {b['name']}", "dropped from P1: over the 12-building cap"))
+            for b in reversed(z["buildings"]):
+                if b["name"] not in part_names:
+                    victim = (z, b)
+                    break
+            if victim:
                 break
+        if victim is None:
+            for z in reversed(zones):
+                if z["buildings"]:
+                    victim = (z, z["buildings"][-1])
+                    break
+        z, b = victim
+        z["buildings"].remove(b)
+        log.append((f"building {b['name']}",
+                    f"dropped from P1: over the {cap}-building cap"))
+    # a compound missing any of its parts is gone with it
+    alive = {b["name"] for z in zones for b in z["buildings"]}
+    kept = []
+    for c in compounds:
+        missing = [p.get("building") for p in (c.get("parts") or [])
+                   if isinstance(p, dict) and p.get("building") not in alive]
+        if missing:
+            log.append((f"compound {c.get('name')}",
+                        f"dropped from P1: part building(s) {', '.join(map(str, missing))} "
+                        f"did not survive"))
+        else:
+            kept.append(c)
+    d["compounds"] = kept
     d["zones"] = zones
     return d
 
@@ -933,6 +1161,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
                      event=("P3", f"building {seen_buildings}/{n_buildings}: {b['name']}"),
                      setting_line=setting_line, zone_line=zl,
                      building_line=_building_line(b), catalogue_lines=catalogue,
+                     compound_line=_compound_line(p1.get("compounds") or [], z, b),
                      building_name=b["name"],
                      _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
                      s=(b.get("storeys", 1) if floors else None):

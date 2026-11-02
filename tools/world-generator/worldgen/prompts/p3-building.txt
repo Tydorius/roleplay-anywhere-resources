@@ -4,6 +4,7 @@ adds the doors and places every object you list; you never give coordinates.
 SETTING: ${setting_line}
 ZONE: ${zone_line}
 BUILDING: ${building_line}
+COMPOUND: ${compound_line}
 
 CATALOGUE (name | size in cells | placement rule):
 ${catalogue_lines}
@@ -22,6 +23,11 @@ Reply with ONE JSON object with exactly these fields:
 
 - 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
   door; the entrance room must be one of "rooms".
+- The COMPOUND line says when the building is one part of a connected
+  structure (its slot and the walls or hosts beside it): its entrance and
+  inner doors must make sense against those neighbours — a gate part is
+  walked through, a corner part is joined by its walls, an attached part
+  shares one wall with its host.
 - Furnish every room for its purpose, with counts that fit it: a bedroom has
   one bed per sleeper plus storage and a light source; a tavern common room
   has several tables with seats; a smithy has forge, anvil, water and stock.

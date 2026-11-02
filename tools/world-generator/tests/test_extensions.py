@@ -14,6 +14,7 @@ KW = {
     "p2-catalogue": {"setting_line": "SETTING", "zone_lines": "ZONES"},
     "p3-building": {"setting_line": "SETTING", "zone_line": "ZONE",
                     "building_line": "BUILDING", "catalogue_lines": "CATALOGUE",
+                    "compound_line": "none; this building stands on its own",
                     "building_name": "The Old Mill"},
     "p4-zone": {"setting_line": "SETTING", "zone_line": "ZONE",
                 "building_lines": "BUILDINGS", "catalogue_lines": "CATALOGUE"},
