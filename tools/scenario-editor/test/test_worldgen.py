@@ -1,6 +1,8 @@
 """The world generation endpoints of the Scenario Editor, over HTTP with a
 mocked generator: start, progress, cancel, the one-at-a-time rule, re-roll
-from a saved plan, and providers listed without their keys.
+from a saved plan, providers listed without their keys, the question bank,
+the Frame-it job (with the long form's clarifying turn) and a generation
+started with an approved frame.
 
 The mock replaces worldgen.api.generate with a wrapper around the real
 relayout of the village fixture: a genuine plan-to-zip build with no model
@@ -14,6 +16,7 @@ import threading
 import time
 import unittest
 import urllib.error
+import urllib.parse
 import urllib.request
 from http.server import ThreadingHTTPServer
 from pathlib import Path
@@ -30,11 +33,26 @@ import scenario_editor as se                           # noqa: E402
 FIXTURE = HERE.parent / "world-generator" / "fixtures" / "village.json"
 FULL_KEY = "sk-test-1234567890abcd"                    # must never reach the browser
 
+GEN_KWARGS = []          # what each mocked generate call received beyond the basics
+FRAME_CALLS = []         # what each mocked frame call received
+
+A_FRAME = {              # a World Frame as P0 returns it
+    "genre": {"primary": "Fantasy", "influences": []},
+    "premise": "A mill town on a cold river, where the weir feeds everyone's flour.",
+    "reality": "Rare and mysterious",
+    "setting": {"era": "a quiet age", "technology": "water and wind", "climate": "cold winters"},
+    "tone": "Cozy", "conflict": "The old miller wants the weir raised; the fishers don't",
+    "playerRole": "the new miller's apprentice", "themes": ["belonging"],
+    "constraints": [], "summary": "A cozy mill town of twenty-odd souls on a cold river.",
+    "unresolved": [],
+}
+
 
 def mocked_generate(idea, provider=None, extensions=(), seed=1, out_dir=None,
                     progress=None, cancel=None, **kw):
     """The fake model run: copy the fixture plan, build it for real, report
     progress like the generator does."""
+    GEN_KWARGS.append(kw)
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(FIXTURE, out / "plan.json")
@@ -43,6 +61,21 @@ def mocked_generate(idea, provider=None, extensions=(), seed=1, out_dir=None,
     summary.update(provider=provider, idea=idea, calls=7, tokens=12345)
     progress({"phase": "done", "label": "built", "calls": 7, "tokens": 12345})
     return summary
+
+
+def mocked_frame(mode, idea="", answers=None, population=None, clarify=None,
+                 provider=None, log_dir=None, progress=None, cancel=None, **kw):
+    """The fake P0: the long form asks one clarifying question before framing."""
+    FRAME_CALLS.append({"mode": mode, "idea": idea, "answers": answers,
+                        "population": population, "clarify": clarify,
+                        "provider": provider, "log_dir": log_dir})
+    if progress:
+        progress({"phase": "P0", "label": "the world frame", "calls": 1, "tokens": 900})
+    if mode == "long" and not clarify:
+        return {"frame": None,
+                "questions": [{"question": "Cozy or deadly?", "options": ["Cozy", "Deadly"]}],
+                "stats": {}}
+    return {"frame": json.loads(json.dumps(A_FRAME)), "questions": [], "stats": {}}
 
 
 def slow_generate(idea=None, progress=None, cancel=None, **kw):
@@ -177,6 +210,96 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertEqual(code, 400)
         self.assertIn("levitate", raw)
         code, raw = self.request("POST", "/api/worldgen/generate", None)   # not a JSON object
+        self.assertEqual(code, 400)
+
+    # ------------------------------------------------------------ question bank, framing
+    def test_questions_endpoint_serves_the_bank(self):
+        b = self.get("/api/worldgen/questions")
+        self.assertEqual(b["modes"], ["quick", "short", "medium", "long"])
+        self.assertEqual(len(b["short"]), 7)
+        self.assertEqual(len(b["medium"]), 14)     # the medium form: the short seven plus the deep seven
+        self.assertEqual([q["id"] for q in b["short"]][0], "genre")
+        self.assertNotIn("stakes", [q["id"] for q in b["short"]], "the medium form's questions")
+        self.assertIn("stakes", [q["id"] for q in b["medium"]])
+        self.assertEqual(b["population"], {"default": [20, 40], "min": 5, "max": 60})
+        for q in b["short"] + b["medium"]:
+            if not q.get("free"):
+                self.assertNotIn("Other", q["options"], "Other is implicit in the UI")
+                self.assertGreaterEqual(len(q["options"]), 2)
+
+    def test_frame_job_returns_the_frame(self):
+        with patch.object(wg.wgapi, "frame", mocked_frame):
+            FRAME_CALLS.clear()
+            j = self.post("/api/worldgen/frame",
+                          {"mode": "short", "idea": "a mill town",
+                           "answers": {"genre": {"choices": ["Fantasy"], "other": ""},
+                                       "bogus": {"choices": ["nope"], "other": ""}},
+                           "population": [10, 90], "provider": "mockp"})["job"]
+            done = self.wait_job(j["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        self.assertEqual(done["kind"], "frame")
+        self.assertEqual(done["frame"]["genre"]["primary"], "Fantasy")
+        self.assertEqual(done["questions"], [])
+        # the answers were cleaned by the generator's rules before the call
+        self.assertEqual(FRAME_CALLS[-1]["mode"], "short")
+        self.assertEqual(FRAME_CALLS[-1]["answers"], {"genre": {"choices": ["Fantasy"], "other": ""}})
+        self.assertEqual(FRAME_CALLS[-1]["population"], [10, 60])   # clamped to the bank
+        self.assertEqual(FRAME_CALLS[-1]["provider"], "mockp")
+
+    def test_frame_job_long_clarify_roundtrip(self):
+        with patch.object(wg.wgapi, "frame", mocked_frame):
+            FRAME_CALLS.clear()
+            j = self.post("/api/worldgen/frame",
+                          {"mode": "long", "idea": "a mill town", "provider": "mockp"})["job"]
+            first = self.wait_job(j["id"])
+            self.assertEqual(first["state"], "done")
+            self.assertIsNone(first["frame"])
+            self.assertEqual(first["questions"][0]["question"], "Cozy or deadly?")
+            j = self.post("/api/worldgen/frame",
+                          {"mode": "long", "idea": "a mill town", "provider": "mockp",
+                           "clarify": [{"question": "Cozy or deadly?", "answer": "Cozy"},
+                                       {"question": "", "answer": "dropped"}]})["job"]
+            done = self.wait_job(j["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        self.assertEqual(done["frame"]["tone"], "Cozy")
+        self.assertEqual(FRAME_CALLS[-1]["clarify"],
+                         [{"question": "Cozy or deadly?", "answer": "Cozy"}])
+
+    def test_frame_validates_before_starting(self):
+        code, raw = self.request("POST", "/api/worldgen/frame",
+                                 {"mode": "huge", "idea": "x", "provider": "mockp"})
+        self.assertEqual(code, 400)
+        code, raw = self.request("POST", "/api/worldgen/frame",
+                                 {"mode": "quick", "provider": "mockp"})
+        self.assertEqual(code, 400)                        # quick needs the idea
+        code, raw = self.request("POST", "/api/worldgen/frame",
+                                 {"mode": "short", "idea": "x", "provider": "nobody"})
+        self.assertEqual(code, 400)
+
+    def test_generate_carries_the_frame_and_questionnaire(self):
+        GEN_KWARGS.clear()
+        j = self.post("/api/worldgen/generate",
+                      {"idea": "", "provider": "mockp", "seed": 5,
+                       "frame": A_FRAME,
+                       "questionnaire": {"mode": "short",
+                                         "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
+                                         "population": [25, 35]}})["job"]
+        done = self.wait_job(j["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        self.assertTrue(done["source"].startswith("work/"))
+        self.assertEqual(GEN_KWARGS[-1]["frame"], A_FRAME)
+        self.assertEqual(GEN_KWARGS[-1]["questionnaire"],
+                         {"mode": "short",
+                          "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
+                          "population": [25, 35]})
+        # a bad questionnaire mode never starts the job
+        code, raw = self.request("POST", "/api/worldgen/generate",
+                                 {"idea": "", "provider": "mockp",
+                                  "frame": A_FRAME,
+                                  "questionnaire": {"mode": "huge"}})
+        self.assertEqual(code, 400)
+        code, raw = self.request("POST", "/api/worldgen/generate",
+                                 {"idea": "", "provider": "mockp", "frame": {"no": "summary"}})
         self.assertEqual(code, 400)
 
     # ------------------------------------------------------------ one at a time, cancel

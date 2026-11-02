@@ -101,6 +101,8 @@ class Handler(ig.Handler):
                                        "editable": src["id"].startswith("work/")})
             if u.path == "/api/worldgen/meta":
                 return self.send(200, wg.meta())
+            if u.path == "/api/worldgen/questions":
+                return self.send(200, wg.question_bank())
             if u.path == "/api/worldgen/estimate":
                 return self.send(200, {"estimate": wg.estimate(q.get("idea", [""])[0])})
             if u.path == "/api/worldgen/job":
@@ -124,7 +126,14 @@ class Handler(ig.Handler):
             if u.path == "/api/worldgen/generate":
                 req = req_json(self.body())
                 return self.send(200, {"job": wg.start_generate(
-                    req.get("idea"), req.get("provider"), req.get("extensions") or [], req.get("seed", 1))})
+                    req.get("idea"), req.get("provider"), req.get("extensions") or [], req.get("seed", 1),
+                    frame=req.get("frame"), questionnaire=req.get("questionnaire"))})
+            if u.path == "/api/worldgen/frame":
+                req = req_json(self.body())
+                return self.send(200, {"job": wg.start_frame(
+                    req.get("mode", "quick"), idea=req.get("idea", ""),
+                    answers=req.get("answers"), population=req.get("population"),
+                    provider=req.get("provider"), clarify=req.get("clarify"))})
             if u.path == "/api/worldgen/cancel":
                 return self.send(200, {"ok": True, "job": wg.cancel()})
             if u.path == "/api/worldgen/reroll":

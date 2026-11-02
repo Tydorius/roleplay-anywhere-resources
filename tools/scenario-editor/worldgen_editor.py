@@ -29,6 +29,7 @@ for _p in (str(GALLERY), str(WORLDGEN_DIR)):
 import image_gallery as ig  # noqa: E402  (the editor's workspaces and zip import)
 from worldgen import api as wgapi  # noqa: E402
 from worldgen import llm as wgllm  # noqa: E402
+from worldgen import questions as wgquestions  # noqa: E402
 from worldgen.extensions import registry as extension_registry  # noqa: E402
 
 PROVIDERS_JSON = Path(wgllm.PROVIDERS_PATH)   # tools/world-generator/providers.json
@@ -122,11 +123,70 @@ def estimate(idea):
     return wgapi.estimate(idea)
 
 
+# ---------------------------------------------------------------- question bank
+def question_bank():
+    """The generator's question bank for the dialog: both forms' questions
+    (the long form asks the medium ones, then a clarifying model turn) and the
+    population limits, as plain data."""
+    default, lo, hi = wgquestions.population_limits()
+    return {"modes": list(wgquestions.MODES),
+            "short": wgquestions.form_questions("short"),
+            "medium": wgquestions.form_questions("medium"),
+            "population": {"default": default, "min": lo, "max": hi}}
+
+
+def _checked_provider(provider):
+    """The provider entry for ``provider`` (a ready one, or a 400)."""
+    entries = providers()
+    if not entries:
+        raise ValueError("no provider is configured yet: add one first (your own key, "
+                         "not the game's subscription)")
+    entry = next((e for e in entries if e["name"] == str(provider or "").strip()), None)
+    if entry is None:
+        raise ValueError(f"unknown provider {provider!r} (configured: "
+                         + ", ".join(e["name"] for e in entries) + ")")
+    if not entry["ready"]:
+        raise ValueError(f"provider {provider!r} has no usable key yet — open Provider settings")
+    return entry
+
+
+def _clean_clarify(clarify):
+    """The clarifying answers of the long form: [{question, answer}], both
+    non-empty strings, at most five."""
+    if not clarify:
+        return None
+    out = []
+    for c in clarify:
+        if not isinstance(c, dict):
+            continue
+        q = str(c.get("question") or "").strip()
+        a = str(c.get("answer") or "").strip()
+        if q and a:
+            out.append({"question": q, "answer": a})
+    return out[:5] or None
+
+
+def _checked_questionnaire(questionnaire):
+    """A questionnaire {mode, answers, population} cleaned by the generator's
+    own rules (known questions and options only, the population clamped)."""
+    if questionnaire is None:
+        return None
+    if not isinstance(questionnaire, dict):
+        raise ValueError("the questionnaire must be an object {mode, answers, population}")
+    mode = str(questionnaire.get("mode") or "quick").strip()
+    if mode not in wgquestions.MODES:
+        raise ValueError(f"unknown mode {mode!r}; use one of {list(wgquestions.MODES)}")
+    return {"mode": mode,
+            "answers": wgquestions.sanitize_answers(mode, questionnaire.get("answers")),
+            "population": wgquestions.sanitize_population(questionnaire.get("population"))}
+
+
 # ---------------------------------------------------------------- jobs
 _job = None          # the one job dict; None when nothing has run yet
 _lock = threading.Lock()
 _PUBLIC = ("id", "kind", "state", "phase", "label", "idea", "calls", "tokens",
-           "started", "finished", "error", "outDir", "logDir", "source", "summary")
+           "started", "finished", "error", "outDir", "logDir", "source", "summary",
+           "frame", "questions")
 
 
 def job():
@@ -201,22 +261,17 @@ def _to_workspace(out_dir, summary, plan_path):
     return sid
 
 
-def start_generate(idea, provider, extensions=(), seed=1):
-    """Start a full generation (model phases + layout + build) for ``idea``."""
+def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None):
+    """Start a full generation (model phases + layout + build) for ``idea``,
+    with an approved World Frame and its questionnaire kept on the plan."""
     idea = str(idea or "").strip()
-    if not idea:
+    questionnaire = _checked_questionnaire(questionnaire)
+    if not idea and (frame is None and questionnaire is None):
         raise ValueError("type the idea first")
-    entries = providers()
-    if not entries:
-        raise ValueError("no provider is configured yet: add one first (your own key, "
-                         "not the game's subscription)")
-    provider = str(provider or "").strip()
-    entry = next((e for e in entries if e["name"] == provider), None)
-    if entry is None:
-        raise ValueError(f"unknown provider {provider!r} (configured: "
-                         + ", ".join(e["name"] for e in entries) + ")")
-    if not entry["ready"]:
-        raise ValueError(f"provider {provider!r} has no usable key yet — open Provider settings")
+    if frame is not None and not (isinstance(frame, dict)
+                                  and isinstance(frame.get("summary"), str)):
+        raise ValueError("the frame must be the approved World Frame object")
+    entry = _checked_provider(provider)
     unknown = sorted(set(extensions or ()) - {e["id"] for e in extension_registry()})
     if unknown:
         raise ValueError(f"unknown extension(s) {unknown}")
@@ -225,21 +280,54 @@ def start_generate(idea, provider, extensions=(), seed=1):
     except (TypeError, ValueError):
         raise ValueError("the seed must be a whole number")
 
-    out_dir = _fresh_out_dir(idea)
+    out_dir = _fresh_out_dir(idea or (questionnaire or {}).get("mode") or "world")
     exts = tuple(extensions or ())
 
     def target(update, j):
         update(outDir=str(out_dir), logDir=str(out_dir / "llm"))
         out_dir.mkdir(parents=True, exist_ok=True)
         summary = wgapi.generate(
-            idea, provider=provider, extensions=exts, seed=seed, out_dir=str(out_dir),
+            idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
+            frame=frame, questionnaire=questionnaire,
             progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                       calls=e.get("calls", 0), tokens=e.get("tokens", 0)),
             cancel=lambda: j["cancelRequested"])
         sid = _to_workspace(out_dir, summary, Path(out_dir) / "plan.json")
         update(source=sid, summary=summary)
 
-    return _start("generate", {"label": "new world", "idea": idea}, target)
+    return _start("generate", {"label": "new world", "idea": idea or None}, target)
+
+
+# ---------------------------------------------------------------- the frame job
+def start_frame(mode, idea="", answers=None, population=None, provider=None, clarify=None):
+    """Start P0 (the World Frame) as its own short job. In long mode without
+    ``clarify`` the job ends with ``questions`` (the clarifying turn) and no
+    frame; send them back answered as ``clarify`` to get the frame. ``frame``
+    on the finished job is what "Generate" then builds with."""
+    mode = str(mode or "quick").strip()
+    if mode not in wgquestions.MODES:
+        raise ValueError(f"unknown mode {mode!r}; use one of {list(wgquestions.MODES)}")
+    idea = str(idea or "").strip()
+    if mode == "quick" and not idea:
+        raise ValueError("quick mode needs the idea first")
+    entry = _checked_provider(provider)
+    answers = wgquestions.sanitize_answers(mode, answers)
+    population = wgquestions.sanitize_population(population)
+    clarify = _clean_clarify(clarify)
+    out_dir = _fresh_out_dir("frame-" + (idea or mode))
+
+    def target(update, j):
+        update(outDir=str(out_dir), logDir=str(out_dir / "llm"))
+        out_dir.mkdir(parents=True, exist_ok=True)
+        r = wgapi.frame(mode, idea=idea, answers=answers, population=population,
+                        clarify=clarify, provider=entry["name"],
+                        log_dir=str(out_dir / "llm"),
+                        progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
+                                                  calls=e.get("calls", 0),
+                                                  tokens=e.get("tokens", 0)))
+        update(frame=r["frame"], questions=r["questions"], label="the world frame")
+
+    return _start("frame", {"label": f"the {mode} frame", "idea": idea or None}, target)
 
 
 def _workspace_dir(source_id):
