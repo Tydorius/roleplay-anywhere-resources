@@ -169,19 +169,30 @@ class OldPlansStillReroll(unittest.TestCase):
             self.assertEqual(len(scenario["calendar"]), 6, "every entry kept")
 
     def test_calendar_entries_at_dropped_buildings_go_with_them(self):
-        """Seed 2 squeezes the Gilded Stag Inn out of the village: the world
-        reports the dropped building, and the calendar never points at a
-        region that did not make it onto the map (the builder would refuse
-        the whole scenario otherwise)."""
+        """A calendar entry whose location never made it onto the map is
+        dropped and reported, and the calendar never points at a missing
+        region (the builder would refuse the whole scenario otherwise).
+        The plan copy points "Harvest supper" at a building that is not on
+        the map, so the test no longer depends on a seed squeezing one out
+        (it once relied on seed 2 dropping the inn; the 012h map growth
+        made room for it)."""
+        with open(os.path.join(FIXTURES, "ashvale-framed.plan.json"), encoding="utf-8") as f:
+            plan = json.load(f)
+        cal = plan["calendar"] if "calendar" in plan else plan["systems"]["calendar"]
+        supper = next(c for c in cal if c["name"] == "Harvest supper")
+        supper["location"] = "The Burnt Mill"
         with tempfile.TemporaryDirectory() as tmp:
-            summary = api.relayout(os.path.join(FIXTURES, "ashvale-framed.plan.json"),
-                                   seed=2, out_dir=os.path.join(tmp, "seed2"))
-            self.assertFalse(summary["ok"], "the dropped inn still fails it")
+            path = os.path.join(tmp, "plan.json")
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(plan, f)
+            summary = api.relayout(path, seed=1, out_dir=os.path.join(tmp, "out"))
+            self.assertFalse(summary["ok"], "the dropped entry still fails it")
             self.assertTrue(summary["zip"], "but the scenario itself builds")
             self.assertEqual(summary["validator_errors"], 0, summary)
             scenario = scenario_of(summary)
             names = [c["name"] for c in scenario["calendar"]]
             self.assertNotIn("Harvest supper", names)
+            self.assertEqual(len(names), 5)
             regions = {r["name"] for r in scenario["regions"]}
             for entry in scenario["calendar"]:
                 self.assertIn(entry["location"], regions, entry)
