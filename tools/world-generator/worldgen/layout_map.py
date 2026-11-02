@@ -344,9 +344,32 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     built = {z.name for z in plan.zones
              if z.buildings or getattr(z, "compounds", None)}
 
-    # the core's blocks and the bands around them pin the grid's least size;
-    # stretch once, then resolve the sides again on the real grid. A wrap can
-    # add one more band than the sides show, so it gets a reserve too.
+    def center_caps():
+        """(cap on x, cap on y) for a lone settlement centre: the shape its
+        content fit asks for — the fit's cross and along with a hair of
+        headroom (exactly, for a blocks-only or lightly built zone, whose
+        placement leaves no packing variance for the headroom to absorb),
+        never under either axis minimum — so a row's zone stays long and thin
+        instead of squaring off to its longest block."""
+        if len(settle_names) != 1:
+            return None, None
+        n = next(iter(settle_names))
+        if n in exact:
+            return exact[n]
+        fc, fa = fit_of[n][1:]
+        cx = max(mins[n][0], round(CENTER_CAP_SLACK * fc))
+        cy = max(mins[n][1], round(CENTER_CAP_SLACK * fa))
+        return cx, cy
+
+    vertical_full = rng.random() < 0.5
+
+    # the core's blocks and the bands around them pin the grid's least size.
+    # Every zone gets at least its content minimums: a band is as wide as its
+    # widest member, long enough to stack them all, and a band running the
+    # map's full length (vertical_full: west/east, else north/south) needs
+    # that whole axis for its stack; the centre keeps the span its content
+    # fit asks for. A wrap can add one more band than the sides show, so it
+    # gets a reserve too.
     core_names = [n for n in settle_names if n in fits]
     if len(core_names) >= 2:
         crosses = [fits[n][1] for n in core_names]
@@ -356,19 +379,57 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     else:
         core_w = max([mins[n][0] for n in settle_names] + [MIN_ZONE_SIDE])
         core_h = max([mins[n][1] for n in settle_names] + [MIN_ZONE_SIDE])
-    need_w = core_w + 2 * margin
-    need_h = core_h + 2 * margin
-    for s in ("west", "east"):
-        if sides[s]:
-            need_w += gut + mnx(sides[s])
-    for s in ("south", "north"):
-        if sides[s]:
-            need_h += gut + mny(sides[s])
-    if "region-groups" in m.extensions and outer:
-        need_w += gut + MIN_ZONE_SIDE
-        need_h += gut + MIN_ZONE_SIDE
-    stretched = (min(GRID_MAX, max(W, round(need_w))), min(GRID_MAX, max(H, round(need_h))))
-    if stretched != (W, H):
+    cap_x, cap_y = center_caps()
+
+    def stack_len(side):
+        """The least length the side's band needs along its run: its members
+        stacked with gutters, each at its own axis minimum (a fields zone at
+        its plots' floor)."""
+        names = sides[side]
+        mi = 1 if side in ("west", "east") else 0
+        return sum(max(mins[n][mi], along_floor.get(n, 0)) for n in names) \
+            + gut * max(0, len(names) - 1)
+
+    def content_size():
+        span_x = max(core_w, cap_x or 0)
+        span_y = max(core_h, cap_y or 0)
+        if vertical_full:
+            # the north/south bands run between the west/east ones, so the
+            # centre's span must also hold their stacked widths
+            span_x = max(span_x, max([stack_len(s) + gut for s in ("north", "south")
+                                      if sides[s]] + [0]))
+            need_w = 2 * margin + span_x
+            for s in ("west", "east"):
+                if sides[s]:
+                    need_w += gut + mnx(sides[s])
+            need_h = 2 * margin + span_y
+            for s in ("south", "north"):
+                if sides[s]:
+                    need_h += gut + mny(sides[s])
+            need_h = max(need_h, 2 * margin + max([stack_len(s) for s in ("west", "east")
+                                                   if sides[s]] + [0]))
+        else:
+            span_y = max(span_y, max([stack_len(s) + gut for s in ("west", "east")
+                                      if sides[s]] + [0]))
+            need_h = 2 * margin + span_y
+            for s in ("south", "north"):
+                if sides[s]:
+                    need_h += gut + mny(sides[s])
+            need_w = 2 * margin + span_x
+            for s in ("west", "east"):
+                if sides[s]:
+                    need_w += gut + mnx(sides[s])
+            need_w = max(need_w, 2 * margin + max([stack_len(s) for s in ("north", "south")
+                                                   if sides[s]] + [0]))
+        if "region-groups" in m.extensions and outer:
+            need_w += gut + MIN_ZONE_SIDE
+            need_h += gut + MIN_ZONE_SIDE
+        return (max(W, round(need_w)), max(H, round(need_h)))
+
+    for _ in range(3):
+        stretched = content_size()
+        if stretched == (W, H):
+            break
         W, H = stretched
         m.grid = (W, H)
         sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
@@ -384,6 +445,19 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
         else:
             cmin["west"] = cmin["east"] = max(crosses)
             cmin["south"] = cmin["north"] = sum(alongs) + gut * (len(alongs) - 1)
+    # the bands that run between the other two span the centre's range, so
+    # the centre's floor — and a lone centre's cap — rise to hold the widest
+    # stack such a band brings across
+    if vertical_full:
+        carry = max([stack_len(s) + gut for s in ("north", "south") if sides[s]] + [0])
+        cmin["west"] = cmin["east"] = max(cmin["west"], carry)
+        if cap_x is not None:
+            cap_x = max(cap_x, carry)
+    else:
+        carry = max([stack_len(s) + gut for s in ("west", "east") if sides[s]] + [0])
+        cmin["south"] = cmin["north"] = max(cmin["south"], carry)
+        if cap_y is not None:
+            cap_y = max(cap_y, carry)
     wraps = _choose_wraps(outer, sides, classes, weights, rng, built) \
         if "region-groups" in m.extensions else {}
 
@@ -470,27 +544,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             ranges[side_hi] = (pos, pos + d_hi - 1)
         return ranges
 
-    def center_caps():
-        """(cap on x, cap on y) for a lone settlement centre: the shape its
-        content fit asks for — the fit's cross and along with a hair of
-        headroom (exactly, for a blocks-only or lightly built zone, whose
-        placement leaves no packing variance for the headroom to absorb),
-        never under either axis minimum — so a row's zone stays long and thin
-        instead of squaring off to its longest block."""
-        if len(settle_names) != 1:
-            return None, None
-        n = next(iter(settle_names))
-        if n in exact:
-            return exact[n]
-        fc, fa = fit_of[n][1:]
-        cx = max(mins[n][0], round(CENTER_CAP_SLACK * fc))
-        cy = max(mins[n][1], round(CENTER_CAP_SLACK * fa))
-        return cx, cy
-
-    cap_x, cap_y = center_caps()
     xr = axis("west", "east", W, cap_x)
     yr = axis("south", "north", H, cap_y)
-    vertical_full = rng.random() < 0.5
     bands = _ring_bands(xr, yr, margin, gut, W, H, vertical_full)
 
     # ---- the settlement group partitions the central block
@@ -892,7 +947,7 @@ def _partition(rect, members, entry, anchor, adj, weights, aspects, rng, assign,
     if len(arms) == 1:
         lead = arms[0]
         rest = _subtree(lead, children)
-        side = _chain_side(rect, root, rest, anchor, weights, aspects, rng)
+        side = _chain_side(rect, root, rest, anchor, weights, aspects, rng, mins)
         gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
         mi = 0 if side in ("west", "east") else 1
         axis = rect.w if side in ("west", "east") else rect.h
@@ -908,10 +963,12 @@ def _partition(rect, members, entry, anchor, adj, weights, aspects, rng, assign,
         _teeth(rect, root, arms, children, anchor, adj, weights, aspects, rng, assign, mins)
 
 
-def _chain_side(rect, root, rest, anchor, weights, aspects, rng):
+def _chain_side(rect, root, rest, anchor, weights, aspects, rng, mins=None):
     """Which side to cut the root strip from. Any side works without an
     anchor; with one, the strip must span the anchor side so the root keeps
-    touching its neighbour. Prefers the cut giving the root its nominal shape."""
+    touching its neighbour. A side whose axis cannot hold the root's own
+    minimum is never cut. Prefers the cut giving the root its nominal shape."""
+    mins = mins or {}
     if anchor is None:
         cands = ("west", "east", "north", "south")
     else:
@@ -922,7 +979,9 @@ def _chain_side(rect, root, rest, anchor, weights, aspects, rng):
     for side in cands:
         axis = rect.w if side in ("west", "east") else rect.h
         span = rect.h if side in ("west", "east") else rect.w
-        if axis <= MIN_ZONE_SIDE + MIN_GUTTER + 1:
+        mi = 0 if side in ("west", "east") else 1
+        need = mins.get(root, (MIN_ZONE_SIDE, MIN_ZONE_SIDE))[mi]
+        if axis <= max(need, MIN_ZONE_SIDE) + MIN_GUTTER + 1:
             continue
         avail = axis - MIN_GUTTER
         size = max(MIN_ZONE_SIDE, min(avail - MIN_ZONE_SIDE, round(avail * weights[root] / total)))
@@ -954,19 +1013,28 @@ def _frame(rect, root, arms, children, adj, weights, aspects, rng, assign, mins)
     sides of the frame around it (every arm touches the centre)."""
     all_sides = ["west", "east", "south", "north"]
     k = len(arms)
+    arms_sorted = sorted(arms, key=lambda n: (-weights[n], n))
+    sub = {a: _subtree(a, children) for a in arms_sorted}
+    gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
     if k == 2:
         # cut side to side on a wide block (each zone a compact block), stack
-        # on a tall one; the core is as wide as its blocks, so wide is usual
-        sides = list(("west", "east") if rect.w >= rect.h else ("south", "north"))
+        # on a tall one; the core is as wide as its blocks, so wide is usual —
+        # unless an arm's subtree is too tall (or wide) for that cut, when the
+        # orientation that holds both minimums wins
+        tall = max(max(mins[n][1] for n in sub[a]) for a in arms_sorted)
+        wide = max(max(mins[n][0] for n in sub[a]) for a in arms_sorted)
+        side_to_side = rect.w >= rect.h
+        if tall + gut >= rect.h and wide + gut < rect.w:
+            side_to_side = True
+        elif wide + gut >= rect.w and tall + gut < rect.h:
+            side_to_side = False
+        sides = list(("west", "east") if side_to_side else ("south", "north"))
     elif k == 3:
         sides = [s for s in all_sides if s != rng.choice(all_sides)]
     else:
         rot = rng.randrange(4)
         sides = all_sides[rot:] + all_sides[:rot]
-    arms_sorted = sorted(arms, key=lambda n: (-weights[n], n))
     side_of = dict(zip(arms_sorted, sides))
-    sub = {a: _subtree(a, children) for a in arms_sorted}
-    gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
 
     def axis_sizes(vertical):
         # the Y stack: south arms, root, north arms; the X stack: west, root, east
@@ -1022,7 +1090,7 @@ def _teeth(rect, root, arms, children, anchor, adj, weights, aspects, rng, assig
     (and the root) touches what it must."""
     subs = [_subtree(a, children) for a in sorted(arms, key=lambda n: (-weights[n], n))]
     flat = [n for sub in subs for n in sub]
-    side = anchor or _chain_side(rect, root, flat, None, weights, aspects, rng)
+    side = anchor or _chain_side(rect, root, flat, None, weights, aspects, rng, mins)
     gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
     mi = 0 if side in ("west", "east") else 1
     axis = rect.w if side in ("west", "east") else rect.h

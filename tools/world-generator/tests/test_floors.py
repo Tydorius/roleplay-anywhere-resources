@@ -706,6 +706,25 @@ class TestGrowthNeverDrops(unittest.TestCase):
         exts = expand({"floors", "region-groups"}
                       | {e for e in data.get("extensions", []) if isinstance(e, str)})
         once = worldgen._build_world(parse_plan(data), data, 1, exts)
+        # the map sizes zones from their content (012g), so a single pass
+        # places what it once dropped; no zone may be thinner than its content
+        self.assertFalse(any(r == "no space in zone" for (_w, r) in once.failures),
+                         "a zone thinner than its content slipped through")
+        errs = once.metrics["errors"]["dropped"]
+        notes = once.metrics["objects"]["unplaced"]
+        self.assertFalse(any(e["what"] == u["what"] and e["reason"] == u["reason"]
+                             for e in errs for u in notes),
+                         "a drop must not also be a note")
+        world = worldgen.run(data, seed=1, extensions=("floors", "region-groups"))
+        self.assertEqual(len(world.buildings), 11)
+        self.assertEqual(world.metrics["errors"]["dropped"], [])
+
+    def test_growth_still_places_an_interior_drop(self):
+        """A drop the map's content sizing cannot see (a lot that will not
+        pack beside its neighbours) still goes through the loop: the ashvale
+        cottage misses its zone in one pass and the full run places it."""
+        data = load_fixture("ashvale-compound.plan.json")
+        once = worldgen._build_world(parse_plan(data), data, 1, frozenset())
         self.assertTrue(any(r == "no space in zone" for (_w, r) in once.failures),
                         "the fixture no longer exercises the growth loop")
         errs = once.metrics["errors"]["dropped"]
@@ -714,8 +733,7 @@ class TestGrowthNeverDrops(unittest.TestCase):
         self.assertFalse(any(e["what"] == u["what"] and e["reason"] == u["reason"]
                              for e in errs for u in notes),
                          "a drop must not also be a note")
-        world = worldgen.run(data, seed=1, extensions=("floors", "region-groups"))
-        self.assertEqual(len(world.buildings), 11)
+        world = worldgen.run(data, seed=1)
         self.assertEqual(world.metrics["errors"]["dropped"], [])
 
 

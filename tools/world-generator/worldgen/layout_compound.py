@@ -483,6 +483,7 @@ def _spine_geometry(compound, plans):
     top = col_end - 1
     if hub_rect is not None:
         top = max(top, hub_rect.y1)
+    run_top = top   # where the corridor ends: the end cap's near edge
 
     # the end cap above everything
     if cap_n is not None:
@@ -490,13 +491,14 @@ def _spine_geometry(compound, plans):
         put(cap_n, Rect(scx + sw // 2 - f[0] // 2, top + 1, f[0], f[1]))
         top = top + 1 + f[1] - 1
 
-    # the spine run(s), split around a centre hub
+    # the spine run(s), split around a centre hub, never running through the
+    # end cap (its own door faces the corridor's last cells)
     if sw > 0:
-        runs = [(spine_y0, top)]
+        runs = [(spine_y0, run_top)]
         if hub_rect is not None and compound.hub_pos == "center":
-            runs = [(spine_y0, hub_rect.y - 1), (hub_rect.y1 + 1, top)]
+            runs = [(spine_y0, hub_rect.y - 1), (hub_rect.y1 + 1, run_top)]
         elif hub_rect is not None and compound.hub_pos == "start":
-            runs = [(hub_rect.y1 + 1, top)]
+            runs = [(hub_rect.y1 + 1, run_top)]
         elif hub_rect is not None and compound.hub_pos == "end":
             runs = [(spine_y0, hub_rect.y - 1)]
         for (a0, a1) in runs:
