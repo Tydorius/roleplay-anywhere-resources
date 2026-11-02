@@ -74,13 +74,16 @@ def apply(world, plan_data, rng):
 
     if "floors" not in world.extensions:
         return
-    singles = []    # [(BuildingOut, [UpperStorey])]
+    singles = []    # [(BuildingOut, [UpperStorey or None])]
     groups = {}     # compound name -> ([BuildingOut-with-uppers], CompoundOut)
     for b in world.buildings:
         d = b.layout.design
-        if d.storeys < 2 or not d.upper:
+        if d.storeys < 2 or (not d.upper and not getattr(d, "units", None)):
             continue
-        if b.layout.room_by_base(d.stairs_room) is None:
+        # a unit building's upper storeys repeat its ground stamp: no
+        # per-storey design exists, so it carries None placeholders
+        uppers = list(d.upper) if d.upper else [None] * (d.storeys - 1)
+        if b.layout.room_by_base(d.stairs_room) is None and not getattr(d, "units", None):
             # a stairs room the ground floor does not have would cost the
             # building its storeys; the stairs rise from the entrance room
             # instead (recorded as a hint fallback, never a drop)
@@ -92,7 +95,7 @@ def apply(world, plan_data, rng):
             groups.setdefault(comp, ([], next(c for c in world.compounds
                                               if c.name == comp)))[0].append(b)
         else:
-            singles.append((b, list(d.upper)))
+            singles.append((b, uppers))
     if not singles and not groups:
         return
     stairs = {id(b): _stair_templates(world, plan_data, b.layout.design.name)
@@ -102,28 +105,48 @@ def apply(world, plan_data, rng):
             stairs[id(b)] = _stair_templates(world, plan_data, b.layout.design.name)
 
     # ---- the band: east of everything, behind the boundary strip, floors
-    # stacked. It is sized from the storeys it must hold and the map grows to
-    # fit it; a planned storey is never dropped for lack of room. The strip
-    # hugs the band: nothing of it is walled, so the builder's auto-connect
-    # (which fires on walled edges 0 or 1 apart) has nothing to bite on, and
-    # the storeys' build-time doors open onto the slab, passable at build.
+    # stacked in columns. It is sized from the storeys it must hold and the
+    # map grows to fit it; a planned storey is never dropped for lack of
+    # room. A stack taller than the band's height budget (the play area's
+    # height, a six-storey block say) wraps into another column, so the
+    # World's Edge strip, the seal and the per-building mapping stay whole.
     strip_x = world.grid[0]
     band_x = strip_x + SEPARATOR_WIDTH
     width = max([b.layout.rect.w for (b, _u) in singles]
                 + [comp.rect.w for (_bs, comp) in groups.values()] or [1])
-    y = BAND_MARGIN
+    budget = max(world.grid[1], 4 * BAND_MARGIN)
+    x, y = band_x, BAND_MARGIN
+    top = BAND_MARGIN
+
+    def reserve(need):
+        """Column space for a stack `need` tall: wrap to a fresh column when
+        the current one cannot fit it (an over-tall stack gets its own
+        column and the map grows)."""
+        nonlocal x, y, top
+        if y > BAND_MARGIN and y + need - FLOOR_GAP > budget:
+            x += width + FLOOR_GAP
+            y = BAND_MARGIN
+        spot = y
+        y += need + FLOOR_GAP
+        top = max(top, y - FLOOR_GAP)
+        return spot
+
     rects = {}
     for (b, uppers) in singles:
+        base = reserve(len(uppers) * b.layout.rect.h
+                       + (len(uppers) - 1) * FLOOR_GAP)
         rs = []
         for _spec in uppers:
-            r = Rect(band_x, y, b.layout.rect.w, b.layout.rect.h)
+            r = Rect(x, base, b.layout.rect.w, b.layout.rect.h)
             rs.append(r)
-            y += r.h + FLOOR_GAP
+            base += r.h + FLOOR_GAP
         rects[id(b)] = rs
     walks = []      # [(CompoundOut, CorridorOut, Rect)]
     group_extras = {}   # id(b) -> {upper index: [door cells]}
     for (bs, comp) in groups.values():
         max_storey = max(b.layout.design.storeys for b in bs)
+        levels = max_storey - 1
+        base = reserve(levels * comp.rect.h + (levels - 1) * FLOOR_GAP)
         for storey in range(2, max_storey + 1):
             level_rects = []   # [(b or None, corridor or None, rect)]
             for b in bs:
@@ -132,8 +155,8 @@ def apply(world, plan_data, rng):
                 i = storey - 2
                 while len(rects.setdefault(id(b), [])) <= i:
                     rects[id(b)].append(None)
-                r = Rect(band_x + (b.layout.rect.x - comp.rect.x),
-                         y + (b.layout.rect.y - comp.rect.y),
+                r = Rect(x + (b.layout.rect.x - comp.rect.x),
+                         base + (b.layout.rect.y - comp.rect.y),
                          b.layout.rect.w, b.layout.rect.h)
                 rects[id(b)][i] = r
                 level_rects.append((b, None, r))
@@ -141,8 +164,8 @@ def apply(world, plan_data, rng):
                 for corridor in comp.corridors:
                     if not _walk_ends_have_storey(comp, corridor, 2):
                         continue
-                    r = Rect(band_x + (corridor.rect.x - comp.rect.x),
-                             y + (corridor.rect.y - comp.rect.y),
+                    r = Rect(x + (corridor.rect.x - comp.rect.x),
+                             base + (corridor.rect.y - comp.rect.y),
                              corridor.rect.w, corridor.rect.h)
                     walks.append((comp, corridor, r))
                     level_rects.append((None, corridor, r))
@@ -158,8 +181,8 @@ def apply(world, plan_data, rng):
                         if rb.contains_cell(cell) and bb is not None:
                             group_extras.setdefault(id(bb), {}).setdefault(
                                 storey - 2, []).append(cell)
-            y += comp.rect.h + FLOOR_GAP
-    world.grid = (band_x + width, max(world.grid[1], y - FLOOR_GAP + BAND_MARGIN))
+            base += comp.rect.h + FLOOR_GAP
+    world.grid = (x + width, max(world.grid[1], top + BAND_MARGIN))
 
     _add_boundary(world, plan_data, strip_x)
     for (b, uppers) in singles:
@@ -284,8 +307,15 @@ def _build_storeys(world, b, uppers, rects, stairs, rng, extra_doors=None):
     for i, (spec, rect) in enumerate(zip(uppers, rects)):
         storey = i + 2
         region_name = f"{design.name} ({STORY_SUFFIX.get(storey, f'floor {storey}')})"
-        layout = layout_rooms(_upper_design(design, spec, region_name), rect, rng,
-                              world.templates, furniture=spec.furniture)
+        if getattr(design, "units", None):
+            # a unit storey is the ground stamp again: the corridor and the
+            # copies' positions repeat, the numbering continues upstairs
+            from ..layout_building import layout_units
+            layout = layout_units(design, rect, rng, world.templates,
+                                  storey=storey, make_entrance=False)
+        else:
+            layout = layout_rooms(_upper_design(design, spec, region_name), rect, rng,
+                                  world.templates, furniture=spec.furniture)
         for cell in (extra_doors or {}).get(i, []):
             _room_door(layout, cell)
         names = {r.base_name for r in layout.rooms}
@@ -294,7 +324,7 @@ def _build_storeys(world, b, uppers, rects, stairs, rng, extra_doors=None):
                 world.failures.append((f"piece {f.template} in {region_name}",
                                        f"room {f.room!r} not in the storey"))
         opening_rect, opening_room = (None, None)
-        if spec.opening is not None:
+        if spec is not None and spec.opening is not None:
             ground_room = bl.room_by_base(spec.opening.over_room)
             if ground_room is None:
                 world.failures.append((f"opening in {region_name}",
@@ -349,15 +379,34 @@ def _build_storeys(world, b, uppers, rects, stairs, rng, extra_doors=None):
             if single:
                 storey_reg.ambience = amb
             else:
+                purposes = {r.name: r.purpose for r in spec.rooms} if spec is not None \
+                    else {r.name: r.purpose for r in layout.design.rooms}
                 reg = RegionOut(room.full_name, room.rect, "room", parent=region_name,
                                 wall=design.wall, ground="wood", ground_texture="floorboards",
                                 ambience=amb,
-                                description=next((r.purpose for r in spec.rooms
-                                                  if r.name == room.base_name), ""))
+                                description=purposes.get(room.base_name, ""))
                 reg.entrance_door = None   # sealed: no exterior door upstairs
                 regions.append(reg)
             for (tname, pos) in room.furniture.placements:
                 objects.append(ObjectOut(tname, pos, room.full_name))
+        if getattr(design, "units", None):
+            from .. import _emit_unit_regions
+            from ..layout_room import layout_room as _lr
+            for uo in layout.unit_outs:
+                for room in uo.layout.rooms:
+                    furniture = [f for f in uo.layout.furniture
+                                 if f.room == room.base_name]
+                    room.furniture = _lr(room.rect, sorted(room.doors), furniture,
+                                         world.templates, rng)
+                    for (t, n, reason) in room.furniture.failures:
+                        world.failures.append((f"piece {t} in {uo.name} {room.base_name}",
+                                               f"placed {n} of the requested count: {reason}"))
+                    for (t, reason) in room.furniture.fallbacks:
+                        world.fallbacks.append((f"piece {t} in {uo.name} {room.base_name}",
+                                                reason))
+            uregs, uobjs = _emit_unit_regions(world, layout, region_name, {})
+            regions.extend(uregs)
+            objects.extend(uobjs)
         if opening_rect is not None:
             regions.append(RegionOut(f.opening_name, opening_rect, "opening",
                                      parent=region_name, ground="wood",

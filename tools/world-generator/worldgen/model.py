@@ -562,7 +562,7 @@ def _parse_building(d, designs):
     design = BuildingDesign(
         name=name, kind=d.get("kind", "house"), size_class=d.get("sizeClass", "small"),
         purpose=d.get("purpose", ""), wall=g.get("wall", "wood"), ground=g.get("ground", "wood"),
-        storeys=1 + len(upper),
+        storeys=max(1 + len(upper), storeys) if units else 1 + len(upper),
         stairs_room=stairs_room if upper else "",
         upper=upper,
         units=units,
