@@ -80,7 +80,47 @@ def extract_json(text):
     try:
         return json.loads(t[start:end + 1]), None
     except json.JSONDecodeError as e:
-        return None, f"the reply is not valid JSON: {e.msg} (line {e.lineno})"
+        error = f"the reply is not valid JSON: {e.msg} (line {e.lineno})"
+    # deeply nested replies (perk trees) sometimes close their brackets in
+    # the wrong order, the same way on every retry: rebalance them and let
+    # the phase's own checks judge the result
+    try:
+        return json.loads(repair_brackets(t[start:end + 1])), None
+    except json.JSONDecodeError:
+        return None, error
+
+
+def repair_brackets(t):
+    """Rebalance ``{ } [ ]`` outside strings: a closer that does not match
+    the innermost open bracket closes the open ones down to its match (or is
+    dropped when nothing open matches it), and missing closers are added at
+    the end."""
+    out, stack, in_str, esc = [], [], False, False
+    opener = {"}": "{", "]": "["}
+    closer = {"{": "}", "[": "]"}
+    for ch in t:
+        if in_str:
+            out.append(ch)
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch in "{[":
+            stack.append(ch)
+        elif ch in "}]":
+            if opener[ch] not in stack:
+                continue
+            while stack[-1] != opener[ch]:
+                out.append(closer[stack.pop()])
+            stack.pop()
+        out.append(ch)
+    out.extend(closer[c] for c in reversed(stack))
+    return "".join(out)
 
 
 class Client:
