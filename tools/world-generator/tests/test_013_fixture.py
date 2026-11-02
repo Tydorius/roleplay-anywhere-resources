@@ -1,0 +1,146 @@
+"""Brief 013 change 7: the framed fixtures. Ashvale with a frame, a real
+population and all five systems builds and validates with 0 errors; the
+cyberpunk district carries a scrip economy with a countdown; and plans from
+before the frame still re-roll and build."""
+import json
+import os
+import shutil
+import tempfile
+import unittest
+
+from worldgen import api
+
+FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
+
+
+def load(name):
+    with open(os.path.join(FIXTURES, name), encoding="utf-8") as f:
+        return json.load(f)
+
+
+def scenario_of(summary):
+    path = os.path.join(summary["out"], summary["zip"][:-len(".zip")], "scenario.json")
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+class FramedBuilds(unittest.TestCase):
+    """Each framed fixture is built once through the vendored builder and
+    validator, then asserted on in full."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="worldgen-013-")
+        cls.summaries = {}
+        for name in ("ashvale-framed.plan.json", "cyberpunk-framed.plan.json"):
+            cls.summaries[name] = api._layout_and_build(
+                load(name), seed=1, out_dir=os.path.join(cls.tmp, name.split(".")[0]))
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_both_fixtures_build_with_zero_errors(self):
+        for name, s in self.summaries.items():
+            with self.subTest(name):
+                self.assertTrue(s["ok"], s)
+                self.assertEqual(s["validator_errors"], 0, s)
+                self.assertEqual(s["reachability"], 1.0, s)
+
+    def test_ashvale_carries_all_five_systems(self):
+        s = self.summaries["ashvale-framed.plan.json"]
+        scn = scenario_of(s)
+        self.assertEqual(len(scn["variables"]), 5)
+        self.assertEqual(len(scn["perkTrees"]), 3)
+        self.assertEqual(len(scn["calendar"]), 6)
+        self.assertEqual(len(scn["quests"]), 2)
+        self.assertTrue(scn["skills"])
+        self.assertTrue(scn["narrativeRules"])
+        self.assertEqual(scn["currency"]["name"], "Silver bit")
+        self.assertEqual(sum(scn["attributes"].values()), 25)
+        self.assertEqual(scn["narrativeFlavor"], "peaceful")
+        self.assertEqual(scn["difficulty"], "casual")
+
+    def test_ashvale_holds_the_population_it_asked_for(self):
+        plan = load("ashvale-framed.plan.json")
+        lo, hi = plan["questionnaire"]["population"]
+        s = self.summaries["ashvale-framed.plan.json"]
+        self.assertEqual(s["npcs"], len(plan["npcs"]), "everyone was placed")
+        self.assertTrue(lo <= s["npcs"] + 1 <= hi,
+                        f"{s['npcs']} npcs + the player sit outside {lo}-{hi}")
+
+    def test_the_calendar_and_quests_name_real_places(self):
+        s = self.summaries["ashvale-framed.plan.json"]
+        scn = scenario_of(s)
+        regions = {r["name"] for r in scn["regions"]}
+        for entry in scn["calendar"]:
+            self.assertIn(entry["location"], regions, entry)
+        plan = load("ashvale-framed.plan.json")
+        people = {p["name"] for p in plan["npcs"]} | {plan["player"]["name"]}
+        for q in scn["quests"]:
+            text = json.dumps(q)
+            self.assertTrue(any(n.split()[0] in text for n in people),
+                            f"quest {q['title']!r} names nobody real")
+
+    def test_cyberpunk_pays_in_scrip_and_counts_down(self):
+        s = self.summaries["cyberpunk-framed.plan.json"]
+        scn = scenario_of(s)
+        cur = scn["currency"]
+        self.assertEqual(cur["name"], "Corp scrip")
+        self.assertNotIn("penny", cur["name"].lower())
+        self.assertNotIn("coin", cur["name"].lower())
+        self.assertTrue(any(c.isdigit() for c in cur["format"]), cur)
+        clocks = [v for v in scn["variables"] if v["name"] == "Repossession clock"]
+        self.assertEqual(len(clocks), 1)
+        clock = clocks[0]
+        self.assertEqual(clock["ratePerHour"], -1, "the deadline ticks down")
+        self.assertEqual(clock["initial"], clock["max"], "it starts at the top")
+        self.assertEqual(sum(scn["attributes"].values()), 25)
+        for key in ("variables", "perkTrees", "calendar", "quests", "skills"):
+            self.assertIn(key, scn)
+
+
+class OldPlansStillReroll(unittest.TestCase):
+    """Plans from before the frame carry none of it, and still re-roll."""
+
+    def test_village_and_the_glm_plans_re_roll_without_a_frame(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            for name in ("village.json", "cyberpunk-glm-plan.json",
+                         "medieval-glm-plan.json"):
+                with self.subTest(name):
+                    summary = api.relayout(os.path.join(FIXTURES, name), seed=2,
+                                           out_dir=os.path.join(tmp, name))
+                    self.assertTrue(summary["ok"], summary)
+                    self.assertEqual(summary["validator_errors"], 0, summary)
+                    self.assertEqual(summary["reachability"], 1.0, summary)
+
+    def test_a_framed_plan_re_rolls_with_its_frame_kept(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = api.relayout(os.path.join(FIXTURES, "ashvale-framed.plan.json"),
+                                   seed=3, out_dir=os.path.join(tmp, "again"))
+            self.assertTrue(summary["ok"], summary)
+            self.assertEqual(summary["npcs"], 24, summary)
+            scenario = scenario_of(summary)
+            self.assertEqual(len(scenario["calendar"]), 6, "every entry kept")
+
+    def test_calendar_entries_at_dropped_buildings_go_with_them(self):
+        """Seed 2 squeezes the Gilded Stag Inn out of the village: the world
+        reports the dropped building, and the calendar never points at a
+        region that did not make it onto the map (the builder would refuse
+        the whole scenario otherwise)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = api.relayout(os.path.join(FIXTURES, "ashvale-framed.plan.json"),
+                                   seed=2, out_dir=os.path.join(tmp, "seed2"))
+            self.assertFalse(summary["ok"], "the dropped inn still fails it")
+            self.assertTrue(summary["zip"], "but the scenario itself builds")
+            self.assertEqual(summary["validator_errors"], 0, summary)
+            scenario = scenario_of(summary)
+            names = [c["name"] for c in scenario["calendar"]]
+            self.assertNotIn("Harvest supper", names)
+            regions = {r["name"] for r in scenario["regions"]}
+            for entry in scenario["calendar"]:
+                self.assertIn(entry["location"], regions, entry)
+
+
+if __name__ == "__main__":
+    unittest.main()

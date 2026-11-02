@@ -136,6 +136,15 @@ class TestP5Batches(unittest.TestCase):
                           roster={"Aldous Miller"})
         self.assertTrue(any("already on the roster" in e for e in errors), errors)
 
+    def test_a_home_without_a_bed_is_an_error(self):
+        # the bakery has no bed: nobody may sleep there
+        d = json.loads(json.dumps(CANNED_P5_BATCH))
+        d["npcs"][0]["home"] = "The Bakehouse"
+        errors = check_p5(d, {"The Bakehouse", "The Old Mill", "Miller's Cottage"},
+                          {"Millbrook"}, bedded={"The Old Mill", "Miller's Cottage"},
+                          need=("npcs",))
+        self.assertTrue(any("has no bed" in e for e in errors), errors)
+
     def test_batch_is_capped_at_ten(self):
         people = [dict(p, name=f"Person {i}") for i, p in enumerate(CANNED_P5_BATCH["npcs"] * 6)]
         client = ScriptedClient(populated_replies(batch={"npcs": people[:12]}))

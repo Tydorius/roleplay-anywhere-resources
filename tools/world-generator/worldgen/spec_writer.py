@@ -189,6 +189,20 @@ def build_spec(world, plan):
         default_tile = {"name": "Void", "ground": "stone",
                         "groundTexture": "rock", "groundColor": BOUNDARY_COLOR,
                         "ambience": OUT_AMBIENCE}
+    # the calendar points at regions by name; a building the layout could not
+    # place no longer exists, so its entries go with it (logged like other
+    # dropped planned content)
+    region_names = {r["name"] for r in regions}
+    calendar = []
+    for c in extras.get("calendar", []):
+        if isinstance(c, dict) and c.get("location") not in region_names:
+            world.metrics.setdefault("errors", {}).setdefault("dropped", []).append(
+                {"what": f"calendar '{c.get('name')}'",
+                 "reason": f"location '{c.get('location')}' did not make it onto "
+                           "the map"})
+        else:
+            calendar.append(c)
+
     spec = {
         "name": plan.name,
         "folderName": plan.name.replace(" ", "-"),
@@ -212,7 +226,7 @@ def build_spec(world, plan):
         "skills": extras.get("skills", {}),
         "variables": extras.get("variables", []),
         "perkTrees": extras.get("perkTrees", []),
-        "calendar": extras.get("calendar", []),
+        "calendar": calendar,
         "quests": extras.get("quests", []),
         "regions": regions,
         "objectTemplates": object_templates,

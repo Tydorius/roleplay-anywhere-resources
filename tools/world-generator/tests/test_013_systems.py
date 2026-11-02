@@ -127,33 +127,68 @@ class TestCheckP6b(unittest.TestCase):
 
 class TestCheckP6c(unittest.TestCase):
     REGIONS = {"Millbrook", "Wheatfields", "The Old Mill", "Miller's Cottage"}
+    PEOPLE = {"Aldous Miller", "Berta Miller", "Edda Straw", "Wren Ash"}
 
     def test_the_canned_clock_passes(self):
-        self.assertEqual(check_p6c(CANNED_P6C, self.REGIONS), [])
+        self.assertEqual(check_p6c(CANNED_P6C, self.REGIONS, self.PEOPLE), [])
 
     def test_unknown_regions_are_errors(self):
         d = json.loads(json.dumps(CANNED_P6C))
         d["calendar"][0]["location"] = "The Moon"
         self.assertTrue(any("not a region" in e for e in
-                            check_p6c(d, self.REGIONS)))
+                            check_p6c(d, self.REGIONS, self.PEOPLE)))
+
+    def test_a_quest_naming_nobody_real_is_an_error(self):
+        d = json.loads(json.dumps(CANNED_P6C))
+        d["quests"] = [{"title": "The Sealed Letter", "objectives": [
+            {"text": "Follow the courier to the old bridge",
+             "prerequisites": [{"text": "Buy a lantern from the pedlar",
+                                "primary": True}]}]}]
+        self.assertTrue(any("name a real place or person" in e
+                            for e in check_p6c(d, self.REGIONS, self.PEOPLE)),
+                        check_p6c(d, self.REGIONS, self.PEOPLE))
+        # the given name alone is enough (the steps speak of people plainly)
+        d["quests"][0]["objectives"][0]["prerequisites"][0]["text"] = \
+            "Buy a lantern from Edda"
+        self.assertFalse(any("name a real place or person" in e
+                             for e in check_p6c(d, self.REGIONS, self.PEOPLE)))
+        # and a real region counts too
+        d["quests"][0]["objectives"][0]["text"] = "Meet at The Old Mill"
+        d["quests"][0]["objectives"][0]["prerequisites"] = []
+        self.assertFalse(any("name a real place or person" in e
+                             for e in check_p6c(d, self.REGIONS, self.PEOPLE)))
 
     def test_the_week_and_one_offs_are_checked(self):
         d = json.loads(json.dumps(CANNED_P6C))
         d["calendar"][2]["recurrence"] = "daily"   # only one one-off left
-        self.assertTrue(any("one-off" in e for e in check_p6c(d, self.REGIONS)))
+        self.assertTrue(any("one-off" in e for e in
+                            check_p6c(d, self.REGIONS, self.PEOPLE)))
         d["calendar"][2]["day"] = 30
-        self.assertTrue(any("day" in e for e in check_p6c(d, self.REGIONS)))
+        self.assertTrue(any("day" in e for e in
+                            check_p6c(d, self.REGIONS, self.PEOPLE)))
 
     def test_sanitize_drops_unknown_locations_and_bad_times(self):
         d = json.loads(json.dumps(CANNED_P6C))
         d["calendar"][0]["location"] = "Nowhere"
         d["calendar"][1]["start"] = "breakfast"
         log = []
-        out = sanitize_p6c(d, log, self.REGIONS)
+        out = sanitize_p6c(d, log, self.REGIONS, self.PEOPLE)
         names = [c["name"] for c in out["calendar"]]
         self.assertNotIn("Morning sacking", names)
         self.assertEqual(out["calendar"][0]["start"], "08:00")
         self.assertTrue(any("not a region" in r for _w, r in log), log)
+
+    def test_sanitize_drops_a_quest_naming_nobody_real(self):
+        d = json.loads(json.dumps(CANNED_P6C))
+        d["quests"] = [{"title": "The Sealed Letter", "objectives": [
+            {"text": "Follow the courier to the old bridge",
+             "prerequisites": [{"text": "Buy a lantern from the pedlar",
+                                "primary": True}]}]}]
+        log = []
+        out = sanitize_p6c(d, log, self.REGIONS, self.PEOPLE)
+        self.assertNotIn("quests", out)
+        self.assertTrue(any("name no real place or person" in r
+                            for _w, r in log), log)
 
 
 class TestP6Runs(unittest.TestCase):

@@ -2108,9 +2108,38 @@ def check_p6b(d):
     return errors[:MAX_ERRORS]
 
 
-def check_p6c(d, regions):
+def _quest_texts(q):
+    """Everything one quest says: its title, its objectives and their steps."""
+    texts = [q.get("title") or ""]
+    for o in q.get("objectives") or []:
+        if isinstance(o, dict):
+            texts.append(o.get("text") or "")
+            for step in o.get("prerequisites") or []:
+                if isinstance(step, dict) and _is_str(step.get("text")):
+                    texts.append(step["text"])
+    return " ".join(t for t in texts if t)
+
+
+def _mentioned(text, regions, people):
+    """True when the text names a real region (the whole name) or a real
+    person (whole name or given name) as a word of its own."""
+    names = [n for n in regions if n]
+    for p in people:
+        given = str(p).split()
+        if given:
+            names.append(p)
+            if len(given) > 1 and len(given[0]) > 2:
+                names.append(given[0])
+    for n in names:
+        if re.search(r"(?<![\w'])" + re.escape(n) + r"(?![\w'])",
+                     text or "", re.IGNORECASE):
+            return True
+    return False
+
+
+def check_p6c(d, regions, people=()):
     """6c, the story clock: calendar against the real region names, and the
-    starting quests."""
+    starting quests, whose steps must name real places and people."""
     errors = []
     if not isinstance(d, dict):
         return ["P6c: the reply is not a JSON object"]
@@ -2156,6 +2185,9 @@ def check_p6c(d, regions):
         if not isinstance(q, dict) or not _is_str(q.get("title")):
             errors.append(f"quests[{i}].title: required")
             continue
+        if people and not _mentioned(_quest_texts(q), regions, people):
+            errors.append(f"quests[{i}]: its steps should name a real place "
+                          "or person of this world")
         objectives = q.get("objectives")
         if not isinstance(objectives, list) or not objectives:
             errors.append(f"quests[{i}].objectives: required, 1-2 objectives")
@@ -2310,8 +2342,9 @@ def sanitize_p6b(d, log):
     return {"perkTrees": trees}
 
 
-def sanitize_p6c(d, log, regions):
-    """Clean the calendar (against the real regions) and the quests."""
+def sanitize_p6c(d, log, regions, people=()):
+    """Clean the calendar (against the real regions) and the quests (whose
+    steps must name a real place or person)."""
     cal = []
     for c in (d.get("calendar") or []):
         if not isinstance(c, dict) or not _is_str(c.get("name")):
@@ -2355,10 +2388,13 @@ def sanitize_p6c(d, log, regions):
                         entry["primary"] = step["primary"]
                     pr.append(entry)
             objectives.append({"text": o["text"], "prerequisites": pr})
-        if objectives:
-            quests.append({"title": q["title"], "objectives": objectives})
-        else:
+        if not objectives:
             log.append((f"quest {q['title']}", "dropped: no usable objectives"))
+        elif people and not _mentioned(_quest_texts(q), regions, people):
+            log.append((f"quest {q['title']}",
+                        "dropped: its steps name no real place or person"))
+        else:
+            quests.append({"title": q["title"], "objectives": objectives})
     if quests:
         out["quests"] = quests[:2]
     return out
@@ -2694,6 +2730,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         f"work {p.get('work', '?')}" for p in roster) or "- (nobody yet)"
     p6_roster_lines += f"\n- {player['name']} (the player), {player.get('role', '?')}"
     regions = set(zone_names) | set(building_names)
+    who = {p["name"] for p in roster} | {player["name"]}   # quests name real people
     values = [it.get("value") for it in (p2.get("items") or [])
               if isinstance(it.get("value"), (int, float))]
     item_value_line = (f"common items cost {sorted(values)[:3]}, dearest "
@@ -2746,12 +2783,12 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
              conflict_line=(frame or {}).get("conflict") or "the situation the player walked into",
              zone_lines=p6_zone_lines, building_lines=p6_building_lines,
              roster_lines=p6_roster_lines,
-             _validate=lambda x: check_p6c(x, regions))
+             _validate=lambda x: check_p6c(x, regions, who))
     if d is None:
         stats["dropped"].append(("systems", "calendar and quests fell back "
                                  "to none (no JSON after retries)"))
     else:
-        systems.update(sanitize_p6c(d, stats["dropped"], regions))
+        systems.update(sanitize_p6c(d, stats["dropped"], regions, who))
 
     plan = {
         "name": p1.get("name", "Generated World"),

@@ -23,6 +23,9 @@ BUILDS = {
     # the compound fixture: floors on and off, region-groups on and off
     "ashvale-compound.plan.json": ((), ("region-groups",), ("floors",),
                                    ("floors", "region-groups")),
+    # the brief-013 framed fixtures: frame, population and all five systems
+    "ashvale-framed.plan.json": ((),),
+    "cyberpunk-framed.plan.json": ((),),
 }
 for _name in REAL_PLANS:
     BUILDS[_name] = ((), ("region-groups",))
