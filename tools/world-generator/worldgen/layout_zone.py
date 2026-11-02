@@ -32,6 +32,7 @@ PATH_WIDTH = 3
 ALLEY_MIN, ALLEY_MAX = 1, 2     # urban side streets
 LANE_WIDTH = 3                  # village side streets
 MAX_SIDE_STREETS = 3
+FIELDS_FIT_BUMP = 2 * 10 * 7 + 8   # the two smallest crop plots, with their tracks
 
 
 def lot_spacing(zone):
@@ -54,7 +55,11 @@ def lot_gap(zone):
 
 
 def side_street_count(long_side, n_buildings):
-    """1-3 side streets by zone size and building count."""
+    """0-3 side streets by zone size and building count: a hamlet of one or
+    two buildings keeps just its main street, there is nothing for a side
+    street to lead to."""
+    if n_buildings < 3:
+        return 0
     k = 1
     if long_side >= 34 or n_buildings >= 5:
         k += 1
