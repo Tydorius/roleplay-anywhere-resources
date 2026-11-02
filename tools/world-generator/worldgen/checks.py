@@ -115,18 +115,31 @@ def object_entity_names(world):
     return names
 
 
+def _shared_storey_doors(world, openings):
+    """{storey region name: {cells}} — the doors between touching storeys
+    (a compound's wall walks), the only openings allowed on a storey's
+    border."""
+    from .extensions.floors import shared_storey_doors
+    floors = getattr(world, "floors", []) or []
+    return shared_storey_doors({f.region_name: f.rect for f in floors},
+                               {f.region_name: openings.get(f.region_name, set())
+                                for f in floors})
+
+
 def _floors_checks(world, blocked):
     """Issues with the placed upper storeys: floor areas the size of their
-    `above` region, no opening on a storey's outer border, portal ends that
-    exist and belong to one portal each, walkable stairs in separate cells,
-    upper rooms reachable from their stairs (openings block, as in the game
-    mod), and nothing sitting in an opening."""
+    `above` region, no opening on a storey's outer border (a wall-walk door
+    shared with another storey excepted), portal ends that exist and belong
+    to one portal each, walkable stairs in separate cells, upper rooms
+    reachable from their stairs (openings block, as in the game mod), and
+    nothing sitting in an opening."""
     issues = []
     names = object_entity_names(world)
     name_set = {n.lower() for n in names.values()}
     regions = {r.name: r for r in world.regions}
     region_set = {n.lower() for n in regions}
     openings = compute_openings(world)
+    keep = _shared_storey_doors(world, openings)
 
     def obj_footprints():
         for o in world.objects:
@@ -143,14 +156,19 @@ def _floors_checks(world, blocked):
             issues.append(f"{f.region_name} is {f.rect.w}x{f.rect.h} but sits over "
                           f"{f.above} at {above.rect.w}x{above.rect.h}")
         # sealed: no opening on the outer border of the storey's floor area
+        # except a wall-walk door it shares with another storey
         ring = _ring(f.rect)
         part_names = [f.region_name] + [r.full_name for r in f.layout.rooms
                                         if r.full_name != f.region_name]
         for name in part_names:
-            hit = openings.get(name, set()) & ring
+            hit = (openings.get(name, set()) & ring) - keep.get(f.region_name, set())
             if hit:
                 issues.append(f"{name} has an exterior opening at {sorted(hit)}; "
                               f"its only ways in and out are its stairs")
+        if f.stair_down is None and f.stair_up is None:
+            if not keep.get(f.region_name):
+                issues.append(f"{f.region_name} has no stairs and no door to "
+                              f"another storey; nobody can reach it")
         for label, ref in (("stair down", f.stair_down),
                            ("stair up", f.stair_up),
                            ("stair below's up stair", f.stair_below_up)):
@@ -303,6 +321,19 @@ def check_scenario_mods(scenario_path, arpg_mods):
             issues.append(f"arpgMods.lights names {name!r}, which is not an object template")
         elif not lit[name].get("light"):
             issues.append(f"arpgMods.lights gives {name!r} a kind, but its light is 0")
+    # the wall-walk doors between touching storeys are the one opening a
+    # storey's border may keep
+    from .extensions.floors import shared_storey_doors
+    from .model import Rect as _Rect2
+    _rects, _ops = {}, {}
+    for f in arpg_mods.get("floors") or []:
+        area = by_name.get(f.get("area"))
+        if area is not None:
+            x, y = area.get("position", (0, 0))
+            w, h = area.get("size", (0, 0))
+            _rects[f.get("area")] = _Rect2(x, y, w, h)
+            _ops[f.get("area")] = {tuple(c) for c in area.get("openings") or []}
+    keep = shared_storey_doors(_rects, _ops)
     for f in arpg_mods.get("floors") or []:
         area = by_name.get(f.get("area"))
         if area is None:
@@ -312,8 +343,9 @@ def check_scenario_mods(scenario_path, arpg_mods):
         w, h = area.get("size", (0, 0))
         ring = {(cx, cy) for cx in range(x, x + w) for cy in (y, y + h - 1)}
         ring |= {(cx, cy) for cx in (x, x + w - 1) for cy in range(y, y + h)}
+        allowed = ring & keep.get(f.get("area"), set())
         for r in scn.get("regions", []):
-            hit = {tuple(c) for c in r.get("openings") or ()} & ring
+            hit = {tuple(c) for c in r.get("openings") or ()} & ring - allowed
             if hit:
                 issues.append(f"{r.get('name')!r} keeps an exterior opening at "
                               f"{sorted(hit)} on {f.get('area')!r}")

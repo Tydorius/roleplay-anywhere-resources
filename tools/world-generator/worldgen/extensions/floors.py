@@ -65,12 +65,17 @@ class FloorOut:
 
 def apply(world, plan_data, rng):
     """Place every multi-storey building's upper storeys. Runs after the
-    zone loop, before the schedules choose where people sleep."""
+    zone loop, before the schedules choose where people sleep. A compound's
+    parts keep their ground arrangement in the band: each storey sits at
+    its part's offset within the compound block, so storeys at the same
+    level touch where their ground regions touch, and a walkable wall gets
+    a wall-walk storey wherever both parts it joins have a storey 2."""
     from .. import ObjectOut
 
     if "floors" not in world.extensions:
         return
-    plans = []   # [(BuildingOut, [UpperStorey])]
+    singles = []    # [(BuildingOut, [UpperStorey])]
+    groups = {}     # compound name -> ([BuildingOut-with-uppers], CompoundOut)
     for b in world.buildings:
         d = b.layout.design
         if d.storeys < 2 or not d.upper:
@@ -82,11 +87,19 @@ def apply(world, plan_data, rng):
             world.fallbacks.append((f"floors of {d.name}",
                                     f"stairs room {d.stairs_room!r} is not a ground room; "
                                     f"the stairs rise from the entrance room"))
-        plans.append((b, list(d.upper)))
-    if not plans:
+        comp = getattr(b, "compound", None)
+        if comp and any(c.name == comp for c in getattr(world, "compounds", []) or []):
+            groups.setdefault(comp, ([], next(c for c in world.compounds
+                                              if c.name == comp)))[0].append(b)
+        else:
+            singles.append((b, list(d.upper)))
+    if not singles and not groups:
         return
     stairs = {id(b): _stair_templates(world, plan_data, b.layout.design.name)
-              for (b, _u) in plans}
+              for (b, _u) in singles}
+    for (bs, _comp) in groups.values():
+        for b in bs:
+            stairs[id(b)] = _stair_templates(world, plan_data, b.layout.design.name)
 
     # ---- the band: east of everything, behind the boundary strip, floors
     # stacked. It is sized from the storeys it must hold and the map grows to
@@ -96,22 +109,78 @@ def apply(world, plan_data, rng):
     # the storeys' build-time doors open onto the slab, passable at build.
     strip_x = world.grid[0]
     band_x = strip_x + SEPARATOR_WIDTH
-    width = max(b.layout.rect.w for (b, _u) in plans)
+    width = max([b.layout.rect.w for (b, _u) in singles]
+                + [comp.rect.w for (_bs, comp) in groups.values()] or [1])
     y = BAND_MARGIN
     rects = {}
-    for (b, uppers) in plans:
+    for (b, uppers) in singles:
         rs = []
         for _spec in uppers:
             r = Rect(band_x, y, b.layout.rect.w, b.layout.rect.h)
             rs.append(r)
             y += r.h + FLOOR_GAP
         rects[id(b)] = rs
+    walks = []      # [(CompoundOut, CorridorOut, Rect)]
+    group_extras = {}   # id(b) -> {upper index: [door cells]}
+    for (bs, comp) in groups.values():
+        max_storey = max(b.layout.design.storeys for b in bs)
+        for storey in range(2, max_storey + 1):
+            level_rects = []   # [(b or None, corridor or None, rect)]
+            for b in bs:
+                if b.layout.design.storeys < storey:
+                    continue
+                i = storey - 2
+                while len(rects.setdefault(id(b), [])) <= i:
+                    rects[id(b)].append(None)
+                r = Rect(band_x + (b.layout.rect.x - comp.rect.x),
+                         y + (b.layout.rect.y - comp.rect.y),
+                         b.layout.rect.w, b.layout.rect.h)
+                rects[id(b)][i] = r
+                level_rects.append((b, None, r))
+            if storey == 2 and comp.corridors:
+                for corridor in comp.corridors:
+                    if not _walk_ends_have_storey(comp, corridor, 2):
+                        continue
+                    r = Rect(band_x + (corridor.rect.x - comp.rect.x),
+                             y + (corridor.rect.y - comp.rect.y),
+                             corridor.rect.w, corridor.rect.h)
+                    walks.append((comp, corridor, r))
+                    level_rects.append((None, corridor, r))
+            # the doors auto-connect will open between touching storeys at
+            # this level: the rooms behind them learn their cells now, so
+            # furniture keeps the walkways clear
+            for i, (ba, ca, ra) in enumerate(level_rects):
+                for (bb, _cb, rb) in level_rects[i + 1:]:
+                    for cell in shared_wall_cells(ra, rb):
+                        if ra.contains_cell(cell) and ba is not None:
+                            group_extras.setdefault(id(ba), {}).setdefault(
+                                storey - 2, []).append(cell)
+                        if rb.contains_cell(cell) and bb is not None:
+                            group_extras.setdefault(id(bb), {}).setdefault(
+                                storey - 2, []).append(cell)
+            y += comp.rect.h + FLOOR_GAP
     world.grid = (band_x + width, max(world.grid[1], y - FLOOR_GAP + BAND_MARGIN))
 
     _add_boundary(world, plan_data, strip_x)
-    for (b, uppers) in plans:
+    for (b, uppers) in singles:
         _build_storeys(world, b, uppers, rects[id(b)], stairs[id(b)], rng)
+    for (bs, comp) in groups.values():
+        for b in bs:
+            _build_storeys(world, b, list(b.layout.design.upper), rects[id(b)],
+                           stairs[id(b)], rng,
+                           extra_doors=group_extras.get(id(b)))
+    for (comp, corridor, r) in walks:
+        _build_wall_walk(world, comp, corridor, r)
     _name_stairs(world)
+
+
+def _walk_ends_have_storey(comp, corridor, storey):
+    """True when every part a wall corridor joins has a storey at `storey`:
+    the wall walk above it runs tower to tower."""
+    by_name = {b.layout.design.name: b for b in comp.parts}
+    ends = [b for b in comp.parts if shared_wall_cells(b.layout.rect, corridor.rect)]
+    return bool(ends) and all(by_name[b.layout.design.name].layout.design.storeys >= storey
+                              for b in ends)
 
 
 def _add_boundary(world, plan_data, strip_x):
@@ -199,10 +268,13 @@ def _stairs_room(bl):
     return room if room is not None else bl.entrance_room
 
 
-def _build_storeys(world, b, uppers, rects, stairs, rng):
+def _build_storeys(world, b, uppers, rects, stairs, rng, extra_doors=None):
     """Lay out one building's upper storeys and commit them (regions,
     objects, floors and stair objects) only when every storey got the stairs
-    it needs; otherwise the building stays single-storey."""
+    it needs; otherwise the building stays single-storey. ``extra_doors`` is
+    {upper index: [cells]} — doors the builder's auto-connect will open to a
+    neighbouring storey of the same compound, given to the rooms behind them
+    before the furniture is laid out."""
     from .. import ObjectOut, RegionOut
 
     bl = b.layout
@@ -214,6 +286,8 @@ def _build_storeys(world, b, uppers, rects, stairs, rng):
         region_name = f"{design.name} ({STORY_SUFFIX.get(storey, f'floor {storey}')})"
         layout = layout_rooms(_upper_design(design, spec, region_name), rect, rng,
                               world.templates, furniture=spec.furniture)
+        for cell in (extra_doors or {}).get(i, []):
+            _room_door(layout, cell)
         names = {r.base_name for r in layout.rooms}
         for f in layout.furniture:
             if f.room not in names:
@@ -516,12 +590,50 @@ def _plan_stairs(world, b, floors, stairs):
     return out, None
 
 
+def _room_door(layout, cell):
+    """An auto-connect door cell on a storey's outer border: the room whose
+    wall it sits on learns it, so its furniture keeps the walkway clear."""
+    x, y = cell
+    extra = list(getattr(layout, "extra_doors", []))
+    if cell not in extra:
+        extra.append(cell)
+    layout.extra_doors = extra
+    for room in layout.rooms:
+        if room.rect.contains_cell(cell) and \
+                (x in (room.rect.x, room.rect.x1) or y in (room.rect.y, room.rect.y1)):
+            room.doors.add(cell)
+            return
+
+
+def _build_wall_walk(world, comp, corridor, rect):
+    """The storey above a walkable wall: a sealed walled region the size of
+    the corridor, no rooms and no stairs of its own — its ways in and out
+    are the doors it shares with the parts it joins upstairs."""
+    from .. import RegionOut
+    from ..layout_building import BuildingLayout
+    from ..model import BuildingDesign
+
+    region_name = f"{corridor.name} ({STORY_SUFFIX[2]})"
+    design = BuildingDesign(name=corridor.name, wall=corridor.wall)
+    layout = BuildingLayout(design, rect)
+    f = FloorOut(corridor.name, 2, region_name, corridor.name, rect, layout)
+    f.builder_door = (rect.x, rect.y + (rect.h - 1) // 2)
+    world.regions.append(RegionOut(
+        region_name, rect, "building", parent=None, wall=corridor.wall,
+        ground="wood", ground_texture="floorboards",
+        ambience={"day": "quiet_indoor"},
+        description=f"The walk above {corridor.name}.", doors=set()))
+    world.floors.append(f)
+    return f
+
+
 def _name_stairs(world):
     """Give every stair object its builder entity name ("<template> <i>",
     numbered per template in placement order, exactly as build_scenario.py
     numbers them) and link the stair pairs as two-way portals: the up stair
     on the storey below to the down stair on the storey above — two
-    different objects, so no pad is ever the end of two portals."""
+    different objects, so no pad is ever the end of two portals. A wall walk
+    carries no stairs; it is skipped here."""
     counts, names = {}, {}
     for o in world.objects:
         counts[o.template] = counts.get(o.template, 0) + 1
@@ -531,6 +643,8 @@ def _name_stairs(world):
         return names.get((ref[0], ref[1])) if ref is not None else None
 
     for f in world.floors:
+        if f.stair_down is None and f.stair_below_up is None:
+            continue   # a wall walk: its doors, not stairs, are its ways in
         f.stair_down_object = end(f.stair_down)
         f.stair_up_object = end(f.stair_up)
         f.stair_below_up_object = end(f.stair_below_up)
@@ -547,6 +661,41 @@ def _name_stairs(world):
 
 
 # ------------------------------------------------------------------ the output
+
+def shared_storey_doors(rects_by_name, openings_by_name):
+    """{storey name: {cells}} — the openings on each storey area's border
+    that are doors to another storey: a wall-walk door. Two storeys that
+    touch (edges 0 or 1 apart) share one wall line (a single cell) or a
+    facing pair of cells; each side is kept when it is an opening of the
+    region it sits on and the other side is an opening of its own.
+    Everything else on a storey's border is a build-time fiction door:
+    sealed away in play."""
+    from ..model import shared_wall_cells as _shared
+    names = list(rects_by_name)
+    keep = {n: set() for n in names}
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            pair = _shared(rects_by_name[a], rects_by_name[b])
+            if not pair:
+                continue
+            oa = openings_by_name.get(a, set())
+            ob = openings_by_name.get(b, set())
+            if len(pair) == 1:
+                (cell,) = pair
+                if cell in oa and cell in ob:
+                    keep[a].add(cell)
+                    keep[b].add(cell)
+                continue
+            ca, cb = pair
+            if ca in oa and cb in ob:
+                if rects_by_name[a].contains_cell(ca):
+                    keep[a].add(ca)
+                    keep[b].add(cb)
+                else:
+                    keep[a].add(cb)
+                    keep[b].add(ca)
+    return keep
+
 
 def arpg_mods(world):
     """The spec's arpgMods: one floors entry per upper storey, one portals

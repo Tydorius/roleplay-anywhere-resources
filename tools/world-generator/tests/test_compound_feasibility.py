@@ -355,19 +355,18 @@ class TestTouchingStoreys(_BuildCase):
         self.assertEqual(by_area["East Tower (upper floor)"]["above"], "East Tower")
         return scn
 
-    def test_seal_strips_the_fiction_doors(self):
-        """What the seal does today: it takes every opening on a storey's
-        border, so the build-time fiction doors go (their job) and the
-        shared wall-walk door goes with them (a problem). Change 4 narrows
-        the seal to the fiction doors and flips the last two assertions."""
+    def test_seal_keeps_the_shared_door_and_strips_the_fiction_doors(self):
+        """The seal takes only the build-time fiction doors: an opening on a
+        storey's border that another storey also keeps (a wall-walk door) is
+        a real door between two storeys of one compound, and ships."""
         scn = self.test_each_storey_maps_to_its_own_building()
         by_name = {r["name"]: r for r in scn["regions"]}
         west = {tuple(c) for c in by_name["West Tower (upper floor)"]["openings"]}
         east = {tuple(c) for c in by_name["East Tower (upper floor)"]["openings"]}
         self.assertNotIn((60, 7), west, "the west fiction door is sealed away")
         self.assertNotIn((71, 11), east, "the east fiction door is sealed away")
-        self.assertNotIn((67, 7), west, "today the shared door is stripped too")
-        self.assertNotIn((68, 7), east, "today the shared door is stripped too")
+        self.assertIn((67, 7), west, "the wall-walk door ships")
+        self.assertIn((68, 7), east, "the wall-walk door ships")
 
 
 if __name__ == "__main__":

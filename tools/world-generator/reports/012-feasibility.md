@@ -94,13 +94,15 @@ the towers would never join along the walk). Same for the matching checks
 (`checks._floors_checks` and the built-scenario ring check in
 `check_scenario_mods`), which flag any border opening.
 
-`test_seal_strips_the_fiction_doors` pins today's behaviour, including the
-stripped shared door. **Change 4 narrows the seal and those checks to the
-fiction doors**: an opening on a storey's border survives when the cell, or
-a 4-neighbour of it, is an opening on another storey's border — that is a
-real door between two storeys and ships; everything else on the border
-(the fiction doors opening onto the slab) is sealed away as today. The
-test's last two assertions flip when that lands.
+`test_seal_strips_the_fiction_doors` pinned that behaviour while the
+feasibility ran. **Change 4 narrows the seal and those checks to the
+fiction doors**: an opening on a storey's border survives when it is one
+side of a shared door — its cell and the touching cell of another storey
+are both openings of their own regions (one wall line, or a facing pair).
+That is a real door between two storeys and it ships; everything else on
+the border (the fiction doors opening onto the slab) is sealed away as
+today. `test_seal_keeps_the_shared_door_and_strips_the_fiction_doors` now
+pins the narrowed seal.
 
 ## What the answers pick for the layout
 

@@ -18,22 +18,36 @@ from .extensions.floors import BOUNDARY_COLOR, SLAB_NAME
 
 
 def _seal_floors(scn):
-    """Strip every opening on an upper storey's outer border from the built
-    scenario: the spec's build-time doors go, the rooms' interior doors
-    stay, and the stairs portals become the storeys' only ways in and out."""
+    """Strip the build-time fiction doors from the built scenario: every
+    opening on an upper storey's outer border goes, except a wall-walk door
+    — an opening another storey also keeps on its own border, the real door
+    between two storeys of one compound. The rooms' interior doors stay;
+    the stairs portals (and, for a wall walk, its doors) are the storeys'
+    only ways in and out."""
+    from .extensions.floors import shared_storey_doors
+    from .model import Rect
+
     by_name = {r.get("name"): r for r in scn.get("regions", [])}
-    ring = set()
-    for f in (scn.get("arpgMods") or {}).get("floors") or []:
+    floors = (scn.get("arpgMods") or {}).get("floors") or []
+    rects, openings = {}, {}
+    for f in floors:
         area = by_name.get(f.get("area"))
         if area is None:
             continue
         x, y = area.get("position", (0, 0))
         w, h = area.get("size", (0, 0))
-        ring |= {(cx, cy) for cx in range(x, x + w) for cy in (y, y + h - 1)}
-        ring |= {(cx, cy) for cx in (x, x + w - 1) for cy in range(y, y + h)}
+        rects[f.get("area")] = Rect(x, y, w, h)
+        openings[f.get("area")] = {tuple(c) for c in area.get("openings") or []}
+    keep = shared_storey_doors(rects, openings)
+    ring = set()
+    ring_keep = set()
+    for name, r in rects.items():
+        ring |= {(cx, cy) for cx in range(r.x, r.x + r.w) for cy in (r.y, r.y1)}
+        ring |= {(cx, cy) for cx in (r.x, r.x1) for cy in range(r.y, r.y + r.h)}
+        ring_keep |= keep.get(name, set())
     for r in scn.get("regions", []):
         r["openings"] = [list(c) for c in (r.get("openings") or [])
-                         if tuple(c) not in ring]
+                         if tuple(c) not in ring or tuple(c) in ring_keep]
 
 
 def _harden_boundary(scn, scenario_dir):
