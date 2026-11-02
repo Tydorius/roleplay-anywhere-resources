@@ -142,12 +142,12 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         client = ScriptedClient(canned_replies())
         plan, stats = phases.run_phases(
             "a mill village", client, frame=frame,
-            questionnaire={"mode": "short", "answers": {}, "population": [20, 40]})
-        self.assertEqual(client.calls, 7, "no extra P0 call: the frame came in")
+            questionnaire={"mode": "short", "answers": {}, "population": [5, 6]})
+        self.assertEqual(client.calls, 8, "no extra P0 call: the frame came in")
         p1_prompt = client.sent[0][1]["content"]
         self.assertIn("WORLD FRAME", p1_prompt)
         self.assertIn(frame["premise"], p1_prompt)
-        self.assertIn("house 20-40 residents", p1_prompt)
+        self.assertIn("house 5-6 residents", p1_prompt)
         self.assertEqual(plan["frame"]["premise"], frame["premise"])
         self.assertEqual(plan["questionnaire"]["mode"], "short")
 
@@ -156,7 +156,7 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         client = ScriptedClient(canned_replies())
         phases.run_phases("a mill village", client, frame=frame,
                           questionnaire={"mode": "quick", "answers": {},
-                                         "population": [10, 20]})
+                                         "population": [5, 6]})
         p2_prompt = client.sent[1][1]["content"]   # P2 is the second call
         self.assertIn("FRAME (the user approved this)", p2_prompt)
         self.assertIn(frame["tone"], p2_prompt)
@@ -166,8 +166,8 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         client = ScriptedClient([_dump(a_frame())] + canned_replies())
         plan, _stats = phases.run_phases(
             "a mill village", client,
-            questionnaire={"mode": "quick", "answers": {}, "population": [20, 40]})
-        self.assertEqual(client.calls, 8, "P0 ran, then the seven canned calls")
+            questionnaire={"mode": "quick", "answers": {}, "population": [5, 6]})
+        self.assertEqual(client.calls, 9, "P0 ran, then the eight canned calls")
         self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
 
     def test_no_frame_no_questionnaire_is_yesterdays_path(self):
@@ -175,7 +175,7 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         plan, _stats = phases.run_phases("a mill village", client)
         self.assertNotIn("frame", plan)
         self.assertNotIn("questionnaire", plan)
-        self.assertEqual(client.calls, 7)
+        self.assertEqual(client.calls, 8)
 
     def test_frame_brief_is_empty_without_a_frame(self):
         self.assertEqual(frame_brief(None), "")

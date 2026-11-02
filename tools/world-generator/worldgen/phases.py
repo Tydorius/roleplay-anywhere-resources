@@ -36,8 +36,10 @@ UNIT_NUMBERING = ("plain", "storey")
 MAX_UNIT_COUNT = 48        # copies across the building's storeys
 MAX_UNIT_RESIDENTS = 8     # beds stamped inside each copy
 
-MAX_BUILDINGS = 12      # across the whole P1 plan
+MAX_BUILDINGS = 12      # across the whole P1 plan, before population lifts it
 MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
+MAX_PLAN_BUILDINGS = 28 # the ceiling however many residents were asked for
+MAX_RESIDENTS = 60      # one P1 building's "residents" (the population ceiling)
 MAX_TEMPLATE_SIDE = 4   # cells; a tree is 3x3 at most
 MAX_COUNT = 12          # one furniture/prop line
 MAX_ERRORS = 12         # cap on the error list fed back to the model
@@ -112,7 +114,9 @@ def _building_line(b):
     if isinstance(b.get("yard"), dict) and b["yard"]:
         y = f", yard ({b['yard'].get('kind', 'yard')} on the {b['yard'].get('side', 'back')})"
     s = f", {b['storeys']} storeys" if _check_int(b.get("storeys")) and b["storeys"] > 1 else ""
-    return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}: {b.get('purpose', '')}{y}"
+    n = b.get("residents")
+    r = f", sleeps {n}" if _check_int(n) and n > 0 else ""
+    return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}{r}: {b.get('purpose', '')}{y}"
 
 
 def _units_line(b):
@@ -707,6 +711,18 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
     return sanitize_p0(d, stats["dropped"]), clarify_qs, stats
 
 
+def building_cap(residents=None, compounds=False):
+    """The P1 building cap for a resident target: 12 (16 with compounds)
+    when no population was asked for, else min(28, 12 + ceil(residents / 3))
+    with the brief-012 compound allowance of 4 inside the same 28 ceiling."""
+    if not _check_int(residents) or residents <= 0:
+        return MAX_BUILDINGS_COMPOUNDS if compounds else MAX_BUILDINGS
+    base = min(MAX_PLAN_BUILDINGS, MAX_BUILDINGS + -(-residents // 3))
+    if compounds:
+        base = min(MAX_PLAN_BUILDINGS, base + 4)
+    return base
+
+
 # ---------------------------------------------------------- P1 world plan
 
 def _unit_errors(b, ctx, errors):
@@ -766,7 +782,7 @@ def _sanitize_units(b, name, log):
         u["numbering"] = "plain"
 
 
-def check_p1(d, floors=False):
+def check_p1(d, floors=False, residents=None):
     errors = []
     if not isinstance(d, dict):
         return ["P1: the reply is not a JSON object"]
@@ -822,7 +838,7 @@ def check_p1(d, floors=False):
             errors.append(f"{ctx}.buildings: must be a list")
     total = sum(len(z.get("buildings", []) or []) for z in zones if isinstance(z, dict))
     compounds = [c for c in (d.get("compounds") or []) if isinstance(c, dict)]
-    cap = MAX_BUILDINGS_COMPOUNDS if compounds else MAX_BUILDINGS
+    cap = building_cap(residents, bool(compounds))
     if total > cap:
         errors.append(f"buildings: {total} in total is too many; at most {cap}"
                       f"{' with compounds' if compounds else ''}")
@@ -851,6 +867,13 @@ def check_p1(d, floors=False):
             if not _is_str(b.get("kind")):
                 errors.append(f"{ctx}: kind required")
             _enum(b, "sizeClass", BUILDING_SIZES, ctx, errors)
+            r = b.get("residents")
+            if r is not None and (not _check_int(r) or not 1 <= r <= MAX_RESIDENTS):
+                errors.append(f"{ctx}: residents must be a whole number "
+                              f"1..{MAX_RESIDENTS}, not {r!r}")
+            if b.get("units") and r is not None:
+                errors.append(f"{ctx}: residents not needed here; a unit building "
+                              f"houses its copies x units.residents")
             _unit_errors(b, ctx, errors)
             if floors and "storeys" in b:
                 top = 6 if (b.get("units") or b["name"] in part_names) else 3
@@ -886,7 +909,7 @@ def check_p1(d, floors=False):
     return errors[:MAX_ERRORS]
 
 
-def sanitize_p1(d, log, floors=False):
+def sanitize_p1(d, log, floors=False, residents=None):
     """Drop bad zones/buildings/roads and default bad enums; log each change."""
     d["name"] = d.get("name") if _is_str(d.get("name")) else "Generated World"
     s = d.get("setting") if isinstance(d.get("setting"), dict) else {}
@@ -945,6 +968,19 @@ def sanitize_p1(d, log, floors=False):
                 log.append((f"building {b['name']}",
                             f"sizeClass {b.get('sizeClass')!r} -> 'small'"))
                 b["sizeClass"] = "small"
+            r = b.get("residents")
+            if b.get("units"):
+                if r is not None:
+                    log.append((f"building {b['name']}",
+                                "residents dropped: a unit building houses its "
+                                "copies x units.residents"))
+                    b.pop("residents", None)
+            elif not _check_int(r) or not 1 <= r <= MAX_RESIDENTS:
+                if r is not None:
+                    log.append((f"building {b['name']}",
+                                f"residents {r!r} dropped: not a whole number "
+                                f"1..{MAX_RESIDENTS}"))
+                b.pop("residents", None)
             _sanitize_units(b, b["name"], log)
             if floors:
                 top = 6 if (b.get("units") or b["name"] in part_names) else 3
@@ -969,7 +1005,7 @@ def sanitize_p1(d, log, floors=False):
             log.append((label, "dropped from P1: bad structure"))
             continue
         compounds.append(c)
-    cap = MAX_BUILDINGS_COMPOUNDS if compounds else MAX_BUILDINGS
+    cap = building_cap(residents, bool(compounds))
     part_names = {p.get("building") for c in compounds
                   for p in (c.get("parts") or []) if isinstance(p, dict)}
     while sum(len(z["buildings"]) for z in zones) > cap:
@@ -1227,13 +1263,40 @@ def _sanitize_light(t, log):
 OPENING_KINDS = ("gallery", "atrium", "stairwell")
 
 
+def design_beds(design, bed_templates):
+    """How many sleepers a P3 design beds: its furniture's sleep-capable
+    lines, ground floor and designed uppers."""
+    n = sum(f.get("count", 1) for f in (design.get("furniture") or [])
+            if f.get("template") in bed_templates)
+    for u in design.get("upper") or []:
+        n += sum(f.get("count", 1) for f in (u.get("furniture") or [])
+                 if f.get("template") in bed_templates)
+    return n
+
+
+def resident_target(questionnaire):
+    """The N P1 plans homes for: the population range's midpoint, None when
+    nobody asked for a population."""
+    if not questionnaire:
+        return None
+    lo, hi = _population_range(questionnaire)
+    return (lo + hi) // 2
+
+
+def _population_range(questionnaire):
+    from . import questions as questions_mod
+    return questions_mod.sanitize_population((questionnaire or {}).get("population"))
+
+
 def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
-             pools=None):
+             pools=None, beds=None, residents=None):
     """``storeys`` is the building's P1 storey count with the floors
     extension enabled (None when it is off, so upper/stairs are ignored).
     ``units`` is the P1 units dict when the building repeats units, so the
     reply must carry one nested "unit" design. ``pools`` is the catalogue's
-    loot pool names, so every lootPool reference names a real pool."""
+    loot pool names, so every lootPool reference names a real pool.
+    ``beds`` is the sleep-capable template names; a building whose P1 entry
+    says ``residents`` must bed that many."""
     errors = []
     ctx = f"building {building_name}"
     if not isinstance(d, dict):
@@ -1295,6 +1358,11 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
                           f"room, not {st!r}")
         errors.extend(_upper_errors(d.get("upper", []), rnames, templates, storeys,
                                     ctx, pools))
+    if beds and _check_int(residents) and residents > 0 and not units:
+        got = design_beds(d, beds)
+        if got < residents:
+            errors.append(f"{ctx}: P1 beds {residents} sleeper(s) here; the furniture "
+                          f"beds only {got} (one sleep-capable object each)")
     return errors[:MAX_ERRORS]
 
 
@@ -1728,26 +1796,49 @@ def sanitize_p4(d, templates, log, zone_name, buildings=()):
 
 # ----------------------------------------------------------------- P5 people
 
-def check_p5(d, buildings, zones, bedded=None):
+P5_BATCH = 10           # the most people one batch call makes
+
+
+def check_p5(d, buildings, zones, bedded=None, items=None,
+             need=("npcs", "player"), roster=()):
+    """One P5 reply: a batch of npcs, the player, or (the old shape) both.
+    ``need`` names the parts this call asked for — anything else in the reply
+    is an error. ``items`` is the catalogue's item names, for the player's
+    starting inventory; ``roster`` the names already made, so nobody repeats."""
     errors = []
     if not isinstance(d, dict):
         return ["P5: the reply is not a JSON object"]
-    people = d.get("npcs")
-    if not isinstance(people, list) or not people:
-        errors.append("npcs: required, a non-empty list")
-        people = []
-    for i, p in enumerate(people):
-        errors.extend(_person_errors(p, f"npcs[{i}]", buildings, zones, bedded))
-    errors.extend(_person_errors(d.get("player"), "player", buildings, zones, bedded))
+    if "npcs" in need:
+        people = d.get("npcs")
+        if not isinstance(people, list) or not people:
+            errors.append("npcs: required, a non-empty list")
+            people = []
+        for i, p in enumerate(people):
+            errors.extend(_person_errors(p, f"npcs[{i}]", buildings, zones,
+                                         bedded, roster))
+    elif d.get("npcs"):
+        errors.append("npcs: this call makes no npcs; reply npcs: [] "
+                      "(or omit the field)")
+    if "player" in need:
+        errors.extend(_person_errors(d.get("player"), "player", buildings,
+                                     zones, bedded, roster))
+        if isinstance(d.get("player"), dict):
+            errors.extend(_player_item_errors(d["player"], "player", items))
+    elif isinstance(d.get("player"), dict) and d.get("player"):
+        errors.append("player: the player is made in its own call later; "
+                      "reply npcs only")
     return errors[:MAX_ERRORS]
 
 
-def _person_errors(p, ctx, buildings, zones, bedded=None):
+def _person_errors(p, ctx, buildings, zones, bedded=None, roster=()):
     if not isinstance(p, dict):
         return [f"{ctx}: must be an object"]
     errors = []
     if not _is_str(p.get("name")):
         errors.append(f"{ctx}.name: required")
+    elif p["name"] in set(roster):
+        errors.append(f"{ctx}.name: {p['name']!r} is already on the roster; "
+                      f"everyone in the world has their own name")
     if p.get("gender") not in ("male", "female"):
         errors.append(f"{ctx}.gender: 'male' or 'female', not {p.get('gender')!r}")
     if not _is_str(p.get("role")):
@@ -1765,42 +1856,116 @@ def _person_errors(p, ctx, buildings, zones, bedded=None):
     return errors
 
 
-def sanitize_p5(d, buildings, zones, log, bedded=()):
+def _player_item_errors(p, ctx, items):
+    """The player's starting inventory and equipment: real items, 2-5 of them
+    (skipped entirely when the catalogue carries no items)."""
+    if items is None or not items:
+        return []
+    errors = []
+    total = 0
+    inv = p.get("inventory", [])
+    if not isinstance(inv, list):
+        return [f"{ctx}.inventory: a list of [item name, count] pairs, or omit it"]
+    for e in inv:
+        name = e if isinstance(e, str) else (e[0] if isinstance(e, list) and e else None)
+        if name not in items:
+            errors.append(f"{ctx}.inventory: {name!r} is not an item of this catalogue")
+        else:
+            total += 1
+    eq = p.get("equipment", {})
+    if not isinstance(eq, dict):
+        errors.append(f"{ctx}.equipment: slot -> item name, or omit it")
+    else:
+        for slot, name in eq.items():
+            if name not in items:
+                errors.append(f"{ctx}.equipment.{slot}: {name!r} is not an item "
+                              f"of this catalogue")
+            else:
+                total += 1
+    if not 2 <= total <= 5:
+        errors.append(f"{ctx}: carry 2-5 starting items across inventory and "
+                      f"equipment, {total} given")
+    return errors
+
+
+def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
+                need=("npcs", "player"), taken=(), max_npcs=None):
     bedded = [b for b in bedded if b in set(buildings)]
-    npcs = []
-    for p in (d.get("npcs") or []):
-        errs = _person_errors(p, f"npc {p.get('name') if isinstance(p, dict) else p!r}",
-                              set(buildings), set(zones))
-        if errs:
-            log.append((f"npc {p.get('name') if isinstance(p, dict) else p!r}",
-                        "dropped: " + "; ".join(errs[:3])))
-            continue
-        if bedded and p["home"] not in bedded:
-            log.append((f"npc {p['name']}",
-                        f"home {p['home']!r} has no bed -> re-homed to {bedded[0]!r}"))
-            p["home"] = bedded[0]
-        npcs.append(p)
-    d["npcs"] = npcs
-    player = d.get("player") if isinstance(d.get("player"), dict) else {}
-    if not _is_str(player.get("name")):
-        player["name"] = "The Traveller"
-    if player.get("gender") not in ("male", "female"):
-        player["gender"] = "female"
-    if not _is_str(player.get("role")):
-        player["role"] = "traveller"
-    if buildings and player.get("home") not in buildings:
-        log.append(("player", f"home {player.get('home')!r} -> {buildings[0]!r}"))
-        player["home"] = buildings[0]
-    if bedded and player.get("home") not in bedded:
-        log.append(("player", f"home {player['home']!r} has no bed -> re-homed to {bedded[0]!r}"))
-        player["home"] = bedded[0]
-    if player.get("work") not in set(buildings) | set(zones):
-        player["work"] = player["home"] or (zones[0] if zones else "")
-    for k in ("description", "physicalDescription"):
-        if not _is_str(player.get(k)):
-            player[k] = "A traveller with a reason to stay."
-    d["player"] = player
+    if "npcs" in need:
+        npcs, seen = [], set(taken)
+        for p in (d.get("npcs") or []):
+            name = p.get("name") if isinstance(p, dict) else None
+            if max_npcs is not None and len(npcs) >= max_npcs:
+                log.append((f"npc {name}", f"dropped: the batch was capped at {max_npcs}"))
+                continue
+            errs = _person_errors(p, f"npc {name if name else p!r}",
+                                  set(buildings), set(zones), roster=seen)
+            if errs:
+                log.append((f"npc {name}", "dropped: " + "; ".join(errs[:3])))
+                continue
+            if bedded and p["home"] not in bedded:
+                log.append((f"npc {p['name']}",
+                            f"home {p['home']!r} has no bed -> re-homed to {bedded[0]!r}"))
+                p["home"] = bedded[0]
+            seen.add(p["name"])
+            npcs.append(p)
+        d["npcs"] = npcs
+    if "player" in need:
+        player = d.get("player") if isinstance(d.get("player"), dict) else {}
+        if not _is_str(player.get("name")):
+            player["name"] = "The Traveller"
+        if player.get("gender") not in ("male", "female"):
+            player["gender"] = "female"
+        if not _is_str(player.get("role")):
+            player["role"] = "traveller"
+        if buildings and player.get("home") not in buildings:
+            log.append(("player", f"home {player.get('home')!r} -> {buildings[0]!r}"))
+            player["home"] = buildings[0]
+        if bedded and player.get("home") not in bedded:
+            log.append(("player", f"home {player['home']!r} has no bed -> re-homed to {bedded[0]!r}"))
+            player["home"] = bedded[0]
+        if player.get("work") not in set(buildings) | set(zones):
+            player["work"] = player["home"] or (zones[0] if zones else "")
+        for k in ("description", "physicalDescription"):
+            if not _is_str(player.get(k)):
+                player[k] = "A traveller with a reason to stay."
+        _sanitize_player_items(player, log, items)
+        d["player"] = player
     return d
+
+
+def _sanitize_player_items(player, log, items):
+    """Keep only real items in the player's inventory/equipment; 0-5 kept."""
+    if items is None:
+        player.pop("inventory", None)
+        player.pop("equipment", None)
+        return
+    names = set(items)
+    inv, seen = [], 0
+    for e in (player.get("inventory") or []):
+        if seen >= 5:
+            break
+        if isinstance(e, str):
+            e = [e, 1]
+        if isinstance(e, list) and e and e[0] in names:
+            count = e[1] if len(e) > 1 and _check_int(e[1]) and e[1] > 0 else 1
+            inv.append([e[0], count])
+            seen += 1
+        else:
+            log.append(("player", f"inventory item {e!r} dropped: not in the catalogue"))
+    eq = {}
+    for slot, name in (player.get("equipment") or {}).items():
+        if seen >= 5:
+            break
+        if isinstance(name, str) and name in names:
+            eq[slot] = name
+            seen += 1
+        else:
+            log.append(("player", f"equipment {name!r} dropped: not in the catalogue"))
+    if inv:
+        player["inventory"] = inv
+    if eq:
+        player["equipment"] = eq
 
 
 # ------------------------------------------------------------------ the run
@@ -1866,12 +2031,13 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
 
     # ---- P1: the world plan (the frame in place of the bare idea)
     fbrief = frame_brief(frame, population)
+    target = resident_target(questionnaire)
     p1 = call("p1", "p1-world", event=("P1", "the world plan"),
               idea=(f"{idea}\n{fbrief}" if fbrief else idea),
-              _validate=lambda x: check_p1(x, floors=floors))
+              _validate=lambda x: check_p1(x, floors=floors, residents=target))
     if p1 is None:
         raise PhaseError("P1 produced no JSON at all")
-    p1 = sanitize_p1(p1, stats["dropped"], floors=floors)
+    p1 = sanitize_p1(p1, stats["dropped"], floors=floors, residents=target)
     if not p1["zones"]:
         raise PhaseError("P1 produced no usable zones")
 
@@ -1895,6 +2061,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     pools = p2.get("lootPools") or {}
     pool_names = set(pools)
     pool_lines = _pool_lines(pools)
+    # sleep-capable templates, for the P3 bed check and P5's homes
+    bed_templates = {t["name"] for t in templates
+                     if t.get("forSleep") or _sleeps(t["name"], t.get("tags"))}
     # P1 cannot know pool names (P2 writes them later): a building pool the
     # catalogue does not carry is dropped rather than failing the parse
     for z in p1["zones"]:
@@ -1937,16 +2106,29 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                      building_name=b["name"],
                      _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
                      s=(b.get("storeys", 1) if floors else None),
-                     u=b.get("units"):
-                     check_p3(x, n, tnames, y, storeys=s, units=u, pools=pool_names))
+                     u=b.get("units"), r=b.get("residents"):
+                     check_p3(x, n, tnames, y, storeys=s, units=u, pools=pool_names,
+                              beds=bed_templates, residents=r))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
                 keep.append(b)   # parse_plan furnishes a one-room fallback
                 continue
-            designs.append(sanitize_p3(d, b["name"], tnames, stats["dropped"],
-                                       storeys=(b.get("storeys", 1) if floors else None),
-                                       units=bool(b.get("units")), pools=pool_names))
+            design = sanitize_p3(d, b["name"], tnames, stats["dropped"],
+                                 storeys=(b.get("storeys", 1) if floors else None),
+                                 units=bool(b.get("units")), pools=pool_names)
+            designs.append(design)
+            # a home that came back with fewer beds than P1 promised sleeps
+            # only what its furniture beds (the layout's bed-ensuring pass
+            # patches anyone left over)
+            if _check_int(b.get("residents")) and b["residents"] > 0:
+                got = design_beds(design, bed_templates)
+                if got < b["residents"]:
+                    stats["dropped"].append(
+                        (f"building {b['name']}",
+                         f"residents {b['residents']} -> {got}: the furniture beds "
+                         f"only {got}"))
+                    b["residents"] = got
             keep.append(b)
         z["buildings"] = keep
 
@@ -1967,34 +2149,143 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             z["dressing"] = sanitize_p4(d, tnames, stats["dropped"], z["name"],
                                         building_names)
 
-    # ---- P5: people
-    zlines = "\n".join(f"- {_zone_line(z)}" for z in p1["zones"])
-    blines = "\n".join(f"- {_building_line(b)}" for b in
-                       (b for z in p1["zones"] for b in z["buildings"]))
+    # ---- P5: people in batches — one call per zone (at most P5_BATCH a
+    # batch), then the player in a call of its own made from playerRole
     zone_names = [z["name"] for z in p1["zones"]]
-    # homes need a placed-able bed: the builder requires a forSleep object
-    # wherever a person sleeps
-    bed_templates = {t["name"] for t in templates
-                     if t.get("forSleep") or _sleeps(t["name"], t.get("tags"))}
     design_by_name = {b["name"]: b for b in designs}
 
-    def _has_bed(design):
-        lines = list(design.get("furniture") or [])
-        for u in design.get("upper") or []:
-            lines += u.get("furniture") or []
-        return any(f.get("template") in bed_templates for f in lines)
+    def beds_of(b):
+        """A building's beds: a unit building stamps one per resident per
+        copy; a plain one holds what its (copied, for sameAs) design beds."""
+        if isinstance(b.get("units"), dict) and _check_int(b["units"].get("count")):
+            per = b["units"].get("residents", 0)
+            return b["units"]["count"] * (per if _check_int(per) else 0)
+        src = design_by_name.get(b["name"]) \
+            or design_by_name.get(same_as_parts.get(b["name"], ""))
+        return design_beds(src, bed_templates) if src else 0
 
-    bedded = [b["name"] for b in (bb for z in p1["zones"] for bb in z["buildings"])
-              if _has_bed(design_by_name.get(b["name"], {}))]
-    p5 = call("p5", "p5-people", event=("P5", "people and schedules"),
-              setting_line=setting_line, zone_lines=zlines, building_lines=blines,
-              _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
-                                           set(bedded)))
-    if p5 is None:
-        stats["dropped"].append(("people", "P5 produced no JSON; using a default player"))
-        p5 = {"npcs": [], "player": {}}
+    beds_by_building = {b["name"]: beds_of(b)
+                        for z in p1["zones"] for b in z["buildings"]}
+    homes_taken = {}       # building name -> people already sleeping there
+
+    def bedded_buildings():
+        return [n for n, k in beds_by_building.items() if k > 0]
+
+    def _p5_blines(zone=None):
+        bs = [b for z in p1["zones"] for b in z["buildings"]] if zone is None \
+            else zone["buildings"]
+        out = []
+        for b in bs:
+            beds = beds_by_building.get(b["name"], 0)
+            taken = homes_taken.get(b["name"], 0)
+            free = max(0, beds - taken)
+            bed_note = f", {beds} bed(s) ({free} free)" if beds else ", no beds"
+            out.append(f"- {_building_line(b)}{bed_note}")
+        return "\n".join(out) or "- none"
+
+    def _roster_block():
+        if not roster:
+            return ""
+        lines = ["PEOPLE MADE SO FAR (they exist; never repeat a name or take "
+                 "a taken bed):"]
+        lines += [f"- {p['name']}, {p.get('role', '?')}, sleeps at {p.get('home', '?')}"
+                  for p in roster]
+        return "\n".join(lines)
+
+    def _quota_line(zone):
+        if target is None:
+            return "the people this zone needs (its homes and workplaces)."
+        beds = sum(beds_by_building.get(b["name"], 0) for b in zone["buildings"])
+        want = min(P5_BATCH, max(1, beds, target - len(roster)))
+        lo, hi = _population_range(questionnaire)
+        return (f"about {want} people (the world wants {lo}-{hi}; "
+                f"{len(roster)} live here already).")
+
+    roster = []            # the people made so far: name, role, home
+    item_names = [it["name"] for it in (p2.get("items") or [])]
+    item_lines = "\n".join(f"- {n}" for n in item_names) or "- (none)"
+    # a zone with no buildings homes nobody: no batch for it (its foresters
+    # and the like are made in another zone's batch, working this one)
+    peopled = [z for z in p1["zones"] if z["buildings"]]
+    for i, z in enumerate(peopled, 1):
+        d = call(f"p5-{slug(z['name'])}", "p5-people",
+                 event=("P5", f"people {i}/{len(peopled)}: {z['name']}"),
+                 setting_line=setting_line, zone_line=_zone_line(z),
+                 zone_names_line=", ".join(zone_names),
+                 building_lines=_p5_blines(z), roster_block=_roster_block(),
+                 quota_line=_quota_line(z),
+                 _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
+                                              set(bedded_buildings()),
+                                              need=("npcs",),
+                                              roster={p["name"] for p in roster}))
+        if d is None:
+            stats["dropped"].append((f"people of {z['name']}",
+                                     "no JSON; the zone went unpeopled"))
+            continue
+        batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
+                            bedded_buildings(), need=("npcs",),
+                            taken={p["name"] for p in roster}, max_npcs=P5_BATCH)
+        for p in batch["npcs"]:
+            roster.append(p)
+            homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
+
+    # below the asked-for range after the zones: top up with one more batch
+    # rather than failing, spread over any bedded building
+    if target is not None:
+        lo, hi = _population_range(questionnaire)
+        for extra in range(3):
+            if len(roster) >= lo:
+                break
+            want = min(P5_BATCH, lo - len(roster))
+            d = call(f"p5-topup-{extra + 1}", "p5-people",
+                     event=("P5", f"top-up batch {extra + 1}: {want} more"),
+                     setting_line=setting_line,
+                     zone_line="any zone with a free bed",
+                     zone_names_line=", ".join(zone_names),
+                     building_lines=_p5_blines(), roster_block=_roster_block(),
+                     quota_line=f"exactly {want} more (the world wants "
+                                f"{lo}-{hi}; {len(roster)} exist already).",
+                     _validate=lambda x: check_p5(x, set(building_names),
+                                                  set(zone_names),
+                                                  set(bedded_buildings()),
+                                                  need=("npcs",),
+                                                  roster={p["name"] for p in roster}))
+            if d is None:
+                stats["dropped"].append(("people top-up", "no JSON"))
+                break
+            batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
+                                bedded_buildings(), need=("npcs",),
+                                taken={p["name"] for p in roster}, max_npcs=want)
+            for p in batch["npcs"]:
+                roster.append(p)
+                homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
+        if len(roster) < lo:
+            stats["dropped"].append(
+                ("people", f"{len(roster)} made, below the asked-for {lo}-{hi} "
+                           "after the top-up batches"))
+
+    # ---- the player, in a call of their own, from the frame's playerRole
+    role_line = (frame or {}).get("playerRole") or \
+        "an outsider with a reason to stay the season"
+    d = call("p5-player", "p5-player", event=("P5", "the player"),
+             setting_line=setting_line, role_line=role_line,
+             building_lines=_p5_blines(), roster_block=_roster_block(),
+             item_lines=item_lines,
+             _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
+                                          set(bedded_buildings()),
+                                          items=set(item_names), need=("player",),
+                                          roster={p["name"] for p in roster}))
+    if d is None:
+        stats["dropped"].append(("player", "P5 produced no JSON; using a default player"))
+        player = sanitize_p5({"player": {}}, building_names, zone_names,
+                             stats["dropped"], bedded_buildings(),
+                             need=("player",),
+                             taken={p["name"] for p in roster})["player"]
     else:
-        p5 = sanitize_p5(p5, building_names, zone_names, stats["dropped"], bedded)
+        player = sanitize_p5(d, building_names, zone_names, stats["dropped"],
+                             bedded_buildings(), items=item_names,
+                             need=("player",), taken={p["name"] for p in roster})["player"]
+    p5 = {"npcs": roster, "player": player}
 
     plan = {
         "name": p1.get("name", "Generated World"),

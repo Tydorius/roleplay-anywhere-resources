@@ -151,7 +151,7 @@ class TestWorldgenEndpoints(unittest.TestCase):
 
     def test_estimate_endpoint(self):
         e = self.get("/api/worldgen/estimate?idea=" + urllib.parse.quote("a fogbound harbour town"))["estimate"]
-        self.assertTrue(13 <= e["calls"] <= 18)
+        self.assertTrue(15 <= e["calls"] <= 24, e)
         self.assertGreater(e["tokens"], 0)
         code, raw = self.request("GET", "/api/worldgen/estimate?idea=")
         self.assertEqual(code, 400)

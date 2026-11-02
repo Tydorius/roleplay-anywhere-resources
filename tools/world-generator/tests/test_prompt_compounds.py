@@ -362,7 +362,7 @@ class TestPromptText(unittest.TestCase):
     def test_p1_prompt_teaches_the_vocabulary(self):
         t = phases._template("p1-world").substitute(rules="", idea="x")
         for bit in ("compounds", "arrangement", "around_green", "corner:nw",
-                    "attached:", "gate", "16 when", "monastery",
+                    "attached:", "gate", "4 more when", "monastery",
                     "Most buildings are not in a compound"):
             self.assertIn(bit, t)
 

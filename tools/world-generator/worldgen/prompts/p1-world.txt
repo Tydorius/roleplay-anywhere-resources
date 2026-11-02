@@ -25,6 +25,7 @@ Reply with ONE JSON object with exactly these fields:
          "sizeClass": "hut|small|medium|large|hall",
          "purpose": "one phrase: what people do here",
          "units": {"name": "Apartment", "count": 12, "residents": 2},
+         "residents": 4,
          "yard": null}
       ]
     }
@@ -107,13 +108,20 @@ These show the vocabulary, not templates. Combine shapes freely to fit the idea.
   workshop or two, a chapel or mill; a modern town wants flats over a shop
   row, a clinic, a cafe, a depot; a station wants a mess hall, a medical bay,
   cabins, workshops. Cover the idea's named features in zones or buildings.
+- The brief may name how many residents to house. Plan enough homes and
+  lodgings (houses, barracks, dormitories, inn rooms) to bed them all: a home
+  building may carry "residents": n (how many sleep there; never on a unit
+  building, which houses copies x units.residents). Few separate homes beat
+  one crowded hall: families, lodgers, staff quarters.
 - A zone's "arrangement", when set: "around_green" puts its buildings facing
   one open green (the largest opposite the road), "along_street" lines them
   on a street, "scattered" spreads them loosely, "fields" fills the zone
   with fenced crop plots and gathers its buildings at the road-side corner.
 - 2 to 4 zones, each with a distinct kind. Every name in "adjacentTo" and in
-  "roads" must be a zone in this same reply. No more than 12 buildings in
-  the whole plan (16 when the reply uses compounds — towers are buildings).
+  "roads" must be a zone in this same reply. The building cap follows the
+  population the brief names (12 for a small place, up to 28 for a full one;
+  4 more when the reply uses compounds — towers are buildings); a validation
+  error will name the exact number if you go over.
 - Choose "density" honestly (a hamlet is sparse, a town is normal, a city
   quarter is dense); it scales how much filler code spreads outdoors.
 - A "yard" is null for most buildings; omit it (null) unless the building

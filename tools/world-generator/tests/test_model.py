@@ -159,12 +159,27 @@ CANNED_P5 = {
          "home": "Miller's Cottage", "work": "Wheatfields",
          "description": "Keeps the cottage and the strip behind it.",
          "physicalDescription": "Sun-browned woman, yarn at her belt"},
+        {"name": "Colin Miller", "gender": "male", "role": "miller's son",
+         "home": "Miller's Cottage", "work": "The Old Mill",
+         "description": "Hefts sacks and dodges lessons; wants his own boat.",
+         "physicalDescription": "Gangly boy, flour on one ear"},
+        {"name": "Daria Wick", "gender": "female", "role": "sieve-maker",
+         "home": "The Old Mill", "work": "Millbrook",
+         "description": "Bolts the flour and mends sieves; saves for winter.",
+         "physicalDescription": "Quiet woman, sieve-ribbon in her hair"},
+        {"name": "Edda Straw", "gender": "female", "role": "bonded labourer",
+         "home": "Miller's Cottage", "work": "Wheatfields",
+         "description": "Works the strips for her keep; owes the mill two days.",
+         "physicalDescription": "Broad-shouldered, straw cuts on her palms"},
     ],
     "player": {"name": "Wren Ash", "gender": "female", "role": "traveller",
                "home": "Miller's Cottage", "work": "Millbrook",
                "description": "A traveller staying for the harvest.",
                "physicalDescription": "Lean, patched coat, walking staff"},
 }
+
+CANNED_P5_BATCH = {"npcs": CANNED_P5["npcs"]}          # one zone's batch
+CANNED_P5_PLAYER = {"player": CANNED_P5["player"]}     # the player's own call
 
 
 # -------------------------------------------------------- JSON extraction
@@ -384,7 +399,9 @@ class TestContracts(unittest.TestCase):
 # ------------------------------------------- the canned five-phase run
 
 def canned_replies():
-    """Call order: p1, p2, p3 x2, p4 x2, p5 - with one p2 retry scripted."""
+    """Call order: p1, p2, p3 x2, p4 x2, p5 batch (the village zone; the
+    fields zone has no buildings, so no batch), p5 player - with one p2
+    retry scripted."""
     return [
         _dump(CANNED_P1),
         "I will surely help with the catalogue!",   # bad JSON -> one retry
@@ -393,7 +410,8 @@ def canned_replies():
         _dump(CANNED_COTTAGE),
         _dump(CANNED_P4_VILLAGE),
         _dump(CANNED_P4_FIELDS),
-        _dump(CANNED_P5),
+        _dump(CANNED_P5_BATCH),
+        _dump(CANNED_P5_PLAYER),
     ]
 
 
@@ -401,7 +419,7 @@ class TestCannedFivePhases(unittest.TestCase):
     def test_plan_json_the_layout_accepts(self):
         client = ScriptedClient(canned_replies())
         plan, stats = phases.run_phases("a mill village", client)
-        self.assertEqual(client.calls, 7)
+        self.assertEqual(client.calls, 8)
         self.assertEqual(client.retries, 1)
         self.assertEqual(stats["dropped"], [])
         self.assertEqual(len(plan["buildings"]), 2)

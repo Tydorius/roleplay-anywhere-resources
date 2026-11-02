@@ -1,12 +1,12 @@
-People this world. Code builds each person's daily schedule from their home
-and work; give everyone a real home building and a real workplace.
+People this world, one batch. Code builds each person's daily schedule from
+their home and work; give everyone a real home building and a real workplace.
 
 WORLD: ${setting_line}
-ZONES:
-${zone_lines}
-BUILDINGS:
+ZONE: ${zone_line}
+ZONES (work may name any of them): ${zone_names_line}
+BUILDINGS (with the beds their furniture holds):
 ${building_lines}
-
+${roster_block}
 Reply with ONE JSON object:
 {
   "npcs": [
@@ -14,18 +14,16 @@ Reply with ONE JSON object:
      "home": "building name from the list", "work": "building or zone name from the lists",
      "description": "one sentence: who they are and what they want",
      "physicalDescription": "build, clothes, one telling detail"}
-  ],
-  "player": {"name": "...", "gender": "...", "role": "...", "home": "...", "work": "...",
-             "description": "...", "physicalDescription": "..."}
+  ]
 }
 
-- Roughly one npc per household or workplace: the innkeeper, the miller, the
-  smith, a farmer or two. 3 to 8 npcs for a village-sized world.
-- "home" must be a BUILDING from the list, and that building must have a bed
-  in it (people sleep at home). "work" must be a building or a zone from the
+- This batch: ${quota_line}
+- Make the people the place needs: staff on duty in opening hours, families,
+  rivals, and at least one person who doesn't fit (the misfit the story wants).
+- "home" must be a BUILDING from the list with a bed free (at most one person
+  per bed, counting the roster). "work" must be a building or a zone from the
   lists (a forester works in the forest zone).
-- The player is an outsider with a reason to stay the winter (or the season).
-- Names fit the setting; no two people share a name. Descriptions are
-  specific: count things, mention one want and one worry.
+- Names fit the setting; nobody in the world shares a name with the roster.
+  Descriptions are specific: count things, mention one want and one worry.
 
 ${rules}

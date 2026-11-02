@@ -25,7 +25,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
             for artifact in ("plan.json", "spec.json", "spec.py", "metrics.json"):
                 self.assertTrue(os.path.exists(os.path.join(tmp, artifact)), artifact)
         self.assertTrue(summary["ok"], summary)
-        self.assertEqual(summary["calls"], 7)
+        self.assertEqual(summary["calls"], 8)
         self.assertEqual(summary["provider"], "stub")
         self.assertEqual(summary["extensions"], [])
         self.assertEqual(summary["validator_errors"], 0, summary)
@@ -92,11 +92,24 @@ class TestEstimate(unittest.TestCase):
         e = api.estimate(plan)
         zones = len(plan["zones"])
         buildings = sum(len(z["buildings"]) for z in plan["zones"])
-        self.assertEqual(e["calls"], 3 + buildings + zones)
+        # P1, P2 + one P3 per own design + one P4 per zone + a P5 batch per
+        # peopled zone + the player's call (village.json carries no frame;
+        # King's Wood has no buildings, so it gets no batch)
+        peopled = sum(1 for z in plan["zones"] if z["buildings"])
+        self.assertEqual(e["calls"], 2 + buildings + zones + peopled + 1)
         self.assertEqual(e["calls_range"][0], e["calls"])
         self.assertGreater(e["calls_range"][1], e["calls"], "retries add calls")
         self.assertEqual(e["tokens"], 8500 * e["calls"])
         self.assertTrue(5 <= e["minutes"] <= 60, e)
+
+    def test_a_framed_plan_counts_p0(self):
+        with open(os.path.join(FIXTURES, "village.json"), "r", encoding="utf-8") as f:
+            plan = json.load(f)
+        plain = api.estimate(plan)["calls"]          # no frame: no P0 call
+        plan["frame"] = {"premise": "x"}
+        plan["questionnaire"] = {"mode": "short", "answers": {}, "population": [20, 40]}
+        self.assertEqual(api.estimate(plan)["calls"], plain + 1)
+        self.assertIn("1 P0 call", api.estimate(plan)["basis"])
 
     def test_plan_path_is_loaded(self):
         e = api.estimate(os.path.join(FIXTURES, "village.json"))

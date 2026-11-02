@@ -29,11 +29,12 @@ from .phases import Cancelled  # noqa: F401 - callers catch worldgen.api.Cancell
 
 VENDOR_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor")
 
-# measured full runs (brief 010): 13-18 calls, 100-150k tokens, 20-35 minutes
-MEASURED_CALLS = (13, 18)
-MEASURED_TOKENS = (100000, 150000)
-MEASURED_MINUTES = (20, 35)
-TOKENS_PER_CALL = 8500       # prompt + completion, across P1-P5
+# measured full runs (brief 010): 13-18 calls, 100-150k tokens, 20-35 minutes;
+# brief 013's batched P5 (one call per zone plus the player) widens it
+MEASURED_CALLS = (15, 24)
+MEASURED_TOKENS = (110000, 190000)
+MEASURED_MINUTES = (20, 45)
+TOKENS_PER_CALL = 8500       # prompt + completion, across the phases
 TOKENS_PER_MINUTE = 4500     # streaming reasoning models on a good day
 
 
@@ -139,7 +140,10 @@ def estimate(idea_or_plan):
                   for p in (c.get("parts") or [])
                   if isinstance(p, dict) and p.get("sameAs"))
     p3_calls = max(0, buildings - same_as)
-    calls = 3 + p3_calls + len(zones)   # P1, P2, P5 + P3 per own design + P4 per zone
+    # P5 batches: one call per zone with buildings, plus the player's own call
+    p5_calls = sum(1 for z in zones if z.get("buildings")) + 1
+    p0_calls = 1 if (plan.get("frame") or plan.get("questionnaire")) else 0
+    calls = p0_calls + 2 + p3_calls + len(zones) + p5_calls
     retries = 6                          # the most a measured run needed
     tokens = TOKENS_PER_CALL * calls
     return {"calls": calls, "calls_range": [calls, calls + retries],
@@ -147,9 +151,11 @@ def estimate(idea_or_plan):
             "minutes": round(tokens / float(TOKENS_PER_MINUTE), 1),
             "minutes_range": [round(tokens / float(TOKENS_PER_MINUTE), 1),
                               round(TOKENS_PER_CALL * (calls + retries) / float(TOKENS_PER_MINUTE), 1)],
-            "basis": f"plan {plan.get('name', '')!r}: 3 phase calls "
-                     f"+ {p3_calls} buildings ({same_as} sameAs copies skipped) "
-                     f"+ {len(zones)} zones (+ retries)"}
+            "basis": f"plan {plan.get('name', '')!r}: "
+                     + (f"{p0_calls} P0 call + " if p0_calls else "")
+                     + f"P1, P2 + {p3_calls} buildings ({same_as} sameAs copies "
+                       f"skipped) + {len(zones)} zones + {p5_calls} people calls "
+                       f"(+ retries)"}
 
 
 def _mid(pair):

@@ -170,6 +170,10 @@ def build_spec(world, plan):
             ent.pop("level")
         if c.person.extras.get("animationId"):
             ent["animationId"] = c.person.extras["animationId"]
+        if c.person.extras.get("inventory"):
+            ent["inventory"] = list(c.person.extras["inventory"])
+        if c.person.extras.get("equipment"):
+            ent["equipment"] = dict(c.person.extras["equipment"])
         if "innkeeper" in (c.person.role or "").lower() or "merchant" in (c.person.role or "").lower():
             ent["merchant"] = {}
         return ent

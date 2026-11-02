@@ -20,8 +20,9 @@ KW = {
                     "building_name": "The Old Mill"},
     "p4-zone": {"setting_line": "SETTING", "zone_line": "ZONE",
                 "building_lines": "BUILDINGS", "catalogue_lines": "CATALOGUE"},
-    "p5-people": {"setting_line": "SETTING", "zone_lines": "ZONES",
-                  "building_lines": "BUILDINGS"},
+    "p5-people": {"setting_line": "SETTING", "zone_line": "ZONE",
+                  "zone_names_line": "ZONE NAMES", "building_lines": "BUILDINGS",
+                  "roster_block": "", "quota_line": "the people it needs."},
 }
 
 EXT_DIR = os.path.join(os.path.dirname(os.path.abspath(phases.__file__)), "prompts", "ext")

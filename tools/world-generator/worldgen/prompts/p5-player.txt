@@ -1,0 +1,28 @@
+The player, in a call of their own. Code builds their schedule from home and
+work like anyone's.
+
+WORLD: ${setting_line}
+ROLE: ${role_line}
+BUILDINGS (with the beds their furniture holds):
+${building_lines}
+${roster_block}
+ITEMS THIS SETTING OFFERS (for what they carry):
+${item_lines}
+
+Reply with ONE JSON object:
+{"player": {"name": "full name", "gender": "male|female", "role": "a short phrase",
+            "home": "building name from the list", "work": "building or zone name from the lists",
+            "description": "one sentence: who they are and what they want",
+            "physicalDescription": "build, clothes, one telling detail",
+            "inventory": [["Item name", 1], ["Item name", 2]],
+            "equipment": {"torso": "Item name", "weapon": "Item name"}}}
+
+- The ROLE line is who this world's frame says the player is; keep it.
+- They carry 2-5 items from the list between inventory ([item, count] pairs)
+  and equipment (one item a slot, named what the setting calls them: torso,
+  weapon, head, legs...). Omit both fields when the list is empty.
+- "home" must be a BUILDING from the list with a bed free; "work" a building
+  or a zone from the lists. The name fits the setting and repeats nobody on
+  the roster.
+
+${rules}
