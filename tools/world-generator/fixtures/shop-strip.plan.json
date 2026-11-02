@@ -1,0 +1,92 @@
+{
+ "name": "Farrow Row",
+ "worldBackground": "Five shops sharing one frontage on a parking strip, the road behind it.",
+ "setting": {"era": "modern", "technology": "electricity", "density": "dense", "climate": "temperate"},
+ "mapSize": "small",
+ "currency": {"name": "Folded note", "description": "The city's paper small change.", "format": "5 notes"},
+ "attributes": {"strength": 5, "dexterity": 4, "intellect": 4, "perception": 5, "charisma": 5},
+ "zones": [
+  {
+   "name": "Farrow Street",
+   "kind": "shopping street",
+   "sizeClass": "medium",
+   "description": "the strip and its yards",
+   "ground": "grass",
+   "buildings": [
+    {"name": "Farrow Bakery", "kind": "shop", "sizeClass": "small", "purpose": "the corner bakery"},
+    {"name": "The Till", "kind": "shop", "sizeClass": "small", "purpose": "a general store"},
+    {"name": "Sharp & Sons", "kind": "shop", "sizeClass": "small", "purpose": "a repair shop"},
+    {"name": "Farrow Florist", "kind": "shop", "sizeClass": "small", "purpose": "the flower shop"},
+    {"name": "Row Laundry", "kind": "shop", "sizeClass": "small", "purpose": "the steam laundry"}
+   ],
+   "dressing": {"paths": "paved", "props": [], "filler": []}
+  },
+  {
+   "name": "Depot Lot",
+   "kind": "scrubland",
+   "sizeClass": "small",
+   "description": "the depot's gravel skirt",
+   "ground": "gravel",
+   "buildings": [],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Farrow Row",
+   "zone": "Farrow Street",
+   "shape": "row",
+   "frontage": "north",
+   "front": "parking",
+   "parts": [
+    {"building": "Farrow Bakery", "at": "row:0"},
+    {"building": "The Till", "at": "row:1", "sameAs": "Farrow Bakery"},
+    {"building": "Sharp & Sons", "at": "row:2", "sameAs": "Farrow Bakery"},
+    {"building": "Farrow Florist", "at": "row:3", "sameAs": "Farrow Bakery"},
+    {"building": "Row Laundry", "at": "row:4", "sameAs": "Farrow Bakery"}
+   ]
+  }
+ ],
+ "roads": [
+  {"from": "Farrow Street", "to": "Depot Lot", "kind": "paved"}
+ ],
+ "templates": [
+  {"name": "Shop counter", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A worn shop counter with a till.",
+   "physicalDescription": "scrolled counter front with brass till",
+   "rule": "facing the door, one stride in"},
+  {"name": "Shelf stack", "size": [1, 2], "walkability": 0, "tags": ["container"],
+   "description": "Crates stacked into shelves.",
+   "physicalDescription": "plank shelves on brick ends, goods front-faced",
+   "rule": "along the walls, never blocking the door"},
+  {"name": "Parked van", "size": [2, 2], "walkability": 0, "tags": ["vehicle"],
+   "description": "A delivery van backed into its slot.",
+   "physicalDescription": "dented panel van with a roller door",
+   "rule": "inside a parking slot, clear of the walk"}
+ ],
+ "buildings": [
+  {
+   "name": "Farrow Bakery",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [{"name": "Shop Floor", "share": "medium", "purpose": "the counter and its stacks"}],
+   "connections": [],
+   "entrance": {"room": "Shop Floor", "side": "north"},
+   "furniture": [
+    {"template": "Shop counter", "room": "Shop Floor", "count": 1, "hint": "center"},
+    {"template": "Shelf stack", "room": "Shop Floor", "count": 2, "hint": "wall:south"}
+   ]
+  }
+ ],
+ "npcs": [
+  {"name": "Ruth Farrow", "gender": "female", "role": "baker", "home": "Farrow Bakery", "work": "Farrow Bakery",
+   "description": "The row's baker: up at four, first to know everyone's business.",
+   "physicalDescription": "floured baker with forearms like the bread"},
+  {"name": "Colm Sharp", "gender": "male", "role": "repairer", "home": "Farrow Bakery", "work": "Sharp & Sons",
+   "description": "Fixes kettles, bikes and arguments, in that order.",
+   "physicalDescription": "thin repairer with a magnet-lined tool apron"}
+ ],
+ "player": {"name": "Adaeze Nwosu", "gender": "female", "role": "driver", "home": "Farrow Bakery", "work": "Row Laundry",
+  "description": "A delivery driver working the row's morning run.",
+  "physicalDescription": "delivery driver in a hi-vis vest with a clipboard"}
+}

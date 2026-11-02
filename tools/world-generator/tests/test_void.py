@@ -42,9 +42,18 @@ class TestVoidZones(unittest.TestCase):
     def test_void_roads_are_walled_tubes_not_open_ground(self):
         w = self.build()
         self.assertFalse([r for r in w.regions if r.kind == "road"])
-        tube = w.regions_by_name["Relay Dock to The Merian Road"]
-        self.assertEqual(tube.wall, "stone")
-        self.assertGreaterEqual(min(tube.rect.w, tube.rect.h), 3)
+        pieces = [r for r in w.regions
+                  if (r.name or "").startswith("Relay Dock to The Merian Road")]
+        self.assertTrue(pieces)
+        road = next(r for r in w.roads
+                    if r.name == "Relay Dock to The Merian Road")
+        walled = {(x, y) for r in w.regions if r.wall
+                  for (x, y) in r.rect.cells()}
+        for r in pieces:
+            self.assertEqual(r.wall, "stone")
+        for cell in road.cells():
+            self.assertIn(cell, walled,
+                          f"road cell {cell} left as open ground")
 
     def test_the_ship_builds_clean_and_reachable(self):
         for seed in (1, 2):

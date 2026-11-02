@@ -1,0 +1,359 @@
+{
+ "name": "St Ruan's",
+ "worldBackground": "A small hospital on a hill: two wards of six rooms off a central corridor, the nurses' station at its foot.",
+ "setting": {
+  "era": "modern",
+  "technology": "electricity",
+  "density": "sparse",
+  "climate": "temperate"
+ },
+ "mapSize": "small",
+ "currency": {
+  "name": "Folded note",
+  "description": "The city's paper small change.",
+  "format": "5 notes"
+ },
+ "attributes": {
+  "strength": 5,
+  "dexterity": 4,
+  "intellect": 5,
+  "perception": 4,
+  "charisma": 5
+ },
+ "zones": [
+  {
+   "name": "Ruan's Hill",
+   "kind": "hospital grounds",
+   "sizeClass": "medium",
+   "description": "the hospital block and its grounds",
+   "ground": "grass",
+   "buildings": [
+    {
+     "name": "Nurses' Station",
+     "kind": "station",
+     "sizeClass": "small",
+     "purpose": "the ward station at the corridor's foot"
+    },
+    {
+     "name": "North Wing",
+     "kind": "ward",
+     "sizeClass": "small",
+     "purpose": "six patient rooms",
+     "storeys": 1,
+     "units": {
+      "name": "North Room",
+      "count": 6,
+      "perStorey": 6,
+      "residents": 1,
+      "numbering": "plain"
+     }
+    },
+    {
+     "name": "South Wing",
+     "kind": "ward",
+     "sizeClass": "small",
+     "purpose": "six patient rooms",
+     "storeys": 1,
+     "units": {
+      "name": "South Room",
+      "count": 6,
+      "perStorey": 6,
+      "residents": 1,
+      "numbering": "plain"
+     }
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [],
+    "filler": []
+   }
+  },
+  {
+   "name": "Pilgrim Green",
+   "kind": "village",
+   "sizeClass": "small",
+   "description": "the village below the hill",
+   "ground": "grass",
+   "buildings": [
+    {
+     "name": "The Walker's Rest",
+     "kind": "inn",
+     "sizeClass": "small",
+     "purpose": "the village inn"
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [],
+    "filler": []
+   }
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Ruan's Spine",
+   "zone": "Ruan's Hill",
+   "shape": "spine",
+   "axis": "ns",
+   "spineWidth": 3,
+   "hub": "start",
+   "parts": [
+    {
+     "building": "Nurses' Station",
+     "at": "spine:hub"
+    },
+    {
+     "building": "North Wing",
+     "at": "spine:left:0"
+    },
+    {
+     "building": "South Wing",
+     "at": "spine:right:0",
+     "sameAs": "North Wing"
+    }
+   ]
+  }
+ ],
+ "roads": [
+  {
+   "from": "Ruan's Hill",
+   "to": "Pilgrim Green",
+   "kind": "cobble"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Ward bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "A ward bed with a paper chart.",
+   "physicalDescription": "metal frame ward bed with chart clip",
+   "rule": "head to the wall, never blocking the door"
+  },
+  {
+   "name": "Bedside locker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A steel bedside locker.",
+   "physicalDescription": "dented steel locker with a water jug",
+   "rule": "beside the bed, clear of the walk"
+  },
+  {
+   "name": "Station desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "table"
+   ],
+   "description": "The station's desk and its bell.",
+   "physicalDescription": "scrolled counter front with brass till",
+   "rule": "facing the door, one stride in"
+  },
+  {
+   "name": "Inn bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "table",
+    "social"
+   ],
+   "description": "A settle bench by the fire.",
+   "physicalDescription": "dark oak settle with horsehair seat",
+   "rule": "along the wall of the common room"
+  },
+  {
+   "name": "Inn bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "An inn bed with a clean fold.",
+   "physicalDescription": "roped inn bed with striped blanket",
+   "rule": "along the wall of a sleeping room, never blocking a door"
+  }
+ ],
+ "buildings": [
+  {
+   "name": "Nurses' Station",
+   "wall": "stone",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Station",
+     "share": "medium",
+     "purpose": "the ward station"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Station",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Station desk",
+     "room": "Station",
+     "count": 1,
+     "hint": "center"
+    }
+   ]
+  },
+  {
+   "name": "North Wing",
+   "wall": "stone",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Sluice",
+     "share": "small",
+     "purpose": "the wing's sluice and stores"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Sluice",
+    "side": "east"
+   },
+   "unit": {
+    "rooms": [
+     {
+      "name": "Bedroom",
+      "share": "small",
+      "purpose": "one patient room"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Bedroom",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Ward bed",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:north"
+     },
+     {
+      "template": "Bedside locker",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "corner"
+     }
+    ]
+   },
+   "furniture": [
+    {
+     "template": "Bedside locker",
+     "room": "Sluice",
+     "count": 1,
+     "hint": "corner"
+    }
+   ]
+  },
+  {
+   "name": "The Walker's Rest",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "medium",
+     "purpose": "the inn's common room"
+    },
+    {
+     "name": "Guest Room",
+     "share": "small",
+     "purpose": "a guest room for pilgrims"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Guest Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Inn bench",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Inn bed",
+     "room": "Guest Room",
+     "count": 1,
+     "hint": "wall:north"
+    }
+   ]
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Sr. Verity Lamb",
+   "gender": "female",
+   "role": "ward sister",
+   "home": "Nurses' Station",
+   "work": "Nurses' Station",
+   "description": "The ward sister: runs the corridor like a clock, knows every chart by its crease.",
+   "physicalDescription": "grey-caped sister with a fob watch and chalk-dry hands"
+  },
+  {
+   "name": "Osk Tam",
+   "gender": "male",
+   "role": "orderly",
+   "home": "The Walker's Rest",
+   "work": "Nurses' Station",
+   "description": "The hill's orderly: strong back, soft step, endless tea.",
+   "physicalDescription": "broad orderly in a grey apron with rolled sleeves"
+  },
+  {
+   "name": "Mistress Bost",
+   "gender": "female",
+   "role": "innkeeper",
+   "home": "The Walker's Rest",
+   "work": "The Walker's Rest",
+   "description": "Keeps the inn below the hill and the hill's rumours beside it.",
+   "physicalDescription": "round innkeeper with a wiped-clean apron and a sharp eye"
+  }
+ ],
+ "player": {
+  "name": "Bren Callas",
+  "gender": "male",
+  "role": "night nurse",
+  "home": "The Walker's Rest",
+  "work": "Nurses' Station",
+  "description": "A night nurse walking up the hill for the late shift.",
+  "physicalDescription": "young nurse in a rain-dark coat with a bicycle clip"
+ }
+}

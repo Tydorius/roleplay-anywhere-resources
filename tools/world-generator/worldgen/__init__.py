@@ -347,15 +347,24 @@ def _void_arms(world, plan_data, voids, zone_cells, road_cells):
         # BFS from the road (and tube) cells to the gate's approach, keeping
         # one cell of clearance each side (the arm is a walled corridor: a
         # route pinched to one cell wide has no interior to walk). Zone and
-        # road ground costs nothing; the road's own tube cells are starts
+        # road ground costs nothing, and neither does a compound's own open
+        # ground — only its walled parts block — so the arm may cross the
+        # block's margin inside its zone; the road's tube cells are starts
         # and never block the clearance test.
         covered = set()
         for r in world.regions:
-            if r.kind not in ("zone", "road"):
-                covered |= r.rect.cells()
+            if r.kind in ("zone", "road", "compound"):
+                continue
+            covered |= r.rect.cells()
         W, H = world.grid
 
         def clear(c):
+            """One cell of clearance each side: the arm is a walled corridor,
+            and a route pinched to one cell wide has no interior to walk.
+            Zone and road ground costs nothing, and neither does a
+            compound's own open ground — only its walled parts block — so
+            the arm may cross a block's margin; the tube's cells are starts
+            and never block the clearance test."""
             x, y = c
             return all(0 <= x + ax < W and 0 <= y + ay < H
                        and ((x + ax, y + ay) not in covered
@@ -396,25 +405,26 @@ def _void_arms(world, plan_data, voids, zone_cells, road_cells):
                 arm -= r.rect.cells()
         if not arm:
             continue
-        rects = _rects_of(arm)
-        for i, r in enumerate(rects):
-            reg = RegionOut(f"{zname} Connector" + (f" {i + 1}" if i else ""),
-                            r, "building", parent=zname, wall="stone",
+        regs = []
+        for i, cells in enumerate(_rects_of(arm)):
+            src = RegionOut(f"{zname} Connector" + (f" {i + 1}" if i else ""),
+                            cells, "building", parent=zname, wall="stone",
                             ground="stone", ground_texture="rock",
                             ambience={"day": "quiet_indoor"},
                             description=f"The sealed way into {zname}.")
-            doors = set()
-            # where it meets the gate's wall, the facing pair is its door
-            for cell in shared_wall_cells(r, bl.rect):
-                doors.add(cell)
-            reg.doors = doors
-            world.regions.append(reg)
-        # every arm cell on the zone line with a road cell just beyond is a
-        # door onto the road (the road's own corridor gets its side from
-        # _void_roads, which runs after this)
-        for reg in world.regions:
-            if not reg.name.startswith(f"{zname} Connector"):
-                continue
+            regs.extend(_split_connector(world, src))
+        _seam_doors(regs)
+        gate_reg = world.regions_by_name.get(bl.design.name) if hasattr(world, "regions_by_name") else None
+        gate_reg = gate_reg or next(
+            (r for r in world.regions if r.name == bl.design.name), None)
+        if gate_reg is not None:
+            # the whole seam into the gate opens: the pair the builder's own
+            # rule would pick lands mid-wall, but the gate's own entrance
+            # door sits elsewhere on the same wall
+            _seam_doors(regs + [gate_reg])
+        # every piece cell on the road line with a road cell just beyond is
+        # a door onto the tube
+        for reg in regs:
             r = reg.rect
             doors = set(reg.doors)
             for x in range(r.x, r.x1 + 1):
@@ -428,39 +438,95 @@ def _void_arms(world, plan_data, voids, zone_cells, road_cells):
                 if (r.x1 + 1, y) in road_cells:
                     doors.add((r.x1, y))
             reg.doors = doors
-    # a road tube an arm butts gets its side of the facing pair (and the
-    # arm its own): explicit doors across the shared wall cells, since the
-    # two regions have different parents and never auto-connect
-    arms = [r for r in world.regions if "Connector" in r.name and r.wall]
-    for arm in arms:
-        for reg in list(world.regions):
-            if reg is arm or not reg.wall or reg.parent is not None:
-                continue
-            pair = shared_wall_cells(arm.rect, reg.rect)
-            if pair:
-                arm.doors = set(arm.doors) | {c for c in pair
-                                              if arm.rect.contains_cell(c)}
-                reg.doors = set(reg.doors) | {c for c in pair
-                                              if reg.rect.contains_cell(c)}
+    # every tube–arm and arm–arm seam: explicit doors across each touching
+    # cell pair, since their parents differ and the builder will not
+    # auto-connect them
+    _connector_seams(world)
+
+
+def _split_connector(world, reg):
+    """The builder wants every region nested in its parent or clear of it,
+    and a connector (road tube or arm) straddles borders by nature. It is
+    split along every zone and compound edge: each piece nests under the
+    region that contains it, or stands alone in the gutter like a road.
+    The first piece keeps the original name. Returns the pieces."""
+    zones = [r for r in world.regions if r.kind == "zone"]
+    comps = [r for r in world.regions if r.kind == "compound"]
+    cells = reg.rect.cells()
+    groups, taken = [], set()
+    for cr in comps:
+        c = cells & cr.rect.cells()
+        if c:
+            groups.append((cr.name, c))
+            taken |= c
+    for z in zones:
+        c = (cells & z.rect.cells()) - taken
+        if c:
+            groups.append((z.name, c))
+            taken |= c
+    if cells - taken:
+        groups.append((None, cells - taken))
+    out = []
+    for (parent, c) in groups:
+        for r in _rects_of(c):
+            out.append((parent, r))
+    pieces = []
+    used = {r.name for r in world.regions}
+    for i, (parent, r) in enumerate(out):
+        nm = reg.name if i == 0 and reg.name not in used else None
+        if nm is None:
+            k = 2
+            nm = f"{reg.name} {k}"
+            while nm in used:
+                k += 1
+                nm = f"{reg.name} {k}"
+        used.add(nm)
+        nreg = RegionOut(nm, r, "building", parent=parent, wall=reg.wall,
+                         ground=reg.ground, ground_texture=reg.ground_texture,
+                         ambience=reg.ambience, description=reg.description)
+        nreg.doors = {c for c in reg.doors if r.contains_cell(c)} if i == 0 \
+            else set()
+        nreg.connector = True
+        world.regions.append(nreg)
+        pieces.append(nreg)
+    return pieces
+
+
+def _seam_doors(regs):
+    """Doors across every place two of these walled regions touch: each
+    adjacent cell pair becomes a door on both, so however the corridor was
+    partitioned (along zone or compound borders) the walk runs end to end."""
+    for i, a in enumerate(regs):
+        for b in regs[i + 1:]:
+            for (x, y) in a.rect.cells():
+                for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if b.rect.contains_cell(n):
+                        a.doors.add((x, y))
+                        b.doors.add(n)
+
+
+def _connector_seams(world):
+    """_seam_doors over every connector pair on the map (tubes and arms)."""
+    conns = [r for r in world.regions if getattr(r, "connector", False)]
+    _seam_doors(conns)
 
 
 def _void_roads(world, plan_data, voids):
     """The roads to and from a void zone become walled corridor connectors:
-    one corridor region per road rect, a mouth too thin for an interior
-    widened to 3 (the mouths' reserve keeps the cell it eats clear), doors
-    on the ends no sibling rect continues from. The arms are laid after
-    this, begin inside the tube and butt its walls; their facing pairs are
-    mirrored onto both at the end of _void_arms."""
+    one corridor per road rect, a mouth too thin for an interior widened to
+    3 (the mouths' reserve keeps the cell it eats clear), doors on the ends
+    no sibling rect continues from. Each corridor is split along the zone
+    borders it straddles (_split_connector); the arms come after this and
+    begin inside the tube."""
     for road in world.roads:
         if road.a not in voids and road.b not in voids:
             continue
         g, tex = road.ground
-        segs = [_widen_seg(world, s) for s in road.rects]
         old = [r for r in world.regions
-               if r.kind == "road"
-               and any(r.rect == s for s in list(road.rects) + segs)]
+               if r.kind == "road" and any(r.rect == s for s in road.rects)]
         for r in old:
             world.regions.remove(r)
+        segs = [_widen_seg(world, s) for s in road.rects]
         for j, seg in enumerate(segs):
             name = road.name if len(segs) == 1 else f"{road.name} Section {j + 1}"
             reg = RegionOut(name, seg, "building", parent=None, wall="stone",
@@ -468,7 +534,12 @@ def _void_roads(world, plan_data, voids):
                             ambience={"day": "quiet_indoor"},
                             description=f"The sealed way along {road.name}.",
                             doors=set(_free_ends(seg, segs)))
-            world.regions.append(reg)
+            reg.connector = True
+            pieces = _split_connector(world, reg)
+            _seam_doors(pieces)
+            for p in pieces:
+                p.doors |= {c for c in _free_ends(p.rect, [q.rect for q in pieces])
+                            if p.rect.contains_cell(c)}
 
 
 def _widen_seg(world, seg):

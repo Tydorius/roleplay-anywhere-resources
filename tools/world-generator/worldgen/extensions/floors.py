@@ -359,6 +359,15 @@ def _build_storeys(world, b, uppers, rects, stairs, rng, extra_doors=None):
             base = f"{region_name} {spec.opening.kind.capitalize()}"
             f.opening_name = base if base not in room_names else f"{base} Well"
         f.builder_door = layout.entrance_door
+        if f.builder_door is not None and f.builder_door[0] == rect.x1 \
+                and rect.x1 == world.grid[0] - 1:
+            # the band hugs the map's east edge: an east door opens off the
+            # grid, so the build-time door flips to the west border (onto
+            # the boundary strip, passable at build) at its own row — the
+            # corridor the ground door served spans the storey, so the west
+            # cell behind it is corridor floor (the same flip a designed
+            # storey gets from _upper_design)
+            f.builder_door = (rect.x, f.builder_door[1])
         # sealed: an upper storey has no opening on its outer border — its
         # only ways in and out are its stairs (the builder_door is a
         # build-time fiction the spec writer adds and injection strips)
