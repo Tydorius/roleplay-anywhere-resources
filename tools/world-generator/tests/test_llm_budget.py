@@ -43,5 +43,30 @@ class TestBudget(unittest.TestCase):
         self.assertEqual(c.budgets, [llm.MAX_TOKENS_CEILING] * 3)
 
 
+class TestTransport(unittest.TestCase):
+    """The rerun of the zombie-town world died with a raw TimeoutError from a
+    read past REQUEST_TIMEOUT, uncaught, ending the whole run."""
+
+    def test_a_read_timeout_is_an_llm_error(self):
+        import unittest.mock as mock
+        c = BudgetClient([])
+        with mock.patch("urllib.request.urlopen", side_effect=TimeoutError("timed out")):
+            with self.assertRaises(llm.LLMError):
+                llm.Client._request(c, [{"role": "user", "content": "x"}])
+
+    def test_call_retries_after_a_timeout(self):
+        c = BudgetClient([('{"ok": 1}', 5)])
+        real = c._request
+        state = {"n": 0}
+
+        def flaky(messages, max_tokens=None):
+            state["n"] += 1
+            if state["n"] == 1:
+                raise llm.LLMError("the connection failed: TimeoutError()")
+            return real(messages, max_tokens)
+        c._request = flaky
+        self.assertEqual(c.call("p1", "sys", "user"), {"ok": 1})
+
+
 if __name__ == "__main__":
     unittest.main()

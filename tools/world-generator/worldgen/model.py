@@ -628,8 +628,8 @@ def _parse_slot(at, ctx):
         return ("row", {"index": -1})
     if not isinstance(at, str) or ":" not in at:
         raise ValueError(f"{ctx}: bad slot {at!r} (use corner:<nw|ne|sw|se>, "
-                         f"edge:<side>:<start|center|end>, inside:<center|side>, "
-                         f"attached:<part>:<side>, row:<index>, "
+                         f"edge:<north|south|east|west>:<start|center|end>, inside:<center|north|south|east|west>, "
+                         f"attached:<part>:<north|south|east|west>, row:<index>, "
                          f"spine:<left|right>:<index>, spine:end:<start|end> "
                          f"or spine:hub)")
     bits = at.split(":")

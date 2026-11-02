@@ -45,9 +45,9 @@ Reply with ONE JSON object with exactly these fields:
 }
 
 Slots by shape (omit "at" for a row part to take the plan's order):
-- enclosure: corner:<nw|ne|sw|se>, edge:<side>:<start|center|end> (at most two
-  of them "gate": true, walked through on both faces), inside:<center|side>,
-  attached:<part>:<side>. The same shape reads many ways: a castle (four
+- enclosure: corner:<nw|ne|sw|se>, edge:<north|south|east|west>:<start|center|end> (at most two
+  of them "gate": true, walked through on both faces), inside:<center|north|south|east|west>,
+  attached:<part>:<north|south|east|west>. The same shape reads many ways: a castle (four
   towers, a gatehouse, a keep inside) or a walled monastery (a chapel and
   cloister inside, a gatehouse and two corner lodges round them).
 - row: row:<index> lines parts up sharing the frontage, their entrances on it;
@@ -58,7 +58,7 @@ Slots by shape (omit "at" for a row part to take the plan's order):
   capping it, spine:hub for the one hub part whose outward entrance gates the
   block. A cluster is the spineWidth-0 case: no corridor, parts packed round
   the hub.
-- any shape: attached:<part>:<side> branches a wing off another part.
+- any shape: attached:<part>:<north|south|east|west> branches a wing off another part.
 
 Four small examples (their buildings are ordinary zone buildings):
 

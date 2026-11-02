@@ -194,6 +194,10 @@ class Client:
             raise LLMError(f"cannot reach the provider: {e.reason}")
         except (ValueError, KeyError) as e:
             raise LLMError(f"malformed provider response: {e}")
+        except OSError as e:
+            # a read that times out mid-reply (TimeoutError / socket.timeout)
+            # or a dropped connection: retried like any failed request
+            raise LLMError(f"the connection failed: {e!r}")
         try:
             content = data["choices"][0]["message"]["content"] or ""
         except (KeyError, IndexError, TypeError):

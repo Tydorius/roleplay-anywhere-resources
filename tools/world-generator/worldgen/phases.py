@@ -389,13 +389,13 @@ def compound_errors(compounds, zone_names, building_zone):
                   and bits[2].isdigit())
             if enclosure and not ok:
                 errors.append(f"{pctx}: bad slot {at!r} (corner:<nw|ne|sw|se>, "
-                              f"edge:<side>:<start|center|end>, inside:<center|side> "
-                              f"or attached:<part>:<side>)")
+                              f"edge:<north|south|east|west>:<start|center|end>, inside:<center|north|south|east|west> "
+                              f"or attached:<part>:<north|south|east|west>)")
                 continue
             if not enclosure and not (ok and bits[:1] == ["attached"]) and not line_ok:
                 errors.append(f"{pctx}: bad slot {at!r} (row:<index>, "
                               f"spine:<left|right>:<index>, spine:end:<start|end>, "
-                              f"spine:hub or attached:<part>:<side>)")
+                              f"spine:hub or attached:<part>:<north|south|east|west>)")
                 continue
             if at and at in slots:
                 errors.append(f"{pctx}: slot {at!r} used twice in {name!r}")
