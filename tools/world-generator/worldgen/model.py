@@ -127,12 +127,40 @@ VALID_SHARES = ("small", "medium", "large")
 VALID_SIZE_CLASSES = ("hut", "small", "medium", "large", "hall")
 VALID_ZONE_SIZES = ("small", "medium", "large", "huge")
 
+# the guide's item vocabulary (section 6.1)
+ITEM_TYPES = ("wieldable", "head", "face", "necklace", "innerTorso", "torso",
+              "gloves", "pants", "boots", "ring", "consumable", "misc", "material")
+ITEM_QUALITIES = ("common", "uncommon", "rare", "epic", "legendary")
+LOOT_SETTINGS = ("none", "sparse", "normal", "rich")
+
+
+@dataclass
+class ItemTemplate:
+    """One findable thing (guide section 6.1): type, quality and value come
+    from the game's lists; physicalDescription ends with 'white background'."""
+    name: str
+    type: str = "misc"
+    quality: str = "common"
+    value: float = 1
+    description: str = ""
+    physicalDescription: str = ""
+
+
+@dataclass
+class LootPool:
+    """A named list of item names a container draws from, with optional
+    per-item weights on top of the quality weighting."""
+    name: str
+    items: list = field(default_factory=list)
+    weights: dict = field(default_factory=dict)
+
 
 @dataclass
 class RoomSpec:
     name: str
     share: str = "small"
     purpose: str = ""
+    loot_pool: str = ""      # every container in this room draws here
 
 
 @dataclass
@@ -141,6 +169,7 @@ class FurniturePlan:
     room: str
     count: int = 1
     hint: str = ""
+    loot_pool: str = ""      # this line's copies draw here (most specific)
 
 
 @dataclass
@@ -176,6 +205,7 @@ class BuildingDesign:
     furniture: list = field(default_factory=list)      # [FurniturePlan]
     yard: object = None                                # YardSpec or None
     yard_props: list = field(default_factory=list)     # [PropPlan]
+    loot_pool: str = ""                                # the whole building's pool
 
 
 @dataclass
@@ -423,6 +453,8 @@ class Plan:
     zones: list = field(default_factory=list)      # [Zone]
     roads: list = field(default_factory=list)      # [Road]
     templates: list = field(default_factory=list)  # [ObjectTemplate]
+    items: list = field(default_factory=list)      # [ItemTemplate]
+    loot_pools: dict = field(default_factory=dict) # {name: LootPool}
     npcs: list = field(default_factory=list)       # [Person]
     player: Person = None
     compounds: list = field(default_factory=list)  # [Compound]
@@ -446,7 +478,8 @@ def _require(d, key, ctx):
 def _parse_roomspec(d):
     return RoomSpec(name=_require(d, "name", "room"),
                     share=d.get("share", "small"),
-                    purpose=d.get("purpose", ""))
+                    purpose=d.get("purpose", ""),
+                    loot_pool=d.get("lootPool", "") or "")
 
 
 def _parse_storeys(d, top=3):
@@ -493,8 +526,10 @@ def _parse_units(d, g, name):
             entrance_room=ud.get("entrance", {}).get("room", rooms[0].name),
             entrance_side=ud.get("entrance", {}).get("side", "south"),
             furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
-                                     count=int(f.get("count", 1)), hint=f.get("hint", ""))
-                       for f in ud.get("furniture", []) if isinstance(f, dict)])
+                                     count=int(f.get("count", 1)), hint=f.get("hint", ""),
+                                     loot_pool=f.get("lootPool", "") or "")
+                       for f in ud.get("furniture", []) if isinstance(f, dict)],
+            loot_pool=ud.get("lootPool", "") or "")
     else:
         design = BuildingDesign(name=u.get("name", "Apartment"), kind="unit",
                                 rooms=[RoomSpec(name="Room", share="medium")])
@@ -527,8 +562,9 @@ def _parse_upper(specs, storeys, ground_rooms):
             rooms=[_parse_roomspec(r) for r in u.get("rooms", []) if isinstance(r, dict)],
             connections=[list(c) for c in u.get("connections", [])],
             furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
-                                     count=int(f.get("count", 1)), hint=f.get("hint", ""))
-                       for f in u.get("furniture", []) if isinstance(f, dict)],
+                                     count=int(f.get("count", 1)), hint=f.get("hint", ""),
+                                     loot_pool=f.get("lootPool", "") or "")
+                       for f in u.get("furniture", [])],
             opening=opening))
     out.sort(key=lambda u: u.storey)
     return out
@@ -571,11 +607,13 @@ def _parse_building(d, designs):
         entrance_room=g.get("entrance", {}).get("room", rooms[0].name if rooms else "Hall"),
         entrance_side=g.get("entrance", {}).get("side", "south"),
         furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
-                                 count=int(f.get("count", 1)), hint=f.get("hint", ""))
+                                 count=int(f.get("count", 1)), hint=f.get("hint", ""),
+                                 loot_pool=f.get("lootPool", "") or "")
                    for f in g.get("furniture", [])],
         yard=yard,
         yard_props=[PropPlan(template=p.get("template"), count=int(p.get("count", 1)),
                              hint=p.get("hint", "")) for p in (g.get("yard") or {}).get("props", [])],
+        loot_pool=(g.get("lootPool") or d.get("lootPool") or ""),
     )
     if design.size_class not in VALID_SIZE_CLASSES:
         raise ValueError(f"building {name!r}: bad sizeClass {design.size_class!r}")
@@ -772,6 +810,101 @@ def _parse_compounds(data, zone_by_name, building_zone):
     return out
 
 
+def _parse_items(data):
+    """([ItemTemplate], {name}) from the plan's top-level "items": types,
+    qualities and positive values enforced, names unique."""
+    out, names = [], set()
+    for it in data.get("items", []) or []:
+        if not isinstance(it, dict):
+            raise ValueError("items: entries must be objects")
+        name = _require(it, "name", "item")
+        if name in names:
+            raise ValueError(f"duplicate item name {name!r}")
+        type_ = it.get("type", "misc")
+        quality = it.get("quality", "common")
+        value = it.get("value", 1)
+        if type_ not in ITEM_TYPES:
+            raise ValueError(f"item {name!r}: bad type {type_!r} "
+                             f"(use one of the guide's item types)")
+        if quality not in ITEM_QUALITIES:
+            raise ValueError(f"item {name!r}: bad quality {quality!r}")
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or value <= 0:
+            raise ValueError(f"item {name!r}: value must be a positive number, "
+                             f"not {value!r}")
+        names.add(name)
+        out.append(ItemTemplate(name=name, type=type_, quality=quality,
+                                value=float(value),
+                                description=it.get("description", ""),
+                                physicalDescription=it.get("physicalDescription", "")))
+    return out, names
+
+
+def _parse_loot_pools(data, item_names):
+    """{name: LootPool} from "lootPools" (an object keyed by pool name or a
+    list of {name, items, weights}); every pooled name must be a real item."""
+    raw = data.get("lootPools") or {}
+    entries = []
+    if isinstance(raw, dict):
+        for name, v in raw.items():
+            body = v if isinstance(v, dict) else {"items": v}
+            entries.append({"name": name, **body})
+    elif isinstance(raw, list):
+        entries = [e for e in raw if isinstance(e, dict)]
+    out = {}
+    for p in entries:
+        name = p.get("name")
+        if not isinstance(name, str) or not name.strip():
+            raise ValueError("lootPools: every pool needs a name")
+        if name in out:
+            raise ValueError(f"duplicate loot pool {name!r}")
+        names = p.get("items", [])
+        if not isinstance(names, list) or not names:
+            raise ValueError(f"loot pool {name!r}: items must be a non-empty list "
+                             f"of item names")
+        bad = sorted({n for n in names if n not in item_names})
+        if bad:
+            raise ValueError(f"loot pool {name!r} names unknown item(s) {bad}")
+        weights = p.get("weights") or {}
+        if not isinstance(weights, dict):
+            raise ValueError(f"loot pool {name!r}: weights must be an object "
+                             f"item -> relative chance")
+        for k, v in weights.items():
+            if k not in set(names) or isinstance(v, bool) \
+                    or not isinstance(v, (int, float)) or v <= 0:
+                raise ValueError(f"loot pool {name!r}: bad weight {k!r}: {v!r}")
+        out[name] = LootPool(name=name, items=list(names), weights=dict(weights))
+    return out
+
+
+def _check_pool_refs(zones, templates, pools):
+    """Every lootPool reference in the merged plan names a real pool: on a
+    building, a room, a furniture line (unit designs and upper storeys
+    included) or an object template's default."""
+    def check(ref, ctx):
+        if ref and ref not in pools:
+            raise ValueError(f"{ctx}: unknown loot pool {ref!r}")
+
+    def check_design(d, where):
+        check(d.loot_pool, f"building {where}")
+        for r in d.rooms:
+            check(r.loot_pool, f"room {r.name} in {where}")
+        for f in d.furniture:
+            check(f.loot_pool, f"{f.template} in {where}")
+
+    for z in zones:
+        for b in z.buildings:
+            check_design(b, b.name)
+            for u in b.upper:
+                for r in u.rooms:
+                    check(r.loot_pool, f"room {r.name} in {b.name} floor {u.storey}")
+                for f in u.furniture:
+                    check(f.loot_pool, f"{f.template} in {b.name} floor {u.storey}")
+            if b.units is not None:
+                check_design(b.units.design, f"unit of {b.name}")
+    for t in templates:
+        check(t.extras.get("lootPool", ""), f"template {t.name}")
+
+
 def parse_plan(data):
     """Parse the merged plan dict into a Plan."""
     designs = {}
@@ -848,7 +981,7 @@ def parse_plan(data):
     for t in data.get("templates", []):
         extras = {k: v for k, v in t.items()
                   if k in ("forSleep", "craftStation", "light", "lightKind", "lightColor",
-                           "money", "maxHp", "heightM", "passableAtBuild")}
+                           "money", "maxHp", "heightM", "passableAtBuild", "lootPool")}
         size = t.get("size", [1, 1])
         templates.append(ObjectTemplate(
             name=_require(t, "name", "template"), size=(int(size[0]), int(size[1])),
@@ -861,6 +994,14 @@ def parse_plan(data):
     if dupes:
         raise ValueError(f"duplicate template names: {sorted(dupes)}")
 
+    items, item_names = _parse_items(data)
+    loot_pools = _parse_loot_pools(data, item_names)
+    loot_setting = data.get("loot", "normal")
+    if loot_setting not in LOOT_SETTINGS:
+        raise ValueError(f"loot must be one of {list(LOOT_SETTINGS)}, "
+                         f"not {loot_setting!r}")
+    _check_pool_refs(zones, templates, loot_pools)
+
     def person(d):
         return Person(name=_require(d, "name", "person"), gender=d.get("gender", "female"),
                       role=d.get("role", "villager"), home=d.get("home", ""), work=d.get("work", ""),
@@ -871,11 +1012,13 @@ def parse_plan(data):
     player = person(data.get("player", {"name": "Player"}))
     extras = {k: v for k, v in data.items()
               if k in ("currency", "attributes", "skills", "narrativeRules", "weatherKinds",
-                       "narrativeFlavor", "difficulty", "xpMultiplier", "startingCurrency")}
+                       "narrativeFlavor", "difficulty", "xpMultiplier", "startingCurrency",
+                       "loot")}
     return Plan(name=data.get("name", "Generated World"),
                 worldBackground=data.get("worldBackground", ""),
                 setting=data.get("setting", {}), mapSize=data.get("mapSize", "small"),
                 zones=zones, roads=[Road(a=r.get("from"), b=r.get("to"), kind=r.get("kind", "dirt"))
                                     for r in data.get("roads", [])],
-                templates=templates, npcs=npcs, player=player, compounds=compounds,
+                templates=templates, items=items, loot_pools=loot_pools,
+                npcs=npcs, player=player, compounds=compounds,
                 extras=extras)

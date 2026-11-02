@@ -15,8 +15,9 @@ import time
 
 from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
-                    HUB_POSITIONS, ROW_FRONTS, SIDE_WORDS, SPINE_AXES,
-                    VALID_ARRANGEMENTS, is_sleep_name as _sleeps)
+                    HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
+                    SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
+                    is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -128,6 +129,13 @@ def _units_line(b):
 def _catalogue_lines(templates):
     return "\n".join(f"- {t['name']} | {t['size'][0]}x{t['size'][1]} | {t.get('rule', '')}"
                      for t in templates)
+
+
+def _pool_lines(pools):
+    """P3's loot pool listing: one line per pool, its items after it (empty
+    when the catalogue carries no pools at all)."""
+    return "\n".join(f"- {name}: {', '.join(p.get('items', []))}"
+                     for name, p in sorted(pools.items()))
 
 
 # ------------------------------------------------- compounds in the raw plan
@@ -794,6 +802,19 @@ def sanitize_p1(d, log, floors=False):
 
 # -------------------------------------------------------- P2 prop catalogue
 
+MAX_ITEMS = 80             # the hard ceiling over the 30-60 the prompt asks for
+
+
+def _pool_entries(raw):
+    """A P2 reply's lootPools as [(name, body)] whether it came as an object
+    keyed by pool name or a list of {name, items, weights}."""
+    if isinstance(raw, dict):
+        return [(k, v if isinstance(v, dict) else {"items": v}) for k, v in raw.items()]
+    if isinstance(raw, list):
+        return [(p.get("name"), p) for p in raw if isinstance(p, dict)]
+    return []
+
+
 def check_p2(d):
     errors = []
     if not isinstance(d, dict) or not isinstance(d.get("templates"), list) \
@@ -801,6 +822,44 @@ def check_p2(d):
         return ["P2: the reply must be {\"templates\": [...]}, a non-empty list"]
     if len(d["templates"]) > 40:
         errors.append(f"templates: {len(d['templates'])} is too many; use 12-30")
+    items = d.get("items", [])
+    if not isinstance(items, list):
+        errors.append("items: must be a list of item templates (or omitted)")
+        items = []
+    elif len(items) > MAX_ITEMS:
+        errors.append(f"items: {len(items)} is too many; use 30-60")
+    seen_items = set()
+    for i, it in enumerate(items):
+        ctx = f"items[{i}]"
+        if not isinstance(it, dict):
+            errors.append(f"{ctx}: must be an object")
+            continue
+        if not _is_str(it.get("name")):
+            errors.append(f"{ctx}.name: required")
+        elif it["name"] in seen_items:
+            errors.append(f"{ctx}.name: {it['name']!r} used twice")
+        else:
+            seen_items.add(it["name"])
+        _enum(it, "type", ITEM_TYPES, ctx, errors)
+        _enum(it, "quality", ITEM_QUALITIES, ctx, errors)
+        v = it.get("value", 1)
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or v <= 0:
+            errors.append(f"{ctx}.value: a positive number in the scenario "
+                          f"currency, not {v!r}")
+        for k in ("description", "physicalDescription"):
+            if not _is_str(it.get(k)):
+                errors.append(f"{ctx}.{k}: required, one sentence")
+    for (pname, p) in _pool_entries(d.get("lootPools")):
+        if not _is_str(pname):
+            errors.append("lootPools: every pool needs a name")
+        entries = p.get("items", []) if isinstance(p, dict) else []
+        if not isinstance(entries, list) or not entries:
+            errors.append(f"loot pool {pname!r}: items must be a non-empty "
+                          f"list of item names")
+            continue
+        for n in entries:
+            if not _is_str(n):
+                errors.append(f"loot pool {pname!r}: item name {n!r} is not a string")
     seen = set()
     for i, t in enumerate(d["templates"]):
         ctx = f"templates[{i}]"
@@ -827,10 +886,67 @@ def check_p2(d):
                 errors.append(f"{ctx}.{k}: required, one sentence ({'concrete placement guideline' if k == 'rule' else 'in-world'})")
         if not isinstance(t.get("tags", []), list):
             errors.append(f"{ctx}.tags: must be a list of short tags")
+        if "lootPool" in t and not _is_str(t.get("lootPool")):
+            errors.append(f"{ctx}.lootPool: a loot pool name, not {t.get('lootPool')!r}")
     return errors[:MAX_ERRORS]
 
 
 def sanitize_p2(d, log):
+    # items first, then the pools (they keep only real item names), then the
+    # templates (a template's own lootPool must name a surviving pool)
+    items, seen_items = [], set()
+    for it in d.get("items", []) or []:
+        if not isinstance(it, dict) or not _is_str(it.get("name")) or it["name"] in seen_items:
+            log.append((f"item {it.get('name') if isinstance(it, dict) else it}",
+                        "dropped: bad or duplicate name"))
+            continue
+        if it.get("type") not in ITEM_TYPES:
+            log.append((f"item {it['name']}", f"type {it.get('type')!r} -> 'misc'"))
+            it["type"] = "misc"
+        if it.get("quality") not in ITEM_QUALITIES:
+            log.append((f"item {it['name']}",
+                        f"quality {it.get('quality')!r} -> 'common'"))
+            it["quality"] = "common"
+        v = it.get("value", 1)
+        if isinstance(v, bool) or not isinstance(v, (int, float)) or v <= 0:
+            log.append((f"item {it['name']}", f"value {v!r} -> 1"))
+            it["value"] = 1
+        if not _is_str(it.get("description")):
+            it["description"] = it["name"]
+        if not _is_str(it.get("physicalDescription")):
+            it["physicalDescription"] = it["name"] + ", white background"
+        elif not it["physicalDescription"].rstrip().lower().endswith("white background"):
+            log.append((f"item {it['name']}",
+                        "physicalDescription must end with 'white background'; appended"))
+            it["physicalDescription"] = it["physicalDescription"].rstrip() + ", white background"
+        seen_items.add(it["name"])
+        items.append(it)
+    d["items"] = items
+    pools = {}
+    for (pname, p) in _pool_entries(d.get("lootPools")):
+        if not _is_str(pname) or pname in pools:
+            log.append((f"loot pool {pname!r}", "dropped: bad or duplicate name"))
+            continue
+        entries = p.get("items", []) if isinstance(p, dict) else []
+        if not isinstance(entries, list):
+            entries = []
+        keep = [n for n in entries if _is_str(n) and n in seen_items]
+        gone = [n for n in entries if not (_is_str(n) and n in seen_items)]
+        if gone:
+            log.append((f"loot pool {pname}",
+                        f"item(s) {', '.join(map(repr, gone))} dropped: not items of this reply"))
+        if not keep:
+            log.append((f"loot pool {pname}", "dropped: no real items left"))
+            continue
+        weights = {}
+        raw_weights = p.get("weights") if isinstance(p, dict) else None
+        if isinstance(raw_weights, dict):
+            for k, w in raw_weights.items():
+                if k in keep and not isinstance(w, bool) \
+                        and isinstance(w, (int, float)) and w > 0:
+                    weights[k] = w
+        pools[pname] = {"items": keep, "weights": weights}
+    d["lootPools"] = pools
     out, seen = [], set()
     for t in d.get("templates", []) or []:
         if not isinstance(t, dict) or not _is_str(t.get("name")) or t["name"] in seen:
@@ -860,6 +976,10 @@ def sanitize_p2(d, log):
             if not _is_str(t.get(k)):
                 t[k] = {"description": t["name"], "physicalDescription": t["name"],
                         "rule": "place anywhere free"}[k]
+        if "lootPool" in t and t["lootPool"] not in pools:
+            log.append((f"template {t['name']}",
+                        f"lootPool {t.get('lootPool')!r} dropped: no such pool"))
+            del t["lootPool"]
         seen.add(t["name"])
         out.append(t)
     d["templates"] = out
@@ -899,11 +1019,13 @@ def _sanitize_light(t, log):
 OPENING_KINDS = ("gallery", "atrium", "stairwell")
 
 
-def check_p3(d, building_name, templates, has_yard, storeys=None, units=None):
+def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
+             pools=None):
     """``storeys`` is the building's P1 storey count with the floors
     extension enabled (None when it is off, so upper/stairs are ignored).
     ``units`` is the P1 units dict when the building repeats units, so the
-    reply must carry one nested "unit" design."""
+    reply must carry one nested "unit" design. ``pools`` is the catalogue's
+    loot pool names, so every lootPool reference names a real pool."""
     errors = []
     ctx = f"building {building_name}"
     if not isinstance(d, dict):
@@ -927,6 +1049,7 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None):
         else:
             rnames.add(r["name"])
         _enum(r, "share", SHARES, f"{ctx}.room {r['name']}", errors)
+        _pool_ref(r, "lootPool", pools, f"{ctx}.room {r['name']}", errors)
     for i, c in enumerate(d.get("connections", []) or []):
         if not (isinstance(c, list) and len(c) == 2 and all(x in rnames for x in c)):
             errors.append(f"{ctx}.connections[{i}]: must be two room names that exist, not {c!r}")
@@ -937,14 +1060,15 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None):
         if e.get("room") not in rnames:
             errors.append(f"{ctx}.entrance.room: must be one of the rooms")
         _enum(e, "side", SIDES, f"{ctx}.entrance", errors)
-    errors.extend(_furniture_errors(d.get("furniture", []), ctx, rnames, templates))
+    _pool_ref(d, "lootPool", pools, ctx, errors)
+    errors.extend(_furniture_errors(d.get("furniture", []), ctx, rnames, templates, pools))
     if units:
         u = d.get("unit")
         if not isinstance(u, dict):
             errors.append(f"{ctx}.unit: required (this building repeats "
                           f"{units.get('name', 'Apartment')} x {units.get('count')})")
         else:
-            errors.extend(_unit_design_errors(u, f"{ctx}.unit", templates))
+            errors.extend(_unit_design_errors(u, f"{ctx}.unit", templates, pools))
     elif isinstance(d.get("unit"), dict) and d.get("unit"):
         errors.append(f"{ctx}.unit: this building repeats no units; reply unit: null")
     y = d.get("yard")
@@ -961,11 +1085,19 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None):
         if not isinstance(st, dict) or st.get("room") not in rnames:
             errors.append(f"{ctx}.stairs: required {{\"room\": ...}} naming a ground "
                           f"room, not {st!r}")
-        errors.extend(_upper_errors(d.get("upper", []), rnames, templates, storeys, ctx))
+        errors.extend(_upper_errors(d.get("upper", []), rnames, templates, storeys,
+                                    ctx, pools))
     return errors[:MAX_ERRORS]
 
 
-def _furniture_errors(furn, ctx, rnames, templates):
+def _pool_ref(d, key, pools, ctx, errors):
+    """A lootPool reference must name one of the catalogue's pools."""
+    if pools is not None and d.get(key) and d[key] not in pools:
+        errors.append(f"{ctx}.{key}: must name one of the catalogue's loot "
+                      f"pools, not {d.get(key)!r}")
+
+
+def _furniture_errors(furn, ctx, rnames, templates, pools=None):
     """Contract violations in one furniture list."""
     errors = []
     if not isinstance(furn, list):
@@ -982,10 +1114,11 @@ def _furniture_errors(furn, ctx, rnames, templates):
         if not _check_int(c) or not 1 <= c <= MAX_COUNT:
             errors.append(f"{ctx}.furniture[{i}]: count must be 1..{MAX_COUNT}, not {c!r}")
         errors.extend(hint_errors(f.get("hint", ""), templates=templates))
+        _pool_ref(f, "lootPool", pools, f"{ctx}.furniture[{i}]", errors)
     return errors
 
 
-def _unit_design_errors(u, ctx, templates):
+def _unit_design_errors(u, ctx, templates, pools=None):
     """Contract violations in a P3 reply's nested "unit" design."""
     errors = []
     rooms = u.get("rooms")
@@ -1001,6 +1134,7 @@ def _unit_design_errors(u, ctx, templates):
         else:
             rnames.add(r["name"])
         _enum(r, "share", SHARES, f"{ctx}.room {r['name']}", errors)
+        _pool_ref(r, "lootPool", pools, f"{ctx}.room {r['name']}", errors)
     for i, c in enumerate(u.get("connections", []) or []):
         if not (isinstance(c, list) and len(c) == 2 and all(x in rnames for x in c)):
             errors.append(f"{ctx}.connections[{i}]: must be two of the unit's "
@@ -1012,11 +1146,12 @@ def _unit_design_errors(u, ctx, templates):
         if e.get("room") not in rnames:
             errors.append(f"{ctx}.entrance.room: must be one of the unit's rooms")
         _enum(e, "side", SIDES, f"{ctx}.entrance", errors)
-    errors.extend(_furniture_errors(u.get("furniture", []), ctx, rnames, templates))
+    _pool_ref(u, "lootPool", pools, ctx, errors)
+    errors.extend(_furniture_errors(u.get("furniture", []), ctx, rnames, templates, pools))
     return errors
 
 
-def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
+def _upper_errors(upper, ground_rooms, templates, storeys, ctx, pools=None):
     """Contract violations in a P3 reply's "upper" storeys."""
     errors = []
     if not isinstance(upper, list):
@@ -1048,6 +1183,7 @@ def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
             else:
                 rnames.add(r["name"])
             _enum(r, "share", SHARES, f"{uctx}.room {r['name']}", errors)
+            _pool_ref(r, "lootPool", pools, f"{uctx}.room {r['name']}", errors)
         for k, c in enumerate(u.get("connections", []) or []):
             if not (isinstance(c, list) and len(c) == 2 and all(x in rnames for x in c)):
                 errors.append(f"{uctx}.connections[{k}]: must be two of this storey's "
@@ -1070,6 +1206,7 @@ def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
                 if not _check_int(c) or not 1 <= c <= MAX_COUNT:
                     errors.append(f"{uctx}.furniture[{k}]: count must be 1..{MAX_COUNT}, not {c!r}")
                 errors.extend(hint_errors(f.get("hint", ""), templates=templates))
+                _pool_ref(f, "lootPool", pools, f"{uctx}.furniture[{k}]", errors)
         op = u.get("opening")
         if op is not None:
             if not isinstance(op, dict):
@@ -1082,7 +1219,7 @@ def _upper_errors(upper, ground_rooms, templates, storeys, ctx):
     return errors
 
 
-def _sanitize_unit(u, building_name, templates, log):
+def _sanitize_unit(u, building_name, templates, log, pools=None):
     """One nested unit design cleaned the way a whole building is: rooms kept
     and de-duplicated, furniture lines dropped against unknown templates or
     rooms, the entrance defaulted. Returns the cleaned dict."""
@@ -1101,6 +1238,11 @@ def _sanitize_unit(u, building_name, templates, log):
         rnames.append(r["name"])
         if r.get("share") not in SHARES:
             r["share"] = "small"
+        if pools is not None and r.get("lootPool") and r["lootPool"] not in pools:
+            log.append((f"building {building_name}",
+                        f"unit room {r['name']} lootPool {r['lootPool']!r} dropped: "
+                        "no such pool"))
+            r.pop("lootPool", None)
     u["rooms"] = rooms
     u["connections"] = [c for c in (u.get("connections") or [])
                         if isinstance(c, list) and len(c) == 2
@@ -1124,15 +1266,27 @@ def _sanitize_unit(u, building_name, templates, log):
             log.append((f"building {building_name}",
                         f"unit furniture {f['template']} hint {f.get('hint')!r} -> ''"))
             f["hint"] = ""
+        if pools is not None and f.get("lootPool") and f["lootPool"] not in pools:
+            log.append((f"building {building_name}",
+                        f"unit furniture {f['template']} lootPool {f['lootPool']!r} "
+                        f"dropped: no such pool"))
+            f.pop("lootPool", None)
         furn.append(f)
+    if pools is not None and u.get("lootPool") and u["lootPool"] not in pools:
+        log.append((f"building {building_name}",
+                    f"unit lootPool {u['lootPool']!r} dropped: no such pool"))
+        u.pop("lootPool", None)
     u["furniture"] = furn
     return u
 
 
-def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
+def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
+                pools=None):
     """``storeys`` is the building's P1 storey count with floors enabled
     (None when it is off, so upper/stairs are stripped). ``units`` is true
-    for a unit building: its nested "unit" design is kept and cleaned."""
+    for a unit building: its nested "unit" design is kept and cleaned.
+    ``pools`` is the catalogue's loot pool names; references outside it are
+    dropped with a reason."""
     d["name"] = building_name
     if d.get("wall") not in WALLS:
         log.append((f"building {building_name}", f"wall {d.get('wall')!r} -> 'wood'"))
@@ -1152,6 +1306,10 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
         rnames.append(r["name"])
         if r.get("share") not in SHARES:
             r["share"] = "medium"
+        if pools is not None and r.get("lootPool") and r["lootPool"] not in pools:
+            log.append((f"building {building_name}",
+                        f"room {r['name']} lootPool {r['lootPool']!r} dropped: no such pool"))
+            r.pop("lootPool", None)
     d["rooms"] = rooms
     d["connections"] = [c for c in (d.get("connections") or [])
                         if isinstance(c, list) and len(c) == 2
@@ -1175,6 +1333,11 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
             log.append((f"building {building_name}",
                         f"furniture {f['template']} hint {f.get('hint')!r} -> ''"))
             f["hint"] = ""
+        if pools is not None and f.get("lootPool") and f["lootPool"] not in pools:
+            log.append((f"building {building_name}",
+                        f"furniture {f['template']} lootPool {f['lootPool']!r} "
+                        f"dropped: no such pool"))
+            f.pop("lootPool", None)
         furn.append(f)
     d["furniture"] = furn
     y = d.get("yard")
@@ -1193,10 +1356,15 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
         y["props"] = props
     else:
         d["yard"] = None
-    d["upper"], d["stairs"] = _sanitize_upper(d, building_name, rnames, templates, log, storeys)
+    if pools is not None and d.get("lootPool") and d["lootPool"] not in pools:
+        log.append((f"building {building_name}",
+                    f"lootPool {d['lootPool']!r} dropped: no such pool"))
+        d.pop("lootPool", None)
+    d["upper"], d["stairs"] = _sanitize_upper(d, building_name, rnames, templates, log, storeys,
+                                              pools)
     if units:
         if isinstance(d.get("unit"), dict) and d["unit"]:
-            d["unit"] = _sanitize_unit(d["unit"], building_name, templates, log)
+            d["unit"] = _sanitize_unit(d["unit"], building_name, templates, log, pools)
         else:
             log.append((f"building {building_name}",
                         "unit design missing; using one bare room per copy"))
@@ -1210,7 +1378,8 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False):
     return d
 
 
-def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys):
+def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
+                      pools=None):
     """(upper list, stairs) cleaned against the floors contract. Without the
     extension, or for a single-storey building, both come back empty."""
     if storeys is None or storeys < 2:
@@ -1246,6 +1415,11 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys):
             names.append(r["name"])
             if r.get("share") not in SHARES:
                 r["share"] = "medium"
+            if pools is not None and r.get("lootPool") and r["lootPool"] not in pools:
+                log.append((f"building {building_name}",
+                            f"room {r['name']!r} in {label} lootPool {r['lootPool']!r} "
+                            f"dropped: no such pool"))
+                r.pop("lootPool", None)
             rooms.append(r)
         if not rooms:
             log.append((f"building {building_name}", f"{label} dropped: no usable rooms"))
@@ -1266,6 +1440,11 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys):
                 log.append((f"building {building_name}",
                             f"furniture {f['template']} hint {f.get('hint')!r} -> ''"))
                 f["hint"] = ""
+            if pools is not None and f.get("lootPool") and f["lootPool"] not in pools:
+                log.append((f"building {building_name}",
+                            f"furniture {f['template']} in {label} lootPool "
+                            f"{f['lootPool']!r} dropped: no such pool"))
+                f.pop("lootPool", None)
             furn.append(f)
         op = u.get("opening")
         if isinstance(op, dict) and op.get("over_room") in ground_rooms \
@@ -1479,6 +1658,18 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
     templates = p2["templates"]
     tnames = {t["name"] for t in templates}
     catalogue = _catalogue_lines(templates)
+    pools = p2.get("lootPools") or {}
+    pool_names = set(pools)
+    pool_lines = _pool_lines(pools)
+    # P1 cannot know pool names (P2 writes them later): a building pool the
+    # catalogue does not carry is dropped rather than failing the parse
+    for z in p1["zones"]:
+        for b in z["buildings"]:
+            if b.get("lootPool") and b["lootPool"] not in pool_names:
+                stats["dropped"].append((f"building {b['name']}",
+                                         f"lootPool {b['lootPool']!r} dropped: "
+                                         "no such pool in the catalogue"))
+                b.pop("lootPool", None)
 
     # ---- P3: one call per building. A sameAs part is not called at all:
     # parse_plan copies its design from the part it points at, so the design
@@ -1508,12 +1699,12 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
                      setting_line=setting_line, zone_line=zl,
                      building_line=_building_line(b), catalogue_lines=catalogue,
                      compound_line=_compound_line(p1.get("compounds") or [], z, b),
-                     units_line=_units_line(b),
+                     units_line=_units_line(b), pool_lines=pool_lines,
                      building_name=b["name"],
                      _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
                      s=(b.get("storeys", 1) if floors else None),
                      u=b.get("units"):
-                     check_p3(x, n, tnames, y, storeys=s, units=u))
+                     check_p3(x, n, tnames, y, storeys=s, units=u, pools=pool_names))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
@@ -1521,7 +1712,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
                 continue
             designs.append(sanitize_p3(d, b["name"], tnames, stats["dropped"],
                                        storeys=(b.get("storeys", 1) if floors else None),
-                                       units=bool(b.get("units"))))
+                                       units=bool(b.get("units")), pools=pool_names))
             keep.append(b)
         z["buildings"] = keep
 
@@ -1579,6 +1770,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None):
         "zones": p1["zones"],
         "roads": p1.get("roads", []),
         "templates": templates,
+        "items": p2.get("items", []),
+        "lootPools": p2.get("lootPools", {}),
         "buildings": designs,
         "npcs": p5["npcs"],
         "player": p5["player"],

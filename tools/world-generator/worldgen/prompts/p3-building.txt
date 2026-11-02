@@ -10,26 +10,39 @@ UNITS: ${units_line}
 CATALOGUE (name | size in cells | placement rule):
 ${catalogue_lines}
 
+LOOT POOLS (name: the items each holds) — empty when the catalogue has none:
+${pool_lines}
+
 Reply with ONE JSON object with exactly these fields:
 {
   "name": "${building_name}",
   "wall": "wood|brick|stone|steel",
   "ground": "floor material, one or two words",
-  "rooms": [{"name": "...", "share": "small|medium|large", "purpose": "..."}],
+  "lootPool": "optional: a pool name covering the whole building's containers",
+  "rooms": [{"name": "...", "share": "small|medium|large", "purpose": "...",
+             "lootPool": "optional: a pool name covering every container in this room"}],
   "connections": [["Room A", "Room B"]],
   "entrance": {"room": "...", "side": "north|south|east|west"},
-  "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}],
+  "furniture": [{"template": "catalogue name", "room": "room name", "count": 1,
+                 "hint": "...", "lootPool": "optional: a pool name for this piece"}],
   "unit": null,
   "yard": null or {"props": [{"template": "catalogue name", "count": 1, "hint": "outdoor hint"}]}
 }
 
 - 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
   door; the entrance room must be one of "rooms".
+- The LOOT POOLS list names the pools the catalogue's containers draw from.
+  Point the most specific level at a pool: a furniture line's "lootPool" for
+  one shelf, a room's for every container in it, the building's for all of
+  them — the most specific wins, so the same shelf template can hold clothes
+  in one shop and baseball bats in the next. Leave them out when the list is
+  empty or nothing needs one.
 - The UNITS line says when this building repeats one unit many times (the
   count and the residents per copy are there): reply with the building's
   SHARED rooms in "rooms" (the entrance hall, corridor rooms, a reception or
   common room, whatever it needs) and design ONE copy in "unit" — {"rooms", "connections", "entrance",
-  "furniture"} like a tiny building. Code stamps every copy and gives each
+  "furniture"} like a tiny building (its rooms and furniture lines may carry
+  "lootPool" like any other). Code stamps every copy and gives each
   its own door; give the unit one bed per resident. When a building has many
   rooms of the same kind (apartments, classrooms, hospital rooms, hotel
   rooms, cells, cabins), design ONE of them and give a count in the plan —

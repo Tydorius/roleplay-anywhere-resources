@@ -222,7 +222,7 @@ class TestP3Units(unittest.TestCase):
         t = phases._template("p3-building").substitute(
             rules="", setting_line="", zone_line="", building_line="",
             catalogue_lines="", compound_line="LINE", units_line="UNITS",
-            building_name="B")
+            pool_lines="", building_name="B")
         self.assertIn("COMPOUND: LINE", t)
         self.assertIn("UNITS: UNITS", t)
         self.assertIn("never list or design the copies one by one", t)
@@ -390,7 +390,7 @@ class TestPromptText(unittest.TestCase):
         t = phases._template("p3-building").substitute(
             rules="", setting_line="", zone_line="", building_line="",
             catalogue_lines="", compound_line="LINE", units_line="none",
-            building_name="B")
+            pool_lines="", building_name="B")
         self.assertIn("COMPOUND: LINE", t)
         self.assertIn("UNITS: none", t)
 

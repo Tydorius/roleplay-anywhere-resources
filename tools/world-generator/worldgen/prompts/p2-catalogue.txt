@@ -1,5 +1,6 @@
 The world plan below is fixed. Write its object catalogue: one template for
-every kind of thing the map needs. Code will place instances of your templates;
+every kind of thing the map needs, plus the items its containers hold and the
+loot pools that hand them out. Code will place instances of your templates;
 you are naming kinds, not placing objects.
 
 WORLD: ${setting_line}
@@ -18,12 +19,43 @@ Reply with ONE JSON object:
    "physicalDescription": "what it looks like from above, for the map",
    "tags": ["2-4 short tags: bed, table, storage, work, plant, landmark..."],
    "rule": "one concrete placement guideline for this setting"}
-]}
+ ],
+ "items": [
+  {"name": "unique name",
+   "type": "wieldable|head|face|necklace|innerTorso|torso|gloves|pants|boots|ring|consumable|misc|material",
+   "quality": "common|uncommon|rare|epic|legendary",
+   "value": 5,
+   "description": "one in-world sentence",
+   "physicalDescription": "what it looks like as an icon, ending with the words white background"}
+ ],
+ "lootPools": {
+  "Kitchen cupboard": {"items": ["Bread", "Tin cup", "Knife"], "weights": {"Knife": 0.4}},
+  "Office desk": {"items": ["Ballpoint pen", "Keycard", "Memo"]},
+  "Ship locker": {"items": ["Ration pack", "Wrench", "Med-gel"]}
+ }
+}
 
 - Cover everything the plan implies: furniture for every room purpose in every
   building, props for every feature in each zone's "outdoor" list, and filler
   for the wild ground (trees, bushes, rubble - whatever fits the setting).
 - 12 to 30 templates. One template per kind of thing, shared by all rooms.
+- 30 to 60 items: what this setting's containers hold — food, tools, keys,
+  clothes, consumables, spares, a few valuables. Mostly common, some
+  uncommon, a few rare or better; value in the scenario's coin, always
+  positive. "physicalDescription" is the item's icon prompt and MUST end
+  with the words "white background".
+- "lootPools" are named lists of your item names, written for THIS setting,
+  never generic. Make as many as the setting needs:
+  - by room kind: what most bathrooms hold is not what most garages hold;
+  - by building or store kind: a clothing store, a sporting goods store and
+    a pharmacy each get their own pool.
+  One item may sit in many pools (a water bottle almost everywhere), another
+  in only one. Each pool may carry "weights" (item -> relative chance, most
+  1.0) to make some items rarer in that pool on top of the quality weighting.
+- A container template may name its default pool: "lootPool": "Kitchen
+  cupboard" on the template. P3 later points a specific room or shelf at a
+  pool, so the same shelf template can hold clothes in one shop and baseball
+  bats in the next.
 - Sizes in cells: bed 1x2, table 2x1 or 2x2, chair/stool/lamp 1x1, tree 1x1
   to 3x3. Walkability 0 unless a person could step over or onto it.
 - "forSleep" is true only for things a person sleeps in or on: beds, cots,

@@ -26,6 +26,61 @@ def _ground_pair(key):
     return GROUND_MAP.get(key, ("dirt", "dirt"))
 
 
+def _loot_map(world):
+    """{region full name: (design, room base name)} for every placed room —
+    a building's own rooms, its stamped unit copies (ground and upper) and
+    its designed upper storeys — so a placement's pool resolves through the
+    furniture line, the room, the building and the template default."""
+    out = {}
+
+    def add(design, rooms):
+        for room in rooms:
+            out[room.full_name] = (design, room.base_name)
+
+    for b in world.buildings:
+        bl = b.layout
+        add(bl.design, bl.rooms)
+        if getattr(bl.design, "units", None):
+            for uo in getattr(bl, "unit_outs", []) or []:
+                add(bl.design.units.design, uo.layout.rooms)
+        for f in getattr(b, "floors", []) or []:
+            add(f.layout.design, f.layout.rooms)
+            if getattr(f.layout.design, "units", None):
+                for uo in getattr(f.layout, "unit_outs", []) or []:
+                    add(f.layout.design.units.design, uo.layout.rooms)
+    return out
+
+
+def _placements(world, plan):
+    """{template name: [entry per placement]} where an entry is the position
+    list, or a dict {"pos", "inventory"} when the placement draws a starting
+    inventory from its pool. The draw is seeded by the world seed and the
+    placement's name, so the same seed reproduces it and copied units
+    differ."""
+    from . import loot as loot_mod
+
+    rooms = _loot_map(world)
+    items_by_name = {it.name: it for it in plan.items}
+    setting = plan.extras.get("loot", "normal")
+    out = {}
+    for o in world.objects:
+        region = world.regions_by_name.get(o.region)
+        pos = o.pos
+        if region is not None and region.wall:
+            inset = 1
+            pos = [o.region, pos[0] - region.rect.x - inset, pos[1] - region.rect.y - inset]
+        else:
+            pos = [pos[0], pos[1]]
+        entries = out.setdefault(o.template, [])
+        pool = plan.loot_pools.get(loot_mod.resolve_pool(
+            rooms.get(o.region), o.template, plan.loot_pools, world.templates))
+        inv = loot_mod.draw_inventory(
+            pool, items_by_name,
+            f"{world.seed}|{o.template}|{len(entries) + 1}", setting) if pool else []
+        entries.append({"pos": pos, "inventory": [[n, c] for (n, c) in inv]} if inv else pos)
+    return out
+
+
 def build_spec(world, plan):
     builder_doors = {f.region_name: list(f.builder_door)
                      for f in getattr(world, "floors", []) or []
@@ -59,17 +114,7 @@ def build_spec(world, plan):
         regions.append(out)
 
     # object templates with placements; room positions are written room-relative
-    by_template = {}
-    for o in world.objects:
-        t = world.templates[o.template]
-        pos = o.pos
-        region = world.regions_by_name.get(o.region)
-        if region is not None and region.wall:
-            inset = 1
-            pos = [o.region, pos[0] - region.rect.x - inset, pos[1] - region.rect.y - inset]
-        else:
-            pos = [pos[0], pos[1]]
-        by_template.setdefault(o.template, []).append(pos)
+    by_template = _placements(world, plan)
 
     object_templates = []
     for t in plan.templates:
@@ -96,9 +141,15 @@ def build_spec(world, plan):
             light = light_for(t)
         if isinstance(light, (int, float)) and not isinstance(light, bool) and light > 0:
             spec_t["light"] = light
-        for k in ("money", "lootPool"):
-            if k in t.extras:
-                spec_t[k] = t.extras[k]
+        if "money" in t.extras:
+            spec_t["money"] = t.extras["money"]
+        # the template's DEFAULT pool only (not the union of its placements'
+        # pools): the game draws lootPoolIds again on later searches, and a
+        # union would let one store's shelves spawn another's goods then —
+        # the per-placement variety lives in the drawn starting inventories
+        pool = plan.loot_pools.get(t.extras.get("lootPool", "") or "")
+        if pool is not None:
+            spec_t["lootPool"] = list(pool.items)
         if t.name in by_template:
             spec_t["placements"] = by_template[t.name]
         object_templates.append(spec_t)
@@ -155,6 +206,12 @@ def build_spec(world, plan):
         "skills": extras.get("skills", {}),
         "regions": regions,
         "objectTemplates": object_templates,
+        "itemTemplates": [
+            {"name": it.name, "type": it.type, "quality": it.quality,
+             "value": it.value, "description": it.description,
+             "physicalDescription": it.physicalDescription}
+            for it in plan.items
+        ],
         "npcs": [character(c) for c in world.characters if not c.is_player],
         "player": character(world.player),
     }
