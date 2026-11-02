@@ -8,7 +8,7 @@ import dataclasses
 import random
 
 from . import checks, layout_map, layout_zone, schedule as schedule_mod, spec_writer
-from .model import ObjectTemplate, Rect, parse_plan
+from .model import ObjectTemplate, Rect, green_feature_name, parse_plan
 
 
 class RegionOut:
@@ -430,10 +430,17 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             if zout.feature is not None:
                 fg, ftex = zout.spine_ground if zout.spine_rects else \
                     zone_ground.get(z.ground, ("grass", "grass"))
-                world.regions.append(RegionOut(f"{z.name} Square", zout.feature, "square", parent=z.name,
+                fname, fdesc = f"{z.name} Square", f"The open heart of {z.name}."
+                if zz.arrangement == "around_green":
+                    # the arrangement's centre is a green: named for the
+                    # zone's own green or common when it has one, and grass
+                    # underfoot whatever its paths are made of
+                    fg, ftex = ("grass", "grass")
+                    fname, fdesc = green_feature_name(zz), f"The green heart of {zz.name}."
+                world.regions.append(RegionOut(fname, zout.feature, "square", parent=z.name,
                                                ground=fg, ground_texture=ftex,
                                                ambience={"day": "nature_outdoors", "night": "crickets"},
-                                               description=f"The open heart of {z.name}."))
+                                               description=fdesc))
             for (fname, frect) in zout.fields:
                 world.regions.append(RegionOut(fname, frect, "field", parent=z.name,
                                                ground="dirt", ground_texture="dirt",

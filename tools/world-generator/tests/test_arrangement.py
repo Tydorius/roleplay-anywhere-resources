@@ -130,6 +130,37 @@ class TestAroundGreen(unittest.TestCase):
         self.assertTrue(any(r.kind == "square" and r.parent == "Village Green"
                             for r in world.regions))
 
+    def test_the_green_is_named_and_grassed(self):
+        world = worldgen.run(load({"Village Green": "around_green"}), seed=1)
+        green = next(r for r in world.regions
+                     if r.kind == "square" and r.parent == "Village Green")
+        self.assertEqual(green.name, "Village Green Green")
+        self.assertEqual((green.ground, green.ground_texture), ("grass", "grass"))
+
+    def test_green_name_takes_the_zones_own_feature(self):
+        from worldgen.model import Zone, green_feature_name
+        self.assertEqual(green_feature_name(
+            Zone("Emberwick", outdoor=["the green", "the well"])), "The Green")
+        self.assertEqual(green_feature_name(
+            Zone("Emberwick", outdoor=["the common"])), "The Common")
+        self.assertEqual(green_feature_name(
+            Zone("Emberwick", outdoor=["the well"])), "Emberwick Green")
+        self.assertEqual(green_feature_name(Zone("Emberwick")), "Emberwick Green")
+
+    def test_the_green_leans_toward_its_only_road_mouth(self):
+        # one south mouth in a tall zone: the ring sits a lot's depth off
+        # that edge, so the entry arm is short and the slack lies behind
+        # the green instead of as a long lone path in front of it
+        zone, templates = zone_and_templates(
+            load({"Village Green": "around_green"}), "Village Green")
+        for seed in (0, 4, 7):
+            out = layout_zone.layout_zone(zone, Rect(0, 0, 40, 60), templates,
+                                          random.Random(seed),
+                                          road_reserved=SOUTH_MOUTH)
+            self.assertIsNotNone(out.feature, f"seed {seed}")
+            self.assertLess(out.street.y, (60 - out.street.h) / 2.0,
+                            f"seed {seed}: the green sits centred, not near its mouth")
+
 
 class TestFieldsArrangement(unittest.TestCase):
     def layout(self, seed=4):

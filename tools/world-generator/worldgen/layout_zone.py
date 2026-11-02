@@ -521,19 +521,40 @@ def green_size(zone, fps, urban):
 def _green_ring(zone, rect, mouths, rng, urban, templates):
     """One open green with a ring path round it: the arrangement's whole
     path network (no side streets, no crossroads square), with an entry arm
-    walking in from each road mouth. Returns (ring rect or None, spine
-    rects, green rect or None)."""
+    walking in from each road mouth. Each arm runs straight from the zone
+    edge to the ring, so on an axis whose mouths face one side only the
+    green leans that way — a lot ring's depth off the mouthed edge, the
+    slack behind it — and an axis whose mouths face both ways, or none,
+    keeps it centred. Returns (ring rect or None, spine rects, green rect
+    or None)."""
     if max(rect.w, rect.h) < 16 or min(rect.w, rect.h) < 8:
         return None, [], None
-    gw, gh = green_size(zone, [building_footprint(d, templates)
-                               for d in zone.buildings], urban)
+    fps = [building_footprint(d, templates) for d in zone.buildings]
+    gw, gh = green_size(zone, fps, urban)
     gw = min(gw, max((7 if urban else 9), rect.w // 3))
     gh = min(gh, max((5 if urban else 6), rect.h // 3))
     cx, cy = rect.center()
-    gx = int(cx - gw / 2.0) + rng.randint(-2, 2)
-    gy = int(cy - gh / 2.0) + rng.randint(-2, 2)
-    gx = max(rect.x + 1 + PATH_WIDTH, min(rect.x1 - 1 - PATH_WIDTH - gw + 1, gx))
-    gy = max(rect.y + 1 + PATH_WIDTH, min(rect.y1 - 1 - PATH_WIDTH - gh + 1, gy))
+    near_x = rect.x + 1 + PATH_WIDTH
+    far_x = rect.x1 - 1 - PATH_WIDTH - gw + 1
+    near_y = rect.y + 1 + PATH_WIDTH
+    far_y = rect.y1 - 1 - PATH_WIDTH - gh + 1
+    sides = {side for (side, _c) in mouths}
+    depths = sorted((min(f) for f in fps), reverse=True) if fps else [0]
+
+    def lean(g, near, far, near_side, far_side, reserve):
+        """The green's origin on one axis, pulled toward its mouthed side
+        while the buildings ringing the green keep a lot's depth there."""
+        if (near_side in sides) == (far_side in sides):
+            return max(near, min(far, g))
+        target = near + reserve if near_side in sides else far - reserve
+        if not near <= target <= far:   # too tight to spare the lot depth: hug
+            target = near if near_side in sides else far
+        return target
+
+    gx = lean(int(cx - gw / 2.0) + rng.randint(-2, 2),
+              near_x, far_x, "west", "east", max(depths[1:4] + [0]))
+    gy = lean(int(cy - gh / 2.0) + rng.randint(-2, 2),
+              near_y, far_y, "south", "north", max(depths[1:4] + [0]))
     green = Rect(gx, gy, gw, gh)
     ring = Rect(green.x - PATH_WIDTH, green.y - PATH_WIDTH,
                 green.w + 2 * PATH_WIDTH, green.h + 2 * PATH_WIDTH)

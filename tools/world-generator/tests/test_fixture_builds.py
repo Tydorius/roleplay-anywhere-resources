@@ -90,9 +90,11 @@ class TestAshvaleCompoundFixture(unittest.TestCase):
             label = f"ext={','.join(ext) or 'none'}"
             world = self.worlds[ext]
             with self.subTest(label):
-                square = [r for r in world.regions
-                          if r.name == "Emberwick Village Square"]
-                self.assertEqual(len(square), 1)
+                # the zone's own outdoor feature is the green's name
+                green = [r for r in world.regions if r.name == "The Green"]
+                self.assertEqual(len(green), 1)
+                self.assertEqual((green[0].ground, green[0].ground_texture),
+                                 ("grass", "grass"))
                 fields = [r for r in world.regions
                           if r.kind == "field" and r.parent == "Millfield Farms"]
                 self.assertGreaterEqual(len(fields), 2)

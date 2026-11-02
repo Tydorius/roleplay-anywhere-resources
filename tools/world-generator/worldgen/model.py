@@ -314,6 +314,19 @@ def is_urban_zone(zone):
     return zone_class(zone) == "settlement" and bool(_kind_words(zone.kind) & set(URBAN_WORDS))
 
 
+GREEN_LIKE_WORDS = ("green", "common")
+
+
+def green_feature_name(zone):
+    """The around_green centre's region name: the zone's own outdoor feature
+    when one is named like a green or common, else "<Zone> Green"."""
+    for feature in getattr(zone, "outdoor", None) or []:
+        words = set(re.findall(r"[a-z]+", str(feature).lower()))
+        if words & set(GREEN_LIKE_WORDS):
+            return " ".join(w.capitalize() for w in str(feature).split())
+    return f"{zone.name} Green"
+
+
 TOWN_WORDS = ("town", "borough", "suburb", "burg")
 
 
