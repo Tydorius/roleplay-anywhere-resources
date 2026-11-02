@@ -177,6 +177,35 @@ farm in `fields` — which builds and validates with zero errors and full
 reachability in all four combinations of `floors` and `region-groups`
 (renders in `out/012-*.png`).
 
+## How zones are sized
+
+A zone's ground follows what stands on it, not its size class alone. A zone
+with buildings or compounds is sized by its **content fit** — the buildings
+facing each other across the street, their yards and lot spacing, the green
+and its ring, the crop plots — scaled a little by `sizeClass` (1.0x for
+small up to about 1.15x) and with room to dress. The size class is no floor:
+a `huge` zone holding a hamlet is hamlet-sized, because the model chooses
+`huge` for castles and hamlets alike. Wild and water zones with nothing in
+them keep their nominal size. The band packer never stretches a built-up
+zone beyond about 1.3x its target along its band; the spare length goes to a
+neighbouring wild zone or the map margin, so no built zone trails empty
+ground. `metrics.json` carries a `zone_fill` entry per zone — its area, the
+area its content claims (buildings, compound blocks, yards, fields, the
+green, one lot ring each) and the ratio — and a built-up zone below about
+0.45 is mostly empty.
+
+The two special ground shapes follow the same rule. An `around_green` green
+is sized from the buildings ringing it (a few buildings, a small green and a
+tight ring of lots) and leans toward its road mouths, so the entry arms run
+through the frontage instead of across empty grass; it is named for the
+zone's own green- or common-like outdoor feature (else "<Zone> Green") and
+is grass underfoot. A wild zone with no buildings gets **one track** joining
+its road mouths — or no path at all when it has fewer than two — never
+streets running the zone's length beside empty ground. The Ashvale fixture
+(`out/012c-*.png`) shows the result: the castle compound covers 57% of
+Castle Rise, the village green carries buildings on three sides, and every
+built zone fills at least 0.57.
+
 ## Import the zip
 
 1. Start Anywhere RPG and open the scenario/import screen.
