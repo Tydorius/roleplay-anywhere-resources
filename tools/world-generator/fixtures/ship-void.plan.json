@@ -1,0 +1,139 @@
+{
+ "name": "The Merian",
+ "worldBackground": "A sealed survey ship tube-docked at a relay station, every compartment reached through walled corridors.",
+ "setting": {"era": "far future", "technology": "starfaring", "density": "sparse", "climate": "temperate"},
+ "mapSize": "small",
+ "currency": {"name": "Exchange chit", "description": "The relay's scrip.", "format": "5 chits"},
+ "attributes": {"strength": 5, "dexterity": 4, "intellect": 5, "perception": 4, "charisma": 4},
+ "weatherKinds": ["clear"],
+ "zones": [
+  {
+   "name": "Relay Dock",
+   "kind": "relay station",
+   "sizeClass": "small",
+   "description": "a sealed docking relay",
+   "ground": "stone",
+   "exterior": "void",
+   "buildings": [
+    {"name": "Airlock Bay", "kind": "bay", "sizeClass": "small", "purpose": "the relay's docking bay"}
+   ],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  },
+  {
+   "name": "The Merian",
+   "kind": "spacecraft",
+   "sizeClass": "large",
+   "description": "the survey ship, compartments along a spine",
+   "ground": "stone",
+   "exterior": "void",
+   "buildings": [
+    {"name": "Bridge", "kind": "control", "sizeClass": "small", "purpose": "the ship's bridge"},
+    {"name": "Compartment 1", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 2", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 3", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 4", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 5", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 6", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"}
+   ],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Relay Cluster",
+   "zone": "Relay Dock",
+   "shape": "cluster",
+   "axis": "ns",
+   "hub": "center",
+   "parts": [
+    {"building": "Airlock Bay", "at": "spine:hub"}
+   ]
+  },
+  {
+   "name": "Merian Spine",
+   "zone": "The Merian",
+   "shape": "spine",
+   "axis": "ns",
+   "spineWidth": 3,
+   "hub": "end",
+   "parts": [
+    {"building": "Bridge", "at": "spine:hub"},
+    {"building": "Compartment 1", "at": "spine:left:0"},
+    {"building": "Compartment 2", "at": "spine:right:0", "sameAs": "Compartment 1"},
+    {"building": "Compartment 3", "at": "spine:left:1", "sameAs": "Compartment 1"},
+    {"building": "Compartment 4", "at": "spine:right:1", "sameAs": "Compartment 1"},
+    {"building": "Compartment 5", "at": "spine:left:2", "sameAs": "Compartment 1"},
+    {"building": "Compartment 6", "at": "spine:right:2", "sameAs": "Compartment 1"}
+   ]
+  }
+ ],
+ "roads": [
+  {"from": "Relay Dock", "to": "The Merian", "kind": "paved"}
+ ],
+ "templates": [
+  {"name": "Crew bunk", "size": [1, 2], "walkability": 0, "tags": ["bed"],
+   "forSleep": true, "description": "A padded berth bunk.",
+   "physicalDescription": "narrow padded bunk with strap restraints",
+   "rule": "along the wall of a sleeping room, never blocking a door"},
+  {"name": "Console", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A duty console with a lit readout.",
+   "physicalDescription": "metal console with glowing display strip",
+   "rule": "along a wall, clear of doors"},
+  {"name": "Supply crate", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A strapped supply crate.",
+   "physicalDescription": "dull grey crate with cargo straps",
+   "rule": "tucked into corners, never blocking a door"}
+ ],
+ "buildings": [
+  {
+   "name": "Airlock Bay",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Bay", "share": "medium", "purpose": "the docking bay and its bench"}],
+   "connections": [],
+   "entrance": {"room": "Bay", "side": "south"},
+   "furniture": [
+    {"template": "Supply crate", "room": "Bay", "count": 2, "hint": "corner"},
+    {"template": "Console", "room": "Bay", "count": 1, "hint": "wall:north"}
+   ]
+  },
+  {
+   "name": "Bridge",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Control Room", "share": "large", "purpose": "the ship's control room"}],
+   "connections": [],
+   "entrance": {"room": "Control Room", "side": "south"},
+   "furniture": [
+    {"template": "Console", "room": "Control Room", "count": 2, "hint": "wall:north"},
+    {"template": "Console", "room": "Control Room", "count": 1, "hint": "wall:west"}
+   ]
+  },
+  {
+   "name": "Compartment 1",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Berth", "share": "medium", "purpose": "crew berths"}],
+   "connections": [],
+   "entrance": {"room": "Berth", "side": "west"},
+   "furniture": [
+    {"template": "Crew bunk", "room": "Berth", "count": 2, "hint": "wall:north"},
+    {"template": "Supply crate", "room": "Berth", "count": 1, "hint": "corner"}
+   ]
+  }
+ ],
+ "npcs": [
+  {"name": "Iyo Sarn", "gender": "female", "role": "captain", "home": "Bridge", "work": "Bridge",
+   "description": "The Merian's captain: quiet, keeps the survey running on chits and stubbornness.",
+   "physicalDescription": "grey-suited captain with cropped hair and a bonded data cuff"},
+  {"name": "Bex Tollerand", "gender": "male", "role": "technician", "home": "Compartment 2", "work": "Airlock Bay",
+   "description": "Ship's technician, forever elbow-deep in the tube seals.",
+   "physicalDescription": "thin technician with tool bandolier and static-frizzed hair"},
+  {"name": "Rae Okonkwo", "gender": "female", "role": "surveyor", "home": "Compartment 4", "work": "Bridge",
+   "description": "Surveyor logging the relay's drift one long shift at a time.",
+   "physicalDescription": "broad-shouldered surveyor in a patched ship suit"}
+ ],
+ "player": {"name": "Wren Calloway", "gender": "female", "role": "passenger", "home": "Compartment 6", "work": "Airlock Bay",
+  "description": "A passenger working passage back to the core routes.",
+  "physicalDescription": "young traveler in a loaner suit, migration tags still on the collar"}
+}

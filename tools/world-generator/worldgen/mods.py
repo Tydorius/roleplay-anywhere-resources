@@ -54,12 +54,18 @@ def _harden_boundary(scn, scenario_dir):
     """The boundary slab ships as it plays: blocking, and carrying a sprite
     the colour of the out-of-bounds void. The spec declared it passable so
     the builder's reachability walk could cross the strip; walkability 0
-    seals it here. The sprite is a flat solid-colour WebP the game stretches
-    over the whole footprint — with its east edge inset half a cell, so the
-    black stops short of the storey walls it touches: the strip's ground
-    tint (the same colour) fills that half cell and renders under the walls
-    instead of bleeding onto their floors."""
-    slab = next((t for t in scn.get("objectTemplates", [])
+    seals it here. A void zone's slabs ("... Void Slab N") harden the same
+    way, spriteless: the tinted ground under them shows through. The sprite
+    is a flat solid-colour WebP the game stretches over the whole footprint
+    — with its east edge inset half a cell, so the black stops short of the
+    storey walls it touches: the strip's ground tint (the same colour) fills
+    that half cell and renders under the walls instead of bleeding onto
+    their floors."""
+    templates = scn.get("objectTemplates") or []
+    for t in templates:
+        if " Void Slab " in t.get("name", ""):
+            t["walkability"] = 0.0
+    slab = next((t for t in templates
                  if t.get("name") == SLAB_NAME), None)
     if slab is None:
         return

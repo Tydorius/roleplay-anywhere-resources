@@ -610,8 +610,9 @@ def _parse_slot(at, ctx):
         return ("row", {"index": int(bits[1])})
     if kind == "spine" and len(bits) == 2 and bits[1] == "hub":
         return ("hub", {})
-    if kind == "spine" and len(bits) == 2 and bits[1] in ("start", "end"):
-        return ("spine_end", {"side": bits[1]})
+    if kind == "spine" and len(bits) == 3 and bits[1] == "end" \
+            and bits[2] in ("start", "end"):
+        return ("spine_end", {"side": bits[2]})
     if kind == "spine" and len(bits) == 3 and bits[1] in ("left", "right") \
             and bits[2].isdigit():
         return ("spine", {"side": bits[1], "index": int(bits[2])})

@@ -75,6 +75,8 @@ class World:
         self.portals = []              # stair portals, as arpgMods entries
         self.compounds = []            # [CompoundOut] (layout_compound.py)
         self.solid_walls = set()       # cells of intentional wall objects
+        self.void_zones = set()        # zone names with exterior "void"
+        self.void_default = False      # every zone void: void default tile
 
 
 def _most_private_room(world, b):
@@ -214,6 +216,290 @@ def _emit_unit_regions(world, bl, parent_name, names_seen):
             for (tname, pos) in room.furniture.placements:
                 objects.append(ObjectOut(tname, pos, room.full_name))
     return regions, objects
+
+
+def _seal_void_zones(world, plan, plan_data):
+    """Interior-only zones (``"exterior": "void"``): everything outside the
+    walled regions becomes out of bounds — walkability-0 slab objects over
+    ground tinted the boundary colour, the same treatment as The World's
+    Edge (passable at build so the builder's flat walk still works, hardened
+    by inject_arpg_mods), and the roads to and from the zone become walled
+    corridor connectors with an arm walking from the road mouth to the
+    block's gate. A plan whose zones are all void gets a void default tile,
+    so no walkable open ground is left anywhere."""
+    from .extensions.floors import BOUNDARY_COLOR
+    from .layout_map import _cells_to_rects
+
+    voids = {z.name: z for z in plan.zones if z.exterior == "void"}
+    if not voids:
+        return
+    world.void_zones = set(voids)
+    world.void_default = all(z.exterior == "void" for z in plan.zones)
+
+    # tint the void zones' own ground (their compound grounds too): the
+    # walled regions and paths nested inside draw over it
+    for r in world.regions:
+        if r.name in voids and r.kind == "zone":
+            r.ground_color = BOUNDARY_COLOR
+        if r.kind == "compound" and r.parent in voids:
+            r.ground_color = BOUNDARY_COLOR
+
+    road_cells = set()
+    for road in world.roads:
+        road_cells |= road.cells()
+    zone_cells = {n: set() for n in voids}
+    for n, pieces in world.zone_pieces.items():
+        if n in voids:
+            for p in pieces:
+                zone_cells[n] |= p.cells()
+
+    _void_roads(world, plan_data, voids)
+    _void_arms(world, plan_data, voids, zone_cells, road_cells)
+
+    # the mask: every cell of a void zone that no walled region, path, yard
+    # or arm covers becomes a slab (a compound's leftover ground included —
+    # the gaps between a block's parts are not streets)
+    keep = set()
+    for r in world.regions:
+        if r.wall or r.kind in ("path", "yard", "road"):
+            keep |= r.rect.cells()
+    for n in voids:
+        mask = zone_cells[n] - keep
+        _void_slabs(world, plan_data, mask, n)
+    if world.void_default:
+        covered = set()
+        for r in world.regions:
+            if r.kind != "boundary":
+                covered |= r.rect.cells()
+        covered |= road_cells
+        _void_slabs(world, plan_data,
+                    {(x, y) for x in range(world.grid[0])
+                            for y in range(world.grid[1])} - covered,
+                    "The Void", outside=True)
+
+
+def _void_slabs(world, plan_data, cells, zone_name, outside=False):
+    """Void cells as walkability-0 slab objects (one template per rect,
+    passable at build): the builder's reachability walk crosses them, the
+    shipped scenario hardens them and the tinted ground shows through."""
+    from .extensions.floors import BOUNDARY_COLOR
+    from .model import ObjectTemplate
+
+    for i, r in enumerate(_rects_of(cells)):
+        tname = f"{zone_name} Void Slab {i + 1}"
+        t = ObjectTemplate(name=tname, size=(r.w, r.h), walkability=0.0,
+                           description="Nothing lies this way.",
+                           physicalDescription="A sealed, lightless bulk.",
+                           tags=["wall"],
+                           extras={"passableAtBuild": True, "maxHp": 999,
+                                   "heightM": 3})
+        world.templates[tname] = t
+        known = {x.get("name") for x in plan_data.setdefault("templates", [])}
+        if tname not in known:
+            plan_data["templates"].append(
+                {"name": tname, "size": [r.w, r.h], "walkability": 0.0,
+                 "passableAtBuild": True, "maxHp": 999, "heightM": 3,
+                 "description": t.description,
+                 "physicalDescription": t.physicalDescription,
+                 "tags": ["wall"], "rule": "out-of-bounds void"})
+        world.objects.append(ObjectOut(tname, (r.x, r.y), zone_name))
+        world.solid_walls |= r.cells()
+
+
+def _rects_of(cells):
+    from .layout_map import _cells_to_rects
+    return _cells_to_rects(cells)
+
+
+def _void_arms(world, plan_data, voids, zone_cells, road_cells):
+    """One walled arm per void zone: from the road cell nearest its gate to
+    the gate's outside door, a 3-wide corridor of rects under the zone,
+    butting the gate's wall (an explicit facing-pair door, since their
+    parents differ) and the road (an explicit door each side of the line)."""
+    from .model import SIDE_DX_DY, shared_wall_cells
+
+    # the road tubes (already corridors by now) are part of the walk's
+    # starts: the BFS cannot cross their walls, but it can begin inside them
+    starts = set(road_cells)
+    for road in world.roads:
+        if road.a not in voids and road.b not in voids:
+            continue
+        for r in world.regions:
+            if r.name == road.name or r.name.startswith(f"{road.name} Section"):
+                starts |= r.rect.cells()
+
+    for zname in sorted(voids):
+        comp = next((c for c in getattr(world, "compounds", []) or []
+                     if c.compound.zone == zname and c.gates), None)
+        if comp is None:
+            continue
+        gate = next((b for b in comp.parts
+                     if b.layout.design.name == comp.gates[0].building), None)
+        if gate is None:
+            continue
+        bl = gate.layout
+        dx, dy = SIDE_DX_DY[bl.entrance_side]
+        approach = (bl.entrance_door[0] + dx, bl.entrance_door[1] + dy)
+        piece = next((p for p in world.zone_pieces.get(zname, [])
+                      if p.contains_cell(approach)), None)
+        if piece is None or not road_cells:
+            continue
+        # BFS from the road (and tube) cells to the gate's approach, keeping
+        # one cell of clearance each side (the arm is a walled corridor: a
+        # route pinched to one cell wide has no interior to walk). Zone and
+        # road ground costs nothing; the road's own tube cells are starts
+        # and never block the clearance test.
+        covered = set()
+        for r in world.regions:
+            if r.kind not in ("zone", "road"):
+                covered |= r.rect.cells()
+        W, H = world.grid
+
+        def clear(c):
+            x, y = c
+            return all(0 <= x + ax < W and 0 <= y + ay < H
+                       and ((x + ax, y + ay) not in covered
+                            or (x + ax, y + ay) in starts)
+                       for ax in (-1, 0, 1) for ay in (-1, 0, 1))
+
+        prev = {c: None for c in starts}
+        todo = list(starts)
+        found = None
+        while todo and found is None:
+            cur = todo.pop(0)
+            if cur == approach:
+                found = cur
+                break
+            x, y = cur
+            for nxt in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if not (0 <= nxt[0] < W and 0 <= nxt[1] < H):
+                    continue
+                if nxt in prev:
+                    continue
+                if nxt != approach and not clear(nxt):
+                    continue
+                prev[nxt] = cur
+                todo.append(nxt)
+        if found is None:
+            world.failures.append((f"void zone {zname}",
+                                   "no clear way from the road to the gate"))
+            continue
+        path = set()
+        cur = found
+        while cur is not None:
+            path.add(cur)
+            cur = prev[cur]
+        arm = {(x + ax, y + ay) for (x, y) in path - starts
+               for ax in (-1, 0, 1) for ay in (-1, 0, 1)}
+        for r in world.regions:       # never over walls or roads
+            if r.wall or r.kind == "road":
+                arm -= r.rect.cells()
+        if not arm:
+            continue
+        rects = _rects_of(arm)
+        for i, r in enumerate(rects):
+            reg = RegionOut(f"{zname} Connector" + (f" {i + 1}" if i else ""),
+                            r, "building", parent=zname, wall="stone",
+                            ground="stone", ground_texture="rock",
+                            ambience={"day": "quiet_indoor"},
+                            description=f"The sealed way into {zname}.")
+            doors = set()
+            # where it meets the gate's wall, the facing pair is its door
+            for cell in shared_wall_cells(r, bl.rect):
+                doors.add(cell)
+            reg.doors = doors
+            world.regions.append(reg)
+        # every arm cell on the zone line with a road cell just beyond is a
+        # door onto the road (the road's own corridor gets its side from
+        # _void_roads, which runs after this)
+        for reg in world.regions:
+            if not reg.name.startswith(f"{zname} Connector"):
+                continue
+            r = reg.rect
+            doors = set(reg.doors)
+            for x in range(r.x, r.x1 + 1):
+                if (x, r.y - 1) in road_cells:
+                    doors.add((x, r.y))
+                if (x, r.y1 + 1) in road_cells:
+                    doors.add((x, r.y1))
+            for y in range(r.y, r.y1 + 1):
+                if (r.x - 1, y) in road_cells:
+                    doors.add((r.x, y))
+                if (r.x1 + 1, y) in road_cells:
+                    doors.add((r.x1, y))
+            reg.doors = doors
+    # a road tube an arm butts gets its side of the facing pair (and the
+    # arm its own): explicit doors across the shared wall cells, since the
+    # two regions have different parents and never auto-connect
+    arms = [r for r in world.regions if "Connector" in r.name and r.wall]
+    for arm in arms:
+        for reg in list(world.regions):
+            if reg is arm or not reg.wall or reg.parent is not None:
+                continue
+            pair = shared_wall_cells(arm.rect, reg.rect)
+            if pair:
+                arm.doors = set(arm.doors) | {c for c in pair
+                                              if arm.rect.contains_cell(c)}
+                reg.doors = set(reg.doors) | {c for c in pair
+                                              if reg.rect.contains_cell(c)}
+
+
+def _void_roads(world, plan_data, voids):
+    """The roads to and from a void zone become walled corridor connectors:
+    one corridor region per road rect, a mouth too thin for an interior
+    widened to 3 (the mouths' reserve keeps the cell it eats clear), doors
+    on the ends no sibling rect continues from. The arms are laid after
+    this, begin inside the tube and butt its walls; their facing pairs are
+    mirrored onto both at the end of _void_arms."""
+    for road in world.roads:
+        if road.a not in voids and road.b not in voids:
+            continue
+        g, tex = road.ground
+        segs = [_widen_seg(world, s) for s in road.rects]
+        old = [r for r in world.regions
+               if r.kind == "road"
+               and any(r.rect == s for s in list(road.rects) + segs)]
+        for r in old:
+            world.regions.remove(r)
+        for j, seg in enumerate(segs):
+            name = road.name if len(segs) == 1 else f"{road.name} Section {j + 1}"
+            reg = RegionOut(name, seg, "building", parent=None, wall="stone",
+                            ground=g, ground_texture=tex,
+                            ambience={"day": "quiet_indoor"},
+                            description=f"The sealed way along {road.name}.",
+                            doors=set(_free_ends(seg, segs)))
+            world.regions.append(reg)
+
+
+def _widen_seg(world, seg):
+    """A road mouth 1-2 cells wide has no interior to wall: grow its thin
+    side to 3 — into the gutter and one cell of whichever zone sits beyond,
+    on the grid — keeping the mouth's position anchored at its start."""
+    from .model import Rect
+
+    if min(seg.w, seg.h) >= 3:
+        return seg
+    if seg.w < seg.h:
+        x = max(0, min(seg.x, world.grid[0] - 3))
+        return Rect(x, seg.y, 3, seg.h)
+    y = max(0, min(seg.y, world.grid[1] - 3))
+    return Rect(seg.x, y, seg.w, 3)
+
+
+def _free_ends(seg, all_rects):
+    """The middle cell of each of seg's edges that no sibling road rect lies
+    just beyond: those ends need a door (the rest auto-connect)."""
+    mids = [(seg.x + seg.w // 2, seg.y, (0, -1)),
+            (seg.x + seg.w // 2, seg.y1, (0, 1)),
+            (seg.x, seg.y + seg.h // 2, (-1, 0)),
+            (seg.x1, seg.y + seg.h // 2, (1, 0))]
+    out = []
+    for (x, y, (dx, dy)) in mids:
+        beyond = (x + dx, y + dy)
+        if any(s != seg and s.contains_cell(beyond) for s in all_rects):
+            continue
+        out.append((x, y))
+    return out
 
 
 def _piece_direction(primary, piece):
@@ -607,6 +893,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     # ---- upper storeys (the floors extension): placed once the zones have
     # set the play area, in a band beyond it, so the stairs and openings
     # exist before the schedules pick where people sleep
+    _seal_void_zones(world, plan, plan_data)
     if "floors" in exts:
         from .extensions import floors as floors_ext
         floors_ext.apply(world, plan_data, rng)

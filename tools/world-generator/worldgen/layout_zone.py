@@ -147,8 +147,10 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     # side streets, square at the crossroads); a zone that asks for it gets
     # one green ringed by its path instead; a fields zone gets farm lanes
     # whatever its kind; an empty wild zone gets one track between its road
-    # mouths or none at all; other zones get one spine
-    if zone.dressing.paths != "none":
+    # mouths or none at all; other zones get one spine. A void zone has no
+    # open ground to dress: everything walkable is inside walls, so it gets
+    # no paths at all (the roads become walled connectors instead).
+    if zone.exterior != "void" and zone.dressing.paths != "none":
         out.spine_ground = {"dirt": ("dirt", "dirt"), "cobble": ("stone", "cobblestone"),
                             "paved": ("stone", "flagstone-light")}.get(zone.dressing.paths, ("dirt", "dirt"))
         widest = (0, 0)
@@ -219,10 +221,12 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
 
     # ---- crop fields: agricultural zones (and any zone that asks for the
     # fields arrangement) get fenced plots with crop rows
-    if zone_class(zone) == "agricultural" or zone.arrangement == "fields":
+    if zone.exterior != "void" and \
+            (zone_class(zone) == "agricultural" or zone.arrangement == "fields"):
         _place_fields(zone, rect, out, rng, templates, map_ctx)
 
-    # ---- outdoor props (yard props first, then the zone's own props)
+    # ---- outdoor props (yard props first, then the zone's own props); a
+    # void zone has no open ground for them
     occupied = set()
     for b in out.buildings:
         for room in b.layout.rooms:
@@ -235,18 +239,23 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         return {b.layout.design.name: (b.layout.rect, b.layout.entrance_side) for b in out.buildings}
 
     for (yard_name, yard_rect, bname) in out.yards:
+        if zone.exterior == "void":
+            continue
         design = next(d for d in zone.buildings if d.name == bname)
         for prop in design.yard_props:
             _place_props(out, prop, yard_rect, templates, rng, occupied, building_index(),
                          area_name=yard_name, zone=zone)
     for prop in zone.dressing.props:
+        if zone.exterior == "void":
+            break
         _place_props(out, prop, rect, templates, rng, occupied, building_index(),
                      area_name=zone.name, zone=zone, buildings_cells=buildings_cells)
 
     # ---- filler to the density target, scaled by the setting's density
+    # (never on void ground)
     feature_cells = out.feature.cells() if out.feature is not None else set()
     free_of_props = set(occupied)
-    for f in zone.dressing.filler:
+    for f in zone.dressing.filler if zone.exterior != "void" else ():
         if f.template not in templates:
             out.failures.append((f"filler {f.template}", "unknown template"))
             continue

@@ -466,7 +466,12 @@ def _spine_geometry(compound, plans):
     def column(parts_list, side):
         cy = spine_y0
         for p in parts_list:
-            if hub_rect is not None and cy < hub_rect.y1 + 2:
+            # skip past a hub at the start or the centre (the columns then
+            # begin north of it); a hub at the end caps the far side, so the
+            # columns stay south of it — hub_y = spine_y0 + col_span leaves
+            # them exactly the span they need
+            if hub_rect is not None and compound.hub_pos != "end" \
+                    and cy < hub_rect.y1 + 2:
                 cy = hub_rect.y1 + 2
             c = cross_of[p.building]
             a = along_of[p.building]

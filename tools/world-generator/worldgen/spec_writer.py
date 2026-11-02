@@ -125,6 +125,15 @@ def build_spec(world, plan):
 
     extras = plan.extras
     dg, dtex = getattr(world, "default_ground", None) or ("grass", "grass")
+    default_tile = {"name": "Meadow" if dg == "grass" else dg.capitalize(),
+                    "ground": dg, "groundTexture": dtex,
+                    "ambience": OUT_AMBIENCE}
+    if getattr(world, "void_default", False):
+        # every zone is void: the map's own tile is the out-of-bounds void
+        from .extensions.floors import BOUNDARY_COLOR
+        default_tile = {"name": "Void", "ground": "stone",
+                        "groundTexture": "rock", "groundColor": BOUNDARY_COLOR,
+                        "ambience": OUT_AMBIENCE}
     spec = {
         "name": plan.name,
         "folderName": plan.name.replace(" ", "-"),
@@ -135,9 +144,7 @@ def build_spec(world, plan):
         "difficulty": extras.get("difficulty", "medium"),
         "xpMultiplier": extras.get("xpMultiplier", 1),
         "gridSize": [world.grid[0], world.grid[1]],
-        "defaultTile": {"name": "Meadow" if dg == "grass" else dg.capitalize(),
-                        "ground": dg, "groundTexture": dtex,
-                        "ambience": OUT_AMBIENCE},
+        "defaultTile": default_tile,
         "weatherKinds": extras.get("weatherKinds", ["clear", "rain", "fog"]),
         "currency": extras.get("currency", {"name": "Copper penny",
                                             "description": "The village's small coin.",

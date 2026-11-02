@@ -248,7 +248,8 @@ def compound_errors(compounds, zone_names, building_zone):
             line_ok = (at == "" and not enclosure) or \
                  (bits[:1] == ["row"] and len(bits) == 2 and bits[1].isdigit()) or \
                  (bits[:1] == ["spine"] and len(bits) == 2 and bits[1] == "hub") or \
-                 (bits[:1] == ["spine"] and len(bits) == 2 and bits[1] in ("start", "end")) or \
+                 (bits[:1] == ["spine"] and len(bits) == 3 and bits[1] == "end"
+                  and bits[2] in ("start", "end")) or \
                  (bits[:1] == ["spine"] and len(bits) == 3 and bits[1] in ("left", "right")
                   and bits[2].isdigit())
             if enclosure and not ok:
