@@ -1,0 +1,47 @@
+Write this world's rules and economy: the numbers the game runs on and the
+lines its GM reads every turn.
+
+WORLD: ${setting_line}
+ZONES:
+${zone_lines}
+BUILDINGS:
+${building_lines}
+ITEM VALUES IN THIS WORLD: ${item_value_line}
+${time_pressure_block}
+Reply with ONE JSON object with exactly these fields:
+{
+  "narrativeRules": ["5-8 short imperative lines for the GM"],
+  "narrativeFlavor": "adaptive|intense|peaceful",
+  "difficulty": "casual|medium|insane",
+  "currency": {"name": "the coin's name", "description": "one sentence",
+               "format": "5 pennies"},
+  "startingCurrency": 10,
+  "attributes": {"strength": 5, "dexterity": 5, "intellect": 5,
+                 "perception": 5, "charisma": 5},
+  "skills": {"Skill name": 2, "...": 0},
+  "weatherKinds": ["clear", "rain", "fog"],
+  "variables": [
+    {"name": "Rumours", "emoji": "\uD83D\uDDE3", "type": "text",
+     "value": "first value", "initial": "first value"},
+    {"name": "Supplies", "emoji": "\uD83C\uDF72", "type": "number",
+     "value": 8, "initial": 8, "min": 0, "max": 12, "ratePerHour": -0.1,
+     "lowZone": {"threshold": 2, "effectDesc": "hunger pains", "emoji": "\u26A0"}}
+  ]
+}
+
+- narrativeRules are 5-8 one-line imperatives for tone, twists and each of
+  the frame's constraints. The player can read them in the Journal: write
+  them as GM instructions, never spoilers.
+- attributes: every character starts at 3 in each and spends EXACTLY 10
+  points, so the five numbers must sum to 25. Shape them to the play the
+  frame wants.
+- about 18 skills at levels 0-3 (0 is untrained), named for this world's
+  doings.
+- weatherKinds from this list ONLY: clear, fog, rain, thunderstorm, snow,
+  blizzard, wind, dust_storm, meteor_shower, heat - suiting the climate.
+- 4-8 variables, a mix of number and text, each named for this world.
+  Number variables need sane min, max and initial (initial inside min..max);
+  ratePerHour moves the value every hour, and a negative rate is a countdown.
+  lowZone/highZone add a status pill under a threshold.
+- Price the catalogue honestly: startingCurrency should buy one to three of
+  the common items listed above.

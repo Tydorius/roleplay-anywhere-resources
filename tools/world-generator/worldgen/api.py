@@ -30,10 +30,11 @@ from .phases import Cancelled  # noqa: F401 - callers catch worldgen.api.Cancell
 VENDOR_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor")
 
 # measured full runs (brief 010): 13-18 calls, 100-150k tokens, 20-35 minutes;
-# brief 013's batched P5 (one call per zone plus the player) widens it
-MEASURED_CALLS = (15, 24)
-MEASURED_TOKENS = (110000, 190000)
-MEASURED_MINUTES = (20, 45)
+# brief 013's batched P5 (one call per zone plus the player) and the three P6
+# systems calls widen it
+MEASURED_CALLS = (18, 27)
+MEASURED_TOKENS = (130000, 220000)
+MEASURED_MINUTES = (25, 50)
 TOKENS_PER_CALL = 8500       # prompt + completion, across the phases
 TOKENS_PER_MINUTE = 4500     # streaming reasoning models on a good day
 
@@ -143,7 +144,7 @@ def estimate(idea_or_plan):
     # P5 batches: one call per zone with buildings, plus the player's own call
     p5_calls = sum(1 for z in zones if z.get("buildings")) + 1
     p0_calls = 1 if (plan.get("frame") or plan.get("questionnaire")) else 0
-    calls = p0_calls + 2 + p3_calls + len(zones) + p5_calls
+    calls = p0_calls + 2 + p3_calls + len(zones) + p5_calls + 3   # + the three P6 calls
     retries = 6                          # the most a measured run needed
     tokens = TOKENS_PER_CALL * calls
     return {"calls": calls, "calls_range": [calls, calls + retries],
@@ -155,7 +156,7 @@ def estimate(idea_or_plan):
                      + (f"{p0_calls} P0 call + " if p0_calls else "")
                      + f"P1, P2 + {p3_calls} buildings ({same_as} sameAs copies "
                        f"skipped) + {len(zones)} zones + {p5_calls} people calls "
-                       f"(+ retries)"}
+                       f"+ 3 systems calls (+ retries)"}
 
 
 def _mid(pair):

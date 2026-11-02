@@ -25,7 +25,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
             for artifact in ("plan.json", "spec.json", "spec.py", "metrics.json"):
                 self.assertTrue(os.path.exists(os.path.join(tmp, artifact)), artifact)
         self.assertTrue(summary["ok"], summary)
-        self.assertEqual(summary["calls"], 8)
+        self.assertEqual(summary["calls"], 11)
         self.assertEqual(summary["provider"], "stub")
         self.assertEqual(summary["extensions"], [])
         self.assertEqual(summary["validator_errors"], 0, summary)
@@ -81,8 +81,8 @@ class TestEstimate(unittest.TestCase):
     def test_idea_uses_the_measured_runs(self):
         e = api.estimate("a fogbound harbour town of smugglers")
         self.assertTrue(e["calls_range"][0] <= e["calls"] <= e["calls_range"][1])
-        self.assertGreaterEqual(e["tokens"], 100000)
-        self.assertLessEqual(e["tokens"], 150000)
+        self.assertGreaterEqual(e["tokens"], 130000)
+        self.assertLessEqual(e["tokens"], 220000)
         self.assertTrue(e["minutes_range"][0] <= e["minutes"] <= e["minutes_range"][1])
         self.assertEqual(e["basis"].startswith("measured"), True)
 
@@ -96,7 +96,7 @@ class TestEstimate(unittest.TestCase):
         # peopled zone + the player's call (village.json carries no frame;
         # King's Wood has no buildings, so it gets no batch)
         peopled = sum(1 for z in plan["zones"] if z["buildings"])
-        self.assertEqual(e["calls"], 2 + buildings + zones + peopled + 1)
+        self.assertEqual(e["calls"], 2 + buildings + zones + peopled + 1 + 3)
         self.assertEqual(e["calls_range"][0], e["calls"])
         self.assertGreater(e["calls_range"][1], e["calls"], "retries add calls")
         self.assertEqual(e["tokens"], 8500 * e["calls"])

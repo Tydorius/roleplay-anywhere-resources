@@ -1014,7 +1014,7 @@ def parse_plan(data):
     extras = {k: v for k, v in data.items()
               if k in ("currency", "attributes", "skills", "narrativeRules", "weatherKinds",
                        "narrativeFlavor", "difficulty", "xpMultiplier", "startingCurrency",
-                       "loot")}
+                       "variables", "perkTrees", "calendar", "quests", "loot")}
     return Plan(name=data.get("name", "Generated World"),
                 worldBackground=data.get("worldBackground", ""),
                 setting=data.get("setting", {}), mapSize=data.get("mapSize", "small"),

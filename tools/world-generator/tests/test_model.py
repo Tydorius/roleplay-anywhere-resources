@@ -182,6 +182,91 @@ CANNED_P5_BATCH = {"npcs": CANNED_P5["npcs"]}          # one zone's batch
 CANNED_P5_PLAYER = {"player": CANNED_P5["player"]}     # the player's own call
 
 
+def _perk(name, desc, children=()):
+    return {"name": name, "type": "passive", "description": desc,
+            "physicalDescription": f"{name} icon, white background",
+            "children": [_perk(*c) for c in children]}
+
+
+CANNED_P6A = {
+    "narrativeRules": [
+        "Keep the village cozy; real danger stays off the green.",
+        "The river's old bargains are honoured, never explained.",
+        "Never say what lives under the weir; show the current instead.",
+        "Every sack counted twice stays counted twice.",
+        "Adults keep secrets from children, not from the player.",
+    ],
+    "narrativeFlavor": "adaptive",
+    "difficulty": "medium",
+    "currency": {"name": "Copper penny", "description": "The mill's tally coin.",
+                 "format": "5 pennies"},
+    "startingCurrency": 8,
+    "attributes": {"strength": 6, "dexterity": 5, "intellect": 4,
+                   "perception": 5, "charisma": 5},
+    "skills": {"Milling": 3, "Bargaining": 2, "Swimming": 1, "Foraging": 2,
+               "Carpentry": 1, "Weather-sense": 2, "Animal handling": 1,
+               "Reading": 0, "Sprinting": 1, "Net-making": 0, "Carting": 1,
+               "Brewing": 0, "First aid": 1, "Storytelling": 2},
+    "weatherKinds": ["clear", "rain", "fog", "thunderstorm"],
+    "variables": [
+        {"name": "Supplies", "emoji": "\U0001F372", "type": "number",
+         "value": 8, "initial": 8, "min": 0, "max": 12, "ratePerHour": -0.1},
+        {"name": "Weir rumours", "emoji": "\U0001F5E3", "type": "text",
+         "value": "the well speaks at night", "initial": "the well speaks at night"},
+        {"name": "Mill debt", "emoji": "\u2696", "type": "number",
+         "value": 3, "initial": 3, "min": 0, "max": 6},
+        {"name": "Season", "emoji": "\U0001F342", "type": "text",
+         "value": "harvest", "initial": "harvest"},
+    ],
+}
+
+CANNED_P6B = {"perkTrees": [
+    {"name": "Miller's Craft", "root": _perk(
+        "Sack and Tally", "You count twice as fast and never lose the number.",
+        [("Steady Back", "Heavy loads cost you half the effort."),
+         ("Stone-set Hands", "Your grip holds even when the wheel shudders."),
+         ("Bargain Face", "Traders take your first offer seriously."),
+         ("Wheel-wright", "You mend a seized mechanism with cord and grease.")])},
+    {"name": "River-sense", "root": _perk(
+        "Current-reader", "You can tell the river's mood from the drift of leaves.",
+        [("Weir-legs", "Wading costs you nothing in cold or current."),
+         ("Deep Breath", "You hold your breath three times as long."),
+         ("Old Bargain", "Once a day, the water gives back what it took."),
+         ("Night-water", "You see the river's shape in the dark.")])},
+    {"name": "Village Trust", "root": _perk(
+        "Known Face", "Villagers tell you small truths unprompted.",
+        [("Hearth-invite", "Doors open for you at supper time."),
+         ("Quiet Word", "You calm one argument a day with a word."),
+         ("Winter-keep", "The village shares its stores with you before its own."),
+         ("Kin-to-anyone", "One family a season calls you their own.")])},
+]}
+
+CANNED_P6C = {
+    "calendar": [
+        {"name": "Morning sacking", "location": "The Old Mill", "day": 0,
+         "start": "07:00", "hours": 2, "recurrence": "daily",
+         "missedConsequence": "The sacks pile up and Aldous notices who slept in."},
+        {"name": "Strip-tending", "location": "Wheatfields", "day": 0,
+         "start": "10:00", "hours": 4, "recurrence": "daily",
+         "missedConsequence": "The strips go unpicked and Edda's debt grows."},
+        {"name": "The weir tally", "location": "The Old Mill", "day": 2,
+         "start": "18:00", "hours": 1, "recurrence": "none",
+         "missedConsequence": "The river keeps its own count, and it counts against you."},
+        {"name": "Harvest supper", "location": "Miller's Cottage", "day": 5,
+         "start": "19:00", "hours": 3, "recurrence": "none",
+         "missedConsequence": "The village eats apart and remembers who skipped it."},
+    ],
+    "quests": [
+        {"title": "The Wheel and the Water", "objectives": [
+            {"text": "Be at the weir tally when the river answers",
+             "prerequisites": [
+                 {"text": "Work three morning sackings beside Aldous", "primary": True},
+                 {"text": "Hear Berta's telling of the old bargain", "primary": False},
+                 {"text": "Find what Edda dropped in the shallows", "primary": False}]}]},
+    ],
+}
+
+
 # -------------------------------------------------------- JSON extraction
 
 class TestExtractJson(unittest.TestCase):
@@ -400,8 +485,8 @@ class TestContracts(unittest.TestCase):
 
 def canned_replies():
     """Call order: p1, p2, p3 x2, p4 x2, p5 batch (the village zone; the
-    fields zone has no buildings, so no batch), p5 player - with one p2
-    retry scripted."""
+    fields zone has no buildings, so no batch), p5 player, p6 x3 - with one
+    p2 retry scripted."""
     return [
         _dump(CANNED_P1),
         "I will surely help with the catalogue!",   # bad JSON -> one retry
@@ -412,6 +497,9 @@ def canned_replies():
         _dump(CANNED_P4_FIELDS),
         _dump(CANNED_P5_BATCH),
         _dump(CANNED_P5_PLAYER),
+        _dump(CANNED_P6A),
+        _dump(CANNED_P6B),
+        _dump(CANNED_P6C),
     ]
 
 
@@ -419,7 +507,7 @@ class TestCannedFivePhases(unittest.TestCase):
     def test_plan_json_the_layout_accepts(self):
         client = ScriptedClient(canned_replies())
         plan, stats = phases.run_phases("a mill village", client)
-        self.assertEqual(client.calls, 8)
+        self.assertEqual(client.calls, 11)
         self.assertEqual(client.retries, 1)
         self.assertEqual(stats["dropped"], [])
         self.assertEqual(len(plan["buildings"]), 2)

@@ -109,7 +109,7 @@ class TestP5Batches(unittest.TestCase):
     def test_one_call_per_peopled_zone_then_the_player(self):
         client = ScriptedClient(canned_replies())
         plan, _stats = phases.run_phases("a mill village", client)
-        self.assertEqual(client.calls, 8)
+        self.assertEqual(client.calls, 11)
         self.assertEqual(len(plan["npcs"]), 5)
         self.assertEqual(plan["player"]["name"], "Wren Ash")
         # sent[1] is P2's first (bad) attempt: P1, P2, P2-retry, P3 x2, P4 x2,

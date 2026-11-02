@@ -1968,6 +1968,402 @@ def _sanitize_player_items(player, log, items):
         player["equipment"] = eq
 
 
+# ---------------------------------------------------------------- P6 systems
+
+WEATHER_KINDS = ("clear", "fog", "rain", "thunderstorm", "snow", "blizzard",
+                 "wind", "dust_storm", "meteor_shower", "heat")
+NARRATIVE_FLAVORS = ("adaptive", "intense", "peaceful")
+DIFFICULTIES = ("casual", "medium", "insane")
+ATTRIBUTE_KEYS = ("strength", "dexterity", "intellect", "perception", "charisma")
+ATTRIBUTE_TOTAL = 25          # base 3 each plus exactly 10 spent points
+RECURRENCES = ("none", "daily", "weekly")
+PERK_TYPES = ("passive", "active")
+MAX_PERK_DEPTH = 5            # levels below the root
+TIME_RE = re.compile(r"^([01]?\d|2[0-3]):[0-5]\d$")
+
+
+def check_p6a(d):
+    """6a, rules and economy."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["P6a: the reply is not a JSON object"]
+    rules = d.get("narrativeRules")
+    if not isinstance(rules, list) or not 5 <= len(rules) <= 8 \
+            or not all(_is_str(r) for r in rules):
+        errors.append("narrativeRules: 5-8 one-line rules, "
+                      f"not {rules if not isinstance(rules, list) else len(rules)} rules")
+    _enum(d, "narrativeFlavor", NARRATIVE_FLAVORS, "P6a", errors)
+    _enum(d, "difficulty", DIFFICULTIES, "P6a", errors)
+    cur = d.get("currency")
+    if not (isinstance(cur, dict) and _is_str(cur.get("name"))
+            and _is_str(cur.get("description")) and _is_str(cur.get("format"))):
+        errors.append("currency: required {name, description, format}")
+    elif not any(c.isdigit() for c in cur["format"]):
+        errors.append("currency.format: must hold the digit of an amount, "
+                      f'like "5 pennies", not {cur["format"]!r}')
+    sc = d.get("startingCurrency")
+    if isinstance(sc, bool) or not isinstance(sc, (int, float)) or sc < 0:
+        errors.append(f"startingCurrency: a number 0 or more, not {sc!r}")
+    at = d.get("attributes")
+    if not isinstance(at, dict) or set(at) != set(ATTRIBUTE_KEYS):
+        errors.append(f"attributes: exactly the five {ATTRIBUTE_KEYS}")
+    elif any(isinstance(at[k], bool) or not isinstance(at[k], int) for k in ATTRIBUTE_KEYS):
+        errors.append("attributes: whole numbers only")
+    elif sum(at[k] for k in ATTRIBUTE_KEYS) != ATTRIBUTE_TOTAL:
+        errors.append(f"attributes: base 3 each plus exactly 10 points, so the "
+                      f"five must sum to {ATTRIBUTE_TOTAL}, not "
+                      f"{sum(at[k] for k in ATTRIBUTE_KEYS)}")
+    skills = d.get("skills")
+    if not isinstance(skills, dict) or not 12 <= len(skills) <= 24 \
+            or not all(_is_str(k) and v in (0, 1, 2, 3) and not isinstance(v, bool)
+                       for k, v in skills.items()):
+        errors.append("skills: about 18 named skills at levels 0-3 "
+                      f"(12-24 allowed), not {skills!r}")
+    weather = d.get("weatherKinds")
+    if not isinstance(weather, list) or not weather \
+            or not all(w in WEATHER_KINDS for w in weather):
+        errors.append(f"weatherKinds: from {list(WEATHER_KINDS)} only, "
+                      f"not {weather!r}")
+    variables = d.get("variables")
+    if not isinstance(variables, list) or not 4 <= len(variables) <= 8:
+        errors.append("variables: 4-8 of them")
+        variables = []
+    for i, v in enumerate(variables):
+        errors.extend(_variable_errors(v, f"variables[{i}]"))
+    return errors[:MAX_ERRORS]
+
+
+def _variable_errors(v, ctx):
+    if not isinstance(v, dict) or not _is_str(v.get("name")):
+        return [f"{ctx}: a name is required"]
+    if not _is_str(v.get("emoji")):
+        return [f"{ctx}.emoji: required, one emoji"]
+    errors = []
+    if v.get("type") == "text":
+        if not _is_str(v.get("value")) or not _is_str(v.get("initial")):
+            errors.append(f"{ctx}: a text variable needs string value and initial")
+        return errors
+    if v.get("type") != "number":
+        return [f"{ctx}.type: 'number' or 'text', not {v.get('type')!r}"]
+    nums = {}
+    for k in ("value", "initial", "min", "max"):
+        x = v.get(k)
+        if isinstance(x, bool) or not isinstance(x, (int, float)):
+            errors.append(f"{ctx}.{k}: a number, not {x!r}")
+        else:
+            nums[k] = x
+    if len(nums) == 4:
+        if nums["min"] > nums["max"]:
+            errors.append(f"{ctx}: min above max")
+        elif not nums["min"] <= nums["initial"] <= nums["max"]:
+            errors.append(f"{ctx}: initial must sit inside min..max")
+    r = v.get("ratePerHour")
+    if r is not None and (isinstance(r, bool) or not isinstance(r, (int, float))):
+        errors.append(f"{ctx}.ratePerHour: a number per hour, not {r!r}")
+    return errors
+
+
+def _perk_errors(p, ctx, depth=1, count=None):
+    """One perk node against the guide's shape; depth 1 is the root."""
+    errors = []
+    if not isinstance(p, dict):
+        return [f"{ctx}: must be an object"], 0
+    if not _is_str(p.get("name")):
+        errors.append(f"{ctx}.name: required")
+    if not _is_str(p.get("description")):
+        errors.append(f"{ctx}.description: required, a rule the GM applies")
+    _enum(p, "type", PERK_TYPES, ctx, errors)
+    if not _is_str(p.get("physicalDescription")):
+        errors.append(f"{ctx}.physicalDescription: required, one line for the icon")
+    total = 1
+    children = p.get("children", [])
+    if not isinstance(children, list):
+        errors.append(f"{ctx}.children: a list (or omit it)")
+        children = []
+    if depth >= MAX_PERK_DEPTH and children:
+        errors.append(f"{ctx}: perks stop {MAX_PERK_DEPTH} levels below the root")
+    for i, c in enumerate(children):
+        cerrs, n = _perk_errors(c, f"{ctx}.children[{i}]", depth + 1)
+        errors.extend(cerrs)
+        total += n
+    return errors, total
+
+
+def check_p6b(d):
+    """6b, the perk trees."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["P6b: the reply is not a JSON object"]
+    trees = d.get("perkTrees")
+    if not isinstance(trees, list) or len(trees) != 3:
+        return ["P6b.perkTrees: exactly 3 trees"]
+    for i, t in enumerate(trees):
+        if not isinstance(t, dict) or not _is_str(t.get("name")):
+            errors.append(f"perkTrees[{i}].name: required")
+            continue
+        perrs, total = _perk_errors(t.get("root"), f"perkTrees[{i}].root")
+        errors.extend(perrs)
+        if not 5 <= total <= 8:
+            errors.append(f"perkTrees[{i}]: 5-8 perks in the tree, {total} given")
+    return errors[:MAX_ERRORS]
+
+
+def check_p6c(d, regions):
+    """6c, the story clock: calendar against the real region names, and the
+    starting quests."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["P6c: the reply is not a JSON object"]
+    cal = d.get("calendar")
+    if not isinstance(cal, list) or len(cal) < 3:
+        errors.append("calendar: the recurring obligations plus 2-4 one-off "
+                      f"events, {len(cal) if isinstance(cal, list) else cal!r} given")
+        cal = []
+    one_offs = 0
+    for i, c in enumerate(cal):
+        if not isinstance(c, dict):
+            errors.append(f"calendar[{i}]: must be an object")
+            continue
+        if not _is_str(c.get("name")):
+            errors.append(f"calendar[{i}].name: required")
+        if c.get("location") not in regions:
+            errors.append(f"calendar[{i}].location: {c.get('location')!r} is not "
+                          f"a region of this world (a zone or building name)")
+        day = c.get("day", 0)
+        if isinstance(day, bool) or not isinstance(day, int) or not 0 <= day <= 13:
+            errors.append(f"calendar[{i}].day: a whole number 0-13 "
+                          "(0 is today; one-offs inside the first week), "
+                          f"not {day!r}")
+        if not (isinstance(c.get("start"), str) and TIME_RE.match(c["start"])):
+            errors.append(f"calendar[{i}].start: HH:MM, not {c.get('start')!r}")
+        hours = c.get("hours")
+        if isinstance(hours, bool) or not isinstance(hours, (int, float)) or hours <= 0:
+            errors.append(f"calendar[{i}].hours: a positive number, not {hours!r}")
+        _enum(c, "recurrence", RECURRENCES, f"calendar[{i}]", errors)
+        if not _is_str(c.get("missedConsequence")):
+            errors.append(f"calendar[{i}].missedConsequence: required, "
+                          "what happens when it is missed")
+        elif c.get("recurrence") == "none":
+            one_offs += 1
+    if one_offs < 2:
+        errors.append(f"calendar: 2-4 one-off events (recurrence \"none\") in "
+                      f"the first week, {one_offs} given")
+    quests = d.get("quests")
+    if not isinstance(quests, list) or not 1 <= len(quests) <= 2:
+        errors.append("quests: 1-2 starting quests")
+        quests = []
+    for i, q in enumerate(quests):
+        if not isinstance(q, dict) or not _is_str(q.get("title")):
+            errors.append(f"quests[{i}].title: required")
+            continue
+        objectives = q.get("objectives")
+        if not isinstance(objectives, list) or not objectives:
+            errors.append(f"quests[{i}].objectives: required, 1-2 objectives")
+            continue
+        for j, o in enumerate(objectives):
+            if not isinstance(o, dict) or not _is_str(o.get("text")):
+                errors.append(f"quests[{i}].objectives[{j}].text: required")
+                continue
+            pr = o.get("prerequisites", [])
+            if not isinstance(pr, list):
+                errors.append(f"quests[{i}].objectives[{j}].prerequisites: "
+                              "a list of steps {text, primary}")
+                continue
+            for k, step in enumerate(pr):
+                if not isinstance(step, dict) or not _is_str(step.get("text")):
+                    errors.append(f"quests[{i}].objectives[{j}].prerequisites[{k}].text: "
+                                  "required")
+    return errors[:MAX_ERRORS]
+
+
+def _attr_spread():
+    return {k: ATTRIBUTE_TOTAL // len(ATTRIBUTE_KEYS) for k in ATTRIBUTE_KEYS}
+
+
+def sanitize_p6a(d, log):
+    """Clean 6a into plan-level keys; a part beyond saving falls back and
+    the log says so. Returns the dict of keys for the plan."""
+    out = {}
+    rules = [r for r in (d.get("narrativeRules") or []) if _is_str(r)][:8]
+    while 0 < len(rules) < 5:
+        rules.append("Keep the tone the frame sets, scene by scene.")
+    if rules:
+        out["narrativeRules"] = rules
+    if d.get("narrativeFlavor") in NARRATIVE_FLAVORS:
+        out["narrativeFlavor"] = d["narrativeFlavor"]
+    if d.get("difficulty") in DIFFICULTIES:
+        out["difficulty"] = d["difficulty"]
+    cur = d.get("currency") if isinstance(d.get("currency"), dict) else {}
+    name = cur.get("name") if _is_str(cur.get("name")) else "Coin"
+    fmt = cur.get("format") if _is_str(cur.get("format")) and \
+        any(c.isdigit() for c in cur.get("format", "")) else f"5 {name.lower()}s"
+    out["currency"] = {"name": name,
+                       "description": cur.get("description") if _is_str(cur.get("description"))
+                       else f"The common coin of the region.",
+                       "format": fmt}
+    sc = d.get("startingCurrency")
+    out["startingCurrency"] = sc if not isinstance(sc, bool) \
+        and isinstance(sc, (int, float)) and sc >= 0 else 5
+    at = d.get("attributes") if isinstance(d.get("attributes"), dict) else {}
+    if set(at) == set(ATTRIBUTE_KEYS) \
+            and all(not isinstance(at[k], bool) and isinstance(at[k], int)
+                    for k in ATTRIBUTE_KEYS) \
+            and sum(at[k] for k in ATTRIBUTE_KEYS) == ATTRIBUTE_TOTAL:
+        out["attributes"] = {k: at[k] for k in ATTRIBUTE_KEYS}
+    else:
+        if at:
+            log.append(("systems", f"attributes {at!r} -> an even "
+                        f"{ATTRIBUTE_TOTAL}-point spread"))
+        out["attributes"] = _attr_spread()
+    skills = {k: v for k, v in (d.get("skills") or {}).items()
+              if _is_str(k) and v in (0, 1, 2, 3) and not isinstance(v, bool)}
+    if skills:
+        out["skills"] = skills
+    weather = [w for w in (d.get("weatherKinds") or []) if w in WEATHER_KINDS]
+    out["weatherKinds"] = weather or ["clear", "rain", "fog"]
+    variables = []
+    for v in (d.get("variables") or []):
+        if not isinstance(v, dict) or not _is_str(v.get("name")):
+            continue
+        if v.get("type") == "text":
+            val = v.get("value") if _is_str(v.get("value")) else ""
+            variables.append({"name": v["name"],
+                              "emoji": v.get("emoji") if _is_str(v.get("emoji")) else "\u2753",
+                              "type": "text", "value": val,
+                              "initial": v.get("initial") if _is_str(v.get("initial")) else val})
+            continue
+        if v.get("type") != "number":
+            continue
+        lo = v.get("min", 0)
+        hi = v.get("max", 10)
+        initial = v.get("initial", lo)
+        for x in (lo, hi, initial):
+            if isinstance(x, bool) or not isinstance(x, (int, float)):
+                lo, hi, initial = 0, 10, 0
+                break
+        lo, hi = min(lo, hi), max(lo, hi)
+        initial = min(hi, max(lo, initial))
+        var = {"name": v["name"],
+               "emoji": v.get("emoji") if _is_str(v.get("emoji")) else "\u2753",
+               "type": "number", "value": initial, "initial": initial,
+               "min": lo, "max": hi}
+        r = v.get("ratePerHour")
+        if not isinstance(r, bool) and isinstance(r, (int, float)):
+            var["ratePerHour"] = r
+        if isinstance(v.get("lowZone"), dict):
+            var["lowZone"] = v["lowZone"]
+        if isinstance(v.get("highZone"), dict):
+            var["highZone"] = v["highZone"]
+        variables.append(var)
+    if variables:
+        out["variables"] = variables[:8]
+    return out
+
+
+def _sanitize_perk(p, log, tree, depth=1):
+    """One perk node cleaned; deeper than MAX_PERK_DEPTH the children drop."""
+    p["type"] = p.get("type") if p.get("type") in PERK_TYPES else "passive"
+    if not _is_str(p.get("description")):
+        p["description"] = p.get("name", "a perk")
+    if not _is_str(p.get("physicalDescription")):
+        p["physicalDescription"] = p.get("name", "a perk")
+    children = []
+    if depth < MAX_PERK_DEPTH:
+        for c in (p.get("children") or []):
+            if isinstance(c, dict) and _is_str(c.get("name")):
+                children.append(_sanitize_perk(c, log, tree, depth + 1))
+            else:
+                log.append((f"perk tree {tree}", f"perk {c!r} dropped: no name"))
+    elif p.get("children"):
+        log.append((f"perk tree {tree}",
+                    f"perks below level {MAX_PERK_DEPTH} dropped"))
+    p["children"] = children
+    return p
+
+
+def sanitize_p6b(d, log):
+    """Clean the perk trees; fewer than 3 usable trees means no trees."""
+    trees = []
+    for t in (d.get("perkTrees") or []):
+        if not isinstance(t, dict) or not _is_str(t.get("name")) \
+                or not isinstance(t.get("root"), dict) \
+                or not _is_str(t["root"].get("name")):
+            log.append(("systems", f"perk tree {t.get('name') if isinstance(t, dict) else t!r}"
+                        " dropped: no name or root"))
+            continue
+        trees.append({"name": t["name"],
+                      "root": _sanitize_perk(t["root"], log, t["name"])})
+    if len(trees) < 3:
+        if trees:
+            log.append(("systems", f"perk trees fell back: {len(trees)} of 3 "
+                        "survived, none kept"))
+        else:
+            log.append(("systems", "perk trees dropped: none survived the checks"))
+        return {}
+    def _count(p):
+        return 1 + sum(_count(c) for c in p["children"])
+    for t in trees:
+        n = _count(t["root"])
+        if not 5 <= n <= 8:
+            log.append((f"perk tree {t['name']}",
+                        f"{n} perks (5-8 asked); kept anyway"))
+    return {"perkTrees": trees}
+
+
+def sanitize_p6c(d, log, regions):
+    """Clean the calendar (against the real regions) and the quests."""
+    cal = []
+    for c in (d.get("calendar") or []):
+        if not isinstance(c, dict) or not _is_str(c.get("name")):
+            continue
+        if c.get("location") not in regions:
+            log.append((f"calendar {c.get('name')}",
+                        f"location {c.get('location')!r} dropped: not a region "
+                        "of this world"))
+            continue
+        day = c.get("day", 0)
+        day = day if not isinstance(day, bool) and isinstance(day, int) \
+            and 0 <= day <= 13 else 0
+        start = c.get("start") if isinstance(c.get("start"), str) \
+            and TIME_RE.match(c.get("start", "")) else "08:00"
+        hours = c.get("hours")
+        hours = hours if not isinstance(hours, bool) \
+            and isinstance(hours, (int, float)) and hours > 0 else 1
+        cal.append({"name": c["name"], "location": c["location"], "day": day,
+                    "start": start, "hours": hours,
+                    "recurrence": c.get("recurrence") if c.get("recurrence") in RECURRENCES
+                    else "none",
+                    "missedConsequence": c.get("missedConsequence")
+                    if _is_str(c.get("missedConsequence")) else
+                    "The absence is noticed."})
+    out = {}
+    if cal:
+        out["calendar"] = cal
+    quests = []
+    for q in (d.get("quests") or []):
+        if not isinstance(q, dict) or not _is_str(q.get("title")):
+            continue
+        objectives = []
+        for o in (q.get("objectives") or []):
+            if not isinstance(o, dict) or not _is_str(o.get("text")):
+                continue
+            pr = []
+            for step in (o.get("prerequisites") or []):
+                if isinstance(step, dict) and _is_str(step.get("text")):
+                    entry = {"text": step["text"]}
+                    if isinstance(step.get("primary"), bool):
+                        entry["primary"] = step["primary"]
+                    pr.append(entry)
+            objectives.append({"text": o["text"], "prerequisites": pr})
+        if objectives:
+            quests.append({"title": q["title"], "objectives": objectives})
+        else:
+            log.append((f"quest {q['title']}", "dropped: no usable objectives"))
+    if quests:
+        out["quests"] = quests[:2]
+    return out
+
+
 # ------------------------------------------------------------------ the run
 
 def _make_caller(client, stats, progress, cancel, exts=()):
@@ -2287,6 +2683,76 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                              need=("player",), taken={p["name"] for p in roster})["player"]
     p5 = {"npcs": roster, "player": player}
 
+    # ---- P6: systems, three calls (rules and economy, perks, story clock).
+    # A call that still fails after its retries falls back for that part and
+    # the log says so - it never fails the world.
+    p6_zone_lines = "\n".join(f"- {_zone_line(z)}" for z in p1["zones"])
+    p6_building_lines = "\n".join(f"- {_building_line(b)}"
+                                  for z in p1["zones"] for b in z["buildings"])
+    p6_roster_lines = "\n".join(
+        f"- {p['name']}, {p.get('role', '?')}: home {p.get('home', '?')}, "
+        f"work {p.get('work', '?')}" for p in roster) or "- (nobody yet)"
+    p6_roster_lines += f"\n- {player['name']} (the player), {player.get('role', '?')}"
+    regions = set(zone_names) | set(building_names)
+    values = [it.get("value") for it in (p2.get("items") or [])
+              if isinstance(it.get("value"), (int, float))]
+    item_value_line = (f"common items cost {sorted(values)[:3]}, dearest "
+                       f"{sorted(values)[-1]}" if values
+                       else "no priced items; pick a modest sum")
+    answers = (questionnaire or {}).get("answers") or {}
+
+    def _answer_text(qid, default):
+        a = answers.get(qid) or {}
+        bits = list(a.get("choices") or []) + ([a["other"]] if a.get("other") else [])
+        return "; ".join(bits) or default
+
+    time_choices = _answer_text("time", "").lower()
+    if "deadline" in time_choices or "slow-building" in time_choices or "threat" in time_choices:
+        tp = ("TIME PRESSURE: the answers ask for it, so ONE variable must be a "
+              "countdown - a negative ratePerHour, initial at the top of its "
+              "range, and a lowZone (or critical) that says what reaching "
+              "zero means.")
+        if "deadline" in time_choices:
+            tp += " The deadline is counted in DAYS."
+        time_pressure_block = tp + "\n"
+    else:
+        time_pressure_block = ""
+    d = call("p6a", "p6a-rules", event=("P6", "rules and economy"),
+             setting_line=setting_line, zone_lines=p6_zone_lines,
+             building_lines=p6_building_lines, item_value_line=item_value_line,
+             time_pressure_block=time_pressure_block, _validate=check_p6a)
+    systems = {}
+    if d is None:
+        stats["dropped"].append(("systems", "rules and economy fell back to "
+                                 "the defaults (no JSON after retries)"))
+    else:
+        systems.update(sanitize_p6a(d, stats["dropped"]))
+
+    growth_line = _answer_text("growth", (frame or {}).get("playerRole")
+                               and "as the frame's role implies" or "as the frame implies")
+    d = call("p6b", "p6b-perks", event=("P6", "perk trees"),
+             setting_line=setting_line, zone_lines=p6_zone_lines,
+             building_lines=p6_building_lines, roster_lines=p6_roster_lines,
+             growth_line=growth_line, _validate=check_p6b)
+    if d is None:
+        stats["dropped"].append(("systems", "perk trees fell back to none "
+                                 "(no JSON after retries)"))
+    else:
+        systems.update(sanitize_p6b(d, stats["dropped"]))
+
+    d = call("p6c", "p6c-story", event=("P6", "calendar and quests"),
+             setting_line=setting_line,
+             player_role=(frame or {}).get("playerRole") or player.get("role", "a newcomer"),
+             conflict_line=(frame or {}).get("conflict") or "the situation the player walked into",
+             zone_lines=p6_zone_lines, building_lines=p6_building_lines,
+             roster_lines=p6_roster_lines,
+             _validate=lambda x: check_p6c(x, regions))
+    if d is None:
+        stats["dropped"].append(("systems", "calendar and quests fell back "
+                                 "to none (no JSON after retries)"))
+    else:
+        systems.update(sanitize_p6c(d, stats["dropped"], regions))
+
     plan = {
         "name": p1.get("name", "Generated World"),
         "worldBackground": p1.get("worldBackground", ""),
@@ -2301,6 +2767,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         "npcs": p5["npcs"],
         "player": p5["player"],
     }
+    plan.update(systems)
     if frame is not None:
         plan["frame"] = frame
     if questionnaire is not None:

@@ -1,0 +1,44 @@
+Write this world's story clock: the calendar of obligations and the quests
+the player starts with.
+
+WORLD: ${setting_line}
+PLAYER ROLE: ${player_role}
+CONFLICT: ${conflict_line}
+ZONES:
+${zone_lines}
+BUILDINGS:
+${building_lines}
+PEOPLE (home and work are where their days go):
+${roster_lines}
+
+A calendar event's location must be one of the REGION NAMES above - a zone
+name or a building name, exactly as written.
+
+Reply with ONE JSON object:
+{
+  "calendar": [
+    {"name": "the event", "location": "a region name from the lists",
+     "day": 0, "start": "08:00", "hours": 2,
+     "recurrence": "none|daily|weekly",
+     "missedConsequence": "what happens when the player misses it"}
+  ],
+  "quests": [
+    {"title": "the quest's title",
+     "objectives": [
+       {"text": "the completing act",
+        "prerequisites": [{"text": "a step on the way", "primary": true},
+                          {"text": "another step", "primary": false}]}
+     ]}
+  ]
+}
+
+- day 0 is TODAY (the game starts day 1 at 08:00). One-off events
+  (recurrence "none") sit inside the first week: day 0-6.
+- Recurring obligations are the place's rhythm - markets, services, shifts,
+  drills - with recurrence "daily" or "weekly".
+- Write 2-4 one-off events in the first week, each at a real region, each
+  with a consequence that stings.
+- 1-2 quests. quests[0] is the tracked one: it grows from the player role
+  and the conflict above, its steps name real places and real people from
+  the lists, and exactly one path through the prerequisites is primary.
+

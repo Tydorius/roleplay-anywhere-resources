@@ -201,13 +201,19 @@ def build_spec(world, plan):
         "gridSize": [world.grid[0], world.grid[1]],
         "defaultTile": default_tile,
         "weatherKinds": extras.get("weatherKinds", ["clear", "rain", "fog"]),
-        "currency": extras.get("currency", {"name": "Copper penny",
-                                            "description": "The village's small coin.",
-                                            "format": "5 pennies"}),
+        # genre-neutral fallbacks: no copper pennies in a cyberpunk world, and
+        # the game's rule is base 3 each plus exactly 10 points (a 25 total)
+        "currency": extras.get("currency", {"name": "Coin",
+                                            "description": "The common coin of the region.",
+                                            "format": "5 coins"}),
         "startingCurrency": extras.get("startingCurrency", 5),
-        "attributes": extras.get("attributes", {"strength": 5, "dexterity": 4, "intellect": 4,
+        "attributes": extras.get("attributes", {"strength": 5, "dexterity": 5, "intellect": 5,
                                                 "perception": 5, "charisma": 5}),
         "skills": extras.get("skills", {}),
+        "variables": extras.get("variables", []),
+        "perkTrees": extras.get("perkTrees", []),
+        "calendar": extras.get("calendar", []),
+        "quests": extras.get("quests", []),
         "regions": regions,
         "objectTemplates": object_templates,
         "itemTemplates": [

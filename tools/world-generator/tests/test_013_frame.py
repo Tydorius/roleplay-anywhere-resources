@@ -143,7 +143,7 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         plan, stats = phases.run_phases(
             "a mill village", client, frame=frame,
             questionnaire={"mode": "short", "answers": {}, "population": [5, 6]})
-        self.assertEqual(client.calls, 8, "no extra P0 call: the frame came in")
+        self.assertEqual(client.calls, 11, "no extra P0 call: the frame came in")
         p1_prompt = client.sent[0][1]["content"]
         self.assertIn("WORLD FRAME", p1_prompt)
         self.assertIn(frame["premise"], p1_prompt)
@@ -167,7 +167,7 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         plan, _stats = phases.run_phases(
             "a mill village", client,
             questionnaire={"mode": "quick", "answers": {}, "population": [5, 6]})
-        self.assertEqual(client.calls, 9, "P0 ran, then the eight canned calls")
+        self.assertEqual(client.calls, 12, "P0 ran, then the eleven canned calls")
         self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
 
     def test_no_frame_no_questionnaire_is_yesterdays_path(self):
@@ -175,7 +175,7 @@ class TestFrameFlowsThroughThePhases(unittest.TestCase):
         plan, _stats = phases.run_phases("a mill village", client)
         self.assertNotIn("frame", plan)
         self.assertNotIn("questionnaire", plan)
-        self.assertEqual(client.calls, 8)
+        self.assertEqual(client.calls, 11)
 
     def test_frame_brief_is_empty_without_a_frame(self):
         self.assertEqual(frame_brief(None), "")
