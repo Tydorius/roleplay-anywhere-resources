@@ -980,8 +980,9 @@ def _gutter_route(a, b, zones, grid, placed):
     1-wide rects or None."""
     W, H = grid
     occupied = set()
-    for zr in _iter_rects(list(zones.values())):
-        occupied |= zr.cells()
+    for piece in zones.values():
+        for zr in _iter_rects(piece):
+            occupied |= zr.cells()
     for r in placed:
         occupied |= r.cells()
 

@@ -20,6 +20,9 @@ BUILDS = {
     "medieval-glm-floors-plan.json": (("floors", "region-groups"), ()),
     "floors-plan.json": (("floors",), ()),
     "village.json": ((),),
+    # the compound fixture: floors on and off, region-groups on and off
+    "ashvale-compound.plan.json": ((), ("region-groups",), ("floors",),
+                                   ("floors", "region-groups")),
 }
 for _name in REAL_PLANS:
     BUILDS[_name] = ((), ("region-groups",))

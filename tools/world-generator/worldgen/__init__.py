@@ -379,10 +379,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                 zz = z
                 piece_label = z.name
             else:
-                # extra pieces carry no buildings, paths or centre props; they
-                # still take the zone's filler so a wrap dresses like one land
+                # extra pieces carry no buildings, compounds, paths or centre
+                # props; they still take the zone's filler so a wrap dresses
+                # like one land
                 zz = dataclasses.replace(
-                    z, buildings=[], outdoor=[],
+                    z, buildings=[], compounds=[], outdoor=[],
                     dressing=dataclasses.replace(z.dressing, props=[], paths="none"))
                 piece_label = f"{z.name} {_piece_direction(primary, prect)}"
             zout = layout_zone.layout_zone(zz, prect, world.templates, rng,
