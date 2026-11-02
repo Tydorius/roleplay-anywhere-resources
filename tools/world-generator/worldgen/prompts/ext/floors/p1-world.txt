@@ -1,4 +1,11 @@
 STOREYS (the floors extension)
-- A building entry may add "storeys": 1-3. Use upper floors where the setting
-  has them: inns, town houses, apartment stacks, towers. Most buildings stay
+- A building entry may add "storeys": 1-3 — up to 6 when it has "units" or is
+  a part of a compound. Use upper floors where the setting has them: inns,
+  town houses, apartment stacks, towers, a ship's decks. Most buildings stay
   single-storey (omit the field, or use 1).
+- A unit building's "units" may add "perStorey" (units per floor; omit it to
+  spread the count over the storeys): {"name": "Cabin", "count": 9,
+  "perStorey": 3, "residents": 2} with "storeys": 3 fills three decks.
+- "numbering": "plain" names the copies Apartment 1, 2, 3 across the floors;
+  "storey" numbers each floor's rooms 101, 102 ... 201, 202 (hotel or
+  hospital style).

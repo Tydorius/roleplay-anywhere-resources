@@ -1,6 +1,7 @@
 """The P1 compound contract (raw plan validation, the 16-building cap when
 compounds are used, sanitizing) and P3's one line per part on its slot and
 its neighbours."""
+import os
 import unittest
 
 from worldgen import phases
@@ -219,11 +220,123 @@ class TestPromptText(unittest.TestCase):
                     "Most buildings are not in a compound"):
             self.assertIn(bit, t)
 
+    def test_p1_prompt_teaches_every_shape_and_units(self):
+        t = phases._template("p1-world").substitute(rules="", idea="x")
+        for bit in ("enclosure", "row", "spine", "cluster", "sameAs",
+                    "units", "residents", "void", "frontage",
+                    "spineWidth", "linked", "exterior",
+                    "Never list or design the copies one by one",
+                    "not templates. Combine shapes freely"):
+            self.assertIn(bit, t)
+        # four setting examples, none of them the only way to build
+        for bit in ("castle", "strip mall", "hospital", "starship"):
+            self.assertIn(bit, t)
+
+    def test_floors_fragment_teaches_storeys_and_per_storey(self):
+        path = os.path.join(os.path.dirname(phases.PROMPTS_DIR),
+                            "prompts", "ext", "floors", "p1-world.txt")
+        with open(path, "r", encoding="utf-8") as f:
+            frag = f.read()
+        for bit in ("storeys", "perStorey", "numbering", "up to 6"):
+            self.assertIn(bit, frag)
+
     def test_p3_prompt_carries_the_compound_line(self):
         t = phases._template("p3-building").substitute(
             rules="", setting_line="", zone_line="", building_line="",
             catalogue_lines="", compound_line="LINE", building_name="B")
         self.assertIn("COMPOUND: LINE", t)
+
+
+class TestCheckP1UnitsAndShapes(unittest.TestCase):
+    """012f change 1: the raw reply's units, storeys cap, void zones and the
+    row/spine compound fields all validate, and sanitize fixes them."""
+
+    def unit_building(self, **units):
+        d = world()
+        d["zones"][0]["buildings"][0]["units"] = \
+            {"name": "Apartment", "count": 12, "perStorey": 4, "residents": 2}
+        d["zones"][0]["buildings"][0]["units"].update(units)
+        return d
+
+    def test_good_units_pass_and_rise_to_six_storeys(self):
+        d = self.unit_building()
+        d["zones"][0]["buildings"][0]["storeys"] = 6
+        self.assertEqual([e for e in errors(d) if "units" in e or "storeys" in e], [])
+
+    def test_bad_units_fields(self):
+        for bad in ({"count": 0}, {"count": "many"}, {"perStorey": 99},
+                    {"residents": -1}, {"numbering": "roman"}, {"name": ""}):
+            with self.subTest(bad=bad):
+                self.assertTrue(any("units" in e for e in errors(self.unit_building(**bad))))
+
+    def test_seven_storeys_needs_units_or_a_compound_part(self):
+        d = self.unit_building()
+        d["zones"][0]["buildings"][0]["storeys"] = 7
+        self.assertTrue(any("1..6" in e for e in phases.check_p1(d, floors=True)))
+        d = world()
+        d["zones"][0]["buildings"][0]["storeys"] = 7
+        self.assertTrue(any("1..3" in e for e in phases.check_p1(d, floors=True)))
+        # a compound part rises to 6 too
+        d = world(compounds=[castle_compound()])
+        d["zones"][0]["buildings"][0]["storeys"] = 6
+        self.assertFalse(any("storeys" in e for e in phases.check_p1(d, floors=True)))
+
+    def test_sanitize_fixes_units_and_bad_exterior(self):
+        d = self.unit_building(perStorey="all", residents=99, numbering="roman")
+        d["zones"][0]["exterior"] = "space"
+        out = []
+        d = phases.sanitize_p1(d, out, floors=True)
+        u = d["zones"][0]["buildings"][0]["units"]
+        self.assertEqual((u["perStorey"], u["residents"], u["numbering"]),
+                         (0, 0, "plain"))
+        self.assertNotIn("exterior", d["zones"][0])
+        self.assertTrue(any("exterior" in r for (_w, r) in out))
+
+    def test_row_and_spine_fields_validate(self):
+        comp = {"name": "The Row", "zone": "Castle Rise", "shape": "row",
+                "frontage": "up", "front": "canal",
+                "parts": [{"building": "Castle Rise Building 1", "at": "row:0"}]}
+        errs = errors(world(compounds=[comp]))
+        self.assertTrue(any("frontage" in e for e in errs))
+        self.assertTrue(any("front must be" in e for e in errs))
+        comp = {"name": "The Spine", "zone": "Castle Rise", "shape": "spine",
+                "axis": "diagonal", "spineWidth": 9,
+                "parts": [{"building": "Castle Rise Building 1", "at": "spine:hub"}]}
+        errs = errors(world(compounds=[comp]))
+        self.assertTrue(any("axis" in e for e in errs))
+        self.assertTrue(any("spineWidth" in e for e in errs))
+
+    def test_same_as_rules(self):
+        comp = castle_compound()
+        comp["shape"] = "spine"
+        comp["axis"] = "ns"
+        comp["hub"] = "start"
+        comp["parts"] = [
+            {"building": "Castle Rise Building 1", "at": "spine:hub"},
+            {"building": "Castle Rise Building 2", "at": "spine:left:0",
+             "sameAs": "Castle Rise Building 1"},
+            {"building": "Castle Rise Building 3", "at": "spine:right:0",
+             "sameAs": "Castle Rise Building 2"}]
+        errs = errors(world(n_castle=3, compounds=[comp]))
+        self.assertTrue(any("itself uses sameAs" in e for e in errs))
+        comp["parts"][2]["sameAs"] = "Nope"
+        errs = errors(world(n_castle=3, compounds=[comp]))
+        self.assertTrue(any("sameAs target" in e for e in errs))
+
+    def test_cluster_needs_a_hub_and_spine_takes_no_gate(self):
+        comp = {"name": "The Cluster", "zone": "Castle Rise", "shape": "cluster",
+                "axis": "ns", "hub": "center",
+                "parts": [{"building": "Castle Rise Building 1", "at": "spine:left:0"},
+                          {"building": "Castle Rise Building 2", "at": "spine:right:0"}]}
+        self.assertTrue(any("needs one part at spine:hub" in e
+                            for e in errors(world(compounds=[comp]))))
+        comp["parts"].append({"building": "Castle Rise Building 3", "at": "spine:hub"})
+        self.assertEqual([e for e in errors(world(n_castle=3, compounds=[comp]))], [])
+        comp["shape"] = "spine"
+        comp["spineWidth"] = 3
+        comp["parts"][2]["gate"] = True
+        errs = errors(world(n_castle=3, compounds=[comp]))
+        self.assertTrue(any("takes no gate parts" in e for e in errs))
 
 
 if __name__ == "__main__":

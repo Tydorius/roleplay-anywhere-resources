@@ -15,6 +15,7 @@ import time
 
 from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
+                    HUB_POSITIONS, ROW_FRONTS, SIDE_WORDS, SPINE_AXES,
                     VALID_ARRANGEMENTS, is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
@@ -29,6 +30,10 @@ WALLS = ("wood", "brick", "stone", "steel")
 PATH_KINDS = ("none", "dirt", "cobble", "paved")
 YARD_SIDES = ("front", "back", "left", "right")
 FILL_DENSITY = ("low", "medium", "high")
+EXTERIORS = ("", "void")
+UNIT_NUMBERING = ("plain", "storey")
+MAX_UNIT_COUNT = 48        # copies across the building's storeys
+MAX_UNIT_RESIDENTS = 8     # beds stamped inside each copy
 
 MAX_BUILDINGS = 12      # across the whole P1 plan
 MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
@@ -219,11 +224,28 @@ def compound_errors(compounds, zone_names, building_zone):
             errors.append(f"{ctx}: courtyard must be small, medium or large")
         if c.get("walls", "walkable") not in COMPOUND_WALLS:
             errors.append(f"{ctx}: walls must be walkable, solid or none")
+        if shape == "row":
+            if c.get("frontage", "south") not in SIDE_WORDS:
+                errors.append(f"{ctx}: frontage must be north, south, east or west")
+            if c.get("front", "none") not in ROW_FRONTS:
+                errors.append(f"{ctx}: front must be street, parking, walkway or none")
+        if shape in ("spine", "cluster"):
+            if c.get("axis", "ns") not in SPINE_AXES:
+                errors.append(f"{ctx}: axis must be ns or ew")
+            if c.get("hub", "center") not in HUB_POSITIONS:
+                errors.append(f"{ctx}: hub must be center, start or end")
+            width = c.get("spineWidth", 3)
+            if shape == "cluster":
+                width = 0
+            elif not (_check_int(width) and 3 <= width <= 5):
+                errors.append(f"{ctx}: spineWidth must be 3-5 (cluster is the "
+                              f"spineWidth-0 case)")
         parts = c.get("parts")
         if not isinstance(parts, list) or not parts:
             errors.append(f"{ctx}: parts must be a non-empty list")
             continue
         slots, gates, hosts = set(), [], {}
+        hubs, same_as = [], {}
         for j, p in enumerate(parts):
             pctx = f"{ctx} part {j + 1}"
             if not isinstance(p, dict):
@@ -269,12 +291,32 @@ def compound_errors(compounds, zone_names, building_zone):
                 if shape != "enclosure" or bits[0] != "edge":
                     errors.append(f"{pctx}: only an enclosure edge part can be the gate")
                 gates.append(bname)
+            if bits[:1] == ["spine"] and bits[1:2] == ["hub"]:
+                hubs.append(bname)
+            if "sameAs" in p and p["sameAs"]:
+                if not _is_str(p["sameAs"]) or p["sameAs"] == bname:
+                    errors.append(f"{pctx}: sameAs must name another part's building")
+                else:
+                    same_as[bname] = p["sameAs"]
             if bits[0] == "attached":
                 hosts[bname] = bits[1]
             elif _is_str(bname):
                 hosts[bname] = None
         if len(gates) > 2:
             errors.append(f"{ctx}: at most two gates, got {len(gates)}")
+        if shape in ("spine", "cluster") and gates:
+            errors.append(f"{ctx}: a {shape} takes no gate parts (the hub gates it)")
+        if len(hubs) > 1:
+            errors.append(f"{ctx}: at most one hub part, got {len(hubs)}")
+        if shape == "cluster" and not hubs:
+            errors.append(f"{ctx}: a cluster needs one part at spine:hub")
+        for bname, target in same_as.items():
+            if target not in hosts:
+                errors.append(f"{ctx} part {bname!r}: sameAs target {target!r} "
+                              f"is not a part of {name!r}")
+            elif target in same_as:
+                errors.append(f"{ctx} part {bname!r}: sameAs target {target!r} "
+                              f"itself uses sameAs; name the design's owner")
         for bname, host in hosts.items():
             if host is not None and host not in hosts:
                 errors.append(f"{ctx} part {bname!r}: attached host {host!r} "
@@ -357,6 +399,63 @@ def _prop_errors(props, ctx, templates, buildings=None, max_count=MAX_COUNT):
 
 # ---------------------------------------------------------- P1 world plan
 
+def _unit_errors(b, ctx, errors):
+    """The P1 "units" field of one building: name, count, perStorey,
+    residents, numbering."""
+    u = b.get("units")
+    if u is None or u == {}:
+        return
+    if not isinstance(u, dict):
+        errors.append(f"{ctx}.units: must be an object "
+                      f"{{name, count, perStorey, residents}}")
+        return
+    if not _is_str(u.get("name")):
+        errors.append(f"{ctx}.units.name: required, e.g. 'Apartment'")
+    c = u.get("count")
+    if not _check_int(c) or not 1 <= c <= MAX_UNIT_COUNT:
+        errors.append(f"{ctx}.units.count: a whole number 1..{MAX_UNIT_COUNT}, not {c!r}")
+    ps = u.get("perStorey", 0)
+    if not _check_int(ps) or not 0 <= ps <= (c if _check_int(c) else 1):
+        errors.append(f"{ctx}.units.perStorey: 0 (spread over the storeys) or "
+                      f"1..count, not {ps!r}")
+    r = u.get("residents", 0)
+    if not _check_int(r) or not 0 <= r <= MAX_UNIT_RESIDENTS:
+        errors.append(f"{ctx}.units.residents: a whole number "
+                      f"0..{MAX_UNIT_RESIDENTS}, not {r!r}")
+    if u.get("numbering", "plain") not in UNIT_NUMBERING:
+        errors.append(f"{ctx}.units.numbering: plain or storey, "
+                      f"not {u.get('numbering')!r}")
+
+
+def _sanitize_units(b, name, log):
+    """Fix the P1 "units" fields in place; drop the whole field when its
+    count is beyond saving (a unit building with no count is a plain one)."""
+    u = b.get("units")
+    if u is None:
+        return
+    if not isinstance(u, dict) or not _check_int(u.get("count")) \
+            or not 1 <= u["count"] <= MAX_UNIT_COUNT:
+        log.append((f"building {name}", f"units {u!r} dropped: not an object "
+                    f"with a count 1..{MAX_UNIT_COUNT}"))
+        b.pop("units", None)
+        return
+    if not _is_str(u.get("name")):
+        log.append((f"building {name}", f"units.name {u.get('name')!r} -> 'Apartment'"))
+        u["name"] = "Apartment"
+    if not _check_int(u.get("perStorey", 0)) or not 0 <= u.get("perStorey", 0) <= u["count"]:
+        log.append((f"building {name}",
+                    f"units.perStorey {u.get('perStorey')!r} -> 0 (spread)"))
+        u["perStorey"] = 0
+    if not _check_int(u.get("residents", 0)) or not 0 <= u.get("residents", 0) <= MAX_UNIT_RESIDENTS:
+        log.append((f"building {name}",
+                    f"units.residents {u.get('residents')!r} -> 0"))
+        u["residents"] = 0
+    if u.get("numbering", "plain") not in UNIT_NUMBERING:
+        log.append((f"building {name}",
+                    f"units.numbering {u.get('numbering')!r} -> 'plain'"))
+        u["numbering"] = "plain"
+
+
 def check_p1(d, floors=False):
     errors = []
     if not isinstance(d, dict):
@@ -400,6 +499,9 @@ def check_p1(d, floors=False):
         if arrangement not in ("",) + VALID_ARRANGEMENTS:
             errors.append(f"{ctx}.arrangement: must be one of "
                           f"{list(VALID_ARRANGEMENTS)}, not {arrangement!r}")
+        if z.get("exterior", "") not in EXTERIORS:
+            errors.append(f"{ctx}.exterior: omit for open ground or set void, "
+                          f"not {z.get('exterior')!r}")
         adj = z.get("adjacentTo", [])
         if not isinstance(adj, list):
             errors.append(f"{ctx}.adjacentTo: must be a list of zone names")
@@ -418,6 +520,9 @@ def check_p1(d, floors=False):
     bz = {b.get("name"): z.get("name") for z in zones if isinstance(z, dict)
           for b in (z.get("buildings") or []) if isinstance(b, dict)}
     errors.extend(compound_errors(d.get("compounds") or [], zn, bz))
+    part_names = {p.get("building") for c in (d.get("compounds") or [])
+                  if isinstance(c, dict)
+                  for p in (c.get("parts") or []) if isinstance(p, dict)}
     bnames = set()
     for z in zones:
         if not isinstance(z, dict):
@@ -436,10 +541,13 @@ def check_p1(d, floors=False):
             if not _is_str(b.get("kind")):
                 errors.append(f"{ctx}: kind required")
             _enum(b, "sizeClass", BUILDING_SIZES, ctx, errors)
+            _unit_errors(b, ctx, errors)
             if floors and "storeys" in b:
+                top = 6 if (b.get("units") or b["name"] in part_names) else 3
                 s = b["storeys"]
-                if not _check_int(s) or not 1 <= s <= 3:
-                    errors.append(f"{ctx}: storeys must be a whole number 1..3, not {s!r}")
+                if not _check_int(s) or not 1 <= s <= top:
+                    errors.append(f"{ctx}: storeys must be a whole number 1..{top}, "
+                                  f"not {s!r}")
             if not _is_str(b.get("purpose")):
                 errors.append(f"{ctx}: purpose required, one phrase")
             y = b.get("yard")
@@ -489,6 +597,10 @@ def sanitize_p1(d, log, floors=False):
             log.append((f"zone {z['name']}",
                         f"arrangement {z.get('arrangement')!r} dropped"))
             z.pop("arrangement", None)
+        if z.get("exterior", "") not in EXTERIORS:
+            log.append((f"zone {z['name']}",
+                        f"exterior {z.get('exterior')!r} dropped (open ground)"))
+            z.pop("exterior", None)
         z["adjacentTo"] = [n for n in (z.get("adjacentTo") or [])
                            if isinstance(n, str) and n != z["name"]]
         z.setdefault("outdoor", [])
@@ -506,7 +618,11 @@ def sanitize_p1(d, log, floors=False):
             log.append((f"road {r.get('from')}-{r.get('to')}", "dropped: bad endpoints"))
     d["roads"] = roads
     # one pass across zones so the building cap is global; compounds raise
-    # it, since a compound's towers and gatehouse are buildings too
+    # it, since a compound's towers and gatehouse are buildings too. A unit
+    # building or a compound part may rise to 6 storeys, the rest to 3.
+    part_names = {p.get("building") for c in (d.get("compounds") or [])
+                  if isinstance(c, dict)
+                  for p in (c.get("parts") or []) if isinstance(p, dict)}
     seen, total = set(), 0
     for z in zones:
         keep = []
@@ -519,8 +635,10 @@ def sanitize_p1(d, log, floors=False):
                 log.append((f"building {b['name']}",
                             f"sizeClass {b.get('sizeClass')!r} -> 'small'"))
                 b["sizeClass"] = "small"
+            _sanitize_units(b, b["name"], log)
             if floors:
-                if not _check_int(b.get("storeys", 1)) or not 1 <= b.get("storeys", 1) <= 3:
+                top = 6 if (b.get("units") or b["name"] in part_names) else 3
+                if not _check_int(b.get("storeys", 1)) or not 1 <= b.get("storeys", 1) <= top:
                     log.append((f"building {b['name']}",
                                 f"storeys {b.get('storeys')!r} -> 1"))
                     b["storeys"] = 1
