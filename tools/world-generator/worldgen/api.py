@@ -262,6 +262,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
         "rooms_reachable": f"{rooms.get('reachable')}/{rooms.get('total')}",
         "entrances_from_road": f"{ents.get('reachable_from_road')}/{ents.get('total')}",
         "reachability": world.metrics.get("reachability"),
+        "map_warnings": world.metrics.get("map_warnings", []),
     }
 
 
@@ -338,6 +339,8 @@ def _summary_text(world, spec, seed, emit):
     if fl.get("floors"):
         lines.append(f"upper storeys {fl['floors']}  stair portals {fl['portals']}  "
                      f"floors checks: {'ok' if not fl.get('issues') else fl['issues']}")
+    for w in world.metrics.get("map_warnings", []):
+        lines.append(f"warning: {w}")
     lines.append("=" * 64)
     emit("\n".join(lines))
 

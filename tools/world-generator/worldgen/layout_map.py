@@ -21,6 +21,7 @@ examples/region-groups makes them act as one region.
 """
 import dataclasses
 import math
+import random
 
 from .model import Rect, is_urban_zone, zone_class
 
@@ -28,8 +29,8 @@ GRID_MIN = 48
 GRID_WARN = 256                 # past this on an axis the map warns, never caps
 MIN_GUTTER, MAX_GUTTER = 2, 3   # empty cells between neighbouring zones
 MIN_ZONE_SIDE = 12              # thinnest zone the partition ever cuts
-AREA_HEADROOM = 1.15            # grid area over the zones' target area
 FIT_SLACK = 0.85                # footprint estimates run hot; buildings resolve smaller
+ELASTIC_STRETCH = 1.75           # farthest farmland stretches past its measured length
 MAX_BAND_ASPECT = 1.3           # longest a built-up zone may run along its band
 CENTER_CAP_SLACK = 1.05         # a lone settlement centre may exceed its fit by
 SIDE_STREET_COUNT = {"few": 5, "many": 9}   # buildings that add a crossing street
@@ -76,6 +77,7 @@ class MapOut:
         self.zone_pieces = {}    # zone name -> [Rect] (one, except wraps)
         self.roads = []          # [RoadOut]
         self.zone_road_reserve = {}  # zone name -> cells that must stay clear (road mouths)
+        self.zone_layout = {}    # built zone name -> (inner seed, entry sides) its layout replays
         self.failures = []
         self.warnings = []       # non-fatal notes (a grid past GRID_WARN)
         self.default_ground = ("grass", "grass")  # the plan's dominant wild ground
@@ -287,34 +289,63 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
     """Place the zones on the grid and lay the roads; returns a MapOut.
     ``weight_scale`` multiplies selected zones' weights (a second pass
     nudging zones whose measured building coverage missed its target)."""
+    from .layout_zone import measure_zone
     tmap = tmap_of(plan)
     scale = weight_scale or {}
 
     weights = {z.name: _zone_weight(z, tmap) * scale.get(z.name, 1.0)
                for z in plan.zones}
     mins = {z.name: _zone_mins(z, tmap) for z in plan.zones}
-    # a blocks-only zone's fit is exact (the blocks place verbatim), so its
-    # caps are its own fit dims per axis, never above them — the band and
-    # centre caps for loose-built zones carry slack for estimates that run
-    # hot. A lightly built zone's single placement is exact the same way:
-    # its caps are its minimums, the fit already trusted at FIT_SLACK there
-    exact = {}
+    # a built zone is measured, not estimated: it lays itself out in its own
+    # frame — mouths on the sides its roads arrive at, at the scale the growth
+    # passes ask for — and the size that held it is the size the map places.
+    # The probe rng is a clone of the map's state, so measuring leaves the
+    # map's own stream untouched; each zone's inner seed is kept so the build
+    # replays the very layout that fitted.
+    probe_rng = random.Random(0)
+    probe_rng.setstate(rng.getstate())
+    _sides, entry = _assign_sides(plan, *_settlement_group(plan, weights), weights,
+                                  probe_rng, *_grid_size(weights))
+    measured = {}     # built zone name -> (w, h) its own layout used
+    zone_layout = {}  # built zone name -> (inner seed, entry sides) to replay
     for z in plan.zones:
-        compounds = getattr(z, "compounds", None) or []
-        if not compounds:
+        if not (z.buildings or getattr(z, "compounds", None)):
             continue
-        parts = {p.building for c in compounds for p in c.parts}
-        if not all(b.name in parts for b in z.buildings):
-            continue
-        fc, fa = _zone_fit(z, tmap)[1:]
-        exact[z.name] = (max(mins[z.name][0], round(fc)),
-                         max(mins[z.name][1], round(fa)))
-    for z in plan.zones:
-        if _lightly_built(z, tmap):
-            exact[z.name] = mins[z.name]
+        probe = {}
+        size = measure_zone(z, tmap, probe_rng, entry[z.name],
+                            scale=max(scale.get(z.name, 1.0), 1.0), probe=probe)
+        if scale.get(z.name, 1.0) < 1.0:
+            # the coverage pass tightens below the measurement: the layout
+            # adapts to a squeezed frame, and the build-score comparison in
+            # run() keeps whichever build placed everything at the better
+            # coverage — a squeeze that drops content loses its retry. The
+            # factor is over the area, so each axis takes its root
+            f = math.sqrt(scale[z.name])
+            base = _zone_mins(z, tmap)
+            size = (max(base[0], round(size[0] * f)),
+                    max(base[1], round(size[1] * f)))
+        measured[z.name] = size
+        zone_layout[z.name] = (probe["seed"], tuple(entry[z.name]))
+    for name, (mw, mh) in measured.items():
+        mins[name] = (mw, mh)
+        weights[name] = mw * mh
+    # a measured zone's size is a measurement, not an estimate: the map never
+    # stretches it past what its own layout used, on either axis — the same
+    # role the fit-based caps played for blocks-only and lightly built zones.
+    # A fields zone is elastic along its band instead: its crop plots scale
+    # with the ground, so spare band length reads as farmland, not vacancy.
+    exact = dict(measured)
+    # Up to ELASTIC_STRETCH of its measured length, though: past that the
+    # plots are a strip of empty ground down a whole map edge
+    elastic = {z.name: measured[z.name] for z in plan.zones
+               if z.name in measured
+               and (zone_class(z) == "agricultural" or z.arrangement == "fields")}
+    for name in elastic:
+        exact.pop(name, None)
     aspects = {z.name: _zone_aspect(z) for z in plan.zones}
-    fits = {z.name: tuple(c * FIT_SLACK for c in _zone_fit(z, tmap)) for z in plan.zones
-            if zone_class(z) == "settlement" and z.buildings}
+    fits = {z.name: (weights[z.name],) + measured[z.name]
+            for z in plan.zones
+            if zone_class(z) == "settlement" and z.name in measured}
     margin = rng.randint(2, 3)
     gut = rng.randint(MIN_GUTTER, MAX_GUTTER)
 
@@ -328,13 +359,18 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
                 sum(weights[n] for n in fits))
     m = MapOut()
     m.grid = _grid_size(weights, core)
+    m.zone_layout = zone_layout
     m.extensions = set(extensions)
     m.density_scale = {"sparse": 0.6, "normal": 1.0, "dense": 1.4}.get(
         (plan.setting or {}).get("density"), 1.0)
     _place_centred(plan, m, weights, mins, aspects, rng, fits, margin, gut,
                    exact=exact, fit_of={z.name: _zone_fit(z, tmap) for z in plan.zones},
                    along_floor={z.name: _fields_along_floor(z, tmap)
-                                for z in plan.zones if _fields_along_floor(z, tmap)})
+                                for z in plan.zones if _fields_along_floor(z, tmap)},
+                   elastic=elastic)
+    if max(m.grid) > GRID_WARN:
+        m.warnings.append(
+            f"grid {m.grid[0]}x{m.grid[1]} runs past {GRID_WARN} on an axis")
     m.roads, road_failures = _place_roads(plan, m.zones, m.grid, rng, m.all_pieces())
     m.failures.extend(road_failures)
     m.zone_road_reserve = _road_mouths(m.all_pieces(), m.roads)
@@ -345,24 +381,27 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
 # ------------------------------------------------------------------ placement
 
 def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gut=2,
-                   exact=None, fit_of=None, along_floor=None):
+                   exact=None, fit_of=None, along_floor=None, elastic=None):
     """The settlement group takes a central block; every other zone takes a
     band on the side its adjacency points at. A thin margin of open country
-    frames the map, so no zone spans it edge to edge; the leftover margin is
+    frames the map, so no Zone spans it edge to edge; the leftover margin is
     where roads walk when their endpoints do not face each other.
 
     The settlement group forms one connected core: its zones sit as
     neighbouring blocks side by side, so the core is as wide as their
     street grids and the grid stretches to fit before anything is placed.
-    ``exact`` caps the blocks-only zones: their fit is a measurement, not an
-    estimate, so they are never stretched past it (``fit_of`` carries every
-    zone's fit for the lone centre's caps). ``along_floor`` names the least
-    length a zone's segment must run along its band — a fields zone's plots
-    beside its farmstead."""
+    ``exact`` caps the built zones: their measured size is a measurement,
+    not an estimate, so they are never stretched past it (``fit_of`` carries
+    every zone's fit for the lone centre's caps). ``along_floor`` names the
+    least length a zone's segment must run along its band — a fields zone's
+    plots beside its farmstead. ``elastic`` maps zones (farmland) to their measured size: they
+    take spare band length up to ELASTIC_STRETCH of it, their plots scaling
+    with the ground."""
     fits = fits or {}
     exact = exact or {}
     fit_of = fit_of or {}
     along_floor = along_floor or {}
+    elastic = elastic or {}
     W, H = m.grid
     classes = {z.name: zone_class(z) for z in plan.zones}
     settle, outer = _settlement_group(plan, weights)
@@ -426,6 +465,11 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     def content_size():
         span_x = max(core_w, cap_x or 0)
         span_y = max(core_h, cap_y or 0)
+        if len(core_names) >= 2 and W < H:
+            # the core cuts as a column on a tall map: its blocks stack, so
+            # their heights sum (cmin's column case, grown into the grid)
+            span_x = max(span_x, max(crosses))
+            span_y = max(span_y, sum(alongs) + gut * (len(core_names) - 1))
         if vertical_full:
             # the north/south bands run between the west/east ones, so the
             # centre's span must also hold their stacked widths
@@ -619,7 +663,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             elif side == h and v in bands:
                 pinned[n] = v          # a horizontal band pins to west/east
         segs = _stack_band(band, side, members, pinned, weights, mins, gut, rng,
-                           built=built, exact=exact, along_floor=along_floor)
+                           built=built, exact=exact, along_floor=along_floor,
+                           elastic=elastic)
         for n, r in segs.items():
             seg_by_band[(side, n)] = r
             pieces[n].append(r)
@@ -688,20 +733,23 @@ def _ring_bands(xr, yr, margin, gut, W, H, vertical_full):
 
 
 def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
-                exact=None, along_floor=None):
+                exact=None, along_floor=None, elastic=None):
     """Cut one band into per-zone segments. Pinned zones (a wrap's pieces)
     sit at their end of the band; the rest fill the middle by weight from a
     seeded end. A built-up zone is never stretched past MAX_BAND_ASPECT of
     its share or of the band's width — a lone zone on a side does not run
     the whole map edge; the spare goes to the band's wild zones, and what
-    they cannot take stays default tile margin. ``mins`` are per axis
+    they cannot take stays uncut as default tile margin. ``mins`` are per axis
     ((min w, min h)); the segment's length runs along the band's axis, and a
-    blocks-only zone (``exact``) caps at its own measured fit on that axis.
+    measured zone (``exact``) caps at its measured size on that axis.
     ``along_floor`` floors a zone's length along the band beyond its own
-    axis minimum — a fields zone's plots beside its farmstead. Returns
-    {name: Rect}."""
+    axis minimum — a fields zone's plots beside its farmstead — and an
+    ``elastic`` zone (farmland) takes spare length up to ELASTIC_STRETCH of
+    its measured size.
+    Returns {name: Rect}."""
     exact = exact or {}
     along_floor = along_floor or {}
+    elastic = elastic or {}
     along = band.h if side in ("west", "east") else band.w
     cross = band.w if side in ("west", "east") else band.h
     mi = 1 if side in ("west", "east") else 0   # the axis the length runs along
@@ -724,7 +772,9 @@ def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
         if n not in built or weights[n] <= 0:
             continue
         floor = floor_of(n)
-        if n in exact:
+        if n in elastic:
+            caps[n] = max(floor, min(round(ELASTIC_STRETCH * elastic[n][mi]), along))
+        elif n in exact:
             caps[n] = max(floor, min(exact[n][mi], along))
         else:
             caps[n] = max(floor, min(round(MAX_BAND_ASPECT * cross),
@@ -954,13 +1004,13 @@ def _grid_size(weights, core=None):
     ``core`` is (w, h, weight): the settlement core's own span when it is
     a row of blocks — the greater of that rectangle and the settlement
     weights shapes the grid, so the core's blocks stay blocks instead of
-    stretching into bands."""
+    stretching into bands. Built zones are measured now, so their weights
+    carry no estimate slack to headroom over."""
     area = float(sum(weights.values()))
     aspect = 1.0
     if core:
         area = area - core[2] + max(core[2], core[0] * core[1])
         aspect = core[0] / float(core[1])
-    area *= AREA_HEADROOM
     gw = max(GRID_MIN, int(round(math.sqrt(area * aspect))))
     gh = max(GRID_MIN, int(round(area / gw)))
     return (gw, gh)

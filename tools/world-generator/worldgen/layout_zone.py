@@ -307,6 +307,7 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
 
 MEASURE_MARGIN = 2        # cells of slack for the zone's own paths and dressing
 MEASURE_TRIES = 12        # frames tried, each bigger, before giving up growing
+MEASURE_TIGHTEN = 6       # frames tried, each smaller, after one fits
 
 
 def _entry_mouths(w, h, sides, rng):
@@ -326,7 +327,7 @@ def _entry_mouths(w, h, sides, rng):
     return cells
 
 
-def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0):
+def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0, probe=None):
     """(w, h) the zone's real layout needs, measured by laying it out: the
     zone runs in a local frame at the size its content is estimated at
     (``scale`` inflates that start — the growth passes' second chance),
@@ -338,12 +339,15 @@ def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0):
     nothing to build is not measured (None): it fills the space left over.
 
     Every attempt lays the zone out with the same inner seed, so the same
-    rng state always measures the same size."""
+    rng state always measures the same size. ``probe``, when given, learns
+    that seed: the map replays the layout it measured with it."""
     from .layout_map import (FIT_SLACK, MIN_ZONE_SIDE, _lightly_built,
                              _loose_blocks, _zone_fit, _zone_mins)
     if not (zone.buildings or getattr(zone, "compounds", None)):
         return None
     seed = rng.randrange(1 << 30)
+    if probe is not None:
+        probe["seed"] = seed
     fit = _zone_fit(zone, templates)
     mins = _zone_mins(zone, templates)
     loose, blocks = _loose_blocks(zone, templates)
@@ -367,12 +371,35 @@ def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0):
         return (len(out.buildings) == want_buildings
                 and len(out.compounds) == want_compounds and not lost)
 
+    def both_place(w, h):
+        return places(w, h, seed) and places(w, h, seed ^ 0x5F3759DF)
+
     # a size only counts as measured when two different inner seeds both
     # place everything there — one seed's luck is not a measurement
     for _ in range(MEASURE_TRIES):
-        if places(w, h, seed) and places(w, h, seed ^ 0x5F3759DF):
-            return (max(w + MEASURE_MARGIN, mins[0], MIN_ZONE_SIDE),
-                    max(h + MEASURE_MARGIN, mins[1], MIN_ZONE_SIDE))
+        if both_place(w, h):
+            # the fit the search started at (and every growth step) runs
+            # loose, and grows both axes together: walk each axis back down
+            # on its own, so a measurement wider than the layout reads as
+            # empty ground. Both seeds must still fit at every step: one
+            # seed's tightest frame has no slack left for the real road
+            # mouths the map brings
+            for mi in (0, 1):
+                for _ in range(MEASURE_TIGHTEN):
+                    if mi == 0:
+                        nw, nh = max(mins[0], MIN_ZONE_SIDE,
+                                     w - max(2, w // 10)), h
+                    else:
+                        nw, nh = w, max(mins[1], MIN_ZONE_SIDE,
+                                        h - max(2, h // 10))
+                    if (nw, nh) == (w, h) or not both_place(nw, nh):
+                        break
+                    w, h = nw, nh
+            # the margin is for paths and dressing on open ground; a void
+            # zone has neither — everything walkable is already inside walls
+            margin = 0 if zone.exterior == "void" else MEASURE_MARGIN
+            return (max(w + margin, mins[0], MIN_ZONE_SIDE),
+                    max(h + margin, mins[1], MIN_ZONE_SIDE))
         w += max(3, w // 6)
         h += max(3, h // 6)
     return (w, h)   # nothing fit: the biggest frame tried, the map's problem
@@ -1646,10 +1673,30 @@ def _place_fields(zone, rect, out, rng, templates, map_ctx=None):
                       max(c[1] for c in track) - min(c[1] for c in track) + 1)
             out.spine_rects.append(tr)
             out.reserved |= set(track)
+            # a later plot's track stops where it meets this one (joining
+            # the path network) rather than crossing it: two path regions
+            # that overlap are refused by the builder
+            spine |= set(track)
 
 
 #
 # ------------------------------------------------------------------ props
+
+def _distance_to_reserved(rect, reserved):
+    """{cell: manhattan distance to the nearest reserved cell}: a
+    multi-source breadth-first sweep over the zone (an unblocked grid, so
+    the walk length is the manhattan distance)."""
+    dist = {c: 0 for c in reserved if rect.contains_cell(c)}
+    todo = deque(dist)
+    while todo:
+        x, y = todo.popleft()
+        for nxt in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if not rect.contains_cell(nxt) or nxt in dist:
+                continue
+            dist[nxt] = dist[(x, y)] + 1
+            todo.append(nxt)
+    return dist
+
 
 def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area_name,
                  zone=None, buildings_cells=None):
@@ -1691,10 +1738,11 @@ def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area
             candidates.sort(key=lambda p: (abs(p[0] - (brect.x + brect.w // 2))
                                            + abs(p[1] - (brect.y + brect.h // 2))))
     elif hint.along_path:
-        near = [(p, min(abs(p[0] - r[0]) + abs(p[1] - r[1]) for r in out.reserved) if out.reserved else 0)
-                for p in candidates]
-        near.sort(key=lambda t: t[1])
-        candidates = [p for p, _d in near]
+        # one multi-source sweep instead of a per-candidate scan over every
+        # reserved cell — the same nearest-reserved order, linear in the zone
+        if out.reserved:
+            dist = _distance_to_reserved(out.rect, out.reserved)
+            candidates.sort(key=lambda p: dist.get(p, 0))
     elif hint.center:
         candidates.sort(key=lambda p: abs(p[0] - zone_center[0]) + abs(p[1] - zone_center[1]))
     elif hint.edge and zone is not None:

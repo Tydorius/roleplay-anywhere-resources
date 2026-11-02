@@ -557,6 +557,7 @@ def run_checks(world):
     metrics = {
         "grid": list(world.grid),
         "seed": world.seed,
+        "map_warnings": list(getattr(world, "map_warnings", [])),
         "regions": len(world.regions),
         "rooms": {"total": rooms_total, "reachable": rooms_ok, "unreachable": unreachable_rooms},
         "entrances": {"total": entrances_total, "reachable_from_road": entrances_ok,

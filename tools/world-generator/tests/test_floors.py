@@ -719,22 +719,19 @@ class TestGrowthNeverDrops(unittest.TestCase):
         self.assertEqual(len(world.buildings), 11)
         self.assertEqual(world.metrics["errors"]["dropped"], [])
 
-    def test_growth_still_places_an_interior_drop(self):
-        """A drop the map's content sizing cannot see (a lot that will not
-        pack beside its neighbours) still goes through the loop: the ashvale
-        cottage misses its zone in one pass and the full run places it."""
+    def test_a_single_pass_places_an_interior_drop(self):
+        """A lot that will not pack beside its neighbours used to slip past
+        the map's content estimate: the ashvale cottage missed its zone in
+        one pass and only the growth loop placed it. Zones are measured by
+        laying them out now (012h), so one pass sees the lot and places it,
+        at both seeds."""
         data = load_fixture("ashvale-compound.plan.json")
-        once = worldgen._build_world(parse_plan(data), data, 1, frozenset())
-        self.assertTrue(any(r == "no space in zone" for (_w, r) in once.failures),
-                        "the fixture no longer exercises the growth loop")
-        errs = once.metrics["errors"]["dropped"]
-        self.assertTrue(errs, "a drop must be an error")
-        notes = once.metrics["objects"]["unplaced"]
-        self.assertFalse(any(e["what"] == u["what"] and e["reason"] == u["reason"]
-                             for e in errs for u in notes),
-                         "a drop must not also be a note")
-        world = worldgen.run(data, seed=1)
-        self.assertEqual(world.metrics["errors"]["dropped"], [])
+        for seed in (1, 2):
+            with self.subTest(seed=seed):
+                once = worldgen._build_world(parse_plan(data), data, seed, frozenset())
+                self.assertFalse(any(r == "no space in zone" for (_w, r) in once.failures),
+                                 "a measured zone dropped a building")
+                self.assertEqual(once.metrics["errors"]["dropped"], [])
 
 
 class TestRealFixturesUnchanged(unittest.TestCase):

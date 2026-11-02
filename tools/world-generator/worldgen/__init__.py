@@ -69,6 +69,7 @@ class World:
         self.fallbacks = []
         self.default_ground = ("grass", "grass")   # the plan's dominant wild ground
         self.metrics = {}
+        self.map_warnings = []      # non-fatal map notes (a grid past GRID_WARN)
         self.extensions = set()
         self.zone_building_area = {}   # zone name -> placed footprint cells
         self.floors = []               # upper storeys (extensions/floors.py)
@@ -639,6 +640,7 @@ def run(plan_data, seed=1, extensions=()):
 GROWTH_FACTOR = 1.4     # how much a zone's content sizing grows per pass
 GROWTH_ALLY = 1.15      # the other built zones grow with it, keeping their street blocks
 MAX_GROWTH_PASSES = 8   # 1.4^8 is about 14x: enough for the fullest plan
+REPLAY_TRIES = 4        # inner seeds a measured zone tries in its final rect
 
 
 def _dropped_count(world):
@@ -683,9 +685,11 @@ def _growth_scale(plan, world, current=None):
 
 def _coverage_scale(plan, world):
     """{zone name: weight multiplier} for settlement zones whose measured
-    building coverage came out roomier than its target by more than a fifth.
-    Zones are sized to their content now, so the pass only ever tightens: a
-    loose village is its fit's own looseness, not an error to grow away."""
+    building coverage came out roomier than its target by more than a
+    tenth. Zones are sized to their own measurement now, so the pass is the
+    squeezer the old weight cuts were: a retry that drops content loses to
+    the build score, so tightening past the measurement is always tried and
+    never kept when it hurts."""
     from .model import building_coverage_target, zone_class
     scale = {}
     for z in plan.zones:
@@ -697,7 +701,7 @@ def _coverage_scale(plan, world):
             continue
         actual = built / float(area)
         target = building_coverage_target(z, plan.setting)
-        if actual < target and target - actual > 0.2 * target:
+        if actual < target and target - actual > 0.1 * target:
             scale[z.name] = max(0.7, actual / target)
     return scale
 
@@ -742,6 +746,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     world.grid = m.grid
     world.roads = m.roads
     world.default_ground = m.default_ground
+    world.map_warnings = list(m.warnings)
     world.failures.extend(m.failures)
     world.zone_pieces = {z.name: m.zone_pieces[z.name] for z in plan.zones
                          if z.name in m.zone_pieces}
@@ -798,9 +803,28 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                     z, buildings=[], compounds=[], outdoor=[],
                     dressing=dataclasses.replace(z.dressing, props=[], paths="none"))
                 piece_label = f"{z.name} {_piece_direction(primary, prect)}"
-            zout = layout_zone.layout_zone(zz, prect, world.templates, rng,
-                                           road_reserved=m.zone_road_reserve.get(z.name),
-                                           map_ctx=m)
+            zout = None
+            if i == 0 and z.name in m.zone_layout:
+                # a measured zone lays out with the inner seed it was
+                # measured with, mouths synthesized on the same entry sides
+                # (the map's real road mouths stay reserved besides). The
+                # real mouths can still tip a tight frame, so a layout that
+                # loses content tries a few more inner seeds in the same rect
+                inner, entry_sides = m.zone_layout[z.name]
+                for k in range(REPLAY_TRIES):
+                    zrng = random.Random(inner ^ (k * 0x9E3779B1))
+                    mouths = {(x + prect.x, y + prect.y) for (x, y)
+                              in layout_zone._entry_mouths(prect.w, prect.h,
+                                                           entry_sides, zrng)}
+                    reserved = set(m.zone_road_reserve.get(z.name, ())) | mouths
+                    zout = layout_zone.layout_zone(zz, prect, world.templates, zrng,
+                                                   road_reserved=reserved, map_ctx=m)
+                    if not any("no space in zone" in r for (_w, r) in zout.failures):
+                        break
+            else:
+                zout = layout_zone.layout_zone(zz, prect, world.templates, rng,
+                                               road_reserved=m.zone_road_reserve.get(z.name),
+                                               map_ctx=m)
             world.reserved |= zout.reserved
             for t in zout.added_templates:   # a generic crop row, added to the plan
                 if t.name not in world.templates:

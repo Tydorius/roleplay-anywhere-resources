@@ -4,11 +4,15 @@ roads arrive on, read from adjacency the way _assign_sides assigns bands —
 and returns the size the real layout needed. Every built zone in every
 fixture measures at least its content minimums, a re-layout in a rect of
 exactly the measured size places everything, and the same seed measures
-the same size twice."""
+the same size twice.
+
+Brief 012h change 2: the map places each built zone at that measured size,
+so no fixture drops a building for want of zone space."""
 import os
 import random
 import unittest
 
+import worldgen
 from tests import util
 from worldgen.layout_map import (_assign_sides, _grid_size, _settlement_group,
                                  _zone_mins, _zone_weight, tmap_of)
@@ -107,6 +111,21 @@ class TestMeasuredZones(unittest.TestCase):
         a = measure_zone(z, tmap, random.Random(3), ("east", "north"))
         b = measure_zone(z, tmap, random.Random(3), ("east", "north"))
         self.assertEqual(a, b)
+
+
+class TestTheMapPlacesMeasuredZones(unittest.TestCase):
+    """Brief 012h change 2: a built zone's rect is the size its own layout
+    measured, so nothing is dropped for want of zone space — the two Ashvale
+    builds and the zombie town that the estimate-sized map squeezed at
+    seed 2, and every other fixture at both seeds."""
+
+    def test_no_fixture_has_a_no_space_failure_at_seeds_1_and_2(self):
+        for name in PLANS:
+            for seed in (1, 2):
+                with self.subTest(f"{name} seed {seed}"):
+                    world = worldgen.run(util.load_plan(name), seed=seed)
+                    lost = [f for f in world.failures if "no space in zone" in f[1]]
+                    self.assertEqual(lost, [], f"{name} seed {seed}: {lost}")
 
 
 if __name__ == "__main__":
