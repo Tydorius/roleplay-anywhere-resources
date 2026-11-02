@@ -165,12 +165,25 @@ def free_cell(world, region_name, taken=(), connected=None):
             continue
         occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
                      for y in range(o.pos[1], o.pos[1] + h)}
+    # the wall rings of walled regions inside this one (a zone's buildings
+    # and rooms): a doorway there can still be another room's wall
+    rings = set()
+    for r in world.regions:
+        if r is region or not r.wall:
+            continue
+        rr = r.rect
+        if rr.x > rect.x1 or rr.x1 < rect.x or rr.y > rect.y1 or rr.y1 < rect.y:
+            continue
+        rings |= {c for c in rr.cells()
+                  if c[0] in (rr.x, rr.x1) or c[1] in (rr.y, rr.y1)}
     anchor = region.entrance_door or (rect.x + rect.w // 2, rect.y + rect.h // 2)
     cands = sorted(rect.cells(), key=lambda c: (abs(c[0] - anchor[0]) + abs(c[1] - anchor[1]),
                                                 c[1], c[0]))
     for c in cands:
         if region.wall and (c[0] in (rect.x, rect.x1) or c[1] in (rect.y, rect.y1)):
             continue  # the builder treats a walled region's ring as wall
+        if c in rings:
+            continue
         if c in occupied:
             continue
         if connected is not None and c not in connected:

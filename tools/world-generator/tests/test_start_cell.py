@@ -64,5 +64,19 @@ class TestObjectsFiledElsewhere(unittest.TestCase):
         self.assertEqual(cell, (30, 30))
 
 
+class TestWallsOfRegionsInside(unittest.TestCase):
+    """A zone's start cell never lands on the wall ring of a building or
+    room inside it, a doorway included: an apartment's door can sit on its
+    main room's wall. Found by the zombie town at seed 2 once zones were
+    sized to their measured layout (brief 012h2)."""
+
+    def test_a_zone_start_skips_inner_wall_rings(self):
+        w = _world(full_room=False)
+        # the only reachable cells: one on the inn's ring, one in the open
+        connected = {(10, 12), (34, 34)}
+        cell = schedule.free_cell(w, "Village", connected=connected)
+        self.assertEqual(cell, (34, 34))
+
+
 if __name__ == "__main__":
     unittest.main()
