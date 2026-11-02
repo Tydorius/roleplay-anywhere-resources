@@ -177,6 +177,45 @@ def _ensure_beds(world, plan, plan_data):
         world.objects.append(ObjectOut(tmpl.name, pos, room.full_name))
 
 
+def _emit_unit_regions(world, bl, parent_name, names_seen):
+    """The regions and objects of a layout's stamped unit copies (a ground
+    block or a band storey): each copy a walled region under its parent,
+    its own rooms nested inside, their furniture placed."""
+    regions, objects = [], []
+    for uo in getattr(bl, "unit_outs", []) or []:
+        ul = uo.layout
+        single = len(ul.rooms) == 1 and ul.rooms[0].rect == uo.rect
+        ureg = RegionOut(
+            uo.name, uo.rect, "building", parent=parent_name,
+            wall=ul.design.wall, ground="wood", ground_texture="floorboards",
+            ambience={"day": "quiet_indoor"},
+            description=f"One of {parent_name}'s units.",
+            doors=set(uo.doors))
+        regions.append(ureg)
+        for room in ul.rooms:
+            room.full_name = uo.name if single else f"{uo.name} {room.base_name}"
+            if room.full_name in names_seen:
+                world.failures.append((f"room {room.full_name}", "duplicate name"))
+            names_seen[room.full_name] = True
+            amb = {"day": "quiet_indoor"}
+            for (t, _p) in room.furniture.placements:
+                if "light" in world.templates[t].tags and world.templates[t].walkability <= 0:
+                    amb = {"day": "fireplace"}
+                    break
+            if single:
+                ureg.ambience = amb
+            else:
+                regions.append(RegionOut(room.full_name, room.rect, "room",
+                                         parent=uo.name, wall=ul.design.wall,
+                                         ground="wood", ground_texture="floorboards",
+                                         ambience=amb,
+                                         description=next((r.purpose for r in ul.design.rooms
+                                                           if r.name == room.base_name), "")))
+            for (tname, pos) in room.furniture.placements:
+                objects.append(ObjectOut(tname, pos, room.full_name))
+    return regions, objects
+
+
 def _piece_direction(primary, piece):
     """The compass word for a zone piece beyond the first, from where it sits
     relative to the zone's primary piece."""
@@ -380,6 +419,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                                            description=f"The road from {road.a} to {road.b}."))
 
     names_seen = {}
+    # a unit building stamps one bed per resident per copy: the catalogue's
+    # bed (or a plain one added here) must exist before the zones lay out
+    if any(getattr(b, "units", None) and b.units.residents
+           for z in plan.zones for b in z.buildings):
+        _bed_template(world, plan_data)
     for z in plan.zones:
         if z.name not in world.zones_by_name:
             continue
@@ -529,6 +573,9 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                         world.regions.append(reg)
                     for (tname, pos) in room.furniture.placements:
                         world.objects.append(ObjectOut(tname, pos, room.full_name))
+                uregs, uobjs = _emit_unit_regions(world, bl, building_name, names_seen)
+                world.regions.extend(uregs)
+                world.objects.extend(uobjs)
             for prop in zout.props:
                 world.objects.append(ObjectOut(prop.template, prop.pos, prop.region))
 

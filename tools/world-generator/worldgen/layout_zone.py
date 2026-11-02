@@ -752,28 +752,35 @@ def _crossroads_square(rect, street, sides, vertical, urban, rng):
 # ------------------------------------------------------------------ buildings
 
 def _furnish(out, b, zone, templates, rng):
-    """Lay out one building's room furniture. Returns its failure list without
-    recording anything, so a rejected placement leaves no trace."""
+    """Lay out one building's room furniture (its stamped unit copies
+    included). Returns its failure list without recording anything, so a
+    rejected placement leaves no trace."""
     failures = []
-    for room in b.layout.rooms:
-        furniture = [f for f in b.layout.furniture if f.room == room.base_name]
-        unknown = [f for f in b.layout.furniture
-                   if f.room not in {r.base_name for r in b.layout.rooms}]
-        for f in unknown:
-            failures.append((f"piece {f.template}", f"room {f.room!r} not in building"))
-        room.furniture = layout_room(room.rect, sorted(room.doors), furniture, templates, rng)
-        for (t, n, reason) in room.furniture.failures:
-            failures.append((f"piece {t} in {room.base_name}",
-                             f"placed {n} of the requested count: {reason}"))
+    layouts = [b.layout] + [u.layout for u in getattr(b.layout, "unit_outs", [])]
+    for bl in layouts:
+        for room in bl.rooms:
+            furniture = [f for f in bl.furniture if f.room == room.base_name]
+            unknown = [f for f in bl.furniture
+                       if f.room not in {r.base_name for r in bl.rooms}]
+            for f in unknown:
+                failures.append((f"piece {f.template}", f"room {f.room!r} not in building"))
+            room.furniture = layout_room(room.rect, sorted(room.doors), furniture, templates, rng)
+            for (t, n, reason) in room.furniture.failures:
+                failures.append((f"piece {t} in {room.base_name}",
+                                 f"placed {n} of the requested count: {reason}"))
     return failures
 
 
 def _record_furniture(out, b):
     for (t, room_name) in b.layout.dropped:
         out.failures.append((f"piece {t} in {room_name}", "dropped: over the 28x22 building cap"))
-    for room in b.layout.rooms:
-        for (t, reason) in room.furniture.fallbacks:
-            out.fallbacks.append((f"piece {t} in {room.base_name}", reason))
+    for name in getattr(b.layout, "unit_dropped", []) or []:
+        out.failures.append((f"unit {name}", "dropped: no room in the block"))
+    layouts = [b.layout] + [u.layout for u in getattr(b.layout, "unit_outs", [])]
+    for bl in layouts:
+        for room in bl.rooms:
+            for (t, reason) in room.furniture.fallbacks:
+                out.fallbacks.append((f"piece {t} in {room.base_name}", reason))
 
 
 def _slot(facing, axis, line, a0, a1, extreme):

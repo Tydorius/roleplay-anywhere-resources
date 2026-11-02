@@ -14,8 +14,8 @@ import string
 import time
 
 from . import hints as hints_mod
-from .model import (COMPOUND_SHAPES, COMPOUND_SHAPES_KNOWN, COMPOUND_WALLS,
-                    COURTYARD_SIZES, VALID_ARRANGEMENTS, is_sleep_name as _sleeps)
+from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
+                    VALID_ARRANGEMENTS, is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -212,10 +212,9 @@ def compound_errors(compounds, zone_names, building_zone):
         if zone not in zone_names:
             errors.append(f"{ctx}: zone {zone!r} is not a zone of this plan")
         shape = c.get("shape", "enclosure")
-        if shape in COMPOUND_SHAPES_KNOWN:
-            errors.append(f"{ctx}: shape {shape!r} is not implemented; use enclosure")
-        elif shape not in COMPOUND_SHAPES:
-            errors.append(f"{ctx}: shape must be enclosure, not {shape!r}")
+        if shape not in COMPOUND_SHAPES:
+            errors.append(f"{ctx}: shape must be enclosure, row, spine or "
+                          f"cluster, not {shape!r}")
         if c.get("courtyard", "medium") not in COURTYARD_SIZES:
             errors.append(f"{ctx}: courtyard must be small, medium or large")
         if c.get("walls", "walkable") not in COMPOUND_WALLS:
@@ -239,23 +238,35 @@ def compound_errors(compounds, zone_names, building_zone):
                               f"{building_zone[bname]!r}, not {zone!r}")
             at = p.get("at", "")
             bits = at.split(":") if isinstance(at, str) else []
+            enclosure = shape == "enclosure"
             ok = (bits[:1] == ["corner"] and len(bits) == 2 and bits[1] in ("nw", "ne", "sw", "se")) or \
                  (bits[:1] == ["edge"] and len(bits) == 3 and bits[1] in SIDES
                   and bits[2] in ("start", "center", "end")) or \
                  (bits[:1] == ["inside"] and len(bits) == 2
                   and bits[1] in ("center",) + SIDES) or \
                  (bits[:1] == ["attached"] and len(bits) == 3 and bits[2] in SIDES)
-            if not ok:
+            line_ok = (at == "" and not enclosure) or \
+                 (bits[:1] == ["row"] and len(bits) == 2 and bits[1].isdigit()) or \
+                 (bits[:1] == ["spine"] and len(bits) == 2 and bits[1] == "hub") or \
+                 (bits[:1] == ["spine"] and len(bits) == 2 and bits[1] in ("start", "end")) or \
+                 (bits[:1] == ["spine"] and len(bits) == 3 and bits[1] in ("left", "right")
+                  and bits[2].isdigit())
+            if enclosure and not ok:
                 errors.append(f"{pctx}: bad slot {at!r} (corner:<nw|ne|sw|se>, "
                               f"edge:<side>:<start|center|end>, inside:<center|side> "
                               f"or attached:<part>:<side>)")
                 continue
-            if at in slots:
+            if not enclosure and not (ok and bits[:1] == ["attached"]) and not line_ok:
+                errors.append(f"{pctx}: bad slot {at!r} (row:<index>, "
+                              f"spine:<left|right>:<index>, spine:end:<start|end>, "
+                              f"spine:hub or attached:<part>:<side>)")
+                continue
+            if at and at in slots:
                 errors.append(f"{pctx}: slot {at!r} used twice in {name!r}")
             slots.add(at)
             if p.get("gate"):
-                if bits[0] != "edge":
-                    errors.append(f"{pctx}: only an edge part can be the gate")
+                if shape != "enclosure" or bits[0] != "edge":
+                    errors.append(f"{pctx}: only an enclosure edge part can be the gate")
                 gates.append(bname)
             if bits[0] == "attached":
                 hosts[bname] = bits[1]

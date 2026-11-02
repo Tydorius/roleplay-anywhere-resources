@@ -6,6 +6,8 @@ each zone), P5 people. Field names follow the DESIGN.md contracts exactly; the
 only merging choices are that P4 dressing lives under ``zones[i].dressing`` and
 P3 designs live in a top-level ``buildings`` list keyed by building name.
 """
+import copy
+import dataclasses
 import re
 from dataclasses import dataclass, field
 
@@ -142,6 +144,19 @@ class FurniturePlan:
 
 
 @dataclass
+class UnitSpec:
+    """Repeating units inside one building (P1 field, P3 "unit" design):
+    the unit is designed once and stamped by code, so the model never plans
+    Apartment 1 to 12 one by one."""
+    name: str = "Apartment"
+    count: int = 1              # total units across the building's storeys
+    per_storey: int = 0         # units per storey (0: count spread over storeys)
+    residents: int = 0          # beds inside each unit
+    numbering: str = "plain"    # plain ("Apartment 4") | storey ("Room 204")
+    design: object = None       # BuildingDesign of one unit (P3 "unit")
+
+
+@dataclass
 class BuildingDesign:
     """P3 output for one building, plus the P1 entry it refines."""
     name: str
@@ -152,6 +167,7 @@ class BuildingDesign:
     ground: str = "wood"
     storeys: int = 1                                   # 1-3 (floors extension)
     stairs_room: str = ""                              # ground room the stair rises from
+    units: object = None                               # UnitSpec when it repeats units
     upper: list = field(default_factory=list)          # [UpperStorey]
     rooms: list = field(default_factory=list)          # [RoomSpec]
     connections: list = field(default_factory=list)    # [[roomA, roomB]]
@@ -218,17 +234,20 @@ class Zone:
     dressing: Dressing = field(default_factory=Dressing)
     arrangement: str = ""   # optional: around_green|along_street|scattered|fields
     compounds: list = field(default_factory=list)  # [Compound] placed in this zone
+    exterior: str = ""      # optional: "void" = no walkable open ground
 
 
 # ------------------------------------------------------------------ compounds
 
 VALID_ARRANGEMENTS = ("around_green", "along_street", "scattered", "fields")
-COMPOUND_SHAPES = {"enclosure"}                 # implemented
-COMPOUND_SHAPES_KNOWN = {"row", "cluster"}      # parsed, rejected for now
+COMPOUND_SHAPES = {"enclosure", "row", "spine", "cluster"}
 COMPOUND_WALLS = ("walkable", "solid", "none")
 COURTYARD_SIZES = ("small", "medium", "large")
 CORNERS = ("nw", "ne", "sw", "se")
 SIDE_WORDS = ("north", "south", "east", "west")
+ROW_FRONTS = ("street", "parking", "walkway", "none")
+SPINE_AXES = ("ns", "ew")
+HUB_POSITIONS = ("center", "start", "end")
 
 
 @dataclass
@@ -239,11 +258,15 @@ class CompoundPart:
     building: str
     at: str = ""
     gate: bool = False
-    slot_kind: str = ""   # corner | edge | inside | attached
+    linked: bool = False      # row: butt against the previous part (a door joins them)
+    same_as: str = ""         # copy another part building's P3 design
+    slot_kind: str = ""   # corner | edge | inside | attached | row | spine | spine_end | hub
     corner: str = ""      # nw|ne|sw|se (corner)
-    side: str = ""        # north|south|east|west (edge, inside, attached)
+    side: str = ""        # north|south|east|west (edge, inside, attached);
+                          # left|right (spine); start|end (spine_end)
     offset: str = ""      # start|center|end (edge)
     host: str = ""        # host part building (attached)
+    index: int = -1       # slot order (row, spine left/right)
 
 
 @dataclass
@@ -256,6 +279,11 @@ class Compound:
     courtyard: str = "medium"
     walls: str = "walkable"
     parts: list = field(default_factory=list)   # [CompoundPart]
+    frontage: str = "south"   # row: the side the entrances face
+    front: str = "none"       # row: street|parking|walkway|none strip in front
+    axis: str = "ns"          # spine: ns|ew
+    spine_width: int = 3      # spine: 3-5 (cluster: 0, no corridor at all)
+    hub_pos: str = "center"   # spine: where the hub part sits
 
 
 @dataclass
@@ -421,13 +449,58 @@ def _parse_roomspec(d):
                     purpose=d.get("purpose", ""))
 
 
-def _parse_storeys(d):
-    """The P1 storey count, clamped to 1..3 (junk counts as one storey)."""
+def _parse_storeys(d, top=3):
+    """The P1 storey count, clamped to 1..top (junk counts as one storey).
+    ``top`` is 6 for unit buildings and compound parts, 3 otherwise."""
     try:
         s = int(d.get("storeys", 1) or 1)
     except (TypeError, ValueError):
         return 1
-    return max(1, min(3, s))
+    return max(1, min(top, s))
+
+
+def _parse_units(d, g, name):
+    """UnitSpec from the P1 "units" field, with the P3 "unit" design that
+    furnishes one copy. Raises ValueError on a bad field."""
+    u = d.get("units")
+    if not u:
+        return None
+    if not isinstance(u, dict):
+        raise ValueError(f"building {name!r}: units must be an object")
+    count = int(u.get("count", 1) or 1)
+    per_storey = int(u.get("perStorey", 0) or 0)
+    residents = int(u.get("residents", 0) or 0)
+    numbering = u.get("numbering", "plain")
+    if count < 1:
+        raise ValueError(f"building {name!r}: units.count must be at least 1")
+    if per_storey < 0 or per_storey > count:
+        raise ValueError(f"building {name!r}: units.perStorey must be 0 "
+                         f"(spread) or 1..count")
+    if residents < 0 or residents > 8:
+        raise ValueError(f"building {name!r}: units.residents must be 0..8")
+    if numbering not in ("plain", "storey"):
+        raise ValueError(f"building {name!r}: bad units.numbering {numbering!r} "
+                         f"(use plain or storey)")
+    ud = g.get("unit")
+    if isinstance(ud, dict):
+        rooms = [_parse_roomspec(r) for r in ud.get("rooms", []) if isinstance(r, dict)]
+        if not rooms:
+            rooms = [RoomSpec(name="Room", share="medium")]
+        design = BuildingDesign(
+            name=u.get("name", "Apartment"), kind="unit",
+            rooms=rooms,
+            connections=[list(c) for c in ud.get("connections", [])],
+            entrance_room=ud.get("entrance", {}).get("room", rooms[0].name),
+            entrance_side=ud.get("entrance", {}).get("side", "south"),
+            furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+                                     count=int(f.get("count", 1)), hint=f.get("hint", ""))
+                       for f in ud.get("furniture", []) if isinstance(f, dict)])
+    else:
+        design = BuildingDesign(name=u.get("name", "Apartment"), kind="unit",
+                                rooms=[RoomSpec(name="Room", share="medium")])
+    return UnitSpec(name=u.get("name", "Apartment"), count=count,
+                    per_storey=per_storey, residents=residents,
+                    numbering=numbering, design=design)
 
 
 def _parse_upper(specs, storeys, ground_rooms):
@@ -473,7 +546,10 @@ def _parse_building(d, designs):
              "connections": [], "entrance": {"room": "Hall", "side": "south"},
              "furniture": [], "yard_props": []}
     rooms = [_parse_roomspec(r) for r in g.get("rooms", [])]
-    storeys = _parse_storeys(d)
+    units = _parse_units(d, g, name)
+    # parsed to 6 and clamped after the compounds are known: a unit building
+    # or a compound part may rise to 6, everything else to 3
+    storeys = _parse_storeys(d, 6)
     upper = _parse_upper(g.get("upper", []), storeys,
                          {r.name for r in rooms}) if storeys > 1 else []
     stairs_room = ""
@@ -481,12 +557,15 @@ def _parse_building(d, designs):
         st = g.get("stairs")
         if isinstance(st, dict) and st.get("room") in {r.name for r in rooms}:
             stairs_room = st["room"]
+        elif units:
+            stairs_room = "Corridor"   # the spine the stairs rise from
     design = BuildingDesign(
         name=name, kind=d.get("kind", "house"), size_class=d.get("sizeClass", "small"),
         purpose=d.get("purpose", ""), wall=g.get("wall", "wood"), ground=g.get("ground", "wood"),
         storeys=1 + len(upper),
         stairs_room=stairs_room if upper else "",
         upper=upper,
+        units=units,
         rooms=rooms,
         connections=[list(c) for c in g.get("connections", [])],
         entrance_room=g.get("entrance", {}).get("room", rooms[0].name if rooms else "Hall"),
@@ -506,11 +585,15 @@ def _parse_building(d, designs):
 def _parse_slot(at, ctx):
     """Parse one slot string into its kind and pieces. Raises ValueError
     naming ``ctx`` (the compound and part) on anything outside the
-    vocabulary."""
+    vocabulary. An empty ``at`` is a row part in plan order."""
+    if at == "":
+        return ("row", {"index": -1})
     if not isinstance(at, str) or ":" not in at:
         raise ValueError(f"{ctx}: bad slot {at!r} (use corner:<nw|ne|sw|se>, "
-                         f"edge:<side>:<start|center|end>, inside:<center|side> "
-                         f"or attached:<part>:<side>)")
+                         f"edge:<side>:<start|center|end>, inside:<center|side>, "
+                         f"attached:<part>:<side>, row:<index>, "
+                         f"spine:<left|right>:<index>, spine:end:<start|end> "
+                         f"or spine:hub)")
     bits = at.split(":")
     kind = bits[0]
     if kind == "corner" and len(bits) == 2 and bits[1] in CORNERS:
@@ -523,14 +606,28 @@ def _parse_slot(at, ctx):
         return ("inside", {"side": "" if bits[1] == "center" else bits[1]})
     if kind == "attached" and len(bits) == 3 and bits[2] in SIDE_WORDS:
         return ("attached", {"host": bits[1], "side": bits[2]})
+    if kind == "row" and len(bits) == 2 and bits[1].isdigit():
+        return ("row", {"index": int(bits[1])})
+    if kind == "spine" and len(bits) == 2 and bits[1] == "hub":
+        return ("hub", {})
+    if kind == "spine" and len(bits) == 2 and bits[1] in ("start", "end"):
+        return ("spine_end", {"side": bits[1]})
+    if kind == "spine" and len(bits) == 3 and bits[1] in ("left", "right") \
+            and bits[2].isdigit():
+        return ("spine", {"side": bits[1], "index": int(bits[2])})
     raise ValueError(f"{ctx}: bad slot {at!r}")
+
+
+ENCLOSURE_SLOTS = ("corner", "edge", "inside", "attached")
+LINE_SLOTS = ("row", "attached", "spine", "spine_end", "hub")
 
 
 def _parse_compounds(data, zone_by_name, building_zone):
     """[Compound] from the plan's top-level list, validated against the
     zones: every part is a building of the compound's own zone, no slot is
-    used twice, gates are edge parts only (at most two), and an attached
-    part names a host that exists and does not loop."""
+    used twice, gates are edge parts only (at most two), an attached part
+    names a host that exists and does not loop, and the shape's own fields
+    (row frontage and front, spine axis and width, one hub at most) hold."""
     out = []
     seen_names = set()
     for c in data.get("compounds", []) or []:
@@ -545,11 +642,9 @@ def _parse_compounds(data, zone_by_name, building_zone):
         if zone not in zone_by_name:
             raise ValueError(f"{ctx}: unknown zone {zone!r}")
         shape = c.get("shape", "enclosure")
-        if shape in COMPOUND_SHAPES_KNOWN:
-            raise ValueError(f"{ctx}: shape {shape!r} is not implemented yet; "
-                             f"use enclosure")
         if shape not in COMPOUND_SHAPES:
-            raise ValueError(f"{ctx}: bad shape {shape!r} (use enclosure)")
+            raise ValueError(f"{ctx}: bad shape {shape!r} (use enclosure, row, "
+                             f"spine or cluster)")
         courtyard = c.get("courtyard", "medium")
         if courtyard not in COURTYARD_SIZES:
             raise ValueError(f"{ctx}: bad courtyard {courtyard!r} "
@@ -558,9 +653,37 @@ def _parse_compounds(data, zone_by_name, building_zone):
         if walls not in COMPOUND_WALLS:
             raise ValueError(f"{ctx}: bad walls {walls!r} "
                              f"(use walkable, solid or none)")
+        frontage = c.get("frontage", "south")
+        front = c.get("front", "none")
+        axis = c.get("axis", "ns")
+        hub_pos = c.get("hub", "center")
+        spine_width = c.get("spineWidth", 3)
+        if shape == "row":
+            if frontage not in SIDE_WORDS:
+                raise ValueError(f"{ctx}: bad frontage {frontage!r}")
+            if front not in ROW_FRONTS:
+                raise ValueError(f"{ctx}: bad front {front!r} "
+                                 f"(use street, parking, walkway or none)")
+        if shape in ("spine", "cluster"):
+            if axis not in SPINE_AXES:
+                raise ValueError(f"{ctx}: bad axis {axis!r} (use ns or ew)")
+            if hub_pos not in HUB_POSITIONS:
+                raise ValueError(f"{ctx}: bad hub {hub_pos!r} "
+                                 f"(use center, start or end)")
+            if shape == "cluster":
+                spine_width = 0
+            else:
+                try:
+                    spine_width = int(spine_width)
+                except (TypeError, ValueError):
+                    raise ValueError(f"{ctx}: bad spineWidth {spine_width!r}")
+                if not 3 <= spine_width <= 5:
+                    raise ValueError(f"{ctx}: spineWidth must be 3-5 "
+                                     f"(cluster is spineWidth 0)")
         parts = c.get("parts", []) or []
         if not isinstance(parts, list) or not parts:
             raise ValueError(f"{ctx}: parts must be a non-empty list")
+        allowed = ENCLOSURE_SLOTS if shape == "enclosure" else LINE_SLOTS
         parsed, slots, gates = [], set(), []
         for p in parts:
             if not isinstance(p, dict):
@@ -569,7 +692,10 @@ def _parse_compounds(data, zone_by_name, building_zone):
             pctx = f"{ctx} part {bname!r}"
             at = p.get("at", "")
             kind, fields = _parse_slot(at, pctx)
-            if at in slots:
+            if kind not in allowed:
+                raise ValueError(f"{pctx}: slot {at!r} does not fit shape "
+                                 f"{shape!r}")
+            if at and at in slots:
                 raise ValueError(f"{pctx}: slot {at!r} used twice in {name!r}")
             slots.add(at)
             if bname not in building_zone:
@@ -578,14 +704,41 @@ def _parse_compounds(data, zone_by_name, building_zone):
                 raise ValueError(f"{pctx}: building {bname!r} is a building of "
                                  f"{building_zone[bname]!r}, not {zone!r}")
             if p.get("gate"):
-                if kind != "edge":
-                    raise ValueError(f"{pctx}: only an edge part can be the gate")
+                if shape != "enclosure" or kind != "edge":
+                    raise ValueError(f"{pctx}: only an enclosure edge part "
+                                     f"can be the gate")
                 gates.append(bname)
+            same_as = p.get("sameAs", "")
+            if same_as:
+                if not isinstance(same_as, str) or not same_as:
+                    raise ValueError(f"{pctx}: sameAs must name a part building")
+                if same_as == bname:
+                    raise ValueError(f"{pctx}: sameAs cannot name itself")
             parsed.append(CompoundPart(building=bname, at=at,
                                        gate=bool(p.get("gate")),
+                                       linked=bool(p.get("linked")),
+                                       same_as=same_as,
                                        slot_kind=kind, **fields))
         if len(gates) > 2:
             raise ValueError(f"{ctx}: at most two gates, got {len(gates)}")
+        if shape in ("spine", "cluster") and len(gates) > 0:
+            raise ValueError(f"{ctx}: a {shape} takes no gate parts")
+        hubs = [p for p in parsed if p.slot_kind == "hub"]
+        if len(hubs) > 1:
+            raise ValueError(f"{ctx}: at most one hub part, got {len(hubs)}")
+        if shape == "cluster" and not hubs:
+            raise ValueError(f"{ctx}: a cluster needs a hub part at spine:hub")
+        if shape == "row":
+            have = [p for p in parsed if p.slot_kind == "row" and p.index >= 0]
+            idxs = [p.index for p in have]
+            if len(set(idxs)) != len(idxs):
+                raise ValueError(f"{ctx}: row indices used twice")
+            # parts with no at keep plan order after the indexed ones
+            nexts = (max(idxs) + 1) if idxs else 0
+            for p in parsed:
+                if p.slot_kind == "row" and p.index < 0:
+                    p.index = nexts
+                    nexts += 1
         by_building = {p.building: p for p in parsed}
         for p in parsed:
             if p.slot_kind != "attached":
@@ -601,8 +754,20 @@ def _parse_compounds(data, zone_by_name, building_zone):
                                      f"through {walk!r}")
                 seen.add(walk)
                 walk = by_building[walk].host
+        for p in parsed:
+            if not p.same_as:
+                continue
+            pctx = f"{ctx} part {p.building!r}"
+            if p.same_as not in by_building:
+                raise ValueError(f"{pctx}: sameAs target {p.same_as!r} is not a "
+                                 f"part of {name!r}")
+            if by_building[p.same_as].same_as:
+                raise ValueError(f"{pctx}: sameAs target {p.same_as!r} itself "
+                                 f"uses sameAs; name the design's owner")
         out.append(Compound(name=name, zone=zone, shape=shape,
-                            courtyard=courtyard, walls=walls, parts=parsed))
+                            courtyard=courtyard, walls=walls, parts=parsed,
+                            frontage=frontage, front=front, axis=axis,
+                            spine_width=spine_width, hub_pos=hub_pos))
     return out
 
 
@@ -626,6 +791,10 @@ def parse_plan(data):
         if arrangement and arrangement not in VALID_ARRANGEMENTS:
             raise ValueError(f"zone {name!r}: bad arrangement {arrangement!r} "
                              f"(use around_green, along_street, scattered or fields)")
+        exterior = z.get("exterior", "")
+        if exterior not in ("", "void"):
+            raise ValueError(f"zone {name!r}: bad exterior {exterior!r} "
+                             f"(use void)")
         zone = Zone(
             name=name, kind=z.get("kind", "field"), size_class=z.get("sizeClass", "medium"),
             description=z.get("description", ""), ground=z.get("ground", "grass"),
@@ -634,6 +803,7 @@ def parse_plan(data):
             outdoor=list(z.get("outdoor", [])),
             dressing=dressing,
             arrangement=arrangement,
+            exterior=exterior,
         )
         if zone.size_class not in VALID_ZONE_SIZES:
             raise ValueError(f"zone {name!r}: bad sizeClass {zone.size_class!r}")
@@ -648,6 +818,31 @@ def parse_plan(data):
     compounds = _parse_compounds(data, zone_by_name, building_zone)
     for c in compounds:
         zone_by_name[c.zone].compounds.append(c)
+    # a part of a compound may rise to 6 storeys; everything else keeps 3
+    part_names = {p.building for c in compounds for p in c.parts}
+    for z in zones:
+        for b in z.buildings:
+            if b.storeys <= 3 or b.units or b.name in part_names:
+                continue
+            b.upper = [u for u in b.upper if u.storey <= 3]
+            b.storeys = 1 + len(b.upper)
+        # sameAs copies another part's P3 design (rooms, furniture, uppers):
+        # P3 furnishes the design once, the parts share it
+        by_name = {b.name: b for b in z.buildings}
+        for c in z.compounds:
+            for p in c.parts:
+                if not p.same_as or p.same_as not in by_name:
+                    continue
+                own, src = by_name[p.building], by_name[p.same_as]
+                if own is src:
+                    continue
+                b = dataclasses.replace(copy.deepcopy(src), name=own.name,
+                                        kind=own.kind, purpose=own.purpose,
+                                        size_class=own.size_class,
+                                        storeys=own.storeys, units=own.units,
+                                        yard=own.yard, yard_props=own.yard_props)
+                by_name[p.building] = b
+                z.buildings[z.buildings.index(own)] = b
     templates = []
     for t in data.get("templates", []):
         extras = {k: v for k, v in t.items()

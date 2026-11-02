@@ -124,7 +124,7 @@ class TestCheckP1Compounds(unittest.TestCase):
     def test_gate_rules(self):
         comp = castle_compound()
         comp["parts"][0]["gate"] = True     # a corner part cannot gate
-        self.assertTrue(any("only an edge part can be the gate" in e
+        self.assertTrue(any("only an enclosure edge part can be the gate" in e
                             for e in errors(world(compounds=[comp]))))
         comp = castle_compound()
         comp["parts"][2]["gate"] = True
@@ -134,8 +134,8 @@ class TestCheckP1Compounds(unittest.TestCase):
 
     def test_bad_shape(self):
         comp = castle_compound()
-        comp["shape"] = "cluster"
-        self.assertTrue(any("not implemented" in e
+        comp["shape"] = "ring"
+        self.assertTrue(any("shape must be enclosure, row, spine or cluster" in e
                             for e in errors(world(compounds=[comp]))))
 
     def test_attached_host_rules(self):

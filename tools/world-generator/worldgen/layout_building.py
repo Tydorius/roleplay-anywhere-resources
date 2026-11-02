@@ -19,7 +19,7 @@ import dataclasses
 import math
 
 from .layout_map import _sizes_mins
-from .model import Rect, RoomSpec, SIDE_DX_DY, shared_wall_cells
+from .model import FurniturePlan, Rect, RoomSpec, SIDE_DX_DY, shared_wall_cells
 
 FOOTPRINTS = {   # sizeClass -> (w, h); the outer ring is wall, so usable space is w-2 x h-2
     "hut": (8, 7),
@@ -141,6 +141,9 @@ class BuildingLayout:
         self.door_pairs = []       # [[cellA, cellB]] facing pairs between rooms
         self.furniture = list(design.furniture)  # what _furnish places (cap-trimmed)
         self.dropped = []          # [(template, room)] pieces dropped at the cap
+        self.unit_outs = []        # [UnitOut] stamped copies, unit buildings only
+        self.unit_dropped = []     # names of copies that did not fit the rect
+        self.residents = 0         # placed units x residents per unit
 
     def room_by_base(self, name):
         for r in self.rooms:
@@ -419,7 +422,229 @@ def _resolve_plan(design, templates):
 def building_footprint(design, templates):
     """The (w, h) the layout will give this design — one place so the map,
     the zone packer and the layout itself agree."""
+    if getattr(design, "units", None):
+        return units_footprint(design, templates)
     return _resolve_plan(design, templates)[:2]
+
+
+# ------------------------------------------------------------------ units
+
+UNIT_SPINE = 3        # the corridor spine's width between the two unit rows
+UNIT_ROW_GAP = 1      # open cells between unit rows and the shared strip
+
+
+def _sleep_name(templates):
+    """The catalogue's smallest sleep template, or None (the pipeline adds a
+    plain Bed before layouts run, so this finds one)."""
+    beds = [t for t in templates.values() if t.for_sleep]
+    return min(beds, key=lambda t: (t.size[0] * t.size[1], t.name)).name if beds else None
+
+
+def _bed_room(unit_design):
+    """The unit room its residents' beds go in: one named or purposed for
+    sleeping, else the first room."""
+    import re
+    for r in unit_design.rooms:
+        if re.search(r"bed|chamber|sleep|quarter", f"{r.name} {r.purpose}".lower()):
+            return r.name
+    return unit_design.rooms[0].name if unit_design.rooms else "Room"
+
+
+def _unit_furniture(design, templates):
+    """One unit copy's furniture: its own pieces plus one bed per resident."""
+    unit = design.units
+    furn = list(unit.design.furniture)
+    if unit.residents and _sleep_name(templates):
+        furn.append(FurniturePlan(template=_sleep_name(templates),
+                                  room=_bed_room(unit.design),
+                                  count=unit.residents))
+    return furn
+
+
+def units_per_storey(design):
+    """How many unit copies one storey carries: the plan's perStorey, or the
+    count spread evenly over the building's storeys."""
+    unit = design.units
+    if unit.per_storey:
+        return unit.per_storey
+    return max(1, -(-unit.count // max(1, design.storeys)))
+
+
+def _unit_size(design, templates):
+    """(w, h) of one unit copy, its residents' beds included."""
+    unit = design.units
+    d = dataclasses.replace(unit.design, furniture=_unit_furniture(design, templates))
+    return _resolve_plan(d, templates)[:2]
+
+
+def units_footprint(design, templates):
+    """(w, h) of a unit building: two unit rows either side of a corridor
+    spine, a shared-room strip at the entrance end. The cap applies to the
+    unit and the corridor, not the block: its length follows from the unit
+    count, and the zone grows to hold it. The spine runs away from the
+    entrance side, so an east- or west-facing block lies on its side."""
+    uw, uh = _unit_size(design, templates)
+    per = units_per_storey(design)
+    rows = max(1, -(-per // 2))
+    vertical = design.entrance_side in ("south", "north")
+    strip_h = _shared_strip_height(design, templates, uw if vertical else uh)
+    if vertical:
+        return (2 * uw + UNIT_SPINE,
+                strip_h + UNIT_ROW_GAP + rows * (uh + UNIT_ROW_GAP))
+    return (strip_h + UNIT_ROW_GAP + rows * (uw + UNIT_ROW_GAP),
+            2 * uh + UNIT_SPINE)
+
+
+def _shared_strip_height(design, templates, width):
+    """The depth the building's shared rooms (lobby, stair hall) need as one
+    strip across the building's width."""
+    needs = room_needs(design, templates)
+    if not needs:
+        return 0
+    return max(MIN_SIDE, max(_depth_for(a, width) for (a, _m) in needs.values()))
+
+
+class UnitOut:
+    """One stamped copy of the unit design, with the door cells on its
+    corridor-facing wall."""
+    def __init__(self, name, rect, layout):
+        self.name = name
+        self.rect = rect
+        self.layout = layout   # BuildingLayout of the copy
+        self.doors = set()
+
+
+def unit_number(unit, storey, k, per):
+    """The copy's number: plain runs 1..count across storeys; storey numbers
+    each floor's copies 101, 102 ... 201, 202."""
+    if unit.numbering == "storey":
+        return storey * 100 + k
+    return (storey - 1) * per + k
+
+
+def layout_units(design, rect, rng, templates, storey=1, make_entrance=True):
+    """Lay one storey of a unit building inside `rect`: the shared rooms as
+    a strip at the entrance end, the corridor spine from it to the far end,
+    and unit copies stamped down both sides, each mirrored so its door faces
+    the corridor. ``storey`` numbers the copies (perStorey each); the
+    entrance side picks the spine's axis, so a rotated block keeps its
+    entrance in its strip."""
+    unit = design.units
+    side = design.entrance_side
+    vertical = side in ("south", "north")
+    uw, uh = _unit_size(design, templates)
+    per = units_per_storey(design)
+    strip_h = min(_shared_strip_height(design, templates, uw if vertical else uh),
+                  max(0, (rect.h if vertical else rect.w) - UNIT_ROW_GAP
+                      - ((uh if vertical else uw) + UNIT_ROW_GAP)))
+    b = BuildingLayout(design, rect)
+    b.unit_outs = []
+    b.residents = 0
+    b.unit_dropped = []
+
+    # ---- the shared rooms flank the corridor mouth at the entrance end;
+    # the corridor itself runs from the entrance edge to the far end, so its
+    # doors into the shared rooms (and its entrance) are the builder's own
+    # auto-connect, never an alignment luck
+    needs = room_needs(design, templates) if templates else _share_needs(design)
+    names = [r.name for r in design.rooms]
+    strip_rooms = []
+    if names and strip_h > 0:
+        ay = rect.y if side == "south" else rect.y1 - strip_h + 1
+        ax = rect.x if side == "west" else rect.x1 - strip_h + 1
+        side_a = Rect(rect.x, ay, uw, strip_h) if vertical else \
+            Rect(ax, rect.y, strip_h, uh)
+        side_b = Rect(rect.x + uw + UNIT_SPINE, ay, uw, strip_h) if vertical else \
+            Rect(ax, rect.y + uh + UNIT_SPINE, strip_h, uh)
+        half = -(-len(names) // 2)
+        for (group, side_rect) in ((names[:half], side_a), (names[half:], side_b)):
+            if not group:
+                continue
+            along = side_rect.w if vertical else side_rect.h
+            weights = [needs.get(n, (1, MIN_SIDE))[0] for n in group]
+            mins = [max(MIN_SIDE, needs.get(n, (1, MIN_SIDE))[1]) for n in group]
+            sizes = _sizes_mins(along, weights, mins)
+            pos = side_rect.x if vertical else side_rect.y
+            for n, size in zip(group, sizes):
+                strip_rooms.append(RoomOut(
+                    n, Rect(pos, side_rect.y, size, side_rect.h) if vertical
+                    else Rect(side_rect.x, pos, side_rect.w, size)))
+                pos += size
+    if vertical:
+        corridor = RoomOut("Corridor", Rect(rect.x + uw, rect.y, UNIT_SPINE, rect.h))
+    else:
+        corridor = RoomOut("Corridor", Rect(rect.x, rect.y + uh, rect.w, UNIT_SPINE))
+    b.rooms = strip_rooms + [corridor]
+
+    # ---- unit copies down both sides of the spine, mirrored toward it
+    unit_along = uh if vertical else uw
+    room = (rect.h if vertical else rect.w) - strip_h - UNIT_ROW_GAP
+    rows = max(0, room // (unit_along + UNIT_ROW_GAP))
+    placed = 0
+    for r in range(rows):
+        if placed >= per:
+            break
+        # the r-th row, walking away from the entrance strip
+        lead = strip_h + UNIT_ROW_GAP + r * (unit_along + UNIT_ROW_GAP)
+        for (col, facing) in ((0, "east" if vertical else "north"),
+                              (1, "west" if vertical else "south")):
+            if placed >= per or lead + unit_along > room + strip_h:
+                break
+            k = placed + 1
+            if vertical:
+                y = (rect.y + lead) if side == "south" else (rect.y1 - lead - uh + 1)
+                x = rect.x + uw + UNIT_SPINE if col else rect.x
+                urect = Rect(x, y, uw, uh)
+            else:
+                x = (rect.x + lead) if side == "west" else (rect.x1 - lead - uw + 1)
+                y = rect.y + uh + UNIT_SPINE if col else rect.y
+                urect = Rect(x, y, uw, uh)
+            ud = dataclasses.replace(unit.design, entrance_side=facing,
+                                     furniture=_unit_furniture(design, templates))
+            ul = layout_rooms(ud, urect, rng, templates)
+            uo = UnitOut(f"{unit.name} {unit_number(unit, storey, k, per)}",
+                         urect, ul)
+            # the copy's door is the auto-connect pair with the corridor, not
+            # the layout's own entrance guess: swap the cells over
+            pair = shared_wall_cells(urect, corridor.rect)
+            old = ul.entrance_door
+            for rm in ul.rooms:
+                rm.doors.discard(old)
+            for c in pair:
+                if urect.contains_cell(c):
+                    uo.doors.add(c)
+                    _cell_to_room(ul, c)
+                if corridor.rect.contains_cell(c):
+                    corridor.doors.add(c)
+            ul.entrance_door = next(iter(sorted(uo.doors)), old)
+            b.unit_outs.append(uo)
+            b.residents += unit.residents
+            placed += 1
+    for k in range(placed + 1, per + 1):
+        b.unit_dropped.append(f"{unit.name} {unit_number(unit, storey, k, per)}")
+
+    # ---- doors: shared strip rooms touch each other and the corridor
+    for i, ra in enumerate(b.rooms):
+        for rb in b.rooms[i + 1:]:
+            for cell in shared_wall_cells(ra.rect, rb.rect):
+                if ra.rect.contains_cell(cell):
+                    ra.doors.add(cell)
+                if rb.rect.contains_cell(cell):
+                    rb.doors.add(cell)
+    b.entrance_side = side
+    b.entrance_door = _entrance_cell(corridor.rect, side)
+    corridor.doors.add(b.entrance_door)
+    return b
+
+
+def _cell_to_room(layout, cell):
+    """A door cell on a room's ring, so its furniture keeps it clear."""
+    x, y = cell
+    for room in layout.rooms:
+        if room.rect.contains_cell(cell) and \
+                (x in (room.rect.x, room.rect.x1) or y in (room.rect.y, room.rect.y1)):
+            room.doors.add(cell)
+            return
 
 
 def layout_rooms(design, rect, rng, templates=None, furniture=None):
@@ -464,6 +689,9 @@ def layout_rooms(design, rect, rng, templates=None, furniture=None):
 
 def layout_building(design, origin, rng, templates=None):
     """Place a building's rooms. origin is the bottom-left cell of its footprint."""
+    if getattr(design, "units", None):
+        w, h = units_footprint(design, templates)
+        return layout_units(design, Rect(origin[0], origin[1], w, h), rng, templates)
     if templates:
         w, h, design, furniture, dropped, needs = _resolve_plan(design, templates)
     else:
