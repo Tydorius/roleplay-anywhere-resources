@@ -7,7 +7,8 @@ than one street's edge. Urban districts get narrow alleys (1-2 cells) and
 buildings that share walls along the streets; villages get wide lanes and
 room for yards. The square or green sits at the main crossroads, among the
 buildings. Other zones keep a single path spine: farmland lanes between the
-road entries, and (for wild zones) a meandering track. Outdoor props and
+road entries. A wild zone with nothing in it gets one track between its road
+mouths, or no path at all when it has fewer than two. Outdoor props and
 filler then spread over the remaining free ground, clear of paths, doors and
 yards, to a density scaled by the setting.
 """
@@ -145,7 +146,8 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     # ---- the path: settlement zones get a street grid (main street plus
     # side streets, square at the crossroads); a zone that asks for it gets
     # one green ringed by its path instead; a fields zone gets farm lanes
-    # whatever its kind; other zones get one spine
+    # whatever its kind; an empty wild zone gets one track between its road
+    # mouths or none at all; other zones get one spine
     if zone.dressing.paths != "none":
         out.spine_ground = {"dirt": ("dirt", "dirt"), "cobble": ("stone", "cobblestone"),
                             "paved": ("stone", "flagstone-light")}.get(zone.dressing.paths, ("dirt", "dirt"))
@@ -163,6 +165,10 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         if green_ring is not None:
             out.street, out.spine_rects, out.feature = green_ring, rects, green
             out.grid_vertical = green_ring.h >= green_ring.w
+        elif zone.arrangement != "fields" and zone_class(zone) == "wild" \
+                and not zone.buildings and not compounds:
+            out.street, out.spine_rects = _wild_track(rect, mouths)
+            out.grid_vertical = out.street is not None and out.street.h >= out.street.w
         elif zone.arrangement != "fields" and \
                 (zone_class(zone) == "settlement" or zone.arrangement == "along_street"):
             street, rects, square, sides = _settlement_streets(
@@ -479,6 +485,40 @@ def _main_path(zone, rect, mouths, rng, widest=(0, 0), hug_road=False):
         street = Rect(left, sy, right - left + 1, PATH_WIDTH)
         cells |= street.cells()
     return street, _cells_to_rects(cells)
+
+
+def _wild_track(rect, mouths):
+    """(street Rect or None, [Rects]). A wild zone's whole path: one track
+    joining its road mouths — the first mouth's nearest neighbour walks an
+    L to it, then the next nearest to any cell already joined — and nothing
+    at all when it has fewer than two, so no street ever runs the zone's
+    length beside empty ground."""
+    entries = []
+    for (side, (mx, my)) in mouths:
+        if side == "inner":
+            continue
+        if side in ("west", "east"):
+            a = max(rect.y + 1, min(rect.y1 - 1, int(round(my))))
+            entries.append((rect.x if side == "west" else rect.x1, a))
+        else:
+            a = max(rect.x + 1, min(rect.x1 - 1, int(round(mx))))
+            entries.append((a, rect.y if side == "south" else rect.y1))
+    if len(entries) < 2:
+        return None, []
+    cells = set()
+    joined = [entries[0]]
+    rest = entries[1:]
+    while rest:
+        p, q = min(((p, q) for p in rest for q in joined),
+                   key=lambda pq: (abs(pq[0][0] - pq[1][0]) + abs(pq[0][1] - pq[1][1]),
+                                   pq[0], pq[1]))
+        cells |= _seg_cells(p, (q[0], p[1]), rect)
+        cells |= _seg_cells((q[0], p[1]), q, rect)
+        joined.append(p)
+        rest.remove(p)
+    rects = _cells_to_rects(cells)
+    street = max(rects, key=lambda r: r.w * r.h) if rects else None
+    return street, rects
 
 
 def _seg_cells(p, q, rect):

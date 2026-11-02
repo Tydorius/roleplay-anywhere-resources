@@ -4,6 +4,8 @@ import random
 import unittest
 
 import worldgen
+from worldgen import layout_zone
+from worldgen.model import Rect
 
 FIXTURE = os.path.join(os.path.dirname(__file__), "..", "fixtures", "village.json")
 
@@ -54,10 +56,68 @@ class TestZoneLayout(unittest.TestCase):
                 self.assertFalse(fp & b.layout.rect.cells(),
                                  f"{o.template} at {o.pos} overlaps building {b.layout.design.name}")
 
-    def test_every_zone_has_its_spine(self):
-        for name in self.world.zones_by_name:
+    def test_every_built_zone_has_its_spine(self):
+        for name, area in self.world.zone_building_area.items():
+            if not area:
+                continue   # an empty wild zone may have no path at all
             spine = next((r for r in self.world.regions if r.name == f"{name} Path"), None)
             self.assertIsNotNone(spine, f"zone {name} has no path spine")
+
+    def test_empty_wild_zone_gets_one_track_or_none(self):
+        # a wild zone with nothing in it has either no path (fewer than two
+        # road mouths) or one track joining its mouths — never parallel
+        # full-length streets through empty ground
+        empty = [name for name, area in self.world.zone_building_area.items()
+                 if not area]
+        self.assertTrue(empty, "the fixture has no empty wild zone to check")
+        for name in empty:
+            paths = [r.rect for r in self.world.regions
+                     if r.kind == "path" and r.parent == name]
+            if not paths:
+                continue
+            cells = set()
+            for r in paths:
+                cells |= r.cells()
+            seen = set()
+            todo = [next(iter(cells))]
+            while todo:
+                c = todo.pop()
+                if c in seen:
+                    continue
+                seen.add(c)
+                x, y = c
+                for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if n in cells:
+                        todo.append(n)
+            self.assertEqual(len(seen), len(cells),
+                             f"zone {name}'s track is not one connected run")
+
+
+class TestWildZoneTrack(unittest.TestCase):
+    """A wild zone's path is one track between its road mouths, or nothing."""
+
+    def layout(self, rect, reserved):
+        from worldgen.model import Zone
+        zone = Zone("Whisperwood", kind="old-growth forest")
+        return layout_zone.layout_zone(zone, rect, {}, random.Random(4),
+                                       road_reserved=reserved)
+
+    def test_two_mouths_get_one_track_joining_them(self):
+        rect = Rect(0, 0, 30, 26)
+        out = self.layout(rect, {(0, y) for y in range(11, 14)} |
+                          {(29, y) for y in range(19, 22)})
+        self.assertEqual(out.feature, None)
+        self.assertTrue(out.spine_rects)
+        cells = set()
+        for r in out.spine_rects:
+            cells |= r.cells()
+        self.assertTrue((0, 12) in cells and (29, 20) in cells,
+                        "the track does not reach both road mouths")
+
+    def test_one_mouth_gets_no_path_at_all(self):
+        out = self.layout(Rect(0, 0, 30, 26), {(0, y) for y in range(11, 14)})
+        self.assertIsNone(out.street)
+        self.assertEqual(out.spine_rects, [])
 
 
 class TestZoneFillMetric(unittest.TestCase):
