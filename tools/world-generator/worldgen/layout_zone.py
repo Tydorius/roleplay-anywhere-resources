@@ -14,6 +14,7 @@ yards, to a density scaled by the setting.
 import dataclasses
 from collections import deque
 
+from . import layout_compound
 from .hints import parse as parse_hint
 from .layout_building import building_footprint, layout_building
 from .layout_room import layout_room
@@ -74,6 +75,7 @@ class BuildingOut:
         self.lot = lot            # Rect: building + yard bounding box
         self.yard_rect = yard_rect
         self.floors = []          # upper storeys (extensions/floors.py fills this)
+        self.compound = None      # compound name when this building is a part
 
 
 class ZoneOut:
@@ -87,6 +89,7 @@ class ZoneOut:
         self.spine_ground = ("dirt", "dirt")
         self.feature = None       # the square at the main crossroads
         self.buildings = []       # [BuildingOut]
+        self.compounds = []       # [CompoundOut]
         self.yards = []           # [(name, Rect, building_name)]
         self.props = []           # [Placement] outdoor props (props + yard props + filler)
         self.fields = []          # [(name, Rect)] field plots (agricultural zones)
@@ -136,6 +139,7 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     out = ZoneOut(zone, rect)
     out.reserved |= set(road_reserved or ())
     density_scale = getattr(map_ctx, "density_scale", 1.0) if map_ctx is not None else 1.0
+    compounds = list(getattr(zone, "compounds", None) or [])
 
     # ---- the path: settlement zones get a street grid (main street plus
     # side streets, square at the crossroads); other zones get one spine
@@ -145,6 +149,9 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         widest = (0, 0)
         for d in zone.buildings:
             fw, fh = building_footprint(d, templates)
+            widest = (max(widest[0], fw), max(widest[1], fh))
+        for c in compounds:
+            fw, fh = layout_compound.compound_footprint(zone, c, templates)
             widest = (max(widest[0], fw), max(widest[1], fh))
         if zone_class(zone) == "settlement":
             street, rects, square, sides = _settlement_streets(
@@ -158,24 +165,36 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
             out.reserved |= r.cells()
 
     # ---- buildings fill the blocks (furniture laid out and checked as part
-    # of placing each one, so a bad rotation can be undone)
-    _place_buildings(zone, rect, out, rng, templates)
+    # of placing each one, so a bad rotation can be undone); compounds go
+    # in first, each as one block the other buildings pack around
+    mouths = _mouth_clusters(rect, set(road_reserved or ()))
+    _place_buildings(zone, rect, out, rng, templates, mouths)
 
-    # ---- branches: reserved cells from each entrance approach to the path
+    # ---- branches: reserved cells from each entrance approach to the path.
+    # A compound part's courtyard-facing entrance is reached through the
+    # gate, not through the walls, so only the gates get a branch; every
+    # branch walks round the compound blocks, never through them.
     path_cells = set()
     for r in out.spine_rects:
         path_cells |= r.cells()
     buildings_cells = set()
     for b in out.buildings:
         buildings_cells |= b.layout.rect.cells()
+    block_cells = set()
+    for comp in out.compounds:
+        block_cells |= comp.rect.cells()
+    gate_parts = {g.building for comp in out.compounds for g in comp.gates}
     for b in out.buildings:
         bl = b.layout
+        if b.compound is not None and bl.design.name not in gate_parts:
+            continue
         dx, dy = SIDE_DX_DY[bl.entrance_side]
         door = bl.entrance_door
         approach = (door[0] + dx, door[1] + dy)
         out.reserved.add(approach)
         if path_cells:
-            out.reserved |= _route_branch(approach, path_cells, out.rect, buildings_cells, b)
+            out.reserved |= _route_branch(approach, path_cells, out.rect,
+                                          buildings_cells | block_cells, b)
 
     # ---- crop fields: agricultural zones get fenced plots with crop rows
     if zone_class(zone) == "agricultural":
@@ -759,12 +778,15 @@ def _place_buildings_grid(zone, rect, out, rng, templates, fits, put, rollback):
                 out.failures.append((f"building {design.name}", "no space in zone"))
 
 
-def _place_buildings(zone, rect, out, rng, templates):
-    designs = sorted(zone.buildings,
+def _place_buildings(zone, rect, out, rng, templates, mouths=()):
+    compounds = list(getattr(zone, "compounds", None) or [])
+    part_names = {p.building for c in compounds for p in c.parts}
+    designs = sorted((d for d in zone.buildings if d.name not in part_names),
                      key=lambda d: (-(building_footprint(d, templates)[0]
                                       * building_footprint(d, templates)[1]), d.name))
     placed_lots = []
     placed_faces = []   # (building rect, entrance side): doors stay approachable
+    compound_blocks = []   # [Rect]: branch routing never cuts through them
     inner = rect.interior(1) if rect.w > 2 and rect.h > 2 else rect
     spacing = lot_spacing(zone)
 
@@ -811,6 +833,51 @@ def _place_buildings(zone, rect, out, rng, templates):
         placed_faces.remove((b.layout.rect, b.layout.entrance_side))
         if b.yard_rect is not None:
             out.yards = [(n, yr, bn) for (n, yr, bn) in out.yards if yr is not b.yard_rect]
+
+    # ---- compounds: one block each, gate face towards the road it joins,
+    # before the loose buildings pack round them
+    def furnish_part(b):
+        failures = _furnish(out, b, zone, templates, rng)
+        if failures:
+            failures = _furnish(out, b, zone, templates, rng)
+        out.failures.extend(failures)
+        _record_furniture(out, b)
+
+    for compound in sorted(compounds, key=lambda c: c.name, reverse=True):
+        fp = layout_compound.compound_footprint(zone, compound, templates)
+        pos = _compound_position(zone, rect, out, compound, fp, inner, fits,
+                                 rng, mouths)
+        if pos is None:
+            out.failures.append((f"compound {compound.name}", "no space in zone"))
+            continue
+        block = Rect(pos[0], pos[1], fp[0], fp[1])
+        comp = layout_compound.place_compound(zone, compound, block, templates,
+                                              rng, furnish_part, mouths=list(mouths))
+        out.compounds.append(comp)
+        out.failures.extend(comp.failures)
+        placed_lots.append(block)
+        compound_blocks.append(block)
+        for b in comp.parts:
+            out.buildings.append(b)
+        targets = []
+        by_name = {b.layout.design.name: b for b in comp.parts}
+        for part in compound.parts:
+            b = by_name.get(part.building)
+            if part.slot_kind != "inside" or b is None:
+                continue
+            dx, dy = SIDE_DX_DY[b.layout.entrance_side]
+            targets.append((b.layout.entrance_door[0] + dx,
+                            b.layout.entrance_door[1] + dy))
+        comp.paths = layout_compound.courtyard_paths(comp, targets)
+        for pr in comp.paths:
+            out.reserved |= pr.cells()
+        # nothing of the zone dresses inside the walls: the block keeps its
+        # ground clear (the parts' own cells excluded — their furniture is
+        # theirs), so no filler tree ever stands in the courtyard
+        reserved_block = block.cells()
+        for b in comp.parts:
+            reserved_block -= b.layout.rect.cells()
+        out.reserved |= reserved_block
 
     street = out.street
     if street is not None and out.side_streets:
@@ -997,6 +1064,44 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
             _record_furniture(out, b)
             return True
     return False
+
+
+def _compound_position(zone, rect, out, compound, fp, inner, fits, rng, mouths):
+    """Where a compound's block sits: the free spot whose gate face comes
+    nearest the road mouth the zone is joined to (else the street, else the
+    zone's centre). Returns the block's origin, or None when nothing fits."""
+    w, h = fp
+    explicit = [p for p in compound.parts if p.gate]
+    gate_side = layout_compound._outward_side(explicit[0]) if explicit else \
+        (mouths[0][0] if mouths else "")
+    if mouths:
+        focus = mouths[0][1]
+    elif out.street is not None:
+        focus = out.street.center()
+    else:
+        focus = rect.center()
+    cands = [(bx, by) for bx in range(inner.x, inner.x1 - w + 2)
+             for by in range(inner.y, inner.y1 - h + 2)]
+    rng.shuffle(cands)
+
+    def face_center(pos):
+        r = Rect(pos[0], pos[1], w, h)
+        c = r.center()
+        return {"north": (c[0], r.y1), "south": (c[0], r.y),
+                "east": (r.x1, c[1]), "west": (r.x, c[1])}.get(gate_side, c)
+
+    best = None
+    for pos in cands:
+        lot = Rect(pos[0], pos[1], w, h)
+        if not fits(lot):
+            continue
+        fc = face_center(pos)
+        d = abs(fc[0] - focus[0]) + abs(fc[1] - focus[1])
+        if best is None or d < best[0]:
+            best = (d, pos)
+        if best[0] <= 2:
+            break
+    return best[1] if best is not None else None
 
 
 def _route_branch(approach, targets, zone_rect, buildings_cells, own_building):

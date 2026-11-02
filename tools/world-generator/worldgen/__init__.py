@@ -73,6 +73,8 @@ class World:
         self.zone_building_area = {}   # zone name -> placed footprint cells
         self.floors = []               # upper storeys (extensions/floors.py)
         self.portals = []              # stair portals, as arpgMods entries
+        self.compounds = []            # [CompoundOut] (layout_compound.py)
+        self.solid_walls = set()       # cells of intentional wall objects
 
 
 def _most_private_room(world, b):
@@ -251,16 +253,20 @@ def _dropped_count(world):
 
 
 def _growth_scale(plan, world):
-    """{zone name: factor} for zones that dropped a building or a storey: the
-    zone's weight grows until its content fits, so nothing planned is lost."""
+    """{zone name: factor} for zones that dropped a building, a storey or a
+    compound's reachability: the zone's weight grows until its content fits,
+    so nothing planned is lost."""
     from .checks import dropped_failures
     zone_of = {b.name: z.name for z in plan.zones for b in z.buildings}
+    zone_of.update({c.name: c.zone for c in getattr(plan, "compounds", []) or []})
     out = {}
     for (what, _reason) in dropped_failures(world.failures):
         if what.startswith("building "):
             name = what[len("building "):]
         elif what.startswith("floors of "):
             name = what[len("floors of "):]
+        elif what.startswith("compound "):
+            name = what[len("compound "):].split(" part ")[0].split(" wall ")[0]
         else:
             continue
         name = name.split(" [")[0]   # strip a piece label, when there is one
@@ -425,16 +431,57 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                                                ground="dirt", ground_texture="dirt",
                                                ambience={"day": "nature_outdoors", "night": "crickets"},
                                                description=f"The yard of {_bname}."))
+            for comp in zout.compounds:
+                world.compounds.append(comp)
+                world.regions.append(RegionOut(
+                    comp.name, comp.rect, "compound", parent=z.name,
+                    ground=g, ground_texture=tex,
+                    ambience={"day": "nature_outdoors", "night": "crickets"},
+                    description=f"The grounds of {comp.name}."))
+                for i, corridor in enumerate(comp.corridors):
+                    world.regions.append(RegionOut(
+                        corridor.name, corridor.rect, "building", parent=comp.name,
+                        wall=corridor.wall, ground=g, ground_texture=tex,
+                        ambience={"day": "nature_outdoors", "night": "crickets"},
+                        description=f"The wall of {comp.name}."))
+                for i, strip in enumerate(comp.wall_strips):
+                    tname = f"{comp.name} Wall Section {i + 1}"
+                    t = ObjectTemplate(name=tname, size=tuple(strip.size),
+                                       walkability=0.0,
+                                       description=f"The wall of {comp.name}.",
+                                       physicalDescription="A high, sheer wall.",
+                                       tags=["wall"],
+                                       extras={"maxHp": 999, "heightM": 3})
+                    world.templates[tname] = t
+                    known = {x.get("name") for x in plan_data.setdefault("templates", [])}
+                    if tname not in known:
+                        plan_data["templates"].append(
+                            {"name": tname, "size": list(strip.size),
+                             "walkability": 0.0, "maxHp": 999, "heightM": 3,
+                             "description": t.description,
+                             "physicalDescription": t.physicalDescription,
+                             "tags": ["wall"], "rule": "the compound's outer wall"})
+                    world.objects.append(ObjectOut(tname, strip.pos, comp.name))
+                    world.solid_walls |= {
+                        (x, y) for x in range(strip.pos[0], strip.pos[0] + strip.size[0])
+                        for y in range(strip.pos[1], strip.pos[1] + strip.size[1])}
+                for j, pr in enumerate(comp.paths):
+                    world.regions.append(RegionOut(
+                        f"{comp.name} Path" + (f" {j + 1}" if j else ""), pr,
+                        "path", parent=comp.name, ground="dirt", ground_texture="dirt",
+                        ambience={"day": "nature_outdoors", "night": "crickets"},
+                        description=f"The path through {comp.name}."))
             for b in zout.buildings:
                 bl = b.layout
                 design = bl.design
                 building_name = design.name
                 world.buildings.append(b)
                 breg = RegionOut(
-                    building_name, bl.rect, "building", parent=z.name, wall=design.wall,
+                    building_name, bl.rect, "building",
+                    parent=b.compound or z.name, wall=design.wall,
                     ground="wood", ground_texture="floorboards",
                     ambience={"day": "quiet_indoor"}, description=design.purpose,
-                    doors={bl.entrance_door})
+                    doors={bl.entrance_door} | set(getattr(bl, "extra_doors", []) or ()))
                 world.regions.append(breg)
                 single = len(bl.rooms) == 1 and bl.rooms[0].rect == bl.rect
                 for room in bl.rooms:

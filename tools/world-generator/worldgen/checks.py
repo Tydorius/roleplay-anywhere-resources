@@ -93,12 +93,14 @@ def portal_jumps(world):
 def dropped_failures(failures):
     """The failures that mean planned content was dropped: a building with no
     space in its zone, a zone that never placed, a storey reduced to
-    single-storey. These are errors, not notes — the command exits non-zero."""
+    single-storey, a compound (or part of one) nobody can walk to. These are
+    errors, not notes — the command exits non-zero."""
     out = []
     for (what, reason) in failures:
         if (what.startswith("building ") and reason == "no space in zone") \
                 or (what.startswith("zone ") and reason == "not placed") \
-                or (what.startswith("floors of ") and "single-storey" in reason):
+                or (what.startswith("floors of ") and "single-storey" in reason) \
+                or (what.startswith("compound ") and "not reachable" in reason):
             out.append((what, reason))
     return out
 
@@ -258,6 +260,26 @@ def _floors_checks(world, blocked):
     return issues
 
 
+def _compound_checks(world, from_player):
+    """Issues with the placed compounds: every part's and every wall
+    corridor's interior is reachable on foot, and so is the courtyard (a
+    sealed courtyard means the gate never opened)."""
+    issues = []
+    for comp in getattr(world, "compounds", []) or []:
+        if not (comp.courtyard.interior().cells() & from_player):
+            issues.append((f"compound {comp.name}", "courtyard not reachable"))
+        for b in comp.parts:
+            if not (b.layout.rect.interior().cells() & from_player):
+                issues.append((f"compound {comp.name} part {b.layout.design.name}",
+                               "not reachable"))
+        for c in comp.corridors:
+            if c.rect.w < 3 or c.rect.h < 3:
+                continue
+            if not (c.rect.interior().cells() & from_player):
+                issues.append((f"compound {comp.name} wall {c.name}", "not reachable"))
+    return issues
+
+
 def check_scenario_mods(scenario_path, arpg_mods):
     """Issues with the built scenario.json against what the generator laid
     out: arpgMods must be present and match exactly, and every upper storey
@@ -399,6 +421,11 @@ def run_checks(world):
             rooms_ok += 1
         else:
             unreachable_rooms.append(r.name)
+
+    # ---- compounds: every part, wall corridor and courtyard is walkable
+    compound_issues = _compound_checks(world, from_player) \
+        if getattr(world, "compounds", None) else []
+    world.failures.extend(compound_issues)
     entrances_total = entrances_ok = 0
     unreachable_entrances = []
     for b in world.buildings:
@@ -420,7 +447,10 @@ def run_checks(world):
             solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
                       for y in range(o.pos[1], o.pos[1] + h)}
     blocked_doors = sorted(doors & solid)
-    blocked_walkways = sorted(world.reserved & solid)
+    # a walkway is blocked only by accident: intentional wall objects (a
+    # compound's solid walls) stand on their own ground, not on a path
+    intentional = set(getattr(world, "solid_walls", ()) or ())
+    blocked_walkways = sorted((world.reserved & solid) - intentional)
 
     # ---- density
     room_density = {}
@@ -490,6 +520,8 @@ def run_checks(world):
         "objects_out_of_bounds": out_of_bounds,
         "characters": {"total": len(world.characters), "issues": char_issues},
         "floors": floors_metrics,
+        "compounds": {"compounds": len(getattr(world, "compounds", []) or []),
+                      "issues": [f"{w}: {r}" for (w, r) in compound_issues]},
     }
     world.metrics = metrics
     return metrics

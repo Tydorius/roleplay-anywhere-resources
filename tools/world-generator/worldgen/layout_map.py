@@ -89,13 +89,21 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
 
     tmap = {t.name: t for t in plan.templates}
 
+    def _all_footprints(z):
+        """The zone's building footprints plus its compound blocks (each
+        block placed whole, like one very large building)."""
+        from .layout_compound import compound_footprint
+        fps = [building_footprint(b, tmap) for b in z.buildings]
+        for c in getattr(z, "compounds", None) or []:
+            fps.append(compound_footprint(z, c, tmap))
+        return fps
+
     def zone_fit(z):
         """(area, cross, along) the zone's street grid and lots need: the
         widest pair of buildings facing across the street, the fuller side's
         row along it, and (for a settlement grid) the side streets' bite out
         of the street's length."""
-        fps = sorted((building_footprint(b, tmap) for b in z.buildings),
-                     key=lambda f: (-f[0], -f[1]))
+        fps = sorted(_all_footprints(z), key=lambda f: (-f[0], -f[1]))
         spacing = lot_spacing(z)
         sides = ([], [])
         for f in fps:   # big first, alternating sides like the band packer
@@ -124,12 +132,12 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
         return max(nominal, 4 * built, zone_fit(z)[0])
 
     def zone_min_side(z):
-        """The narrowest the zone may be cut: its widest building plus the
-        street and its margins (and, for a settlement, its street grid's
-        width), so a band can always hold it."""
+        """The narrowest the zone may be cut: its widest building or compound
+        block plus the street and its margins (and, for a settlement, its
+        street grid's width), so a band can always hold it."""
         if not z.buildings:
             return MIN_ZONE_SIDE
-        widest = max(max(building_footprint(b, tmap)) for b in z.buildings)
+        widest = max(max(f) for f in _all_footprints(z))
         base = max(MIN_ZONE_SIDE, widest + lot_spacing(z) + PATH_WIDTH + 4)
         if zone_class(z) == "settlement":
             base = max(base, round(zone_fit(z)[1] * FIT_SLACK))
