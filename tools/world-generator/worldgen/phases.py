@@ -2830,6 +2830,11 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         "npcs": p5["npcs"],
         "player": p5["player"],
     }
+    # P1's plan-level layout fields: without these a live run threw its
+    # compounds away (the fixtures carry them by hand, so only a live run showed it)
+    for key in ("compounds", "loot"):
+        if p1.get(key):
+            plan[key] = p1[key]
     plan.update(systems)
     if frame is not None:
         plan["frame"] = frame

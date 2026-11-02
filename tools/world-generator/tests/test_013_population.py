@@ -206,3 +206,22 @@ class TestP5Batches(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPlanKeepsP1Layout(unittest.TestCase):
+    """The first live 013 run planned a castle enclosure and a cotter row in
+    P1, passed validation, and shipped neither: run_phases never copied
+    `compounds` into the plan. The fixtures write compounds by hand, so only
+    the full phase run can catch this."""
+
+    def test_compounds_survive_into_the_plan(self):
+        p1 = populated_p1()
+        p1["compounds"] = [{
+            "name": "Mill Row", "zone": "Millbrook", "shape": "row",
+            "frontage": "south", "front": "none",
+            "parts": [{"building": "The Old Mill", "at": "row:0"},
+                      {"building": "Miller's Cottage", "at": "row:1"}]}]
+        client = ScriptedClient(populated_replies(p1=p1))
+        plan, stats = phases.run_phases("a mill village", client)
+        self.assertEqual([c["name"] for c in plan.get("compounds", [])], ["Mill Row"],
+                         stats["dropped"])
