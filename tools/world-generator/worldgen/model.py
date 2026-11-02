@@ -216,6 +216,46 @@ class Zone:
     buildings: list = field(default_factory=list)  # [BuildingDesign]
     outdoor: list = field(default_factory=list)    # short feature names from P1
     dressing: Dressing = field(default_factory=Dressing)
+    arrangement: str = ""   # optional: around_green|along_street|scattered|fields
+    compounds: list = field(default_factory=list)  # [Compound] placed in this zone
+
+
+# ------------------------------------------------------------------ compounds
+
+VALID_ARRANGEMENTS = ("around_green", "along_street", "scattered", "fields")
+COMPOUND_SHAPES = {"enclosure"}                 # implemented
+COMPOUND_SHAPES_KNOWN = {"row", "cluster"}      # parsed, rejected for now
+COMPOUND_WALLS = ("walkable", "solid", "none")
+COURTYARD_SIZES = ("small", "medium", "large")
+CORNERS = ("nw", "ne", "sw", "se")
+SIDE_WORDS = ("north", "south", "east", "west")
+
+
+@dataclass
+class CompoundPart:
+    """One part of a compound: a building from the zone's own buildings list,
+    placed by its slot. ``at`` is the model's slot string; the kind and the
+    pieces are parsed and validated with the plan."""
+    building: str
+    at: str = ""
+    gate: bool = False
+    slot_kind: str = ""   # corner | edge | inside | attached
+    corner: str = ""      # nw|ne|sw|se (corner)
+    side: str = ""        # north|south|east|west (edge, inside, attached)
+    offset: str = ""      # start|center|end (edge)
+    host: str = ""        # host part building (attached)
+
+
+@dataclass
+class Compound:
+    """Several connected structures placed as one block: the parts are
+    existing buildings of one zone; code adds the walls between them."""
+    name: str
+    zone: str
+    shape: str = "enclosure"
+    courtyard: str = "medium"
+    walls: str = "walkable"
+    parts: list = field(default_factory=list)   # [CompoundPart]
 
 
 @dataclass
@@ -344,6 +384,7 @@ class Plan:
     templates: list = field(default_factory=list)  # [ObjectTemplate]
     npcs: list = field(default_factory=list)       # [Person]
     player: Person = None
+    compounds: list = field(default_factory=list)  # [Compound]
     extras: dict = field(default_factory=dict)     # currency, attributes, skills, ...
 
     def template(self, name):
@@ -449,6 +490,109 @@ def _parse_building(d, designs):
     return design
 
 
+def _parse_slot(at, ctx):
+    """Parse one slot string into its kind and pieces. Raises ValueError
+    naming ``ctx`` (the compound and part) on anything outside the
+    vocabulary."""
+    if not isinstance(at, str) or ":" not in at:
+        raise ValueError(f"{ctx}: bad slot {at!r} (use corner:<nw|ne|sw|se>, "
+                         f"edge:<side>:<start|center|end>, inside:<center|side> "
+                         f"or attached:<part>:<side>)")
+    bits = at.split(":")
+    kind = bits[0]
+    if kind == "corner" and len(bits) == 2 and bits[1] in CORNERS:
+        return ("corner", {"corner": bits[1]})
+    if kind == "edge" and len(bits) == 3 and bits[1] in SIDE_WORDS \
+            and bits[2] in ("start", "center", "end"):
+        return ("edge", {"side": bits[1], "offset": bits[2]})
+    if kind == "inside" and len(bits) == 2 \
+            and bits[1] in (("center",) + SIDE_WORDS):
+        return ("inside", {"side": "" if bits[1] == "center" else bits[1]})
+    if kind == "attached" and len(bits) == 3 and bits[2] in SIDE_WORDS:
+        return ("attached", {"host": bits[1], "side": bits[2]})
+    raise ValueError(f"{ctx}: bad slot {at!r}")
+
+
+def _parse_compounds(data, zone_by_name, building_zone):
+    """[Compound] from the plan's top-level list, validated against the
+    zones: every part is a building of the compound's own zone, no slot is
+    used twice, gates are edge parts only (at most two), and an attached
+    part names a host that exists and does not loop."""
+    out = []
+    seen_names = set()
+    for c in data.get("compounds", []) or []:
+        if not isinstance(c, dict):
+            raise ValueError("compounds: entries must be objects")
+        name = _require(c, "name", "compound")
+        ctx = f"compound {name!r}"
+        if name in seen_names:
+            raise ValueError(f"{ctx}: name used twice")
+        seen_names.add(name)
+        zone = _require(c, "zone", ctx)
+        if zone not in zone_by_name:
+            raise ValueError(f"{ctx}: unknown zone {zone!r}")
+        shape = c.get("shape", "enclosure")
+        if shape in COMPOUND_SHAPES_KNOWN:
+            raise ValueError(f"{ctx}: shape {shape!r} is not implemented yet; "
+                             f"use enclosure")
+        if shape not in COMPOUND_SHAPES:
+            raise ValueError(f"{ctx}: bad shape {shape!r} (use enclosure)")
+        courtyard = c.get("courtyard", "medium")
+        if courtyard not in COURTYARD_SIZES:
+            raise ValueError(f"{ctx}: bad courtyard {courtyard!r} "
+                             f"(use small, medium or large)")
+        walls = c.get("walls", "walkable")
+        if walls not in COMPOUND_WALLS:
+            raise ValueError(f"{ctx}: bad walls {walls!r} "
+                             f"(use walkable, solid or none)")
+        parts = c.get("parts", []) or []
+        if not isinstance(parts, list) or not parts:
+            raise ValueError(f"{ctx}: parts must be a non-empty list")
+        parsed, slots, gates = [], set(), []
+        for p in parts:
+            if not isinstance(p, dict):
+                raise ValueError(f"{ctx}: parts entries must be objects")
+            bname = _require(p, "building", f"{ctx} part")
+            pctx = f"{ctx} part {bname!r}"
+            at = p.get("at", "")
+            kind, fields = _parse_slot(at, pctx)
+            if at in slots:
+                raise ValueError(f"{pctx}: slot {at!r} used twice in {name!r}")
+            slots.add(at)
+            if bname not in building_zone:
+                raise ValueError(f"{pctx}: unknown building {bname!r}")
+            if building_zone[bname] != zone:
+                raise ValueError(f"{pctx}: building {bname!r} is a building of "
+                                 f"{building_zone[bname]!r}, not {zone!r}")
+            if p.get("gate"):
+                if kind != "edge":
+                    raise ValueError(f"{pctx}: only an edge part can be the gate")
+                gates.append(bname)
+            parsed.append(CompoundPart(building=bname, at=at,
+                                       gate=bool(p.get("gate")),
+                                       slot_kind=kind, **fields))
+        if len(gates) > 2:
+            raise ValueError(f"{ctx}: at most two gates, got {len(gates)}")
+        by_building = {p.building: p for p in parsed}
+        for p in parsed:
+            if p.slot_kind != "attached":
+                continue
+            pctx = f"{ctx} part {p.building!r}"
+            if p.host not in by_building:
+                raise ValueError(f"{pctx}: attached host {p.host!r} is not a "
+                                 f"part of {name!r}")
+            walk, seen = p.host, set()
+            while walk in by_building and by_building[walk].slot_kind == "attached":
+                if walk in seen:
+                    raise ValueError(f"{pctx}: attached parts form a cycle "
+                                     f"through {walk!r}")
+                seen.add(walk)
+                walk = by_building[walk].host
+        out.append(Compound(name=name, zone=zone, shape=shape,
+                            courtyard=courtyard, walls=walls, parts=parsed))
+    return out
+
+
 def parse_plan(data):
     """Parse the merged plan dict into a Plan."""
     designs = {}
@@ -465,6 +609,10 @@ def parse_plan(data):
             filler=[FillerPlan(template=f.get("template"), density=f.get("density", "low"))
                     for f in dressing_data.get("filler", [])],
         )
+        arrangement = z.get("arrangement", "")
+        if arrangement and arrangement not in VALID_ARRANGEMENTS:
+            raise ValueError(f"zone {name!r}: bad arrangement {arrangement!r} "
+                             f"(use around_green, along_street, scattered or fields)")
         zone = Zone(
             name=name, kind=z.get("kind", "field"), size_class=z.get("sizeClass", "medium"),
             description=z.get("description", ""), ground=z.get("ground", "grass"),
@@ -472,6 +620,7 @@ def parse_plan(data):
             buildings=[_parse_building(b, designs) for b in z.get("buildings", [])],
             outdoor=list(z.get("outdoor", [])),
             dressing=dressing,
+            arrangement=arrangement,
         )
         if zone.size_class not in VALID_ZONE_SIZES:
             raise ValueError(f"zone {name!r}: bad sizeClass {zone.size_class!r}")
@@ -481,6 +630,11 @@ def parse_plan(data):
         for n in z.adjacentTo:
             if n not in names:
                 raise ValueError(f"zone {z.name!r}: adjacentTo unknown zone {n!r}")
+    zone_by_name = {z.name: z for z in zones}
+    building_zone = {b.name: z.name for z in zones for b in z.buildings}
+    compounds = _parse_compounds(data, zone_by_name, building_zone)
+    for c in compounds:
+        zone_by_name[c.zone].compounds.append(c)
     templates = []
     for t in data.get("templates", []):
         extras = {k: v for k, v in t.items()
@@ -514,4 +668,5 @@ def parse_plan(data):
                 setting=data.get("setting", {}), mapSize=data.get("mapSize", "small"),
                 zones=zones, roads=[Road(a=r.get("from"), b=r.get("to"), kind=r.get("kind", "dirt"))
                                     for r in data.get("roads", [])],
-                templates=templates, npcs=npcs, player=player, extras=extras)
+                templates=templates, npcs=npcs, player=player, compounds=compounds,
+                extras=extras)
