@@ -22,6 +22,7 @@ import urllib.request
 PROVIDERS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                               "providers.json")
 REQUEST_TIMEOUT = 600   # seconds; one reasoning reply can take minutes
+MAX_TOKENS_CEILING = 65536   # how far an empty, budget-spent reply may double the budget
 
 
 class LLMError(Exception):
@@ -117,14 +118,18 @@ class Client:
                   "tokens": {"prompt": 0, "completion": 0, "total": 0}}
         t0 = time.time()
         result, last_parsed, ok = None, None, False
+        budget = self.max_tokens
         for attempt in range(1, max_retries + 2):
             if attempt > 1:
                 self.retries += 1
             try:
-                raw, usage = self._request(messages)
+                raw, usage = self._request(messages, budget)
                 transport_error = None
             except LLMError as e:
                 raw, usage, transport_error = "", {}, str(e)
+            # a reasoning model that spends the whole budget thinking replies
+            # empty: retry the same messages with twice the budget
+            spent = not raw.strip() and int(usage.get("completion", 0) or 0) >= budget
             parsed, parse_error = extract_json(raw)
             errors = []
             if transport_error:
@@ -142,13 +147,16 @@ class Client:
                 "parsed": parsed,
                 "errors": errors,
                 "usage": usage,
+                "max_tokens": budget,
             })
             for k in ("prompt", "completion", "total"):
                 record["tokens"][k] += int(usage.get(k, 0) or 0)
             if not errors:
                 result, ok = parsed, True
                 break
-            if attempt <= max_retries:
+            if attempt <= max_retries and spent:
+                budget = min(budget * 2, MAX_TOKENS_CEILING)
+            elif attempt <= max_retries:
                 messages = messages + [
                     {"role": "assistant", "content": raw or "(no reply)"},
                     {"role": "user", "content":
@@ -164,10 +172,10 @@ class Client:
         self._write_log(phase, record)
         return record["result"]
 
-    def _request(self, messages):
+    def _request(self, messages, max_tokens=None):
         """POST /chat/completions. Returns (content, usage); raises LLMError."""
         body = json.dumps({"model": self.model, "messages": messages,
-                           "max_tokens": self.max_tokens}).encode("utf-8")
+                           "max_tokens": max_tokens or self.max_tokens}).encode("utf-8")
         req = urllib.request.Request(
             self.base_url + "/chat/completions", data=body, method="POST",
             headers={"Content-Type": "application/json",

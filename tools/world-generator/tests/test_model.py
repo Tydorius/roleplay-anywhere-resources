@@ -31,7 +31,7 @@ class ScriptedClient(llm.Client):
         self._queue = list(replies)
         self.sent = []
 
-    def _request(self, messages):
+    def _request(self, messages, max_tokens=None):
         self.sent.append([dict(m) for m in messages])
         usage = {"prompt": 10, "completion": 5, "total": 15}
         if not self._queue:
