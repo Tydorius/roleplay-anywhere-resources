@@ -140,9 +140,12 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     out.reserved |= set(road_reserved or ())
     density_scale = getattr(map_ctx, "density_scale", 1.0) if map_ctx is not None else 1.0
     compounds = list(getattr(zone, "compounds", None) or [])
+    mouths = _mouth_clusters(rect, set(road_reserved or ()))
 
     # ---- the path: settlement zones get a street grid (main street plus
-    # side streets, square at the crossroads); other zones get one spine
+    # side streets, square at the crossroads); a zone that asks for it gets
+    # one green ringed by its path instead; a fields zone gets farm lanes
+    # whatever its kind; other zones get one spine
     if zone.dressing.paths != "none":
         out.spine_ground = {"dirt": ("dirt", "dirt"), "cobble": ("stone", "cobblestone"),
                             "paved": ("stone", "flagstone-light")}.get(zone.dressing.paths, ("dirt", "dirt"))
@@ -153,21 +156,33 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         for c in compounds:
             fw, fh = layout_compound.compound_footprint(zone, c, templates)
             widest = (max(widest[0], fw), max(widest[1], fh))
-        if zone_class(zone) == "settlement":
+        green_ring = None
+        if zone.arrangement == "around_green":
+            green_ring, rects, green = _green_ring(zone, rect, mouths, rng,
+                                                   is_urban_zone(zone))
+        if green_ring is not None:
+            out.street, out.spine_rects, out.feature = green_ring, rects, green
+            out.grid_vertical = green_ring.h >= green_ring.w
+        elif zone.arrangement != "fields" and \
+                (zone_class(zone) == "settlement" or zone.arrangement == "along_street"):
             street, rects, square, sides = _settlement_streets(
                 zone, rect, set(out.reserved), rng, widest, is_urban_zone(zone))
-            out.street, out.spine_rects, out.feature = street, rects, square
+            # a zone too small for its green falls back to the street grid,
+            # and keeps no centre feature: the green is the arrangement's own
+            out.street, out.spine_rects, out.feature = street, rects, \
+                (square if zone.arrangement != "around_green" else None)
             out.side_streets = sides
             out.grid_vertical = street is not None and street.h >= street.w
         else:
-            out.street, out.spine_rects = _main_path(zone, rect, set(out.reserved), rng, widest)
+            out.street, out.spine_rects = _main_path(
+                zone, rect, set(out.reserved), rng, widest,
+                hug_road=zone.arrangement == "fields")
         for r in out.spine_rects:
             out.reserved |= r.cells()
 
     # ---- buildings fill the blocks (furniture laid out and checked as part
     # of placing each one, so a bad rotation can be undone); compounds go
     # in first, each as one block the other buildings pack around
-    mouths = _mouth_clusters(rect, set(road_reserved or ()))
     _place_buildings(zone, rect, out, rng, templates, mouths)
 
     # ---- branches: reserved cells from each entrance approach to the path.
@@ -196,8 +211,9 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
             out.reserved |= _route_branch(approach, path_cells, out.rect,
                                           buildings_cells | block_cells, b)
 
-    # ---- crop fields: agricultural zones get fenced plots with crop rows
-    if zone_class(zone) == "agricultural":
+    # ---- crop fields: agricultural zones (and any zone that asks for the
+    # fields arrangement) get fenced plots with crop rows
+    if zone_class(zone) == "agricultural" or zone.arrangement == "fields":
         _place_fields(zone, rect, out, rng, templates, map_ctx)
 
     # ---- outdoor props (yard props first, then the zone's own props)
@@ -305,12 +321,15 @@ def _mouth_clusters(rect, mouths):
     return clusters
 
 
-def _main_path(zone, rect, mouths, rng, widest=(0, 0)):
+def _main_path(zone, rect, mouths, rng, widest=(0, 0), hug_road=False):
     """(street Rect, [Rects]). The street runs the zone's long axis near its
     centre; each road mouth gets a 3-wide entry arm walking to it. A zone too
     narrow for its widest building on a side gets a one-sided street hugging
-    its edge instead. Built as one cell set and re-cut into disjoint rects,
-    so the pieces can never partially overlap."""
+    its edge instead. With ``hug_road`` the street hugs the first road
+    mouth's side when it runs along it (the fields arrangement runs its lane
+    on the road side, so the buildings gather behind it at the corner).
+    Built as one cell set and re-cut into disjoint rects, so the pieces can
+    never partially overlap."""
     if max(rect.w, rect.h) < 14 or min(rect.w, rect.h) < 7:
         return None, []
     # the street runs with the axis most building entrances face, so lining
@@ -362,6 +381,14 @@ def _main_path(zone, rect, mouths, rng, widest=(0, 0)):
 
     cells = set()
 
+    # the road-side hug: the first real road mouth's side, when the street
+    # runs along it (a west mouth hugs nothing on a horizontal street)
+    hug = ""
+    if hug_road and mouths:
+        hug = gateways[0][0]
+        if hug not in (("west", "east") if vertical else ("south", "north")):
+            hug = ""
+
     def offset_street(lo, hi, s, need):
         """Nudge the street so each open band fits the widest building; a
         zone too narrow for both hugs one edge (a one-sided street)."""
@@ -378,7 +405,10 @@ def _main_path(zone, rect, mouths, rng, widest=(0, 0)):
     if vertical:
         reach = max(4, rect.h // 4)
         sx = max(rect.x + 1, min(rect.x1 - PATH_WIDTH, int(cx) - 1 + rng.randint(-3, 3)))
-        sx = offset_street(rect.x, rect.x1, sx, widest[0] + 2)
+        if hug in ("west", "east"):
+            sx = rect.x if hug == "west" else rect.x1 - PATH_WIDTH + 1
+        else:
+            sx = offset_street(rect.x, rect.x1, sx, widest[0] + 2)
         top = int(cy) + reach + rng.randint(-2, 2)
         bot = int(cy) - reach + rng.randint(-2, 2)
         for (side, a) in gateways:
@@ -413,7 +443,10 @@ def _main_path(zone, rect, mouths, rng, widest=(0, 0)):
     else:
         reach = max(4, rect.w // 4)
         sy = max(rect.y + 1, min(rect.y1 - PATH_WIDTH, int(cy) - 1 + rng.randint(-3, 3)))
-        sy = offset_street(rect.y, rect.y1, sy, widest[1] + 2)
+        if hug in ("south", "north"):
+            sy = rect.y if hug == "south" else rect.y1 - PATH_WIDTH + 1
+        else:
+            sy = offset_street(rect.y, rect.y1, sy, widest[1] + 2)
         left = int(cx) - reach + rng.randint(-2, 2)
         right = int(cx) + reach + rng.randint(-2, 2)
         for (side, a) in gateways:
@@ -468,6 +501,41 @@ def _seg_cells(p, q, rect):
 
 
 # ------------------------------------------------------------------ streets
+
+def _green_ring(zone, rect, mouths, rng, urban):
+    """One open green with a ring path round it: the arrangement's whole
+    path network (no side streets, no crossroads square), with an entry arm
+    walking in from each road mouth. Returns (ring rect or None, spine
+    rects, green rect or None)."""
+    if max(rect.w, rect.h) < 16 or min(rect.w, rect.h) < 8:
+        return None, [], None
+    gw = max((7 if urban else 9), min(13, rect.w // 3))
+    gh = max((5 if urban else 6), min(9, rect.h // 3))
+    cx, cy = rect.center()
+    gx = int(cx - gw / 2.0) + rng.randint(-2, 2)
+    gy = int(cy - gh / 2.0) + rng.randint(-2, 2)
+    gx = max(rect.x + 1 + PATH_WIDTH, min(rect.x1 - 1 - PATH_WIDTH - gw + 1, gx))
+    gy = max(rect.y + 1 + PATH_WIDTH, min(rect.y1 - 1 - PATH_WIDTH - gh + 1, gy))
+    green = Rect(gx, gy, gw, gh)
+    ring = Rect(green.x - PATH_WIDTH, green.y - PATH_WIDTH,
+                green.w + 2 * PATH_WIDTH, green.h + 2 * PATH_WIDTH)
+    if not rect.interior(1).contains_rect(ring):
+        return None, [], None
+    cells = ring.cells() - green.cells()
+    for (side, (mx, my)) in mouths:
+        a = max(rect.y + 1, min(rect.y1 - 1, int(round(my)))) \
+            if side in ("west", "east") else \
+            max(rect.x + 1, min(rect.x1 - 1, int(round(mx))))
+        if side == "west":
+            cells |= _seg_cells((rect.x, a), (ring.x, a), rect)
+        elif side == "east":
+            cells |= _seg_cells((rect.x1, a), (ring.x1, a), rect)
+        elif side == "south":
+            cells |= _seg_cells((a, rect.y), (a, ring.y), rect)
+        elif side == "north":
+            cells |= _seg_cells((a, rect.y1), (a, ring.y1), rect)
+    return ring, _cells_to_rects(cells), green
+
 
 def _settlement_streets(zone, rect, mouths, rng, widest, urban):
     """A settlement's street network: the main street runs the zone's long
@@ -778,6 +846,60 @@ def _place_buildings_grid(zone, rect, out, rng, templates, fits, put, rollback):
                 out.failures.append((f"building {design.name}", "no space in zone"))
 
 
+def _place_buildings_around_green(zone, rect, out, rng, templates, fits, put,
+                                  rollback, mouths):
+    """The around_green arrangement: buildings face the green on all sides
+    of its ring, the largest at the head of the green — the side opposite
+    the road mouth."""
+    green = out.feature
+    ring = Rect(green.x - PATH_WIDTH, green.y - PATH_WIDTH,
+                green.w + 2 * PATH_WIDTH, green.h + 2 * PATH_WIDTH)
+    head = OPPOSITE_SIDE[mouths[0][0]] if mouths else "north"
+    slots = []
+    for side in ("north", "south", "east", "west"):
+        if side in ("north", "south"):
+            line = ring.y1 + 1 if side == "north" else ring.y - 1
+            lo = max(rect.x + 1, ring.x - 2)
+            hi = min(rect.x1 - 1, ring.x1 + 2)
+            slots.append(_slot(OPPOSITE_SIDE[side], "x", line, lo, hi, side == head))
+        else:
+            line = ring.x1 + 1 if side == "east" else ring.x - 1
+            lo = max(rect.y + 1, ring.y - 2)
+            hi = min(rect.y1 - 1, ring.y1 + 2)
+            slots.append(_slot(OPPOSITE_SIDE[side], "y", line, lo, hi, side == head))
+    rng.shuffle(slots)
+    designs = sorted(
+        (d for d in zone.buildings if d.name not in {
+            p.building for c in getattr(zone, "compounds", []) or [] for p in c.parts}),
+        key=lambda d: (-(building_footprint(d, templates)[0]
+                         * building_footprint(d, templates)[1]), d.name))
+    for i, design in enumerate(designs):
+        order = sorted(slots, key=lambda s: (s["used"] / float(s["len"])
+                                             - (0.2 if s["extreme"] else 0.0)))
+        if i == 0:
+            head_slots = [s for s in slots if s["extreme"]]
+            order = head_slots + [s for s in order if s not in head_slots]
+        placed = any(_pack_in_slot(design, s, fits, put, rollback, zone, templates, out, rng)
+                     for s in order)
+        if not placed:
+            if not _scan_place(design, rect, out.street, fits, put, rollback,
+                               zone, templates, out, rng):
+                out.failures.append((f"building {design.name}", "no space in zone"))
+
+
+def _fields_focus(rect, out, mouths):
+    """The road-side corner the fields arrangement gathers its buildings
+    at: the zone corner nearest the biggest road mouth."""
+    if mouths:
+        (_side, (mx, my)) = mouths[0]
+        cx = rect.x if mx < rect.x + rect.w / 2.0 else rect.x1
+        cy = rect.y if my < rect.y + rect.h / 2.0 else rect.y1
+        return (cx, cy)
+    if out.street is not None:
+        return (out.street.x + out.street.w // 2, out.street.y + out.street.h // 2)
+    return rect.center()
+
+
 def _place_buildings(zone, rect, out, rng, templates, mouths=()):
     compounds = list(getattr(zone, "compounds", None) or [])
     part_names = {p.building for c in compounds for p in c.parts}
@@ -880,6 +1002,17 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         out.reserved |= reserved_block
 
     street = out.street
+    if zone.arrangement == "around_green" and out.feature is not None:
+        _place_buildings_around_green(zone, rect, out, rng, templates, fits, put,
+                                      rollback, mouths)
+        return
+    if zone.arrangement in ("scattered", "fields"):
+        focus = _fields_focus(rect, out, mouths) if zone.arrangement == "fields" else None
+        for design in designs:
+            if not _scan_place(design, rect, street, fits, put, rollback,
+                               zone, templates, out, rng, focus=focus):
+                out.failures.append((f"building {design.name}", "no space in zone"))
+        return
     if street is not None and out.side_streets:
         _place_buildings_grid(zone, rect, out, rng, templates, fits, put, rollback)
         return
@@ -1013,9 +1146,11 @@ def _facing_street_side(br, street):
     return "north" if br.y1 < street.y else "south"
 
 
-def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out, rng):
-    """Fallback: the first free spot in the zone, preferring near the street.
-    The entrance is turned to face the street when there is one; a spot whose
+def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out, rng,
+                focus=None):
+    """Fallback: the first free spot in the zone, preferring near the street
+    (or near ``focus``, the road-side corner of a fields arrangement). The
+    entrance is turned to face the street when there is one; a spot whose
     rooms furnish cleanly wins over a best-effort spot, but the entrance never
     turns away from the street to rescue the rooms."""
     fp0 = building_footprint(design, templates)
@@ -1023,7 +1158,11 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
         cands = [(bx, by) for bx in range(rect.x + 1, rect.x1 - fp0[0] + 2)
                  for by in range(rect.y + 1, rect.y1 - fp0[1] + 2)]
         rng.shuffle(cands)
-        if street is not None:
+        if focus is not None:
+            # the fields arrangement names where its buildings gather: that
+            # beats the usual pull toward the street
+            cands.sort(key=lambda p: abs(p[0] - focus[0]) + abs(p[1] - focus[1]))
+        elif street is not None:
             sc = (street.x + street.w // 2, street.y + street.h // 2)
             cands.sort(key=lambda p: abs(p[0] - sc[0]) + abs(p[1] - sc[1]))
         fallback = None
