@@ -245,7 +245,9 @@ def layout_room(rect, door_cells, furniture, templates, rng, keep_clear=None):
                     continue
                 if hint.symmetric and count + 2 <= budget:
                     m = mirror(pos, tmpl.size)
-                    if m != pos and (f.template, m) not in banned and legal(m, tmpl.size):
+                    # the mirror of a piece near the middle can overlap it
+                    if m != pos and (f.template, m) not in banned and legal(m, tmpl.size) \
+                            and not _footprint(pos, tmpl.size) & _footprint(m, tmpl.size):
                         for p in (pos, m):
                             occupied.update(_footprint(p, tmpl.size))
                             placed.append((f.template, p, tmpl.size))

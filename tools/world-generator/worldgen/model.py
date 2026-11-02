@@ -977,6 +977,19 @@ def parse_plan(data):
                                         yard=own.yard, yard_props=own.yard_props)
                 by_name[p.building] = b
                 z.buildings[z.buildings.index(own)] = b
+    # two buildings stamping units of the same name ("Apartment 1" in both
+    # walk-ups) would give the builder duplicate regions: each building's
+    # copies take its name in front ("Dogwood Walk-Up Apartment 1")
+    unit_names = {}
+    for z in zones:
+        for b in z.buildings:
+            if b.units is not None:
+                unit_names.setdefault(b.units.name, []).append(b)
+    for shared in unit_names.values():
+        if len(shared) < 2:
+            continue
+        for b in shared:
+            b.units = dataclasses.replace(b.units, name=f"{b.name} {b.units.name}")
     templates = []
     for t in data.get("templates", []):
         extras = {k: v for k, v in t.items()
