@@ -180,7 +180,11 @@ reachability in all four combinations of `floors` and `region-groups`
 ## Units, storeys, rows, spines and void zones
 
 Brief 012e added the shapes modern and interior worlds need, all in the same
-vocabulary of slots, flags and counts (no genre words in the layout code).
+vocabulary of slots, flags and counts (no genre words in the layout code). The
+genre proofs are `fixtures/modern-quarter.plan.json` (a six-storey block of 24
+flats, a parking strip of shops, a park), `fixtures/starship-decks.plan.json`
+(an all-void ship with a three-deck crew block) and the hospital
+`fixtures/hospital-spine.plan.json`.
 
 **Repeated units.** A building may carry
 `"units": {"name": "Apartment", "count": 12, "perStorey": 4, "residents": 2,
@@ -239,6 +243,53 @@ tile, so no walkable open ground survives anywhere. The proof is
 `fixtures/ship-void.plan.json` — six compartments on a spine, a dock, and a
 tube between: every walkable cell of the map is inside a walled region
 (`tests/test_void.py`).
+
+## Item templates and loot pools
+
+Brief 012f gave P2 a second job: besides the furniture catalogue it returns
+**30-60 setting items** (`{name, type, quality, value, description,
+physicalDescription}`, the guide's type and quality lists) and named
+**`lootPools`** — lists of item names as specific as the setting needs, by room
+kind (a bathroom pool, a galley pool) and by building or store kind (a clothing
+store's pool, a sporting goods store's pool, each kiosk its own). One item may
+sit in many pools, others in only one, and each pool may carry a `weights` map
+item -> relative chance to make some of its items rarer on top of the quality
+weighting. Pools are written by the model per setting; code only validates
+them (pools name real items, every reference names a real pool, types and
+qualities come from the lists, values are positive).
+
+**Where a container's pool comes from** — most specific wins:
+
+1. the P3 furniture line's `lootPool` (this shelf in this store);
+2. the room's `lootPool` (every container in this bathroom);
+3. the building's `lootPool` (the whole sporting goods store);
+4. the object template's default `lootPool`.
+
+So one "Store shelf" template holds clothes in one shop and baseball bats in
+the next. Unit copies inherit the unit design's pools.
+
+**Starting inventories.** When code places a container it draws 0-3 items from
+its pool, weighted common-over-rare and seeded by the world seed and the
+placement's name — the same seed re-rolls the same inventories while every
+copied unit differs from its siblings. A per-plan `"loot": "none|sparse|
+normal|rich"` setting scales the counts (default `normal`). The spec writes
+each object template's `lootPoolIds` as its **declared default only**, never
+the union of its placements' pools: the game redraws `lootPoolIds` on later
+searches, and a union would let one store's shelves spawn another's goods
+then — the per-store variety lives in the drawn starting inventories, which
+are per placement. A world with no items still builds, with empty containers.
+
+One pool per genre, as a plan writes them:
+
+```json
+"lootPools": {
+  "Bathroom cabinet": {"items": ["Mouthwash", "Razor", "Aspirin bottle"]},
+  "Crew locker": {"items": ["Ration pack", "Wrench", "Data chip"],
+                  "weights": {"Data chip": 0.4}},
+  "Ward medicine": {"items": ["Bandage roll", "Thermometer", "Morphine ampoule"],
+                    "weights": {"Morphine ampoule": 0.2}}
+}
+```
 
 ## How zones are sized
 
