@@ -32,10 +32,12 @@ class TestMapFillsTheGrid(unittest.TestCase):
 
     def test_zones_cover_most_of_the_grid(self):
         # the settlement-centred map keeps a thin margin of open country
-        # round the zones (roads walk it), so coverage sits just under 0.9
+        # round the zones (roads walk it), so coverage sits just under 0.9;
+        # a band whose built zones cap short of its length leaves open
+        # country there too (the default tile margin takes the spare)
         W, H = self.world.grid
         covered = sum(r.w * r.h for rs in self.world.zone_pieces.values() for r in rs)
-        self.assertGreaterEqual(covered / float(W * H), 0.85)
+        self.assertGreaterEqual(covered / float(W * H), 0.8)
 
     def test_no_gap_wider_than_three_cells(self):
         zones = list(self.world.zones_by_name.values())

@@ -159,7 +159,7 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
         green_ring = None
         if zone.arrangement == "around_green":
             green_ring, rects, green = _green_ring(zone, rect, mouths, rng,
-                                                   is_urban_zone(zone))
+                                                   is_urban_zone(zone), templates)
         if green_ring is not None:
             out.street, out.spine_rects, out.feature = green_ring, rects, green
             out.grid_vertical = green_ring.h >= green_ring.w
@@ -502,15 +502,33 @@ def _seg_cells(p, q, rect):
 
 # ------------------------------------------------------------------ streets
 
-def _green_ring(zone, rect, mouths, rng, urban):
+def green_size(zone, fps, urban):
+    """(w, h) of an around_green green, from the buildings that ring it: each
+    side carries about a quarter of the frontage, so a few buildings make a
+    small green with a tight ring, many buildings a wide one."""
+    if not fps:
+        return (0, 0)
+    gap = sum(lot_gap(zone)) // 2
+    sides = ([], [], [], [])
+    for length in sorted((max(f) for f in fps), reverse=True):
+        sides[min(range(4), key=lambda i: (sum(sides[i]), i))].append(length)
+    per = max(sum(s) + gap * max(0, len(s) - 1) for s in sides)
+    gw = max((7 if urban else 9), min(13, int(round(per * 0.6))))
+    gh = max((5 if urban else 6), min(9, int(round(gw * 0.7))))
+    return gw, gh
+
+
+def _green_ring(zone, rect, mouths, rng, urban, templates):
     """One open green with a ring path round it: the arrangement's whole
     path network (no side streets, no crossroads square), with an entry arm
     walking in from each road mouth. Returns (ring rect or None, spine
     rects, green rect or None)."""
     if max(rect.w, rect.h) < 16 or min(rect.w, rect.h) < 8:
         return None, [], None
-    gw = max((7 if urban else 9), min(13, rect.w // 3))
-    gh = max((5 if urban else 6), min(9, rect.h // 3))
+    gw, gh = green_size(zone, [building_footprint(d, templates)
+                               for d in zone.buildings], urban)
+    gw = min(gw, max((7 if urban else 9), rect.w // 3))
+    gh = min(gh, max((5 if urban else 6), rect.h // 3))
     cx, cy = rect.center()
     gx = int(cx - gw / 2.0) + rng.randint(-2, 2)
     gy = int(cy - gh / 2.0) + rng.randint(-2, 2)

@@ -21,13 +21,16 @@ examples/region-groups makes them act as one region.
 """
 import math
 
-from .model import Rect, building_coverage_target, zone_class
+from .model import Rect, is_urban_zone, zone_class
 
 GRID_MIN, GRID_MAX = 48, 160
 MIN_GUTTER, MAX_GUTTER = 2, 3   # empty cells between neighbouring zones
 MIN_ZONE_SIDE = 12              # thinnest zone the partition ever cuts
-AREA_HEADROOM = 1.15            # grid area over the zones' nominal area
+AREA_HEADROOM = 1.15            # grid area over the zones' target area
 FIT_SLACK = 0.85                # footprint estimates run hot; buildings resolve smaller
+MAX_BAND_ASPECT = 1.3           # longest a built-up zone may run along its band
+SIDE_STREET_COUNT = {"few": 5, "many": 9}   # buildings that add a crossing street
+SIZE_CLASS_MULT = {"small": 1.0, "medium": 1.1, "large": 1.15, "huge": 1.1}
 SIDES = ("west", "east", "north", "south")
 OPPOSITE = {"west": "east", "east": "west", "north": "south", "south": "north"}
 
@@ -84,64 +87,101 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
     """Place the zones on the grid and lay the roads; returns a MapOut.
     ``weight_scale`` multiplies selected zones' weights (a second pass
     nudging zones whose measured building coverage missed its target)."""
-    from .layout_zone import ZONE_SIZES, PATH_WIDTH, lot_spacing, side_street_count
+    from .layout_zone import (ZONE_SIZES, PATH_WIDTH, YARD_DEPTH, lot_gap,
+                              lot_spacing, side_street_count)
     from .layout_building import building_footprint
 
     tmap = {t.name: t for t in plan.templates}
 
     def _all_footprints(z):
-        """The zone's building footprints plus its compound blocks (each
-        block placed whole, like one very large building)."""
+        """The zone's loose building footprints plus its compound blocks (each
+        block placed whole, like one very large building; a block's parts are
+        inside it, so they are not loose buildings)."""
         from .layout_compound import compound_footprint
-        fps = [building_footprint(b, tmap) for b in z.buildings]
+        parts = {p.building for c in getattr(z, "compounds", None) or []
+                 for p in c.parts}
+        fps = [building_footprint(b, tmap) for b in z.buildings if b.name not in parts]
         for c in getattr(z, "compounds", None) or []:
             fps.append(compound_footprint(z, c, tmap))
         return fps
 
+    def _ring_fit(z, fps, spacing):
+        """(area, cross, along) the around_green arrangement needs: buildings
+        ring the green on every side, so the zone is the green plus its ring
+        path plus a building depth and a lot line on each side."""
+        from .layout_zone import green_size
+        gw, gh = green_size(z, fps, is_urban_zone(z))
+        depths = sorted((min(f) for f in fps), reverse=True)
+        head, rest = depths[0], max(depths[1:4] + [0])
+        cross = 2 * rest + 2 * 3 + gw + 4
+        along = head + rest + 2 * 3 + gh + 4
+        return cross * along, cross, along
+
     def zone_fit(z):
-        """(area, cross, along) the zone's street grid and lots need: the
-        widest pair of buildings facing across the street, the fuller side's
-        row along it, and (for a settlement grid) the side streets' bite out
-        of the street's length."""
+        """(area, cross, along) the zone's content needs: the widest pair of
+        buildings facing across the street, the fuller side's row along it,
+        and (for a settlement grid) the side streets' bite out of the street's
+        length. A zone ringing a green is sized as the green and its ring
+        instead."""
         fps = sorted(_all_footprints(z), key=lambda f: (-f[0], -f[1]))
         spacing = lot_spacing(z)
+        gap = sum(lot_gap(z)) / 2.0   # the gaps the packer really leaves
+        if z.arrangement == "around_green" and fps:
+            return _ring_fit(z, fps, spacing)
         sides = ([], [])
         for f in fps:   # big first, alternating sides like the band packer
             sides[1 if len(sides[1]) < len(sides[0]) else 0].append(f)
         cross = 4 + spacing + PATH_WIDTH + \
             sum((max(f[0] for f in s) if s else 0) for s in sides)
-        along = 6 + max((sum(f[1] + spacing for f in s) for s in sides), default=0)
+        along = 6 + max((sum(f[1] + gap for f in s) for s in sides), default=0)
+        if any(b.yard for b in z.buildings):
+            # a yard runs YARD_DEPTH deep beside its building
+            cross += 2 * (YARD_DEPTH + 1)
+            along += YARD_DEPTH + 1
         if zone_class(z) == "settlement":
-            k = side_street_count(max(ZONE_SIZES[z.size_class]), len(z.buildings))
+            if not is_urban_zone(z):
+                # a village or town keeps its crossroads square, and its
+                # buildings stand loose round it
+                cross += 6
+                along += 9
+            k = side_street_count(along, len(z.buildings))
             along += k * (spacing + 3)
-        return cross * along, cross, along
+        area = cross * along
+        if zone_class(z) == "agricultural" or z.arrangement == "fields":
+            # the crop plots are content too: room for the two smallest the
+            # layout always plants, with their tracks
+            area += 2 * 10 * 7 + 8
+        return area, cross, along
 
     def zone_weight(z):
-        """The zone's nominal area, or the area its content actually needs
-        (footprints plus paths, yards and props), whichever is larger. A
-        settlement zone is sized for its building coverage target instead of
-        the loose 4x footprint rule."""
+        """The zone's target area. Zones with buildings or compounds are sized
+        by what they contain — their fit already carries the streets, yards and
+        lot spacing — scaled by the size class (a huge castle ground breathes
+        wider than a small one, about 1.0x to 1.25x). The size class is no
+        floor on the area: a huge zone with a hamlet in it is hamlet-sized.
+        Wild and water zones with nothing in them keep their nominal size."""
         nominal = ZONE_SIZES[z.size_class][0] * ZONE_SIZES[z.size_class][1]
-        if not z.buildings:
+        if not (z.buildings or getattr(z, "compounds", None)):
             return nominal
-        built = sum(building_footprint(b, tmap)[0] * building_footprint(b, tmap)[1]
-                    for b in z.buildings)
-        if zone_class(z) == "settlement":
-            return max(nominal, zone_fit(z)[0] * FIT_SLACK,
-                       built / building_coverage_target(z, plan.setting))
-        return max(nominal, 4 * built, zone_fit(z)[0])
+        return zone_fit(z)[0] * SIZE_CLASS_MULT[z.size_class]
 
     def zone_min_side(z):
         """The narrowest the zone may be cut: its widest building or compound
-        block plus the street and its margins (and, for a settlement, its
-        street grid's width), so a band can always hold it."""
+        block plus the street and its margins (and, for a settlement or a
+        green ring, its streets' width), so a band can always hold it. A
+        built-up zone is also never cut thinner than its weight admits: a
+        band holding it must be wide enough that the band packer's aspect cap
+        cannot squeeze the zone below the area its content needs."""
         if not z.buildings:
             return MIN_ZONE_SIDE
+        fit_cross = zone_fit(z)[1] if z.arrangement == "around_green" else 0
+        if zone_class(z) == "settlement":
+            fit_cross = max(fit_cross, zone_fit(z)[1] * FIT_SLACK)
         widest = max(max(f) for f in _all_footprints(z))
         base = max(MIN_ZONE_SIDE, widest + lot_spacing(z) + PATH_WIDTH + 4)
-        if zone_class(z) == "settlement":
-            base = max(base, round(zone_fit(z)[1] * FIT_SLACK))
-        return base
+        if fit_cross:
+            base = max(base, round(fit_cross))
+        return max(base, round(math.sqrt(zone_weight(z) / MAX_BAND_ASPECT)))
 
     scale = weight_scale or {}
     weights = {z.name: zone_weight(z) * scale.get(z.name, 1.0) for z in plan.zones}
@@ -195,6 +235,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     outer = [z for z in plan.zones if z.name not in settle_names]
 
     sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
+    built = {z.name for z in plan.zones
+             if z.buildings or getattr(z, "compounds", None)}
 
     # the core's blocks and the bands around them pin the grid's least size;
     # stretch once, then resolve the sides again on the real grid. A wrap can
@@ -205,22 +247,24 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
         alongs = [fits[n][2] for n in core_names]
         core_w = sum(crosses) + gut * (len(core_names) - 1)
         core_h = max(alongs)
-        need_w = core_w + 2 * margin
-        need_h = core_h + 2 * margin
-        for s in ("west", "east"):
-            if sides[s]:
-                need_w += gut + max(mins[n] for n in sides[s])
-        for s in ("south", "north"):
-            if sides[s]:
-                need_h += gut + max(mins[n] for n in sides[s])
-        if "region-groups" in m.extensions and outer:
-            need_w += gut + MIN_ZONE_SIDE
-            need_h += gut + MIN_ZONE_SIDE
-        stretched = (min(GRID_MAX, max(W, round(need_w))), min(GRID_MAX, max(H, round(need_h))))
-        if stretched != (W, H):
-            W, H = stretched
-            m.grid = (W, H)
-            sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
+    else:
+        core_w = core_h = max([mins[n] for n in settle_names] + [MIN_ZONE_SIDE])
+    need_w = core_w + 2 * margin
+    need_h = core_h + 2 * margin
+    for s in ("west", "east"):
+        if sides[s]:
+            need_w += gut + max(mins[n] for n in sides[s])
+    for s in ("south", "north"):
+        if sides[s]:
+            need_h += gut + max(mins[n] for n in sides[s])
+    if "region-groups" in m.extensions and outer:
+        need_w += gut + MIN_ZONE_SIDE
+        need_h += gut + MIN_ZONE_SIDE
+    stretched = (min(GRID_MAX, max(W, round(need_w))), min(GRID_MAX, max(H, round(need_h))))
+    if stretched != (W, H):
+        W, H = stretched
+        m.grid = (W, H)
+        sides = _assign_sides(plan, settle, outer, weights, rng, W, H)
 
     # the core's blocks also pin the centre's least size on each axis: cut
     # as a row on a wide map (blocks side by side), as a column on a tall one
@@ -232,7 +276,7 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
         else:
             cmin["west"] = cmin["east"] = max(crosses)
             cmin["south"] = cmin["north"] = sum(alongs) + gut * (len(alongs) - 1)
-    wraps = _choose_wraps(outer, sides, classes, weights, rng) \
+    wraps = _choose_wraps(outer, sides, classes, weights, rng, built) \
         if "region-groups" in m.extensions else {}
 
     def band_weight(side):
@@ -250,7 +294,7 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     # ---- axis layouts: [band?, centre, band?]. The centre block absorbs all
     # the slack, and the bands are capped so the centre provably stays in the
     # middle third of the map however lopsided the zone weights are.
-    def axis(side_lo, side_hi, span):
+    def axis(side_lo, side_hi, span, center_cap=None):
         center_wgt = sum(weights[n] for n in settle_names)
         center_min = max([mins[n] for n in settle_names]
                          + [MIN_ZONE_SIDE, cmin[side_lo]])
@@ -268,11 +312,37 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             sizes[i] = max(sizes[lo_i + hi_i - i] + span // 3,
                            lo_min if i == 0 else hi_min)
         elif has_lo != has_hi:
-            # one band: leave room for the centre to sit at least a third of
-            # the way in from the empty side
+            # one band: a built-up band leaves the centre at least a third of
+            # the way in from the empty side; a wild band may take up to half
+            # (a forest swallowing a whole side reads fine), so a lone small
+            # settlement in the centre is not stretched tall and thin
             i = lo_i if has_lo else hi_i
-            sizes[i] = min(sizes[i], max(span // 3 - 1 - margin - gut,
+            band = sides[side_lo] if has_lo else sides[side_hi]
+            limit = (span // 3 - 1 - margin - gut if any(n in built for n in band)
+                     else span // 2 - margin - gut)
+            sizes[i] = min(sizes[i], max(limit,
                                          lo_min if i == lo_i else hi_min))
+        # a lone settlement does not absorb the whole axis: it keeps roughly
+        # the shape its weight asks for, and the bands take the slack (a wild
+        # band happily; a built band's stacker caps it again)
+        if center_cap is not None and (has_lo or has_hi):
+            ci = 1 if has_lo else 0
+            if sizes[ci] > center_cap:
+                surplus = sizes[ci] - center_cap
+                sizes[ci] = center_cap
+                band_is = [i for i in (lo_i, hi_i) if i is not None]
+                wild = [i for i in band_is
+                        if all(n not in built for n in
+                               (sides[side_lo] if i == lo_i else sides[side_hi]))]
+                takers = wild or band_is
+                total = sum(sizes[i] for i in takers) or 1
+                give = [int(surplus * sizes[i] // total) for i in takers]
+                for i, g in zip(takers, give):
+                    sizes[i] += g
+                left = surplus - sum(give)
+                while left > 0 and takers:
+                    sizes[takers[left % len(takers)]] += 1
+                    left -= 1
         d_lo = sizes[lo_i] if has_lo else 0
         d_hi = sizes[hi_i] if has_hi else 0
         c_size = avail - d_lo - d_hi
@@ -287,8 +357,20 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             ranges[side_hi] = (pos, pos + d_hi - 1)
         return ranges
 
-    xr = axis("west", "east", W)
-    yr = axis("south", "north", H)
+    def center_caps():
+        """(cap on x, cap on y) for a lone settlement centre: the shape its
+        weight asks for, a square-ish span on x and the matching length on y."""
+        if len(settle_names) != 1:
+            return None, None
+        n = next(iter(settle_names))
+        w = weights[n]
+        cx = max(mins[n], round(1.15 * math.sqrt(w)))
+        cy = max(mins[n], round(1.15 * w / float(cx)))
+        return cx, cy
+
+    cap_x, cap_y = center_caps()
+    xr = axis("west", "east", W, cap_x)
+    yr = axis("south", "north", H, cap_y)
     vertical_full = rng.random() < 0.5
     bands = _ring_bands(xr, yr, margin, gut, W, H, vertical_full)
 
@@ -329,7 +411,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
                 pinned[n] = h          # a vertical band pins to north/south
             elif side == h and v in bands:
                 pinned[n] = v          # a horizontal band pins to west/east
-        segs = _stack_band(band, side, members, pinned, weights, mins, gut, rng)
+        segs = _stack_band(band, side, members, pinned, weights, mins, gut, rng,
+                           built=built)
         for n, r in segs.items():
             seg_by_band[(side, n)] = r
             pieces[n].append(r)
@@ -397,15 +480,40 @@ def _ring_bands(xr, yr, margin, gut, W, H, vertical_full):
     return bands
 
 
-def _stack_band(band, side, members, pinned, weights, mins, gut, rng):
+def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=()):
     """Cut one band into per-zone segments. Pinned zones (a wrap's pieces)
     sit at their end of the band; the rest fill the middle by weight from a
-    seeded end. Returns {name: Rect}."""
+    seeded end. A built-up zone is never stretched past MAX_BAND_ASPECT of
+    its share or of the band's width — a lone zone on a side does not run
+    the whole map edge; the spare goes to the band's wild zones, and what
+    they cannot take stays default tile margin. Returns {name: Rect}."""
     along = band.h if side in ("west", "east") else band.w
+    cross = band.w if side in ("west", "east") else band.h
     sizes = _sizes_mins(along - gut * (len(members) - 1),
                         [weights[n] for n in members],
                         [min(max(mins[n], MIN_ZONE_SIDE), along) for n in members])
     size_of = dict(zip(members, sizes))
+
+    # cap the built-up members — never past MAX_BAND_ASPECT of the band's
+    # width nor ~1.1x their share of it; the surplus feeds the wild ones (a
+    # forest reads fine long; a village strip does not), any rest stays
+    # uncut as default tile margin
+    caps = {n: max(min(max(mins[n], MIN_ZONE_SIDE), along),
+                   min(round(MAX_BAND_ASPECT * cross),
+                       round(1.05 * weights[n] / float(cross)) + 2))
+            for n in members if n in built and weights[n] > 0}
+    for _ in range(len(members)):
+        spare = sum(max(0, size_of[n] - caps[n]) for n in members if n in caps)
+        if spare <= 0:
+            break
+        for n in caps:
+            size_of[n] = min(size_of[n], caps[n])
+        free = [n for n in members if n not in caps]
+        if not free:
+            break   # no wild member: the spare stays default tile margin
+        share = float(sum(weights[n] for n in free)) or 1.0
+        for n in free:
+            size_of[n] += int(round(spare * weights[n] / share))
 
     def place(n, start, size):
         if side in ("west", "east"):
@@ -544,10 +652,11 @@ def _assign_sides(plan, settle, outer, weights, rng, W, H):
     return sides
 
 
-def _choose_wraps(outer, sides, classes, weights, rng):
-    """Pick up to two surrounding zones (wild first, then the biggest) to
-    wrap round a corner: they take touching pieces on two adjacent sides. A
-    lone surrounding zone always wraps, so it surrounds rather than flanks."""
+def _choose_wraps(outer, sides, classes, weights, rng, built=()):
+    """Pick up to two surrounding zones (empty wild first, then built wild,
+    then the biggest) to wrap round a corner: they take touching pieces on
+    two adjacent sides. A lone surrounding zone always wraps, so it surrounds
+    rather than flanks."""
     wraps = {}
     corners = [("west", "north"), ("east", "north"), ("east", "south"), ("west", "south")]
     rng.shuffle(corners)
@@ -569,7 +678,10 @@ def _choose_wraps(outer, sides, classes, weights, rng):
         pool = [n for n in sides[v] + sides[h] if n not in wraps]
         if not pool:
             continue
-        pool.sort(key=lambda n: (0 if classes[n] == "wild" else 1,
+        # empty land wraps best: a zone with buildings in it wraps round a
+        # corner only to leave half its content's ground behind
+        pool.sort(key=lambda n: ((0 if classes[n] == "wild" and n not in built else
+                                  1 if classes[n] == "wild" else 2),
                                  -weights[n], n))
         if rng.random() < 0.7 or not wraps:
             # the first wrap is guaranteed: a corner between two populated
@@ -829,8 +941,9 @@ def _sizes_mins(total, weights, mins):
         tall = max(range(n), key=lambda i: sizes[i] - mins[i])
         if sizes[tall] <= mins[tall]:
             break
-        sizes[tall] -= 1
-        sizes[short] += 1
+        move = min(sizes[tall] - mins[tall], mins[short] - sizes[short])
+        sizes[tall] -= move
+        sizes[short] += move
     return sizes
 
 

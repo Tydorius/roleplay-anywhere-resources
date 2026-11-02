@@ -215,14 +215,12 @@ def run(plan_data, seed=1, extensions=()):
     # planned is placed
     growth = {}
     for _ in range(MAX_GROWTH_PASSES):
-        grow = _growth_scale(plan, world)
+        grow = _growth_scale(plan, world, growth)
         if not grow:
             break
         # each pass compounds: a zone keeps the scale it earned even once its
         # own buildings fit (a smaller base would bring the drops back)
-        growth = dict(growth)
-        for n, f in grow.items():
-            growth[n] = growth.get(n, 1.0) * f
+        growth = grow
         retry, retry_data = attempt(growth)
         if _dropped_count(retry) > _dropped_count(world):
             break   # growing lost more than it placed; keep the better build
@@ -243,6 +241,7 @@ def run(plan_data, seed=1, extensions=()):
 
 
 GROWTH_FACTOR = 1.4     # how much a zone's content sizing grows per pass
+GROWTH_ALLY = 1.15      # the other built zones grow with it, keeping their street blocks
 MAX_GROWTH_PASSES = 8   # 1.4^8 is about 14x: enough for the fullest plan
 
 
@@ -252,11 +251,15 @@ def _dropped_count(world):
     return len(dropped_failures(world.failures))
 
 
-def _growth_scale(plan, world):
-    """{zone name: factor} for zones that dropped a building, a storey or a
-    compound's reachability: the zone's weight grows until its content fits,
-    so nothing planned is lost."""
+def _growth_scale(plan, world, current=None):
+    """{zone name: absolute factor} for zones that dropped a building, a
+    storey or a compound's reachability: the zone's weight compounds until
+    its content fits, so nothing planned is lost. Every other built zone
+    grows with it once, not compounding — the map grows from the weight sum,
+    so one zone growing alone would take the width its neighbours' street
+    blocks need."""
     from .checks import dropped_failures
+    current = current or {}
     zone_of = {b.name: z.name for z in plan.zones for b in z.buildings}
     zone_of.update({c.name: c.zone for c in getattr(plan, "compounds", []) or []})
     out = {}
@@ -272,13 +275,21 @@ def _growth_scale(plan, world):
         name = name.split(" [")[0]   # strip a piece label, when there is one
         zone = zone_of.get(name)
         if zone is not None:
-            out[zone] = GROWTH_FACTOR
+            out[zone] = current.get(zone, 1.0) * GROWTH_FACTOR
+    if out:
+        for z in plan.zones:
+            if z.name not in out and (z.buildings or getattr(z, "compounds", None)):
+                out[z.name] = max(current.get(z.name, 1.0), GROWTH_ALLY)
+        for n, f in current.items():
+            out.setdefault(n, f)
     return out
 
 
 def _coverage_scale(plan, world):
     """{zone name: weight multiplier} for settlement zones whose measured
-    building coverage missed its target by more than a fifth."""
+    building coverage came out roomier than its target by more than a fifth.
+    Zones are sized to their content now, so the pass only ever tightens: a
+    loose village is its fit's own looseness, not an error to grow away."""
     from .model import building_coverage_target, zone_class
     scale = {}
     for z in plan.zones:
@@ -290,8 +301,8 @@ def _coverage_scale(plan, world):
             continue
         actual = built / float(area)
         target = building_coverage_target(z, plan.setting)
-        if abs(actual - target) > 0.2 * target:
-            scale[z.name] = min(1.5, max(0.7, actual / target))
+        if actual < target and target - actual > 0.2 * target:
+            scale[z.name] = max(0.7, actual / target)
     return scale
 
 
@@ -417,7 +428,8 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                                                    ambience={"day": "nature_outdoors", "night": "crickets"},
                                                    description=f"The path through {z.name}."))
             if zout.feature is not None:
-                fg, ftex = zout.spine_ground if zout.spine_rects else zone_ground.get(z.ground, ("grass", "grass"))
+                fg, ftex = zout.spine_ground if zout.spine_rects else \
+                    zone_ground.get(z.ground, ("grass", "grass"))
                 world.regions.append(RegionOut(f"{z.name} Square", zout.feature, "square", parent=z.name,
                                                ground=fg, ground_texture=ftex,
                                                ambience={"day": "nature_outdoors", "night": "crickets"},
