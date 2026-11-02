@@ -406,6 +406,32 @@ def check_scenario_mods(scenario_path, arpg_mods):
     return issues
 
 
+CONTENT_KINDS = ("building", "compound", "yard", "field", "square")
+
+
+def _zone_fill(world):
+    """{zone name: {area, content, ratio}} — how much of a zone's ground its
+    content claims: buildings, compound blocks (courtyards included), yards,
+    fields and the green, each with one lot ring round it. Wild zones with no
+    content measure 0; a built-up zone below about 0.45 is mostly empty ground."""
+    out = {}
+    for zn, pieces in world.zone_pieces.items():
+        zone_cells = set()
+        for p in pieces:
+            zone_cells |= p.cells()
+        content = set()
+        for r in world.regions:
+            if r.parent != zn or r.kind not in CONTENT_KINDS:
+                continue
+            content |= {(x, y) for x in range(r.rect.x - 1, r.rect.x1 + 2)
+                        for y in range(r.rect.y - 1, r.rect.y1 + 2)}
+        content &= zone_cells
+        area = len(zone_cells)
+        out[zn] = {"area": area, "content": len(content),
+                   "ratio": round(len(content) / float(area), 3) if area else 0.0}
+    return out
+
+
 def run_checks(world):
     openings = compute_openings(world)
     blocked, doors = walkability_grid(world, openings)
@@ -543,6 +569,7 @@ def run_checks(world):
         "hint_fallbacks": [{"what": w, "reason": r} for (w, r) in getattr(world, "fallbacks", [])],
         "density": {"rooms": room_density, "outdoor_per_100_cells": zone_density,
                     "building_coverage": building_coverage},
+        "zone_fill": _zone_fill(world),
         "doors_clear": not blocked_doors,
         "blocked_door_cells": [list(c) for c in blocked_doors],
         "walkways_clear": not blocked_walkways,

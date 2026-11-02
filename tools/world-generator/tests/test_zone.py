@@ -60,5 +60,31 @@ class TestZoneLayout(unittest.TestCase):
             self.assertIsNotNone(spine, f"zone {name} has no path spine")
 
 
+class TestZoneFillMetric(unittest.TestCase):
+    """zone_fill measures every zone: area, content (buildings, compound
+    blocks with their courtyards, yards, fields, the green, one lot ring each)
+    and the ratio between them."""
+
+    @classmethod
+    def setUpClass(cls):
+        from tests.util import build_world
+        cls.world = build_world("ashvale-compound.plan.json")
+
+    def test_every_zone_measured(self):
+        names = set(self.world.zones_by_name)
+        self.assertEqual(set(self.world.metrics["zone_fill"]), names)
+
+    def test_values_are_sane(self):
+        for zn, f in self.world.metrics["zone_fill"].items():
+            self.assertGreater(f["area"], 0, zn)
+            self.assertGreaterEqual(f["content"], 0, zn)
+            self.assertLessEqual(f["content"], f["area"], zn)
+            self.assertAlmostEqual(f["ratio"], round(f["content"] / float(f["area"]), 3),
+                                   places=3, msg=zn)
+
+    def test_wild_zone_without_buildings_has_no_content(self):
+        self.assertEqual(self.world.metrics["zone_fill"]["Whisperwood"]["content"], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
