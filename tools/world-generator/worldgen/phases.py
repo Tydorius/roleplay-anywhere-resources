@@ -17,7 +17,7 @@ from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
                     SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
-                    is_sleep_name as _sleeps)
+                    bed_capacity, is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -1283,12 +1283,16 @@ OPENING_KINDS = ("gallery", "atrium", "stairwell")
 
 
 def design_beds(design, bed_templates):
-    """How many sleepers a P3 design beds: its furniture's sleep-capable
-    lines, ground floor and designed uppers."""
-    n = sum(f.get("count", 1) for f in (design.get("furniture") or [])
+    """How many sleepers a P3 design beds (a double bed counts two): its
+    furniture's sleep-capable lines, ground floor and designed uppers.
+    ``bed_templates`` maps each sleep-capable template name to its sleeper
+    capacity."""
+    n = sum(f.get("count", 1) * bed_templates[f["template"]]
+            for f in (design.get("furniture") or [])
             if f.get("template") in bed_templates)
     for u in design.get("upper") or []:
-        n += sum(f.get("count", 1) for f in (u.get("furniture") or [])
+        n += sum(f.get("count", 1) * bed_templates[f["template"]]
+                 for f in (u.get("furniture") or [])
                  if f.get("template") in bed_templates)
     return n
 
@@ -1314,7 +1318,8 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
     ``units`` is the P1 units dict when the building repeats units, so the
     reply must carry one nested "unit" design. ``pools`` is the catalogue's
     loot pool names, so every lootPool reference names a real pool.
-    ``beds`` is the sleep-capable template names; a building whose P1 entry
+    ``beds`` is the sleep-capable template names with each one's sleeper
+    capacity; a building whose P1 entry
     says ``residents`` must bed that many."""
     errors = []
     ctx = f"building {building_name}"
@@ -1381,7 +1386,7 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
         got = design_beds(d, beds)
         if got < residents:
             errors.append(f"{ctx}: P1 beds {residents} sleeper(s) here; the furniture "
-                          f"beds only {got} (one sleep-capable object each)")
+                          f"beds only {got} (a 2x2-or-bigger bed sleeps two)")
     return errors[:MAX_ERRORS]
 
 
@@ -2544,8 +2549,10 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     pools = p2.get("lootPools") or {}
     pool_names = set(pools)
     pool_lines = _pool_lines(pools)
-    # sleep-capable templates, for the P3 bed check and P5's homes
-    bed_templates = {t["name"] for t in templates
+    # sleep-capable templates and each one's sleeper capacity (a double bed
+    # counts two), for the P3 bed check and P5's homes
+    bed_templates = {t["name"]: bed_capacity(tuple(t["size"]))
+                     for t in templates
                      if t.get("forSleep") or _sleeps(t["name"], t.get("tags"))}
     # P1 cannot know pool names (P2 writes them later): a building pool the
     # catalogue does not carry is dropped rather than failing the parse
@@ -2610,7 +2617,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                     stats["dropped"].append(
                         (f"building {b['name']}",
                          f"residents {b['residents']} -> {got}: the furniture beds "
-                         f"only {got}"))
+                         f"only {got} sleeper(s)"))
                     b["residents"] = got
             keep.append(b)
         z["buildings"] = keep
@@ -2638,8 +2645,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     design_by_name = {b["name"]: b for b in designs}
 
     def beds_of(b):
-        """A building's beds: a unit building stamps one per resident per
-        copy; a plain one holds what its (copied, for sameAs) design beds."""
+        """A building's sleeper capacity: a unit building stamps one single
+        bed per resident per copy; a plain one holds what its (copied, for
+        sameAs) design beds."""
         if isinstance(b.get("units"), dict) and _check_int(b["units"].get("count")):
             per = b["units"].get("residents", 0)
             return b["units"]["count"] * (per if _check_int(per) else 0)
@@ -2662,7 +2670,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             beds = beds_by_building.get(b["name"], 0)
             taken = homes_taken.get(b["name"], 0)
             free = max(0, beds - taken)
-            bed_note = f", {beds} bed(s) ({free} free)" if beds else ", no beds"
+            bed_note = f", sleeps {beds} ({free} spots free)" if beds else ", no beds"
             out.append(f"- {_building_line(b)}{bed_note}")
         return "\n".join(out) or "- none"
 

@@ -56,11 +56,16 @@ Reply with ONE JSON object:
   cupboard" on the template. P3 later points a specific room or shelf at a
   pool, so the same shelf template can hold clothes in one shop and baseball
   bats in the next.
-- Sizes in cells: bed 1x2, table 2x1 or 2x2, chair/stool/lamp 1x1, tree 1x1
-  to 3x3. Walkability 0 unless a person could step over or onto it.
+- Sizes in cells: bed 1x2 (sleeps 1), double bed 2x2 (sleeps 2), table 2x1
+  or 2x2, chair/stool/lamp 1x1, tree 1x1 to 3x3. Walkability 0 unless a
+  person could step over or onto it; sleep objects are the exception — a bed,
+  cot, bunk, pallet or hammock gets walkability 0.3, because sleepers lie on
+  it and walking across one is slow.
 - "forSleep" is true only for things a person sleeps in or on: beds, cots,
   bunks, pallets, hammocks. Every other template is false. Every home needs
-  at least one forSleep template in its furniture.
+  at least one forSleep template in its furniture. A sleep object at least
+  2 cells wide both ways (a double bed) sleeps two; anything narrower sleeps
+  one.
 - "light" is 0 for anything that gives off no light. A light source gets 0.2
   to 1.0 by how far its light reaches: a candle about 0.2, a lantern or
   streetlight 0.5 to 0.7, a hearth or bonfire 0.8 to 1.0. Tag it "light". The

@@ -253,6 +253,8 @@ class TestBedlessHome(unittest.TestCase):
         bed = next(t for t in spec["objectTemplates"] if t["name"] == "Bed")
         self.assertEqual(bed["size"], [1, 2])
         self.assertTrue(bed["forSleep"])
+        self.assertEqual(bed["walkability"], 0.3,
+                         "a fallback bed is lain on, not walked around")
         self.assertTrue(bed["placements"])
 
     def test_bed_does_not_block_the_room(self):

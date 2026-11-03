@@ -110,14 +110,14 @@ def _bed_template(world, plan_data):
     beds = flagged or [t for t in world.templates.values() if t.for_sleep]
     if beds:
         return min(beds, key=lambda t: (t.size[0] * t.size[1], t.name))
-    t = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.0,
+    t = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.3,
                        description="A plain bed.",
                        physicalDescription="A wooden bed frame with a straw mattress.",
                        tags=["bed"], rule="against the wall of a sleeping room",
                        extras={"forSleep": True})
     world.templates[t.name] = t
     plan_data.setdefault("templates", []).append(
-        {"name": t.name, "size": [1, 2], "walkability": 0.0, "forSleep": True,
+        {"name": t.name, "size": [1, 2], "walkability": 0.3, "forSleep": True,
          "description": t.description, "physicalDescription": t.physicalDescription,
          "tags": ["bed"], "rule": t.rule})
     return t

@@ -76,8 +76,10 @@ class TestBuildingCap(unittest.TestCase):
 
 class TestP3Beds(unittest.TestCase):
     def setUp(self):
+        from worldgen.model import bed_capacity
         self.tnames = {t["name"] for t in CANNED_TEMPLATES}
-        self.beds = {t["name"] for t in CANNED_TEMPLATES if "bed" in t["name"].lower()}
+        self.beds = {t["name"]: bed_capacity(tuple(t["size"]))
+                     for t in CANNED_TEMPLATES if "bed" in t["name"].lower()}
 
     def test_fewer_beds_than_residents_is_an_error(self):
         d = json.loads(json.dumps(CANNED_MILL))   # one Straw bed
@@ -86,6 +88,33 @@ class TestP3Beds(unittest.TestCase):
         self.assertTrue(any("beds only 1" in e for e in errors), errors)
         errors = check_p3(d, "The Old Mill", self.tnames, True,
                           beds=self.beds, residents=1)
+        self.assertEqual(errors, [])
+
+    def test_design_beds_counts_a_double_as_two(self):
+        from worldgen.phases import design_beds
+        beds = {"Straw bed": 1, "Oak double bed": 2}
+        design = {"furniture": [
+            {"template": "Straw bed", "room": "R", "count": 2, "hint": "wall:north"},
+            {"template": "Oak double bed", "room": "R", "count": 1, "hint": "wall:north"},
+            {"template": "Trestle table", "room": "R", "count": 1, "hint": "center"}],
+            "upper": [{"furniture": [
+                {"template": "Oak double bed", "room": "U", "count": 1,
+                 "hint": "wall:north"}]}]}
+        # 2 singles + a double downstairs (4) and a double up (2)
+        self.assertEqual(design_beds(design, beds), 6)
+
+    def test_four_residents_pass_with_one_double_and_two_singles(self):
+        d = json.loads(json.dumps(CANNED_COTTAGE))   # already one Straw bed
+        tnames = self.tnames | {"Oak double bed"}
+        beds = dict(self.beds)
+        beds["Oak double bed"] = 2
+        d["furniture"] += [
+            {"template": "Straw bed", "room": "Sleeping Loft", "count": 1,
+             "hint": "wall:west"},
+            {"template": "Oak double bed", "room": "Sleeping Loft", "count": 1,
+             "hint": "wall:north"}]
+        errors = check_p3(d, "Miller's Cottage", tnames, False,
+                          beds=beds, residents=4)
         self.assertEqual(errors, [])
 
     def test_run_phases_lowers_the_p1_residents_to_the_beds(self):
@@ -116,7 +145,7 @@ class TestP5Batches(unittest.TestCase):
         # then the batch and the player
         batch_prompt = client.sent[7][1]["content"]
         self.assertIn("one batch", batch_prompt)
-        self.assertIn("bed(s)", batch_prompt)
+        self.assertIn("spots free", batch_prompt)
         player_prompt = client.sent[8][1]["content"]
         self.assertIn("ROLE:", player_prompt)
         self.assertIn("outsider with a reason to stay", player_prompt,

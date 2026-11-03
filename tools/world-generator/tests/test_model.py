@@ -503,6 +503,19 @@ def canned_replies():
     ]
 
 
+class TestBedCapacity(unittest.TestCase):
+    """A sleep object at least 2 cells in both directions sleeps 2; anything
+    narrower sleeps 1, a 2x1 single bed turned on its side included."""
+
+    def test_sizes(self):
+        from worldgen.model import ObjectTemplate, bed_capacity
+        for size, want in [((1, 1), 1), ((1, 2), 1), ((2, 1), 1),
+                           ((2, 2), 2), ((3, 2), 2)]:
+            self.assertEqual(bed_capacity(size), want, f"{size} should sleep {want}")
+            self.assertEqual(bed_capacity(ObjectTemplate(name="B", size=size)),
+                             want, f"a {size} template should sleep {want}")
+
+
 class TestCannedFivePhases(unittest.TestCase):
     def test_plan_json_the_layout_accepts(self):
         client = ScriptedClient(canned_replies())

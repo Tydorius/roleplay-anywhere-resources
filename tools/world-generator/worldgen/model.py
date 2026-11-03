@@ -416,8 +416,10 @@ def is_sleep_name(name, tags=()):
 def bed_capacity(template):
     """How many sleepers one sleep object holds: at least 2 cells in both
     directions sleeps 2 (a double bed), anything narrower sleeps 1 — a 2x1
-    single bed turned on its side included."""
-    w, h = template.size
+    single bed turned on its side included. Takes a template or its
+    (width, height) pair."""
+    size = template.size if hasattr(template, "size") else template
+    w, h = size
     return 2 if min(w, h) >= 2 else 1
 
 
