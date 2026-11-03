@@ -250,8 +250,9 @@ of time.
   one workshop layout serves a forge, a carpenter's shop and a fabricator bay.
 - **`size`** is the north-facing size the slot takes. It is matched against an object's size in
   either orientation.
-- **`count`** is a number, a `[min, max]` range, or `"sleepers"` for bed slots. Code fills
-  `"sleepers"` from P1's residents, so the bed-count check stops being a model job.
+- **`count`** is a number, a `[min, max]` range, `"couples"` or `"singles"`. Bed slots use the
+  last two, and code fills them from P1's `residents` and `couples`, so the bed-count check stops
+  being a model job (see "Beds and sleepers").
 - **`optional`** slots are dropped first when the room is tight. **`minWealth`** slots appear only
   at that wealth or above: an elite bedroom gets a vanity and a rug.
 - **`grow`** slots are added in order, while space remains, when a room comes out bigger than the
@@ -358,6 +359,39 @@ What the generator does with it:
 - The spec writer emits `rot` and the turned `size` on each placed object.
 
 The model never reasons about rotation.
+
+## Beds and sleepers
+
+Checked in the 0.18 bundle, 2026-11-03:
+- **The game has no bed capacity and no bed ownership.** At bedtime an NPC takes the nearest sleep
+  object in its scheduled room whose best spot nobody else has claimed.
+- **Where the sleeper lies depends on walkability.** A walkable cell on the bed is the spot. For a
+  bed with walkability 0, the game falls back to a free cell beside the bed, so the sleeper lies
+  on the floor.
+
+Rules for the library (brief 015 makes the generator follow them on the plain route; the editor's
+checks already count capacity this way):
+- **Capacity:** a sleep object at least 2 cells in both directions sleeps 2. Anything narrower
+  sleeps 1, including a turned 2×1. Objects declare it through their size: `bed.double` and
+  `bed.fourposter` are 2×2.
+- **Sleep objects have walkability 0.3**, so people lie on them, as the game's own big beds do
+  (0.3–0.4).
+- **Couples:** each couple gets one double bed, in a bedroom where nobody else sleeps, because the
+  game can't keep partners together otherwise. Children and others sleep in other rooms when the
+  building has them.
+- **Every wealth tier has a double**: a straw-stuffed double for `poor`, a carved four-poster for
+  `elite`. A couple is a household fact, not a wealth one.
+- **Layouts:** a `bedroom.master` family with one `couples` bed slot (nightstands beside it,
+  storage in a corner), and the ordinary bedroom and dormitory families with `singles` slots. A
+  home's suite picks one master bedroom per couple.
+- **Sleep belongs in bedrooms.** Brief 014's mining found our models put beds in kitchens and
+  halls (16 in P3 replies, 59 in fixtures), the medieval sleep-by-the-hearth habit. Kitchen and
+  common-room layouts have no bed slots; a suite for a one-room hut uses a `hut.single_room`
+  layout with a sleeping corner instead.
+
+Who is a couple comes from P1 (`couples` on a home) and P5 (`partner`), kept in `plan.json`. The
+scenario format has no relationship field; a future relationships mod would carry it (see
+`_reference/mod_roadmap.md` in the scenarios folder).
 
 ## Pipeline changes
 

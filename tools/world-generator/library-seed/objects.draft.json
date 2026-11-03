@@ -130,6 +130,8 @@
   "light": 0,
   "back": "north",
   "wealth": [
+   "poor",
+   "modest",
    "wealthy",
    "elite"
   ],
