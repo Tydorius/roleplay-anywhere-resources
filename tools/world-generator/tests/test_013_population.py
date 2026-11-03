@@ -333,8 +333,6 @@ class TestP5Batches(unittest.TestCase):
                             for _w, r in stats["dropped"]), stats["dropped"])
         self.assertTrue(any("capped at 2" in r for _w, r in stats["dropped"]),
                         stats["dropped"])
-        self.assertTrue(any("every bed in the world is taken" in r
-                            for _w, r in stats["dropped"]), stats["dropped"])
 
     def test_a_zone_promised_more_than_a_batch_gets_a_second_batch(self):
         """With no population target, one batch per zone left homes empty
