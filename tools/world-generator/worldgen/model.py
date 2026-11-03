@@ -414,6 +414,19 @@ def is_sleep_name(name, tags=()):
     return any(w in (t or "").lower() for t in tags or () for w in SLEEP_WORDS)
 
 
+# rooms whose beds are for whoever comes: a traveller, a patient. They need no
+# owner, so they stay empty unless a home runs out of its own beds. Whole words
+# only: a warden, a wardrobe and a steward are not a ward
+SPARE_ROOM = re.compile(r"\b(guests?|paying|lodging|lodgers?|letting|travell?ers?|"
+                        r"visitors?|patients?|wards?|infirmary|sick\w*|recovery|"
+                        r"convalesc\w*|triage)\b")
+
+
+def is_spare_room(name, purpose=""):
+    """Whether a room's beds are spare ones, by its name and purpose."""
+    return bool(SPARE_ROOM.search(f"{name} {purpose}".lower()))
+
+
 def bed_capacity(template):
     """How many sleepers one sleep object holds: at least 2 cells in both
     directions sleeps 2 (a double bed), anything narrower sleeps 1 — a 2x1

@@ -305,12 +305,11 @@ def _ensure_beds(world, plan, plan_data):
     for person in plan.npcs + [plan.player]:
         if world.sleep_assign.get(person.name) is not None:
             continue   # the layout assigned them a bed of their own
-        home = next((b for b in world.buildings
-                     if b.layout.design.name == person.home), None)
+        home = schedule_mod.home_building(world, person.home)
         if home is None:
             continue
-        full = schedule_mod.sleep_room(world, person.home)
-        zone = schedule_mod.zone_of(world, person.home)
+        full = schedule_mod.sleep_room(world, home.layout.design.name)
+        zone = schedule_mod.zone_of(world, home.layout.design.name)
         if full is None and any(
                 b is not home
                 and schedule_mod.zone_of(world, b.layout.design.name) == zone

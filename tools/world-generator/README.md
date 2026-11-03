@@ -122,11 +122,19 @@ Beside every form sits the **resident count**, defaulting to 20-40 (the
 game's own default) and allowed 5-60. P1 plans enough homes and lodgings to
 bed them (a building may carry `residents: n`, and a unit building's count is
 units x residents), P3 must give each promise real beds, and P5 people the
-place in batches — one call per zone with buildings, at most ten people each,
-the roster carried forward so names never repeat, then the player in a call
-of their own from the frame's role, carrying 2-5 starting items from the
-catalogue. Below the asked-for range the run tops up with further batches
-rather than failing.
+place in batches — one call per zone with buildings, at most ten people each
+and more calls while the zone's promised residents aren't all made, the roster
+carried forward so names never repeat, then the player in a call of their own
+from the frame's role, carrying 2-5 starting items from the catalogue. Below
+the asked-for range the run tops up with further batches rather than failing.
+With no resident count set, a plan whose P1 promised residents houses nobody
+past its beds.
+
+Each person gets a sleep room of their own at layout: a couple shares a double
+bed, a home naming one unit copy sleeps in that copy, and everyone else fills
+the home's beds. Beds in guest rooms and wards are **spare**: they need no
+owner, P5 doesn't count them as homes, and they stay empty unless a home runs
+out of its own beds.
 
 **P6, the systems**, runs after the people in three calls — 6a rules and
 economy (narrative rules, flavor and difficulty, a currency whose format

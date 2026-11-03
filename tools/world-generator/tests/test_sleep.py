@@ -619,6 +619,71 @@ class TestSleepRoomAssignment(unittest.TestCase):
         for room, n in self._sleepers_per_room(world).items():
             self.assertLessEqual(n, caps.get(room, 0), room)
 
+    def test_spare_beds_stay_free_when_the_home_has_its_own(self):
+        """An inn's letting room keeps its beds for travellers: nobody owns
+        them, and that is no shortage."""
+        import copy
+        data = copy.deepcopy(GUEST_ROOM_PLAN)
+        inn = data["buildings"][0]
+        inn["rooms"][2] = {"name": "Letting Room", "share": "medium",
+                           "purpose": "beds for travellers off the road"}
+        inn["connections"][1] = ["Common Room", "Letting Room"]
+        for f in inn["furniture"]:
+            if f["room"] == "Keeper's Room":
+                f["count"] = 3
+            if f["room"] == "Guest Chamber":
+                f["room"] = "Letting Room"
+        world = worldgen.run(data, seed=1)
+        self.assertEqual(set(self._sleep_locations(world).values()),
+                         {"The Green Ox Keeper's Room"})
+        self.assertEqual(self._room_capacities(world)["The Green Ox Letting Room"], 2)
+        self.assertFalse([f for f in world.failures if "bed" in str(f).lower()])
+
+    def _fixture(self, name):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "..", "fixtures", name)
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        return worldgen.run(data, seed=1,
+                            extensions=tuple(data.get("extensions") or ()))
+
+    def test_a_home_naming_a_unit_copy_sleeps_in_that_copy(self):
+        """The plan says "Grendel Flats Apartment 1"; the region is "Apartment 1"."""
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "..", "fixtures",
+                            "apartment-block.plan.json")
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        locs = self._sleep_locations(self._fixture("apartment-block.plan.json"))
+        people = [p for p in data["npcs"] + [data["player"]]
+                  if p["home"].startswith("Grendel Flats Apartment")]
+        self.assertTrue(people)
+        for p in people:
+            self.assertEqual(locs[p["name"]],
+                             p["home"].replace("Grendel Flats ", "") + " Bedroom")
+
+    def test_a_home_naming_a_copy_by_its_region_name(self):
+        world = self._fixture("starship-decks.plan.json")
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Bex Tollerand"], "Cabin 2")
+        self.assertEqual(locs["Rae Okonkwo"], "Cabin 7")
+        self.assertEqual(locs["Wren Calloway"], "Cabin 12")
+
+    def test_a_home_naming_a_unit_building_fills_its_copies(self):
+        from worldgen import schedule
+        world = self._fixture("zombie-town.plan.json")
+        rooms = {}
+        for b in world.buildings:
+            for r, _d in schedule._storey_rooms(b.layout):
+                rooms[r.full_name] = r
+        for room, n in self._sleepers_per_room(world).items():
+            if "Walk-Up Apartment" in room:
+                self.assertLessEqual(n, schedule.room_capacity(world, rooms[room]), room)
+        self.assertTrue(any("Walk-Up Apartment" in l
+                            for l in self._sleep_locations(world).values()))
+
     def test_upper_storey_bedroom_preferred(self):
         world = worldgen.run(UPSTAIRS_PLAN, seed=1, extensions=("floors",))
         locs = self._sleep_locations(world)

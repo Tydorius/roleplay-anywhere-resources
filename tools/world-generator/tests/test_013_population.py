@@ -267,6 +267,55 @@ class TestP5Batches(unittest.TestCase):
         self.assertTrue(any("capped at 10" in r for _w, r in stats["dropped"]),
                         stats["dropped"])
 
+    def test_spare_beds_are_nobodys_home(self):
+        """A guest room's beds are not P5's to fill: the cottage sleeps its
+        one promised resident and shows the rest as spare."""
+        cottage = json.loads(json.dumps(CANNED_COTTAGE))
+        cottage["rooms"].append({"name": "Guest Room", "share": "small",
+                                 "purpose": "beds for travellers"})
+        cottage["connections"].append(["Main Room", "Guest Room"])
+        cottage["furniture"].append({"template": "Straw bed", "room": "Guest Room",
+                                     "count": 3, "hint": "wall:north"})
+        base = CANNED_P5_BATCH["npcs"][0]
+        people = [dict(base, name=f"Person {i}", home="Miller's Cottage")
+                  for i in range(4)]
+        replies = populated_replies(batch={"npcs": people})
+        replies[3] = _dump(cottage)
+        client = ScriptedClient(replies)
+        plan, _stats = phases.run_phases("a mill village", client)
+        self.assertEqual(len(plan["npcs"]), 2, "one home bed each, spare beds kept")
+        prompts = [m[1]["content"] for m in client.sent]
+        self.assertTrue(any("plus 3 spare bed(s)" in p for p in prompts))
+
+    def test_promised_residents_count_even_in_spare_beds(self):
+        """P1 said two live here and the cottage has one bed of its own: one
+        of the guest beds is a home after all, and the other two stay spare."""
+        p1 = populated_p1()
+        p1["zones"][0]["buildings"][1]["residents"] = 2
+        cottage = json.loads(json.dumps(CANNED_COTTAGE))
+        cottage["rooms"].append({"name": "Guest Room", "share": "small",
+                                 "purpose": "beds for travellers"})
+        cottage["connections"].append(["Main Room", "Guest Room"])
+        cottage["furniture"].append({"template": "Straw bed", "room": "Guest Room",
+                                     "count": 3, "hint": "wall:north"})
+        replies = populated_replies(p1=p1)
+        replies[3] = _dump(cottage)
+        client = ScriptedClient(replies)
+        phases.run_phases("a mill village", client)
+        prompts = [m[1]["content"] for m in client.sent]
+        self.assertTrue(any("sleeps 2 (2 spots free), plus 2 spare bed(s)" in p
+                            for p in prompts))
+
+    def test_design_spare_beds_counts_only_spare_rooms(self):
+        from worldgen.phases import design_beds, design_spare_beds
+        design = {"rooms": [{"name": "Ward", "purpose": "patients"},
+                            {"name": "Office", "purpose": "the doctor's desk"}],
+                  "furniture": [{"template": "Cot", "room": "Ward", "count": 4},
+                                {"template": "Cot", "room": "Office", "count": 1}]}
+        beds = {"Cot": 1}
+        self.assertEqual(design_beds(design, beds), 5)
+        self.assertEqual(design_spare_beds(design, beds), 4)
+
     def test_no_target_houses_nobody_past_the_beds(self):
         """The second live couples run: zones with no homes of their own put
         their workers in cottages already full. A full home's person moves to

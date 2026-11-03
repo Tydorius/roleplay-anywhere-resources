@@ -17,7 +17,7 @@ from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
                     SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
-                    bed_capacity, is_sleep_name as _sleeps)
+                    bed_capacity, is_spare_room, is_sleep_name as _sleeps)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -1340,6 +1340,19 @@ def design_beds(design, bed_templates):
                  for f in (u.get("furniture") or [])
                  if f.get("template") in bed_templates)
     return n
+
+
+def design_spare_beds(design, bed_templates):
+    """How many of a P3 design's sleepers are spare: beds in guest rooms and
+    wards, there for whoever comes and nobody's home."""
+    def spare(part):
+        rooms = {r.get("name"): r.get("purpose", "")
+                 for r in part.get("rooms") or [] if isinstance(r, dict)}
+        return sum(f.get("count", 1) * bed_templates[f["template"]]
+                   for f in part.get("furniture") or []
+                   if f.get("template") in bed_templates and f.get("room") in rooms
+                   and is_spare_room(f["room"], rooms[f["room"]]))
+    return spare(design) + sum(spare(u) for u in design.get("upper") or [])
 
 
 def design_double_beds(design, bed_templates):
@@ -2831,8 +2844,28 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             or design_by_name.get(same_as_parts.get(b["name"], ""))
         return design_beds(src, bed_templates) if src else 0
 
+    def home_beds_of(b):
+        """How many of a building's beds are homes: all but the spare ones
+        (an inn's guest rooms, a hospital's wards), though the residents P1
+        promised it always count."""
+        total = beds_of(b)
+        src = design_by_name.get(b["name"]) \
+            or design_by_name.get(same_as_parts.get(b["name"], ""))
+        if isinstance(b.get("units"), dict):
+            rooms = [r for r in ((src or {}).get("unit") or {}).get("rooms") or []
+                     if isinstance(r, dict)]
+            spare = total if is_spare_room(str(b["units"].get("name", ""))) or (
+                rooms and all(is_spare_room(str(r.get("name", "")), str(r.get("purpose", "")))
+                              for r in rooms)) else 0
+        else:
+            spare = design_spare_beds(src, bed_templates) if src else 0
+        promised = b["residents"] if _check_int(b.get("residents")) else 0
+        return min(total, max(total - spare, promised))
+
     beds_by_building = {b["name"]: beds_of(b)
                         for z in p1["zones"] for b in z["buildings"]}
+    home_beds = {b["name"]: home_beds_of(b)
+                 for z in p1["zones"] for b in z["buildings"]}
     homes_taken = {}       # building name -> people already sleeping there
     # the pairs P5 must write as partners (home -> promised couples)
     couples_by_home = {b["name"]: b["couples"]
@@ -2858,20 +2891,27 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                                        for z in p1["zones"] for b in z["buildings"])
 
     def free_spots():
-        """Each bedded home's sleep spots no batch has filled yet."""
+        """Each home's sleep spots no batch has filled yet (spare beds are
+        nobody's home, so they are not spots)."""
         return {n: max(0, k - homes_taken.get(n, 0))
-                for n, k in beds_by_building.items() if k > 0}
+                for n, k in home_beds.items() if k > 0}
+
+    def _bed_note(name):
+        beds, homes = beds_by_building.get(name, 0), home_beds.get(name, 0)
+        if not beds:
+            return ", no beds"
+        free = max(0, homes - homes_taken.get(name, 0))
+        note = f", sleeps {homes} ({free} spots free)" if homes else ", no home beds"
+        if beds > homes:
+            note += f", plus {beds - homes} spare bed(s) for guests or patients, nobody's home"
+        return note
 
     def _p5_blines(zone=None):
         bs = [b for z in p1["zones"] for b in z["buildings"]] if zone is None \
             else zone["buildings"]
         out = []
         for b in bs:
-            beds = beds_by_building.get(b["name"], 0)
-            taken = homes_taken.get(b["name"], 0)
-            free = max(0, beds - taken)
-            bed_note = f", sleeps {beds} ({free} spots free)" if beds else ", no beds"
-            out.append(f"- {_building_line(b)}{bed_note}")
+            out.append(f"- {_building_line(b)}{_bed_note(b['name'])}")
         if zone is not None:
             # a zone's workers may live elsewhere (a fishing strand with no
             # homes): show them the other zones' homes that still have room
@@ -2881,9 +2921,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                     continue
                 for b in z2["buildings"]:
                     if spots.get(b["name"], 0) > 0:
-                        out.append(f"- {_building_line(b)} (in {z2['name']}), "
-                                   f"sleeps {beds_by_building[b['name']]} "
-                                   f"({spots[b['name']]} spots free)")
+                        out.append(f"- {_building_line(b)} (in {z2['name']})"
+                                   f"{_bed_note(b['name'])}")
         return "\n".join(out) or "- none"
 
     def _roster_block():

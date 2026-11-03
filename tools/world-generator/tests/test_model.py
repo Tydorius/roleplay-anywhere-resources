@@ -575,5 +575,24 @@ class TestCannedFivePhases(unittest.TestCase):
         self.assertEqual(len(world.buildings), 2)
 
 
+class TestSpareRooms(unittest.TestCase):
+    def test_inn_and_hospital_rooms_are_spare(self):
+        from worldgen.model import is_spare_room
+        for name, purpose in (("Guest Chamber", ""), ("Letting Room", ""),
+                              ("Lodging room", ""), ("Patient Room", ""),
+                              ("West Wing Rest Ward", ""), ("Sick Room", ""),
+                              ("Infirmary", ""), ("Room 3", "for travellers"),
+                              ("Back Room", "lodging for paying guests")):
+            self.assertTrue(is_spare_room(name, purpose), name)
+
+    def test_words_that_only_contain_ward_are_not(self):
+        from worldgen.model import is_spare_room
+        for name, purpose in (("Warden's Room", ""), ("Steward's Cabin", ""),
+                              ("Bedroom", "a wardrobe and a bed"),
+                              ("Master Bedchamber", "the parents' bed"),
+                              ("Keeper's Room", "the keeper's own bed")):
+            self.assertFalse(is_spare_room(name, purpose), name)
+
+
 if __name__ == "__main__":
     unittest.main()
