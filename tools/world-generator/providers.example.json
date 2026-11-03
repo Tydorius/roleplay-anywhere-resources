@@ -1,0 +1,60 @@
+{
+  "_readme": [
+    "Copy this file to providers.json (same folder) and fill in your keys.",
+    "providers.json is gitignored and never printed or logged by the tool.",
+    "Every preset speaks the OpenAI-compatible /chat/completions protocol.",
+    "Remote providers need a real api_key; local servers ignore the key but",
+    "the field must exist (use \"none\"). Set max_tokens generously: these are",
+    "reasoning-heavy calls and a small cap truncates the JSON replies.",
+    "Test one with:  python -m worldgen check-provider <name>"
+  ],
+  "zai": {
+    "_comment": "z.ai API (https://z.ai/openplatform/api-docs). The model measured with this pipeline was glm-5.3-flash.",
+    "base_url": "https://api.z.ai/api/paas/v4",
+    "api_key": "YOUR_API_KEY",
+    "model": "glm-5.3-flash",
+    "max_tokens": 16000
+  },
+  "zai-coding": {
+    "_comment": "z.ai coding-plan subscription (GLM coding plan), same API, different endpoint.",
+    "base_url": "https://api.z.ai/api/coding/paas/v4",
+    "api_key": "YOUR_API_KEY",
+    "model": "glm-5.3-flash",
+    "max_tokens": 16000
+  },
+  "openrouter": {
+    "_comment": "OpenRouter aggregates many providers; model ids look like vendor/name (see https://openrouter.ai/models).",
+    "base_url": "https://openrouter.ai/api/v1",
+    "api_key": "YOUR_API_KEY",
+    "model": "deepseek/deepseek-chat",
+    "max_tokens": 16000
+  },
+  "openai": {
+    "_comment": "OpenAI's own endpoint.",
+    "base_url": "https://api.openai.com/v1",
+    "api_key": "YOUR_API_KEY",
+    "model": "gpt-4o",
+    "max_tokens": 16000
+  },
+  "ollama": {
+    "_comment": "Ollama local server (https://ollama.com); run: OLLAMA_HOST=0.0.0.0 ollama serve. Key unused.",
+    "base_url": "http://localhost:11434/v1",
+    "api_key": "none",
+    "model": "llama3.1:8b",
+    "max_tokens": 16000
+  },
+  "lmstudio": {
+    "_comment": "LM Studio local server (Developer tab -> Start Server); model is whatever you loaded. Key unused.",
+    "base_url": "http://localhost:1234/v1",
+    "api_key": "none",
+    "model": "qwen2.5-7b-instruct",
+    "max_tokens": 16000
+  },
+  "llama-swap": {
+    "_comment": "llama-swap proxies to locally configured models (https://github.com/mostlygeek/llama-swap); model = a name from its config. Key unused unless you put one in front of it.",
+    "base_url": "http://localhost:8080/v1",
+    "api_key": "none",
+    "model": "your-model",
+    "max_tokens": 16000
+  }
+}

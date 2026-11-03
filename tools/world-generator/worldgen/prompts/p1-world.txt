@@ -1,0 +1,130 @@
+Turn this idea into the world plan for a Roleplay Anywhere scenario. You are
+the planner: name the zones and buildings. Code decides every position.
+
+IDEA: ${idea}
+
+Reply with ONE JSON object with exactly these fields:
+{
+  "name": "short place name, 1-3 words",
+  "worldBackground": "2-4 sentences: what this place is, its mood, one tension",
+  "setting": {"era": "...", "technology": "...", "density": "sparse|normal|dense", "climate": "..."},
+  "mapSize": "small|medium|large",
+  "zones": [
+    {
+      "name": "unique zone name",
+      "kind": "free text: village, farmland, forest, market quarter, docks, station deck...",
+      "sizeClass": "small|medium|large|huge",
+      "description": "one sentence",
+      "ground": "grass|dirt|gravel|stone",
+      "adjacentTo": ["names of other zones in this list"],
+      "outdoor": ["short names of outdoor features this zone needs, e.g. 'village well', 'loading crane'"],
+      "arrangement": "optional, omit for today's default: around_green|along_street|scattered|fields",
+      "exterior": "optional, omit for open ground: void seals the zone - nothing outside its walls is walkable (a ship, a station, a sealed bunker)",
+      "buildings": [
+        {"name": "unique building name", "kind": "inn|cottage|clinic|warehouse|... (any words)",
+         "sizeClass": "hut|small|medium|large|hall",
+         "purpose": "one phrase: what people do here",
+         "units": {"name": "Apartment", "count": 12, "residents": 2},
+         "residents": 4,
+         "yard": null}
+      ]
+    }
+  ],
+  "compounds": [
+    {"name": "unique compound name", "zone": "a zone name from this list",
+     "shape": "enclosure|row|spine|cluster",
+     "courtyard": "small|medium|large",      "walls": "walkable|solid|none",       "enclosure only",
+     "frontage": "north|south|east|west",    "front": "street|parking|walkway|none", "row only",
+     "axis": "ns|ew", "spineWidth": 3,       "hub": "center|start|end",             "spine only",
+     "parts": [
+       {"building": "a building of that zone", "at": "<slot>", "gate": true,
+        "linked": false, "sameAs": "another part's building or omitted"}
+     ]}
+  ],
+  "roads": [{"from": "zone name", "to": "zone name", "kind": "dirt|cobble|paved"}]
+}
+
+Slots by shape (omit "at" for a row part to take the plan's order):
+- enclosure: corner:<nw|ne|sw|se>, edge:<north|south|east|west>:<start|center|end> (at most two
+  of them "gate": true, walked through on both faces), inside:<center|north|south|east|west>,
+  attached:<part>:<north|south|east|west>. The same shape reads many ways: a castle (four
+  towers, a gatehouse, a keep inside) or a walled monastery (a chapel and
+  cloister inside, a gatehouse and two corner lodges round them).
+- row: row:<index> lines parts up sharing the frontage, their entrances on it;
+  "linked": true butts a part against its neighbour with a door between them
+  (a terrace, a ship's compartments), unlinked parts keep a clear gap.
+  "front" puts a street, walkway or parked-vehicle strip in front.
+- spine: spine:<left|right>:<index> along the corridor, spine:end:<start|end>
+  capping it, spine:hub for the one hub part whose outward entrance gates the
+  block. A cluster is the spineWidth-0 case: no corridor, parts packed round
+  the hub.
+- any shape: attached:<part>:<north|south|east|west> branches a wing off another part.
+
+Four small examples (their buildings are ordinary zone buildings):
+
+  A castle: {"name": "Ironmoat", "zone": "Castle Rise", "shape": "enclosure",
+             "courtyard": "medium", "walls": "walkable",
+             "parts": [{"building": "Gatehouse", "at": "edge:south:center", "gate": true},
+                       {"building": "Keep", "at": "inside:center"},
+                       {"building": "NW Tower", "at": "corner:nw"},
+                       {"building": "NE Tower", "at": "corner:ne"}]}
+
+  A strip mall: {"name": "Farrow Row", "zone": "Farrow Street", "shape": "row",
+                 "frontage": "north", "front": "parking",
+                 "parts": [{"building": "Bakery", "at": "row:0"},
+                           {"building": "General Store", "at": "row:1", "sameAs": "Bakery"},
+                           {"building": "Florist", "at": "row:2", "sameAs": "Bakery"}]}
+
+  A hospital: {"name": "Ruan's Spine", "zone": "Ruan's Hill", "shape": "spine",
+               "axis": "ns", "spineWidth": 3, "hub": "start",
+               "parts": [{"building": "Nurses' Station", "at": "spine:hub"},
+                         {"building": "North Wing", "at": "spine:left:0"},
+                         {"building": "South Wing", "at": "spine:right:0",
+                          "sameAs": "North Wing"}]}
+    with a wing as a unit building:
+    {"name": "North Wing", "kind": "ward", "sizeClass": "small",
+     "purpose": "six patient rooms",
+     "units": {"name": "Room", "count": 6, "residents": 1}}
+
+  A starship: every zone "exterior": "void"; a spine of linked compartments
+  with the bridge hubbing one end, and a crew block of cabins:
+    {"name": "Crew Block", "kind": "berths", "sizeClass": "medium",
+     "purpose": "nine cabins for the crew",
+     "units": {"name": "Cabin", "count": 9, "residents": 2}}
+
+These show the vocabulary, not templates. Combine shapes freely to fit the idea.
+
+- "compounds" is optional: omit the field when no place needs one. Use a
+  compound when ONE place is built from several connected structures, and
+  name its parts as ordinary buildings of that zone first.
+- Most buildings are not in a compound.
+- When a building has many rooms of the same kind (apartments, classrooms,
+  hospital rooms, hotel rooms, cells, cabins), design ONE of them and give a
+  count. Code copies it. Never list or design the copies one by one. The same
+  for identical neighbouring buildings: design one, and point the rest at it
+  with "sameAs".
+- Buildings are lived in and worked in: homes, workplaces, gathering places,
+  whatever this setting has. A medieval village wants an inn, homes, a
+  workshop or two, a chapel or mill; a modern town wants flats over a shop
+  row, a clinic, a cafe, a depot; a station wants a mess hall, a medical bay,
+  cabins, workshops. Cover the idea's named features in zones or buildings.
+- The brief may name how many residents to house. Plan enough homes and
+  lodgings (houses, barracks, dormitories, inn rooms) to bed them all: a home
+  building may carry "residents": n (how many sleep there; never on a unit
+  building, which houses copies x units.residents). Few separate homes beat
+  one crowded hall: families, lodgers, staff quarters.
+- A zone's "arrangement", when set: "around_green" puts its buildings facing
+  one open green (the largest opposite the road), "along_street" lines them
+  on a street, "scattered" spreads them loosely, "fields" fills the zone
+  with fenced crop plots and gathers its buildings at the road-side corner.
+- 2 to 4 zones, each with a distinct kind. Every name in "adjacentTo" and in
+  "roads" must be a zone in this same reply. The building cap follows the
+  population the brief names (12 for a small place, up to 28 for a full one;
+  4 more when the reply uses compounds — towers are buildings); a validation
+  error will name the exact number if you go over.
+- Choose "density" honestly (a hamlet is sparse, a town is normal, a city
+  quarter is dense); it scales how much filler code spreads outdoors.
+- A "yard" is null for most buildings; omit it (null) unless the building
+  truly needs outside space.
+
+${rules}

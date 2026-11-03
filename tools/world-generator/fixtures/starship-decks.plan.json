@@ -1,0 +1,221 @@
+{
+ "name": "The Calliope",
+ "worldBackground": "A sealed survey ship tube-docked at a relay station: compartments on a spine, a three-deck crew block of cabins, every walk behind walls.",
+ "setting": {"era": "far future", "technology": "starfaring", "density": "sparse", "climate": "temperate"},
+ "mapSize": "small",
+ "extensions": ["floors"],
+ "currency": {"name": "Exchange chit", "description": "The relay's scrip.", "format": "5 chits"},
+ "attributes": {"strength": 5, "dexterity": 4, "intellect": 5, "perception": 4, "charisma": 4},
+ "weatherKinds": ["clear"],
+ "zones": [
+  {
+   "name": "Relay Dock",
+   "kind": "relay station",
+   "sizeClass": "small",
+   "description": "a sealed docking relay",
+   "ground": "stone",
+   "exterior": "void",
+   "buildings": [
+    {"name": "Airlock Bay", "kind": "bay", "sizeClass": "small", "purpose": "the relay's docking bay"}
+   ],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  },
+  {
+   "name": "The Calliope",
+   "kind": "spacecraft",
+   "sizeClass": "large",
+   "description": "the survey ship, compartments along a spine",
+   "ground": "stone",
+   "exterior": "void",
+   "buildings": [
+    {"name": "Bridge", "kind": "control", "sizeClass": "small", "purpose": "the ship's bridge"},
+    {"name": "Compartment 1", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 2", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Compartment 3", "kind": "berth", "sizeClass": "hut", "purpose": "crew berth and systems"},
+    {"name": "Crew Block", "kind": "berth", "sizeClass": "medium",
+     "purpose": "crew cabins on three decks", "storeys": 3,
+     "units": {"name": "Cabin", "count": 12, "perStorey": 4, "residents": 1,
+               "numbering": "plain"}}
+   ],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Relay Cluster",
+   "zone": "Relay Dock",
+   "shape": "cluster",
+   "axis": "ns",
+   "hub": "center",
+   "parts": [
+    {"building": "Airlock Bay", "at": "spine:hub"}
+   ]
+  },
+  {
+   "name": "Calliope Spine",
+   "zone": "The Calliope",
+   "shape": "spine",
+   "axis": "ns",
+   "spineWidth": 3,
+   "hub": "end",
+   "parts": [
+    {"building": "Bridge", "at": "spine:hub"},
+    {"building": "Compartment 1", "at": "spine:left:0"},
+    {"building": "Compartment 2", "at": "spine:right:0", "sameAs": "Compartment 1"},
+    {"building": "Crew Block", "at": "spine:left:1"},
+    {"building": "Compartment 3", "at": "spine:right:1", "sameAs": "Compartment 1"}
+   ]
+  }
+ ],
+ "roads": [
+  {"from": "Relay Dock", "to": "The Calliope", "kind": "paved"}
+ ],
+ "templates": [
+  {"name": "Crew bunk", "size": [1, 2], "walkability": 0, "tags": ["bed"],
+   "forSleep": true, "description": "A padded berth bunk.",
+   "physicalDescription": "narrow padded bunk with strap restraints",
+   "rule": "along the wall of a sleeping room, never blocking a door"},
+  {"name": "Console", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A duty console with a lit readout.",
+   "physicalDescription": "metal console with glowing display strip",
+   "rule": "along a wall, clear of doors"},
+  {"name": "Wall locker", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A crew locker with a seal tag.",
+   "physicalDescription": "grey wall locker with a seal tag",
+   "rule": "tucked into corners, never blocking a door"},
+  {"name": "Galley locker", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A mess-store locker.",
+   "physicalDescription": "labelled mess locker with a latch",
+   "rule": "along a wall, clear of the door"},
+  {"name": "Supply crate", "size": [1, 1], "walkability": 0, "tags": ["container"],
+   "description": "A strapped supply crate.",
+   "physicalDescription": "dull grey crate with cargo straps",
+   "rule": "tucked into corners, never blocking a door"}
+ ],
+ "items": [
+  {"name": "Ration pack", "type": "consumable", "quality": "common", "value": 2,
+   "description": "A sealed meal pack, bland but complete.", "physicalDescription": "foil ration pack with print date, white background"},
+  {"name": "Sleep patch", "type": "consumable", "quality": "common", "value": 3,
+   "description": "A slow-release sleep patch.", "physicalDescription": "small round sleep patch in film, white background"},
+  {"name": "Med-gel", "type": "consumable", "quality": "uncommon", "value": 9,
+   "description": "A field tube of med-gel.", "physicalDescription": "squeeze tube of med-gel with nozzle, white background"},
+  {"name": "Wrench", "type": "wieldable", "quality": "common", "value": 6,
+   "description": "A zero-g torque wrench.", "physicalDescription": "zero-g torque wrench with knurled grip, white background"},
+  {"name": "Data chip", "type": "misc", "quality": "common", "value": 5,
+   "description": "A survey data chip, labelled by shift.", "physicalDescription": "data chip with shift label, white background"},
+  {"name": "Fusion cell", "type": "material", "quality": "common", "value": 12,
+   "description": "A sealed fusion cell, charge flagged green.", "physicalDescription": "sealed fusion cell with green flag, white background"},
+  {"name": "Ship suit", "type": "innerTorso", "quality": "common", "value": 10,
+   "description": "A spare ship suit, press-stud collar.", "physicalDescription": "folded grey ship suit with press studs, white background"},
+  {"name": "Tool bandolier", "type": "torso", "quality": "common", "value": 14,
+   "description": "A tool bandolier, slots half filled.", "physicalDescription": "canvas tool bandolier with strapped tools, white background"},
+  {"name": "Log slate", "type": "misc", "quality": "common", "value": 4,
+   "description": "The watch log slate, last shift inked.", "physicalDescription": "log slate with inked watch rows, white background"},
+  {"name": "Vacuum flask", "type": "misc", "quality": "common", "value": 3,
+   "description": "A dented vacuum flask, still holding heat.", "physicalDescription": "dented vacuum flask with bail handle, white background"},
+  {"name": "Signal flare", "type": "misc", "quality": "uncommon", "value": 8,
+   "description": "A hand flare, seal intact.", "physicalDescription": "red hand flare with pull seal, white background"},
+  {"name": "Spare seal", "type": "material", "quality": "common", "value": 7,
+   "description": "A spare hatch seal ring.", "physicalDescription": "rubber hatch seal ring in chalk, white background"},
+  {"name": "Coolant can", "type": "material", "quality": "common", "value": 6,
+   "description": "A can of line coolant.", "physicalDescription": "squat coolant can with spout cap, white background"},
+  {"name": "Magnetic boots", "type": "boots", "quality": "uncommon", "value": 16,
+   "description": "Mag-lock boots, soles scuffed white.", "physicalDescription": "mag-lock boots with scuffed soles, white background"},
+  {"name": "Pilot goggles", "type": "face", "quality": "common", "value": 7,
+   "description": "Bridge goggles with a crack across one lens.", "physicalDescription": "bridge goggles with cracked lens, white background"},
+  {"name": "Work gloves", "type": "gloves", "quality": "common", "value": 5,
+   "description": "Grip gloves, fingertips shiny.", "physicalDescription": "grip gloves with shiny fingertips, white background"},
+  {"name": "Bonded key", "type": "misc", "quality": "rare", "value": 20,
+   "description": "A bonded override key on a wrist chain.", "physicalDescription": "override key on a wrist chain, white background"}
+ ],
+ "lootPools": {
+  "Crew locker": {"items": ["Ration pack", "Sleep patch", "Log slate", "Data chip",
+                             "Ship suit", "Vacuum flask", "Work gloves"]},
+  "Ship stores": {"items": ["Fusion cell", "Spare seal", "Coolant can", "Signal flare",
+                             "Wrench", "Med-gel"],
+                  "weights": {"Fusion cell": 0.5, "Med-gel": 0.4}},
+  "Galley stores": {"items": ["Ration pack", "Vacuum flask", "Sleep patch"]}
+ },
+ "buildings": [
+  {
+   "name": "Airlock Bay",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Bay", "share": "medium", "purpose": "the docking bay and its bench"}],
+   "connections": [],
+   "entrance": {"room": "Bay", "side": "south"},
+   "furniture": [
+    {"template": "Supply crate", "room": "Bay", "count": 2, "hint": "corner",
+     "lootPool": "Ship stores"},
+    {"template": "Console", "room": "Bay", "count": 1, "hint": "wall:north"}
+   ]
+  },
+  {
+   "name": "Bridge",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Control Room", "share": "large", "purpose": "the ship's control room"}],
+   "connections": [],
+   "entrance": {"room": "Control Room", "side": "south"},
+   "furniture": [
+    {"template": "Console", "room": "Control Room", "count": 2, "hint": "wall:north"},
+    {"template": "Console", "room": "Control Room", "count": 1, "hint": "wall:west"},
+    {"template": "Wall locker", "room": "Control Room", "count": 1, "hint": "corner",
+     "lootPool": "Crew locker"}
+   ]
+  },
+  {
+   "name": "Compartment 1",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [{"name": "Berth", "share": "medium", "purpose": "crew berths"}],
+   "connections": [],
+   "entrance": {"room": "Berth", "side": "west"},
+   "furniture": [
+    {"template": "Crew bunk", "room": "Berth", "count": 2, "hint": "wall:north"},
+    {"template": "Supply crate", "room": "Berth", "count": 1, "hint": "corner",
+     "lootPool": "Ship stores"}
+   ]
+  },
+  {
+   "name": "Crew Block",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {"name": "Galley", "share": "medium", "purpose": "the crew's galley and mess",
+     "lootPool": "Galley stores"}
+   ],
+   "connections": [],
+   "entrance": {"room": "Galley", "side": "west"},
+   "stairs": {"room": "Galley"},
+   "unit": {
+    "rooms": [
+     {"name": "Cabin", "share": "small", "purpose": "one crew cabin",
+      "lootPool": "Crew locker"}
+    ],
+    "connections": [],
+    "entrance": {"room": "Cabin", "side": "west"},
+    "furniture": [
+     {"template": "Wall locker", "room": "Cabin", "count": 1, "hint": "corner"}
+    ]
+   },
+   "furniture": [
+    {"template": "Galley locker", "room": "Galley", "count": 1, "hint": "wall:north"}
+   ]
+  }
+ ],
+ "npcs": [
+  {"name": "Iyo Sarn", "gender": "female", "role": "captain", "home": "Bridge", "work": "Bridge",
+   "description": "The Calliope's captain: quiet, keeps the survey running on chits and stubbornness.",
+   "physicalDescription": "grey-suited captain with cropped hair and a bonded data cuff"},
+  {"name": "Bex Tollerand", "gender": "male", "role": "technician", "home": "Cabin 2", "work": "Airlock Bay",
+   "description": "Ship's technician, forever elbow-deep in the tube seals.",
+   "physicalDescription": "thin technician with tool bandolier and static-frizzed hair"},
+  {"name": "Rae Okonkwo", "gender": "female", "role": "surveyor", "home": "Cabin 7", "work": "Bridge",
+   "description": "Surveyor logging the relay's drift one long shift at a time.",
+   "physicalDescription": "broad-shouldered surveyor in a patched ship suit"}
+ ],
+ "player": {"name": "Wren Calloway", "gender": "female", "role": "passenger", "home": "Cabin 12", "work": "Airlock Bay",
+  "description": "A passenger working passage back to the core routes.",
+  "physicalDescription": "young traveler in a loaner suit, migration tags still on the collar"}
+}

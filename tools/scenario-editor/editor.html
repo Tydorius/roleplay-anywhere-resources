@@ -12,6 +12,7 @@
     <h1>Scenario Editor</h1>
     <div class="tabs"><button id="tabMap" class="on">Map</button><button id="tabImages">Images</button></div>
     <label class="inline">Scenario <select id="source"></select></label>
+    <button id="newWorld" title="Generate a whole world from a one-line idea (your own model provider and key)">New world…</button>
     <button id="openZip" title="Open a scenario zip as a workspace the game won't touch">Open zip…</button>
     <input type="file" id="zipFile" accept=".zip" hidden>
     <button id="toWork" title="Copy the New Game scenario and its images into a workspace you can edit" hidden>Copy to workspace</button>
@@ -24,6 +25,7 @@
     <span class="dirty" id="dirty" hidden>Unsaved changes</span>
     <button id="save" class="primary" title="Save (Ctrl+S)" disabled>Save</button>
     <a id="download" class="button off" title="Download this workspace as a zip for New Game → Import">Download zip</a>
+    <button id="reroll" title="Place the same world again from its saved plan — a new seed, no model calls" hidden>Re-roll layout…</button>
   </div>
 </header>
 
@@ -63,6 +65,7 @@
 <script src="/refs.js"></script>
 <script src="/inspector.js"></script>
 <script src="/refsui.js"></script>
+<script src="/worldgen.js"></script>
 <script src="/mapview.js"></script>
 </body>
 </html>

@@ -1,0 +1,112 @@
+{
+ "name": "Grendel Flats",
+ "worldBackground": "A six-storey workers' block over a market street: twenty-four flats off a stair corridor.",
+ "setting": {"era": "modern", "technology": "electricity", "density": "dense", "climate": "temperate"},
+ "mapSize": "small",
+ "extensions": ["floors"],
+ "currency": {"name": "Folded note", "description": "The city's paper small change.", "format": "5 notes"},
+ "attributes": {"strength": 5, "dexterity": 4, "intellect": 4, "perception": 5, "charisma": 5},
+ "zones": [
+  {
+   "name": "Sopwith Street",
+   "kind": "residential street",
+   "sizeClass": "medium",
+   "description": "the flats and the corner shop",
+   "ground": "grass",
+   "buildings": [
+    {"name": "Grendel Flats", "kind": "apartments", "sizeClass": "medium",
+     "purpose": "workers' housing, six floors", "storeys": 6,
+     "units": {"name": "Apartment", "count": 24, "perStorey": 4, "residents": 2,
+               "numbering": "plain"}},
+    {"name": "The Corner Tray", "kind": "shop", "sizeClass": "hut", "purpose": "the corner shop"}
+   ],
+   "dressing": {"paths": "paved", "props": [], "filler": []}
+  },
+  {
+   "name": "Tannery Yard",
+   "kind": "scrubland",
+   "sizeClass": "small",
+   "description": "the old tannery's scrap of yard",
+   "ground": "dirt",
+   "buildings": [],
+   "dressing": {"paths": "none", "props": [], "filler": []}
+  }
+ ],
+ "roads": [
+  {"from": "Sopwith Street", "to": "Tannery Yard", "kind": "cobble"}
+ ],
+ "templates": [
+  {"name": "Board bed", "size": [1, 2], "walkability": 0, "tags": ["bed"],
+   "forSleep": true, "description": "A plain board bed with a folded blanket.",
+   "physicalDescription": "plain pine bed frame with grey blanket",
+   "rule": "along the wall of a sleeping room, never blocking a door"},
+  {"name": "Deal table", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A deal table with two chairs' worth of elbows.",
+   "physicalDescription": "scarred deal table with mismatched legs",
+   "rule": "by the window wall, clear of the door"},
+  {"name": "Kitchenette", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A two-ring cooker and a shallow sink.",
+   "physicalDescription": "enamelled two-ring cooker with pipe-fed sink",
+   "rule": "against the wall farthest from the door"},
+  {"name": "Shop counter", "size": [2, 1], "walkability": 0, "tags": ["table"],
+   "description": "A worn shop counter with a till.",
+   "physicalDescription": "scrolled counter front with brass till",
+   "rule": "facing the door, one stride in"},
+  {"name": "Shelf stack", "size": [1, 2], "walkability": 0, "tags": ["container"],
+   "description": "Crates stacked into shelves.",
+   "physicalDescription": "plank shelves on brick ends, goods front-faced",
+   "rule": "along the walls, never blocking the door"}
+ ],
+ "buildings": [
+  {
+   "name": "Grendel Flats",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [
+    {"name": "Lobby", "share": "medium", "purpose": "the stair lobby and its post"}
+   ],
+   "connections": [],
+   "entrance": {"room": "Lobby", "side": "south"},
+   "stairs": {"room": "Lobby"},
+   "unit": {
+    "rooms": [
+     {"name": "Sitting Room", "share": "medium", "purpose": "the flat's sitting room and kitchen corner"},
+     {"name": "Bedroom", "share": "small", "purpose": "the flat's bedroom"}
+    ],
+    "connections": [["Sitting Room", "Bedroom"]],
+    "entrance": {"room": "Sitting Room", "side": "south"},
+    "furniture": [
+     {"template": "Kitchenette", "room": "Sitting Room", "count": 1, "hint": "wall:north"},
+     {"template": "Deal table", "room": "Sitting Room", "count": 1, "hint": "center"},
+     {"template": "Board bed", "room": "Bedroom", "count": 2, "hint": "wall:north"}
+    ]
+   },
+   "furniture": [
+    {"template": "Deal table", "room": "Lobby", "count": 1, "hint": "wall:west"}
+   ]
+  },
+  {
+   "name": "The Corner Tray",
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [{"name": "Shop Floor", "share": "medium", "purpose": "the counter and its stacks"}],
+   "connections": [],
+   "entrance": {"room": "Shop Floor", "side": "south"},
+   "furniture": [
+    {"template": "Shop counter", "room": "Shop Floor", "count": 1, "hint": "center"},
+    {"template": "Shelf stack", "room": "Shop Floor", "count": 2, "hint": "wall:north"}
+   ]
+  }
+ ],
+ "npcs": [
+  {"name": "Marta Cuyp", "gender": "female", "role": "concierge", "home": "Grendel Flats Apartment 1", "work": "The Corner Tray",
+   "description": "The block's concierge: keeps the stair rota and everyone's debts in one pencil ledger.",
+   "physicalDescription": "stout concierge in a print dress with a pencil behind each ear"},
+  {"name": "Eli Vosk", "gender": "male", "role": "shopkeeper", "home": "Grendel Flats Apartment 3", "work": "The Corner Tray",
+   "description": "Runs the corner shop and half the gossip on the stair.",
+   "physicalDescription": "young shopkeeper with a chalked apron and quick smile"}
+ ],
+ "player": {"name": "Juniper Hale", "gender": "female", "role": "new tenant", "home": "Grendel Flats Apartment 10", "work": "The Corner Tray",
+  "description": "A new tenant on the fourth floor, still learning the stair rota.",
+  "physicalDescription": "new tenant in a bus-stained coat with a suitcase handle sticking out of a bag"}
+}

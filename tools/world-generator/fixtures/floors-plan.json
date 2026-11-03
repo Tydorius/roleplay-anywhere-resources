@@ -1,0 +1,309 @@
+{
+  "name": "Marrowgate",
+  "worldBackground": "Marrowgate is a market town of two streets: a square, a well, an inn with a gallery over the common room, and the weavers' rows where cloth is made and rented beds stack three storeys high. The Loops feed the town - wheat and kitchen gardens - and the carts come in on market days. The weavers' guild wants a charter; the innkeeper wants the guild's custom; neither says so out loud.",
+  "setting": {
+    "era": "medieval",
+    "technology": "timber and water",
+    "density": "normal",
+    "climate": "wet"
+  },
+  "mapSize": "small",
+  "currency": {
+    "name": "Copper penny",
+    "description": "The small coin of Marrowgate's market; four make a silver bit.",
+    "format": "5 pennies"
+  },
+  "startingCurrency": 6,
+  "attributes": {"strength": 5, "dexterity": 4, "intellect": 5, "perception": 5, "charisma": 6},
+  "skills": {"Weaving": 2, "Haggling": 2, "Cooking": 1, "Farming": 1, "Brawling": 1, "Foraging": 1},
+  "weatherKinds": ["clear", "fog", "rain", "thunderstorm"],
+  "narrativeRules": [
+    "Count things: four looms, two carts, one well, a known number of rented beds.",
+    "The gallery is for watching the common room; everyone upstairs knows who comes in.",
+    "Guild business is discussed in the workshop, never in the inn.",
+    "The town wall is a ditch and a memory; nobody calls it a wall."
+  ],
+  "zones": [
+    {
+      "name": "Marrowgate",
+      "kind": "market town",
+      "sizeClass": "huge",
+      "description": "The town itself: a square with a well, the inn, the weavers' rows and a cottage or two.",
+      "ground": "grass",
+      "adjacentTo": ["The Loops"],
+      "outdoor": ["town well", "market stalls"],
+      "buildings": [
+        {"name": "The Sickle & Sheaf", "kind": "inn", "sizeClass": "large",
+         "purpose": "ale, food and beds for travellers", "storeys": 2, "yard": null},
+        {"name": "Weaver's Rows", "kind": "apartments", "sizeClass": "hall",
+         "purpose": "workshop below, rented rooms above", "storeys": 3, "yard": null},
+        {"name": "Hedge Cottage", "kind": "house", "sizeClass": "small",
+         "purpose": "the market gardener's house", "yard": {"kind": "kitchen garden", "side": "back"}}
+      ],
+      "dressing": {
+        "paths": "cobble",
+        "props": [
+          {"template": "Village well", "count": 1, "hint": "center"},
+          {"template": "Market stall", "count": 2, "hint": "scatter"}
+        ],
+        "filler": [{"template": "Oak tree", "density": "low"}]
+      }
+    },
+    {
+      "name": "The Loops",
+      "kind": "farmland",
+      "sizeClass": "medium",
+      "description": "The town's strips: wheat in long rows, scarecrows at the corners.",
+      "ground": "dirt",
+      "adjacentTo": ["Marrowgate"],
+      "outdoor": ["wheat rows", "scarecrows"],
+      "buildings": [],
+      "dressing": {
+        "paths": "dirt",
+        "props": [
+          {"template": "Wheat row", "count": 8, "hint": "scatter"},
+          {"template": "Scarecrow", "count": 2, "hint": "scatter"}
+        ],
+        "filler": []
+      }
+    }
+  ],
+  "roads": [
+    {"from": "Marrowgate", "to": "The Loops", "kind": "dirt"}
+  ],
+  "templates": [
+    {"name": "Straw bed", "size": [1, 2], "walkability": 0, "tags": ["bed"], "forSleep": true,
+     "description": "A straw palliasse on a plank frame.",
+     "physicalDescription": "wooden plank bed frame with straw mattress and rough blanket",
+     "rule": "along the wall of a sleeping room, never blocking a door"},
+    {"name": "Trestle table", "size": [2, 1], "walkability": 0, "tags": ["table", "eat"],
+     "description": "A trestle table with two benches' worth of elbows.",
+     "physicalDescription": "rough wooden trestle table with plank top",
+     "rule": "in the middle of the room where people eat and work"},
+    {"name": "Wooden stool", "size": [1, 1], "walkability": 0, "tags": ["seat"],
+     "description": "A three-legged stool.",
+     "physicalDescription": "small three-legged wooden stool",
+     "rule": "around the tables"},
+    {"name": "Long bench", "size": [2, 1], "walkability": 0, "tags": ["seat", "social"],
+     "description": "A bench that seats two.",
+     "physicalDescription": "plain wooden bench seating two people",
+     "rule": "along the walls of the common room and the gallery rail"},
+    {"name": "Clay hearth", "size": [2, 1], "walkability": 0, "tags": ["light", "food"], "light": 0.6, "craftStation": true,
+     "description": "The clay hearth: every meal and all the warmth.",
+     "physicalDescription": "clay cooking hearth with iron pot and low fire",
+     "rule": "against a wall, away from the door"},
+    {"name": "Oak barrel", "size": [1, 1], "walkability": 0, "tags": ["storage"],
+     "description": "An oak barrel: ale, salt, or nails.",
+     "physicalDescription": "wooden barrel with iron hoops",
+     "rule": "in corners, or beside the hearth"},
+    {"name": "Iron-bound chest", "size": [1, 1], "walkability": 0, "tags": ["storage"],
+     "description": "A chest for cloth, rent books or bedding.",
+     "physicalDescription": "low wooden chest with iron straps and lock plate",
+     "rule": "in the corner of a bedchamber or stair hall"},
+    {"name": "Oil lamp", "size": [1, 1], "walkability": 0, "tags": ["light"],
+     "description": "A clay oil lamp, trimmed each dusk.",
+     "physicalDescription": "small clay oil lamp with steady flame",
+     "rule": "on a table or in the middle of a room that needs light"},
+    {"name": "Loom", "size": [2, 1], "walkability": 0, "tags": ["work", "craft"], "craftStation": true,
+     "description": "A standing loom, warp taut, cloth half-done.",
+     "physicalDescription": "tall wooden standing loom with warp threads and half-woven cloth",
+     "rule": "in a row under the workshop windows"},
+    {"name": "Spiral stair", "size": [1, 1], "walkability": 1, "tags": ["stairs"],
+     "description": "A tight spiral stair from one floor to the next.",
+     "physicalDescription": "narrow spiral staircase of wooden wedges seen from above",
+     "rule": "in the stair hall, one cell, kept walkable"},
+    {"name": "Village well", "size": [2, 2], "walkability": 0, "tags": ["landmark", "social"],
+     "description": "The town well: the reason Marrowgate is here.",
+     "physicalDescription": "round stone well with wooden windlass and shingled roof",
+     "rule": "one public well in the open centre of the town, never indoors"},
+    {"name": "Market stall", "size": [2, 2], "walkability": 0, "tags": ["trade"],
+     "description": "A market stall, awning flapping.",
+     "physicalDescription": "wooden market stall with striped awning and wares",
+     "rule": "near the well and the paths, never blocking one"},
+    {"name": "Oak tree", "size": [2, 2], "walkability": 0, "tags": ["plant", "filler"],
+     "description": "An oak, acorns under it.",
+     "physicalDescription": "broad oak tree seen from above",
+     "rule": "at the town's edges, never blocking a path"},
+    {"name": "Wheat row", "size": [3, 1], "walkability": 0.6, "tags": ["plant"],
+     "description": "A row of wheat stooks.",
+     "physicalDescription": "row of golden wheat stooks in a ploughed field",
+     "rule": "in long rows across the open fields"},
+    {"name": "Scarecrow", "size": [1, 1], "walkability": 0, "tags": ["filler"],
+     "description": "A scarecrow in a coat older than its wearer's.",
+     "physicalDescription": "ragged scarecrow on a cross of poles",
+     "rule": "standing watch in the fields"},
+    {"name": "Herb bed", "size": [2, 1], "walkability": 0.6, "tags": ["plant"],
+     "description": "A kitchen-herb bed: sage, thyme, feverfew.",
+     "physicalDescription": "small garden bed of culinary herbs with stepping stones",
+     "rule": "in the kitchen gardens behind the houses"}
+  ],
+  "buildings": [
+    {
+      "name": "The Sickle & Sheaf",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Common Room", "share": "large", "purpose": "ale, talk and the evening fire"},
+        {"name": "Kitchen", "share": "small", "purpose": "cooking and the water pump"},
+        {"name": "Back Hall", "share": "medium", "purpose": "the stair and the barrow of logs"}
+      ],
+      "connections": [
+        ["Common Room", "Kitchen"],
+        ["Common Room", "Back Hall"]
+      ],
+      "entrance": {"room": "Common Room", "side": "south"},
+      "stairs": {"room": "Back Hall"},
+      "furniture": [
+        {"template": "Clay hearth", "room": "Common Room", "count": 1, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Common Room", "count": 2, "hint": "center"},
+        {"template": "Wooden stool", "room": "Common Room", "count": 6, "hint": "around:Trestle table"},
+        {"template": "Long bench", "room": "Common Room", "count": 2, "hint": "wall:east"},
+        {"template": "Clay hearth", "room": "Kitchen", "count": 1, "hint": "wall:west"},
+        {"template": "Trestle table", "room": "Kitchen", "count": 1, "hint": "center"},
+        {"template": "Oak barrel", "room": "Kitchen", "count": 2, "hint": "beside:Clay hearth"},
+        {"template": "Oil lamp", "room": "Back Hall", "count": 1, "hint": "center"}
+      ],
+      "upper": [
+        {
+          "storey": 2,
+          "rooms": [
+            {"name": "Gallery", "share": "large", "purpose": "seats at the rail, looking down on the common room"},
+            {"name": "Landing", "share": "medium", "purpose": "the stair head and a lamp"},
+            {"name": "Keeper's Chamber", "share": "small", "purpose": "the keeper's own bed"}
+          ],
+          "connections": [
+            ["Gallery", "Landing"],
+            ["Landing", "Keeper's Chamber"]
+          ],
+          "furniture": [
+            {"template": "Long bench", "room": "Gallery", "count": 2, "hint": "wall:north"},
+            {"template": "Wooden stool", "room": "Gallery", "count": 2, "hint": "wall:south"},
+            {"template": "Oil lamp", "room": "Landing", "count": 1, "hint": "center"},
+            {"template": "Straw bed", "room": "Keeper's Chamber", "count": 1, "hint": "wall:north"},
+            {"template": "Iron-bound chest", "room": "Keeper's Chamber", "count": 1, "hint": "corner"}
+          ],
+          "opening": {"over_room": "Common Room", "kind": "gallery"}
+        }
+      ],
+      "yard": null
+    },
+    {
+      "name": "Weaver's Rows",
+      "wall": "brick",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Loom Workshop", "share": "large", "purpose": "four looms under the windows"},
+        {"name": "Stair Hall", "share": "medium", "purpose": "the spiral stair and the rent box"}
+      ],
+      "connections": [["Loom Workshop", "Stair Hall"]],
+      "entrance": {"room": "Loom Workshop", "side": "south"},
+      "stairs": {"room": "Stair Hall"},
+      "furniture": [
+        {"template": "Loom", "room": "Loom Workshop", "count": 3, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Loom Workshop", "count": 1, "hint": "center"},
+        {"template": "Wooden stool", "room": "Loom Workshop", "count": 3, "hint": "around:Trestle table"},
+        {"template": "Oil lamp", "room": "Stair Hall", "count": 1, "hint": "center"},
+        {"template": "Iron-bound chest", "room": "Stair Hall", "count": 1, "hint": "corner"}
+      ],
+      "upper": [
+        {
+          "storey": 2,
+          "rooms": [
+            {"name": "Landing", "share": "medium", "purpose": "the stair head"},
+            {"name": "Loom Flat", "share": "large", "purpose": "the weaver family's rooms"}
+          ],
+          "connections": [["Landing", "Loom Flat"]],
+          "furniture": [
+            {"template": "Oil lamp", "room": "Landing", "count": 1, "hint": "center"},
+            {"template": "Straw bed", "room": "Loom Flat", "count": 2, "hint": "wall:north"},
+            {"template": "Trestle table", "room": "Loom Flat", "count": 1, "hint": "center"},
+            {"template": "Wooden stool", "room": "Loom Flat", "count": 2, "hint": "around:Trestle table"},
+            {"template": "Iron-bound chest", "room": "Loom Flat", "count": 1, "hint": "corner"}
+          ],
+          "opening": {"over_room": "Loom Workshop", "kind": "atrium"}
+        },
+        {
+          "storey": 3,
+          "rooms": [
+            {"name": "Landing", "share": "medium", "purpose": "the stair head"},
+            {"name": "Sky Flat", "share": "large", "purpose": "a rented room under the eaves"}
+          ],
+          "connections": [["Landing", "Sky Flat"]],
+          "furniture": [
+            {"template": "Oil lamp", "room": "Landing", "count": 1, "hint": "center"},
+            {"template": "Straw bed", "room": "Sky Flat", "count": 1, "hint": "wall:north"},
+            {"template": "Trestle table", "room": "Sky Flat", "count": 1, "hint": "center"},
+            {"template": "Long bench", "room": "Sky Flat", "count": 1, "hint": "wall:west"}
+          ],
+          "opening": null
+        }
+      ],
+      "yard": null
+    },
+    {
+      "name": "Hedge Cottage",
+      "wall": "wood",
+      "ground": "wood",
+      "rooms": [
+        {"name": "Main Room", "share": "medium", "purpose": "hearth and table"},
+        {"name": "Bedroom", "share": "small", "purpose": "a bed behind the chimney"}
+      ],
+      "connections": [["Main Room", "Bedroom"]],
+      "entrance": {"room": "Main Room", "side": "south"},
+      "furniture": [
+        {"template": "Clay hearth", "room": "Main Room", "count": 1, "hint": "wall:north"},
+        {"template": "Trestle table", "room": "Main Room", "count": 1, "hint": "center"},
+        {"template": "Wooden stool", "room": "Main Room", "count": 2, "hint": "around:Trestle table"},
+        {"template": "Straw bed", "room": "Bedroom", "count": 1, "hint": "wall:north"}
+      ],
+      "yard": {"props": [{"template": "Herb bed", "count": 2, "hint": "scatter"}]}
+    }
+  ],
+  "npcs": [
+    {
+      "name": "Sela Fox",
+      "gender": "female",
+      "role": "innkeeper",
+      "home": "The Sickle & Sheaf",
+      "work": "The Sickle & Sheaf",
+      "description": "The Sickle & Sheaf's keeper: counts every pint and every face on the gallery. Wants the weavers' guild to drink here after pay-day.",
+      "physicalDescription": "Stout woman in her forties, apron, keys at the belt, ale-soiled towel over one shoulder"
+    },
+    {
+      "name": "Maud Harness",
+      "gender": "female",
+      "role": "weaver",
+      "home": "Weaver's Rows",
+      "work": "Weaver's Rows",
+      "description": "Master of the workshop and keeper of the rent book: sharp with cloth and sharper with arrears. Wants a guild charter.",
+      "physicalDescription": "Tall woman with yarn-threaded skirt, ink-stained fingers, measuring tape at the neck"
+    },
+    {
+      "name": "Ned Sparrow",
+      "gender": "male",
+      "role": "apprentice weaver",
+      "home": "Weaver's Rows",
+      "work": "Weaver's Rows",
+      "description": "The apprentice: sleeps in the loom flat, hoards candle-ends, and knows which beds are let. Worries the charter talk will cost him his place.",
+      "physicalDescription": "Gangly youth, cropped hair, weaver's thimbles on a cord round his neck"
+    },
+    {
+      "name": "Hartley Green",
+      "gender": "male",
+      "role": "market gardener",
+      "home": "Hedge Cottage",
+      "work": "The Loops",
+      "description": "The market gardener: herbs and early greens for the inn's kitchen. Wants a second strip in The Loops.",
+      "physicalDescription": "Weathered old man, straw hat, basket of greens over one arm"
+    }
+  ],
+  "player": {
+    "name": "Tam Pike",
+    "gender": "male",
+    "role": "chapman",
+    "home": "The Sickle & Sheaf",
+    "work": "Marrowgate",
+    "description": "A chapman (pedlar) wintering at the Sickle & Sheaf: sells ribbon and news, listens more than he talks.",
+    "physicalDescription": "Lean man with a patched coat, a pack of ribbons, and a smile that arrives before he does"
+  }
+}

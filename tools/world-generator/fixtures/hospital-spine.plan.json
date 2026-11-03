@@ -1,0 +1,629 @@
+{
+ "name": "St Ruan's",
+ "worldBackground": "A small hospital on a hill: two wards of six rooms off a central corridor, the nurses' station at its foot.",
+ "setting": {
+  "era": "modern",
+  "technology": "electricity",
+  "density": "sparse",
+  "climate": "temperate"
+ },
+ "mapSize": "small",
+ "currency": {
+  "name": "Folded note",
+  "description": "The city's paper small change.",
+  "format": "5 notes"
+ },
+ "attributes": {
+  "strength": 5,
+  "dexterity": 4,
+  "intellect": 5,
+  "perception": 4,
+  "charisma": 5
+ },
+ "zones": [
+  {
+   "name": "Ruan's Hill",
+   "kind": "hospital grounds",
+   "sizeClass": "medium",
+   "description": "the hospital block and its grounds",
+   "ground": "grass",
+   "buildings": [
+    {
+     "name": "Nurses' Station",
+     "kind": "station",
+     "sizeClass": "small",
+     "purpose": "the ward station at the corridor's foot"
+    },
+    {
+     "name": "North Wing",
+     "kind": "ward",
+     "sizeClass": "small",
+     "purpose": "six patient rooms",
+     "storeys": 1,
+     "units": {
+      "name": "North Room",
+      "count": 6,
+      "perStorey": 6,
+      "residents": 1,
+      "numbering": "plain"
+     }
+    },
+    {
+     "name": "South Wing",
+     "kind": "ward",
+     "sizeClass": "small",
+     "purpose": "six patient rooms",
+     "storeys": 1,
+     "units": {
+      "name": "South Room",
+      "count": 6,
+      "perStorey": 6,
+      "residents": 1,
+      "numbering": "plain"
+     }
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [],
+    "filler": []
+   }
+  },
+  {
+   "name": "Pilgrim Green",
+   "kind": "village",
+   "sizeClass": "small",
+   "description": "the village below the hill",
+   "ground": "grass",
+   "buildings": [
+    {
+     "name": "The Walker's Rest",
+     "kind": "inn",
+     "sizeClass": "small",
+     "purpose": "the village inn"
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [],
+    "filler": []
+   }
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Ruan's Spine",
+   "zone": "Ruan's Hill",
+   "shape": "spine",
+   "axis": "ns",
+   "spineWidth": 3,
+   "hub": "start",
+   "parts": [
+    {
+     "building": "Nurses' Station",
+     "at": "spine:hub"
+    },
+    {
+     "building": "North Wing",
+     "at": "spine:left:0"
+    },
+    {
+     "building": "South Wing",
+     "at": "spine:right:0",
+     "sameAs": "North Wing"
+    }
+   ]
+  }
+ ],
+ "roads": [
+  {
+   "from": "Ruan's Hill",
+   "to": "Pilgrim Green",
+   "kind": "cobble"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Ward bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "A ward bed with a paper chart.",
+   "physicalDescription": "metal frame ward bed with chart clip",
+   "rule": "head to the wall, never blocking the door"
+  },
+  {
+   "name": "Bedside locker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A steel bedside locker.",
+   "physicalDescription": "dented steel locker with a water jug",
+   "rule": "beside the bed, clear of the walk"
+  },
+  {
+   "name": "Station desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "table"
+   ],
+   "description": "The station's desk and its bell.",
+   "physicalDescription": "scrolled counter front with brass till",
+   "rule": "facing the door, one stride in"
+  },
+  {
+   "name": "Inn bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "table",
+    "social"
+   ],
+   "description": "A settle bench by the fire.",
+   "physicalDescription": "dark oak settle with horsehair seat",
+   "rule": "along the wall of the common room"
+  },
+  {
+   "name": "Inn bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "An inn bed with a clean fold.",
+   "physicalDescription": "roped inn bed with striped blanket",
+   "rule": "along the wall of a sleeping room, never blocking a door"
+  },
+  {
+   "name": "Medicine cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A locked medicine cabinet.",
+   "physicalDescription": "steel medicine cabinet with a lock hasp",
+   "rule": "on a wall, clear of the door"
+  },
+  {
+   "name": "Filing cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A grey filing cabinet, one drawer stuck.",
+   "physicalDescription": "grey filing cabinet with a stuck drawer",
+   "rule": "against the wall, clear of the door"
+  },
+  {
+   "name": "Inn dresser",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "container"
+   ],
+   "description": "A pine dresser with bowed drawers.",
+   "physicalDescription": "pine dresser with bowed drawer fronts",
+   "rule": "against the wall, clear of the door"
+  }
+ ],
+ "items": [
+  {
+   "name": "Water jug",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "A jug of water and its beaker.",
+   "physicalDescription": "enamel water jug with a beaker, white background"
+  },
+  {
+   "name": "Paper chart",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "The bed's chart, last shift signed.",
+   "physicalDescription": "clipboard chart with signed rows, white background"
+  },
+  {
+   "name": "Spectacles",
+   "type": "face",
+   "quality": "common",
+   "value": 6,
+   "description": "Reading spectacles, one arm mended with tape.",
+   "physicalDescription": "wire spectacles with taped arm, white background"
+  },
+  {
+   "name": "Ward slippers",
+   "type": "boots",
+   "quality": "common",
+   "value": 3,
+   "description": "Felt ward slippers, one heel crushed.",
+   "physicalDescription": "grey felt slippers with crushed heel, white background"
+  },
+  {
+   "name": "Granola bar",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A wrapped granola bar from the visitor shop.",
+   "physicalDescription": "wrapped granola bar with print date, white background"
+  },
+  {
+   "name": "Wool blanket",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A folded ward blanket.",
+   "physicalDescription": "folded grey wool blanket, white background"
+  },
+  {
+   "name": "Aspirin bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A bottle of aspirin from stores.",
+   "physicalDescription": "brown aspirin bottle with cotton neck, white background"
+  },
+  {
+   "name": "Bandage roll",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A clean bandage roll.",
+   "physicalDescription": "paper-wrapped bandage roll, white background"
+  },
+  {
+   "name": "Antiseptic wipe",
+   "type": "consumable",
+   "quality": "common",
+   "value": 1,
+   "description": "A sachet of antiseptic wipe.",
+   "physicalDescription": "foil sachet of antiseptic wipe, white background"
+  },
+  {
+   "name": "Thermometer",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A glass thermometer in its case.",
+   "physicalDescription": "glass thermometer in a plastic case, white background"
+  },
+  {
+   "name": "Morphine ampoule",
+   "type": "consumable",
+   "quality": "rare",
+   "value": 25,
+   "description": "A locked-box ampoule, counted twice a shift.",
+   "physicalDescription": "glass morphine ampoule with label, white background"
+  },
+  {
+   "name": "Rota clipboard",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "The ward rota on its clipboard.",
+   "physicalDescription": "clipboard rota with pencil column, white background"
+  },
+  {
+   "name": "Fountain pen",
+   "type": "misc",
+   "quality": "common",
+   "value": 4,
+   "description": "A chased fountain pen, nib worn to the angle of its writer.",
+   "physicalDescription": "chased fountain pen with worn nib, white background"
+  },
+  {
+   "name": "Biscuit tin",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "The night-shift biscuit tin, mostly crumbs.",
+   "physicalDescription": "round biscuit tin with crumbs, white background"
+  },
+  {
+   "name": "Ward key",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 8,
+   "description": "A ward door key on a red fob.",
+   "physicalDescription": "steel key on a red fob, white background"
+  },
+  {
+   "name": "Candle",
+   "type": "material",
+   "quality": "common",
+   "value": 1,
+   "description": "A stub of tallow candle.",
+   "physicalDescription": "tallow candle stub with drips, white background"
+  },
+  {
+   "name": "Playing cards",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A worn deck of cards, one card torn.",
+   "physicalDescription": "worn card deck with torn card, white background"
+  },
+  {
+   "name": "Clay pipe",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A clay pipe, bowl blackened.",
+   "physicalDescription": "blackened clay pipe with stem bite, white background"
+  },
+  {
+   "name": "Ale bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A bottle of brown ale, crown still on.",
+   "physicalDescription": "brown ale bottle with crown cap, white background"
+  },
+  {
+   "name": "Folded newspaper",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "Yesterday's paper, crossword half done.",
+   "physicalDescription": "folded newspaper with pencilled crossword, white background"
+  }
+ ],
+ "lootPools": {
+  "Bedside locker": {
+   "items": [
+    "Water jug",
+    "Paper chart",
+    "Spectacles",
+    "Ward slippers",
+    "Granola bar",
+    "Wool blanket"
+   ],
+   "weights": {
+    "Wool blanket": 0.5
+   }
+  },
+  "Ward medicine": {
+   "items": [
+    "Aspirin bottle",
+    "Bandage roll",
+    "Antiseptic wipe",
+    "Thermometer",
+    "Morphine ampoule"
+   ],
+   "weights": {
+    "Morphine ampoule": 0.2
+   }
+  },
+  "Station drawer": {
+   "items": [
+    "Rota clipboard",
+    "Fountain pen",
+    "Biscuit tin",
+    "Ward key"
+   ]
+  },
+  "Inn dresser": {
+   "items": [
+    "Candle",
+    "Playing cards",
+    "Clay pipe",
+    "Ale bottle",
+    "Folded newspaper"
+   ]
+  }
+ },
+ "buildings": [
+  {
+   "name": "Nurses' Station",
+   "wall": "stone",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Station",
+     "share": "medium",
+     "purpose": "the ward station"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Station",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Station desk",
+     "room": "Station",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Filing cabinet",
+     "room": "Station",
+     "count": 1,
+     "hint": "wall:west",
+     "lootPool": "Station drawer"
+    }
+   ]
+  },
+  {
+   "name": "North Wing",
+   "wall": "stone",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Sluice",
+     "share": "small",
+     "purpose": "the wing's sluice and stores"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Sluice",
+    "side": "east"
+   },
+   "unit": {
+    "rooms": [
+     {
+      "name": "Bedroom",
+      "share": "small",
+      "purpose": "one patient room",
+      "lootPool": "Bedside locker"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Bedroom",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Ward bed",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:north"
+     },
+     {
+      "template": "Bedside locker",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "corner"
+     }
+    ]
+   },
+   "furniture": [
+    {
+     "template": "Bedside locker",
+     "room": "Sluice",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Medicine cabinet",
+     "room": "Sluice",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Ward medicine"
+    }
+   ]
+  },
+  {
+   "name": "The Walker's Rest",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "medium",
+     "purpose": "the inn's common room"
+    },
+    {
+     "name": "Guest Room",
+     "share": "small",
+     "purpose": "a guest room for pilgrims"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Guest Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Inn bench",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Inn bed",
+     "room": "Guest Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Inn dresser",
+     "room": "Guest Room",
+     "count": 1,
+     "hint": "corner",
+     "lootPool": "Inn dresser"
+    }
+   ]
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Sr. Verity Lamb",
+   "gender": "female",
+   "role": "ward sister",
+   "home": "Nurses' Station",
+   "work": "Nurses' Station",
+   "description": "The ward sister: runs the corridor like a clock, knows every chart by its crease.",
+   "physicalDescription": "grey-caped sister with a fob watch and chalk-dry hands"
+  },
+  {
+   "name": "Osk Tam",
+   "gender": "male",
+   "role": "orderly",
+   "home": "The Walker's Rest",
+   "work": "Nurses' Station",
+   "description": "The hill's orderly: strong back, soft step, endless tea.",
+   "physicalDescription": "broad orderly in a grey apron with rolled sleeves"
+  },
+  {
+   "name": "Mistress Bost",
+   "gender": "female",
+   "role": "innkeeper",
+   "home": "The Walker's Rest",
+   "work": "The Walker's Rest",
+   "description": "Keeps the inn below the hill and the hill's rumours beside it.",
+   "physicalDescription": "round innkeeper with a wiped-clean apron and a sharp eye"
+  }
+ ],
+ "player": {
+  "name": "Bren Callas",
+  "gender": "male",
+  "role": "night nurse",
+  "home": "The Walker's Rest",
+  "work": "Nurses' Station",
+  "description": "A night nurse walking up the hill for the late shift.",
+  "physicalDescription": "young nurse in a rain-dark coat with a bicycle clip"
+ }
+}

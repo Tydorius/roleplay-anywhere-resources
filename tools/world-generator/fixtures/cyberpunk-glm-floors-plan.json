@@ -1,0 +1,2874 @@
+{
+ "name": "Greyline Bazaar",
+ "worldBackground": "Greyline Bazaar is a drowned quarter of the sprawl where the rain never stops and the neon never dims. Noodle steam, ozone and street-fryer smoke blur together under canopy strung between apartment pillars. The tension: the Mercy+ clinic and the back-alley ripperdoc compete for the same desperate patients, and the market lives or dies on which one the syndicates let stay open.",
+ "setting": {
+  "era": "near-future 2080s",
+  "technology": "cyberpunk: neural implants, holographic signage, cheap automation, failing municipal power",
+  "density": "dense",
+  "climate": "perpetual heavy rain, warm and humid, frequent thunder"
+ },
+ "mapSize": "medium",
+ "zones": [
+  {
+   "name": "Rainmarket Strip",
+   "kind": "market quarter",
+   "sizeClass": "large",
+   "description": "A canopied pedestrian strip of steam, fryers and hawkers that floods ankle-deep every evening.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Chrome Row",
+    "Pillar Stacks"
+   ],
+   "outdoor": [
+    "market stalls",
+    "steam vents",
+    "neon signboards",
+    "drainage channel",
+    "umbrella racks",
+    "crates"
+   ],
+   "buildings": [
+    {
+     "name": "Bowl of Rain",
+     "kind": "noodle bar",
+     "sizeClass": "small",
+     "purpose": "hot synth-broth noodles served at a counter",
+     "yard": null
+    },
+    {
+     "name": "Wok Nine",
+     "kind": "noodle bar",
+     "sizeClass": "small",
+     "purpose": "late-night fried noodles and bootleg stim tea",
+     "yard": null
+    },
+    {
+     "name": "The Leaky Amp",
+     "kind": "bar",
+     "sizeClass": "medium",
+     "purpose": "drinks, loud music and courier gossip",
+     "yard": null,
+     "storeys": 2
+    },
+    {
+     "name": "Last Stop Goods",
+     "kind": "bodega",
+     "sizeClass": "small",
+     "purpose": "ration packs, batteries and rain gear",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "Hawker stall",
+      "count": 8,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Drainage channel",
+      "count": 3,
+      "hint": "center"
+     },
+     {
+      "template": "Steam vent",
+      "count": 5,
+      "hint": "along_path+scatter"
+     },
+     {
+      "template": "Plastic stool",
+      "count": 8,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Waiting bench",
+      "count": 2,
+      "hint": "along_path+edge"
+     },
+     {
+      "template": "Neon signboard",
+      "count": 4,
+      "hint": "front:Bowl of Rain+front:Wok Nine+front:The Leaky Amp+front:Last Stop Goods"
+     },
+     {
+      "template": "Umbrella rack",
+      "count": 4,
+      "hint": "beside:Bowl of Rain+beside:Wok Nine+beside:The Leaky Amp+beside:Last Stop Goods"
+     },
+     {
+      "template": "Filament strip light",
+      "count": 4,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Bin cluster",
+      "count": 4,
+      "hint": "behind:Bowl of Rain+behind:Wok Nine+cluster"
+     },
+     {
+      "template": "Taped supply crate",
+      "count": 4,
+      "hint": "beside:Last Stop Goods+behind:The Leaky Amp+cluster"
+     },
+     {
+      "template": "Channel fern",
+      "count": 6,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Collapse rubble",
+      "count": 2,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Chrome Row",
+   "kind": "clinic row",
+   "sizeClass": "small",
+   "description": "A short street of medical storefronts where licensed care and back-room surgery sit three doors apart.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Rainmarket Strip",
+    "Pillar Stacks"
+   ],
+   "outdoor": [
+    "triage awning",
+    "bench row",
+    "emergency beacon",
+    "bin cluster"
+   ],
+   "buildings": [
+    {
+     "name": "Mercy+ Clinic",
+     "kind": "clinic",
+     "sizeClass": "medium",
+     "purpose": "licensed trauma care and implant servicing",
+     "yard": null
+    },
+    {
+     "name": "The Backdoor",
+     "kind": "clinic",
+     "sizeClass": "small",
+     "purpose": "unlicensed implant surgery behind a curtained door",
+     "yard": null
+    },
+    {
+     "name": "Mao's Pharmacy",
+     "kind": "pharmacy",
+     "sizeClass": "small",
+     "purpose": "pharmaceuticals, antibiotics and grey-market chems",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Triage awning",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Emergency beacon",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Filament strip light",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Neon signboard",
+      "count": 3,
+      "hint": "along_path"
+     },
+     {
+      "template": "Umbrella rack",
+      "count": 3,
+      "hint": "along_path"
+     },
+     {
+      "template": "Drainage channel",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Waiting bench",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Bin cluster",
+      "count": 2,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Taped supply crate",
+      "count": 4,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Channel fern",
+      "count": 4,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Collapse rubble",
+      "count": 1,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Pillar Stacks",
+   "kind": "apartment stacks",
+   "sizeClass": "medium",
+   "description": "Stacked residential towers shoulder to shoulder around a muddy service court strung with laundry lines.",
+   "ground": "gravel",
+   "adjacentTo": [
+    "Rainmarket Strip",
+    "Chrome Row"
+   ],
+   "outdoor": [
+    "laundry lines",
+    "transit shelter",
+    "water reclamation tank",
+    "scattered crates",
+    "bench row"
+   ],
+   "buildings": [
+    {
+     "name": "Pillar 12 Apartments",
+     "kind": "apartment tower",
+     "sizeClass": "large",
+     "purpose": "stacked micro-apartments for market workers",
+     "yard": null,
+     "storeys": 3
+    },
+    {
+     "name": "Pillar 13 Apartments",
+     "kind": "apartment tower",
+     "sizeClass": "large",
+     "purpose": "stacked micro-apartments, half its units squatting",
+     "yard": null,
+     "storeys": 3
+    },
+    {
+     "name": "Squatters' Annex",
+     "kind": "tenement",
+     "sizeClass": "medium",
+     "purpose": "overcrowded rooms for new arrivals with nowhere else",
+     "yard": null,
+     "storeys": 2
+    },
+    {
+     "name": "Reclaimer Shed",
+     "kind": "utility shed",
+     "sizeClass": "hut",
+     "purpose": "pumps and filters that keep the towers' water drinkable",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Hawker stall",
+      "count": 6,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Drainage channel",
+      "count": 4,
+      "hint": "along_path+center"
+     },
+     {
+      "template": "Steam vent",
+      "count": 4,
+      "hint": "scatter+along_path"
+     },
+     {
+      "template": "Neon signboard",
+      "count": 7,
+      "hint": "scatter+front:Pillar 12 Apartments"
+     },
+     {
+      "template": "Rain-slick stairwell",
+      "count": 3,
+      "hint": "beside:Pillar 12 Apartments"
+     },
+     {
+      "template": "Umbrella rack",
+      "count": 4,
+      "hint": "front:Pillar 12 Apartments"
+     },
+     {
+      "template": "Laundry line",
+      "count": 3,
+      "hint": "center"
+     },
+     {
+      "template": "Transit shelter",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Reclamation tank",
+      "count": 1,
+      "hint": "beside:Reclaimer Shed"
+     },
+     {
+      "template": "Waiting bench",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Plastic stool",
+      "count": 6,
+      "hint": "along_path+cluster"
+     },
+     {
+      "template": "Chipped bistro table",
+      "count": 2,
+      "hint": "along_path+scatter"
+     },
+     {
+      "template": "Filament strip light",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Taped supply crate",
+      "count": 8,
+      "hint": "cluster+beside:Pillar 13 Apartments"
+     },
+     {
+      "template": "Bin cluster",
+      "count": 3,
+      "hint": "cluster+behind:Pillar 12 Apartments"
+     },
+     {
+      "template": "Channel fern",
+      "count": 6,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Collapse rubble",
+      "count": 3,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": []
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Rainmarket Strip",
+   "to": "Chrome Row",
+   "kind": "paved"
+  },
+  {
+   "from": "Rainmarket Strip",
+   "to": "Pillar Stacks",
+   "kind": "paved"
+  },
+  {
+   "from": "Chrome Row",
+   "to": "Pillar Stacks",
+   "kind": "cobble"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Wok fry station",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A dual-flame wok range where synth-broth and flash-fried noodles hit the steel in seconds.",
+   "physicalDescription": "Two blackened wok bowls set into a scarred steel range with gas lines and hanging ladles.",
+   "tags": [
+    "work",
+    "cooking",
+    "storage"
+   ],
+   "rule": "One wok station against the back wall of each noodle bar, behind the serving counter, never beside the door where rain gusts in."
+  },
+  {
+   "name": "Tin serving counter",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A dented counter where bowl after bowl slides across to hungry market workers.",
+   "physicalDescription": "A long grey steel slab with stacked bowls, chopstick cups and a chipped till at one end.",
+   "tags": [
+    "table",
+    "work",
+    "storage"
+   ],
+   "rule": "Runs parallel to the doorway with stools lined along the customer side; staff work in the gap behind it."
+  },
+  {
+   "name": "Plastic stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A stackable stool, cracked and taped, the standard seat of the drowned quarter.",
+   "physicalDescription": "A small bright square of moulded plastic with a faint ring of dried broth on top.",
+   "tags": [
+    "seat",
+    "chair"
+   ],
+   "rule": "Cluster stools around bistro tables and in rows facing counters; never in the doorway path."
+  },
+  {
+   "name": "Chipped bistro table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A small table for noodles, deals and courier rumours under the Leaky Amp's speakers.",
+   "physicalDescription": "A scratched alloy tabletop ringed with cup stains and the burnt glow of a holo coaster.",
+   "tags": [
+    "table",
+    "seat"
+   ],
+   "rule": "Fill the Leaky Amp's common room with scattered tables, one or two stools at each long side, clear of the stair."
+  },
+  {
+   "name": "Wire shelving rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Bolted wire racks holding ration packs, chems or implant parts depending on the door.",
+   "physicalDescription": "An open grid frame of shelves with boxes, bottles and bins stacked in tidy rows.",
+   "tags": [
+    "storage",
+    "work"
+   ],
+   "rule": "Push racks against the back walls of shops, pharmacies and store rooms, leaving one clear cell in front for browsing."
+  },
+  {
+   "name": "Med-fridge",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A humming pharmaceutical chiller whose stock decides who lives through the night.",
+   "physicalDescription": "A white cube with a heavy latch, frost on the seams and a glowing inventory strip down one edge.",
+   "tags": [
+    "storage",
+    "medical"
+   ],
+   "rule": "Place behind a counter or in a corner of any clinic or pharmacy, plugged against a wall and above flood line."
+  },
+  {
+   "name": "Reception terminal desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A desk with a cracked terminal that runs triage lists, tabs and stall licences.",
+   "physicalDescription": "An L of grey laminate with a flickering holo-terminal, cable runs and a card reader.",
+   "tags": [
+    "work",
+    "table",
+    "storage"
+   ],
+   "rule": "Face one desk toward Mercy+'s entrance as reception, or tuck another into a shop corner as a till."
+  },
+  {
+   "name": "Trauma gurney",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "description": "A padded trauma bed where patients ride out the worst the quarter inflicts.",
+   "physicalDescription": "A narrow padded bed on a scuffed pedestal with a monitor arm and blood-taped rails at the head.",
+   "tags": [
+    "bed",
+    "medical",
+    "work"
+   ],
+   "rule": "Row gurneys along Mercy+'s trauma bay wall a cell apart, each beside its monitor, never under a leaking canopy seam."
+  },
+  {
+   "name": "Ripperdoc surgical chair",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A reclined operation chair with clamps for wrists, ankles and worse.",
+   "physicalDescription": "A chrome recliner ringed by tool trays, hanging cables and a surgical lamp arm.",
+   "tags": [
+    "medical",
+    "work",
+    "chair"
+   ],
+   "rule": "Set a single surgical chair in the curtained heart of The Backdoor, facing away from the door, tool tray within one cell."
+  },
+  {
+   "name": "Hotplate kitchenette",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A single burner, a dented kettle and a lifetime of instant noodles in every micro-apartment.",
+   "physicalDescription": "A scorched burner disc on a crate with a taped power lead and a hanging water pouch.",
+   "tags": [
+    "work",
+    "cooking"
+   ],
+   "rule": "One per micro-apartment, tucked in a corner against the back wall and a full cell clear of any bedding."
+  },
+  {
+   "name": "Pipe bunk bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "description": "A two-tier pipe frame with thin mattresses, home for Pillar Stack shift workers.",
+   "physicalDescription": "A metal frame with a mattress on the top tier, bedding balled at one end and clothes hung off the rail.",
+   "tags": [
+    "bed",
+    "storage"
+   ],
+   "rule": "Bunks against the interior wall farthest from the door, one frame per sleeper, head to the wall."
+  },
+  {
+   "name": "Foam floor pallet",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "description": "A scavenged foam mat and thermal blanket that passes for a bed in the Annex.",
+   "physicalDescription": "A thin flat pad with a crumpled foil blanket and a folded jacket for a pillow.",
+   "tags": [
+    "bed",
+    "storage"
+   ],
+   "rule": "Pallets in Squatters' Annex rooms wherever the floor stays dry, clear of the door swing and the weeping walls."
+  },
+  {
+   "name": "Taped supply crate",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A resin crate of ration packs, parts or contraband, lid strapped against the rain.",
+   "physicalDescription": "A square faded-orange crate with silver tape sealing the seams and stencilled codes on the lid.",
+   "tags": [
+    "storage",
+    "crate"
+   ],
+   "rule": "Stack crates in store rooms and behind stalls; outdoors scatter them beside building walls, never on the drainage channel."
+  },
+  {
+   "name": "Water filtration rig",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Pumps and filter drums that turn tank sludge into drinkable water for two towers.",
+   "physicalDescription": "A squat bank of pumps, transparent filter cylinders and gurgling pipe runs along one face.",
+   "tags": [
+    "work",
+    "storage"
+   ],
+   "rule": "Only inside the Reclaimer Shed, bolted along the wall nearest the tank feed pipes."
+  },
+  {
+   "name": "Rain-slick stairwell",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "A grated switchback stair, wet forever, linking the quarter's storeys.",
+   "physicalDescription": "A square outline of open grate treads and a rusted handrail seen from directly above.",
+   "tags": [
+    "stairs",
+    "landmark"
+   ],
+   "rule": "One stairwell in every multi-storey building — Leaky Amp, both Pillar towers, the Annex — against a wall away from the main entrance."
+  },
+  {
+   "name": "Hawker stall",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A tarp-roofed stall of fried skewers, bootleg chips or umbrellas, open till the water rises.",
+   "physicalDescription": "A bright tarp canopy over a counter cart, side flaps rolled up and guy-cords lashed to neighbouring frames.",
+   "tags": [
+    "work",
+    "storage",
+    "landmark"
+   ],
+   "rule": "Rows of stalls flank the Rainmarket Strip path on both sides, backs to the building lines, never touching the drainage channel."
+  },
+  {
+   "name": "Steam vent",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "description": "A paving grate where the towers' excess heat blasts steam into the strip's eternal drizzle.",
+   "physicalDescription": "A rusted grate square in the paving, edges stained orange, faint steam haze drifting across it.",
+   "tags": [
+    "landmark",
+    "work"
+   ],
+   "rule": "Set vents in the strip's paving between stall rows, one step off the walking line and never beside seating."
+  },
+  {
+   "name": "Neon signboard",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A humming vertical signboard advertising broth, implants or chems through the rain.",
+   "physicalDescription": "A slim glowing panel in hot pink and cyan, its light streaking down the wet facade beneath.",
+   "tags": [
+    "landmark",
+    "light"
+   ],
+   "rule": "Mount signboards against building fronts above each doorway, one per face, never flat where floodwater laps."
+  },
+  {
+   "name": "Drainage channel",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.8,
+   "forSleep": false,
+   "description": "An open gutter down the strip's spine that swallows the evening flood, badly.",
+   "physicalDescription": "A long grate-lined trough of running water with silt bars along its edges.",
+   "tags": [
+    "landmark",
+    "water"
+   ],
+   "rule": "Run channels along the centre of the Rainmarket Strip and past shop frontage as straight stretches that stalls and benches never overlap."
+  },
+  {
+   "name": "Umbrella rack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A drum of borrowed umbrellas at every threshold, honesty enforced by the rain.",
+   "physicalDescription": "A round bin bristling with folded umbrella handles, a shallow rust ring spreading at its base.",
+   "tags": [
+    "storage",
+    "entry"
+   ],
+   "rule": "One rack just inside or beside every shop and clinic doorway, drip side toward the drain."
+  },
+  {
+   "name": "Triage awning",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "A clear-plastic canopy where Chrome Row's wounded queue out of the rain.",
+   "physicalDescription": "A translucent sloped canopy on four poles over folding trestles, tape arrows marking the floor.",
+   "tags": [
+    "landmark",
+    "work",
+    "medical"
+   ],
+   "rule": "One awning spilling from Mercy+'s entrance onto Chrome Row, clear of the drainage line and the beacon cable."
+  },
+  {
+   "name": "Waiting bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A slat bench bolted down so queue-jumpers can't rearrange the furniture.",
+   "physicalDescription": "A straight two-cell bench of ribbed plastic slats on lightly rusted steel legs.",
+   "tags": [
+    "seat",
+    "bench"
+   ],
+   "rule": "Line benches facing the gurneys in Mercy+'s waiting bay, and set paired benches along Chrome Row and the Pillar court paths."
+  },
+  {
+   "name": "Emergency beacon",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A strobing trauma beacon that summons medi-drones through the thunder.",
+   "physicalDescription": "A slender pole crowned with an amber strobe halo, cabling stapled down its length.",
+   "tags": [
+    "landmark",
+    "light",
+    "medical"
+   ],
+   "rule": "A single beacon at Chrome Row's midpoint beside the triage awning, kept clear of stalls and signboards."
+  },
+  {
+   "name": "Bin cluster",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Wheelie bins for broth cartons, blood bags and things that shouldn't be binned.",
+   "physicalDescription": "A tight knot of three dented bins with weighted lids, slick runoff pooling around their feet.",
+   "tags": [
+    "storage",
+    "waste"
+   ],
+   "rule": "Cluster bins beside service doors and behind stall rows, always downhill of any food counter."
+  },
+  {
+   "name": "Laundry line",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "Lines slung court-wide, drip-drying the towers' clothes into air that never dries them.",
+   "physicalDescription": "Criss-crossed cords overhead strung with shirts and sheeting, pegs and sagging loops visible from above.",
+   "tags": [
+    "work",
+    "laundry"
+   ],
+   "rule": "String lines across the Pillar Stacks service court between tower walls, spanning above head height and never over the transit shelter."
+  },
+  {
+   "name": "Transit shelter",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "A half-roofed shelter where shift workers queue for trams that may or may not run.",
+   "physicalDescription": "An open-backed frame with a curved translucent roof, a route holo-panel and standing room inside.",
+   "tags": [
+    "landmark",
+    "seat"
+   ],
+   "rule": "One shelter beside the path at the court's tram stop, opening away from the driving rain."
+  },
+  {
+   "name": "Reclamation tank",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The court's cistern, catching roof runoff the pumps will fight all night to make potable.",
+   "physicalDescription": "A squat ribbed cylinder with a dished top, inlet pipes from tower downspouts and a moss skirt at its base.",
+   "tags": [
+    "landmark",
+    "storage",
+    "water"
+   ],
+   "rule": "Place one tank in the service court directly beside the Reclaimer Shed with feed pipes running shed-ward."
+  },
+  {
+   "name": "Channel fern",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "description": "Tough ferns crowding every crack the runoff keeps wet, the quarter's only green.",
+   "physicalDescription": "A bright tuft of fronds bursting from pavement seams, leaflets slick with rain.",
+   "tags": [
+    "plant",
+    "flora"
+   ],
+   "rule": "Scatter ferns along wall bases, tank feet and channel edges where runoff gathers, never in doorways or on paths."
+  },
+  {
+   "name": "Collapse rubble",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A slab of fallen parapet furred with moss, as much landmark as obstruction down here.",
+   "physicalDescription": "A jagged patch of broken concrete and rebar with puddles pooled in its hollows.",
+   "tags": [
+    "landmark",
+    "rubble"
+   ],
+   "rule": "Pile rubble against pillar footings and lot corners, clear of every door, path and drainage run."
+  },
+  {
+   "name": "Filament strip light",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A scavenged filament tube that browns out with the grid and buzzes back with the thunder.",
+   "physicalDescription": "A thin bright bar caged in tape and wire, rain-haze haloing its glow from above.",
+   "tags": [
+    "light",
+    "landmark"
+   ],
+   "rule": "Mount one strip above every bunk row, counter and surgical chair; outdoors only under awnings or stall roofs, never exposed to the storm."
+  }
+ ],
+ "buildings": [
+  {
+   "name": "Bowl of Rain",
+   "wall": "steel",
+   "ground": "slotted concrete",
+   "rooms": [
+    {
+     "name": "Serving Floor",
+     "share": "medium",
+     "purpose": "noodle bar counter service for rain-soaked customers"
+    },
+    {
+     "name": "Back Kitchen",
+     "share": "small",
+     "purpose": "wok cooking, broth vats and dry stock storage"
+    }
+   ],
+   "connections": [
+    [
+     "Serving Floor",
+     "Back Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Serving Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Tin serving counter",
+     "room": "Serving Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Serving Floor",
+     "count": 3,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Chipped bistro table",
+     "room": "Serving Floor",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Serving Floor",
+     "count": 2,
+     "hint": "around:Chipped bistro table"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Serving Floor",
+     "count": 1,
+     "hint": "corner+near_door"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Serving Floor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Serving Floor",
+     "count": 1,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Wok fry station",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Back Kitchen",
+     "count": 2,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Bin cluster",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "beside:Wok fry station"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Wok Nine",
+   "wall": "steel",
+   "ground": "tiled concrete",
+   "rooms": [
+    {
+     "name": "Noodle Floor",
+     "share": "medium",
+     "purpose": "counter service and late-night dining for fried noodles and bootleg stim tea"
+    },
+    {
+     "name": "Back Kitchen",
+     "share": "small",
+     "purpose": "wok cooking, prep and dry storage"
+    }
+   ],
+   "connections": [
+    [
+     "Noodle Floor",
+     "Back Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Noodle Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Tin serving counter",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Noodle Floor",
+     "count": 3,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Chipped bistro table",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "center+away_from_door"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Noodle Floor",
+     "count": 2,
+     "hint": "around:Chipped bistro table"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "corner+wall:east"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Neon signboard",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "near_door+wall:south"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Noodle Floor",
+     "count": 1,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Wok fry station",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "wall:east+corner"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Back Kitchen",
+     "count": 2,
+     "hint": "corner+wall:west"
+    },
+    {
+     "template": "Bin cluster",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Back Kitchen",
+     "count": 1,
+     "hint": "beside:Wok fry station"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "The Leaky Amp",
+   "wall": "steel",
+   "ground": "stained concrete",
+   "rooms": [
+    {
+     "name": "Common room",
+     "share": "large",
+     "purpose": "bar common room with counter, tables and loud music"
+    },
+    {
+     "name": "Servery",
+     "share": "small",
+     "purpose": "kitchen behind the serving counter"
+    },
+    {
+     "name": "Store room",
+     "share": "small",
+     "purpose": "drink and supply storage"
+    }
+   ],
+   "connections": [
+    [
+     "Common room",
+     "Servery"
+    ],
+    [
+     "Servery",
+     "Store room"
+    ]
+   ],
+   "entrance": {
+    "room": "Common room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Tin serving counter",
+     "room": "Common room",
+     "count": 1,
+     "hint": "row:north+symmetric"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Common room",
+     "count": 3,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Chipped bistro table",
+     "room": "Common room",
+     "count": 2,
+     "hint": "center+away_from_door"
+    },
+    {
+     "template": "Chipped bistro table",
+     "room": "Common room",
+     "count": 2,
+     "hint": "row:east"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Common room",
+     "count": 8,
+     "hint": "around:Chipped bistro table"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Common room",
+     "count": 1,
+     "hint": "corner+near_door"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Common room",
+     "count": 1,
+     "hint": "near_door+wall:south"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Common room",
+     "count": 1,
+     "hint": "beside:Tin serving counter+wall:north"
+    },
+    {
+     "template": "Wok fry station",
+     "room": "Servery",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Servery",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Store room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Store room",
+     "count": 3,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Common room"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Rail gallery",
+       "share": "small",
+       "purpose": "railed overlook with seats above the common room"
+      },
+      {
+       "name": "Staff bunks",
+       "share": "small",
+       "purpose": "sleeping bunks for bar staff and crashing couriers"
+      },
+      {
+       "name": "Owner's flat",
+       "share": "medium",
+       "purpose": "the bar owner's live-in flat"
+      }
+     ],
+     "connections": [
+      [
+       "Rail gallery",
+       "Staff bunks"
+      ],
+      [
+       "Rail gallery",
+       "Owner's flat"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Chipped bistro table",
+       "room": "Rail gallery",
+       "count": 2,
+       "hint": "row:south"
+      },
+      {
+       "template": "Plastic stool",
+       "room": "Rail gallery",
+       "count": 4,
+       "hint": "around:Chipped bistro table"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Staff bunks",
+       "count": 2,
+       "hint": "wall:east+away_from_door"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Staff bunks",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Owner's flat",
+       "count": 1,
+       "hint": "wall:west+away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Owner's flat",
+       "count": 1,
+       "hint": "corner+wall:north"
+      },
+      {
+       "template": "Chipped bistro table",
+       "room": "Owner's flat",
+       "count": 1,
+       "hint": "center"
+      },
+      {
+       "template": "Plastic stool",
+       "room": "Owner's flat",
+       "count": 2,
+       "hint": "around:Chipped bistro table"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Owner's flat",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Owner's flat",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      }
+     ],
+     "opening": {
+      "over_room": "Common room",
+      "kind": "gallery"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Last Stop Goods",
+   "wall": "steel",
+   "ground": "sealed concrete",
+   "rooms": [
+    {
+     "name": "Shop Floor",
+     "share": "medium",
+     "purpose": "bodega retail floor with till and dry goods aisles"
+    },
+    {
+     "name": "Back Store",
+     "share": "small",
+     "purpose": "stock room for ration packs, batteries and rain gear"
+    }
+   ],
+   "connections": [
+    [
+     "Shop Floor",
+     "Back Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Shop Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Reception terminal desk",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "corner+near_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "beside:Reception terminal desk"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Back Store",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Back Store",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Back Store",
+     "count": 1,
+     "hint": "beside:Wire shelving rack"
+    },
+    {
+     "template": "Bin cluster",
+     "room": "Back Store",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Back Store",
+     "count": 1,
+     "hint": "center"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Mercy+ Clinic",
+   "wall": "stone",
+   "ground": "drainage tile",
+   "rooms": [
+    {
+     "name": "Waiting Bay",
+     "share": "medium",
+     "purpose": "reception desk and covered waiting area for walk-in patients"
+    },
+    {
+     "name": "Trauma Bay",
+     "share": "medium",
+     "purpose": "emergency trauma treatment with gurney stations"
+    },
+    {
+     "name": "Implant Servicing",
+     "share": "small",
+     "purpose": "licensed implant diagnostics and servicing bay"
+    },
+    {
+     "name": "Store Room",
+     "share": "small",
+     "purpose": "medical supplies, cold-chain stock and sealed crates"
+    }
+   ],
+   "connections": [
+    [
+     "Waiting Bay",
+     "Trauma Bay"
+    ],
+    [
+     "Waiting Bay",
+     "Implant Servicing"
+    ],
+    [
+     "Implant Servicing",
+     "Store Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Waiting Bay",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Reception terminal desk",
+     "room": "Waiting Bay",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "Waiting bench",
+     "room": "Waiting Bay",
+     "count": 3,
+     "hint": "row:west+symmetric"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Waiting Bay",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Waiting Bay",
+     "count": 1,
+     "hint": "wall:north+beside:Reception terminal desk"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Waiting Bay",
+     "count": 1,
+     "hint": "wall:north+beside:Reception terminal desk"
+    },
+    {
+     "template": "Trauma gurney",
+     "room": "Trauma Bay",
+     "count": 3,
+     "hint": "row:north+symmetric"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Trauma Bay",
+     "count": 2,
+     "hint": "wall:north+beside:Trauma gurney"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Trauma Bay",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Trauma Bay",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Trauma Bay",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Implant Servicing",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Implant Servicing",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Implant Servicing",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Waiting bench",
+     "room": "Implant Servicing",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Implant Servicing",
+     "count": 1,
+     "hint": "wall:south+beside:Reception terminal desk"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Store Room",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Store Room",
+     "count": 4,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "center"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "The Backdoor",
+   "wall": "brick",
+   "ground": "worn tile",
+   "rooms": [
+    {
+     "name": "Curtained Front",
+     "share": "small",
+     "purpose": "reception and consultation behind the street curtain"
+    },
+    {
+     "name": "Surgery",
+     "share": "small",
+     "purpose": "unlicensed implant surgery"
+    },
+    {
+     "name": "Recovery Nook",
+     "share": "small",
+     "purpose": "post-operative recovery beds"
+    },
+    {
+     "name": "Supply Closet",
+     "share": "small",
+     "purpose": "medical supply storage"
+    }
+   ],
+   "connections": [
+    [
+     "Curtained Front",
+     "Surgery"
+    ],
+    [
+     "Surgery",
+     "Recovery Nook"
+    ],
+    [
+     "Surgery",
+     "Supply Closet"
+    ]
+   ],
+   "entrance": {
+    "room": "Curtained Front",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Reception terminal desk",
+     "room": "Curtained Front",
+     "count": 1,
+     "hint": "wall:east+corner"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Curtained Front",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Curtained Front",
+     "count": 3,
+     "hint": "row:east"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Curtained Front",
+     "count": 1,
+     "hint": "beside:Reception terminal desk"
+    },
+    {
+     "template": "Ripperdoc surgical chair",
+     "room": "Surgery",
+     "count": 1,
+     "hint": "center+away_from_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Surgery",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Surgery",
+     "count": 1,
+     "hint": "wall:east+corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Surgery",
+     "count": 1,
+     "hint": "beside:Ripperdoc surgical chair"
+    },
+    {
+     "template": "Pipe bunk bed",
+     "room": "Recovery Nook",
+     "count": 2,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Foam floor pallet",
+     "room": "Recovery Nook",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Recovery Nook",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Supply Closet",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Supply Closet",
+     "count": 1,
+     "hint": "wall:west+corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Mao's Pharmacy",
+   "wall": "stone",
+   "ground": "cracked tile",
+   "rooms": [
+    {
+     "name": "Shopfront",
+     "share": "medium",
+     "purpose": "retail floor with till, browsing racks and a stool or two for waiting custom"
+    },
+    {
+     "name": "Dispensary",
+     "share": "small",
+     "purpose": "curtained behind-counter bay where Mao fills prescriptions and grey-market chem trades"
+    },
+    {
+     "name": "Store Room",
+     "share": "small",
+     "purpose": "stock room for sealed crates and backup racks"
+    }
+   ],
+   "connections": [
+    [
+     "Shopfront",
+     "Dispensary"
+    ],
+    [
+     "Dispensary",
+     "Store Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Shopfront",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Reception terminal desk",
+     "room": "Shopfront",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Shopfront",
+     "count": 1,
+     "hint": "wall:north+beside:Reception terminal desk"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Shopfront",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Shopfront",
+     "count": 2,
+     "hint": "around:Reception terminal desk"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Shopfront",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Shopfront",
+     "count": 1,
+     "hint": "beside:Reception terminal desk"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Med-fridge",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Dispensary",
+     "count": 1,
+     "hint": "beside:Reception terminal desk"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Store Room",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Store Room",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "center"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Pillar 12 Apartments",
+   "wall": "steel",
+   "ground": "sealed concrete",
+   "rooms": [
+    {
+     "name": "Flood Lobby",
+     "share": "medium",
+     "purpose": "entrance hall with stairwell and drip-off for wet market workers"
+    },
+    {
+     "name": "Noodle Bar",
+     "share": "medium",
+     "purpose": "ground-floor noodle counter feeding the tower's residents"
+    },
+    {
+     "name": "Store Room",
+     "share": "small",
+     "purpose": "dry stock and cleaning gear for the noodle bar"
+    }
+   ],
+   "connections": [
+    [
+     "Flood Lobby",
+     "Noodle Bar"
+    ],
+    [
+     "Flood Lobby",
+     "Store Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Flood Lobby",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Rain-slick stairwell",
+     "room": "Flood Lobby",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Flood Lobby",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Wok fry station",
+     "room": "Noodle Bar",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tin serving counter",
+     "room": "Noodle Bar",
+     "count": 1,
+     "hint": "center+symmetric"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Noodle Bar",
+     "count": 4,
+     "hint": "row:south+symmetric"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Noodle Bar",
+     "count": 1,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Noodle Bar",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Store Room",
+     "count": 2,
+     "hint": "wall:north+symmetric"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Store Room",
+     "count": 3,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Flood Lobby"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Stair Landing 2",
+       "share": "small",
+       "purpose": "second-storey landing serving the micro-flats"
+      },
+      {
+       "name": "Stack Flat 2A",
+       "share": "medium",
+       "purpose": "micro-apartment for two market workers"
+      },
+      {
+       "name": "Stack Flat 2B",
+       "share": "small",
+       "purpose": "micro-apartment for one market worker"
+      }
+     ],
+     "connections": [
+      [
+       "Stair Landing 2",
+       "Stack Flat 2A"
+      ],
+      [
+       "Stair Landing 2",
+       "Stack Flat 2B"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Pipe bunk bed",
+       "room": "Stack Flat 2A",
+       "count": 2,
+       "hint": "away_from_door+row:east"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Stack Flat 2A",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stack Flat 2A",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Stack Flat 2B",
+       "count": 1,
+       "hint": "away_from_door+wall:east"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Stack Flat 2B",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stack Flat 2B",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stair Landing 2",
+       "count": 1,
+       "hint": "center"
+      }
+     ],
+     "opening": {
+      "over_room": "Flood Lobby",
+      "kind": "stairwell"
+     }
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Stair Landing 3",
+       "share": "small",
+       "purpose": "top-storey landing serving the micro-flats"
+      },
+      {
+       "name": "Stack Flat 3A",
+       "share": "medium",
+       "purpose": "micro-apartment for two market workers"
+      },
+      {
+       "name": "Stack Flat 3B",
+       "share": "small",
+       "purpose": "micro-apartment for one market worker"
+      }
+     ],
+     "connections": [
+      [
+       "Stair Landing 3",
+       "Stack Flat 3A"
+      ],
+      [
+       "Stair Landing 3",
+       "Stack Flat 3B"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Pipe bunk bed",
+       "room": "Stack Flat 3A",
+       "count": 2,
+       "hint": "away_from_door+row:east"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Stack Flat 3A",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stack Flat 3A",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Stack Flat 3B",
+       "count": 1,
+       "hint": "away_from_door+wall:east"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Stack Flat 3B",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stack Flat 3B",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Stair Landing 3",
+       "count": 1,
+       "hint": "center"
+      }
+     ],
+     "opening": {
+      "over_room": "Flood Lobby",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Pillar 13 Apartments",
+   "wall": "steel",
+   "ground": "stained concrete",
+   "rooms": [
+    {
+     "name": "Arrival Lobby",
+     "share": "medium",
+     "purpose": "entrance hall, lettings desk and stair hall"
+    },
+    {
+     "name": "Wok & Tin",
+     "share": "large",
+     "purpose": "ground-floor noodle bar serving the tower"
+    },
+    {
+     "name": "Rice & Parts Store",
+     "share": "small",
+     "purpose": "dry goods and maintenance store"
+    }
+   ],
+   "connections": [
+    [
+     "Arrival Lobby",
+     "Wok & Tin"
+    ],
+    [
+     "Arrival Lobby",
+     "Rice & Parts Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Arrival Lobby",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Rain-slick stairwell",
+     "room": "Arrival Lobby",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Arrival Lobby",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Arrival Lobby",
+     "count": 1,
+     "hint": "near_door+wall:east"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Arrival Lobby",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wok fry station",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Tin serving counter",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "near_door+symmetric"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Wok & Tin",
+     "count": 4,
+     "hint": "beside:Tin serving counter+row:south"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "Bin cluster",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "corner+wall:south"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "beside:Tin serving counter"
+    },
+    {
+     "template": "Umbrella rack",
+     "room": "Wok & Tin",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Rice & Parts Store",
+     "count": 2,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Rice & Parts Store",
+     "count": 4,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Rice & Parts Store",
+     "count": 1,
+     "hint": "center"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Arrival Lobby"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Second Landing",
+       "share": "small",
+       "purpose": "stair landing and service hall"
+      },
+      {
+       "name": "Micro-Unit 2A",
+       "share": "small",
+       "purpose": "let micro-apartment, one sleeper"
+      },
+      {
+       "name": "Micro-Unit 2B",
+       "share": "small",
+       "purpose": "let micro-apartment, one sleeper"
+      },
+      {
+       "name": "Squatted Unit 2C",
+       "share": "small",
+       "purpose": "squatted micro-apartment, two sleepers"
+      }
+     ],
+     "connections": [
+      [
+       "Second Landing",
+       "Micro-Unit 2A"
+      ],
+      [
+       "Second Landing",
+       "Micro-Unit 2B"
+      ],
+      [
+       "Second Landing",
+       "Squatted Unit 2C"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Rain-slick stairwell",
+       "room": "Second Landing",
+       "count": 1,
+       "hint": "corner+away_from_door"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Second Landing",
+       "count": 1,
+       "hint": "beside:Rain-slick stairwell"
+      },
+      {
+       "template": "Bin cluster",
+       "room": "Second Landing",
+       "count": 1,
+       "hint": "near_door"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Micro-Unit 2A",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Micro-Unit 2A",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Micro-Unit 2A",
+       "count": 1,
+       "hint": "wall:east+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Micro-Unit 2A",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Micro-Unit 2B",
+       "count": 1,
+       "hint": "wall:south+away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Micro-Unit 2B",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Micro-Unit 2B",
+       "count": 1,
+       "hint": "wall:west+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Micro-Unit 2B",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Foam floor pallet",
+       "room": "Squatted Unit 2C",
+       "count": 2,
+       "hint": "wall:north+symmetric"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Squatted Unit 2C",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Squatted Unit 2C",
+       "count": 2,
+       "hint": "wall:east+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Squatted Unit 2C",
+       "count": 1,
+       "hint": "center"
+      }
+     ],
+     "opening": {
+      "over_room": "Arrival Lobby",
+      "kind": "stairwell"
+     }
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Third Landing",
+       "share": "small",
+       "purpose": "top stair landing"
+      },
+      {
+       "name": "Micro-Unit 3A",
+       "share": "small",
+       "purpose": "let micro-apartment, one sleeper"
+      },
+      {
+       "name": "Squatted Unit 3B",
+       "share": "small",
+       "purpose": "squatted micro-apartment, two sleepers"
+      },
+      {
+       "name": "Squatted Unit 3C",
+       "share": "small",
+       "purpose": "squatted micro-apartment, one sleeper"
+      }
+     ],
+     "connections": [
+      [
+       "Third Landing",
+       "Micro-Unit 3A"
+      ],
+      [
+       "Third Landing",
+       "Squatted Unit 3B"
+      ],
+      [
+       "Third Landing",
+       "Squatted Unit 3C"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Rain-slick stairwell",
+       "room": "Third Landing",
+       "count": 1,
+       "hint": "corner+away_from_door"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Third Landing",
+       "count": 1,
+       "hint": "beside:Rain-slick stairwell"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Micro-Unit 3A",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Micro-Unit 3A",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Micro-Unit 3A",
+       "count": 1,
+       "hint": "wall:east+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Micro-Unit 3A",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Foam floor pallet",
+       "room": "Squatted Unit 3B",
+       "count": 2,
+       "hint": "wall:north+symmetric"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Squatted Unit 3B",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Squatted Unit 3B",
+       "count": 2,
+       "hint": "wall:east+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Squatted Unit 3B",
+       "count": 1,
+       "hint": "center"
+      },
+      {
+       "template": "Foam floor pallet",
+       "room": "Squatted Unit 3C",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Squatted Unit 3C",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Squatted Unit 3C",
+       "count": 1,
+       "hint": "wall:west+corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Squatted Unit 3C",
+       "count": 1,
+       "hint": "center"
+      }
+     ],
+     "opening": {
+      "over_room": "Arrival Lobby",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Squatters' Annex",
+   "wall": "steel",
+   "ground": "wet concrete",
+   "rooms": [
+    {
+     "name": "Arrival Hall",
+     "share": "small",
+     "purpose": "dripping entry hall where new arrivals queue for a spot"
+    },
+    {
+     "name": "Communal Bunk Room",
+     "share": "large",
+     "purpose": "overflow sleeping hall for those with no cubicle yet"
+    },
+    {
+     "name": "Shared Kitchen",
+     "share": "medium",
+     "purpose": "communal hotplate cooking and eating corner"
+    },
+    {
+     "name": "Store Room",
+     "share": "small",
+     "purpose": "taped rations, bedding and maintenance stock"
+    }
+   ],
+   "connections": [
+    [
+     "Arrival Hall",
+     "Communal Bunk Room"
+    ],
+    [
+     "Arrival Hall",
+     "Shared Kitchen"
+    ],
+    [
+     "Arrival Hall",
+     "Store Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Arrival Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Umbrella rack",
+     "room": "Arrival Hall",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Arrival Hall",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Bin cluster",
+     "room": "Arrival Hall",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Pipe bunk bed",
+     "room": "Communal Bunk Room",
+     "count": 4,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Foam floor pallet",
+     "room": "Communal Bunk Room",
+     "count": 2,
+     "hint": "away_from_door"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Communal Bunk Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Communal Bunk Room",
+     "count": 2,
+     "hint": "beside:Pipe bunk bed"
+    },
+    {
+     "template": "Hotplate kitchenette",
+     "room": "Shared Kitchen",
+     "count": 2,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Shared Kitchen",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Chipped bistro table",
+     "room": "Shared Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Plastic stool",
+     "room": "Shared Kitchen",
+     "count": 3,
+     "hint": "around:Chipped bistro table"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Shared Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Store Room",
+     "count": 4,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Arrival Hall"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Landing",
+       "share": "small",
+       "purpose": "stair landing and hatch over the entry hall"
+      },
+      {
+       "name": "Bunk Cubicle 2A",
+       "share": "small",
+       "purpose": "micro-apartment sleeping two on pipe bunks"
+      },
+      {
+       "name": "Bunk Cubicle 2B",
+       "share": "small",
+       "purpose": "micro-apartment sleeping two on pipe bunks"
+      },
+      {
+       "name": "Pallet Room 2C",
+       "share": "small",
+       "purpose": "cheapest micro-apartment, sleepers on floor pallets"
+      }
+     ],
+     "connections": [
+      [
+       "Landing",
+       "Bunk Cubicle 2A"
+      ],
+      [
+       "Landing",
+       "Bunk Cubicle 2B"
+      ],
+      [
+       "Landing",
+       "Pallet Room 2C"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Filament strip light",
+       "room": "Landing",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Landing",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Bunk Cubicle 2A",
+       "count": 2,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Bunk Cubicle 2A",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Bunk Cubicle 2A",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Bunk Cubicle 2A",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Pipe bunk bed",
+       "room": "Bunk Cubicle 2B",
+       "count": 2,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Bunk Cubicle 2B",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Bunk Cubicle 2B",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Bunk Cubicle 2B",
+       "count": 1,
+       "hint": "beside:Pipe bunk bed"
+      },
+      {
+       "template": "Foam floor pallet",
+       "room": "Pallet Room 2C",
+       "count": 3,
+       "hint": "away_from_door"
+      },
+      {
+       "template": "Hotplate kitchenette",
+       "room": "Pallet Room 2C",
+       "count": 1,
+       "hint": "wall:south+corner"
+      },
+      {
+       "template": "Taped supply crate",
+       "room": "Pallet Room 2C",
+       "count": 2,
+       "hint": "corner"
+      },
+      {
+       "template": "Filament strip light",
+       "room": "Pallet Room 2C",
+       "count": 1,
+       "hint": "beside:Foam floor pallet"
+      }
+     ],
+     "opening": {
+      "over_room": "Arrival Hall",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Reclaimer Shed",
+   "wall": "steel",
+   "ground": "sealed concrete",
+   "rooms": [
+    {
+     "name": "Pump Hall",
+     "share": "small",
+     "purpose": "water reclamation and pump control"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Pump Hall",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Water filtration rig",
+     "room": "Pump Hall",
+     "count": 2,
+     "hint": "wall:west+symmetric"
+    },
+    {
+     "template": "Reception terminal desk",
+     "room": "Pump Hall",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Wire shelving rack",
+     "room": "Pump Hall",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Taped supply crate",
+     "room": "Pump Hall",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Filament strip light",
+     "room": "Pump Hall",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Wen Zhao-Yi",
+   "gender": "female",
+   "role": "owner-cook of Bowl of Rain",
+   "home": "Pillar 12 Apartments",
+   "work": "Bowl of Rain",
+   "description": "She works six counter stools from dawn to flood and wants enough saved by storm season to replace her two failing broth boilers before they die.",
+   "physicalDescription": "Short and thick-armed, in an oil-spattered apron over a yellow rain slicker; her left hand is a cheap cargo-model prosthetic with a ladle socket welded into the palm."
+  },
+  {
+   "name": "Dex Amaro",
+   "gender": "male",
+   "role": "night cook at Wok Nine",
+   "home": "Pillar 13 Apartments",
+   "work": "Wok Nine",
+   "description": "He fries noodles till the 4 a.m. rush and wants to buy Wok Nine's deed from its absent owner before the syndicates claim the empty unit; he worries about the stim-tea debt he owes a collector who never stops smiling.",
+   "physicalDescription": "Tall and wiry in a grease-stained bomber jacket; three jade studs run up his right ear, one for each year he has squatted Pillar 13."
+  },
+  {
+   "name": "Marisol Ocampo",
+   "gender": "female",
+   "role": "owner of The Leaky Amp",
+   "home": "Pillar 12 Apartments",
+   "work": "The Leaky Amp",
+   "description": "She keeps her nine-table common room loud on a forty-year-old sound rig and wants the rooftop antenna raised before thunder season shreds her signal; she fears every brownout could be the one that kills her amp wall for good.",
+   "physicalDescription": "Broad-shouldered with a buzzed silver scalp, wearing patched courier leathers; a grey-market hearing implant whistles faintly whenever thunder rolls."
+  },
+  {
+   "name": "Elias Osei",
+   "gender": "male",
+   "role": "owner of Last Stop Goods",
+   "home": "Pillar 12 Apartments",
+   "work": "Last Stop Goods",
+   "description": "He counts his two hundred ration packs twice a day and wants a wholesale battery shipment to beat the winter run; he worries about looters the moment the strip floods ankle-deep and the hawker cameras go dark.",
+   "physicalDescription": "Paunchy and deliberate, in a shopkeeper's tabard with two dozen pockets; an old wooden wrist abacus clicks on his left arm."
+  },
+  {
+   "name": "Anika Roy",
+   "gender": "female",
+   "role": "trauma surgeon at Mercy+ Clinic",
+   "home": "Pillar 12 Apartments",
+   "work": "Mercy+ Clinic",
+   "description": "She treats forty-odd patients a week in a licensed trauma bay and wants to buy a backup generator before storm grid failures hit triage; she worries the syndicates will one day order her shutters down the way they did Chrome Row's last clinic.",
+   "physicalDescription": "Lean and upright, surgical greens under a grey coat; a faint row of three self-done stitch scars marks her own jaw."
+  },
+  {
+   "name": "Ozzie Malveaux",
+   "gender": "male",
+   "role": "unlicensed ripperdoc at The Backdoor",
+   "home": "Pillar 13 Apartments",
+   "work": "The Backdoor",
+   "description": "He cuts implants behind a curtain by the light of one salvaged surgical lamp and wants enough syndicate credit to buy a real autoclave; he worries about the septic failures he hears about from patients Mercy+ turned away and never saw again.",
+   "physicalDescription": "Narrow and stooped, rubber apron over a cracked vest; his right eye is a mismatched amber lens that ticks when he focuses."
+  },
+  {
+   "name": "Mao Kesorn",
+   "gender": "female",
+   "role": "pharmacist at Mao's Pharmacy",
+   "home": "Pillar 12 Apartments",
+   "work": "Mao's Pharmacy",
+   "description": "She guards a shelf of forty antibiotic vials like currency and wants a working cold-storage unit before the humidity spoils the batch; she worries the counterfeit chems moving through the strip will poison her regulars and get blamed on her.",
+   "physicalDescription": "Tiny and ramrod straight, reading goggles pushed up into a white bun; she smells permanently of menthol rub."
+  },
+  {
+   "name": "Tata Ilunga",
+   "gender": "female",
+   "role": "pump operator at Reclaimer Shed",
+   "home": "Pillar 13 Apartments",
+   "work": "Reclaimer Shed",
+   "description": "She keeps the pumps that make the towers' water drinkable and is down to her last two filter membranes; she wants spares ordered before the next lightning strike and lies awake fearing the brownout that lets fouled water through to two hundred taps.",
+   "physicalDescription": "Stocky, in a waterproof coverall with sleeves rolled past blue-stained knuckles from membrane sealant."
+  }
+ ],
+ "player": {
+  "name": "Cass Oduya",
+  "gender": "female",
+  "role": "grounded contract courier",
+  "home": "Squatters' Annex",
+  "work": "Rainmarket Strip",
+  "description": "A long-haul courier stranded when the rain season flooded the maglev lines, she runs parcels along the strip for the market stalls and wants to bank enough for a berth on the first barge out; she worries her transit visa expires before the water drops.",
+  "physicalDescription": "Long-legged and rain-pale under a chrome-yellow poncho; a cracked courier drone with a frayed strap rides her left shoulder like a pet."
+ },
+ "extensions": [
+  "floors",
+  "region-groups"
+ ]
+}

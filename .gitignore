@@ -7,3 +7,7 @@ __pycache__/
 /mods/better-images/gallery-backups/
 /mods/better-images/image_gallery.state.json
 /mods/better-images/gallery-scenarios/
+
+# world generator local state
+/tools/world-generator/providers.json
+/tools/world-generator/out/

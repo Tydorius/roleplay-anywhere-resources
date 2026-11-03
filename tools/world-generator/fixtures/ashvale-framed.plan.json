@@ -1,0 +1,2253 @@
+{
+ "name": "Ashvale",
+ "worldBackground": "Ashvale is a small castle on a rise above a farming valley: four towers, a gatehouse, and a keep that has never been taken. The village of Emberwick clusters round its green below the walls, Millfield's farms stretch to the river, and the Whisperwood closes the valley's end. The castellan counts his stores against a hard winter, and the toll he asks of the farms has grown two years running.",
+ "setting": {
+  "era": "medieval",
+  "technology": "stone and iron",
+  "density": "sparse",
+  "climate": "temperate"
+ },
+ "mapSize": "medium",
+ "currency": {
+  "name": "Silver bit",
+  "description": "The count's coin, cut silver worn smooth by trade.",
+  "format": "4 bits"
+ },
+ "startingCurrency": 12,
+ "attributes": {
+  "strength": 5,
+  "dexterity": 5,
+  "intellect": 5,
+  "perception": 5,
+  "charisma": 5
+ },
+ "skills": {
+  "Swordplay": 2,
+  "Stewardship": 2,
+  "Farming": 1,
+  "Foraging": 2,
+  "Masonry": 1,
+  "Haggling": 1
+ },
+ "weatherKinds": [
+  "clear",
+  "fog",
+  "rain",
+  "thunderstorm"
+ ],
+ "narrativeRules": [
+  "Keep the valley cozy; real danger stays beyond the walls.",
+  "The count's household counts everything twice, and so should the story.",
+  "The river's old bargains are honoured, never explained.",
+  "Villagers argue about tolls and suppers, never about survival.",
+  "Winter is felt in chores and firesides before it is ever named.",
+  "Adults keep secrets from children, not from the player."
+ ],
+ "zones": [
+  {
+   "name": "Castle Rise",
+   "kind": "castle grounds",
+   "sizeClass": "huge",
+   "description": "The castellan's compound on the rise: four towers, walkable walls, and the keep in the yard.",
+   "ground": "gravel",
+   "adjacentTo": [
+    "Emberwick Village"
+   ],
+   "outdoor": [
+    "the castle green",
+    "the well"
+   ],
+   "buildings": [
+    {
+     "name": "Northwest Tower",
+     "kind": "tower",
+     "sizeClass": "hut",
+     "purpose": "a watch tower over the north wall",
+     "storeys": 3,
+     "yard": null
+    },
+    {
+     "name": "Northeast Tower",
+     "kind": "tower",
+     "sizeClass": "hut",
+     "purpose": "a watch tower over the north wall",
+     "storeys": 3,
+     "yard": null
+    },
+    {
+     "name": "Southeast Tower",
+     "kind": "tower",
+     "sizeClass": "hut",
+     "purpose": "a watch tower over the south wall",
+     "storeys": 3,
+     "yard": null
+    },
+    {
+     "name": "Southwest Tower",
+     "kind": "tower",
+     "sizeClass": "hut",
+     "purpose": "a watch tower over the south wall",
+     "storeys": 3,
+     "yard": null
+    },
+    {
+     "name": "Gatehouse",
+     "kind": "gatehouse",
+     "sizeClass": "small",
+     "purpose": "the castle gate, its door and its watch",
+     "storeys": 2,
+     "yard": null
+    },
+    {
+     "name": "Ashvale Keep",
+     "kind": "keep",
+     "sizeClass": "small",
+     "purpose": "the castellan's hall and chamber",
+     "storeys": 2,
+     "yard": null
+    },
+    {
+     "name": "Garrison Barracks",
+     "kind": "barracks",
+     "sizeClass": "small",
+     "purpose": "where the garrison sleeps and drills",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "Village well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Weapons rack",
+      "count": 1,
+      "hint": "scatter"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Emberwick Village",
+   "kind": "village",
+   "sizeClass": "huge",
+   "description": "Emberwick's homes and trades round the green, the inn at its head.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Castle Rise",
+    "Millfield Farms",
+    "Whisperwood"
+   ],
+   "outdoor": [
+    "the green",
+    "the well",
+    "the notice post"
+   ],
+   "arrangement": "around_green",
+   "buildings": [
+    {
+     "name": "The Gilded Stag Inn",
+     "kind": "inn",
+     "sizeClass": "medium",
+     "purpose": "ale, beds and news at the head of the green",
+     "yard": null
+    },
+    {
+     "name": "Cinder Smithy",
+     "kind": "smithy",
+     "sizeClass": "hut",
+     "purpose": "the village forge",
+     "yard": {
+      "kind": "workyard",
+      "side": "back"
+     }
+    },
+    {
+     "name": "Chapel of the Radiant",
+     "kind": "chapel",
+     "sizeClass": "hut",
+     "purpose": "prayers, weddings and the record book",
+     "yard": null
+    },
+    {
+     "name": "Hearthrow Cottage",
+     "kind": "cottage",
+     "sizeClass": "hut",
+     "purpose": "the reaper's cottage",
+     "yard": null
+    },
+    {
+     "name": "Ashwick Cottage",
+     "kind": "cottage",
+     "sizeClass": "hut",
+     "purpose": "the herder's cottage",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Village well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Market notice post",
+      "count": 1,
+      "hint": "center"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Oak tree",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Millfield Farms",
+   "kind": "farmland",
+   "sizeClass": "large",
+   "description": "Millfield's strips of wheat and barley, the farmhouse and the mill at the road corner.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Emberwick Village",
+    "Whisperwood"
+   ],
+   "outdoor": [
+    "wheat rows",
+    "post fences"
+   ],
+   "arrangement": "fields",
+   "buildings": [
+    {
+     "name": "Millfield Farmhouse",
+     "kind": "farmhouse",
+     "sizeClass": "small",
+     "purpose": "the tenant farmer's house",
+     "yard": null
+    },
+    {
+     "name": "Rivermill",
+     "kind": "mill",
+     "sizeClass": "small",
+     "purpose": "the valley's mill on the river leat",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [],
+    "filler": [
+     {
+      "template": "Bramble bush",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Whisperwood",
+   "kind": "old-growth forest",
+   "sizeClass": "large",
+   "description": "The Whisperwood: old pines and older oaks, cut at the edge and nowhere else.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Millfield Farms",
+    "Emberwick Village"
+   ],
+   "outdoor": [
+    "pine stands",
+    "brambles"
+   ],
+   "buildings": [],
+   "dressing": {
+    "paths": "dirt",
+    "props": [],
+    "filler": [
+     {
+      "template": "Pine tree",
+      "density": "high"
+     },
+     {
+      "template": "Oak tree",
+      "density": "low"
+     },
+     {
+      "template": "Bramble bush",
+      "density": "medium"
+     }
+    ]
+   }
+  }
+ ],
+ "compounds": [
+  {
+   "name": "Ashvale Castle",
+   "zone": "Castle Rise",
+   "shape": "enclosure",
+   "courtyard": "medium",
+   "walls": "walkable",
+   "parts": [
+    {
+     "building": "Northwest Tower",
+     "at": "corner:nw"
+    },
+    {
+     "building": "Northeast Tower",
+     "at": "corner:ne"
+    },
+    {
+     "building": "Southeast Tower",
+     "at": "corner:se"
+    },
+    {
+     "building": "Southwest Tower",
+     "at": "corner:sw"
+    },
+    {
+     "building": "Gatehouse",
+     "at": "edge:south:center",
+     "gate": true
+    },
+    {
+     "building": "Ashvale Keep",
+     "at": "inside:north"
+    },
+    {
+     "building": "Garrison Barracks",
+     "at": "edge:north:center"
+    }
+   ]
+  }
+ ],
+ "roads": [
+  {
+   "from": "Emberwick Village",
+   "to": "Castle Rise",
+   "kind": "cobble"
+  },
+  {
+   "from": "Emberwick Village",
+   "to": "Millfield Farms",
+   "kind": "dirt"
+  },
+  {
+   "from": "Millfield Farms",
+   "to": "Whisperwood",
+   "kind": "dirt"
+  },
+  {
+   "from": "Emberwick Village",
+   "to": "Whisperwood",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Straw bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "A straw palliasse on a plank frame.",
+   "physicalDescription": "wooden plank bed frame with straw mattress and rough blanket",
+   "rule": "along the wall of a sleeping room, never blocking a door"
+  },
+  {
+   "name": "Guard bunk",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "bed"
+   ],
+   "forSleep": true,
+   "description": "A narrow bunk with a straw mat, one to a guard.",
+   "physicalDescription": "rough timber bunk frame with rolled blanket",
+   "rule": "in rows against the barrack wall, clear of the door"
+  },
+  {
+   "name": "Trestle table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "table",
+    "social"
+   ],
+   "description": "A trestle table with two benches' worth of elbows.",
+   "physicalDescription": "rough wooden trestle table with plank top",
+   "rule": "in the middle of the room where people eat and work"
+  },
+  {
+   "name": "Wooden stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "chair"
+   ],
+   "description": "A three-legged stool.",
+   "physicalDescription": "small three-legged wooden stool",
+   "rule": "around the tables"
+  },
+  {
+   "name": "Long bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "social"
+   ],
+   "description": "A bench that seats two.",
+   "physicalDescription": "plain wooden bench seating two people",
+   "rule": "along the walls of halls and chapels"
+  },
+  {
+   "name": "Clay hearth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "light",
+    "food"
+   ],
+   "light": 0.6,
+   "craftStation": true,
+   "description": "The clay hearth: every meal and all the warmth.",
+   "physicalDescription": "clay cooking hearth with iron pot and low fire",
+   "rule": "against a wall, away from the door"
+  },
+  {
+   "name": "Stone hearth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "light",
+    "food"
+   ],
+   "light": 0.6,
+   "description": "A stone hearth big enough to warm a hall.",
+   "physicalDescription": "stone hearth with iron fireback and wood stack",
+   "rule": "against the long wall of a hall, away from the door"
+  },
+  {
+   "name": "Smith's forge",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "work",
+    "light"
+   ],
+   "light": 0.5,
+   "craftStation": true,
+   "description": "The smith's forge, never quite cold.",
+   "physicalDescription": "stone forge with charcoal fire and bellows",
+   "rule": "against the back wall of the forge room"
+  },
+  {
+   "name": "Anvil",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "work"
+   ],
+   "description": "The anvil, worn smooth at the edges.",
+   "physicalDescription": "black iron anvil on oak block",
+   "rule": "beside the forge, one pace from the fire"
+  },
+  {
+   "name": "Weapons rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "work",
+    "storage"
+   ],
+   "description": "Spears and billhooks stood in a timber rack.",
+   "physicalDescription": "wooden rack with spaced spear shafts",
+   "rule": "against a wall of the guard room, never blocking a walkway"
+  },
+  {
+   "name": "Lord's high seat",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "social"
+   ],
+   "description": "The castellan's high seat, carved and hard.",
+   "physicalDescription": "carved oak high-backed seat on a low dais",
+   "rule": "centred on the hall's long wall away from the door"
+  },
+  {
+   "name": "Lidded chest",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "storage"
+   ],
+   "description": "An oak chest with a lid and a lock.",
+   "physicalDescription": "iron-banded oak chest",
+   "rule": "in corners, or at the foot of a bed"
+  },
+  {
+   "name": "Oak barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "storage"
+   ],
+   "description": "An oak barrel: ale, salt, or nails.",
+   "physicalDescription": "wooden barrel with iron hoops",
+   "rule": "in corners, or beside the hearth"
+  },
+  {
+   "name": "Firewood stack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "storage",
+    "filler"
+   ],
+   "description": "Split firewood, stacked.",
+   "physicalDescription": "neat stack of split firewood logs",
+   "rule": "along a wall out of the way, or in the yard"
+  },
+  {
+   "name": "Village well",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "landmark",
+    "social"
+   ],
+   "description": "A stone well with a windlass.",
+   "physicalDescription": "round stone well with wooden windlass and shingled roof",
+   "rule": "one public well in an open centre, never indoors"
+  },
+  {
+   "name": "Market notice post",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "tags": [
+    "landmark"
+   ],
+   "description": "The notice post, where tolls and tidings are nailed up.",
+   "physicalDescription": "weathered post with nailed paper scraps",
+   "rule": "at the heart of the green"
+  },
+  {
+   "name": "Oak tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "plant",
+    "filler"
+   ],
+   "description": "An oak, acorns under it.",
+   "physicalDescription": "broad oak tree seen from above",
+   "rule": "at the village edges and through the wood, never blocking a path"
+  },
+  {
+   "name": "Pine tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "tags": [
+    "plant",
+    "filler"
+   ],
+   "description": "A tall pine.",
+   "physicalDescription": "tall dark pine tree seen from above",
+   "rule": "dense in the old wood, kept off paths and clearings"
+  },
+  {
+   "name": "Bramble bush",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "tags": [
+    "plant",
+    "filler"
+   ],
+   "description": "A bramble bush, blackberries in season.",
+   "physicalDescription": "tangled green bramble bush with blackberries",
+   "rule": "at field edges and under the trees"
+  },
+  {
+   "name": "Wheat row",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.6,
+   "tags": [
+    "plant"
+   ],
+   "description": "A row of wheat stooks.",
+   "physicalDescription": "row of golden wheat stooks in a ploughed field",
+   "rule": "in long rows across the open fields"
+  },
+  {
+   "name": "Post fence",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.5,
+   "tags": [
+    "fence"
+   ],
+   "description": "A fence of split posts and rails.",
+   "physicalDescription": "short run of post-and-rail fence",
+   "rule": "round the field plots, a gap at each gate"
+  }
+ ],
+ "buildings": [
+  {
+   "name": "Northwest Tower",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Guard Room",
+     "share": "medium",
+     "purpose": "the watch post and its bunk"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Guard Room",
+    "side": "south"
+   },
+   "stairs": {
+    "room": "Guard Room"
+   },
+   "furniture": [
+    {
+     "template": "Guard bunk",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Watch Room",
+       "share": "medium",
+       "purpose": "the off-duty watch"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Guard bunk",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:west"
+      }
+     ]
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Lookout",
+       "share": "medium",
+       "purpose": "the roof watch over the valley"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Wooden stool",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "wall:north"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Northeast Tower",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Guard Room",
+     "share": "medium",
+     "purpose": "the watch post and its bunk"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Guard Room",
+    "side": "south"
+   },
+   "stairs": {
+    "room": "Guard Room"
+   },
+   "furniture": [
+    {
+     "template": "Guard bunk",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Watch Room",
+       "share": "medium",
+       "purpose": "the off-duty watch"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Guard bunk",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:east"
+      }
+     ]
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Lookout",
+       "share": "medium",
+       "purpose": "the roof watch over the valley"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Wooden stool",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "wall:north"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Southeast Tower",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Guard Room",
+     "share": "medium",
+     "purpose": "the watch post and its bunk"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Guard Room",
+    "side": "north"
+   },
+   "stairs": {
+    "room": "Guard Room"
+   },
+   "furniture": [
+    {
+     "template": "Guard bunk",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Watch Room",
+       "share": "medium",
+       "purpose": "the off-duty watch"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Guard bunk",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:south"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:east"
+      }
+     ]
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Lookout",
+       "share": "medium",
+       "purpose": "the roof watch over the valley"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Wooden stool",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "wall:south"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Southwest Tower",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Guard Room",
+     "share": "medium",
+     "purpose": "the watch post and its bunk"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Guard Room",
+    "side": "north"
+   },
+   "stairs": {
+    "room": "Guard Room"
+   },
+   "furniture": [
+    {
+     "template": "Guard bunk",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Guard Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Watch Room",
+       "share": "medium",
+       "purpose": "the off-duty watch"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Guard bunk",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:south"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Watch Room",
+       "count": 1,
+       "hint": "wall:west"
+      }
+     ]
+    },
+    {
+     "storey": 3,
+     "rooms": [
+      {
+       "name": "Lookout",
+       "share": "medium",
+       "purpose": "the roof watch over the valley"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Wooden stool",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Lookout",
+       "count": 1,
+       "hint": "wall:south"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Gatehouse",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Gate Passage",
+     "share": "medium",
+     "purpose": "the arch and its doors, walked through"
+    },
+    {
+     "name": "Gate Chamber",
+     "share": "small",
+     "purpose": "the gate watch above the arch"
+    }
+   ],
+   "connections": [
+    [
+     "Gate Passage",
+     "Gate Chamber"
+    ]
+   ],
+   "entrance": {
+    "room": "Gate Passage",
+    "side": "south"
+   },
+   "stairs": {
+    "room": "Gate Chamber"
+   },
+   "furniture": [
+    {
+     "template": "Wooden stool",
+     "room": "Gate Passage",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Gate Chamber",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Gate Chamber",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Gate Watch",
+       "share": "small",
+       "purpose": "the watch over the road"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Guard bunk",
+       "room": "Gate Watch",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Gate Watch",
+       "count": 1,
+       "hint": "corner"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Ashvale Keep",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Great Hall",
+     "share": "large",
+     "purpose": "the castellan's table and the count of stores"
+    },
+    {
+     "name": "Lord's Chamber",
+     "share": "small",
+     "purpose": "the castellan's own room"
+    }
+   ],
+   "connections": [
+    [
+     "Great Hall",
+     "Lord's Chamber"
+    ]
+   ],
+   "entrance": {
+    "room": "Great Hall",
+    "side": "south"
+   },
+   "stairs": {
+    "room": "Great Hall"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Lord's high seat",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Long bench",
+     "room": "Great Hall",
+     "count": 2,
+     "hint": "beside:Trestle table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Lord's Chamber",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Lord's Chamber",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Solar",
+       "share": "medium",
+       "purpose": "the castellan's solar and strongbox"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Straw bed",
+       "room": "Solar",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Lidded chest",
+       "room": "Solar",
+       "count": 2,
+       "hint": "corner"
+      },
+      {
+       "template": "Trestle table",
+       "room": "Solar",
+       "count": 1,
+       "hint": "center"
+      }
+     ]
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Garrison Barracks",
+   "wall": "stone",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Barracks Floor",
+     "share": "large",
+     "purpose": "bunks, drill and the evening dice"
+    },
+    {
+     "name": "Store",
+     "share": "small",
+     "purpose": "spare arms and the grain count"
+    }
+   ],
+   "connections": [
+    [
+     "Barracks Floor",
+     "Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Barracks Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Guard bunk",
+     "room": "Barracks Floor",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Stone hearth",
+     "room": "Barracks Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Weapons rack",
+     "room": "Barracks Floor",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Barracks Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Oak barrel",
+     "room": "Store",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Store",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "The Gilded Stag Inn",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "large",
+     "purpose": "ale, talk and the evening fire at the head of the green"
+    },
+    {
+     "name": "Kitchen",
+     "share": "small",
+     "purpose": "cooking and the ale store"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Clay hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Common Room",
+     "count": 5,
+     "hint": "around:Trestle table"
+    },
+    {
+     "template": "Long bench",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Clay hearth",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Oak barrel",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Cinder Smithy",
+   "wall": "wood",
+   "ground": "gravel",
+   "rooms": [
+    {
+     "name": "Forge",
+     "share": "medium",
+     "purpose": "the fire, the anvil, and a pallet for the smith"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Forge",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Smith's forge",
+     "room": "Forge",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Anvil",
+     "room": "Forge",
+     "count": 1,
+     "hint": "beside:Smith's forge"
+    },
+    {
+     "template": "Firewood stack",
+     "room": "Forge",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Forge",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Forge",
+     "count": 1,
+     "hint": "beside:Anvil"
+    }
+   ],
+   "yard": {
+    "props": [
+     {
+      "template": "Firewood stack",
+      "count": 2,
+      "hint": "scatter"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Chapel of the Radiant",
+   "wall": "wood",
+   "ground": "stone",
+   "rooms": [
+    {
+     "name": "Nave",
+     "share": "medium",
+     "purpose": "prayers and the parish record"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Nave",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Long bench",
+     "room": "Nave",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Nave",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Hearthrow Cottage",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Main Room",
+     "share": "medium",
+     "purpose": "hearth and table"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Main Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Clay hearth",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Room",
+     "count": 2,
+     "hint": "around:Trestle table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Ashwick Cottage",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Main Room",
+     "share": "medium",
+     "purpose": "hearth, table and the loom corner"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Main Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Clay hearth",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Room",
+     "count": 2,
+     "hint": "around:Trestle table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:east"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Millfield Farmhouse",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Main Room",
+     "share": "large",
+     "purpose": "hearth, table and the tally slate"
+    },
+    {
+     "name": "Pantry",
+     "share": "small",
+     "purpose": "stores and the seed bins"
+    }
+   ],
+   "connections": [
+    [
+     "Main Room",
+     "Pantry"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Clay hearth",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Trestle table",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Room",
+     "count": 2,
+     "hint": "around:Trestle table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Main Room",
+     "count": 2,
+     "hint": "row:west"
+    },
+    {
+     "template": "Oak barrel",
+     "room": "Pantry",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Pantry",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Rivermill",
+   "wall": "wood",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Mill Floor",
+     "share": "large",
+     "purpose": "the stones, the sacks and the miller's tally"
+    },
+    {
+     "name": "Miller's Room",
+     "share": "small",
+     "purpose": "the miller's bed and chest"
+    }
+   ],
+   "connections": [
+    [
+     "Mill Floor",
+     "Miller's Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Mill Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Trestle table",
+     "room": "Mill Floor",
+     "count": 2,
+     "hint": "center"
+    },
+    {
+     "template": "Oak barrel",
+     "room": "Mill Floor",
+     "count": 3,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Firewood stack",
+     "room": "Mill Floor",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Miller's Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Lidded chest",
+     "room": "Miller's Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Ser Aldous Marrow",
+   "gender": "male",
+   "role": "castellan",
+   "home": "Ashvale Keep",
+   "work": "Ashvale Keep",
+   "description": "The castellan of Ashvale: exact, sleepless, counting stores against a winter he believes will be cruel. Owes the count a full granary and the village a thinner toll.",
+   "physicalDescription": "Grey-cropped soldier in his fifties, ring mail shirt, ledger under one arm"
+  },
+  {
+   "name": "Brenna Ash",
+   "gender": "female",
+   "role": "innkeeper",
+   "home": "The Gilded Stag Inn",
+   "work": "The Gilded Stag Inn",
+   "description": "The Gilded Stag's keeper: pours honestly, listens closely, repeats selectively. Keeps the village's news and its debts behind the same bar.",
+   "physicalDescription": "Tall sharp-eyed woman, apron, ale-soiled towel over one shoulder"
+  },
+  {
+   "name": "Ordwin Cinder",
+   "gender": "male",
+   "role": "blacksmith",
+   "home": "Cinder Smithy",
+   "work": "Cinder Smithy",
+   "description": "The smith: quiet, exact, sleeps by his forge. Shoes the castle's horses at half price and keeps a ledger of who owes him what.",
+   "physicalDescription": "Bare-armed smith with burn-scarred forearms, leather apron, soot in his beard"
+  },
+  {
+   "name": "Tilla Reed",
+   "gender": "female",
+   "role": "farmer",
+   "home": "Millfield Farmhouse",
+   "work": "Millfield Farmhouse",
+   "description": "The tenant of Millfield: works her strips hard and reads the castellan's toll notices twice. Wants the toll in writing or not at all.",
+   "physicalDescription": "Weathered woman in a patched coat, tally slate on a thong round her neck"
+  },
+  {
+   "name": "Hale Millrace",
+   "gender": "male",
+   "role": "miller",
+   "home": "Rivermill",
+   "work": "Rivermill",
+   "description": "The miller: keeps the leat clear and his thumb on the scale, in that order. The village forgives the second because of the first.",
+   "physicalDescription": "Flour-dusted man, rolled sleeves, weighted paddle in hand"
+  },
+  {
+   "name": "Maren Dale",
+   "gender": "female",
+   "role": "under-cook",
+   "home": "Ashvale Keep",
+   "work": "Ashvale Keep",
+   "description": "The keep's under-cook: feeds forty on a budget for thirty, and knows which lord hates eel.",
+   "physicalDescription": "Flour-dusted woman, keys at her belt"
+  },
+  {
+   "name": "Ilse Bright",
+   "gender": "female",
+   "role": "chambermaid",
+   "home": "Ashvale Keep",
+   "work": "Ashvale Keep",
+   "description": "Makes the keep's beds and its gossip; hears the count's letters before the seal dries.",
+   "physicalDescription": "Small, quick woman with a lint brush"
+  },
+  {
+   "name": "Brother Quint Sellar",
+   "gender": "male",
+   "role": "chaplain",
+   "home": "Chapel of the Radiant",
+   "work": "Chapel of the Radiant",
+   "description": "Keeps the chapel and the parish rolls; believes the Radiant counts honest tallies too.",
+   "physicalDescription": "Grey-robed, ink-stained fingers"
+  },
+  {
+   "name": "Ser Gavrel Thorn",
+   "gender": "male",
+   "role": "captain of the garrison",
+   "home": "Garrison Barracks",
+   "work": "Garrison Barracks",
+   "description": "Drills six soldiers and a boy, mostly against boredom; the walls have never been tested.",
+   "physicalDescription": "Broad, greying soldier, whistle on a cord"
+  },
+  {
+   "name": "Dara Wick",
+   "gender": "female",
+   "role": "shieldswoman",
+   "home": "Garrison Barracks",
+   "work": "Gatehouse",
+   "description": "Takes the morning watch at the gate and knows every carter by their axle noise.",
+   "physicalDescription": "Sun-browned soldier, shield scarred at the rim"
+  },
+  {
+   "name": "Tom Wick",
+   "gender": "male",
+   "role": "porter",
+   "home": "Gatehouse",
+   "work": "Gatehouse",
+   "description": "Weighs the toll-cart and counts it twice when his sister is watching.",
+   "physicalDescription": "Lanky young man, rope-burned palms"
+  },
+  {
+   "name": "Old Pew",
+   "gender": "male",
+   "role": "crossbowman",
+   "home": "Garrison Barracks",
+   "work": "Northwest Tower",
+   "description": "Thirty years on the tower stairs; says the woodward's birds report to nobody.",
+   "physicalDescription": "Wizened, wrapped in an old cloak"
+  },
+  {
+   "name": "Sorrel Ash",
+   "gender": "female",
+   "role": "serving girl",
+   "home": "The Gilded Stag Inn",
+   "work": "The Gilded Stag Inn",
+   "description": "Brenna's daughter: carries more jugs than her arms should allow and remembers every order.",
+   "physicalDescription": "Quick-eyed girl, braids pinned with a brass pin"
+  },
+  {
+   "name": "Gideon Marsh",
+   "gender": "male",
+   "role": "carter",
+   "home": "Hearthrow Cottage",
+   "work": "Emberwick Village",
+   "description": "Hauls the valley's grain and grudges with one mule named Treasurer.",
+   "physicalDescription": "Thick-set man, cart grease on his cuffs"
+  },
+  {
+   "name": "Petra Marsh",
+   "gender": "female",
+   "role": "herb-wife",
+   "home": "Hearthrow Cottage",
+   "work": "Emberwick Village",
+   "description": "Keeps the village's coughs and confinements; trades yarrows with the farms.",
+   "physicalDescription": "Calm woman, basket of drying herbs"
+  },
+  {
+   "name": "Cobb Marsh",
+   "gender": "male",
+   "role": "odd-job boy",
+   "home": "Hearthrow Cottage",
+   "work": "Cinder Smithy",
+   "description": "Pumps Ordwin's bellows and pockets the sparks he shouldn't.",
+   "physicalDescription": "Soot-fringed boy, forever grinning"
+  },
+  {
+   "name": "Widow Elnora Vane",
+   "gender": "female",
+   "role": "seamstress",
+   "home": "Ashwick Cottage",
+   "work": "Emberwick Village",
+   "description": "Sews the garrison's coats and the village's opinions; grumbles at every toll rise.",
+   "physicalDescription": "Straight-backed, spectacles on a ribbon"
+  },
+  {
+   "name": "Silas Vane",
+   "gender": "male",
+   "role": "ferry boy",
+   "home": "Ashwick Cottage",
+   "work": "Rivermill",
+   "description": "Poles the ferry and sweeps the millrace; the river's only real friend.",
+   "physicalDescription": "Barefoot boy, trousers rolled to the knee"
+  },
+  {
+   "name": "Lomm Sage",
+   "gender": "male",
+   "role": "ratcatcher",
+   "home": "The Gilded Stag Inn",
+   "work": "Emberwick Village",
+   "description": "Lodges at the Stag for a copper a week; the village's rats and rumours both reach him first.",
+   "physicalDescription": "Lean man, ferret in a box"
+  },
+  {
+   "name": "Reed Farren",
+   "gender": "male",
+   "role": "field hand",
+   "home": "Millfield Farmhouse",
+   "work": "Millfield Farms",
+   "description": "Works Tilla's strips like they were his own; they nearly are.",
+   "physicalDescription": "Weather-beaten man, straw behind one ear"
+  },
+  {
+   "name": "Nan Osier",
+   "gender": "female",
+   "role": "dairymaid",
+   "home": "Millfield Farmhouse",
+   "work": "Millfield Farms",
+   "description": "Turns the valley's milk into its butter, and the surplus into leverage.",
+   "physicalDescription": "Sturdy girl, cheeks like apples"
+  },
+  {
+   "name": "Tam Osier",
+   "gender": "male",
+   "role": "goose-boy",
+   "home": "Millfield Farmhouse",
+   "work": "Millfield Farms",
+   "description": "Guards the geese, mostly from himself; wants Old Pew's job on the tower.",
+   "physicalDescription": "Gawky boy, switch in hand"
+  },
+  {
+   "name": "Jorun Millrace",
+   "gender": "female",
+   "role": "mill apprentice",
+   "home": "Rivermill",
+   "work": "Rivermill",
+   "description": "Hale's daughter: reads the weir like scripture and keeps the tally true.",
+   "physicalDescription": "Serious girl, chalk at her apron"
+  },
+  {
+   "name": "Wat Underwood",
+   "gender": "male",
+   "role": "woodward",
+   "home": "Hearthrow Cottage",
+   "work": "Whisperwood",
+   "description": "Lodges with the Marshes; knows Whisperwood's paths and what shouldn't be followed.",
+   "physicalDescription": "Quiet man, smelling of leaf-rot"
+  }
+ ],
+ "player": {
+  "name": "Rook Hale",
+  "gender": "female",
+  "role": "traveler",
+  "home": "The Gilded Stag Inn",
+  "work": "Emberwick Village",
+  "description": "A traveler wintering at the Gilded Stag: handy with a quill, cagey about the road behind you, curious about the castle's grain count.",
+  "physicalDescription": "Lean young traveler, patched wool coat, walking staff, hood down"
+ },
+ "frame": {
+  "genre": {
+   "primary": "Fantasy",
+   "influences": []
+  },
+  "premise": "A small castle on a rise above a farming village, counting its stores against a winter everyone feels coming.",
+  "reality": "Rare and mysterious",
+  "setting": {
+   "era": "a late-medieval valley",
+   "technology": "stone, water and iron",
+   "climate": "temperate, turning cold"
+  },
+  "tone": "Cozy",
+  "conflict": "The count wants the granary full by first snow; the village wants the toll thinned",
+  "playerRole": "a traveler wintering at the Gilded Stag, handy with a quill",
+  "themes": [
+   "belonging",
+   "a small place against a big winter"
+  ],
+  "constraints": [
+   "Keep it cozy: real danger stays beyond the walls"
+  ],
+  "summary": "Ashvale is a small castle above a farming valley: four towers, a gatehouse, and a keep that has never been taken. The village of Emberwick clusters around its green, and the farms run their strips down to the river and the mill. Winter is coming early this year, and the count's castellan has begun counting everything twice - the granary, the toll, the sacks, the swords. The village counts back. The player is a traveler wintering at the Gilded Stag Inn, handy with a quill, slowly becoming the one both sides trust to keep an honest tally. It is a cozy world of suppers, markets, drills and small debts, where the only real danger is the cold and the river's old, honoured bargains.",
+  "unresolved": [
+   "what the river keeps",
+   "how early the winter truly comes"
+  ]
+ },
+ "questionnaire": {
+  "mode": "medium",
+  "answers": {
+   "genre": {
+    "choices": [
+     "Fantasy"
+    ],
+    "other": ""
+   },
+   "tone": {
+    "choices": [
+     "Cozy"
+    ],
+    "other": ""
+   },
+   "player": {
+    "choices": [
+     "A newcomer"
+    ],
+    "other": ""
+   },
+   "drive": {
+    "choices": [
+     "Community and relationships"
+    ],
+    "other": ""
+   },
+   "power": {
+    "choices": [
+     "A ruler or noble house"
+    ],
+    "other": ""
+   },
+   "danger": {
+    "choices": [
+     "Mostly safe"
+    ],
+    "other": ""
+   }
+  },
+  "population": [
+   22,
+   28
+  ]
+ },
+ "narrativeFlavor": "peaceful",
+ "difficulty": "casual",
+ "variables": [
+  {
+   "name": "Granary stores",
+   "emoji": "🌾",
+   "type": "number",
+   "value": 14,
+   "initial": 14,
+   "min": 0,
+   "max": 20,
+   "ratePerHour": -0.02
+  },
+  {
+   "name": "Toll ledger",
+   "emoji": "📜",
+   "type": "number",
+   "value": 3,
+   "initial": 3,
+   "min": 0,
+   "max": 8
+  },
+  {
+   "name": "Wood split for winter",
+   "emoji": "🫤",
+   "type": "number",
+   "value": 5,
+   "initial": 5,
+   "min": 0,
+   "max": 12
+  },
+  {
+   "name": "Village favour",
+   "emoji": "🤝",
+   "type": "text",
+   "value": "warm, but watchful of strangers",
+   "initial": "warm, but watchful of strangers"
+  },
+  {
+   "name": "The river's mood",
+   "emoji": "🌊",
+   "type": "text",
+   "value": "low and quiet",
+   "initial": "low and quiet"
+  }
+ ],
+ "perkTrees": [
+  {
+   "name": "Wintercraft",
+   "root": {
+    "name": "Cold-woken",
+    "type": "passive",
+    "description": "You need one hour less sleep a night, and wake sharp.",
+    "physicalDescription": "Cold-woken icon, white background",
+    "children": [
+     {
+      "name": "Even Pace",
+      "type": "passive",
+      "description": "Cold work never costs you a second attempt.",
+      "physicalDescription": "Even Pace icon, white background",
+      "children": []
+     },
+     {
+      "name": "Layered",
+      "type": "passive",
+      "description": "Wet clothes dry on you without a chill.",
+      "physicalDescription": "Layered icon, white background",
+      "children": []
+     },
+     {
+      "name": "Ice-eye",
+      "type": "passive",
+      "description": "You read weather a day ahead from the sky alone.",
+      "physicalDescription": "Ice-eye icon, white background",
+      "children": []
+     },
+     {
+      "name": "Last Stock",
+      "type": "passive",
+      "description": "Once a week you find a store nobody remembered.",
+      "physicalDescription": "Last Stock icon, white background",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Quill and Tally",
+   "root": {
+    "name": "Fair Hand",
+    "type": "passive",
+    "description": "Anything you copy, you copy truly.",
+    "physicalDescription": "Fair Hand icon, white background",
+    "children": [
+     {
+      "name": "Double Count",
+      "type": "passive",
+      "description": "You catch an arithmetic error once a scene.",
+      "physicalDescription": "Double Count icon, white background",
+      "children": []
+     },
+     {
+      "name": "Toll-wise",
+      "type": "passive",
+      "description": "You know every exemption the old charter allows.",
+      "physicalDescription": "Toll-wise icon, white background",
+      "children": []
+     },
+     {
+      "name": "Sealed Word",
+      "type": "passive",
+      "description": "A letter you carry arrives unread.",
+      "physicalDescription": "Sealed Word icon, white background",
+      "children": []
+     },
+     {
+      "name": "Audit Nerve",
+      "type": "passive",
+      "description": "Under a lord's eye you keep an honest page.",
+      "physicalDescription": "Audit Nerve icon, white background",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Hearth-trust",
+   "root": {
+    "name": "Known at the Door",
+    "type": "passive",
+    "description": "Villagers tell you small truths unprompted.",
+    "physicalDescription": "Known at the Door icon, white background",
+    "children": [
+     {
+      "name": "Supper Seat",
+      "type": "passive",
+      "description": "Someone always makes room for you at a full table.",
+      "physicalDescription": "Supper Seat icon, white background",
+      "children": []
+     },
+     {
+      "name": "Quiet Word",
+      "type": "passive",
+      "description": "You calm one argument a day with a word.",
+      "physicalDescription": "Quiet Word icon, white background",
+      "children": []
+     },
+     {
+      "name": "Winter-keep",
+      "type": "passive",
+      "description": "The village shares its stores with you before its own.",
+      "physicalDescription": "Winter-keep icon, white background",
+      "children": []
+     },
+     {
+      "name": "Kin-to-anyone",
+      "type": "passive",
+      "description": "One family a season calls you their own.",
+      "physicalDescription": "Kin-to-anyone icon, white background",
+      "children": []
+     }
+    ]
+   }
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Garrison drill",
+   "location": "Garrison Barracks",
+   "day": 0,
+   "start": "07:00",
+   "hours": 2,
+   "recurrence": "daily",
+   "missedConsequence": "Ser Gavrel assigns the slop pails."
+  },
+  {
+   "name": "Gatehouse toll count",
+   "location": "Gatehouse",
+   "day": 0,
+   "start": "18:00",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "Ser Aldous Marrow marks who skipped it."
+  },
+  {
+   "name": "Village market",
+   "location": "Emberwick Village",
+   "day": 1,
+   "start": "09:00",
+   "hours": 4,
+   "recurrence": "weekly",
+   "missedConsequence": "Brenna Ash sells the good bread to the farms."
+  },
+  {
+   "name": "The count's audit",
+   "location": "Ashvale Keep",
+   "day": 1,
+   "start": "10:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "The shortfall is found by someone colder than you."
+  },
+  {
+   "name": "Weir blessing",
+   "location": "Rivermill",
+   "day": 3,
+   "start": "17:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "The millers remember who stood dry."
+  },
+  {
+   "name": "Harvest supper",
+   "location": "The Gilded Stag Inn",
+   "day": 5,
+   "start": "19:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "The village eats apart and remembers who skipped it."
+  }
+ ],
+ "quests": [
+  {
+   "title": "The Count's Audit",
+   "objectives": [
+    {
+     "text": "Stand at Ser Aldous Marrow's side when the audit reaches the Ashvale Keep tally",
+     "prerequisites": [
+      {
+       "text": "Work the Gatehouse toll count beside Tom Wick",
+       "primary": true
+      },
+      {
+       "text": "Hear Widow Elnora Vane's grumble about the toll",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Bring Aldous a fair count that leaves Emberwick Village its winter",
+     "prerequisites": [
+      {
+       "text": "Check the granary stores against Jorun Millrace's mill tally",
+       "primary": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "What the River Keeps",
+   "objectives": [
+    {
+     "text": "Be at the weir blessing at Rivermill",
+     "prerequisites": [
+      {
+       "text": "Ask Hale Millrace what the river took",
+       "primary": true
+      },
+      {
+       "text": "Walk the millrace with Jorun at dusk",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

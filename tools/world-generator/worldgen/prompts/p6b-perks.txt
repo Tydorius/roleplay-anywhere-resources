@@ -1,0 +1,27 @@
+Write this world's perk trees: how the player grows, as rules the GM applies.
+
+WORLD: ${setting_line}
+ZONES:
+${zone_lines}
+BUILDINGS:
+${building_lines}
+PEOPLE:
+${roster_lines}
+HOW THE PLAYER GROWS: ${growth_line}
+
+Reply with ONE JSON object:
+{"perkTrees": [
+  {"name": "a tree name",
+   "root": {"name": "the first perk", "type": "passive|active",
+            "description": "a rule the GM applies, verbatim",
+            "physicalDescription": "one line for the perk's icon",
+            "children": [{"name": "...", "type": "...", "description": "...",
+                          "physicalDescription": "...", "children": []}]}}
+]}
+
+- Exactly 3 trees, 5-8 perks in each (counting the whole tree), and no perk
+  deeper than 5 levels below its root.
+- Every description is written as a RULE the GM applies verbatim ("Your
+  meditation gathers a little more qi"), never a bare label.
+- The trees express the growth line above, in this world's own words.
+

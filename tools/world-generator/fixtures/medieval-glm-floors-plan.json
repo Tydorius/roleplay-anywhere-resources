@@ -1,0 +1,1777 @@
+{
+ "name": "Aldford",
+ "worldBackground": "Aldford is a quiet farming hamlet of a dozen households huddled at the tree line of the Eldenwood, its days measured by the turning of the millwheel on the stream. The chapel bell, the smell of barley and the low murmur of the inn's common room mark the rhythm of life here. Trouble brews quietly: the miller has begun charging a heavier toll per sack than custom allows, and the farmers whisper about withholding their grain come harvest.",
+ "setting": {
+  "era": "medieval",
+  "technology": "pre-industrial: water power, hand tools, animal transport",
+  "density": "sparse",
+  "climate": "temperate, mild wet summers and cold damp winters"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Village Green",
+   "kind": "village",
+   "sizeClass": "small",
+   "description": "A packed-earth heart of the hamlet where the cottages, inn and chapel ring a small open green.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Barley Flats",
+    "Millrace Bank"
+   ],
+   "outdoor": [
+    "village well",
+    "water trough",
+    "hay cart",
+    "woodpile",
+    "inn bench",
+    "chopping block",
+    "smithy quench trough",
+    "coal pile"
+   ],
+   "buildings": [
+    {
+     "name": "The Sleeping Hart Inn",
+     "kind": "inn",
+     "sizeClass": "medium",
+     "purpose": "lodging, ale and news for travellers and villagers",
+     "storeys": 2,
+     "yard": null
+    },
+    {
+     "name": "Chapel of St. Brannoc",
+     "kind": "chapel",
+     "sizeClass": "small",
+     "purpose": "prayer, Sunday services and village blessings",
+     "yard": null
+    },
+    {
+     "name": "Aldford Smithy",
+     "kind": "smithy",
+     "sizeClass": "small",
+     "purpose": "shoeing horses and repairing farm tools",
+     "yard": null
+    },
+    {
+     "name": "Widow Maren's Cottage",
+     "kind": "cottage",
+     "sizeClass": "hut",
+     "purpose": "home of the village herb-woman",
+     "yard": null
+    },
+    {
+     "name": "Hedgerow Cottage",
+     "kind": "cottage",
+     "sizeClass": "hut",
+     "purpose": "home of a young farmhand family",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Village well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Wooden trough",
+      "count": 2,
+      "hint": "center+beside:Aldford Smithy"
+     },
+     {
+      "template": "Coal pile",
+      "count": 1,
+      "hint": "beside:Aldford Smithy"
+     },
+     {
+      "template": "Plank bench",
+      "count": 1,
+      "hint": "front:The Sleeping Hart Inn"
+     },
+     {
+      "template": "Farm cart",
+      "count": 1,
+      "hint": "beside:The Sleeping Hart Inn"
+     },
+     {
+      "template": "Stacked firewood",
+      "count": 3,
+      "hint": "beside:The Sleeping Hart Inn+beside:Widow Maren's Cottage+beside:Hedgerow Cottage"
+     },
+     {
+      "template": "Chopping stump",
+      "count": 1,
+      "hint": "beside:The Sleeping Hart Inn"
+     },
+     {
+      "template": "Broadleaf tree",
+      "count": 3,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Bush clump",
+      "count": 3,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Broadleaf tree",
+      "density": "low"
+     },
+     {
+      "template": "Bush clump",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Millrace Bank",
+   "kind": "riverside",
+   "sizeClass": "small",
+   "description": "A grassy bank along a fast mill stream where the mill, mill pond and miller's house stand.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Village Green",
+    "Old Forest"
+   ],
+   "outdoor": [
+    "mill pond",
+    "waterwheel",
+    "loading dock",
+    "grain sacks",
+    "moored rowboat",
+    "willow tree",
+    "cart turning space"
+   ],
+   "buildings": [
+    {
+     "name": "Aldford Mill",
+     "kind": "mill",
+     "sizeClass": "medium",
+     "purpose": "grinding the village grain between millstones driven by the waterwheel",
+     "yard": null
+    },
+    {
+     "name": "Miller's House",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home of the miller and his family",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Millpond and waterwheel",
+      "count": 1,
+      "hint": "beside:Aldford Mill"
+     },
+     {
+      "template": "Loading dock",
+      "count": 1,
+      "hint": "beside:Aldford Mill+edge"
+     },
+     {
+      "template": "Moored rowboat",
+      "count": 1,
+      "hint": "beside:Aldford Mill+edge"
+     },
+     {
+      "template": "Grain sack",
+      "count": 5,
+      "hint": "cluster+front:Aldford Mill"
+     },
+     {
+      "template": "Farm cart",
+      "count": 1,
+      "hint": "beside:Aldford Mill"
+     },
+     {
+      "template": "Stacked firewood",
+      "count": 1,
+      "hint": "beside:Miller's House"
+     },
+     {
+      "template": "Split-rail fence",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Broadleaf tree",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Bush clump",
+      "count": 4,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Broadleaf tree",
+      "density": "low"
+     },
+     {
+      "template": "Bush clump",
+      "density": "medium"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Barley Flats",
+   "kind": "farmland",
+   "sizeClass": "large",
+   "description": "Open strips of barley and vegetable ground divided by low hedgerows, with two farmsteads among the fields.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Village Green",
+    "Old Forest"
+   ],
+   "outdoor": [
+    "barley fields",
+    "haystacks",
+    "scarecrow",
+    "split-rail fences",
+    "ox cart",
+    "field track"
+   ],
+   "buildings": [
+    {
+     "name": "Odo's Farmhouse",
+     "kind": "farmhouse",
+     "sizeClass": "small",
+     "purpose": "home of the largest landholder in the hamlet",
+     "yard": null
+    },
+    {
+     "name": "Threshing Barn",
+     "kind": "barn",
+     "sizeClass": "small",
+     "purpose": "storing sheaves and threshing grain out of the rain",
+     "yard": null
+    },
+    {
+     "name": "Ashfield Farmhouse",
+     "kind": "farmhouse",
+     "sizeClass": "hut",
+     "purpose": "home of a tenant farming family",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Barley strip",
+      "count": 6,
+      "hint": "cluster+center"
+     },
+     {
+      "template": "Split-rail fence",
+      "count": 12,
+      "hint": "along_path"
+     },
+     {
+      "template": "Scarecrow",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Hay pile",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Farm cart",
+      "count": 1,
+      "hint": "beside:Odo's Farmhouse"
+     },
+     {
+      "template": "Stacked firewood",
+      "count": 2,
+      "hint": "beside:Odo's Farmhouse+beside:Ashfield Farmhouse"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Broadleaf tree",
+      "density": "low"
+     },
+     {
+      "template": "Bush clump",
+      "density": "medium"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Old Forest",
+   "kind": "forest",
+   "sizeClass": "huge",
+   "description": "The dark edge of the ancient Eldenwood, giving firewood, game and mushrooms, and a low unease after dusk.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Barley Flats",
+    "Millrace Bank"
+   ],
+   "outdoor": [
+    "old oaks",
+    "fallen log",
+    "deer trail",
+    "mossy boulders",
+    "foraging patch",
+    "stacked logs",
+    "splitting stump"
+   ],
+   "buildings": [
+    {
+     "name": "Woodcutter's Hut",
+     "kind": "hut",
+     "sizeClass": "hut",
+     "purpose": "shelter for the woodsman who cuts and stacks the village firewood",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Stacked firewood",
+      "count": 5,
+      "hint": "beside:Woodcutter's Hut+cluster"
+     },
+     {
+      "template": "Chopping stump",
+      "count": 1,
+      "hint": "beside:Woodcutter's Hut"
+     },
+     {
+      "template": "Dirt track",
+      "count": 2,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Fallen log",
+      "count": 3,
+      "hint": "scatter"
+     },
+     {
+      "template": "Mossy boulder",
+      "count": 4,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Mushroom patch",
+      "count": 4,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Broadleaf tree",
+      "density": "high"
+     },
+     {
+      "template": "Bush clump",
+      "density": "high"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Village Green",
+   "to": "Barley Flats",
+   "kind": "dirt"
+  },
+  {
+   "from": "Village Green",
+   "to": "Millrace Bank",
+   "kind": "cobble"
+  },
+  {
+   "from": "Barley Flats",
+   "to": "Old Forest",
+   "kind": "dirt"
+  },
+  {
+   "from": "Millrace Bank",
+   "to": "Old Forest",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Straw bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "description": "A wooden frame strung with rope and stuffed with a straw palliasse, the standard bed of every Aldford household.",
+   "physicalDescription": "A narrow rectangle of dark timber with a pale straw mattress and a folded woollen blanket at the foot.",
+   "tags": [
+    "bed",
+    "sleep",
+    "storage"
+   ],
+   "rule": "One per sleeper: place in a corner of every cottage and farmhouse away from the hearth; inn guest rooms get one against a wall with a chest at its foot."
+  },
+  {
+   "name": "Wooden table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A scarred plank table on trestle legs, used for meals, mending and the miller's tally-keeping alike.",
+   "physicalDescription": "A long pale-brown rectangle of planks seen from above.",
+   "tags": [
+    "table",
+    "eat",
+    "work"
+   ],
+   "rule": "One table in each cottage great room near the hearth; the inn common room gets several spaced apart so stools can ring them."
+  },
+  {
+   "name": "Three-legged stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A humble cut-log stool that serves at table, hearth and milking stool alike.",
+   "physicalDescription": "A small round seat with three splayed legs.",
+   "tags": [
+    "seat",
+    "table"
+   ],
+   "rule": "Cluster stools around tables and beside the inn hearth, never blocking a doorway or the path to the stairs."
+  },
+  {
+   "name": "Plank bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A long backless bench that seats the chapel congregation, the inn's common room and idlers on the green.",
+   "physicalDescription": "A narrow brown rectangle of planks.",
+   "tags": [
+    "seat",
+    "table"
+   ],
+   "rule": "Set benches in rows facing the chapel altar, along the sides of inn common room tables, and one on the green directly in front of the inn door."
+  },
+  {
+   "name": "Stone altar",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The rough-hewn altar of St. Brannoc, draped in linen for Sunday services and harvest blessings.",
+   "physicalDescription": "A pale grey rectangular slab with a small white cloth square at its centre.",
+   "tags": [
+    "landmark",
+    "ritual"
+   ],
+   "rule": "One only, against the chapel's east wall, with clear floor between it and the bench rows."
+  },
+  {
+   "name": "Stone hearth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "An open fireplace of fieldstone that cooks the barley pottage and warms every dwelling in the hamlet.",
+   "physicalDescription": "A blackened grey block with a dark fire opening and ash scatter in front.",
+   "tags": [
+    "hearth",
+    "cooking",
+    "light"
+   ],
+   "rule": "One per dwelling built against a wall, kept well clear of beds and stored grain, with the table nearby."
+  },
+  {
+   "name": "Storage chest",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "An iron-bound oak chest holding clothing, grain, herbs or the inn's spare candles.",
+   "physicalDescription": "A squat dark-brown box with a pale metal band across the lid.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "One or two per home against a wall away from the hearth; one at the foot of every inn guest bed and two in the mill for flour records and tack."
+  },
+  {
+   "name": "Forge and anvil",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The coal-fired smithy hearth with its anvil block, where horses are shod and scythes mended.",
+   "physicalDescription": "A blackened stone hearth square with a small dark anvil shape at one side.",
+   "tags": [
+    "work",
+    "forge",
+    "heat"
+   ],
+   "rule": "One block against the smithy's back wall, with the quench trough and coal pile just outside the smithy door."
+  },
+  {
+   "name": "Wooden trough",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A hollowed-trunk trough serving horses and cattle at the green and hot iron at the smithy.",
+   "physicalDescription": "A long open rectangle showing dark water or blackened interior.",
+   "tags": [
+    "water",
+    "work"
+   ],
+   "rule": "The water trough stands beside the village well on the green; a second, blackened one sits at the smithy door as the quench trough; never place one indoors."
+  },
+  {
+   "name": "Coal pile",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "description": "A heap of char brought up the mill track, hoarded for the smithy's fire.",
+   "physicalDescription": "A low dark-black mound.",
+   "tags": [
+    "fuel",
+    "work"
+   ],
+   "rule": "One heap under a timber lean-to against the smithy's side wall, within a step of the forge."
+  },
+  {
+   "name": "Millstone rig",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The great runner stone and wooden gearing that turn the stream's power into flour.",
+   "physicalDescription": "A fat pale-grey circle with dark timber gearing radiating to one side.",
+   "tags": [
+    "work",
+    "landmark",
+    "machinery"
+   ],
+   "rule": "One only, centred in the mill on its stream side so the gears run to the waterwheel shaft, with grain sacks stacked in reach."
+  },
+  {
+   "name": "Grain sack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A bulging sack of barley waiting on the miller's toll, the small grievance that stirs the hamlet.",
+   "physicalDescription": "A lumpy beige square with a tied neck.",
+   "tags": [
+    "storage",
+    "goods"
+   ],
+   "rule": "Stack in clusters of two to five inside the mill and on its loading dock, with a few in the threshing barn after harvest."
+  },
+  {
+   "name": "Hay pile",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "description": "A golden haystack raised in the fields, or sheaves pitched under cover in the threshing barn.",
+   "physicalDescription": "A rounded golden-yellow mound with a darker thatched top.",
+   "tags": [
+    "storage",
+    "fodder"
+   ],
+   "rule": "Space haystacks across the barley flats behind the fences; line one interior wall of the threshing barn with hay piles clear of the central threshing floor."
+  },
+  {
+   "name": "Scarecrow",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A straw man in a patched coat, standing his lonely watch over the barley.",
+   "physicalDescription": "A thin brown cross-pole with a pale ragged blob at its head.",
+   "tags": [
+    "landmark",
+    "field"
+   ],
+   "rule": "One only, out mid-way in a barley strip away from the track, facing the field path."
+  },
+  {
+   "name": "Split-rail fence",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "description": "Chestnut rails split by the woodsman and mortised into posts, penning the fields from the cattle.",
+   "physicalDescription": "A thin brown line of parallel rails with post nubs at each end.",
+   "tags": [
+    "fence",
+    "boundary"
+   ],
+   "rule": "Run linked segments along the field track and around the barley strips, leaving gaps where gates and the mill cart turning space fall."
+  },
+  {
+   "name": "Farm cart",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A creaking wain for hay and sacks, drawn by oxen or left standing between tasks.",
+   "physicalDescription": "A brown rectangular bed with a long dark shaft extending from one side.",
+   "tags": [
+    "cart",
+    "transport",
+    "goods"
+   ],
+   "rule": "Park off the path: the hay cart beside the inn on the green, the ox cart at the edge of Odo's farmstead, never blocking a door or the track."
+  },
+  {
+   "name": "Village well",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The stone-walled well on the green where all twelve households draw their water under gossiping breath.",
+   "physicalDescription": "A small grey ring of stone with a dark centre and two posts holding a tiny crossbar roof.",
+   "tags": [
+    "water",
+    "landmark"
+   ],
+   "rule": "One public well only, on the village green within a few steps of inn and chapel; no other wells anywhere in Aldford."
+  },
+  {
+   "name": "Stacked firewood",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Sawn and split logs stacked to dry, the woodsman's steady tribute to winter.",
+   "physicalDescription": "A tight rectangular block of pale cut-log ends.",
+   "tags": [
+    "fuel",
+    "storage"
+   ],
+   "rule": "Every cottage keeps a stack against a side wall under its eaves; taller stacks fill the clearing by the woodcutter's hut."
+  },
+  {
+   "name": "Chopping stump",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A broad oak butt scarred by the axe, where logs are split for the hearth.",
+   "physicalDescription": "A pale round cut face ringed by flying wood chips.",
+   "tags": [
+    "work",
+    "wood"
+   ],
+   "rule": "Set beside a woodpile: one by the inn's stack on the green, one in the splitting area near the woodcutter's hut, never indoors."
+  },
+  {
+   "name": "Broadleaf tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Great gnarled oaks of the Eldenwood and lone shade trees standing about the hamlet's edges.",
+   "physicalDescription": "A wide irregular green canopy with a darker trunk mark at its centre.",
+   "tags": [
+    "plant",
+    "landmark",
+    "shade"
+   ],
+   "rule": "Cluster the huge old oaks through the Eldenwood clear of paths, scatter single trees along the forest edge and about the green, and set one leaning willow-like tree overhanging the millpond bank."
+  },
+  {
+   "name": "Bush clump",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Thorn and hazel growth, trimmed into hedgerows between fields or left wild under the forest edge.",
+   "physicalDescription": "A small mottled dark-green clump.",
+   "tags": [
+    "plant",
+    "boundary"
+   ],
+   "rule": "String clumps into the low hedgerows dividing the barley strips and scatter them as undergrowth along the Eldenwood edge; never on the dirt track."
+  },
+  {
+   "name": "Mossy boulder",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "Old stones shrugged off by the forest, green-grown and patient.",
+   "physicalDescription": "A grey rounded lump with a paler moss cap on one side.",
+   "tags": [
+    "rock",
+    "landmark"
+   ],
+   "rule": "Only under forest canopy, half-sunk beside deer trails and fallen logs; never in ploughed ground or the village."
+  },
+  {
+   "name": "Mushroom patch",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "Pale caps sprouting in the damp leaf litter, gathered by Widow Maren against the winter.",
+   "physicalDescription": "A scatter of tiny cream dots over dark leaf mould.",
+   "tags": [
+    "plant",
+    "forage"
+   ],
+   "rule": "Cluster patches on the dim forest floor near old oaks and fallen logs, never in open fields or the village green."
+  },
+  {
+   "name": "Fallen log",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "A wind-thrown trunk going soft with moss, home to beetles and shy deer at dusk.",
+   "physicalDescription": "A long grey-brown cylinder with a green moss stripe along one flank.",
+   "tags": [
+    "wood",
+    "landmark"
+   ],
+   "rule": "Scatter a few across the Eldenwood floor, some crossing the deer trails; never inside the village or on the farmland."
+  },
+  {
+   "name": "Barley strip",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.8,
+   "forSleep": false,
+   "description": "A strip of Aldford's gold crop, the backbone of every household's year and the miller's toll.",
+   "physicalDescription": "A dense golden-yellow field square with fine vertical combing.",
+   "tags": [
+    "crop",
+    "field"
+   ],
+   "rule": "Lay long strips side by side across the Barley Flats, separated by hedgerow, with the field track running along their edge and the farmsteads facing their crops."
+  },
+  {
+   "name": "Dirt track",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "Worn earth pressed bare by boots and cartwheels, the quiet veins of the hamlet.",
+   "physicalDescription": "A pale tan patch with faint parallel wheel-rut lines.",
+   "tags": [
+    "path",
+    "ground"
+   ],
+   "rule": "One main rutted strip runs from the green past the flats to the mill as the field track, with fainter threads winding through the trees as deer trails; never under buildings or water."
+  },
+  {
+   "name": "Millpond and waterwheel",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "description": "The dark millpond feeding the great oak waterwheel whose steady turning measures Aldford's days.",
+   "physicalDescription": "A dark green-black water square with a huge brown spoked wheel circle on its mill-facing side.",
+   "tags": [
+    "water",
+    "landmark",
+    "machinery"
+   ],
+   "rule": "One only, set against the mill's stream-side wall so the wheel face touches the mill; the loading dock runs along the pond beside it."
+  },
+  {
+   "name": "Loading dock",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "A plank platform over the pond's edge where sacks pass between cart, mill and boat.",
+   "physicalDescription": "A brown rectangular deck of parallel planks with dark water gaps showing between.",
+   "tags": [
+    "work",
+    "dock"
+   ],
+   "rule": "One only, hard against the mill's pond-facing wall beside the millpond, clear of the waterwheel's turn."
+  },
+  {
+   "name": "Moored rowboat",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "description": "The miller's flat-bottomed skiff, tied and bobbing, for setting eel lines at dusk.",
+   "physicalDescription": "A narrow dark-hulled oval with a bench bar across its middle.",
+   "tags": [
+    "boat",
+    "transport"
+   ],
+   "rule": "One only, tied at the millpond edge beside the loading dock, never mid-pond or out in the stream current."
+  },
+  {
+   "name": "Staircase",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "description": "A tight winding stair of creaking treads climbing to the inn's guest lofts.",
+   "physicalDescription": "A small brown square of stacked step edges.",
+   "tags": [
+    "stairs",
+    "access"
+   ],
+   "rule": "One only, inside the Sleeping Hart Inn against a wall near the common room hearth, linking the ground floor to the guest rooms above."
+  }
+ ],
+ "buildings": [
+  {
+   "name": "The Sleeping Hart Inn",
+   "wall": "wood",
+   "ground": "oak planks",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "large",
+     "purpose": "ale, meals and gossip for villagers and travellers"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "inn kitchen for cooking and stores"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Staircase",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Common Room",
+     "count": 4,
+     "hint": "center"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Common Room",
+     "count": 10,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Common Room",
+     "count": 3,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Common Room",
+     "count": 3,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stone hearth",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Common Room"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Landing",
+       "share": "small",
+       "purpose": "stair head and passage to guest rooms"
+      },
+      {
+       "name": "Alder Room",
+       "share": "small",
+       "purpose": "guest room for travellers"
+      },
+      {
+       "name": "Hart Room",
+       "share": "small",
+       "purpose": "guest room for travellers"
+      }
+     ],
+     "connections": [
+      [
+       "Landing",
+       "Alder Room"
+      ],
+      [
+       "Landing",
+       "Hart Room"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Three-legged stool",
+       "room": "Landing",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Storage chest",
+       "room": "Landing",
+       "count": 1,
+       "hint": "corner"
+      },
+      {
+       "template": "Straw bed",
+       "room": "Alder Room",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Storage chest",
+       "room": "Alder Room",
+       "count": 1,
+       "hint": "beside:Straw bed"
+      },
+      {
+       "template": "Straw bed",
+       "room": "Hart Room",
+       "count": 1,
+       "hint": "wall:north+corner"
+      },
+      {
+       "template": "Storage chest",
+       "room": "Hart Room",
+       "count": 1,
+       "hint": "beside:Straw bed"
+      }
+     ],
+     "opening": {
+      "over_room": "Common Room",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Chapel of St. Brannoc",
+   "wall": "stone",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Nave",
+     "share": "large",
+     "purpose": "Prayer, Sunday services and village blessings"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Nave",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Stone altar",
+     "room": "Nave",
+     "count": 1,
+     "hint": "wall:east+center"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Nave",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Nave",
+     "count": 2,
+     "hint": "row:south"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Nave",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Nave",
+     "count": 1,
+     "hint": "wall:west+corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Aldford Smithy",
+   "wall": "stone",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Smithy workshop",
+     "share": "small",
+     "purpose": "Shoeing horses and repairing farm tools"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Smithy workshop",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Forge and anvil",
+     "room": "Smithy workshop",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Smithy workshop",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Smithy workshop",
+     "count": 2,
+     "hint": "near_door"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Smithy workshop",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Widow Maren's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Great Room",
+     "share": "small",
+     "purpose": "single room serving as kitchen, herb-work space and sleeping quarters"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Great Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "wall:west+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Hedgerow Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Great Room",
+     "share": "medium",
+     "purpose": "single-room dwelling: sleeping, cooking and eating for a young farmhand family"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Great Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "wall:east+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Aldford Mill",
+   "wall": "wood",
+   "ground": "oak boards",
+   "rooms": [
+    {
+     "name": "Grinding Room",
+     "share": "large",
+     "purpose": "main mill floor where the waterwheel gears turn the millstones"
+    },
+    {
+     "name": "Grain Store",
+     "share": "medium",
+     "purpose": "cool dry room for sacks of waiting grain and milled flour"
+    },
+    {
+     "name": "Toll Room",
+     "share": "small",
+     "purpose": "miller's tally room where sacks are weighed and the toll is recorded"
+    }
+   ],
+   "connections": [
+    [
+     "Toll Room",
+     "Grinding Room"
+    ],
+    [
+     "Grinding Room",
+     "Grain Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Grinding Room",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Millstone rig",
+     "room": "Grinding Room",
+     "count": 1,
+     "hint": "wall:east+center"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Grinding Room",
+     "count": 4,
+     "hint": "beside:Millstone rig"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Grinding Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Toll Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Toll Room",
+     "count": 2,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Toll Room",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Grain Store",
+     "count": 5,
+     "hint": "corner"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Grain Store",
+     "count": 3,
+     "hint": "row:west"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Miller's House",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Great Room",
+     "share": "medium",
+     "purpose": "living, cooking and eating room for the miller's family"
+    },
+    {
+     "name": "Sleeping Room",
+     "share": "small",
+     "purpose": "bedroom for the miller, his wife and child"
+    }
+   ],
+   "connections": [
+    [
+     "Great Room",
+     "Sleeping Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Great Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Great Room",
+     "count": 3,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Plank bench",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Sleeping Room",
+     "count": 2,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Odo's Farmhouse",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Great Room",
+     "share": "medium",
+     "purpose": "family hall for cooking, meals and Odo's farm dealings"
+    },
+    {
+     "name": "Sleeping Room",
+     "share": "small",
+     "purpose": "sleeping room for Odo, his wife and the children"
+    }
+   ],
+   "connections": [
+    [
+     "Great Room",
+     "Sleeping Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Great Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Great Room",
+     "count": 4,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:west+corner+away_from_door"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:east+corner+away_from_door"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Sleeping Room",
+     "count": 2,
+     "hint": "corner+symmetric+away_from_door"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "wall:south+corner+away_from_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Threshing Barn",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Threshing Floor",
+     "share": "large",
+     "purpose": "open central floor for flailing grain out of the sheaves under cover"
+    },
+    {
+     "name": "Sheaf Store",
+     "share": "medium",
+     "purpose": "stacking sheaves and sacked grain clear of the threshing work"
+    }
+   ],
+   "connections": [
+    [
+     "Threshing Floor",
+     "Sheaf Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Threshing Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Hay pile",
+     "room": "Sheaf Store",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Sheaf Store",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Grain sack",
+     "room": "Threshing Floor",
+     "count": 2,
+     "hint": "near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Ashfield Farmhouse",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Great Room",
+     "share": "medium",
+     "purpose": "cooking, eating and family life around the hearth"
+    },
+    {
+     "name": "Sleeping Room",
+     "share": "small",
+     "purpose": "parents' sleeping space and household storage"
+    }
+   ],
+   "connections": [
+    [
+     "Great Room",
+     "Sleeping Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Great Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Great Room",
+     "count": 4,
+     "hint": "around:Wooden table"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Great Room",
+     "count": 2,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Great Room",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Sleeping Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Sleeping Room",
+     "count": 1,
+     "hint": "wall:north+corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Woodcutter's Hut",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Living Room",
+     "share": "small",
+     "purpose": "single room where the woodcutter sleeps, eats and warms himself"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Living Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Stone hearth",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Straw bed",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "corner+wall:west"
+    },
+    {
+     "template": "Wooden table",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "beside:Stone hearth"
+    },
+    {
+     "template": "Three-legged stool",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "beside:Wooden table"
+    },
+    {
+     "template": "Storage chest",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "corner+wall:east"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Aldous Fenwick",
+   "gender": "male",
+   "role": "innkeeper of The Sleeping Hart",
+   "home": "The Sleeping Hart Inn",
+   "work": "The Sleeping Hart Inn",
+   "description": "Aldous keeps four guest beds, two casks of autumn ale and every rumour in Aldford, and he wants the grain-toll quarrel kept off his benches because he fears a harvest boycott will empty his common room by Candlemas.",
+   "physicalDescription": "Barrel-chested and balding, in a leather apron scorched at the hem, with a habit of wiping the same empty tankard for minutes at a stretch while he listens."
+  },
+  {
+   "name": "Osric Kemp",
+   "gender": "male",
+   "role": "miller of Aldford Mill",
+   "home": "Miller's House",
+   "work": "Aldford Mill",
+   "description": "Osric has taken to demanding a ninth part of every sack instead of the customary tenth, wanting the coin to buy out his late brother's debt, and he worries the farmers will route their grain to some distant quern before first frost.",
+   "physicalDescription": "Thick-set with flour-white forearms and a permanent dusting of meal in his black brows, and his right thumbnail is cracked from dragging sacks across the millstones' feeding trough."
+  },
+  {
+   "name": "Dunstan Wren",
+   "gender": "male",
+   "role": "smith at Aldford Smithy",
+   "home": "Hedgerow Cottage",
+   "work": "Aldford Smithy",
+   "description": "Dunstan walks from the field-edge cottage he shares with his young wife to the forge each dawn, wanting an apprentice before his eyes fail, and he worries the charcoal stack will not last a damp winter with every farmer suddenly demanding scythes and repointed ploughshares.",
+   "physicalDescription": "Lean but knotted through the shoulders, arms cross-hatched with fresh burn scars, wearing a smoke-black leather shirt with one brass button gone green."
+  },
+  {
+   "name": "Father Ansel",
+   "gender": "male",
+   "role": "priest of the Chapel of St. Brannoc",
+   "home": "The Sleeping Hart Inn",
+   "work": "Chapel of St. Brannoc",
+   "description": "Ansel rents the small back room above the common room on parish ha'pennies and serves three cracked bells' worth of duty at the chapel, wanting to arbitrate between miller and farmers before the dispute ripens into sin, and he worries that whatever walks the Eldenwood after dusk is growing bolder each week.",
+   "physicalDescription": "A thin grey man in a patched wool habit tied with rope, with ink stains on two fingers and a missing tooth he hides behind closed lips."
+  },
+  {
+   "name": "Maren Cobb",
+   "gender": "female",
+   "role": "herb-woman",
+   "home": "Widow Maren's Cottage",
+   "work": "Old Forest",
+   "description": "Maren tends every fever and foaling in Aldford from a shelf of thirty-two stoppered jars, wanting to lay in a winter store of elderberries and chamomile, and she worries that since midsummer something in the forest has been frightening the game away from her mushroom hollows.",
+   "physicalDescription": "Small and bent at the shoulder, in layered grey shawls pinned with a fishbone brooch, and her left hand smells of comfrey no matter how she scrubs it."
+  },
+  {
+   "name": "Odo Blackbuck",
+   "gender": "male",
+   "role": "farmer, largest landholder",
+   "home": "Odo's Farmhouse",
+   "work": "Barley Flats",
+   "description": "Odo works nine strip-fields and a pair of heavy oxen, wanting the miller's toll cut back to the old tenth without ever saying so aloud, and he worries that if he is caught organizing the withholding he will be the first barred from the millstones come grinding season.",
+   "physicalDescription": "Broad and slow-moving, in a sheepskin vest over a homespun tunic, with a horseshoe of white hair and a copper ring worn to a groove on his thumb."
+  },
+  {
+   "name": "Tibb Harrow",
+   "gender": "female",
+   "role": "tenant farmer of Ashfield",
+   "home": "Ashfield Farmhouse",
+   "work": "Barley Flats",
+   "description": "Tibb farms her late husband's two rented strips with three goats and two young sons underfoot, wanting her sheaves dry and her rent grain counted before the rains, and she worries the damp has already crept into the rick's heart and will rot half her winter bread.",
+   "physicalDescription": "Weather-brown and wiry, hair bound in a red kerchief gone pale with washing, with a permanent grass stain along her right forearm from shouldering the scythe."
+  },
+  {
+   "name": "Hodge Fen",
+   "gender": "male",
+   "role": "woodcutter",
+   "home": "Woodcutter's Hut",
+   "work": "Old Forest",
+   "description": "Hodge has stacked twenty-seven cords against his hut's north wall and wants forty before hard frost, but he worries about the deep quiet that has fallen on his usual cutting stand and the stripped bark he found at chest height on an oak last week.",
+   "physicalDescription": "Tall and stooped from ducking boughs, in a smocked coat snagged at every seam, with a notched felling axe he carries even to the inn and a gold-less earring hole in one ear."
+  }
+ ],
+ "player": {
+  "name": "Ivo Marsh",
+  "gender": "male",
+  "role": "itinerant tinker and mender",
+  "home": "The Sleeping Hart Inn",
+  "work": "The Sleeping Hart Inn",
+  "description": "Ivo's cart cracked its axle at the mill ford a week past, and he means to winter in the inn's common room mending pots, kettles and locks for coppers, wanting the smith to finish a seasoned oak axle before the roads turn to mud, and worrying that his pouch of eleven silver pennies will not outlast the snow.",
+  "physicalDescription": "Slight and quick-fingered, in a travel-stained brown coat with a soldering iron and a coil of tin wire hanging at his belt, and a healing scorch across his left palm."
+ },
+ "extensions": [
+  "floors",
+  "region-groups"
+ ]
+}

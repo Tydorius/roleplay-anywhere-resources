@@ -1,0 +1,1356 @@
+{
+ "name": "Kettle Creek",
+ "worldBackground": "Kettle Creek is a small prairie town whose four-block main street still carries the rhythm of daily life: coffee at the diner, nails and advice at the hardware store, long-term residents in the motel's back units. The mood is warm, unhurried and a little tired, with conversation that always circles back to the same topics. The tension is that the new highway bypass routes travelers around town, and every empty parking spot on Main Street is counted as a bad omen.",
+ "setting": {
+  "era": "present day",
+  "technology": "modern: cars, power grid, mobile phones with spotty signal",
+  "density": "normal",
+  "climate": "temperate plains, hot summers and windy winters"
+ },
+ "mapSize": "medium",
+ "zones": [
+  {
+   "name": "Main Street",
+   "kind": "small-town commercial strip",
+   "sizeClass": "medium",
+   "description": "A two-lane paved main street lined with the town's few businesses, angled parking and old streetlights.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Maple Row",
+    "Creek Bend Park"
+   ],
+   "outdoor": [
+    "streetlights",
+    "parked pickup trucks",
+    "benches",
+    "trash bins",
+    "notice board"
+   ],
+   "buildings": [
+    {
+     "name": "Rosie's Diner",
+     "kind": "diner",
+     "sizeClass": "medium",
+     "purpose": "coffee, breakfast plates and local gossip from open to close",
+     "yard": null
+    },
+    {
+     "name": "Halvorsen Hardware",
+     "kind": "hardware store",
+     "sizeClass": "medium",
+     "purpose": "tools, lumber, paint and repair advice from the owner",
+     "yard": {
+      "side": "back",
+      "placement": "cluster+edge",
+      "features": [
+       "lumber racks",
+       "pallet stacks",
+       "fence panels",
+       "gravel delivery pad"
+      ]
+     }
+    },
+    {
+     "name": "Bluebird Motel",
+     "kind": "motel",
+     "sizeClass": "large",
+     "purpose": "cheap weekly rooms for travelers and a few long-term tenants",
+     "yard": {
+      "side": "front",
+      "placement": "along_path",
+      "features": [
+       "parked cars",
+       "ice machine",
+       "vacancy sign",
+       "payphone"
+      ]
+     }
+    },
+    {
+     "name": "Carter's Garage",
+     "kind": "auto workshop",
+     "sizeClass": "medium",
+     "purpose": "car and truck repairs for the whole town",
+     "yard": {
+      "side": "right",
+      "placement": "scatter+edge",
+      "features": [
+       "pickup on blocks",
+       "oil drums",
+       "tire stacks",
+       "tool cart"
+      ]
+     }
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Streetlight",
+      "count": 7,
+      "hint": "along_path+beside:Rosie's Diner"
+     },
+     {
+      "template": "Notice board",
+      "count": 1,
+      "hint": "beside:Rosie's Diner"
+     },
+     {
+      "template": "Park bench",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Trash bin",
+      "count": 5,
+      "hint": "along_path+behind:Rosie's Diner"
+     },
+     {
+      "template": "Pickup truck",
+      "count": 6,
+      "hint": "along_path+front:Bluebird Motel"
+     },
+     {
+      "template": "Tire stack",
+      "count": 4,
+      "hint": "beside:Carter's Garage"
+     },
+     {
+      "template": "Lumber rack",
+      "count": 2,
+      "hint": "behind:Halvorsen Hardware"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Prairie grass tuft",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Maple Row",
+   "kind": "residential street",
+   "sizeClass": "medium",
+   "description": "A quiet side street of modest single-family homes with trimmed lawns and picket fences.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Main Street"
+   ],
+   "outdoor": [
+    "picket fences",
+    "mailboxes",
+    "shade trees",
+    "driveways"
+   ],
+   "buildings": [
+    {
+     "name": "Whitaker House",
+     "kind": "house",
+     "sizeClass": "medium",
+     "purpose": "family home of the diner's morning cook",
+     "yard": null
+    },
+    {
+     "name": "Ortiz House",
+     "kind": "house",
+     "sizeClass": "medium",
+     "purpose": "home of the schoolteacher and her retired father",
+     "yard": null
+    },
+    {
+     "name": "Prairie Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "small home of the elderly hardware store founder",
+     "yard": null
+    }
+   ],
+   "dressing": {
+    "paths": "paved",
+    "props": [
+     {
+      "template": "Picket fence",
+      "count": 14,
+      "hint": "front:Whitaker House+front:Ortiz House+front: Prairie Cottage"
+     },
+     {
+      "template": "Driveway",
+      "count": 3,
+      "hint": "front:Whitaker House+front:Ortiz House+front: Prairie Cottage"
+     },
+     {
+      "template": "Mailbox",
+      "count": 3,
+      "hint": "front:Whitaker House+front:Ortiz House+front: Prairie Cottage"
+     },
+     {
+      "template": "Shade tree",
+      "count": 3,
+      "hint": "front:Whitaker House+front:Ortiz House+front: Prairie Cottage"
+     },
+     {
+      "template": "Pickup truck",
+      "count": 3,
+      "hint": "front:Whitaker House+front:Ortiz House+front: Prairie Cottage"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Prairie grass tuft",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Creek Bend Park",
+   "kind": "riverside park",
+   "sizeClass": "small",
+   "description": "A grassy strip along the creek with a footbridge, picnic tables and the town water tower standing over it all.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Main Street"
+   ],
+   "outdoor": [
+    "picnic tables",
+    "footbridge",
+    "water tower",
+    "grill stands"
+   ],
+   "buildings": [],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Footbridge",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Water tower",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Picnic table",
+      "count": 6,
+      "hint": "cluster+along_path"
+     },
+     {
+      "template": "Grill stand",
+      "count": 2,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "Park bench",
+      "count": 3,
+      "hint": "along_path+edge"
+     },
+     {
+      "template": "Trash bin",
+      "count": 2,
+      "hint": "cluster"
+     },
+     {
+      "template": "Shade tree",
+      "count": 5,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Prairie grass tuft",
+      "density": "medium"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Main Street",
+   "to": "Maple Row",
+   "kind": "paved"
+  },
+  {
+   "from": "Main Street",
+   "to": "Creek Bend Park",
+   "kind": "paved"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Diner booth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A bench-table-bench booth where regulars linger over bottomless coffee at Rosie's.",
+   "physicalDescription": "A rectangular table flanked by two dark green vinyl bench seats, shiny from decades of sliding in.",
+   "tags": [
+    "table",
+    "seat"
+   ],
+   "rule": "Rows along the street windows of Rosie's Diner, seats facing the counter, with a clear aisle to the door."
+  },
+  {
+   "name": "Counter stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A chrome-and-vinyl stool that regulars claim by name before sunrise.",
+   "physicalDescription": "A round red vinyl seat on a chrome pedestal with a small footring, a bright dot from above.",
+   "tags": [
+    "seat"
+   ],
+   "rule": "One even row along the customer side of the diner counter, the end stool nearest the register."
+  },
+  {
+   "name": "Diner counter",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Rosie's counter, where coffee is poured and half the town's news changes hands.",
+   "physicalDescription": "A long stainless-top counter with napkin dispensers and a register at one end.",
+   "tags": [
+    "table",
+    "work",
+    "storage"
+   ],
+   "rule": "One counter dividing Rosie's front room from the kitchen pass; the coffee urn and griddle stay behind it."
+  },
+  {
+   "name": "Coffee urn",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A big battered urn that never goes cold between five a.m. and closing.",
+   "physicalDescription": "A squat steel cylinder with a spigot and a stack of white mugs beside it.",
+   "tags": [
+    "drink",
+    "work"
+   ],
+   "rule": "Behind the diner counter beside the griddle pass; exactly one, refilled through the morning rush."
+  },
+  {
+   "name": "Flat-top griddle",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "The griddle where the morning cook, when not at home on Maple Row, lays out hash browns at dawn.",
+   "physicalDescription": "A wide black steel cooktop with a grease-warped shelf of squeeze bottles behind it.",
+   "tags": [
+    "cooking",
+    "work"
+   ],
+   "rule": "Against the back wall of Rosie's kitchen in the corner, with the coffee urn within arm's reach."
+  },
+  {
+   "name": "Lumber rack",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Stacked two-by-fours and plywood sheets under a tarp behind Halvorsen's.",
+   "physicalDescription": "Low wooden A-frame racks with neat stacks of dimensioned lumber, one tarp tied over the top.",
+   "tags": [
+    "storage",
+    "work"
+   ],
+   "rule": "In the fenced back yard of Halvorsen Hardware, in rows clear of the fence line and the neighbor's drive."
+  },
+  {
+   "name": "Kitchen table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A worn kitchen table where breakfast arguments and supper silence both happen.",
+   "physicalDescription": "A rectangular table with an oilcloth cover, chairs tucked under its long sides.",
+   "tags": [
+    "table"
+   ],
+   "rule": "Center of every Maple Row kitchen, sized to the household: four chairs at the Whitakers', two at the Prairie Cottage."
+  },
+  {
+   "name": "Kitchen chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A straight-backed wooden chair that has outlived three table tops.",
+   "physicalDescription": "A simple wooden chair seen from above as a square seat and a back slat.",
+   "tags": [
+    "seat"
+   ],
+   "rule": "Two to four around each kitchen table plus one spare beside the couch in the Ortiz parlor; never left in a walkway."
+  },
+  {
+   "name": "Double bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A firm old double bed, the kind the Bluebird rents by the week.",
+   "physicalDescription": "A rectangular bed with a patchwork or chenille cover, pillow at the head end.",
+   "tags": [
+    "bed"
+   ],
+   "rule": "Head against a wall with a dresser alongside; one per sleeper in the Bluebird's back units and one per bedroom on Maple Row."
+  },
+  {
+   "name": "Dresser",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A scuffed dresser with a lamp on top and, in the motel units, a Bible nobody opens.",
+   "physicalDescription": "A square wooden chest with a lamp shade visible on top from above.",
+   "tags": [
+    "storage",
+    "light"
+   ],
+   "rule": "Beside the foot of every bed, lamp facing it; long-term tenants' dressers sit against the wall nearest their hot plate."
+  },
+  {
+   "name": "Couch",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A sagging sofa where the motel's long-term tenants watch the evening news.",
+   "physicalDescription": "A long fabric couch with two crushed cushions and arms worn shiny.",
+   "tags": [
+    "seat"
+   ],
+   "rule": "Against the far wall of the Bluebird's back units' sitting corner and the Ortiz parlor; never in the nightly traveler rooms."
+  },
+  {
+   "name": "Hardware shelving",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "Floor-to-ceiling shelving holding nails, paint and every washer size in the county.",
+   "physicalDescription": "A long narrow aisle of steel shelving with small boxes and gallon paint cans in tidy rows.",
+   "tags": [
+    "storage"
+   ],
+   "rule": "Two parallel aisles down the middle of Halvorsen's floor, fasteners nearest the door and paint at the back, a wheelbarrow's width between."
+  },
+  {
+   "name": "Sales counter",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A counter where Halvorsen writes up orders and motel guests take their key.",
+   "physicalDescription": "A long wooden counter with a register, a service bell and a stool behind it.",
+   "tags": [
+    "work",
+    "storage"
+   ],
+   "rule": "One across the front of Halvorsen Hardware near the door; a second, smaller one inside the Bluebird's office window."
+  },
+  {
+   "name": "Garage workbench",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Carter's scarred workbench where half the town's engine troubles come to die.",
+   "physicalDescription": "A long heavy bench with a pegboard of outlined tools above and a vise at one end.",
+   "tags": [
+    "work",
+    "storage"
+   ],
+   "rule": "Along the back wall of Carter's Garage, clear of the bay doors' swing."
+  },
+  {
+   "name": "Car lift",
+   "size": [
+    3,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "A hydraulic lift holding somebody's pickup at chest height, hood already up.",
+   "physicalDescription": "Steel lift posts and arms with a truck undercarriage and open hood above them.",
+   "tags": [
+    "work",
+    "vehicle"
+   ],
+   "rule": "One per bay inside Carter's Garage, hoisted vehicles nose-in toward the right-side yard, never facing Main Street."
+  },
+  {
+   "name": "Tire stack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "Pyramids of takeoff tires leaning by the garage, priced in chalk.",
+   "physicalDescription": "A stack of three or four black tires with chalk prices on the sidewalls.",
+   "tags": [
+    "storage",
+    "vehicle"
+   ],
+   "rule": "Beside Carter's Garage in its right-hand yard in short pyramids, away from the creek side of town."
+  },
+  {
+   "name": "Streetlight",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "The old Main Street lights that come on one by one at dusk.",
+   "physicalDescription": "A tall dark pole with a curved arm and teardrop lamp head, a small circle of shadow at its base.",
+   "tags": [
+    "light",
+    "landmark"
+   ],
+   "rule": "Evenly spaced along both edges of Main Street with one marking the notice board corner; none on Maple Row."
+  },
+  {
+   "name": "Pickup truck",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A work pickup, usually Halvorsen's or a rancher's, parked where everyone can count it.",
+   "physicalDescription": "A long cab-and-bed truck with dusty paint, seen from above as a cab box plus open bed.",
+   "tags": [
+    "vehicle"
+   ],
+   "rule": "Nose-in to the curb in Main Street's angled spots or the Bluebird's front lot; every empty painted spot counts as a bad omen."
+  },
+  {
+   "name": "Park bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A slatted bench that has held three generations of waiting spouses.",
+   "physicalDescription": "A wooden slat bench on iron legs, green paint peeling to gray.",
+   "tags": [
+    "seat"
+   ],
+   "rule": "Pairs between streetlights on Main Street and singles facing the creek along the park path."
+  },
+  {
+   "name": "Trash bin",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A green town bin, emptied behind the diner every evening.",
+   "physicalDescription": "A round green drum with a domed lid and a tired plastic liner bag showing.",
+   "tags": [
+    "utility"
+   ],
+   "rule": "Beside every Main Street bench and the diner's back door, plus one at each park picnic cluster."
+  },
+  {
+   "name": "Notice board",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "The town's wooden bulletin board, half bypass petition and half lost cat.",
+   "physicalDescription": "A roofed wooden board with layered pinned papers and a pencil stub on a string.",
+   "tags": [
+    "landmark",
+    "sign"
+   ],
+   "rule": "Exactly one, at the center of Main Street beside the diner door, never inside a building."
+  },
+  {
+   "name": "Picnic table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A heavy picnic table where supper moves outdoors on the year's hot nights.",
+   "physicalDescription": "An A-frame table with attached bench seats and initials carved in the planks.",
+   "tags": [
+    "table",
+    "seat"
+   ],
+   "rule": "Clusters on the park grass near the footbridge, one grill stand at each cluster's creek side."
+  },
+  {
+   "name": "Grill stand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A park grill that still smells of a hundred burgers.",
+   "physicalDescription": "A short black drum grill on three legs over an ash-dark circle of ground.",
+   "tags": [
+    "cooking"
+   ],
+   "rule": "One beside each picnic cluster, downwind side toward the creek, never under the water tower's legs."
+  },
+  {
+   "name": "Footbridge",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 1.0,
+   "description": "The plank footbridge over Kettle Creek, the town's favorite place to stare at water.",
+   "physicalDescription": "A narrow wooden span with railings on both sides crossing the creek in a straight line.",
+   "tags": [
+    "landmark",
+    "path"
+   ],
+   "rule": "One span crossing the creek at the park's center, both ends landing on the path; the only crossing in town."
+  },
+  {
+   "name": "Water tower",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "description": "The town water tower, sentinel and compass point over everything.",
+   "physicalDescription": "Four splayed steel legs rising to a riveted drum with KETTLE CREEK painted in fading white.",
+   "tags": [
+    "landmark"
+   ],
+   "rule": "One, at the park's far edge behind the picnic ground, visible down the length of Main Street; never beside a building."
+  },
+  {
+   "name": "Picket fence",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.2,
+   "description": "White picket fence, the Maple Row standard, politely climbable in an emergency.",
+   "physicalDescription": "A line of white pointed pickets with a low rail and gate gaps where lawns meet walks.",
+   "tags": [
+    "fence"
+   ],
+   "rule": "Along the front property lines of Maple Row with gaps at every walkway and driveway; never across the back of a lot."
+  },
+  {
+   "name": "Mailbox",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "description": "A curbside mailbox, flag up on pension day.",
+   "physicalDescription": "A small metal box on a post with a red flag and a house number stenciled on the side.",
+   "tags": [
+    "sign"
+   ],
+   "rule": "One per Maple Row house at its walkway, on the street side of the picket fence, never inside the fence line itself."
+  },
+  {
+   "name": "Shade tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "description": "An old cottonwood or maple that every yard on the row is quietly proud of.",
+   "physicalDescription": "A broad canopy from above, a wide green disc with dappled shadow at its edge.",
+   "tags": [
+    "plant"
+   ],
+   "rule": "One mature tree per Maple Row front lawn set off-center from the house, plus scattered cottonwoods along the creek bank."
+  },
+  {
+   "name": "Driveway",
+   "size": [
+    2,
+    3
+   ],
+   "walkability": 1.0,
+   "description": "A concrete strip from back door to street, oil-stained where the truck drips.",
+   "physicalDescription": "A pale concrete strip with hairline cracks and dark drip stains, meeting the curb at the street.",
+   "tags": [
+    "path"
+   ],
+   "rule": "One strip per Maple Row house from its door to the street through the picket gap, a pickup parked on it."
+  },
+  {
+   "name": "Prairie grass tuft",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 1.0,
+   "description": "Tough prairie grass and wildflowers anywhere the mower gives up.",
+   "physicalDescription": "A clump of mixed grass with stubby wildflowers and pale seed heads, bare dirt at the edges.",
+   "tags": [
+    "plant"
+   ],
+   "rule": "Scatter on the park's unmown edges, vacant corners and roadside verges; never on pavement, trimmed lawns or in fence gaps."
+  }
+ ],
+ "buildings": [
+  {
+   "name": "Rosie's Diner",
+   "wall": "brick",
+   "ground": "checkered linoleum",
+   "rooms": [
+    {
+     "name": "Dining Room",
+     "share": "large",
+     "purpose": "booths, stools and gossip under the street windows"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "griddle, coffee urn and the pass to the counter"
+    }
+   ],
+   "connections": [
+    [
+     "Dining Room",
+     "Kitchen"
+    ]
+   ],
+   "entrance": {
+    "room": "Dining Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Diner booth",
+     "room": "Dining Room",
+     "count": 4,
+     "hint": "row:south+symmetric"
+    },
+    {
+     "template": "Diner counter",
+     "room": "Dining Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Counter stool",
+     "room": "Dining Room",
+     "count": 6,
+     "hint": "beside:Diner counter"
+    },
+    {
+     "template": "Flat-top griddle",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Coffee urn",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "beside:Flat-top griddle"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Halvorsen Hardware",
+   "wall": "brick",
+   "ground": "worn wood",
+   "rooms": [
+    {
+     "name": "Sales Floor",
+     "share": "large",
+     "purpose": "retail floor with aisles of tools, fasteners and paint, and the owner's advice counter by the door"
+    },
+    {
+     "name": "Stock Room",
+     "share": "small",
+     "purpose": "overflow stock and crates behind a swinging door"
+    }
+   ],
+   "connections": [
+    [
+     "Sales Floor",
+     "Stock Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Sales Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Hardware shelving",
+     "room": "Sales Floor",
+     "count": 4,
+     "hint": "center+symmetric"
+    },
+    {
+     "template": "Sales counter",
+     "room": "Sales Floor",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "Hardware shelving",
+     "room": "Stock Room",
+     "count": 2,
+     "hint": "wall:north+wall:west"
+    }
+   ],
+   "yard": {
+    "props": [
+     {
+      "template": "Lumber rack",
+      "room": "Stock Room",
+      "count": 3,
+      "hint": "cluster+edge"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Bluebird Motel",
+   "wall": "wood",
+   "ground": "worn linoleum",
+   "rooms": [
+    {
+     "name": "Office",
+     "share": "medium",
+     "purpose": "check-in window, key rack and register for the night manager"
+    },
+    {
+     "name": "Traveler unit",
+     "share": "small",
+     "purpose": "nightly traveler room, one bed and a place to unpack"
+    },
+    {
+     "name": "Back unit",
+     "share": "medium",
+     "purpose": "long-term tenant room with a sitting corner and two beds"
+    }
+   ],
+   "connections": [
+    [
+     "Office",
+     "Traveler unit"
+    ],
+    [
+     "Traveler unit",
+     "Back unit"
+    ]
+   ],
+   "entrance": {
+    "room": "Office",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Sales counter",
+     "room": "Office",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "Double bed",
+     "room": "Traveler unit",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Dresser",
+     "room": "Traveler unit",
+     "count": 1,
+     "hint": "beside:Double bed"
+    },
+    {
+     "template": "Double bed",
+     "room": "Back unit",
+     "count": 2,
+     "hint": "wall:north+symmetric"
+    },
+    {
+     "template": "Dresser",
+     "room": "Back unit",
+     "count": 1,
+     "hint": "beside:Double bed"
+    },
+    {
+     "template": "Couch",
+     "room": "Back unit",
+     "count": 1,
+     "hint": "wall:south+corner"
+    }
+   ],
+   "yard": {
+    "props": [
+     {
+      "template": "Pickup truck",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "Trash bin",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Prairie grass tuft",
+      "count": 2,
+      "hint": "edge+scatter"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Carter's Garage",
+   "wall": "brick",
+   "ground": "oiled concrete",
+   "rooms": [
+    {
+     "name": "Bay One",
+     "share": "large",
+     "purpose": "main vehicle lift bay for repairs and inspections"
+    },
+    {
+     "name": "Bay Two",
+     "share": "medium",
+     "purpose": "second repair bay for trucks and brake work"
+    },
+    {
+     "name": "Parts Office",
+     "share": "small",
+     "purpose": "parts counter, paperwork and coffee for waiting customers"
+    }
+   ],
+   "connections": [
+    [
+     "Bay One",
+     "Bay Two"
+    ],
+    [
+     "Bay Two",
+     "Parts Office"
+    ]
+   ],
+   "entrance": {
+    "room": "Parts Office",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Car lift",
+     "room": "Bay One",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Car lift",
+     "room": "Bay Two",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Garage workbench",
+     "room": "Bay One",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Garage workbench",
+     "room": "Bay Two",
+     "count": 1,
+     "hint": "wall:south+away_from_door"
+    },
+    {
+     "template": "Garage workbench",
+     "room": "Parts Office",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    }
+   ],
+   "yard": {
+    "props": [
+     {
+      "template": "Tire stack",
+      "count": 4,
+      "hint": "cluster"
+     },
+     {
+      "template": "Prairie grass tuft",
+      "count": 3,
+      "hint": "edge+scatter"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Whitaker House",
+   "wall": "wood",
+   "ground": "hardwood floor",
+   "rooms": [
+    {
+     "name": "Living Room",
+     "share": "medium",
+     "purpose": "family sitting room just inside the front door"
+    },
+    {
+     "name": "Kitchen",
+     "share": "large",
+     "purpose": "family kitchen where family meals happen before the diner shift"
+    },
+    {
+     "name": "Master Bedroom",
+     "share": "small",
+     "purpose": "parents' bedroom"
+    },
+    {
+     "name": "Kids' Bedroom",
+     "share": "small",
+     "purpose": "shared children's bedroom"
+    }
+   ],
+   "connections": [
+    [
+     "Living Room",
+     "Kitchen"
+    ],
+    [
+     "Living Room",
+     "Master Bedroom"
+    ],
+    [
+     "Living Room",
+     "Kids' Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Living Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Kitchen table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Kitchen",
+     "count": 4,
+     "hint": "around:Kitchen table"
+    },
+    {
+     "template": "Couch",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Living Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Double bed",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Dresser",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "beside:Double bed"
+    },
+    {
+     "template": "Double bed",
+     "room": "Kids' Bedroom",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Dresser",
+     "room": "Kids' Bedroom",
+     "count": 1,
+     "hint": "beside:Double bed"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Ortiz House",
+   "wall": "wood",
+   "ground": "hardwood",
+   "rooms": [
+    {
+     "name": "Parlor",
+     "share": "medium",
+     "purpose": "sitting room and entry where the teacher grades papers and her father listens to the radio"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "cooking and shared meals for a two-person household"
+    },
+    {
+     "name": "Teacher's Bedroom",
+     "share": "small",
+     "purpose": "bedroom of the schoolteacher"
+    },
+    {
+     "name": "Father's Bedroom",
+     "share": "small",
+     "purpose": "bedroom of the retired father"
+    }
+   ],
+   "connections": [
+    [
+     "Parlor",
+     "Kitchen"
+    ],
+    [
+     "Parlor",
+     "Teacher's Bedroom"
+    ],
+    [
+     "Parlor",
+     "Father's Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Parlor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Kitchen table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Kitchen",
+     "count": 3,
+     "hint": "around:Kitchen table"
+    },
+    {
+     "template": "Couch",
+     "room": "Parlor",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Parlor",
+     "count": 1,
+     "hint": "beside:Couch"
+    },
+    {
+     "template": "Double bed",
+     "room": "Teacher's Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Dresser",
+     "room": "Teacher's Bedroom",
+     "count": 1,
+     "hint": "beside:Double bed"
+    },
+    {
+     "template": "Double bed",
+     "room": "Father's Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Dresser",
+     "room": "Father's Bedroom",
+     "count": 1,
+     "hint": "beside:Double bed"
+    }
+   ],
+   "yard": null
+  },
+  {
+   "name": "Prairie Cottage",
+   "wall": "wood",
+   "ground": "worn hardwood",
+   "rooms": [
+    {
+     "name": "Parlor",
+     "share": "medium",
+     "purpose": "front sitting room where the old founder reads and receives neighbors"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "everyday kitchen with a small table for two"
+    },
+    {
+     "name": "Bedroom",
+     "share": "small",
+     "purpose": "single bedroom of the widowed store founder"
+    }
+   ],
+   "connections": [
+    [
+     "Parlor",
+     "Kitchen"
+    ],
+    [
+     "Parlor",
+     "Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Parlor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Couch",
+     "room": "Parlor",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Parlor",
+     "count": 1,
+     "hint": "beside:Couch"
+    },
+    {
+     "template": "Kitchen table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Kitchen chair",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "around:Kitchen table"
+    },
+    {
+     "template": "Double bed",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Dresser",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "beside:Double bed"
+    }
+   ],
+   "yard": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Dale Whitaker",
+   "gender": "male",
+   "role": "morning cook at Rosie's Diner",
+   "home": "Whitaker House",
+   "work": "Rosie's Diner",
+   "description": "The diner's morning cook, who wants the counter stools full again by six and worries the bypass has cut his breakfast trucks from a dozen down to three.",
+   "physicalDescription": "Heavyset, in a bleach-spotted apron over flannel, with a crescent-shaped burn scar on his left forearm."
+  },
+  {
+   "name": "Astrid Halvorsen",
+   "gender": "female",
+   "role": "founder and owner of Halvorsen Hardware",
+   "home": "Prairie Cottage",
+   "work": "Halvorsen Hardware",
+   "description": "The eighty-one-year-old founder of the hardware store, who still opens six days a week because she wants to hand the keys to someone before her knees quit first.",
+   "physicalDescription": "Tiny and straight-backed, in a man's wool vest and orthopedic shoes, clicking her ring of a hundred cut keys like a metronome."
+  },
+  {
+   "name": "Marisol Ortiz",
+   "gender": "female",
+   "role": "schoolteacher",
+   "home": "Ortiz House",
+   "work": "Main Street",
+   "description": "Teacher of the county's smallest class, nine students this year, who wants a tenth desk filled by spring and fears the bypass will empty the schoolhouse for good.",
+   "physicalDescription": "Compact and quick-moving, in corduroys and a hand-knit scarf, a red grading pen parked behind her ear at all hours."
+  },
+  {
+   "name": "Ernesto Ortiz",
+   "gender": "male",
+   "role": "retired; volunteer caretaker of the park",
+   "home": "Ortiz House",
+   "work": "Creek Bend Park",
+   "description": "Marisol's retired father, who sweeps the footbridge and the six picnic tables every morning because he wants the town to look lived-in and worries he'll be the last one left to do it.",
+   "physicalDescription": "Gaunt, in a canvas work jacket and feed cap, fingers stained dark from shelling walnuts on the bench."
+  },
+  {
+   "name": "Rosie Vance",
+   "gender": "female",
+   "role": "owner of Rosie's Diner",
+   "home": "Bluebird Motel",
+   "work": "Rosie's Diner",
+   "description": "The diner's namesake, who sold her house to keep all four coffee pots hot past supper and counts every empty parking spot on Main Street from the kitchen window.",
+   "physicalDescription": "Broad-shouldered with a gravel voice, in jeans and a name-tagged work shirt, a pencil worn to a stub behind her ear."
+  },
+  {
+   "name": "Gus Bell",
+   "gender": "male",
+   "role": "innkeeper of the Bluebird Motel",
+   "home": "Bluebird Motel",
+   "work": "Bluebird Motel",
+   "description": "The motel's owner-manager, who wants his fourteen weekly rooms full like the old highway days and worries about the flicker in the vacancy sign he can't trace to any wire.",
+   "physicalDescription": "Lean and sun-creased, in a pearl-snap western shirt, with keys on a carabiner that jingle before you see him coming."
+  },
+  {
+   "name": "Jesse Carter",
+   "gender": "male",
+   "role": "mechanic at Carter's Garage",
+   "home": "Bluebird Motel",
+   "work": "Carter's Garage",
+   "description": "The town's only mechanic, who rented a motel back room after his divorce and wants the county plow contract to carry the shop through winter, worried the bypass sends breakdowns to a rival garage thirty miles east.",
+   "physicalDescription": "Barrel-chested, in gray coveralls with his name faded off the chest, a white scar splitting one eyebrow."
+  }
+ ],
+ "player": {
+  "name": "Dana Mercer",
+  "gender": "female",
+  "role": "county traffic surveyor",
+  "home": "Bluebird Motel",
+  "work": "Main Street",
+  "description": "An outsider hired by the county to spend the winter counting cars and empty parking spots for a bypass impact report, who wants her numbers to be honest and worries they'll be the last thing that finishes this town off.",
+  "physicalDescription": "Tall and windburned, in a fleece-lined surveyor's vest and insulated boots, clicking a metal tally counter without noticing she's doing it."
+ }
+}

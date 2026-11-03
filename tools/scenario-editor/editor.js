@@ -62,6 +62,25 @@ async function loadSources(select) {
   if (sel.value !== S.source) await openSource(sel.value);
 }
 
+/** Pick up scenarios added behind the page (another tab, a job that finished while
+ * the page was closed): redraws the list only when it changed, never switching away
+ * from the open scenario, and never while the list has focus (it may be dropped down). */
+async function refreshSourceList() {
+  const sel = $("source");
+  if (document.hidden || document.activeElement === sel || !S.sources) return;
+  let sources;
+  try { sources = (await api("/api/scenarios")).sources; } catch { return; }
+  const key = list => list.map(s => s.id + "\u0000" + s.label).join("\u0001");
+  if (key(sources) === key(S.sources) || document.activeElement === sel) return;
+  S.sources = sources;
+  sel.innerHTML = sources.map(s => `<option value="${esc(s.id)}">${esc(s.label)}</option>`).join("")
+    || `<option value="">No scenarios yet: open a zip</option>`;
+  if (sources.some(s => s.id === S.source)) sel.value = S.source;
+}
+window.addEventListener("focus", refreshSourceList);
+document.addEventListener("visibilitychange", refreshSourceList);
+setInterval(refreshSourceList, 15000);
+
 async function openSource(id) {
   if (dirty() && !confirm("Discard unsaved changes?")) { $("source").value = S.source; return; }
   S.source = id; remember("editor.source", id);
@@ -70,6 +89,7 @@ async function openSource(id) {
   const r = await api("/api/scenario?" + q());
   S.scn = r.scenario; S.media = new Set(r.media); S.editable = r.editable;
   minimapScenario(); renderToolOpts(); fit(); render(); inspect(); fillFind(); check();
+  updateRerollButton();
   if (S.tab === "images") showImages();
 }
 

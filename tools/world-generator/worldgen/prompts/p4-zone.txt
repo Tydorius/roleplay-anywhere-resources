@@ -1,0 +1,30 @@
+Dress ONE zone's outdoors. Code lays the paths and places every object you
+list; you never give coordinates.
+
+SETTING: ${setting_line}
+ZONE: ${zone_line}
+BUILDINGS HERE:
+${building_lines}
+
+CATALOGUE (name | size in cells | placement rule):
+${catalogue_lines}
+
+Reply with ONE JSON object with exactly these fields:
+{
+  "paths": "none|dirt|cobble|paved",
+  "props": [{"template": "catalogue name", "count": 2, "hint": "outdoor hint"}],
+  "filler": [{"template": "catalogue name", "density": "low|medium|high"}]
+}
+
+- "paths": the zone's own paths. A village green or market: dirt or cobble. A
+  wild forest: dirt or none. A town square: cobble or paved.
+- "props": the zone's named outdoor features plus street furniture, with
+  counts that fit the zone's size class (a well is 1, benches are several).
+  Template names must be catalogue names EXACTLY.
+- Props use ONLY the outdoor hint vocabulary: along_path, center, edge,
+  cluster, scatter, behind:<building>, front:<building>, beside:<building>,
+  joined with +. Landmarks (a well, a cross, a fountain) take "center".
+- "filler" spreads over the wild ground: trees and bushes for a forest (high
+  density), the odd oak for a village (low). 0-3 filler entries.
+
+${rules}

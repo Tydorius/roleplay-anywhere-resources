@@ -1,0 +1,29 @@
+People this world, one batch. Code builds each person's daily schedule from
+their home and work; give everyone a real home building and a real workplace.
+
+WORLD: ${setting_line}
+ZONE: ${zone_line}
+ZONES (work may name any of them): ${zone_names_line}
+BUILDINGS (with the beds their furniture holds):
+${building_lines}
+${roster_block}
+Reply with ONE JSON object:
+{
+  "npcs": [
+    {"name": "full name", "gender": "male|female", "role": "their trade or place",
+     "home": "building name from the list", "work": "building or zone name from the lists",
+     "description": "one sentence: who they are and what they want",
+     "physicalDescription": "build, clothes, one telling detail"}
+  ]
+}
+
+- This batch: ${quota_line}
+- Make the people the place needs: staff on duty in opening hours, families,
+  rivals, and at least one person who doesn't fit (the misfit the story wants).
+- "home" must be a BUILDING from the list with a bed free (at most one person
+  per bed, counting the roster). "work" must be a building or a zone from the
+  lists (a forester works in the forest zone).
+- Names fit the setting; nobody in the world shares a name with the roster.
+  Descriptions are specific: count things, mention one want and one worry.
+
+${rules}

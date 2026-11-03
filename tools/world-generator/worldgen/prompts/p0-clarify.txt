@@ -1,0 +1,16 @@
+The user answered a questionnaire about a Roleplay Anywhere scenario. Find
+the real ambiguities or contradictions in the answers - the clashes that
+would change the world (a cozy tone picked together with deadly danger:
+which wins when they clash?). Do not ask what the answers already say.
+
+IDEA: ${idea_line}
+
+ANSWERS:
+${answer_lines}
+${notes_block}
+Reply with ONE JSON object:
+{"questions": [{"question": "one clear question", "options": ["2-4 short options"]}]}
+
+- At most 5 questions, and only ones whose answers change the world.
+- Each option is a short answer to it; the user always has Other as well.
+- Nothing worth asking? Reply {"questions": []}.
