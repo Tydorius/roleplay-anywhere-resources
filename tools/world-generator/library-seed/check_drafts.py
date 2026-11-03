@@ -135,7 +135,7 @@ def main():
         known = {o["category"] for o in objs}
         used = set()
         for purpose, body in purposes.items():
-            for kind in ("core", "extra"):
+            for kind in ("core", "extra", "roles"):
                 for cat in body.get(kind, []):
                     used.add(cat)
         missing = sorted(used - known)

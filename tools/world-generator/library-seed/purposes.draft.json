@@ -1,0 +1,172 @@
+{
+  "bedroom": {
+    "core": ["bed"],
+    "extra": ["table", "cabinet", "chest", "chair", "light", "decor", "sink", "toilet"],
+    "roles": {"bed": ["sleep"], "table": ["storage.small"], "cabinet": ["storage.big"],
+              "chest": ["storage.small"], "chair": ["seat"], "light": ["light.small"],
+              "decor": ["decor.floor"], "sink": ["wash"], "toilet": ["wash"]}
+  },
+  "kitchen": {
+    "core": ["stove", "sink", "table", "light"],
+    "extra": ["appliance", "counter", "cabinet", "chair", "bench", "work", "bin", "basket", "barrel", "hearth"],
+    "roles": {"stove": ["cook"], "sink": ["wash"], "table": ["table"],
+              "light": ["light.small"], "appliance": ["storage.small"],
+              "counter": ["work.secondary"], "cabinet": ["storage.small"],
+              "chair": ["seat"], "bench": ["seat.many"], "work": ["work.secondary"],
+              "bin": ["storage.small"], "basket": ["storage.small"],
+              "barrel": ["storage.small"], "hearth": ["heat"]}
+  },
+  "dining": {
+    "core": ["table", "chair", "light"],
+    "extra": ["bench", "sofa", "cabinet", "decor", "counter", "stove", "entertainment"],
+    "roles": {"table": ["table"], "chair": ["seat"], "light": ["light.small"],
+              "bench": ["seat.many"], "sofa": ["seat.many"], "cabinet": ["storage.small", "display"],
+              "decor": ["decor.floor"], "counter": ["service"], "stove": ["cook"],
+              "entertainment": ["entertainment"]}
+  },
+  "common_room": {
+    "core": ["table", "chair", "light"],
+    "extra": ["bench", "sofa", "hearth", "entertainment", "counter", "decor", "appliance", "rack"],
+    "roles": {"table": ["table"], "chair": ["seat"], "light": ["light.small"],
+              "bench": ["seat.many"], "sofa": ["seat.many"], "hearth": ["heat", "light.big"],
+              "entertainment": ["entertainment"], "counter": ["service"],
+              "decor": ["decor.floor"], "appliance": ["entertainment"],
+              "rack": ["storage.small"]}
+  },
+  "shop": {
+    "core": ["counter", "light"],
+    "extra": ["shelf", "rack", "cabinet", "table", "chair", "appliance", "console", "decor", "bin", "basket"],
+    "roles": {"counter": ["service"], "light": ["light.small"], "shelf": ["display"],
+              "rack": ["display"], "cabinet": ["display", "storage.small"],
+              "table": ["display"], "chair": ["seat"], "appliance": ["storage.small"],
+              "console": ["work.secondary"], "decor": ["decor.floor"],
+              "bin": ["storage.small"], "basket": ["storage.small"]}
+  },
+  "workshop": {
+    "core": ["work", "light"],
+    "extra": ["table", "rack", "chest", "shelf", "barrel", "chair", "appliance", "bin"],
+    "roles": {"work": ["work.primary"], "light": ["light.small"], "table": ["work.secondary"],
+              "rack": ["storage.small"], "chest": ["storage.small"], "shelf": ["storage.big"],
+              "barrel": ["storage.small"], "chair": ["seat"], "appliance": ["work.secondary"],
+              "bin": ["storage.small"]}
+  },
+  "storage": {
+    "core": ["shelf"],
+    "extra": ["chest", "rack", "barrel", "basket", "pallet", "bin", "cabinet", "appliance", "hearth", "desk", "light", "utility"],
+    "roles": {"shelf": ["storage.big"], "chest": ["storage.small"], "rack": ["storage.small"],
+              "barrel": ["storage.small"], "basket": ["storage.small"],
+              "pallet": ["storage.big"], "bin": ["storage.small"], "cabinet": ["storage.small"],
+              "appliance": ["storage.small"], "hearth": ["heat"],
+              "desk": ["work.primary"], "light": ["light.small"], "utility": ["work.secondary"]}
+  },
+  "office": {
+    "core": ["desk", "chair", "light"],
+    "extra": ["cabinet", "shelf", "console", "appliance", "decor", "board", "table", "sofa", "rack"],
+    "roles": {"desk": ["work.primary"], "chair": ["seat"], "light": ["light.small"],
+              "cabinet": ["storage.big"], "shelf": ["storage.small", "display"],
+              "console": ["work.secondary"], "appliance": ["service"],
+              "decor": ["decor.floor"], "board": ["display"], "table": ["table"],
+              "sofa": ["seat.many"], "rack": ["storage.small"]}
+  },
+  "washroom": {
+    "core": ["sink", "toilet", "light"],
+    "extra": ["bath", "cabinet", "appliance", "decor", "basket"],
+    "roles": {"sink": ["wash"], "toilet": ["wash"], "light": ["light.small"],
+              "bath": ["wash"], "cabinet": ["storage.small"],
+              "appliance": ["wash"], "decor": ["decor.floor"],
+              "basket": ["storage.small"]}
+  },
+  "dormitory": {
+    "core": ["bed", "light"],
+    "extra": ["chest", "cabinet", "chair", "table", "appliance", "bin"],
+    "roles": {"bed": ["sleep"], "light": ["light.small"], "chest": ["storage.small"],
+              "cabinet": ["storage.small"], "chair": ["seat"], "table": ["table"],
+              "appliance": ["service"], "bin": ["storage.small"]}
+  },
+  "forge": {
+    "core": ["work", "light"],
+    "extra": ["rack", "barrel", "chair", "chest", "table"],
+    "roles": {"work": ["work.primary"], "light": ["light.small"],
+              "rack": ["storage.small"], "barrel": ["storage.small"],
+              "chair": ["seat"], "chest": ["storage.small"], "table": ["work.secondary"]}
+  },
+  "chapel": {
+    "core": ["bench", "religious", "light"],
+    "extra": ["decor", "entertainment", "coffin", "chair"],
+    "roles": {"bench": ["seat.many"], "religious": ["work.primary"],
+              "light": ["light.small"], "decor": ["decor.floor"],
+              "entertainment": ["entertainment"], "coffin": ["storage.small"],
+              "chair": ["seat"]}
+  },
+  "classroom": {
+    "core": ["desk", "board", "light"],
+    "extra": ["chair", "shelf", "table", "console", "decor"],
+    "roles": {"desk": ["work.primary"], "board": ["display"], "light": ["light.small"],
+              "chair": ["seat"], "shelf": ["storage.small"], "table": ["table"],
+              "console": ["work.secondary"], "decor": ["decor.floor"]}
+  },
+  "ward": {
+    "core": ["bed", "medical", "light"],
+    "extra": ["cabinet", "decor", "sink", "work", "toilet"],
+    "roles": {"bed": ["sleep"], "medical": ["medical"], "light": ["light.small"],
+              "cabinet": ["storage.small"], "decor": ["decor.floor"],
+              "sink": ["wash"], "work": ["work.primary"], "toilet": ["wash"]}
+  },
+  "cell": {
+    "core": ["bed", "toilet"],
+    "extra": ["cabinet", "chest", "bench", "sink", "bath", "light"],
+    "roles": {"bed": ["sleep"], "toilet": ["wash"], "cabinet": ["storage.small"],
+              "chest": ["storage.small"], "bench": ["seat.many"],
+              "sink": ["wash"], "bath": ["wash"], "light": ["light.small"]}
+  },
+  "bridge": {
+    "core": ["console", "light"],
+    "extra": ["chair", "board", "appliance", "work", "table", "shelf"],
+    "roles": {"console": ["work.primary"], "light": ["light.small"],
+              "chair": ["seat"], "board": ["display"], "appliance": ["work.secondary"],
+              "work": ["work.secondary"], "table": ["table"], "shelf": ["storage.small"]}
+  },
+  "laboratory": {
+    "core": ["work", "light"],
+    "extra": ["cabinet", "console", "shelf", "medical", "sink", "desk", "chair", "appliance"],
+    "roles": {"work": ["work.primary"], "light": ["light.small"],
+              "cabinet": ["storage.small"], "console": ["work.secondary"],
+              "shelf": ["storage.big"], "medical": ["medical"], "sink": ["wash"],
+              "desk": ["work.secondary"], "chair": ["seat"], "appliance": ["work.secondary"]}
+  },
+  "library": {
+    "core": ["shelf", "light"],
+    "extra": ["table", "desk", "chair", "decor", "work", "entertainment", "utility"],
+    "roles": {"shelf": ["storage.big"], "light": ["light.small"], "table": ["table"],
+              "desk": ["work.primary"], "chair": ["seat"], "decor": ["decor.floor"],
+              "work": ["work.primary"], "entertainment": ["entertainment"],
+              "utility": ["work.secondary"]}
+  },
+  "laundry": {
+    "core": ["appliance", "light"],
+    "extra": ["basket", "sink", "bin"],
+    "roles": {"appliance": ["wash", "work.primary"], "light": ["light.small"],
+              "basket": ["storage.small"], "sink": ["wash"], "bin": ["storage.small"]}
+  },
+  "guardroom": {
+    "core": ["cabinet", "light"],
+    "extra": ["rack", "table", "chair", "board", "security", "gym"],
+    "roles": {"cabinet": ["storage.small"], "light": ["light.small"],
+              "rack": ["storage.small"], "table": ["table"], "chair": ["seat"],
+              "board": ["display"], "security": ["work.secondary"], "gym": ["work.secondary"]}
+  },
+  "gym": {
+    "core": ["gym", "light"],
+    "extra": ["rack", "cabinet", "bin", "decor"],
+    "roles": {"gym": ["work.primary"], "light": ["light.small"],
+              "rack": ["storage.small"], "cabinet": ["storage.small"],
+              "bin": ["storage.small"], "decor": ["decor.floor"]}
+  },
+  "greenhouse": {
+    "core": ["work", "light"],
+    "extra": ["shelf", "decor", "bench", "barrel"],
+    "roles": {"work": ["work.primary"], "light": ["light.big"],
+              "shelf": ["storage.small"], "decor": ["decor.floor"],
+              "bench": ["seat.many"], "barrel": ["storage.small"]}
+  }
+}

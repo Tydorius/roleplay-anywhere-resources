@@ -111,7 +111,38 @@ Merge notes worth review:
 
 ## Purposes
 
-(filled by change 3)
+`library-seed/purposes.draft.json` covers **22 purposes**: the design's first 10 (bedroom,
+kitchen, dining, common_room, shop, workshop, storage, office, washroom, dormitory) plus forge,
+chapel, classroom, ward, cell, bridge, laboratory, library, laundry, guardroom, gym and
+greenhouse (greenhouse exists only because RimWorld's hydroponics basin needs a home). Each
+purpose lists its `core` categories (almost always present) and `extra` ones (sometimes, or
+richer rooms), and binds every category to the roles the design's layouts use (`sleep`,
+`work.primary`, `work.secondary`, `seat`, `seat.many`, `table`, `cook`, `heat`, `wash`,
+`storage.small`, `storage.big`, `light.small`, `light.big`, `service`, `display`,
+`entertainment`, `medical`, `decor.floor`).
+
+Where the core/extra split comes from:
+
+- Prison Architect's room requirements give the tightest cores: cell = bed + toilet, office =
+  desk + chair + filing cabinet, kitchen = cooker + fridge + sink, dormitory = bunk + toilet,
+  ward = medical bed. [pa-fandom]
+- CDDA's house mapgen and furniture families give the looser extras: dressers and nightstands
+  in bedrooms, entertainment centers and coffee tables in living rooms, furnaces and water
+  heaters in basements. [cdda-furniture, cdda-mapgen]
+- Wikipedia's category taxonomy settled the storage split (cupboards small, wardrobes and
+  shelving big) and the dining extras (sideboards, display cabinets). [wikipedia-furniture]
+
+`layout-notes.md` records, per purpose, the arrangement facts the sources show — beds lined
+along one wall in shared bedrooms, L-shaped kitchen appliance clusters, washroom fixtures in a
+wall line, pews in rows facing the altar, library bookcases shoulder to shoulder along every
+wall. Its opening caveat matters: CDDA's house mapgen resolves furniture glyphs through
+palettes we did not open, so we take positional patterns (wall-hugging furniture, corner
+clusters, clear centres), not glyph identities; and the Prison Architect pairings come from its
+wiki's object lists and room-requirement snippets rather than a fully open page.
+
+`check_drafts.py` now also verifies that every category named in `purposes.draft.json` (in
+`core`, `extra` and `roles`) exists in `objects.draft.json`: 22 purposes, all 33 categories
+referenced, **PASS**.
 
 ## Our own output
 
