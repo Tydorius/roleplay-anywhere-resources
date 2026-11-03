@@ -308,6 +308,8 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
 MEASURE_MARGIN = 2        # cells of slack for the zone's own paths and dressing
 MEASURE_TRIES = 12        # frames tried, each bigger, before giving up growing
 MEASURE_TIGHTEN = 6       # frames tried, each smaller, after one fits
+REPLAY_TRIES = 4          # inner seeds a measured zone tries in its final rect
+SCAN_FURNISH_SPOTS = 24   # spots whose rooms fail to furnish before a scan settles
 
 
 def _entry_mouths(w, h, sides, rng):
@@ -325,6 +327,26 @@ def _entry_mouths(w, h, sides, rng):
             cells |= ({(a + d, 0) for d in (-1, 0, 1)} if s == "south"
                       else {(a + d, h - 1) for d in (-1, 0, 1)})
     return cells
+
+
+def replay_zone(zone, rect, templates, inner, entry_sides, road_reserve=(),
+                map_ctx=None):
+    """Lay a measured zone out in its placed rect with the inner seed it was
+    measured with, mouths synthesized on the same entry sides (the map's real
+    road mouths stay reserved besides). The real mouths can still tip a tight
+    frame, so a layout that loses content tries a few more inner seeds in the
+    same rect. Returns the ZoneOut."""
+    zout = None
+    for k in range(REPLAY_TRIES):
+        zrng = random.Random(inner ^ (k * 0x9E3779B1))
+        mouths = {(x + rect.x, y + rect.y) for (x, y)
+                  in _entry_mouths(rect.w, rect.h, entry_sides, zrng)}
+        reserved = set(road_reserve) | mouths
+        zout = layout_zone(zone, rect, templates, zrng, road_reserved=reserved,
+                           map_ctx=map_ctx)
+        if not any("no space in zone" in r for (_w, r) in zout.failures):
+            break
+    return zout
 
 
 def measure_zone(zone, templates, rng, entry_sides=(), scale=1.0, probe=None):
@@ -1372,7 +1394,13 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
             sc = (street.x + street.w // 2, street.y + street.h // 2)
             cands.sort(key=lambda p: abs(p[0] - sc[0]) + abs(p[1] - sc[1]))
         fallback = None
+        spoiled = 0
         for (bx, by) in cands:
+            # a room that will not furnish usually fails the same way at every
+            # spot: after a few such spots, settle for the first of them rather
+            # than furnishing again at every free cell of the zone
+            if spoiled >= SCAN_FURNISH_SPOTS:
+                break
             # the entrance is turned to face the street first; the original
             # orientation is still better than not placing the building
             if street is None:
@@ -1400,6 +1428,7 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
                     _record_furniture(out, b)
                     return True
                 rollback(b)
+                spoiled += 1
                 if fallback is None:
                     fallback = (rd, (bx, by), yr)
         if fallback is not None:

@@ -32,6 +32,7 @@ MIN_ZONE_SIDE = 12              # thinnest zone the partition ever cuts
 FIT_SLACK = 0.85                # footprint estimates run hot; buildings resolve smaller
 ELASTIC_STRETCH = 1.75           # farthest farmland stretches past its measured length
 MAX_BAND_ASPECT = 1.3           # longest a built-up zone may run along its band
+MAP_FIT_PASSES = 6              # grid growths tried until every measured zone fits
 CENTER_CAP_SLACK = 1.05         # a lone settlement centre may exceed its fit by
 SIDE_STREET_COUNT = {"few": 5, "many": 9}   # buildings that add a crossing street
 SIZE_CLASS_MULT = {"small": 1.0, "medium": 1.1, "large": 1.15, "huge": 1.1}
@@ -73,11 +74,12 @@ class RoadOut:
 class MapOut:
     def __init__(self):
         self.grid = (GRID_MIN, GRID_MIN)
-        self.zones = {}          # zone name -> primary Rect (the biggest piece)
+        self.zones = {}          # zone name -> primary Rect (the piece its content lays out in)
         self.zone_pieces = {}    # zone name -> [Rect] (one, except wraps)
         self.roads = []          # [RoadOut]
         self.zone_road_reserve = {}  # zone name -> cells that must stay clear (road mouths)
         self.zone_layout = {}    # built zone name -> (inner seed, entry sides) its layout replays
+        self.measured = {}       # built zone name -> (w, h) its own layout measured
         self.failures = []
         self.warnings = []       # non-fatal notes (a grid past GRID_WARN)
         self.default_ground = ("grass", "grass")  # the plan's dominant wild ground
@@ -360,22 +362,104 @@ def layout_map(plan, rng, extensions=(), weight_scale=None):
     m = MapOut()
     m.grid = _grid_size(weights, core)
     m.zone_layout = zone_layout
+    m.measured = measured
     m.extensions = set(extensions)
     m.density_scale = {"sparse": 0.6, "normal": 1.0, "dense": 1.4}.get(
         (plan.setting or {}).get("density"), 1.0)
-    _place_centred(plan, m, weights, mins, aspects, rng, fits, margin, gut,
-                   exact=exact, fit_of={z.name: _zone_fit(z, tmap) for z in plan.zones},
-                   along_floor={z.name: _fields_along_floor(z, tmap)
-                                for z in plan.zones if _fields_along_floor(z, tmap)},
-                   elastic=elastic)
+    # the map is sized to what is built, never the other way round. A zone
+    # placed smaller than its own layout measured would cull buildings to
+    # fit, so the grid grows by the shortfall; and a zone whose real layout
+    # (in its placed rect, with the roads' real mouths) still loses content
+    # grows itself. Either way the zones place again from the same rng state
+    fit_of = {z.name: _zone_fit(z, tmap) for z in plan.zones}
+    along_floor = {z.name: _fields_along_floor(z, tmap)
+                   for z in plan.zones if _fields_along_floor(z, tmap)}
+    state = rng.getstate()
+    for _ in range(MAP_FIT_PASSES):
+        rng.setstate(state)
+        m.failures, m.roads, m.zone_road_reserve = [], [], {}
+        _place_centred(plan, m, weights, mins, aspects, rng, fits, margin, gut,
+                       exact=exact, fit_of=fit_of, along_floor=along_floor,
+                       elastic=elastic)
+        short = _measured_shortfall(m, measured)
+        if short:
+            m.grid = (m.grid[0] + short[0], m.grid[1] + short[1])
+            continue
+        m.roads, road_failures = _place_roads(plan, m.zones, m.grid, rng, m.all_pieces())
+        m.zone_road_reserve = _road_mouths(m.all_pieces(), m.roads)
+        lost = _losing_zones(plan, m, tmap)
+        if not lost:
+            break
+        for name in lost:
+            mw, mh = measured[name]
+            size = (mw + max(3, mw // 10), mh + max(3, mh // 10))
+            measured[name] = mins[name] = size
+            weights[name] = size[0] * size[1]
+            for caps in (exact, elastic):
+                if name in caps:
+                    caps[name] = size
+            if name in fits:
+                fits[name] = (weights[name],) + size
+    else:
+        if short:   # the last pass grew the grid without placing roads
+            m.roads, road_failures = _place_roads(plan, m.zones, m.grid, rng,
+                                                  m.all_pieces())
+            m.zone_road_reserve = _road_mouths(m.all_pieces(), m.roads)
+        m.warnings.append("zones that still cannot hold their own layouts: "
+                          + ", ".join(sorted(set(_short_zones(m, measured))
+                                             | set(_losing_zones(plan, m, tmap)))))
+    m.failures.extend(road_failures)
     if max(m.grid) > GRID_WARN:
         m.warnings.append(
             f"grid {m.grid[0]}x{m.grid[1]} runs past {GRID_WARN} on an axis")
-    m.roads, road_failures = _place_roads(plan, m.zones, m.grid, rng, m.all_pieces())
-    m.failures.extend(road_failures)
-    m.zone_road_reserve = _road_mouths(m.all_pieces(), m.roads)
     m.default_ground = _default_ground(plan, weights)
     return m
+
+
+def _short_zones(m, measured):
+    """{zone: (dw, dh)} for measured zones whose content piece is smaller
+    than the size their own layout measured."""
+    out = {}
+    for name, (mw, mh) in measured.items():
+        pieces = m.zone_pieces.get(name)
+        if not pieces:
+            continue
+        r = pieces[0]
+        dw, dh = max(0, mw - r.w), max(0, mh - r.h)
+        if dw or dh:
+            out[name] = (dw, dh)
+    return out
+
+
+def _losing_zones(plan, m, tmap):
+    """Measured zones whose real layout — in the rect the map gave them, with
+    the roads' real mouths reserved — still leaves a building or compound
+    without space. Laid out on scratch copies: the build replays the same."""
+    from .layout_zone import replay_zone
+
+    class _Scratch:   # what layout_zone reads of the map, field names copied
+        density_scale = m.density_scale
+        field_names = set(m.field_names)
+    ctx = _Scratch()
+    lost = []
+    for z in plan.zones:
+        if z.name not in m.zone_layout or not m.zone_pieces.get(z.name):
+            continue
+        inner, entry_sides = m.zone_layout[z.name]
+        zout = replay_zone(z, m.zone_pieces[z.name][0], dict(tmap), inner, entry_sides,
+                           m.zone_road_reserve.get(z.name, ()), map_ctx=ctx)
+        if any("no space in zone" in r for (_w, r) in zout.failures):
+            lost.append(z.name)
+    return lost
+
+
+def _measured_shortfall(m, measured):
+    """How much the grid grows on each axis so every measured zone can hold
+    its own layout, or None when they all do."""
+    short = _short_zones(m, measured)
+    if not short:
+        return None
+    return (max(d[0] for d in short.values()), max(d[1] for d in short.values()))
 
 
 # ------------------------------------------------------------------ placement
@@ -535,8 +619,16 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
         cmin["south"] = cmin["north"] = max(cmin["south"], carry)
         if cap_y is not None:
             cap_y = max(cap_y, carry)
+    # the side each zone was given is its home: a wrap's piece there carries
+    # the zone's content; its piece round the corner is open land only
+    home = {n: s for s in SIDES for n in sides[s]}
     wraps = _choose_wraps(outer, sides, classes, weights, rng, built) \
         if "region-groups" in m.extensions else {}
+
+    def is_extra(side, n):
+        """A wrap's piece away from home: no content, so no measured floor —
+        it takes the band's spare ground rather than squeezing what is built."""
+        return n in wraps and home.get(n) != side
 
     def band_weight(side):
         total = sum(weights[n] for n in sides[side])
@@ -547,7 +639,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
     def band_min(side):
         names = list(sides[side]) + [n for n, (v, h) in wraps.items()
                                      if side in (v, h) and n not in sides[side]]
-        return max([mins[n][side_axis(side)] for n in names] + [0])
+        return max([MIN_ZONE_SIDE if is_extra(side, n) else mins[n][side_axis(side)]
+                    for n in names] + [0])
 
     # ---- axis layouts: [band?, centre, band?]. The centre block absorbs all
     # the slack, and the bands are capped so the centre provably stays in the
@@ -664,7 +757,8 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
                 pinned[n] = v          # a horizontal band pins to west/east
         segs = _stack_band(band, side, members, pinned, weights, mins, gut, rng,
                            built=built, exact=exact, along_floor=along_floor,
-                           elastic=elastic)
+                           elastic=elastic,
+                           extra={n for n in members if is_extra(side, n)})
         for n, r in segs.items():
             seg_by_band[(side, n)] = r
             pieces[n].append(r)
@@ -683,12 +777,17 @@ def _place_centred(plan, m, weights, mins, aspects, rng, fits=None, margin=2, gu
             dy = -gut if h == "south" else gut
             seg_by_band[(v, n)] = Rect(corner.x, corner.y + dy, corner.w, corner.h)
         pieces[n] = [seg_by_band[(v, n)], seg_by_band[(h, n)]]
+    # the first piece is the zone's primary — the one its content lays out
+    # in — so a wrap's home piece leads, however much land the other took
+    for n in wraps:
+        lead = seg_by_band.get((home.get(n), n))
+        if lead is not None and lead in pieces[n]:
+            pieces[n] = [lead] + [r for r in pieces[n] if r is not lead]
 
     for z in plan.zones:
         if not pieces[z.name]:
             m.failures.append((f"zone {z.name}", "not placed"))
-    m.zones = {z.name: max(pieces[z.name], key=lambda r: (r.w * r.h, r.x, r.y))
-               for z in plan.zones if pieces[z.name]}
+    m.zones = {z.name: pieces[z.name][0] for z in plan.zones if pieces[z.name]}
     m.zone_pieces = {z.name: pieces[z.name] for z in plan.zones if pieces[z.name]}
 
 
@@ -733,7 +832,7 @@ def _ring_bands(xr, yr, margin, gut, W, H, vertical_full):
 
 
 def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
-                exact=None, along_floor=None, elastic=None):
+                exact=None, along_floor=None, elastic=None, extra=()):
     """Cut one band into per-zone segments. Pinned zones (a wrap's pieces)
     sit at their end of the band; the rest fill the middle by weight from a
     seeded end. A built-up zone is never stretched past MAX_BAND_ASPECT of
@@ -745,7 +844,9 @@ def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
     ``along_floor`` floors a zone's length along the band beyond its own
     axis minimum — a fields zone's plots beside its farmstead — and an
     ``elastic`` zone (farmland) takes spare length up to ELASTIC_STRETCH of
-    its measured size.
+    its measured size. An ``extra`` member is a wrap's piece away from its
+    home side: open land with no floor of its own, it takes spare length
+    like a wild zone.
     Returns {name: Rect}."""
     exact = exact or {}
     along_floor = along_floor or {}
@@ -755,6 +856,8 @@ def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
     mi = 1 if side in ("west", "east") else 0   # the axis the length runs along
 
     def floor_of(n):
+        if n in extra:
+            return min(MIN_ZONE_SIDE, along)
         return min(max(mins[n][mi], along_floor.get(n, 0), MIN_ZONE_SIDE), along)
 
     sizes = _sizes_mins(along - gut * (len(members) - 1),
@@ -769,7 +872,7 @@ def _stack_band(band, side, members, pinned, weights, mins, gut, rng, built=(),
     # fit instead: its blocks place verbatim, so slack buys nothing
     caps = {}
     for n in members:
-        if n not in built or weights[n] <= 0:
+        if n not in built or n in extra or weights[n] <= 0:
             continue
         floor = floor_of(n)
         if n in elastic:
