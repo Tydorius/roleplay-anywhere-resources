@@ -639,6 +639,16 @@ def _population_line(population):
     return f"house {lo}-{hi} residents (aim near {(lo + hi) // 2}); the map must bed them"
 
 
+def _notes_block(notes):
+    """The user's "Other instructions or requests" as a prompt block ("" when
+    there are none). They are the user's own words, so they come verbatim."""
+    notes = (notes or "").strip()
+    if not notes:
+        return ""
+    return ("\nOTHER INSTRUCTIONS FROM THE USER (follow them; they outrank your "
+            "own ideas):\n" + notes + "\n")
+
+
 def frame_brief(frame, population=None):
     """The frame as prompt text for P1 (and P6): every field, a line each.
     Empty string when there is no frame."""
@@ -664,17 +674,19 @@ def frame_brief(frame, population=None):
     if population:
         lines.append(f"- {_population_line(population)}")
     lines.append("- Summary: " + (frame.get("summary") or ""))
-    return "\n".join(lines)
+    return "\n".join(lines) + _notes_block(frame.get("notes"))
 
 
 def run_frame(client, mode, answers=None, idea="", population=None, clarify=None,
-              progress=None, cancel=None):
+              progress=None, cancel=None, notes=""):
     """P0: the World Frame. In long mode the first call (without ``clarify``)
     asks up to 5 clarifying questions and returns them unanswered; call again
     with ``clarify`` as [{question, answer}] to get the frame. Every other
     mode frames in one call. Returns ``(frame, clarify_questions, stats)``;
-    the frame is None while clarifications wait for answers. Raises
-    PhaseError when P0 cannot be salvaged, Cancelled between calls."""
+    the frame is None while clarifications wait for answers. ``notes`` (the
+    "Other instructions" box) go to both calls and are kept verbatim on the
+    frame as ``notes``. Raises PhaseError when P0 cannot be salvaged,
+    Cancelled between calls."""
     from . import questions as questions_mod
     if mode not in questions_mod.MODES:
         raise ValueError(f"unknown mode {mode!r}")
@@ -689,6 +701,7 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
         d = call("p0-clarify", "p0-clarify", event=("P0", "clarifying questions"),
                  idea_line=idea_line,
                  answer_lines="\n".join(answer_lines) or "- (none)",
+                 notes_block=_notes_block(notes),
                  _validate=check_p0_clarify)
         if d is None:
             raise PhaseError("P0-clarify produced no JSON at all")
@@ -707,10 +720,14 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
              idea_line=idea_line, mode_line=_mode_line(mode),
              population_line=_population_line(population),
              answer_lines="\n".join(answer_lines) or "- (none: frame the idea itself)",
-             clarify_block=cblock, _validate=check_p0)
+             clarify_block=cblock, notes_block=_notes_block(notes),
+             _validate=check_p0)
     if d is None:
         raise PhaseError("P0 produced no JSON at all")
-    return sanitize_p0(d, stats["dropped"]), clarify_qs, stats
+    frm = sanitize_p0(d, stats["dropped"])
+    if (notes or "").strip():
+        frm["notes"] = notes.strip()
+    return frm, clarify_qs, stats
 
 
 def building_cap(residents=None, compounds=False):
@@ -2483,9 +2500,14 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         frame, _qs, p0_stats = run_frame(
             client, questionnaire.get("mode", "quick"),
             answers=questionnaire.get("answers"), idea=idea,
-            population=population, clarify=[], progress=progress, cancel=cancel)
+            population=population, clarify=[], progress=progress, cancel=cancel,
+            notes=questionnaire.get("notes") or "")
         for k in ("phase_log", "dropped"):
             stats[k] = p0_stats[k] + stats[k]
+    notes = ((questionnaire or {}).get("notes") or "").strip()
+    if frame is not None and notes:
+        # the box may have been edited after framing: the latest words win
+        frame = dict(frame, notes=notes)
 
     # ---- P1: the world plan (the frame in place of the bare idea)
     fbrief = frame_brief(frame, population)
@@ -2501,6 +2523,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
 
     # ---- P2: the prop catalogue
     setting_line = _setting_line(p1, frame)
+    # the people and story calls also get the "Other instructions" (a plot
+    # outline belongs there); the many building and zone calls do not
+    story_line = setting_line + _notes_block((frame or {}).get("notes"))
     zone_lines = "\n".join(
         f"- {_zone_line(z)}\n"
         f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
@@ -2668,7 +2693,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     for i, z in enumerate(peopled, 1):
         d = call(f"p5-{slug(z['name'])}", "p5-people",
                  event=("P5", f"people {i}/{len(peopled)}: {z['name']}"),
-                 setting_line=setting_line, zone_line=_zone_line(z),
+                 setting_line=story_line, zone_line=_zone_line(z),
                  zone_names_line=", ".join(zone_names),
                  building_lines=_p5_blines(z), roster_block=_roster_block(),
                  quota_line=_quota_line(z),
@@ -2697,7 +2722,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             want = min(P5_BATCH, lo - len(roster))
             d = call(f"p5-topup-{extra + 1}", "p5-people",
                      event=("P5", f"top-up batch {extra + 1}: {want} more"),
-                     setting_line=setting_line,
+                     setting_line=story_line,
                      zone_line="any zone with a free bed",
                      zone_names_line=", ".join(zone_names),
                      building_lines=_p5_blines(), roster_block=_roster_block(),
@@ -2726,7 +2751,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     role_line = (frame or {}).get("playerRole") or \
         "an outsider with a reason to stay the season"
     d = call("p5-player", "p5-player", event=("P5", "the player"),
-             setting_line=setting_line, role_line=role_line,
+             setting_line=story_line, role_line=role_line,
              building_lines=_p5_blines(), roster_block=_roster_block(),
              item_lines=item_lines,
              _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
@@ -2781,7 +2806,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     else:
         time_pressure_block = ""
     d = call("p6a", "p6a-rules", event=("P6", "rules and economy"),
-             setting_line=setting_line, zone_lines=p6_zone_lines,
+             setting_line=story_line, zone_lines=p6_zone_lines,
              building_lines=p6_building_lines, item_value_line=item_value_line,
              time_pressure_block=time_pressure_block, _validate=check_p6a)
     systems = {}
@@ -2794,7 +2819,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     growth_line = _answer_text("growth", (frame or {}).get("playerRole")
                                and "as the frame's role implies" or "as the frame implies")
     d = call("p6b", "p6b-perks", event=("P6", "perk trees"),
-             setting_line=setting_line, zone_lines=p6_zone_lines,
+             setting_line=story_line, zone_lines=p6_zone_lines,
              building_lines=p6_building_lines, roster_lines=p6_roster_lines,
              growth_line=growth_line, _validate=check_p6b)
     if d is None:
@@ -2804,7 +2829,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         systems.update(sanitize_p6b(d, stats["dropped"]))
 
     d = call("p6c", "p6c-story", event=("P6", "calendar and quests"),
-             setting_line=setting_line,
+             setting_line=story_line,
              player_role=(frame or {}).get("playerRole") or player.get("role", "a newcomer"),
              conflict_line=(frame or {}).get("conflict") or "the situation the player walked into",
              zone_lines=p6_zone_lines, building_lines=p6_building_lines,

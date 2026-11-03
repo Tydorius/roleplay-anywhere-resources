@@ -130,6 +130,22 @@ class TestRunFrame(unittest.TestCase):
         self.assertEqual(qs, [])
         self.assertEqual(frame["premise"], a_frame()["premise"])
 
+    def test_other_instructions_reach_p0_and_stay_on_the_frame(self):
+        q = {"question": "Cozy or deadly?", "options": ["Cozy", "Deadly"]}
+        notes = "Plot: act 1 the mill burns; act 2 the culprit hides at the inn."
+        client = ScriptedClient([_dump({"questions": [q]}), _dump(a_frame())])
+        frame, _qs, _stats = phases.run_frame(client, "long", idea="x", notes=notes)
+        self.assertIsNone(frame)
+        self.assertIn(notes, client.sent[0][1]["content"])     # the clarifying turn sees them
+        frame, _qs, _stats = phases.run_frame(client, "long", idea="x", clarify=[], notes=notes)
+        self.assertIn(notes, client.sent[1][1]["content"])
+        self.assertEqual(frame["notes"], notes)                # kept word for word
+        self.assertIn(notes, phases.frame_brief(frame))        # and P1 gets them
+        client = ScriptedClient([_dump(a_frame())])
+        frame, _qs, _stats = phases.run_frame(client, "quick", idea="x")
+        self.assertNotIn("notes", frame)
+        self.assertNotIn("OTHER INSTRUCTIONS", client.sent[0][1]["content"])
+
     def test_unsalvageable_p0_raises(self):
         client = ScriptedClient(["no json here", "still nothing", "nope"])
         with self.assertRaises(phases.PhaseError):

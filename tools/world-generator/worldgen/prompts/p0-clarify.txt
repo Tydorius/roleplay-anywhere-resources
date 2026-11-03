@@ -7,7 +7,7 @@ IDEA: ${idea_line}
 
 ANSWERS:
 ${answer_lines}
-
+${notes_block}
 Reply with ONE JSON object:
 {"questions": [{"question": "one clear question", "options": ["2-4 short options"]}]}
 

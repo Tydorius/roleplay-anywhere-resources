@@ -8,7 +8,7 @@ POPULATION: ${population_line}
 
 ANSWERS (each may be skipped; Other holds the user's own words):
 ${answer_lines}
-${clarify_block}
+${notes_block}${clarify_block}
 Reply with ONE JSON object with exactly these fields:
 {
   "genre": {"primary": "one genre word", "influences": ["0-3 other flavours picked above"]},

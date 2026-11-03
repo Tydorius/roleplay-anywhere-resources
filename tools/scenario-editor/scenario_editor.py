@@ -109,6 +109,10 @@ class Handler(ig.Handler):
                 return self.send(200, {"job": wg.job()})
             if u.path == "/api/worldgen/plan":
                 return self.send(200, wg.plan_info((q.get("source") or [""])[0]))
+            if u.path == "/api/worldgen/drafts":
+                return self.send(200, {"drafts": wg.list_drafts()})
+            if u.path == "/api/worldgen/draft":
+                return self.send(200, {"draft": wg.get_draft((q.get("id") or [""])[0])})
         except (LookupError, ValueError, KeyError, OSError) as e:
             return self.send(400, {"error": str(e)})
         return super().do_GET()
@@ -127,13 +131,22 @@ class Handler(ig.Handler):
                 req = req_json(self.body())
                 return self.send(200, {"job": wg.start_generate(
                     req.get("idea"), req.get("provider"), req.get("extensions") or [], req.get("seed", 1),
-                    frame=req.get("frame"), questionnaire=req.get("questionnaire"))})
+                    frame=req.get("frame"), questionnaire=req.get("questionnaire"),
+                    draft=req.get("draft"))})
             if u.path == "/api/worldgen/frame":
                 req = req_json(self.body())
                 return self.send(200, {"job": wg.start_frame(
                     req.get("mode", "quick"), idea=req.get("idea", ""),
                     answers=req.get("answers"), population=req.get("population"),
-                    provider=req.get("provider"), clarify=req.get("clarify"))})
+                    provider=req.get("provider"), clarify=req.get("clarify"),
+                    notes=req.get("notes", ""), draft=req.get("draft"))})
+            if u.path == "/api/worldgen/draft":
+                req = req_json(self.body())
+                draft_id = (q.get("id") or [""])[0]
+                if req.get("delete"):
+                    wg.delete_draft(draft_id)
+                    return self.send(200, {"ok": True})
+                return self.send(200, {"draft": wg.save_draft(draft_id, req)})
             if u.path == "/api/worldgen/cancel":
                 return self.send(200, {"ok": True, "job": wg.cancel()})
             if u.path == "/api/worldgen/reroll":

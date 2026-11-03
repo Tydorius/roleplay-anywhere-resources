@@ -83,14 +83,15 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
 
 def frame(mode, idea="", answers=None, population=None, clarify=None,
           provider=None, providers_path=None, client=None, log_dir=None,
-          progress=None, cancel=None):
+          progress=None, cancel=None, notes=""):
     """P0, the World Frame, as its own step (brief 013 change 2). Long mode
     without ``clarify`` runs the clarifying turn and returns
     ``{"questions": [...], "frame": None}``; call again with the answers as
     ``clarify`` (``[{"question", "answer"}]``, or ``[]`` to skip the turn)
     to get ``{"questions": [], "frame": {...}}``. Every other mode frames in
-    one call. Returns the dict with the frame's phase stats under
-    ``"stats"``."""
+    one call. ``notes`` is the form's "Other instructions or requests" text,
+    kept verbatim on the frame. Returns the dict with the frame's phase stats
+    under ``"stats"``."""
     if client is None:
         from . import llm
         kwargs = {"providers_path": providers_path} if providers_path else {}
@@ -99,7 +100,7 @@ def frame(mode, idea="", answers=None, population=None, clarify=None,
         client = llm.Client(provider, **kwargs)
     frm, questions_out, stats = phases.run_frame(
         client, mode, answers=answers, idea=idea, population=population,
-        clarify=clarify, progress=progress, cancel=cancel)
+        clarify=clarify, progress=progress, cancel=cancel, notes=notes)
     return {"frame": frm, "questions": questions_out, "stats": stats}
 
 

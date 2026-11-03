@@ -8,6 +8,8 @@
 // medium / long questionnaire from the generator's question bank), answer with option chips,
 // "Frame it" runs P0 as a short job (the long form adds the model's clarifying questions),
 // and the frame's summary is editable before "Generate world" starts the full job.
+// The whole dialog is saved as a draft on the server (out/drafts/), so a refresh or a
+// closed dialog loses nothing: "Saved drafts" at the top brings one back.
 
 const WG_PHASES = {P0: "The world frame", P1: "World plan", P2: "Prop catalogue", P3: "Buildings", P4: "Zones",
                    P5: "People", P6: "Rules, perks, story", layout: "Placing everything", build: "Building the scenario"};
@@ -19,9 +21,12 @@ let wgBank = null;      // {modes, short, medium, population}, from /api/worldge
 let wgFrame = null;     // the approved frame of the open dialog (its summary may have been edited)
 let wgFramedMode = null;
 let wgClarifyQuestions = null;   // the long form's clarifying questions, while unanswered
-let wgClarify = [];              // [{question, answer}] once answered
+let wgClarify = null;            // [{question, answer}] once answered ([] = all skipped)
 let wgFrameBusy = false;
 let wgEstimateTimer = 0;
+let wgDraftId = null;            // the open dialog's draft (out/drafts/<id>.json)
+let wgDraftTimer = 0;
+let wgDialog = null;             // the open dialog element, for the draft saver
 
 const wgNum = n => Number(n || 0).toLocaleString("en-US");
 const wgSeedOf = el => { const s = parseInt(el.value, 10); return Number.isFinite(s) ? s : 1; };
@@ -48,23 +53,30 @@ function wgFormDialog(title, bodyHtml, onGo, onOpen) {
 async function newWorldDialog() {
   wgMeta = await api("/api/worldgen/meta");
   wgBank = await api("/api/worldgen/questions");
-  wgFrame = null; wgFramedMode = null; wgClarifyQuestions = null; wgClarify = [];
-  const form = wgFormDialog("New world from an idea…", wgFormHtml(), dlg => {
+  wgFrame = null; wgFramedMode = null; wgClarifyQuestions = null; wgClarify = null;
+  wgDraftId = null;
+  let drafts = [];
+  try { drafts = (await api("/api/worldgen/drafts")).drafts; } catch {}
+  const form = wgFormDialog("New world from an idea…", wgFormHtml(drafts), dlg => {
     const idea = $("wgIdea").value.trim();
     const mode = wgModeOf(dlg);
     if (mode === "quick" && !idea) { toast("Type the idea first"); return null; }
-    if (!wgFrame) { toast("Frame the world first — press Frame it"); return null; }
+    if (!wgFrame) { wgNeedFrame(); return null; }
     if ($("wgSummary").value.trim()) wgFrame.summary = $("wgSummary").value.trim();
+    wgSaveDraftNow();
     return {
       idea,
       provider: $("wgProvider").value,
       seed: wgSeedOf($("wgSeed")),
       extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
       frame: wgFrame,
-      questionnaire: {mode, answers: wgAnswers(dlg), population: wgPopulation(dlg)},
+      questionnaire: {mode, answers: wgAnswers(dlg), population: wgPopulation(dlg),
+                      notes: $("wgNotes").value.trim()},
+      draft: wgDraftId,
     };
   }, dlg => wgBindForm(dlg));
   const value = await form.promise;   // openDialog resolves to the clicked value itself
+  wgDialog = null;
   if (value !== "go") return;
   try {
     const r = await api("/api/worldgen/generate", {method: "POST", body: JSON.stringify(form.picked())});
@@ -72,15 +84,45 @@ async function newWorldDialog() {
   } catch (e) { toast(e.message); }
 }
 
-function wgFormHtml() {
+/** Generate pressed with no frame yet: say why, in the dialog, where Frame it is. */
+function wgNeedFrame() {
+  const msg = wgClarifyQuestions
+    ? "Answer the model's questions (or skip them), then press Frame it again under them."
+    : "Frame the world first: press Frame it and read the frame.";
+  $("wgFrameStatus").textContent = msg;
+  $("wgFrameStatus").classList.add("warn");
+  (wgClarifyQuestions ? $("wgFrameBtn2") : $("wgFrameBtn"))?.scrollIntoView({block: "center", behavior: "smooth"});
+  toast(msg);
+}
+
+/** Generate looks off until a frame exists, but stays clickable so a press says why. */
+function wgUpdateGo() {
+  const go = wgDialog?.querySelector(".dlg-buttons .primary");
+  if (!go) return;
+  go.classList.toggle("wg-wait", !wgFrame);
+  go.title = wgFrame ? "" : (wgClarifyQuestions ? "Answer the model's questions and Frame it again first"
+                                                : "Frame the world first");
+}
+
+function wgFormHtml(drafts) {
   const pop = wgBank.population;
+  const state = d => d.generated ? "generated" : d.running ? "generating" : d.framed ? "framed"
+    : d.questions ? "model asked questions" : "not framed";
   return `
+    ${drafts.length ? `<div class="wg-drafts">
+      <select id="wgDraftPick">${drafts.map(d => `<option value="${esc(d.id)}">${esc(d.saved)} · ${esc(d.title.slice(0, 60))} (${esc(d.mode)}, ${esc(state(d))})</option>`).join("")}</select>
+      <button type="button" id="wgDraftLoad">Resume draft</button>
+      <button type="button" id="wgDraftDel" title="Delete the chosen draft">Delete</button>
+    </div>` : ""}
     <div class="wg-modes">${wgBank.modes.map(m =>
       `<button type="button" class="wg-mode${m === "quick" ? " on" : ""}" data-mode="${esc(m)}">${esc(WG_MODE_LABEL[m] || m)}</button>`).join("")}</div>
     ${field("The idea, in one line",
             `<textarea id="wgIdea" rows="2" placeholder="a fogbound harbour town of smugglers"></textarea>`,
             "Everything for the quick form; a steer beside the questionnaires.")}
     <div id="wgQuestions"></div>
+    ${field("Other instructions or requests",
+            `<textarea id="wgNotes" rows="4" placeholder="anything the boxes above don't cover: a plot outline, places or people you want, house rules…"></textarea>`,
+            "Optional. Sent word for word to the frame, the world plan, the people and the story phases.")}
     <div class="wg-row">
       ${field("Residents",
               `<div class="wg-pop"><input type="number" id="wgPopLo" value="${pop.default[0]}" min="${pop.min}" max="${pop.max}" step="1"> <span class="note">to</span> <input type="number" id="wgPopHi" value="${pop.default[1]}" min="${pop.min}" max="${pop.max}" step="1"></div>`,
@@ -200,14 +242,79 @@ function wgPopulation(dlg) {
 }
 
 // ---------------------------------------------------------------- Frame it
+function wgSetStatus(text, warn = false) {
+  $("wgFrameStatus").textContent = text;
+  $("wgFrameStatus").classList.toggle("warn", warn);
+}
+
 function wgResetFrame() {
-  wgFrame = null; wgFramedMode = null; wgClarifyQuestions = null; wgClarify = [];
+  const had = wgFrame || wgClarifyQuestions;
+  wgFrame = null; wgFramedMode = null; wgClarifyQuestions = null; wgClarify = null;
   if ($("wgFrameBox")) {
     $("wgFrameBox").hidden = true;
     $("wgClarifyBox").hidden = true;
     $("wgFrameBtn").textContent = "Frame it";
-    $("wgFrameStatus").textContent =
-      "P0 turns your answers into the World Frame every later phase follows. Frame it, read it, then generate.";
+    wgSetStatus("P0 turns your answers into the World Frame every later phase follows. Frame it, read it, then generate.");
+  }
+  wgUpdateGo();
+  if (had && wgDraftId) api("/api/worldgen/draft?id=" + wgDraftId,
+    {method: "POST", body: JSON.stringify({clearFrame: true})}).catch(() => {});
+}
+
+/** The long form's clarifying questions, with their own Frame it button underneath. */
+function wgShowClarify(questions, answers) {
+  wgClarifyQuestions = questions;
+  const box = $("wgClarifyBox");
+  box.hidden = false;
+  $("wgFrameBox").hidden = true;
+  box.innerHTML = `<div class="wg-q-prompt">The model asks — answer what you care about (or skip them all), then Frame it again below</div>`
+    + questions.map((q, i) => `
+      <div class="wg-q" data-cq="${i}">
+        <div class="wg-q-prompt">${esc(q.question)}</div>
+        <div class="wg-chips" data-multi="1">
+          ${q.options.map((o, k) => `<button type="button" class="wg-chip" data-i="${k}">${esc(o)}</button>`).join("")}
+          <button type="button" class="wg-chip wg-other" data-i="other">Other</button>
+          <input type="text" class="wg-other-text" hidden placeholder="your own answer">
+        </div>
+      </div>`).join("")
+    + `<div class="wg-framebar"><button type="button" id="wgFrameBtn2" class="primary">Frame it again</button>
+         <span class="note">with these answers — then Generate world comes alive</span></div>`;
+  wgBindChips(box);
+  for (const a of answers || []) {            // a resumed draft's answers
+    const i = questions.findIndex(q => q.question === a.question);
+    const chips = box.querySelector(`[data-cq="${i}"] .wg-chips`);
+    if (chips) wgSetChoice(chips, questions[i].options, [a.answer]);
+  }
+  $("wgFrameBtn2").onclick = () => $("wgFrameBtn").onclick();
+  $("wgFrameBtn").textContent = "Frame it again";
+  wgSetStatus(`The model has ${questions.length} question${questions.length === 1 ? "" : "s"} of its own — answer them below, then press Frame it again under them.`, true);
+  wgUpdateGo();
+}
+
+function wgShowFrame(frame, summary) {
+  wgFrame = frame; wgClarifyQuestions = null;
+  $("wgClarifyBox").hidden = true;
+  $("wgFrameBox").hidden = false;
+  $("wgFrameView").innerHTML = `<summary>The whole frame</summary>${wgFrameDetails(frame)}`;
+  $("wgSummary").value = summary || frame.summary || "";
+  wgSetStatus("This frame shapes every later phase. Edit the summary if you like, then Generate world.");
+  $("wgFrameBtn").textContent = "Frame it again";
+  wgUpdateGo();
+}
+
+/** Tick the chips whose labels are in `values`; anything else goes in Other. */
+function wgSetChoice(chips, options, values, other = "") {
+  const extra = [];
+  for (const v of values || []) {
+    const i = options.indexOf(v);
+    if (i >= 0) chips.querySelector(`.wg-chip[data-i="${i}"]`)?.classList.add("on");
+    else if (v) extra.push(v);
+  }
+  const text = [other, ...extra].filter(Boolean).join("; ");
+  if (text) {
+    chips.querySelector(".wg-other").classList.add("on");
+    const t = chips.querySelector(".wg-other-text");
+    t.hidden = false; t.value = text;
   }
 }
 
@@ -217,62 +324,113 @@ async function wgFrameIt(dlg) {
   const idea = $("wgIdea").value.trim();
   if (mode === "quick" && !idea) return toast("Type the idea first");
   wgFrameBusy = true;
-  const btn = $("wgFrameBtn");
-  btn.disabled = true; btn.textContent = "Framing…";
+  const btns = [$("wgFrameBtn"), $("wgFrameBtn2")].filter(Boolean);
+  btns.forEach(b => { b.disabled = true; b.textContent = "Framing…"; });
+  wgSaveDraftNow();
   try {
     const body = {mode, idea, answers: wgAnswers(dlg), population: wgPopulation(dlg),
-                  provider: $("wgProvider").value};
-    if (wgClarify.length) body.clarify = wgClarify;
+                  notes: $("wgNotes").value.trim(), provider: $("wgProvider").value, draft: wgDraftId};
+    if (wgClarify) body.clarify = wgClarify;   // [] when every question was skipped
     const r = await api("/api/worldgen/frame", {method: "POST", body: JSON.stringify(body)});
-    const j = await wgPollFrame(r.job, dlg);
-    if (j && j.state === "failed") { $("wgFrameStatus").textContent = j.error || "framing failed"; return; }
-    if (!j) { $("wgFrameStatus").textContent = "framing stopped"; return; }
-    if ((j.questions || []).length) {
-      wgClarifyQuestions = j.questions; wgClarify = [];
-      const box = $("wgClarifyBox");
-      box.hidden = false;
-      box.innerHTML = `<div class="wg-q-prompt">The model asks — answer what you care about, then Frame it again</div>`
-        + j.questions.map((q, i) => `
-          <div class="wg-q" data-cq="${i}">
-            <div class="wg-q-prompt">${esc(q.question)}</div>
-            <div class="wg-chips" data-multi="1">
-              ${q.options.map((o, k) => `<button type="button" class="wg-chip" data-i="${k}">${esc(o)}</button>`).join("")}
-              <button type="button" class="wg-chip wg-other" data-i="other">Other</button>
-              <input type="text" class="wg-other-text" hidden placeholder="your own answer">
-            </div>
-          </div>`).join("");
-      wgBindChips(box);
-      $("wgFrameStatus").textContent = `The model has ${j.questions.length} question${j.questions.length === 1 ? "" : "s"} of its own.`;
-    } else if (j.frame) {
-      wgFrame = j.frame; wgFramedMode = mode; wgClarifyQuestions = null; wgClarify = [];
-      $("wgClarifyBox").hidden = true;
-      $("wgFrameBox").hidden = false;
-      $("wgFrameView").innerHTML = `<summary>The whole frame</summary>${wgFrameDetails(j.frame)}`;
-      $("wgSummary").value = j.frame.summary || "";
-      $("wgFrameStatus").textContent = "This frame shapes every later phase. Edit the summary if you like, then Generate world.";
-      btn.textContent = "Frame it again";
-    } else {
-      $("wgFrameStatus").textContent = "the model returned no frame — try again";
-    }
+    wgSetStatus("Framing…");
+    await wgFrameResult(await wgPollFrame(r.job, dlg), mode);
   } catch (e) {
-    $("wgFrameStatus").textContent = e.message;
+    wgSetStatus(e.message, true);
   } finally {
     wgFrameBusy = false;
-    btn.disabled = false;
-    if (btn.textContent === "Framing…") btn.textContent = "Frame it";
+    btns.forEach(b => { if (b.isConnected) { b.disabled = false; if (b.textContent === "Framing…") b.textContent = "Frame it again"; } });
+    if ($("wgFrameBtn").textContent === "Framing…") $("wgFrameBtn").textContent = "Frame it";
   }
 }
 
+async function wgFrameResult(j, mode) {
+  if (j && j.state === "failed") return wgSetStatus(j.error || "framing failed", true);
+  if (!j) return wgSetStatus("framing stopped", true);
+  if ((j.questions || []).length) {
+    wgClarify = null;
+    wgShowClarify(j.questions);
+  } else if (j.frame) {
+    wgFramedMode = mode;
+    wgShowFrame(j.frame);
+  } else {
+    wgSetStatus("the model returned no frame — try again", true);
+  }
+}
+
+// ---------------------------------------------------------------- drafts
+const wgNewDraftId = () => "d-" + new Date().toISOString().replace(/\D/g, "").slice(0, 14)
+  + "-" + Math.random().toString(36).slice(2, 6);
+
+/** The dialog as a draft: what the page owns (the server writes the frame and the run). */
+function wgDraftState(dlg) {
+  const s = {mode: wgModeOf(dlg), idea: $("wgIdea").value, answers: wgAnswers(dlg),
+             notes: $("wgNotes").value, population: wgPopulation(dlg), provider: $("wgProvider").value,
+             seed: wgSeedOf($("wgSeed")),
+             extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext)};
+  if (wgFrame) s.summary = $("wgSummary").value;
+  if (wgClarifyQuestions) s.clarifyAnswers = wgClarifyAnswers(dlg);
+  return s;
+}
+
+function wgSaveDraftNow() {
+  clearTimeout(wgDraftTimer);
+  const dlg = wgDialog;
+  if (!dlg || !dlg.open) return;
+  const s = wgDraftState(dlg);
+  // nothing typed or picked yet: no draft worth keeping
+  if (!wgDraftId && !s.idea.trim() && !s.notes.trim() && !Object.keys(s.answers).length) return;
+  wgDraftId ||= wgNewDraftId();
+  api("/api/worldgen/draft?id=" + wgDraftId, {method: "POST", body: JSON.stringify(s)}).catch(() => {});
+}
+
+function wgSaveDraftSoon() {
+  clearTimeout(wgDraftTimer);
+  wgDraftTimer = setTimeout(wgSaveDraftNow, 800);
+}
+
+/** Fill the dialog from a saved draft; picks up its frame job if that is still running. */
+async function wgResumeDraft(dlg, id) {
+  const d = (await api("/api/worldgen/draft?id=" + encodeURIComponent(id))).draft;
+  wgResetFrame();
+  wgDraftId = d.id;
+  const mode = d.mode || "quick";
+  dlg.querySelectorAll(".wg-mode").forEach(x => x.classList.toggle("on", x.dataset.mode === mode));
+  wgRenderQuestions(dlg, mode);
+  $("wgIdea").value = d.idea || "";
+  $("wgNotes").value = d.notes || "";
+  if (d.population) { $("wgPopLo").value = d.population[0]; $("wgPopHi").value = d.population[1]; }
+  if (d.provider && [...$("wgProvider").options].some(o => o.value === d.provider)) $("wgProvider").value = d.provider;
+  if (d.seed != null) $("wgSeed").value = d.seed;
+  dlg.querySelectorAll("[data-ext]").forEach(cb => cb.checked = (d.extensions || []).includes(cb.dataset.ext));
+  dlg.querySelectorAll(".wg-q[data-q]").forEach(box => {
+    const q = wgQuestionById(box.dataset.q), a = (d.answers || {})[box.dataset.q];
+    if (!q || !a) return;
+    if (q.free) box.querySelector(".wg-other-text").value = a.other || "";
+    else wgSetChoice(box.querySelector(".wg-chips"), q.options, a.choices, a.other);
+  });
+  if (d.frame) { wgFramedMode = d.framedMode || mode; wgShowFrame(d.frame, d.summary); }
+  else if (d.questions) wgShowClarify(d.questions, d.clarifyAnswers);
+  const run = d.run;
+  if (run) wgSetStatus(run.source ? `Already generated from this draft (${run.started}); it opened as a workspace. Generate again for another world.`
+                                  : `A generation from this draft started at ${run.started}.`);
+  $("wgIdea").oninput();
+  // its frame job may still be running (the page was refreshed mid-frame)
+  const j = (await api("/api/worldgen/job")).job;
+  if (j && j.kind === "frame" && j.draft === d.id && j.state === "running") {
+    wgSetStatus("Framing… (picked up the running job)");
+    await wgFrameResult(await wgPollFrame(j, dlg), mode);
+  }
+  toast("Draft resumed");
+}
+
 /** Quietly polls the frame job while the dialog stays open (no second dialog):
- * resolves with the finished job, or null when it was cancelled or replaced. */
+ * resolves with the finished job, or null when it was replaced or the dialog closed.
+ * Closing the dialog leaves the job running: it writes its result into the draft. */
 function wgPollFrame(first, dlg) {
   return new Promise(resolve => {
     let result = null;
     const tick = setInterval(async () => {
-      if (!dlg.open) {                       // the form was closed: stop the job
-        api("/api/worldgen/cancel", {method: "POST"}).catch(() => {});
-        clearInterval(tick); return resolve(null);
-      }
+      if (!dlg.open) { clearInterval(tick); return resolve(null); }
       let j = null;
       try { j = (await api("/api/worldgen/job")).job; } catch { return; }
       if (!j || j.id !== first.id) { clearInterval(tick); return resolve(null); }
@@ -292,6 +450,7 @@ function wgFrameDetails(f) {
     [(f.themes || []).length === 1 ? "Theme" : "Themes", (f.themes || []).join("; ")],
     [(f.constraints || []).length === 1 ? "Constraint" : "Constraints", (f.constraints || []).join("; ")],
     ["The framer left open", (f.unresolved || []).join("; ")],
+    ["Your other instructions", f.notes],
   ];
   return `<dl class="facts">${rows.filter(([, v]) => v).map(([k, v]) =>
     `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>`;
@@ -314,7 +473,27 @@ function wgClarifyAnswers(dlg) {
 }
 
 function wgBindForm(dlg) {
+  wgDialog = dlg;
   wgRenderQuestions(dlg, "quick");
+  wgUpdateGo();
+  // every edit lands in the draft a moment later
+  dlg.addEventListener("input", wgSaveDraftSoon);
+  dlg.addEventListener("change", wgSaveDraftSoon);
+  dlg.addEventListener("click", ev => { if (ev.target.closest(".wg-chip, .wg-mode")) wgSaveDraftSoon(); });
+  if ($("wgDraftLoad")) {
+    $("wgDraftLoad").onclick = () => wgResumeDraft(dlg, $("wgDraftPick").value).catch(e => toast(e.message));
+    $("wgDraftDel").onclick = async () => {
+      const id = $("wgDraftPick").value;
+      if (!confirm("Delete this draft?")) return;
+      try {
+        await api("/api/worldgen/draft?id=" + encodeURIComponent(id), {method: "POST", body: JSON.stringify({delete: true})});
+        if (id === wgDraftId) wgDraftId = null;
+        $("wgDraftPick").querySelector(`option[value="${CSS.escape(id)}"]`)?.remove();
+        if (!$("wgDraftPick").options.length) $("wgDraftPick").parentElement.remove();
+        toast("Draft deleted");
+      } catch (e) { toast(e.message); }
+    };
+  }
   dlg.querySelectorAll(".wg-mode").forEach(b => b.onclick = () => {
     dlg.querySelectorAll(".wg-mode").forEach(x => x.classList.remove("on"));
     b.classList.add("on");
@@ -326,7 +505,7 @@ function wgBindForm(dlg) {
     }
   });
   $("wgFrameBtn").onclick = () => {
-    if (wgClarifyQuestions) wgClarify = wgClarifyAnswers(dlg);
+    if (wgClarifyQuestions) wgClarify = wgClarifyAnswers(dlg);   // [] skips them all
     wgFrameIt(dlg);
   };
   const estimate = () => {
@@ -477,6 +656,17 @@ async function updateRerollButton() {
   catch { b.hidden = true; }
 }
 
+/** After a refresh: a generation or re-roll still running gets its progress dialog back. */
+async function wgReattach() {
+  let j = null;
+  try { j = (await api("/api/worldgen/job")).job; } catch { return; }
+  if (!j || j.state !== "running") return;
+  if (j.kind === "generate") await wgTrackJob(j, "Generating the world…");
+  else if (j.kind === "reroll") await wgTrackJob(j, "Re-rolling the layout…");
+  else if (j.kind === "frame") toast("A world frame is being made — New world… → Resume draft picks it up");
+}
+
 $("newWorld").onclick = () => newWorldDialog().catch(e => toast(e.message));
 $("reroll").onclick = () => rerollDialog().catch(e => toast(e.message));
 updateRerollButton();
+wgReattach();

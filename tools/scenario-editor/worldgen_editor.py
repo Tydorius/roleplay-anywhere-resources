@@ -153,7 +153,7 @@ def _checked_provider(provider):
 def _clean_clarify(clarify):
     """The clarifying answers of the long form: [{question, answer}], both
     non-empty strings, at most five."""
-    if not clarify:
+    if clarify is None:
         return None
     out = []
     for c in clarify:
@@ -163,7 +163,7 @@ def _clean_clarify(clarify):
         a = str(c.get("answer") or "").strip()
         if q and a:
             out.append({"question": q, "answer": a})
-    return out[:5] or None
+    return out[:5]           # [] = the user skipped every question: frame now
 
 
 def _checked_questionnaire(questionnaire):
@@ -176,9 +176,13 @@ def _checked_questionnaire(questionnaire):
     mode = str(questionnaire.get("mode") or "quick").strip()
     if mode not in wgquestions.MODES:
         raise ValueError(f"unknown mode {mode!r}; use one of {list(wgquestions.MODES)}")
-    return {"mode": mode,
-            "answers": wgquestions.sanitize_answers(mode, questionnaire.get("answers")),
-            "population": wgquestions.sanitize_population(questionnaire.get("population"))}
+    out = {"mode": mode,
+           "answers": wgquestions.sanitize_answers(mode, questionnaire.get("answers")),
+           "population": wgquestions.sanitize_population(questionnaire.get("population"))}
+    notes = wgquestions.sanitize_notes(questionnaire.get("notes"))
+    if notes:
+        out["notes"] = notes
+    return out
 
 
 # ---------------------------------------------------------------- jobs
@@ -186,7 +190,7 @@ _job = None          # the one job dict; None when nothing has run yet
 _lock = threading.Lock()
 _PUBLIC = ("id", "kind", "state", "phase", "label", "idea", "calls", "tokens",
            "started", "finished", "error", "outDir", "logDir", "source", "summary",
-           "frame", "questions")
+           "frame", "questions", "draft")
 
 
 def job():
@@ -261,9 +265,11 @@ def _to_workspace(out_dir, summary, plan_path):
     return sid
 
 
-def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None):
+def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None,
+                   draft=None):
     """Start a full generation (model phases + layout + build) for ``idea``,
-    with an approved World Frame and its questionnaire kept on the plan."""
+    with an approved World Frame and its questionnaire kept on the plan.
+    ``draft`` names the saved dialog draft, which records the run."""
     idea = str(idea or "").strip()
     questionnaire = _checked_questionnaire(questionnaire)
     if not idea and (frame is None and questionnaire is None):
@@ -280,12 +286,16 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
     except (TypeError, ValueError):
         raise ValueError("the seed must be a whole number")
 
+    draft = _checked_draft_id(draft) if draft else None
     out_dir = _fresh_out_dir(idea or (questionnaire or {}).get("mode") or "world")
     exts = tuple(extensions or ())
 
     def target(update, j):
         update(outDir=str(out_dir), logDir=str(out_dir / "llm"))
         out_dir.mkdir(parents=True, exist_ok=True)
+        if draft:
+            _merge_draft(draft, {"run": {"job": j["id"], "outDir": str(out_dir),
+                                         "started": j["started"]}})
         summary = wgapi.generate(
             idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
             frame=frame, questionnaire=questionnaire,
@@ -294,16 +304,22 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
             cancel=lambda: j["cancelRequested"])
         sid = _to_workspace(out_dir, summary, Path(out_dir) / "plan.json")
         update(source=sid, summary=summary)
+        if draft:
+            _merge_draft(draft, {"run": {"job": j["id"], "outDir": str(out_dir),
+                                         "started": j["started"], "source": sid}})
 
-    return _start("generate", {"label": "new world", "idea": idea or None}, target)
+    return _start("generate", {"label": "new world", "idea": idea or None, "draft": draft},
+                  target)
 
 
 # ---------------------------------------------------------------- the frame job
-def start_frame(mode, idea="", answers=None, population=None, provider=None, clarify=None):
+def start_frame(mode, idea="", answers=None, population=None, provider=None, clarify=None,
+                notes="", draft=None):
     """Start P0 (the World Frame) as its own short job. In long mode without
     ``clarify`` the job ends with ``questions`` (the clarifying turn) and no
     frame; send them back answered as ``clarify`` to get the frame. ``frame``
-    on the finished job is what "Generate" then builds with."""
+    on the finished job is what "Generate" then builds with. The result is
+    also written into the saved ``draft``, so a page refresh loses nothing."""
     mode = str(mode or "quick").strip()
     if mode not in wgquestions.MODES:
         raise ValueError(f"unknown mode {mode!r}; use one of {list(wgquestions.MODES)}")
@@ -314,20 +330,127 @@ def start_frame(mode, idea="", answers=None, population=None, provider=None, cla
     answers = wgquestions.sanitize_answers(mode, answers)
     population = wgquestions.sanitize_population(population)
     clarify = _clean_clarify(clarify)
+    notes = wgquestions.sanitize_notes(notes)
+    draft = _checked_draft_id(draft) if draft else None
     out_dir = _fresh_out_dir("frame-" + (idea or mode))
 
     def target(update, j):
         update(outDir=str(out_dir), logDir=str(out_dir / "llm"))
         out_dir.mkdir(parents=True, exist_ok=True)
         r = wgapi.frame(mode, idea=idea, answers=answers, population=population,
-                        clarify=clarify, provider=entry["name"],
+                        clarify=clarify, notes=notes, provider=entry["name"],
                         log_dir=str(out_dir / "llm"),
                         progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                                   calls=e.get("calls", 0),
                                                   tokens=e.get("tokens", 0)))
         update(frame=r["frame"], questions=r["questions"], label="the world frame")
+        if draft:
+            # new questions clear the old answers; a frame clears the questions
+            _merge_draft(draft, {
+                "frame": r["frame"], "framedMode": mode if r["frame"] else None,
+                "summary": (r["frame"] or {}).get("summary"),
+                "questions": r["questions"] or None,
+                "clarifyAnswers": None if r["questions"] else
+                _read_draft(draft).get("clarifyAnswers")})
 
-    return _start("frame", {"label": f"the {mode} frame", "idea": idea or None}, target)
+    return _start("frame", {"label": f"the {mode} frame", "idea": idea or None, "draft": draft},
+                  target)
+
+
+# ---------------------------------------------------------------- drafts
+# The dialog's state (form, answers, the model's questions, the frame) saved
+# as out/drafts/<id>.json, so a refresh or a closed dialog can bring it back.
+_draft_lock = threading.Lock()
+MAX_DRAFT_BYTES = 200_000
+
+
+def _drafts_dir():
+    return OUT_ROOT / "drafts"
+
+
+def _checked_draft_id(draft_id):
+    draft_id = str(draft_id or "")
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}", draft_id):
+        raise ValueError(f"bad draft id {draft_id!r}")
+    return draft_id
+
+
+def _read_draft(draft_id):
+    path = _drafts_dir() / f"{_checked_draft_id(draft_id)}.json"
+    try:
+        return json.loads(path.read_text("utf-8"))
+    except (OSError, ValueError):
+        return {}
+
+
+def _merge_draft(draft_id, fields):
+    """Merge ``fields`` into the draft (None removes a key) and stamp it."""
+    with _draft_lock:
+        d = _read_draft(draft_id)
+        for k, v in fields.items():
+            if v is None:
+                d.pop(k, None)
+            else:
+                d[k] = v
+        d["id"] = draft_id
+        d["saved"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        text = json.dumps(d, indent=1, ensure_ascii=False)
+        if len(text.encode("utf-8")) > MAX_DRAFT_BYTES:
+            raise ValueError("the draft is too large to save")
+        _drafts_dir().mkdir(parents=True, exist_ok=True)
+        tmp = _drafts_dir() / f"{draft_id}.json.tmp"
+        tmp.write_text(text, "utf-8")
+        tmp.replace(_drafts_dir() / f"{draft_id}.json")
+        return d
+
+
+# what the page may save; the frame and the run are the server's to write
+_DRAFT_FORM_KEYS = ("mode", "idea", "answers", "notes", "population", "provider", "seed",
+                    "extensions", "summary", "clarifyAnswers")
+
+
+def save_draft(draft_id, form):
+    if not isinstance(form, dict):
+        raise ValueError("the draft must be an object")
+    fields = {k: form.get(k) for k in _DRAFT_FORM_KEYS if k in form}
+    if form.get("clearFrame"):     # the form changed under the frame: drop it
+        fields.update(frame=None, framedMode=None, questions=None, clarifyAnswers=None,
+                      summary=None)
+    return _merge_draft(_checked_draft_id(draft_id), fields)
+
+
+def get_draft(draft_id):
+    d = _read_draft(draft_id)
+    if not d:
+        raise LookupError(f"no draft {draft_id!r}")
+    return d
+
+
+def delete_draft(draft_id):
+    path = _drafts_dir() / f"{_checked_draft_id(draft_id)}.json"
+    if not path.is_file():
+        raise LookupError(f"no draft {draft_id!r}")
+    path.unlink()
+
+
+def list_drafts():
+    """The saved drafts, newest first, as one-line summaries."""
+    out = []
+    for path in (_drafts_dir().glob("*.json") if _drafts_dir().is_dir() else ()):
+        try:
+            d = json.loads(path.read_text("utf-8"))
+        except (OSError, ValueError):
+            continue
+        frame = d.get("frame") or {}
+        title = (d.get("idea") or frame.get("premise") or "").strip() or "(no idea text)"
+        run = d.get("run") or {}
+        out.append({"id": path.stem, "saved": d.get("saved", ""), "mode": d.get("mode", "quick"),
+                    "title": title[:120], "framed": bool(frame),
+                    "questions": bool(d.get("questions")),
+                    "generated": bool(run.get("source")),
+                    "running": bool(run) and not run.get("source")})
+    out.sort(key=lambda d: d["saved"], reverse=True)
+    return out
 
 
 def _workspace_dir(source_id):

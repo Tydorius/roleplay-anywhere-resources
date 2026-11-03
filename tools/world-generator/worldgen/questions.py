@@ -19,6 +19,13 @@ BANK_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "questions.
 
 MODES = ("quick", "short", "medium", "long")
 MAX_OTHER_CHARS = 400          # free text is a steer, not an essay
+MAX_NOTES_CHARS = 6000         # "Other instructions" may hold a plot outline
+
+
+def sanitize_notes(notes):
+    """The form's "Other instructions or requests" box: plain text, trimmed,
+    capped at MAX_NOTES_CHARS; "" when empty or not text."""
+    return notes.strip()[:MAX_NOTES_CHARS] if isinstance(notes, str) else ""
 
 
 def _check_bank(bank, path):

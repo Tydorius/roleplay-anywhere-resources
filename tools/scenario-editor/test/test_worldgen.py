@@ -68,10 +68,11 @@ def mocked_frame(mode, idea="", answers=None, population=None, clarify=None,
     """The fake P0: the long form asks one clarifying question before framing."""
     FRAME_CALLS.append({"mode": mode, "idea": idea, "answers": answers,
                         "population": population, "clarify": clarify,
-                        "provider": provider, "log_dir": log_dir})
+                        "provider": provider, "log_dir": log_dir,
+                        "notes": kw.get("notes", "")})
     if progress:
         progress({"phase": "P0", "label": "the world frame", "calls": 1, "tokens": 900})
-    if mode == "long" and not clarify:
+    if mode == "long" and clarify is None:
         return {"frame": None,
                 "questions": [{"question": "Cozy or deadly?", "options": ["Cozy", "Deadly"]}],
                 "stats": {}}
@@ -264,6 +265,40 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertEqual(done["frame"]["tone"], "Cozy")
         self.assertEqual(FRAME_CALLS[-1]["clarify"],
                          [{"question": "Cozy or deadly?", "answer": "Cozy"}])
+
+    def test_frame_skipping_every_question_frames_at_once_with_notes(self):
+        with patch.object(wg.wgapi, "frame", mocked_frame):
+            FRAME_CALLS.clear()
+            j = self.post("/api/worldgen/frame",
+                          {"mode": "long", "idea": "a mill town", "provider": "mockp",
+                           "clarify": [], "notes": "  Act 1: the mill burns.  "})["job"]
+            done = self.wait_job(j["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        self.assertIsNotNone(done["frame"])             # [] skips the clarifying turn
+        self.assertEqual(FRAME_CALLS[-1]["clarify"], [])
+        self.assertEqual(FRAME_CALLS[-1]["notes"], "Act 1: the mill burns.")
+
+    def test_draft_roundtrip_and_frame_result_saved_into_it(self):
+        self.post("/api/worldgen/draft?id=d-test-1",
+                  {"mode": "long", "idea": "a mill town", "notes": "plot", "frame": "ignored"})
+        with patch.object(wg.wgapi, "frame", mocked_frame):
+            j = self.post("/api/worldgen/frame",
+                          {"mode": "long", "idea": "a mill town", "provider": "mockp",
+                           "draft": "d-test-1"})["job"]
+            self.wait_job(j["id"])
+        d = self.get("/api/worldgen/draft?id=d-test-1")["draft"]
+        self.assertEqual((d["idea"], d["notes"]), ("a mill town", "plot"))
+        self.assertEqual(d["questions"][0]["question"], "Cozy or deadly?")
+        self.assertNotIn("frame", d)                    # the page can't write the frame
+        listed = {x["id"]: x for x in self.get("/api/worldgen/drafts")["drafts"]}
+        self.assertTrue(listed["d-test-1"]["questions"])
+        self.post("/api/worldgen/draft?id=d-test-1", {"clearFrame": True})
+        self.assertNotIn("questions", self.get("/api/worldgen/draft?id=d-test-1")["draft"])
+        self.post("/api/worldgen/draft?id=d-test-1", {"delete": True})
+        code, _ = self.request("GET", "/api/worldgen/draft?id=d-test-1")
+        self.assertEqual(code, 400)
+        code, _ = self.request("POST", "/api/worldgen/draft?id=../evil", {"idea": "x"})
+        self.assertEqual(code, 400)
 
     def test_frame_validates_before_starting(self):
         code, raw = self.request("POST", "/api/worldgen/frame",
