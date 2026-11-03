@@ -73,6 +73,43 @@ class TestBuildingCap(unittest.TestCase):
         errors = check_p1(d)
         self.assertTrue(any("residents not needed" in e for e in errors), errors)
 
+    def test_couples_field_is_validated(self):
+        d = populated_p1()                       # the mill and cottage: 1 resident each
+        d["zones"][0]["buildings"][0]["residents"] = 4
+        d["zones"][0]["buildings"][0]["couples"] = 1
+        self.assertFalse(any("couples" in e for e in check_p1(d)))
+        d["zones"][0]["buildings"][0]["couples"] = 3   # more than half the residents
+        errors = check_p1(d)
+        self.assertTrue(any("couple(s) need 6" in e for e in errors), errors)
+        d["zones"][0]["buildings"][0]["couples"] = "two"
+        errors = check_p1(d)
+        self.assertTrue(any("couples must be a whole number" in e for e in errors),
+                        errors)
+        d["zones"][0]["buildings"][0].pop("residents")
+        d["zones"][0]["buildings"][0]["couples"] = 1
+        errors = check_p1(d)
+        self.assertTrue(any("couples needs residents" in e for e in errors), errors)
+        d["zones"][0]["buildings"][0]["residents"] = 4
+        d["zones"][0]["buildings"][0]["units"] = {"name": "Room", "count": 4,
+                                                  "residents": 1}
+        errors = check_p1(d)
+        self.assertTrue(any("couples not needed" in e for e in errors), errors)
+
+    def test_bad_couples_dropped_with_a_log_line(self):
+        from worldgen.phases import sanitize_p1
+        d = populated_p1()
+        mill = d["zones"][0]["buildings"][0]
+        mill["residents"] = 4
+        mill["couples"] = 1
+        log = []
+        sanitize_p1(d, log)
+        self.assertEqual(log, [])          # a fitting couple survives
+        mill["couples"] = 3                # only four residents
+        log = []
+        sanitize_p1(d, log)
+        self.assertNotIn("couples", mill)
+        self.assertTrue(any("couples" in w + r for (w, r) in log), log)
+
 
 class TestP3Beds(unittest.TestCase):
     def setUp(self):
@@ -116,6 +153,38 @@ class TestP3Beds(unittest.TestCase):
         errors = check_p3(d, "Miller's Cottage", tnames, False,
                           beds=beds, residents=4)
         self.assertEqual(errors, [])
+        # the same design fails a couple: one double is there, two are not
+        errors = check_p3(d, "Miller's Cottage", tnames, False,
+                          beds=beds, residents=4, couples=2)
+        self.assertTrue(any("holds only 1 double bed" in e for e in errors), errors)
+        errors = check_p3(d, "Miller's Cottage", tnames, False,
+                          beds=beds, residents=4, couples=1)
+        self.assertEqual(errors, [])
+
+    def test_the_building_line_and_prompt_carry_the_couples(self):
+        p1 = populated_p1()
+        cottage = p1["zones"][0]["buildings"][1]
+        cottage["residents"] = 2
+        cottage["couples"] = 1
+        templates = CANNED_TEMPLATES + [
+            {"name": "Double bed", "size": [2, 2], "walkability": 0.3,
+             "forSleep": True, "tags": ["bed"], "description": "A double bed.",
+             "physicalDescription": "wide wooden bed frame",
+             "rule": "against the wall of a sleeping room"}]
+        cottage_design = json.loads(json.dumps(CANNED_COTTAGE))
+        cottage_design["furniture"].append(
+            {"template": "Double bed", "room": "Sleeping Loft", "count": 1,
+             "hint": "wall:north"})
+        replies = populated_replies(p1=p1)
+        replies[1] = _dump({"templates": templates})
+        replies[3] = _dump(cottage_design)
+        client = ScriptedClient(replies)
+        plan, _stats = phases.run_phases("a mill village", client)
+        cottage_prompt = client.sent[3][1]["content"]
+        self.assertIn("1 couple(s) sharing a double bed", cottage_prompt)
+        kept = next(b for z in plan["zones"] for b in z["buildings"]
+                    if b["name"] == "Miller's Cottage")
+        self.assertEqual(kept.get("couples"), 1)
 
     def test_run_phases_lowers_the_p1_residents_to_the_beds(self):
         # the mill promises 3 sleepers but its furniture beds one; the model

@@ -8,7 +8,8 @@ import dataclasses
 import random
 
 from . import checks, layout_map, layout_zone, schedule as schedule_mod, spec_writer
-from .model import ObjectTemplate, Rect, green_feature_name, parse_plan
+from .model import (ObjectTemplate, Rect, bed_capacity, green_feature_name,
+                    parse_plan)
 
 
 class RegionOut:
@@ -123,6 +124,27 @@ def _bed_template(world, plan_data):
     return t
 
 
+def _double_template(world, plan_data):
+    """The catalogue's double bed: the smallest template the catalogue flags
+    forSleep that sleeps two, or a plain 2x2 "Double bed" at walkability 0.3
+    added to the plan when the catalogue has none."""
+    doubles = [t for t in world.templates.values()
+               if t.for_sleep and bed_capacity(t) == 2]
+    if doubles:
+        return min(doubles, key=lambda t: (t.size[0] * t.size[1], t.name))
+    t = ObjectTemplate(name="Double bed", size=(2, 2), walkability=0.3,
+                       description="A plain double bed.",
+                       physicalDescription="A wide wooden bed frame with a straw mattress.",
+                       tags=["bed"], rule="against the wall of a sleeping room",
+                       extras={"forSleep": True})
+    world.templates[t.name] = t
+    plan_data.setdefault("templates", []).append(
+        {"name": t.name, "size": [2, 2], "walkability": 0.3, "forSleep": True,
+         "description": t.description, "physicalDescription": t.physicalDescription,
+         "tags": ["bed"], "rule": t.rule})
+    return t
+
+
 def _place_bed(world, room, tmpl):
     """A free cell for one bed: against a wall, off the walkways and never
     boxing itself (or the room) in. None when the room has no room left."""
@@ -159,12 +181,108 @@ def _place_bed(world, room, tmpl):
     return None
 
 
+def _couples_by_home(plan):
+    """The plan's couples as home name -> [[person, person], ...]: each home
+    the plan says has couples pairs that many pairs of its residents, in
+    order (P5's partner links, once written, pair the named people)."""
+    people_by_home = {}
+    for p in plan.npcs + [plan.player]:
+        people_by_home.setdefault(p.home, []).append(p)
+    out = {}
+    for z in plan.zones:
+        for b in z.buildings:
+            c = getattr(b, "couples", 0) or 0
+            if c <= 0:
+                continue
+            residents = people_by_home.get(b.name, [])
+            pairs = [residents[i:i + 2] for i in range(0, 2 * c, 2)]
+            out[b.name] = [p for p in pairs if len(p) == 2]
+    return out
+
+
+def _rooms_by_privacy(world, b):
+    """A building's rooms (ground and uppers), most private first: one named
+    or purposed for sleeping, else the farthest from the entrance door."""
+    import re
+    bl = b.layout
+    door = bl.entrance_door
+
+    def score(item):
+        room, design = item
+        purpose = next((r.purpose for r in design.rooms
+                        if r.name == room.base_name), "")
+        if re.search(r"bed|chamber|sleep|private|quarter",
+                     f"{room.base_name} {purpose}".lower()):
+            return (2, 0.0)
+        cx, cy = room.rect.center()
+        return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
+
+    rooms = [(r, bl.design) for r in bl.rooms]
+    for f in getattr(b, "floors", []) or []:
+        rooms += [(r, f.layout.design) for r in f.layout.rooms]
+    return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]
+
+
+def _double_beds_in(world, building):
+    """How many double beds a building's placed furniture holds."""
+    n = sum(schedule_mod.room_doubles(world, r) for r in building.layout.rooms)
+    for f in getattr(building, "floors", []) or []:
+        n += sum(schedule_mod.room_doubles(world, r) for r in f.layout.rooms)
+    return n
+
+
+def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
+    """One double bed per couple the plan promises this home, added in its
+    most private room that has space when the furniture holds none (two
+    single beds and a recorded failure when nothing fits a double), then the
+    home's sleep assignment re-run so both partners share the double room."""
+    home = next((b for b in world.buildings
+                 if b.layout.design.name == home_name), None)
+    if home is None:
+        return
+    want = getattr(home.layout.design, "couples", 0) or 0
+    while _double_beds_in(world, home) < want:
+        tmpl = _double_template(world, plan_data)
+        placed = None
+        for room in _rooms_by_privacy(world, home):
+            pos = _place_bed(world, room, tmpl)
+            if pos is not None:
+                room.furniture.placements.append((tmpl.name, pos))
+                world.objects.append(ObjectOut(tmpl.name, pos, room.full_name))
+                placed = room
+                break
+        if placed is None:
+            single = _bed_template(world, plan_data)
+            room = None
+            for r in _rooms_by_privacy(world, home):
+                pos = _place_bed(world, r, single)
+                if pos is not None:
+                    r.furniture.placements.append((single.name, pos))
+                    world.objects.append(ObjectOut(single.name, pos, r.full_name))
+                    room = r
+                    break
+            names = " and ".join(p.name for pair in pairs for p in pair) or home_name
+            why = f"no free cell for a double bed in {home_name}"
+            if room is not None:
+                why += "; two single beds instead"
+            world.failures.append((f"double bed for {names}", why))
+            return
+    residents = [p for p in plan.npcs + [plan.player] if p.home == home_name]
+    schedule_mod.assign_sleep_rooms(world, residents,
+                                    couples={home_name: pairs})
+
+
 def _ensure_beds(world, plan, plan_data):
-    """Every person sleeps in a bed. A person the room assignment left
-    without one gets a bed added at home: in the home's fullest bedded room
-    when its beds are all taken (they stay home, crowded, when that room has
-    no free cell), else in its most private room. A bedless home borrows the
-    nearest bedded building of its household (the same zone) first."""
+    """Every person sleeps in a bed. Couples come first: each home the plan
+    says has couples gets one double bed per couple (added when its furniture
+    holds none) with both partners assigned to it. Then a person the room
+    assignment left without one gets a bed added at home: in the home's
+    fullest bedded room when its beds are all taken (they stay home, crowded,
+    when that room has no free cell), else in its most private room. A
+    bedless home borrows the nearest bedded building of its household (the
+    same zone) first."""
+    for home_name, pairs in _couples_by_home(plan).items():
+        _ensure_couple_beds(world, plan, plan_data, home_name, pairs)
     for person in plan.npcs + [plan.player]:
         if world.sleep_assign.get(person.name) is not None:
             continue   # the layout assigned them a bed of their own
@@ -1002,7 +1120,8 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
         world.failures.append(("regions", f"duplicate region names: {sorted(set(dupes))}"))
 
     # ---- everyone sleeps in a bed, before the schedules pick the rooms
-    schedule_mod.assign_sleep_rooms(world, plan.npcs + [plan.player])
+    schedule_mod.assign_sleep_rooms(world, plan.npcs + [plan.player],
+                                    couples=_couples_by_home(plan))
     _ensure_beds(world, plan, plan_data)
 
     # ---- people: schedules from home and work, start cells on cells that

@@ -56,7 +56,10 @@ Reply with ONE JSON object with exactly these fields:
   this setting's rooms hold: a bedroom has one bed per sleeper plus storage
   and a light source; a common room has several tables with seats; a workshop
   has its tools, materials and somewhere to sit; a shop has a counter and
-  shelves; a sickbay or lab has beds and equipment.
+  shelves; a sickbay or lab has beds and equipment. When the BUILDING line
+  says couples, each couple shares one double bed (2x2, sleeps two) in a
+  bedroom of its own, with children and everyone else in other rooms when the
+  building has them.
 - "template" must be a catalogue name EXACTLY as listed. "room" must be one of
   your own room names.
 - Furniture hints use ONLY the room vocabulary (wall:north, corner, center,

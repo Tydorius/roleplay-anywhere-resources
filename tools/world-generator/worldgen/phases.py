@@ -116,7 +116,9 @@ def _building_line(b):
     s = f", {b['storeys']} storeys" if _check_int(b.get("storeys")) and b["storeys"] > 1 else ""
     n = b.get("residents")
     r = f", sleeps {n}" if _check_int(n) and n > 0 else ""
-    return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}{r}: {b.get('purpose', '')}{y}"
+    c = b.get("couples")
+    cp = f", {c} couple(s) sharing a double bed" if _check_int(c) and c > 0 else ""
+    return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}{r}{cp}: {b.get('purpose', '')}{y}"
 
 
 def _units_line(b):
@@ -893,6 +895,20 @@ def check_p1(d, floors=False, residents=None):
             if b.get("units") and r is not None:
                 errors.append(f"{ctx}: residents not needed here; a unit building "
                               f"houses its copies x units.residents")
+            c = b.get("couples")
+            if c is not None and (not _check_int(c) or not 0 <= c <= MAX_RESIDENTS // 2):
+                errors.append(f"{ctx}: couples must be a whole number "
+                              f"0..{MAX_RESIDENTS // 2}, not {c!r}")
+            elif b.get("units") and c is not None:
+                errors.append(f"{ctx}: couples not needed here; a unit building "
+                              f"houses its copies x units.residents")
+            elif _check_int(c) and c > 0:
+                if not _check_int(r):
+                    errors.append(f"{ctx}: couples needs residents here "
+                                  f"(how many sleep in this building)")
+                elif 2 * c > r:
+                    errors.append(f"{ctx}: {c} couple(s) need {2 * c} of the "
+                                  f"{r} residents to share beds")
             _unit_errors(b, ctx, errors)
             if floors and "storeys" in b:
                 top = 6 if (b.get("units") or b["name"] in part_names) else 3
@@ -1000,6 +1016,24 @@ def sanitize_p1(d, log, floors=False, residents=None):
                                 f"residents {r!r} dropped: not a whole number "
                                 f"1..{MAX_RESIDENTS}"))
                 b.pop("residents", None)
+            c = b.get("couples")
+            if b.get("units"):
+                if c is not None:
+                    log.append((f"building {b['name']}",
+                                "couples dropped: a unit building houses its "
+                                "copies x units.residents"))
+                    b.pop("couples", None)
+            elif not _check_int(c) or not 0 <= c:
+                if c is not None:
+                    log.append((f"building {b['name']}",
+                                f"couples {c!r} dropped: not a whole number"))
+                b.pop("couples", None)
+            elif c > 0 and (not _check_int(b.get("residents"))
+                            or 2 * c > b["residents"]):
+                log.append((f"building {b['name']}",
+                            f"couples {c!r} dropped: two of the residents per "
+                            f"couple ({b.get('residents')!r} residents)"))
+                b.pop("couples", None)
             _sanitize_units(b, b["name"], log)
             if floors:
                 top = 6 if (b.get("units") or b["name"] in part_names) else 3
@@ -1078,7 +1112,9 @@ def _pool_entries(raw):
     return []
 
 
-def check_p2(d):
+def check_p2(d, needs_double=False):
+    """``needs_double``: a home in the plan has couples, so the catalogue
+    must hold a sleep object that sleeps two (at least 2 cells both ways)."""
     errors = []
     if not isinstance(d, dict) or not isinstance(d.get("templates"), list) \
             or not d["templates"]:
@@ -1151,6 +1187,15 @@ def check_p2(d):
             errors.append(f"{ctx}.tags: must be a list of short tags")
         if "lootPool" in t and not _is_str(t.get("lootPool")):
             errors.append(f"{ctx}.lootPool: a loot pool name, not {t.get('lootPool')!r}")
+    if needs_double and not any(
+            isinstance(t, dict) and (t.get("forSleep") or _sleeps(t.get("name"), t.get("tags")))
+            and isinstance(t.get("size"), list) and len(t["size"]) == 2
+            and all(_check_int(v) for v in t["size"])
+            and bed_capacity(t["size"]) == 2
+            for t in d["templates"]):
+        errors.append("templates: a home in the plan has couples, so the catalogue "
+                      "needs a double bed — a forSleep object at least 2 cells in "
+                      "both directions (2x2 sleeps two)")
     return errors[:MAX_ERRORS]
 
 
@@ -1297,6 +1342,17 @@ def design_beds(design, bed_templates):
     return n
 
 
+def design_double_beds(design, bed_templates):
+    """How many double beds a P3 design holds (one per couple), counting the
+    sleep-capable lines whose template sleeps two."""
+    n = sum(f.get("count", 1) for f in (design.get("furniture") or [])
+            if bed_templates.get(f.get("template")) == 2)
+    for u in design.get("upper") or []:
+        n += sum(f.get("count", 1) for f in (u.get("furniture") or [])
+                 if bed_templates.get(f.get("template")) == 2)
+    return n
+
+
 def resident_target(questionnaire):
     """The N P1 plans homes for: the population range's midpoint, None when
     nobody asked for a population."""
@@ -1312,7 +1368,7 @@ def _population_range(questionnaire):
 
 
 def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
-             pools=None, beds=None, residents=None):
+             pools=None, beds=None, residents=None, couples=None):
     """``storeys`` is the building's P1 storey count with the floors
     extension enabled (None when it is off, so upper/stairs are ignored).
     ``units`` is the P1 units dict when the building repeats units, so the
@@ -1320,7 +1376,8 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
     loot pool names, so every lootPool reference names a real pool.
     ``beds`` is the sleep-capable template names with each one's sleeper
     capacity; a building whose P1 entry
-    says ``residents`` must bed that many."""
+    says ``residents`` must bed that many, and one with ``couples`` needs
+    that many double beds."""
     errors = []
     ctx = f"building {building_name}"
     if not isinstance(d, dict):
@@ -1387,6 +1444,12 @@ def check_p3(d, building_name, templates, has_yard, storeys=None, units=None,
         if got < residents:
             errors.append(f"{ctx}: P1 beds {residents} sleeper(s) here; the furniture "
                           f"beds only {got} (a 2x2-or-bigger bed sleeps two)")
+        if _check_int(couples) and couples > 0:
+            doubles = design_double_beds(d, beds)
+            if doubles < couples:
+                errors.append(f"{ctx}: P1 says {couples} couple(s); the furniture "
+                              f"holds only {doubles} double bed(s), and each couple "
+                              f"needs one in a bedroom of its own")
     return errors[:MAX_ERRORS]
 
 
@@ -2536,8 +2599,12 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
         f"  outdoor features: {', '.join(map(str, z.get('outdoor') or [])) or 'none'}"
         for z in p1["zones"])
+    # a home with couples needs a double bed in the catalogue, so P2 is told
+    needs_double = any(_check_int(b.get("couples")) and b["couples"] > 0
+                       for z in p1["zones"] for b in z["buildings"])
     p2 = call("p2", "p2-catalogue", event=("P2", "the prop catalogue"),
-              setting_line=setting_line, zone_lines=zone_lines, _validate=check_p2)
+              setting_line=setting_line, zone_lines=zone_lines,
+              _validate=lambda x: check_p2(x, needs_double))
     if p2 is None:
         raise PhaseError("P2 produced no JSON at all")
     p2 = sanitize_p2(p2, stats["dropped"])
@@ -2596,9 +2663,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                      building_name=b["name"],
                      _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
                      s=(b.get("storeys", 1) if floors else None),
-                     u=b.get("units"), r=b.get("residents"):
+                     u=b.get("units"), r=b.get("residents"), cp=b.get("couples"):
                      check_p3(x, n, tnames, y, storeys=s, units=u, pools=pool_names,
-                              beds=bed_templates, residents=r))
+                              beds=bed_templates, residents=r, couples=cp))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
@@ -2619,6 +2686,16 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                          f"residents {b['residents']} -> {got}: the furniture beds "
                          f"only {got} sleeper(s)"))
                     b["residents"] = got
+                    c = b.get("couples")
+                    if _check_int(c) and c > 0 and 2 * c > got:
+                        keep = got // 2
+                        stats["dropped"].append(
+                            (f"building {b['name']}",
+                             f"couples {c} -> {keep}: only {got} residents now"))
+                        if keep > 0:
+                            b["couples"] = keep
+                        else:
+                            b.pop("couples", None)
             keep.append(b)
         z["buildings"] = keep
 

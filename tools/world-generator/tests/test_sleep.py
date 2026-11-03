@@ -343,6 +343,103 @@ TWO_BEDROOMS_PLAN = {
 }
 
 
+COUPLES_PLAN = {
+    # the Fillery household again, with Joram and Petra a couple: the plan
+    # says so, the furniture holds no double bed, the catalogue none either
+    "name": "Oxbridge",
+    "worldBackground": "A hamlet by a bridge.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "sparse", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [
+        {"name": "Oxbridge", "kind": "village", "sizeClass": "medium",
+         "description": "The hamlet.", "ground": "grass", "adjacentTo": [],
+         "outdoor": [], "buildings": [
+             {"name": "Fillery Cottage", "kind": "cottage", "sizeClass": "medium",
+              "purpose": "the innkeep's family home", "residents": 3,
+              "couples": 1, "yard": None},
+         ],
+         "dressing": {"paths": "dirt", "props": [], "filler": []}},
+    ],
+    "roads": [],
+    "templates": CATALOGUE + [_tmpl("Hearth", 2, 1, ["fire", "cook"])],
+    "buildings": [
+        {"name": "Fillery Cottage", "wall": "wood", "ground": "wood",
+         "rooms": [{"name": "Main Room", "share": "large",
+                    "purpose": "cooking and eating"},
+                   {"name": "Master Bedchamber", "share": "medium",
+                    "purpose": "the parents' bedchamber"},
+                   {"name": "Children's Bedchamber", "share": "medium",
+                    "purpose": "the children's beds"}],
+         "connections": [["Main Room", "Master Bedchamber"],
+                         ["Main Room", "Children's Bedchamber"]],
+         "entrance": {"room": "Main Room", "side": "south"},
+         "furniture": [{"template": "Hearth", "room": "Main Room", "count": 1,
+                        "hint": "wall:north"},
+                       {"template": "Oak Table", "room": "Main Room",
+                        "count": 1, "hint": "center"},
+                       {"template": "Straw Bed", "room": "Master Bedchamber",
+                        "count": 2, "hint": "wall:north"},
+                       {"template": "Straw Bed", "room": "Children's Bedchamber",
+                        "count": 2, "hint": "wall:north"}],
+         "yard": None},
+    ],
+    "npcs": TWO_BEDROOMS_PLAN["npcs"],
+    "player": TWO_BEDROOMS_PLAN["player"],
+}
+
+
+class TestCouples(unittest.TestCase):
+    """A couple shares one double bed in a bedroom nobody else sleeps in,
+    added when the home's furniture holds none."""
+
+    def _sleep_locations(self, world):
+        out = {}
+        for c in world.characters:
+            for blk in c.schedule:
+                if blk["role"] == "sleep":
+                    out[c.name] = blk["location"]
+        return out
+
+    def test_a_double_bed_is_added_and_the_couple_shares_its_room(self):
+        import copy
+        world = worldgen.run(copy.deepcopy(COUPLES_PLAN), seed=1)
+        dbl = world.templates.get("Double bed")
+        self.assertIsNotNone(dbl, "a fallback Double bed joins the catalogue")
+        self.assertEqual(dbl.size, (2, 2))
+        self.assertEqual(dbl.walkability, 0.3)
+        placed = [o for o in world.objects if o.template == "Double bed"]
+        self.assertEqual(len(placed), 1)
+        self.assertEqual(placed[0].region, "Fillery Cottage Master Bedchamber")
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Joram Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Petra Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Tilly Fillery"], "Fillery Cottage Children's Bedchamber")
+        for what, why in world.failures:
+            self.assertNotIn("double bed", f"{what} {why}".lower(),
+                             f"couple failure: {what}: {why}")
+
+    def test_the_catalogues_own_double_is_used_when_it_exists(self):
+        import copy
+        data = copy.deepcopy(COUPLES_PLAN)
+        data["templates"].append(_tmpl("Wide bed", 2, 2, ["bed"], forSleep=True))
+        cottage = data["buildings"][0]
+        cottage["furniture"] = [
+            f for f in cottage["furniture"] if f["room"] != "Master Bedchamber"] + [
+            {"template": "Wide bed", "room": "Master Bedchamber", "count": 1,
+             "hint": "wall:north"}]
+        world = worldgen.run(data, seed=1)
+        self.assertNotIn("Double bed", world.templates,
+                         "the catalogue's own double needs no fallback")
+        wide = [o for o in world.objects if o.template == "Wide bed"]
+        self.assertEqual({o.region for o in wide},
+                         {"Fillery Cottage Master Bedchamber"})
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Joram Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Petra Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Tilly Fillery"], "Fillery Cottage Children's Bedchamber")
+
+
 GUEST_ROOM_PLAN = {
     "name": "Calxgate",
     "worldBackground": "A market cross and an inn.",

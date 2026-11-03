@@ -24,6 +24,13 @@ def room_capacity(world, room):
                if world.templates[t].for_sleep)
 
 
+def room_doubles(world, room):
+    """How many double beds (a sleep object sleeping two) a room holds."""
+    return sum(1 for (t, _p) in room.furniture.placements
+               if world.templates[t].for_sleep
+               and bed_capacity(world.templates[t]) == 2)
+
+
 def _is_guest(room, design):
     purpose = _room_purpose(design, room.base_name).lower()
     return "guest" in purpose or "paying" in purpose
@@ -68,10 +75,13 @@ def sleep_room(world, building_name):
     return None
 
 
-def assign_sleep_rooms(world, people):
+def assign_sleep_rooms(world, people, couples=None):
     """One sleep room per person, not one per building: each bedded room
     holds as many people as its beds sleep, so nobody shares a room past its
-    capacity. Rooms fill in the sleep_room order (upper storeys first,
+    capacity. Couples (``couples`` maps a home to its pairs) go first, both
+    partners into one room with a double bed that then sleeps nobody else —
+    the game cannot keep partners together any other way. Everyone else fills
+    the remaining capacity in the sleep_room order (upper storeys first,
     private rooms before guest rooms), a partly-filled room before an empty
     one so a household does not spread one person per room while another
     room has free beds. People whose home runs out of free beds get no
@@ -86,7 +96,23 @@ def assign_sleep_rooms(world, people):
         pools = bedded_pools(world, b)
         cap = {r: room_capacity(world, r) for pool in pools for r in pool}
         used = dict.fromkeys(cap, 0)
+        done = set()
+        for pair in (couples or {}).get(b.layout.design.name, []):
+            room = None
+            for pool in pools:
+                room = next((r for r in pool
+                             if used[r] + 2 <= cap[r] and room_doubles(world, r)), None)
+                if room is not None:
+                    break
+            if room is None:
+                continue   # no double bed yet: they fill in with everyone else
+            world.sleep_assign[pair[0].name] = room
+            world.sleep_assign[pair[1].name] = room
+            used[room] = cap[room]   # the couple's bedroom sleeps nobody else
+            done.update(p.name for p in pair)
         for p in residents:
+            if p.name in done:
+                continue
             for pool in pools:
                 cands = [r for r in pool if used[r] < cap[r]]
                 if not cands:

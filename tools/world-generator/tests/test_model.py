@@ -395,6 +395,20 @@ class TestContracts(unittest.TestCase):
         self.assertTrue(any("used twice" in e for e in errors), errors)
         self.assertTrue(any("size" in e for e in errors), errors)
 
+    def test_p2_needs_a_double_bed_only_when_a_home_has_couples(self):
+        singles = [{"templates": [
+            {"name": "Straw bed", "size": [1, 2], "walkability": 0.3,
+             "forSleep": True, "description": "d", "physicalDescription": "p",
+             "tags": ["bed"], "rule": "r"}]}]
+        self.assertEqual(phases.check_p2(singles[0]), [])
+        self.assertTrue(any("double bed" in e for e in
+                            phases.check_p2(singles[0], needs_double=True)))
+        with_double = {"templates": singles[0]["templates"] + [
+            {"name": "Wide bed", "size": [2, 2], "walkability": 0.3,
+             "forSleep": True, "description": "d", "physicalDescription": "p",
+             "tags": ["bed"], "rule": "r"}]}
+        self.assertEqual(phases.check_p2(with_double, needs_double=True), [])
+
     def test_p3_unknown_references_and_bad_hint(self):
         tnames = {t["name"] for t in CANNED_TEMPLATES}
         d = json.loads(json.dumps(CANNED_MILL))
