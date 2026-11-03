@@ -2968,8 +2968,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         for n in range(P5_ZONE_BATCHES):
             room = sum(free_spots().values()) if bed_bound else P5_BATCH
             if room <= 0:
-                stats["dropped"].append((f"people of {z['name']}",
-                                         "no batch: every bed in the world is taken"))
+                if not n:
+                    stats["dropped"].append((f"people of {z['name']}",
+                                             "no batch: every bed in the world is taken"))
                 break
             more = 0
             if n:
