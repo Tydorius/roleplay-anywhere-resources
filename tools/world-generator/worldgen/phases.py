@@ -2039,8 +2039,13 @@ def _player_item_errors(p, ctx, items):
 
 
 def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
-                need=("npcs", "player"), taken=(), max_npcs=None, couples=None):
+                need=("npcs", "player"), taken=(), max_npcs=None, couples=None,
+                free=None):
+    """``free`` (home -> sleep spots still free): a person whose home is
+    already full moves to the home with the most spots free, or is dropped
+    when every bed in the world is taken."""
     bedded = [b for b in bedded if b in set(buildings)]
+    left = dict(free) if free is not None else None
     if "npcs" in need:
         npcs, seen = [], set(taken)
         for p in (d.get("npcs") or []):
@@ -2057,6 +2062,18 @@ def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
                 log.append((f"npc {p['name']}",
                             f"home {p['home']!r} has no bed -> re-homed to {bedded[0]!r}"))
                 p["home"] = bedded[0]
+            if left is not None and left.get(p["home"], 0) <= 0:
+                roomiest = max(left, key=lambda h: (left[h], h), default=None)
+                if roomiest is None or left[roomiest] <= 0:
+                    log.append((f"npc {p['name']}",
+                                f"dropped: {p['home']!r} is full and no home has "
+                                f"a sleep spot free"))
+                    continue
+                log.append((f"npc {p['name']}",
+                            f"home {p['home']!r} is full -> re-homed to {roomiest!r}"))
+                p["home"] = roomiest
+            if left is not None:
+                left[p["home"]] -= 1
             seen.add(p["name"])
             npcs.append(p)
         _sanitize_partners(npcs, couples, log)
@@ -2834,6 +2851,17 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     def bedded_buildings():
         return [n for n, k in beds_by_building.items() if k > 0]
 
+    # with no population target, a plan whose P1 promised residents is bed-
+    # bound: its beds are the population (a target tops up instead, and the
+    # layout adds beds; older plans without residents keep that too)
+    bed_bound = target is None and any(_check_int(b.get("residents"))
+                                       for z in p1["zones"] for b in z["buildings"])
+
+    def free_spots():
+        """Each bedded home's sleep spots no batch has filled yet."""
+        return {n: max(0, k - homes_taken.get(n, 0))
+                for n, k in beds_by_building.items() if k > 0}
+
     def _p5_blines(zone=None):
         bs = [b for z in p1["zones"] for b in z["buildings"]] if zone is None \
             else zone["buildings"]
@@ -2844,6 +2872,18 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             free = max(0, beds - taken)
             bed_note = f", sleeps {beds} ({free} spots free)" if beds else ", no beds"
             out.append(f"- {_building_line(b)}{bed_note}")
+        if zone is not None:
+            # a zone's workers may live elsewhere (a fishing strand with no
+            # homes): show them the other zones' homes that still have room
+            spots = free_spots()
+            for z2 in p1["zones"]:
+                if z2 is zone:
+                    continue
+                for b in z2["buildings"]:
+                    if spots.get(b["name"], 0) > 0:
+                        out.append(f"- {_building_line(b)} (in {z2['name']}), "
+                                   f"sleeps {beds_by_building[b['name']]} "
+                                   f"({spots[b['name']]} spots free)")
         return "\n".join(out) or "- none"
 
     def _roster_block():
@@ -2866,9 +2906,10 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             return (f"exactly {more} more people for this zone's homes that "
                     f"still have spots free (an earlier call made the rest).")
         if target is None:
+            room = min(P5_BATCH, sum(free_spots().values())) if bed_bound else P5_BATCH
             return (f"the people this zone needs (its homes and workplaces), "
-                    f"at most {P5_BATCH} in this reply; a later call makes the "
-                    f"rest.")
+                    f"at most {room} in this reply, each in a home with a spot "
+                    f"free; a later call makes the rest.")
         beds = sum(beds_by_building.get(b["name"], 0) for b in zone["buildings"])
         want = min(P5_BATCH, max(1, beds, target - len(roster)))
         lo, hi = _population_range(questionnaire)
@@ -2886,9 +2927,14 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     peopled = [z for z in p1["zones"] if z["buildings"]]
     for i, z in enumerate(peopled, 1):
         for n in range(P5_ZONE_BATCHES):
+            room = sum(free_spots().values()) if bed_bound else P5_BATCH
+            if room <= 0:
+                stats["dropped"].append((f"people of {z['name']}",
+                                         "no batch: every bed in the world is taken"))
+                break
             more = 0
             if n:
-                more = min(P5_BATCH, zone_unfilled(z))
+                more = min(P5_BATCH, zone_unfilled(z), room)
                 if target is not None:
                     more = min(more, _population_range(questionnaire)[1] - len(roster))
                 if more <= 0:
@@ -2913,8 +2959,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
                                 bedded_buildings(), need=("npcs",),
                                 taken={p["name"] for p in roster},
-                                max_npcs=more or P5_BATCH,
-                                couples=couples_left())
+                                max_npcs=more or min(P5_BATCH, room),
+                                couples=couples_left(),
+                                free=free_spots() if bed_bound else None)
             for p in batch["npcs"]:
                 roster.append(p)
                 homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1

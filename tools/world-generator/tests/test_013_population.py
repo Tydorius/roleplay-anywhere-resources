@@ -243,13 +243,49 @@ class TestP5Batches(unittest.TestCase):
                           need=("npcs",))
         self.assertTrue(any("has no bed" in e for e in errors), errors)
 
+    @staticmethod
+    def _roomy_cottage_replies(batch, extra=()):
+        """The canned world with a cottage that beds 12, so the beds are not
+        what limits a batch (with no target, a plan whose P1 promised
+        residents houses nobody past its beds)."""
+        cottage = json.loads(json.dumps(CANNED_COTTAGE))
+        for f in cottage["furniture"]:
+            if f["template"] == "Straw bed":
+                f["count"] = 12
+        replies = populated_replies(batch=batch)
+        replies[3] = _dump(cottage)
+        for r in extra:
+            replies.insert(-1, _dump(r))
+        return replies
+
     def test_batch_is_capped_at_ten(self):
-        people = [dict(p, name=f"Person {i}") for i, p in enumerate(CANNED_P5_BATCH["npcs"] * 6)]
-        client = ScriptedClient(populated_replies(batch={"npcs": people[:12]}))
+        people = [dict(p, name=f"Person {i}", home="Miller's Cottage")
+                  for i, p in enumerate(CANNED_P5_BATCH["npcs"] * 6)]
+        client = ScriptedClient(self._roomy_cottage_replies({"npcs": people[:12]}))
         plan, stats = phases.run_phases("a mill village", client)
         self.assertEqual(len(plan["npcs"]), 10)
         self.assertTrue(any("capped at 10" in r for _w, r in stats["dropped"]),
                         stats["dropped"])
+
+    def test_no_target_houses_nobody_past_the_beds(self):
+        """The second live couples run: zones with no homes of their own put
+        their workers in cottages already full. A full home's person moves to
+        the home with the most spots free, and the batch is capped at the
+        spots free, so the rest are dropped."""
+        base = CANNED_P5_BATCH["npcs"][0]
+        # mill and cottage bed one each: two fit, the third has nowhere
+        people = [dict(base, name=f"Person {i}", home="Miller's Cottage")
+                  for i in range(3)]
+        client = ScriptedClient(populated_replies(batch={"npcs": people}))
+        plan, stats = phases.run_phases("a mill village", client)
+        homes = sorted(p["home"] for p in plan["npcs"])
+        self.assertEqual(homes, ["Miller's Cottage", "The Old Mill"])
+        self.assertTrue(any("is full -> re-homed to 'The Old Mill'" in r
+                            for _w, r in stats["dropped"]), stats["dropped"])
+        self.assertTrue(any("capped at 2" in r for _w, r in stats["dropped"]),
+                        stats["dropped"])
+        self.assertTrue(any("every bed in the world is taken" in r
+                            for _w, r in stats["dropped"]), stats["dropped"])
 
     def test_a_zone_promised_more_than_a_batch_gets_a_second_batch(self):
         """With no population target, one batch per zone left homes empty
