@@ -237,9 +237,10 @@ class TestBedlessHome(unittest.TestCase):
         cls.world = worldgen.run(cls.data, seed=1)
 
     def test_generic_bed_added_to_the_private_room(self):
+        # one bed per person: Maud and the player each get their own
         beds = [o for o in self.world.objects if o.template == "Bed"]
-        self.assertEqual(len(beds), 1, "expected exactly one added Bed")
-        self.assertEqual(beds[0].region, "Fen Croft Bedroom")
+        self.assertEqual(len(beds), 2, "expected one added Bed per bedless resident")
+        self.assertEqual({b.region for b in beds}, {"Fen Croft Bedroom"})
 
     def test_sleep_location_is_the_bedded_room(self):
         for c in self.world.characters:
@@ -271,6 +272,259 @@ class TestBedlessHome(unittest.TestCase):
             other = {(x, y) for x in range(pos[0], pos[0] + tw)
                      for y in range(pos[1], pos[1] + th)}
             self.assertFalse(cells & other, "Bed overlaps existing furniture")
+
+
+TWO_BEDROOMS_PLAN = {
+    "name": "Oxbridge",
+    "worldBackground": "A hamlet by a bridge.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "sparse", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [
+        {"name": "Oxbridge", "kind": "village", "sizeClass": "medium",
+         "description": "The hamlet.", "ground": "grass", "adjacentTo": [],
+         "outdoor": [], "buildings": [
+             {"name": "Fillery Cottage", "kind": "cottage", "sizeClass": "medium",
+              "purpose": "the innkeep's family home", "residents": 3, "yard": None},
+         ],
+         "dressing": {"paths": "dirt", "props": [], "filler": []}},
+        {"name": "Oxbridge Fields", "kind": "farmland", "sizeClass": "medium",
+         "description": "The ploughlands.", "ground": "grass",
+         "adjacentTo": ["Oxbridge"], "outdoor": [], "buildings": [
+             {"name": "Field Barn", "kind": "barn", "sizeClass": "small",
+              "purpose": "hay and carts", "yard": None},
+         ],
+         "dressing": {"paths": "dirt", "props": [], "filler": []}},
+    ],
+    "roads": [{"from": "Oxbridge", "to": "Oxbridge Fields", "kind": "dirt"}],
+    "templates": CATALOGUE + [_tmpl("Hearth", 2, 1, ["fire", "cook"])],
+    "buildings": [
+        {"name": "Fillery Cottage", "wall": "wood", "ground": "wood",
+         "rooms": [{"name": "Main Room", "share": "large",
+                    "purpose": "cooking and eating"},
+                   {"name": "Master Bedchamber", "share": "medium",
+                    "purpose": "the parents' bedchamber"},
+                   {"name": "Children's Bedchamber", "share": "medium",
+                    "purpose": "the children's beds"}],
+         "connections": [["Main Room", "Master Bedchamber"],
+                         ["Main Room", "Children's Bedchamber"]],
+         "entrance": {"room": "Main Room", "side": "south"},
+         "furniture": [{"template": "Hearth", "room": "Main Room", "count": 1,
+                        "hint": "wall:north"},
+                       {"template": "Oak Table", "room": "Main Room",
+                        "count": 1, "hint": "center"},
+                       {"template": "Straw Bed", "room": "Master Bedchamber",
+                        "count": 2, "hint": "wall:north"},
+                       {"template": "Straw Bed", "room": "Children's Bedchamber",
+                        "count": 2, "hint": "wall:north"}],
+         "yard": None},
+        {"name": "Field Barn", "wall": "wood", "ground": "dirt",
+         "rooms": [{"name": "Barn Floor", "share": "large",
+                    "purpose": "hay and carts"}],
+         "connections": [], "entrance": {"room": "Barn Floor", "side": "south"},
+         "furniture": [], "yard": None},
+    ],
+    "npcs": [
+        {"name": "Joram Fillery", "gender": "male", "role": "innkeep",
+         "home": "Fillery Cottage", "work": "Fillery Cottage",
+         "description": "The innkeep.", "physicalDescription": "stout"},
+        {"name": "Petra Fillery", "gender": "female", "role": "innkeep's wife",
+         "home": "Fillery Cottage", "work": "Fillery Cottage",
+         "description": "The innkeep's wife.", "physicalDescription": "tall"},
+        {"name": "Tilly Fillery", "gender": "female", "role": "child",
+         "home": "Fillery Cottage", "work": "Oxbridge",
+         "description": "Their daughter.", "physicalDescription": "small"},
+    ],
+    "player": {"name": "Aldous Reed", "gender": "male", "role": "pedlar",
+               "home": "Field Barn", "work": "Oxbridge",
+               "description": "A pedlar.", "physicalDescription": "dusty"},
+}
+
+
+GUEST_ROOM_PLAN = {
+    "name": "Calxgate",
+    "worldBackground": "A market cross and an inn.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "normal", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Calxgate", "kind": "village", "sizeClass": "medium",
+        "description": "The crossroads.", "ground": "grass", "adjacentTo": [],
+        "outdoor": [], "buildings": [
+            {"name": "The Green Ox", "kind": "inn", "sizeClass": "medium",
+             "purpose": "ale and lodging", "residents": 3, "yard": None},
+        ],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }],
+    "roads": [],
+    "templates": CATALOGUE + [_tmpl("Hearth", 2, 1, ["fire", "cook"])],
+    "buildings": [
+        {"name": "The Green Ox", "wall": "wood", "ground": "wood",
+         "rooms": [{"name": "Common Room", "share": "large",
+                    "purpose": "ale and talk"},
+                   {"name": "Keeper's Room", "share": "small",
+                    "purpose": "the keeper's own bed"},
+                   {"name": "Guest Chamber", "share": "medium",
+                    "purpose": "lodging for paying guests"}],
+         "connections": [["Common Room", "Keeper's Room"],
+                         ["Common Room", "Guest Chamber"]],
+         "entrance": {"room": "Common Room", "side": "south"},
+         "furniture": [{"template": "Hearth", "room": "Common Room", "count": 1,
+                        "hint": "wall:north"},
+                       {"template": "Oak Table", "room": "Common Room",
+                        "count": 2, "hint": "center"},
+                       {"template": "Straw Bed", "room": "Keeper's Room",
+                        "count": 1, "hint": "wall:north"},
+                       {"template": "Straw Bed", "room": "Guest Chamber",
+                        "count": 2, "hint": "row:north"}],
+         "yard": None},
+    ],
+    "npcs": [
+        {"name": "Osric Bell", "gender": "male", "role": "innkeep",
+         "home": "The Green Ox", "work": "The Green Ox",
+         "description": "The keeper.", "physicalDescription": "ruddy"},
+        {"name": "Hild Bell", "gender": "female", "role": "innkeep's wife",
+         "home": "The Green Ox", "work": "The Green Ox",
+         "description": "The keeper's wife.", "physicalDescription": "broad"},
+    ],
+    "player": {"name": "The Wanderer", "gender": "female", "role": "traveller",
+               "home": "The Green Ox", "work": "Calxgate",
+               "description": "Passing through.", "physicalDescription": "cloaked"},
+}
+
+
+UPSTAIRS_PLAN = {
+    "name": "Hilly Lea",
+    "worldBackground": "A cot on a slope.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "sparse", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Hilly Lea", "kind": "hamlet", "sizeClass": "medium",
+        "description": "The slope.", "ground": "grass", "adjacentTo": [],
+        "outdoor": [], "buildings": [
+            {"name": "Stairfoot House", "kind": "cottage", "sizeClass": "medium",
+             "purpose": "a family home", "residents": 2, "storeys": 2,
+             "yard": None},
+        ],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }],
+    "roads": [],
+    "templates": CATALOGUE + [_tmpl("Hearth", 2, 1, ["fire", "cook"])],
+    "buildings": [
+        {"name": "Stairfoot House", "wall": "wood", "ground": "wood",
+         "rooms": [{"name": "Main Room", "share": "large",
+                    "purpose": "cooking and eating"},
+                   {"name": "Downstairs Chamber", "share": "medium",
+                    "purpose": "the ground-floor bed"}],
+         "connections": [["Main Room", "Downstairs Chamber"]],
+         "entrance": {"room": "Main Room", "side": "south"},
+         "stairs": {"room": "Main Room"},
+         "upper": [{"storey": 2,
+                    "rooms": [{"name": "Landing", "share": "medium",
+                               "purpose": "the stair head"},
+                              {"name": "Bedchamber", "share": "medium",
+                               "purpose": "the loft bed"}],
+                    "connections": [["Landing", "Bedchamber"]],
+                    "furniture": [{"template": "Straw Bed", "room": "Bedchamber",
+                                   "count": 1, "hint": "wall:north"}]}],
+         "furniture": [{"template": "Hearth", "room": "Main Room", "count": 1,
+                        "hint": "wall:north"},
+                       {"template": "Oak Table", "room": "Main Room",
+                        "count": 1, "hint": "center"},
+                       {"template": "Straw Bed", "room": "Downstairs Chamber",
+                        "count": 2, "hint": "wall:north"}],
+         "yard": None},
+    ],
+    "npcs": [
+        {"name": "Edda Marsh", "gender": "female", "role": "shepherd",
+         "home": "Stairfoot House", "work": "Hilly Lea",
+         "description": "A shepherd.", "physicalDescription": "windswept"},
+    ],
+    "player": {"name": "The Wanderer", "gender": "female", "role": "traveller",
+               "home": "Stairfoot House", "work": "Hilly Lea",
+               "description": "Passing through.", "physicalDescription": "cloaked"},
+}
+
+
+class TestSleepRoomAssignment(unittest.TestCase):
+    """A sleep room for each person: bedded rooms fill to their bed capacity
+    (not the whole household into the fullest one), in the sleep_room order."""
+
+    def _sleep_locations(self, world):
+        out = {}
+        for c in world.characters:
+            for blk in c.schedule:
+                if blk["role"] == "sleep":
+                    out[c.name] = blk["location"]
+        return out
+
+    def _sleepers_per_room(self, world):
+        counts = {}
+        for loc in self._sleep_locations(world).values():
+            counts[loc] = counts.get(loc, 0) + 1
+        return counts
+
+    def _room_capacities(self, world):
+        from worldgen.schedule import room_capacity
+        out = {}
+        for b in world.buildings:
+            for r in b.layout.rooms:
+                out[r.full_name] = room_capacity(world, r)
+            for f in b.floors:
+                for r in f.layout.rooms:
+                    out.setdefault(r.full_name, 0)
+                    out[r.full_name] += room_capacity(world, r)
+        return out
+
+    def test_two_bedrooms_split_the_household(self):
+        world = worldgen.run(TWO_BEDROOMS_PLAN, seed=1)
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Joram Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Petra Fillery"], "Fillery Cottage Master Bedchamber")
+        self.assertEqual(locs["Tilly Fillery"], "Fillery Cottage Children's Bedchamber")
+        counts = self._sleepers_per_room(world)
+        caps = self._room_capacities(world)
+        for room, n in counts.items():
+            self.assertLessEqual(n, caps.get(room, 0),
+                                 f"{room} holds {n} sleepers of {caps.get(room, 0)} beds")
+
+    def test_guest_room_used_only_after_private_rooms_fill(self):
+        world = worldgen.run(GUEST_ROOM_PLAN, seed=1)
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Osric Bell"], "The Green Ox Keeper's Room")
+        self.assertEqual(locs["Hild Bell"], "The Green Ox Guest Chamber")
+        self.assertEqual(locs["The Wanderer"], "The Green Ox Guest Chamber")
+
+    def test_a_full_home_adds_a_bed_rather_than_borrowing_a_neighbours(self):
+        import copy
+        data = copy.deepcopy(TWO_BEDROOMS_PLAN)
+        cottage = data["buildings"][0]
+        cottage["furniture"] = [f for f in cottage["furniture"]
+                                if f["room"] != "Children's Bedchamber"]
+        data["zones"][0]["buildings"].append(
+            {"name": "Smith's House", "kind": "cottage", "sizeClass": "small",
+             "purpose": "the smith's home", "residents": 1, "yard": None})
+        data["buildings"].append(
+            {"name": "Smith's House", "wall": "wood", "ground": "wood",
+             "rooms": [{"name": "Hearth Room", "share": "large",
+                        "purpose": "living and sleeping"}],
+             "connections": [], "entrance": {"room": "Hearth Room", "side": "south"},
+             "furniture": [{"template": "Straw Bed", "room": "Hearth Room",
+                            "count": 2, "hint": "wall:north"}],
+             "yard": None})
+        world = worldgen.run(data, seed=1)
+        locs = self._sleep_locations(world)
+        self.assertTrue(locs["Tilly Fillery"].startswith("Fillery Cottage "), locs)
+        caps = self._room_capacities(world)
+        for room, n in self._sleepers_per_room(world).items():
+            self.assertLessEqual(n, caps.get(room, 0), room)
+
+    def test_upper_storey_bedroom_preferred(self):
+        world = worldgen.run(UPSTAIRS_PLAN, seed=1, extensions=("floors",))
+        locs = self._sleep_locations(world)
+        self.assertEqual(locs["Edda Marsh"], "Stairfoot House (upper floor) Bedchamber")
+        self.assertEqual(locs["The Wanderer"], "Stairfoot House Downstairs Chamber")
 
 
 if __name__ == "__main__":

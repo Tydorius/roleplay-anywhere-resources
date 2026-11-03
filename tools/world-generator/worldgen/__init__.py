@@ -78,6 +78,7 @@ class World:
         self.solid_walls = set()       # cells of intentional wall objects
         self.void_zones = set()        # zone names with exterior "void"
         self.void_default = False      # every zone void: void default tile
+        self.sleep_assign = {}         # person name -> RoomOut with their bed
 
 
 def _most_private_room(world, b):
@@ -100,9 +101,13 @@ def _most_private_room(world, b):
 
 
 def _bed_template(world, plan_data):
-    """The catalogue's bed: the smallest sleep template, or a plain 1x2 Bed
-    added to the plan when the catalogue has none."""
-    beds = [t for t in world.templates.values() if t.for_sleep]
+    """The catalogue's bed: the smallest template the catalogue flags
+    forSleep, else the smallest its name calls a bed (a "Bedside locker" is
+    furniture, not a bed), or a plain 1x2 Bed added to the plan when the
+    catalogue has neither."""
+    flagged = [t for t in world.templates.values()
+               if t.extras.get("forSleep") is True]
+    beds = flagged or [t for t in world.templates.values() if t.for_sleep]
     if beds:
         return min(beds, key=lambda t: (t.size[0] * t.size[1], t.name))
     t = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.0,
@@ -155,29 +160,38 @@ def _place_bed(world, room, tmpl):
 
 
 def _ensure_beds(world, plan, plan_data):
-    """Every person sleeps in a bed. A home whose building has no sleep object
-    borrows the nearest bedded building of its household (the same zone); when
-    the household has none, one bed is added to the home's most private room."""
+    """Every person sleeps in a bed. A person the room assignment left
+    without one gets a bed added at home: in the home's fullest bedded room
+    when its beds are all taken (they stay home, crowded, when that room has
+    no free cell), else in its most private room. A bedless home borrows the
+    nearest bedded building of its household (the same zone) first."""
     for person in plan.npcs + [plan.player]:
+        if world.sleep_assign.get(person.name) is not None:
+            continue   # the layout assigned them a bed of their own
         home = next((b for b in world.buildings
                      if b.layout.design.name == person.home), None)
-        if home is None or schedule_mod.sleep_room(world, person.home) is not None:
+        if home is None:
             continue
+        full = schedule_mod.sleep_room(world, person.home)
         zone = schedule_mod.zone_of(world, person.home)
-        if any(b is not home
-               and schedule_mod.zone_of(world, b.layout.design.name) == zone
-               and schedule_mod.sleep_room(world, b.layout.design.name) is not None
-               for b in world.buildings):
+        if full is None and any(
+                b is not home
+                and schedule_mod.zone_of(world, b.layout.design.name) == zone
+                and schedule_mod.sleep_room(world, b.layout.design.name) is not None
+                for b in world.buildings):
             continue   # the schedule will point at the household's bed
-        room = _most_private_room(world, home)
+        room = full or _most_private_room(world, home)
         tmpl = _bed_template(world, plan_data)
         pos = _place_bed(world, room, tmpl)
         if pos is None:
             world.failures.append((f"bed for {person.name}",
                                    f"no free cell for a bed in {room.full_name}"))
+            if full is not None:
+                world.sleep_assign[person.name] = full   # home, over capacity
             continue
         room.furniture.placements.append((tmpl.name, pos))
         world.objects.append(ObjectOut(tmpl.name, pos, room.full_name))
+        world.sleep_assign[person.name] = room
 
 
 def _emit_unit_regions(world, bl, parent_name, names_seen):
@@ -988,6 +1002,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
         world.failures.append(("regions", f"duplicate region names: {sorted(set(dupes))}"))
 
     # ---- everyone sleeps in a bed, before the schedules pick the rooms
+    schedule_mod.assign_sleep_rooms(world, plan.npcs + [plan.player])
     _ensure_beds(world, plan, plan_data)
 
     # ---- people: schedules from home and work, start cells on cells that

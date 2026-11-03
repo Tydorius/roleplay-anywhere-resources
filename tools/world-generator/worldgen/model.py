@@ -413,6 +413,14 @@ def is_sleep_name(name, tags=()):
     return any(w in (t or "").lower() for t in tags or () for w in SLEEP_WORDS)
 
 
+def bed_capacity(template):
+    """How many sleepers one sleep object holds: at least 2 cells in both
+    directions sleeps 2 (a double bed), anything narrower sleeps 1 — a 2x1
+    single bed turned on its side included."""
+    w, h = template.size
+    return 2 if min(w, h) >= 2 else 1
+
+
 @dataclass
 class ObjectTemplate:
     name: str

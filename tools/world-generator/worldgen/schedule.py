@@ -3,47 +3,98 @@
 Blocks are consecutive and cover 24 h (the last may wrap past midnight), each
 with an exact region name and a role of work, leisure or sleep — the format
 build_scenario.py accepts. Sleep always goes to a room that has a forSleep
-object, because the builder checks that: a room of the person's home when it
-has one, else the nearest bedded building of the same household (the same
-zone). Work places like a smithy or a chapel are for daytime only.
+object, because the builder checks that: each person's assigned bedroom when
+the layout gave them one (assign_sleep_rooms), else a bedded room of their
+home's household — the nearest bedded building of the same zone. Work places
+like a smithy or a chapel are for daytime only.
 """
+
+from .model import bed_capacity
 
 SLEEP = ("22:00", "06:00")
 WORK = ("06:00", "18:00")
 LEISURE = ("18:00", "22:00")
 
 
+def room_capacity(world, room):
+    """How many sleepers a room beds: the summed capacity of its sleep
+    objects (a double bed counts two)."""
+    return sum(bed_capacity(world.templates[t])
+               for (t, _p) in room.furniture.placements
+               if world.templates[t].for_sleep)
+
+
+def _is_guest(room, design):
+    purpose = _room_purpose(design, room.base_name).lower()
+    return "guest" in purpose or "paying" in purpose
+
+
+def bedded_pools(world, building):
+    """A building's bedded rooms as pools in fill order: upper storeys
+    before the ground floor, private rooms before guest rooms."""
+    ground = [(r, building.layout.design) for r in building.layout.rooms]
+    upper = [(r, f.layout.design) for f in building.floors
+             for r in f.layout.rooms]
+    pools = []
+    for want_guest in (False, True):
+        for rooms in (upper, ground):
+            pool = [r for (r, d) in rooms
+                    if room_capacity(world, r) > 0 and _is_guest(r, d) == want_guest]
+            if pool:
+                pools.append(pool)
+    return pools
+
+
 def sleep_room(world, building_name):
-    """The room in a building with the most beds (None when it has none).
-    Rooms whose purpose mentions guests are skipped so staff sleep in their
-    own rooms. A home with upper storeys sleeps upstairs — its bedrooms moved
-    up a storey — so the upper rooms come first."""
+    """The room in a building bedding the most sleepers (None when it has
+    none). Rooms whose purpose mentions guests are skipped so staff sleep in
+    their own rooms. A home with upper storeys sleeps upstairs — its bedrooms
+    moved up a storey — so the upper rooms come first."""
     def bedded(pool):
         best, best_n = None, 0
         for room in pool:
-            n = sum(1 for (t, _p) in room.furniture.placements
-                    if world.templates[t].for_sleep)
+            n = room_capacity(world, room)
             if n > best_n:
                 best, best_n = room, n
         return best
 
-    def guest(room, design):
-        purpose = _room_purpose(design, room.base_name).lower()
-        return "guest" in purpose or "paying" in purpose
-
     for b in world.buildings:
         if b.layout.design.name != building_name:
             continue
-        ground = [(r, b.layout.design) for r in b.layout.rooms]
-        upper = [(r, f.layout.design) for f in b.floors for r in f.layout.rooms]
-        for pool in ([r for (r, d) in upper if not guest(r, d)],
-                     [r for (r, d) in ground if not guest(r, d)],
-                     [r for (r, _d) in upper],
-                     [r for (r, _d) in ground]):
+        for pool in bedded_pools(world, b):
             room = bedded(pool)
             if room is not None:
                 return room
     return None
+
+
+def assign_sleep_rooms(world, people):
+    """One sleep room per person, not one per building: each bedded room
+    holds as many people as its beds sleep, so nobody shares a room past its
+    capacity. Rooms fill in the sleep_room order (upper storeys first,
+    private rooms before guest rooms), a partly-filled room before an empty
+    one so a household does not spread one person per room while another
+    room has free beds. People whose home runs out of free beds get no
+    entry — _ensure_beds and resolve_sleep fall back for them."""
+    homes = {}
+    for p in people:
+        homes.setdefault(p.home, []).append(p)
+    for b in world.buildings:
+        residents = homes.get(b.layout.design.name)
+        if not residents:
+            continue
+        pools = bedded_pools(world, b)
+        cap = {r: room_capacity(world, r) for pool in pools for r in pool}
+        used = dict.fromkeys(cap, 0)
+        for p in residents:
+            for pool in pools:
+                cands = [r for r in pool if used[r] < cap[r]]
+                if not cands:
+                    continue
+                room = min(cands, key=lambda r: (used[r] == 0, -cap[r]))
+                used[room] += 1
+                world.sleep_assign[p.name] = room
+                break
 
 
 def zone_of(world, building_name):
@@ -53,10 +104,11 @@ def zone_of(world, building_name):
 
 
 def resolve_sleep(world, person):
-    """The room the person sleeps in: a bedded room of their home, else the
-    nearest bedded building of the same household (their zone) — never a
-    daytime work place. None when there is no bed to point at."""
-    room = sleep_room(world, person.home)
+    """The room the person sleeps in: their assigned room when the layout
+    gave them one, else the nearest bedded building of the same household
+    (their zone) — never a daytime work place. None when there is no bed to
+    point at."""
+    room = world.sleep_assign.get(person.name)
     if room is not None:
         return room
     home = next((b for b in world.buildings
