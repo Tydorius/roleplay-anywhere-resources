@@ -61,7 +61,7 @@
    "layout patterns",
    "room roles"
   ],
-  "entries": 1
+  "entries": 2
  },
  {
   "id": "pz-pfans",
@@ -91,7 +91,7 @@
    "categories",
    "room roles"
   ],
-  "entries": 62
+  "entries": 63
  },
  {
   "id": "kenney-furniture",
@@ -121,7 +121,7 @@
    "names",
    "categories"
   ],
-  "entries": 9
+  "entries": 10
  },
  {
   "id": "wikipedia-furniture",
@@ -154,5 +154,23 @@
    "names"
   ],
   "entries": 0
+ },
+ {
+  "id": "local-replies",
+  "title": "Our own P3 replies and fixture plans",
+  "url": "out/*/llm/*p3*.json and fixtures/*.json (this repository)",
+  "licence": "own",
+  "shareAlike": false,
+  "covers": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "gives": [
+   "names",
+   "room roles"
+  ],
+  "entries": 23
  }
 ]
