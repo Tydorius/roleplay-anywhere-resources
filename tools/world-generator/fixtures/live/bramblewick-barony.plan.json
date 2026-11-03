@@ -1,0 +1,4973 @@
+{
+ "name": "Bramblewick Barony",
+ "worldBackground": "Bramblewick is a bottom-rung barony in temperate countryside: one sagging walled manor, one skeptical human village, and fields that owe more than they grow. Its late baron spent his coin registering every one of the roughly thirty nonhuman 'assets' who now cook, mend and shelter at Thornrose Estate, and died leaving a debt the crown fully intends to collect. Everyday life runs cozy and busy — bread, charms, mended roofs — but each tax notice is a reminder that the whole household, residents included, can be seized and sold if the barony falls behind.",
+ "setting": {
+  "era": "late-medieval low-noble barony",
+  "technology": "pre-industrial craftsmanship with common everyday enchantment",
+  "density": "sparse",
+  "climate": "temperate rural countryside"
+ },
+ "mapSize": "medium",
+ "zones": [
+  {
+   "name": "Thornrose Estate",
+   "kind": "estate grounds",
+   "sizeClass": "large",
+   "description": "A sagging walled manor and its overgrown outbuildings, home to the roughly thirty nonhuman residents legally registered as the estate's property.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Nettlebrook Village",
+    "Hollyfields"
+   ],
+   "outdoor": [
+    "kitchen garden",
+    "duck pond",
+    "drying green",
+    "old well",
+    "collapsed folly"
+   ],
+   "arrangement": "scattered",
+   "buildings": [
+    {
+     "name": "Gatehouse",
+     "kind": "gatehouse",
+     "sizeClass": "small",
+     "purpose": "watching the estate road and lodging the gatekeepers",
+     "storeys": 2,
+     "residents": 2
+    },
+    {
+     "name": "Old Hall",
+     "kind": "manor hall",
+     "sizeClass": "hall",
+     "purpose": "the baron's table, kitchen and household heart",
+     "storeys": 2,
+     "residents": 7
+    },
+    {
+     "name": "East Wing",
+     "kind": "dormitory",
+     "sizeClass": "medium",
+     "purpose": "bedchambers for the household staff",
+     "storeys": 2,
+     "units": {
+      "name": "Servants' Room",
+      "count": 6,
+      "perStorey": 3,
+      "residents": 2
+     }
+    },
+    {
+     "name": "West Wing",
+     "kind": "infirmary",
+     "sizeClass": "small",
+     "purpose": "tending bruises, colds and old scars",
+     "residents": 2
+    },
+    {
+     "name": "Garden Lodge",
+     "kind": "lodge",
+     "sizeClass": "hut",
+     "purpose": "gardeners' snug quarters in the court corner",
+     "residents": 2
+    },
+    {
+     "name": "The Still",
+     "kind": "herbalist cottage",
+     "sizeClass": "small",
+     "purpose": "brewing tonics, dyes and rough cider",
+     "residents": 3
+    },
+    {
+     "name": "Charmwright's Workshop",
+     "kind": "workshop",
+     "sizeClass": "small",
+     "purpose": "enchanting tools, charms and roof-slates",
+     "storeys": 2,
+     "residents": 2
+    },
+    {
+     "name": "Stable & Coach House",
+     "kind": "stables",
+     "sizeClass": "medium",
+     "purpose": "housing two old horses and the broken cart",
+     "residents": 2
+    },
+    {
+     "name": "Granary",
+     "kind": "granary",
+     "sizeClass": "small",
+     "purpose": "storing seed grain and estate rents"
+    },
+    {
+     "name": "Bath House",
+     "kind": "bathhouse",
+     "sizeClass": "small",
+     "purpose": "hot soaking tubs fed by a charm-warded cistern"
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Stone well",
+      "count": 1,
+      "hint": "front:Old Hall"
+     },
+     {
+      "template": "Duck pond",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Gate lantern",
+      "count": 1,
+      "hint": "beside:Gatehouse"
+     },
+     {
+      "template": "Drying line",
+      "count": 2,
+      "hint": "beside:The Still"
+     },
+     {
+      "template": "Crop row",
+      "count": 6,
+      "hint": "cluster+behind:Old Hall"
+     },
+     {
+      "template": "Folly rubble",
+      "count": 6,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Old tree",
+      "density": "low"
+     },
+     {
+      "template": "Bramble bush",
+      "density": "medium"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Nettlebrook Village",
+   "kind": "village",
+   "sizeClass": "medium",
+   "description": "A mostly-human farming village gathered on one green, whose folk watch the new baron with polite suspicion.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Thornrose Estate",
+    "Hollyfields"
+   ],
+   "outdoor": [
+    "village green",
+    "village well",
+    "notice post",
+    "cart turnaround"
+   ],
+   "arrangement": "around_green",
+   "buildings": [
+    {
+     "name": "The Bent Antler Inn",
+     "kind": "inn",
+     "sizeClass": "large",
+     "purpose": "ale, gossip and lodgings for travelers and tax collectors",
+     "storeys": 2,
+     "units": {
+      "name": "Guest Room",
+      "count": 4,
+      "perStorey": 2,
+      "residents": 1
+     }
+    },
+    {
+     "name": "Innkeep's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "the innkeeper family's home beside the inn",
+     "residents": 4
+    },
+    {
+     "name": "Waystone Chapel",
+     "kind": "chapel",
+     "sizeClass": "small",
+     "purpose": "prayers, weddings and feast-day gatherings",
+     "residents": 1
+    },
+    {
+     "name": "Brophy's Forge",
+     "kind": "smithy",
+     "sizeClass": "small",
+     "purpose": "shoeing horses and mending the estate's tools",
+     "residents": 4
+    },
+    {
+     "name": "Millbrook Mill",
+     "kind": "watermill",
+     "sizeClass": "medium",
+     "purpose": "grinding the barony's grain on the brook",
+     "residents": 4
+    },
+    {
+     "name": "Harrow's Store",
+     "kind": "general store",
+     "sizeClass": "small",
+     "purpose": "selling salt, thread and village news",
+     "storeys": 2,
+     "residents": 3
+    },
+    {
+     "name": "Reeve's House",
+     "kind": "cottage",
+     "sizeClass": "medium",
+     "purpose": "home and office of the village reeve",
+     "residents": 5
+    },
+    {
+     "name": "Weaver's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "loom-work and home of the weaver's family",
+     "residents": 3
+    },
+    {
+     "name": "Cooper's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "barrel-making and the cooper's family home",
+     "residents": 3
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Stone well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Notice post",
+      "count": 1,
+      "hint": "center+along_path"
+     },
+     {
+      "template": "Old tree",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "Gate lantern",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Broken cart",
+      "count": 1,
+      "hint": "edge+along_path"
+     },
+     {
+      "template": "Storage barrel",
+      "count": 5,
+      "hint": "cluster+behind:Cooper's Cottage"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Old tree",
+      "density": "low"
+     },
+     {
+      "template": "Bramble bush",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Hollyfields",
+   "kind": "farmland",
+   "sizeClass": "large",
+   "description": "The barony's scruffy patchwork of wheat, hops and apple rows that earns what little the estate pays its taxes with.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Thornrose Estate",
+    "Nettlebrook Village",
+    "Whisperwood"
+   ],
+   "outdoor": [
+    "wheat plots",
+    "hop trellises",
+    "orchard rows",
+    "hay ricks",
+    "field scarecrow"
+   ],
+   "arrangement": "fields",
+   "buildings": [
+    {
+     "name": "Hollyfield Farmhouse",
+     "kind": "farmhouse",
+     "sizeClass": "medium",
+     "purpose": "tenant farmers' home at the field corner",
+     "residents": 4
+    },
+    {
+     "name": "Great Barn",
+     "kind": "barn",
+     "sizeClass": "large",
+     "purpose": "hay, tools and livestock through winter",
+     "residents": 1
+    },
+    {
+     "name": "Orchard Bothy",
+     "kind": "bothy",
+     "sizeClass": "hut",
+     "purpose": "seasonal keepers' shelter among the apple rows",
+     "residents": 2
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Crop row",
+      "count": 24,
+      "hint": "scatter"
+     },
+     {
+      "template": "Hop trellis",
+      "count": 10,
+      "hint": "cluster"
+     },
+     {
+      "template": "Old tree",
+      "count": 12,
+      "hint": "cluster"
+     },
+     {
+      "template": "Field scarecrow",
+      "count": 4,
+      "hint": "scatter"
+     },
+     {
+      "template": "Hay rick",
+      "count": 4,
+      "hint": "scatter+behind:Great Barn"
+     },
+     {
+      "template": "Folly rubble",
+      "count": 4,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Bramble bush",
+      "density": "medium"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Whisperwood",
+   "kind": "forest",
+   "sizeClass": "large",
+   "description": "A mossy working wood of timber, charcoal and forage, deep enough that residents' old pursuers might one day come looking.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Hollyfields"
+   ],
+   "outdoor": [
+    "charcoal kilns",
+    "forester's trailhead",
+    "mossy waystone",
+    "forage hollow"
+   ],
+   "buildings": [
+    {
+     "name": "Woodcutter's Lodge",
+     "kind": "forester's lodge",
+     "sizeClass": "small",
+     "purpose": "base camp for felling, charcoal and patrol",
+     "residents": 2
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Charcoal kiln",
+      "count": 3,
+      "hint": "cluster"
+     },
+     {
+      "template": "Mossy waystone",
+      "count": 1,
+      "hint": "beside:Woodcutter's Lodge"
+     },
+     {
+      "template": "Gate lantern",
+      "count": 1,
+      "hint": "beside:Woodcutter's Lodge"
+     },
+     {
+      "template": "Notice post",
+      "count": 1,
+      "hint": "front:Woodcutter's Lodge"
+     },
+     {
+      "template": "Bramble bush",
+      "count": 8,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Old tree",
+      "density": "high"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Nettlebrook Village",
+   "to": "Thornrose Estate",
+   "kind": "cobble"
+  },
+  {
+   "from": "Thornrose Estate",
+   "to": "Hollyfields",
+   "kind": "dirt"
+  },
+  {
+   "from": "Hollyfields",
+   "to": "Whisperwood",
+   "kind": "dirt"
+  },
+  {
+   "from": "Nettlebrook Village",
+   "to": "Hollyfields",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Manor bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "light": 0,
+   "description": "A rope-strung bed with a straw tick and a moth-eaten canopy, the best sleep in the barony.",
+   "physicalDescription": "Timber bed frame with a lumpy straw mattress, patched blanket and one sagging canopy post.",
+   "tags": [
+    "bed",
+    "sleep",
+    "furniture"
+   ],
+   "rule": "One per sleeper in the Old Hall chambers, inn guest rooms and farmhouse, headboard against a wall away from the door."
+  },
+  {
+   "name": "Straw pallet",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": true,
+   "light": 0,
+   "description": "A folded straw pallet with a scratchy blanket, honest rest for servants and keepers.",
+   "physicalDescription": "Low pallet of bound straw with a frayed grey blanket half pulled back.",
+   "tags": [
+    "bed",
+    "sleep",
+    "poor"
+   ],
+   "rule": "Lay in rows along the walls of the dormitory, gatehouse, bothy, stable loft and woodcutter's lodge, one per sleeper."
+  },
+  {
+   "name": "Long table",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A scarred trestle table where the household eats, argues and counts its coppers.",
+   "physicalDescription": "Broad plank tabletop on trestle legs, knife-scarred, with a long bench-width footprint.",
+   "tags": [
+    "table",
+    "dining",
+    "furniture"
+   ],
+   "rule": "Stand in the center of the Old Hall and the inn common room with stools arranged around it."
+  },
+  {
+   "name": "Small table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A workaday side table for meals, potions and candle stubs.",
+   "physicalDescription": "Small wobbly table of pale plank on turned legs, ring-stained from mugs.",
+   "tags": [
+    "table",
+    "furniture",
+    "work"
+   ],
+   "rule": "One against a wall in kitchens, cottages and the infirmary; in the chapel it stands altar-wise under a white cloth."
+  },
+  {
+   "name": "Wooden stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A three-legged stool that has outlived three barons.",
+   "physicalDescription": "Rounded plank seat on three worn legs, polished shiny by decades of sitters.",
+   "tags": [
+    "chair",
+    "seat",
+    "furniture"
+   ],
+   "rule": "Set two or three around each table, one at each workbench, and one at bed feet."
+  },
+  {
+   "name": "Wall shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A plank shelf holding whatever the room cannot do without.",
+   "physicalDescription": "Thick plank shelf on wooden brackets, crowded with jars, bundles and small boxes.",
+   "tags": [
+    "storage",
+    "shelf"
+   ],
+   "rule": "Fix to an inside wall of every kitchen, workroom, shop and bedchamber, one per room and never outdoors."
+  },
+  {
+   "name": "Storage barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A cooper-made barrel keeping beer, grain or apples from the damp.",
+   "physicalDescription": "Upright oak barrel with iron hoops, lid ajar, staves dark with age.",
+   "tags": [
+    "storage",
+    "container"
+   ],
+   "rule": "Stand in clusters of two or three against the walls of cellars, pantries, the granary and the cooper's yard."
+  },
+  {
+   "name": "Workbench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A heavy bench where charms are cut, tools mended and barrels hammered true.",
+   "physicalDescription": "Stout workbench with a scarred top, vise at one end and a shadowed drawer beneath.",
+   "tags": [
+    "work",
+    "table",
+    "storage"
+   ],
+   "rule": "One each at the forge, the charmwright's, the cooper's, the mill and the infirmary, against a wall near the window light."
+  },
+  {
+   "name": "Weaver's loom",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A clattering frame loom that clothes half the village in honest wool.",
+   "physicalDescription": "Tall wooden loom frame strung with warp threads, shuttle resting mid-cloth.",
+   "tags": [
+    "work",
+    "craft",
+    "furniture"
+   ],
+   "rule": "One only, filling the weaver's cottage against its brightest wall."
+  },
+  {
+   "name": "Forge",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.9,
+   "description": "Brophy's coal-heart fire, hot enough to shoe a horse or straighten a barony.",
+   "physicalDescription": "Stone forge hearth with a hooded chimney, glowing coals and an anvil set at its side.",
+   "tags": [
+    "work",
+    "fire",
+    "light",
+    "smithy"
+   ],
+   "lightKind": "fire",
+   "rule": "One against the back wall of Brophy's forge with clear floor before it; never inside a timber outbuilding."
+  },
+  {
+   "name": "Millstone",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "The grooved stone pair that grinds the barony's grain on the brook's power.",
+   "physicalDescription": "Round grey millstone pair on a timber frame, flour dusting the surrounding floor.",
+   "tags": [
+    "work",
+    "mill",
+    "landmark"
+   ],
+   "rule": "One only, centered on the Millbrook mill floor with grain barrels within reach."
+  },
+  {
+   "name": "Great hearth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.9,
+   "description": "A wide stone hearth where pots bubble and the household thaws.",
+   "physicalDescription": "Open stone fireplace with a blackened lintel, iron pot hook and stacked kindling.",
+   "tags": [
+    "fire",
+    "light",
+    "cooking"
+   ],
+   "lightKind": "fire",
+   "rule": "One on the long wall of the Old Hall, the inn and every cottage hearth-room, keeping each room warm and lit."
+  },
+  {
+   "name": "Tallow candle",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.2,
+   "description": "A stubby tallow candle that gutters but holds back the dark.",
+   "physicalDescription": "Dripping tallow candle in a puddle of wax atop a cracked clay dish.",
+   "tags": [
+    "light",
+    "candle"
+   ],
+   "lightKind": "candle",
+   "rule": "Set on bedside tables, shelves and window sills, and in clumps of two or three in the chapel alcoves."
+  },
+  {
+   "name": "Gate lantern",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "A hooded oil lantern hung where travellers and tax collectors must be seen coming.",
+   "physicalDescription": "Iron lantern on a hooked post, wind-shielded glass smoky with use.",
+   "tags": [
+    "light",
+    "lantern",
+    "landmark"
+   ],
+   "lightKind": "lantern",
+   "rule": "Hang one each beside the estate gate, the inn door, the chapel porch and the forester's trailhead."
+  },
+  {
+   "name": "Mossy waystone",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "An old boundary stone with a faint green glow that keeps the wood's old promises.",
+   "physicalDescription": "Knee-high mossy standing stone carved with a worn spiral, seeping pale green light.",
+   "tags": [
+    "landmark",
+    "plant",
+    "light"
+   ],
+   "lightKind": "magic",
+   "lightColor": "#a9e8bb",
+   "rule": "One only, beside the forester's trailhead deep in Whisperwood; never inside walls."
+  },
+  {
+   "name": "Staircase",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A creaking stair of oak treads climbing to the upper floor.",
+   "physicalDescription": "Narrow switchback stair of worn treads with a rope handrail along the wall.",
+   "tags": [
+    "stairs",
+    "portal"
+   ],
+   "rule": "Against an outer wall of every two-storey building, clear of the doorway, one flight per storey."
+  },
+  {
+   "name": "Broken cart",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A two-wheeled cart with a shattered axle, forever one repair from useful.",
+   "physicalDescription": "Timber cart with a splintered axle, one wheel leaning, hay still caught in the rails.",
+   "tags": [
+    "cart",
+    "storage",
+    "broken"
+   ],
+   "rule": "The estate's broken cart stands inside the coach house; a sound cart may stand on the village cart turnaround."
+  },
+  {
+   "name": "Stone well",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A cool stone well with a bucket and a great deal of rope.",
+   "physicalDescription": "Round stone wellhead with a wooden cover, windlass post and dangling bucket.",
+   "tags": [
+    "well",
+    "water",
+    "landmark"
+   ],
+   "rule": "One public well at the centre of the village green and one old well in the manor yard; never indoors."
+  },
+  {
+   "name": "Notice post",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A squared post where edicts, market days and tax notices go to be grumbled at.",
+   "physicalDescription": "Weathered oak post with nailed-up parchment scraps and a carved direction sign.",
+   "tags": [
+    "landmark",
+    "sign"
+   ],
+   "rule": "One on the village green for notices, and one at the Whisperwood trailhead as a waymark."
+  },
+  {
+   "name": "Old tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A broad apple or oak tree giving shade, fruit and firewood in its turn.",
+   "physicalDescription": "Thick-trunked tree with a spreading crown, gnarled roots bulging into the grass.",
+   "tags": [
+    "plant",
+    "tree",
+    "shade"
+   ],
+   "rule": "March in rows through the Hollyfields orchard, scatter as canopy across Whisperwood, and set one or two for shade on the village green."
+  },
+  {
+   "name": "Bramble bush",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A thorny bramble patch, the barony's prickly namesake and its free dessert.",
+   "physicalDescription": "Low tangled bramble bush with thorny canes and a few dark berries.",
+   "tags": [
+    "plant",
+    "forage",
+    "thorn"
+   ],
+   "rule": "Cluster thick in the forage hollow and along hedgerows and field edges."
+  },
+  {
+   "name": "Crop row",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.4,
+   "forSleep": false,
+   "light": 0,
+   "description": "A weeded row of wheat, onions or kitchen herbs, growing what little the barony earns.",
+   "physicalDescription": "Neat row of green shoots in dark tilled soil, a few weeds daring the hoe.",
+   "tags": [
+    "plant",
+    "farm",
+    "garden"
+   ],
+   "rule": "Lay in parallel rows with a furrow's gap between them, filling the wheat plots and the kitchen garden beds."
+  },
+  {
+   "name": "Duck pond",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A reed-ringed duck pond that the estate's ducks regard as sovereign territory.",
+   "physicalDescription": "Rounded pond of still water ringed with reeds and trampled mud, two ducks mid-patrol.",
+   "tags": [
+    "water",
+    "landmark",
+    "plant"
+   ],
+   "rule": "One only, sunk in the open estate court near the kitchen garden."
+  },
+  {
+   "name": "Drying line",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.6,
+   "forSleep": false,
+   "light": 0,
+   "description": "A rope line between posts where linen and dyed wool flap dry.",
+   "physicalDescription": "Two posts with a sagging line, a damp sheet and a striped cloth pegged to it.",
+   "tags": [
+    "drying",
+    "farm",
+    "garden"
+   ],
+   "rule": "Strung between posts across the drying green by the kitchen garden and The Still."
+  },
+  {
+   "name": "Hay rick",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stacked hay rick, winter fodder and nap spot in one.",
+   "physicalDescription": "Thatch-capped haystack with golden sides combed smooth and a ladder leaning loose.",
+   "tags": [
+    "farm",
+    "hay",
+    "storage"
+   ],
+   "rule": "Scatter through Hollyfields at harvest and stack one great rick inside the Great Barn."
+  },
+  {
+   "name": "Field scarecrow",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A coat-and-straw watcher the crows have long since stopped fearing.",
+   "physicalDescription": "Crossbar scarecrow in a battered coat and floppy hat, straw poking from sleeves.",
+   "tags": [
+    "farm",
+    "landmark"
+   ],
+   "rule": "One standing mid-field in each wheat plot, arms wide to the crows."
+  },
+  {
+   "name": "Hop trellis",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tall pole frame strung with climbing hops for the autumn picking.",
+   "physicalDescription": "Tall paired poles laced with string, green hop vines climbing in thick ropes.",
+   "tags": [
+    "plant",
+    "farm",
+    "trellis"
+   ],
+   "rule": "Stand in tall rows through the Hollyfields hop yard, a pole's width apart for pickers."
+  },
+  {
+   "name": "Charcoal kiln",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "A banked earth kiln breathing thin smoke and a low orange glow.",
+   "physicalDescription": "Dome of packed earth and turf with a smoke vent, faint ember light at its seams.",
+   "tags": [
+    "work",
+    "fire",
+    "light"
+   ],
+   "lightKind": "ember",
+   "rule": "Cluster two or three in the Whisperwood kiln clearing, wood stacked close by."
+  },
+  {
+   "name": "Folly rubble",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.3,
+   "forSleep": false,
+   "light": 0,
+   "description": "Tumbled stone from the collapsed folly, good for nothing but bruised shins and hide-and-seek.",
+   "physicalDescription": "Pile of mossy broken stonework with a carved fragment peeking out.",
+   "tags": [
+    "rubble",
+    "ruin",
+    "landmark"
+   ],
+   "rule": "Scatter around the estate's collapsed folly and along any tumbled stretch of the old wall."
+  },
+  {
+   "name": "Soaking tub",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden soaking tub of charm-warmed water, steam curling off the top.",
+   "physicalDescription": "Round-topped wooden tub steaming gently, water shimmering with a faint warding shimmer.",
+   "tags": [
+    "bath",
+    "water",
+    "furniture"
+   ],
+   "rule": "Two or three only, set inside the bath house with a stool beside each."
+  }
+ ],
+ "items": [
+  {
+   "name": "Crusty barley loaf",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "Heavy barley bread from the Old Hall ovens, better dunked than bitten.",
+   "physicalDescription": "Round crusty loaf scored with a cross, on a white background"
+  },
+  {
+   "name": "Mutton pasty",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A folded pastry of mutton and turnip, the inn's whole menu most days.",
+   "physicalDescription": "Golden crimped pasty with a steam vent, on a white background"
+  },
+  {
+   "name": "Dried apple rings",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "Leathery sweet apple rings strung from the orchard rafters.",
+   "physicalDescription": "Small stack of wrinkled pale apple rings tied with twine, on a white background"
+  },
+  {
+   "name": "Basket of blackberries",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "Bramble berries picked at the cost of several scratched hands.",
+   "physicalDescription": "Wicker basket heaped with dark glossy blackberries, on a white background"
+  },
+  {
+   "name": "Jug of rough cider",
+   "type": "consumable",
+   "quality": "common",
+   "value": 6,
+   "description": "The Still's sharp cider, stronger than it tastes and it tastes strong.",
+   "physicalDescription": "Clay jug corked with cloth, one cup beside it, on a white background"
+  }
+ ],
+ "lootPools": {},
+ "buildings": [
+  {
+   "name": "Gatehouse",
+   "wall": "stone",
+   "ground": "flagstones",
+   "rooms": [
+    {
+     "name": "Gate Passage",
+     "share": "medium",
+     "purpose": "the arched tunnel driven through the middle of the gatehouse, walked through by every cart and caller between the village road and the estate court, with the old oak gates at its south face"
+    },
+    {
+     "name": "Watch Room",
+     "share": "small",
+     "purpose": "the gatekeepers' ground-floor room for the winch chains, keys and the arrivals ledger, holding the stair up to their bedchamber"
+    }
+   ],
+   "connections": [
+    [
+     "Gate Passage",
+     "Watch Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Gate Passage",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Gate lantern",
+     "room": "Gate Passage",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Staircase",
+     "room": "Watch Room",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Watch Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Watch Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Watch Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Watch Room"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Gatekeeper's Chamber",
+       "share": "medium",
+       "purpose": "the two gatekeepers' bedchamber above the gate arch, its slit windows watching the estate road north and south and its side doors opening onto the walkable wall tops"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Straw pallet",
+       "room": "Gatekeeper's Chamber",
+       "count": 2,
+       "hint": "row:north"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Gatekeeper's Chamber",
+       "count": 2,
+       "hint": "beside:Straw pallet"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Gatekeeper's Chamber",
+       "count": 1,
+       "hint": "wall:south"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Gatekeeper's Chamber",
+       "count": 2,
+       "hint": "beside:Wall shelf"
+      }
+     ],
+     "opening": {
+      "over_room": "Watch Room",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Old Hall",
+   "wall": "stone",
+   "ground": "stone flags",
+   "rooms": [
+    {
+     "name": "Great Hall",
+     "share": "large",
+     "purpose": "the household heart where the baron's table stands, meals are eaten and the estate's business is heard"
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "the busy kitchen where the estate's resident cooks bake and brew for the whole household"
+    },
+    {
+     "name": "Pantry",
+     "share": "small",
+     "purpose": "dry storage for the hall's bread, salt and drink"
+    }
+   ],
+   "connections": [
+    [
+     "Great Hall",
+     "Kitchen"
+    ],
+    [
+     "Kitchen",
+     "Pantry"
+    ]
+   ],
+   "entrance": {
+    "room": "Great Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Long table",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Great Hall",
+     "count": 3,
+     "hint": "around:Long table"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Staircase",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Great Hall",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Great Hall",
+     "count": 2,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Small table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Pantry",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Pantry",
+     "count": 1,
+     "hint": "wall:north"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Great Hall"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Landing Gallery",
+       "share": "small",
+       "purpose": "a railed gallery landing above the great hall, linking the bedchambers"
+      },
+      {
+       "name": "Baron's Chamber",
+       "share": "medium",
+       "purpose": "the newly arrived baron's own bedchamber"
+      },
+      {
+       "name": "Household Chamber",
+       "share": "large",
+       "purpose": "shared bedchamber for three of the estate's resident staff"
+      },
+      {
+       "name": "Gable Chamber",
+       "share": "medium",
+       "purpose": "shared bedchamber under the gable for three more residents"
+      }
+     ],
+     "connections": [
+      [
+       "Landing Gallery",
+       "Baron's Chamber"
+      ],
+      [
+       "Landing Gallery",
+       "Household Chamber"
+      ],
+      [
+       "Landing Gallery",
+       "Gable Chamber"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Staircase",
+       "room": "Landing Gallery",
+       "count": 1,
+       "hint": "wall:west"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Landing Gallery",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Baron's Chamber",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Baron's Chamber",
+       "count": 1,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Baron's Chamber",
+       "count": 1,
+       "hint": "wall:west"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Baron's Chamber",
+       "count": 1,
+       "hint": "beside:Wall shelf"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Household Chamber",
+       "count": 3,
+       "hint": "row:east"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Household Chamber",
+       "count": 3,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Household Chamber",
+       "count": 1,
+       "hint": "wall:west"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Household Chamber",
+       "count": 2,
+       "hint": "beside:Wall shelf"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Gable Chamber",
+       "count": 3,
+       "hint": "row:north"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Gable Chamber",
+       "count": 3,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Gable Chamber",
+       "count": 1,
+       "hint": "wall:south"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Gable Chamber",
+       "count": 2,
+       "hint": "beside:Wall shelf"
+      }
+     ],
+     "opening": {
+      "over_room": "Great Hall",
+      "kind": "gallery"
+     }
+    }
+   ]
+  },
+  {
+   "name": "East Wing",
+   "wall": "wood",
+   "ground": "plank flooring",
+   "rooms": [
+    {
+     "name": "Corridor",
+     "share": "small",
+     "purpose": " Entrance passage running along the shared Old Hall wall, with the stair up and the stamped servants' room doors along it"
+    },
+    {
+     "name": "Common Room",
+     "share": "medium",
+     "purpose": "Cozy hearth-room where the household staff eat, mend and grumble about tax notices together"
+    },
+    {
+     "name": "Linen Store",
+     "share": "small",
+     "purpose": "Crammed storeroom for bedding, spare shifts and the estate's mismatched household supplies"
+    }
+   ],
+   "connections": [
+    [
+     "Corridor",
+     "Common Room"
+    ],
+    [
+     "Corridor",
+     "Linen Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Corridor",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Staircase",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Long table",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Common Room",
+     "count": 5,
+     "hint": "around:Long table"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "beside:Long table"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Linen Store",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Linen Store",
+     "count": 1,
+     "hint": "near_door"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Servants' Room",
+      "share": "small",
+      "purpose": "Cramped, cheerful bedchamber shared by two of the estate's registered residents, one pallet apiece"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Servants' Room",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Straw pallet",
+      "room": "Servants' Room",
+      "count": 2,
+      "hint": "row:north"
+     },
+     {
+      "template": "Wooden stool",
+      "room": "Servants' Room",
+      "count": 2,
+      "hint": "beside:Straw pallet"
+     },
+     {
+      "template": "Wall shelf",
+      "room": "Servants' Room",
+      "count": 1,
+      "hint": "wall:east"
+     },
+     {
+      "template": "Tallow candle",
+      "room": "Servants' Room",
+      "count": 2,
+      "hint": "beside:Wall shelf"
+     }
+    ]
+   },
+   "yard": null,
+   "stairs": {
+    "room": "Corridor"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Landing",
+       "share": "small",
+       "purpose": "Upper gallery landing where the three upstairs servants' room doors open, running walkable along the Old Hall wall"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Staircase",
+       "room": "Landing",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Landing",
+       "count": 2,
+       "hint": "beside:Staircase"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Landing",
+       "count": 1,
+       "hint": "wall:south"
+      }
+     ],
+     "opening": {
+      "over_room": "Corridor",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "West Wing",
+   "wall": "stone",
+   "ground": "stone flags",
+   "rooms": [
+    {
+     "name": "Salving Room",
+     "share": "small",
+     "purpose": "entrance room where bruises are bound, splints set, and cough syrups and salves are mixed at the bench"
+    },
+    {
+     "name": "Rest Ward",
+     "share": "small",
+     "purpose": "quiet recovery ward with a bed each for two patients sleeping off fevers and old aches"
+    }
+   ],
+   "connections": [
+    [
+     "Salving Room",
+     "Rest Ward"
+    ]
+   ],
+   "entrance": {
+    "room": "Salving Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Salving Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Rest Ward",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Rest Ward",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Rest Ward",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Rest Ward",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Rest Ward",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Garden Lodge",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Gardeners' Snug",
+     "share": "medium",
+     "purpose": "warm one-room quarters where the estate's two nonhuman gardeners sleep, sup and dry their boots at the hearth, wedged into the court corner against the old walls"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Gardeners' Snug",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Straw pallet",
+     "room": "Gardeners' Snug",
+     "count": 2,
+     "hint": "row:south"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Gardeners' Snug",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Small table",
+     "room": "Gardeners' Snug",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Gardeners' Snug",
+     "count": 2,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Gardeners' Snug",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Gardeners' Snug",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Gardeners' Snug",
+     "count": 2,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "The Still",
+   "wall": "wood",
+   "ground": "worn planks",
+   "rooms": [
+    {
+     "name": "Brew Room",
+     "share": "medium",
+     "purpose": "Hearth-room where tonics simmer, dyes steep and rough cider is bottled; the cottage's main room"
+    },
+    {
+     "name": "Herb Store",
+     "share": "small",
+     "purpose": "Pantry of dried herbs, tincture jars and cider barrels"
+    },
+    {
+     "name": "Sleep Nook",
+     "share": "small",
+     "purpose": "Bedchamber where the cottage's three herbalists sleep"
+    }
+   ],
+   "connections": [
+    [
+     "Brew Room",
+     "Herb Store"
+    ],
+    [
+     "Brew Room",
+     "Sleep Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Brew Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Workbench",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Small table",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "wall:north+beside:Great hearth"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Brew Room",
+     "count": 2,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Brew Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Herb Store",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Herb Store",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Sleep Nook",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Sleep Nook",
+     "count": 1,
+     "hint": "row:east"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Sleep Nook",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Sleep Nook",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Charmwright's Workshop",
+   "wall": "wood",
+   "ground": "worn planks",
+   "rooms": [
+    {
+     "name": "Charm Workshop",
+     "share": "medium",
+     "purpose": "Ground-floor bench room where the estate's everyday charms are cut, waxed and sealed, and cracked roof-slates have their warding glyphs renewed"
+    },
+    {
+     "name": "Slate Store",
+     "share": "small",
+     "purpose": "Keeps spare roof-slates, wax blocks and finished charms awaiting collection around the manor"
+    }
+   ],
+   "connections": [
+    [
+     "Charm Workshop",
+     "Slate Store"
+    ]
+   ],
+   "entrance": {
+    "room": "Charm Workshop",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Staircase",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Small table",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Charm Workshop",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Charm Workshop",
+     "count": 2,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Charm Workshop",
+     "count": 2,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Slate Store",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Slate Store",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Slate Store",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Charm Workshop"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Charmwright's Loft",
+       "share": "small",
+       "purpose": "Sleeping loft above the workshop shared by the charmwright and their apprentice"
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Straw pallet",
+       "room": "Charmwright's Loft",
+       "count": 2,
+       "hint": "row:north"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Charmwright's Loft",
+       "count": 2,
+       "hint": "beside:Straw pallet"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Charmwright's Loft",
+       "count": 1,
+       "hint": "wall:south"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Charmwright's Loft",
+       "count": 1,
+       "hint": "beside:Wall shelf"
+      }
+     ],
+     "opening": {
+      "over_room": "Charm Workshop",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Stable & Coach House",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Stable Aisle",
+     "share": "large",
+     "purpose": "Wide straw-strewn aisle with two box stalls housing the estate's old horses, Buttons and Thistle"
+    },
+    {
+     "name": "Tack & Feed Room",
+     "share": "small",
+     "purpose": "Cramped room of bridles, brushes, hoof salves and oat barrels smelling of leather and linseed"
+    },
+    {
+     "name": "Coach House",
+     "share": "medium",
+     "purpose": "Draughty cart shed where the estate's broken cart waits for repairs the barony can't yet afford"
+    },
+    {
+     "name": "Stable Loft",
+     "share": "small",
+     "purpose": "Hay-scented loft nook above the horses where the stable's two sleepers bed down on straw"
+    }
+   ],
+   "connections": [
+    [
+     "Stable Aisle",
+     "Tack & Feed Room"
+    ],
+    [
+     "Stable Aisle",
+     "Coach House"
+    ],
+    [
+     "Stable Aisle",
+     "Stable Loft"
+    ]
+   ],
+   "entrance": {
+    "room": "Stable Aisle",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Tallow candle",
+     "room": "Stable Aisle",
+     "count": 1,
+     "hint": "wall:north",
+     "note": "sill light"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Tack & Feed Room",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Tack & Feed Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Tack & Feed Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Broken cart",
+     "room": "Coach House",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Coach House",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Coach House",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Stable Loft",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Stable Loft",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Stable Loft",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Stable Loft",
+     "count": 2,
+     "hint": "beside:Straw pallet"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Granary",
+   "wall": "wood",
+   "ground": "plank floor",
+   "rooms": [
+    {
+     "name": "Grain Floor",
+     "share": "medium",
+     "purpose": "main storage hall where the estate's rent grain rests in barrels on a raised plank floor, kept dry and rat-watched"
+    },
+    {
+     "name": "Seed Tally",
+     "share": "small",
+     "purpose": "counting nook where the keeper tallies rent sacks on a shelf ledger and keeps next season's seed grain sealed apart from the rest"
+    }
+   ],
+   "connections": [
+    [
+     "Grain Floor",
+     "Seed Tally"
+    ]
+   ],
+   "entrance": {
+    "room": "Grain Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Storage barrel",
+     "room": "Grain Floor",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Grain Floor",
+     "count": 3,
+     "hint": "row:west"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Grain Floor",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Seed Tally",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Seed Tally",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Seed Tally",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Seed Tally",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Bath House",
+   "wall": "wood",
+   "ground": "stone slabs",
+   "rooms": [
+    {
+     "name": "Changing Room",
+     "share": "small",
+     "purpose": "Entry room where bathers shed muddy boots and work clothes, with towels, soap barrels and a shelf of drying linen"
+    },
+    {
+     "name": "Bath Chamber",
+     "share": "medium",
+     "purpose": "Steamy main room of three hot soaking tubs fed by pipes from the charm-warded cistern, ringed with candlelight"
+    },
+    {
+     "name": "Cistern Room",
+     "share": "small",
+     "purpose": "Back room holding the charm-warded cistern and the hearth that keeps the water hot when the warming charm sputters"
+    }
+   ],
+   "connections": [
+    [
+     "Changing Room",
+     "Bath Chamber"
+    ],
+    [
+     "Bath Chamber",
+     "Cistern Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Changing Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Wall shelf",
+     "room": "Changing Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Changing Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Changing Room",
+     "count": 2,
+     "hint": "row:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Changing Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Soaking tub",
+     "room": "Bath Chamber",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Bath Chamber",
+     "count": 3,
+     "hint": "beside:Soaking tub"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bath Chamber",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bath Chamber",
+     "count": 2,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Cistern Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Cistern Room",
+     "count": 3,
+     "hint": "row:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Cistern Room",
+     "count": 1,
+     "hint": "beside:Great hearth"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Cistern Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Cistern Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "The Bent Antler Inn",
+   "wall": "wood",
+   "ground": "plank floorboards",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "large",
+     "purpose": "ale, gossip and hot meals by the hearth, where villagers eye travelers and tax collectors alike"
+    },
+    {
+     "name": "Kitchen and Pantry",
+     "share": "small",
+     "purpose": "cooking for the common room and storing ale, salt and provisions"
+    },
+    {
+     "name": "Back Hall",
+     "share": "small",
+     "purpose": "corridor where the ground-floor guest rooms open, with the stair rising to the floor above"
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Kitchen and Pantry"
+    ],
+    [
+     "Common Room",
+     "Back Hall"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Long table",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "center"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Common Room",
+     "count": 6,
+     "hint": "around:Long table"
+    },
+    {
+     "template": "Gate lantern",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "wall:any"
+    },
+    {
+     "template": "Small table",
+     "room": "Kitchen and Pantry",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Kitchen and Pantry",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Kitchen and Pantry",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Kitchen and Pantry",
+     "count": 3,
+     "hint": "corner"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Guest Room",
+      "share": "small",
+      "purpose": "simple lodging for one traveler, tax collector or peddler, bed, shelf and a stub of candle"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Guest Room",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Manor bed",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "wall:north+away_from_door"
+     },
+     {
+      "template": "Wall shelf",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "wall:east"
+     },
+     {
+      "template": "Tallow candle",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "beside:Manor bed"
+     },
+     {
+      "template": "Wooden stool",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "beside:Manor bed"
+     }
+    ]
+   },
+   "yard": null,
+   "stairs": {
+    "room": "Back Hall"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Landing",
+       "share": "small",
+       "purpose": "upper corridor where the upstairs guest rooms open, a lamp burning at the rail for late arrivals"
+      },
+      {
+       "name": "Landlord's Chamber",
+       "share": "small",
+       "purpose": "the innkeeper's own room over the common room, close to the noise and the till"
+      }
+     ],
+     "connections": [
+      [
+       "Landing",
+       "Landlord's Chamber"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Tallow candle",
+       "room": "Landing",
+       "count": 1,
+       "hint": "wall:any"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Landlord's Chamber",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Landlord's Chamber",
+       "count": 1,
+       "hint": "wall:east"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Landlord's Chamber",
+       "count": 1,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Landlord's Chamber",
+       "count": 1,
+       "hint": "beside:Manor bed"
+      }
+     ],
+     "opening": {
+      "over_room": "Common Room",
+      "kind": "gallery"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Innkeep's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Hearth Room",
+     "share": "medium",
+     "purpose": "Main family room where the innkeeper's household cooks, eats and mends clothes by the fire"
+    },
+    {
+     "name": "Pantry",
+     "share": "small",
+     "purpose": "Buttery holding the family's flour, salt pork and small casks borrowed from the inn's cellar"
+    },
+    {
+     "name": "Master Bedchamber",
+     "share": "small",
+     "purpose": "Sleeping room of the innkeeper and their spouse"
+    },
+    {
+     "name": "Children's Bedchamber",
+     "share": "small",
+     "purpose": "Sleeping room of the innkeeper's two children"
+    }
+   ],
+   "connections": [
+    [
+     "Hearth Room",
+     "Pantry"
+    ],
+    [
+     "Hearth Room",
+     "Master Bedchamber"
+    ],
+    [
+     "Hearth Room",
+     "Children's Bedchamber"
+    ]
+   ],
+   "entrance": {
+    "room": "Hearth Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Hearth Room",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "beside:Great hearth"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Pantry",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Pantry",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Master Bedchamber",
+     "count": 2,
+     "hint": "symmetric"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Master Bedchamber",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Master Bedchamber",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Master Bedchamber",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Children's Bedchamber",
+     "count": 2,
+     "hint": "symmetric"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Children's Bedchamber",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Children's Bedchamber",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Children's Bedchamber",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Waystone Chapel",
+   "wall": "stone",
+   "ground": "flagstone",
+   "rooms": [
+    {
+     "name": "Chapel Nave",
+     "share": "medium",
+     "purpose": "Prayers, weddings and feast-day gatherings; a white-clothed altar and candlelit stools for the village faithful"
+    },
+    {
+     "name": "Vestry",
+     "share": "small",
+     "purpose": "The resident keeper's sleeping nook, holding vestments, parish records and a humble pallet"
+    }
+   ],
+   "connections": [
+    [
+     "Chapel Nave",
+     "Vestry"
+    ]
+   ],
+   "entrance": {
+    "room": "Chapel Nave",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "Small table",
+     "room": "Chapel Nave",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Chapel Nave",
+     "count": 4,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Chapel Nave",
+     "count": 4,
+     "hint": "row:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Chapel Nave",
+     "count": 2,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Chapel Nave",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Vestry",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Vestry",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Vestry",
+     "count": 1,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Vestry",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Brophy's Forge",
+   "wall": "stone",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Forge Floor",
+     "share": "medium",
+     "purpose": "The smithy proper: shoeing horses, welding iron, and mending the estate's ploughs and tools"
+    },
+    {
+     "name": "Hearth Room",
+     "share": "small",
+     "purpose": "Cooking and meals for Brophy, his journeymen and the apprentice"
+    },
+    {
+     "name": "Bunk Room",
+     "share": "small",
+     "purpose": "Sleeping quarters for the four who live at the forge"
+    }
+   ],
+   "connections": [
+    [
+     "Forge Floor",
+     "Hearth Room"
+    ],
+    [
+     "Hearth Room",
+     "Bunk Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Forge Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Forge",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Workbench",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Forge Floor",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Forge Floor",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Small table",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Hearth Room",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Hearth Room",
+     "count": 2,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Bunk Room",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Bunk Room",
+     "count": 2,
+     "hint": "row:south"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bunk Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bunk Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Millbrook Mill",
+   "wall": "wood",
+   "ground": "plank",
+   "rooms": [
+    {
+     "name": "Grinding Floor",
+     "share": "large",
+     "purpose": "The heart of the mill, where the brook-driven wheel turns the great stone to grind the barony's grain"
+    },
+    {
+     "name": "Grain Store",
+     "share": "small",
+     "purpose": "A tight pantry room holding the village's grain, sacked and barrelled between grindings"
+    },
+    {
+     "name": "Miller's Chamber",
+     "share": "medium",
+     "purpose": "The miller and his wife's sleeping room above the clatter of the stones"
+    },
+    {
+     "name": "Mill Bothy",
+     "share": "small",
+     "purpose": "A snug bunk room for the two hired hands who haul sacks and tend the wheel"
+    }
+   ],
+   "connections": [
+    [
+     "Grinding Floor",
+     "Grain Store"
+    ],
+    [
+     "Grinding Floor",
+     "Miller's Chamber"
+    ],
+    [
+     "Grinding Floor",
+     "Mill Bothy"
+    ]
+   ],
+   "entrance": {
+    "room": "Grinding Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Millstone",
+     "room": "Grinding Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Grinding Floor",
+     "count": 3,
+     "hint": "beside:Millstone"
+    },
+    {
+     "template": "Workbench",
+     "room": "Grinding Floor",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Grinding Floor",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Grinding Floor",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Grinding Floor",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Grain Store",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Grain Store",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Grain Store",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Miller's Chamber",
+     "count": 2,
+     "hint": "row:west+away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Miller's Chamber",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Miller's Chamber",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Miller's Chamber",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Mill Bothy",
+     "count": 2,
+     "hint": "row:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Mill Bothy",
+     "count": 2,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Mill Bothy",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Harrow's Store",
+   "wall": "wood",
+   "ground": "plank floor",
+   "rooms": [
+    {
+     "name": "Shop Floor",
+     "share": "medium",
+     "purpose": "the shop counter where salt, thread and village news are sold"
+    },
+    {
+     "name": "Store Room",
+     "share": "small",
+     "purpose": "stock room for salt barrels, dry goods and tallying"
+    }
+   ],
+   "connections": [
+    [
+     "Shop Floor",
+     "Store Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Shop Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Small table",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Small table",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Shop Floor",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Shop Floor",
+     "count": 2,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Staircase",
+     "room": "Shop Floor",
+     "count": 1,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Store Room",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Small table",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Store Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "stairs": {
+    "room": "Shop Floor"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Hearth Room",
+       "share": "medium",
+       "purpose": "landing and family hearth-room where the Harrows eat and warm themselves"
+      },
+      {
+       "name": "Master Bedroom",
+       "share": "small",
+       "purpose": "bedchamber of Harrow the storekeeper and his wife"
+      },
+      {
+       "name": "Apprentice Bedroom",
+       "share": "small",
+       "purpose": "bedchamber of the store's apprentice, who sleeps above the stock"
+      }
+     ],
+     "connections": [
+      [
+       "Hearth Room",
+       "Master Bedroom"
+      ],
+      [
+       "Hearth Room",
+       "Apprentice Bedroom"
+      ]
+     ],
+     "furniture": [
+      {
+       "template": "Staircase",
+       "room": "Hearth Room",
+       "count": 1,
+       "hint": "corner+away_from_door"
+      },
+      {
+       "template": "Great hearth",
+       "room": "Hearth Room",
+       "count": 1,
+       "hint": "wall:north+away_from_door"
+      },
+      {
+       "template": "Small table",
+       "room": "Hearth Room",
+       "count": 1,
+       "hint": "center"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Hearth Room",
+       "count": 3,
+       "hint": "around:Small table"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Hearth Room",
+       "count": 1,
+       "hint": "wall:west"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Hearth Room",
+       "count": 2,
+       "hint": "beside:Small table"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Master Bedroom",
+       "count": 2,
+       "hint": "away_from_door+symmetric"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Master Bedroom",
+       "count": 2,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Master Bedroom",
+       "count": 1,
+       "hint": "wall:east"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Master Bedroom",
+       "count": 2,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Manor bed",
+       "room": "Apprentice Bedroom",
+       "count": 1,
+       "hint": "away_from_door"
+      },
+      {
+       "template": "Wooden stool",
+       "room": "Apprentice Bedroom",
+       "count": 1,
+       "hint": "beside:Manor bed"
+      },
+      {
+       "template": "Wall shelf",
+       "room": "Apprentice Bedroom",
+       "count": 1,
+       "hint": "wall:north"
+      },
+      {
+       "template": "Tallow candle",
+       "room": "Apprentice Bedroom",
+       "count": 1,
+       "hint": "beside:Manor bed"
+      }
+     ],
+     "opening": {
+      "over_room": "Shop Floor",
+      "kind": "stairwell"
+     }
+    }
+   ]
+  },
+  {
+   "name": "Reeve's House",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Main Room",
+     "share": "medium",
+     "purpose": "Hearth-room, kitchen and the reeve's office, where village tallies, rents and the barony's dues are reckoned at the desk"
+    },
+    {
+     "name": "Pantry",
+     "share": "small",
+     "purpose": "Stores the household grain and the collected village shares owed to the estate"
+    },
+    {
+     "name": "Master Bedroom",
+     "share": "small",
+     "purpose": "Sleeping chamber of the reeve and his wife"
+    },
+    {
+     "name": "Children's Bedroom",
+     "share": "small",
+     "purpose": "Bunk chamber for the reeve's three children"
+    }
+   ],
+   "connections": [
+    [
+     "Main Room",
+     "Pantry"
+    ],
+    [
+     "Main Room",
+     "Master Bedroom"
+    ],
+    [
+     "Main Room",
+     "Children's Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Small table",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Main Room",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Main Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Pantry",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Master Bedroom",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Children's Bedroom",
+     "count": 3,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Children's Bedroom",
+     "count": 1,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Children's Bedroom",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Children's Bedroom",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Weaver's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Weaving Room",
+     "share": "medium",
+     "purpose": "Front room where the weaver works the great loom and takes cloth orders from villagers"
+    },
+    {
+     "name": "Hearth Room",
+     "share": "medium",
+     "purpose": "Kitchen and family common room, warm and bread-smelling, with the pantry corner"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "small",
+     "purpose": "Sleeping room for the weaver, spouse and apprentice child"
+    }
+   ],
+   "connections": [
+    [
+     "Weaving Room",
+     "Hearth Room"
+    ],
+    [
+     "Hearth Room",
+     "Bedchamber"
+    ]
+   ],
+   "entrance": {
+    "room": "Weaving Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Weaver's loom",
+     "room": "Weaving Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Weaving Room",
+     "count": 1,
+     "hint": "beside:Weaver's loom"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Weaving Room",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Weaving Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Hearth Room",
+     "count": 2,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Hearth Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Bedchamber",
+     "count": 3,
+     "hint": "row:west"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Cooper's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Workshop",
+     "share": "small",
+     "purpose": "Front room where the cooper shapes staves and hoops and sells finished barrels"
+    },
+    {
+     "name": "Hearth Room",
+     "share": "small",
+     "purpose": "Kitchen and family common room where meals are cooked and taken"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "small",
+     "purpose": "Sleeping room for the cooper, their spouse and one apprentice child"
+    }
+   ],
+   "connections": [
+    [
+     "Workshop",
+     "Hearth Room"
+    ],
+    [
+     "Hearth Room",
+     "Bedchamber"
+    ]
+   ],
+   "entrance": {
+    "room": "Workshop",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Workbench",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Workshop",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "beside:Workbench"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Hearth Room",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Bedchamber",
+     "count": 2,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Bedchamber",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "beside:Manor bed"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Hollyfield Farmhouse",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Hearth Room",
+     "share": "medium",
+     "purpose": "Kitchen and common room where the tenant family cooks, eats and mends tools by the fire"
+    },
+    {
+     "name": "Bedroom",
+     "share": "medium",
+     "purpose": "Sleeping room for the four tenant farmers, a bed apiece along the walls"
+    },
+    {
+     "name": "Pantry",
+     "share": "small",
+     "purpose": "Cool storage for seed grain, flour and salted stores"
+    }
+   ],
+   "connections": [
+    [
+     "Hearth Room",
+     "Bedroom"
+    ],
+    [
+     "Hearth Room",
+     "Pantry"
+    ]
+   ],
+   "entrance": {
+    "room": "Hearth Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Small table",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Hearth Room",
+     "count": 3,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Hearth Room",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Bedroom",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Manor bed",
+     "room": "Bedroom",
+     "count": 2,
+     "hint": "row:east"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Bedroom",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bedroom",
+     "count": 2,
+     "hint": "beside:Manor bed"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Pantry",
+     "count": 3,
+     "hint": "row:north"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Great Barn",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Barn Floor",
+     "share": "large",
+     "purpose": "Wide threshing aisle where the estate's oxen, goats and geese stall through winter, the great hay rick stacked at their backs"
+    },
+    {
+     "name": "Herd's Nook",
+     "share": "small",
+     "purpose": "Snug boarded corner where the estate's winter herder sleeps within earshot of the livestock"
+    },
+    {
+     "name": "Tack Room",
+     "share": "small",
+     "purpose": "Harness, seed grain and the mending tools for the Hollyfields plots"
+    }
+   ],
+   "connections": [
+    [
+     "Barn Floor",
+     "Herd's Nook"
+    ],
+    [
+     "Barn Floor",
+     "Tack Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Barn Floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Hay rick",
+     "room": "Barn Floor",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Barn Floor",
+     "count": 3,
+     "hint": "row:west"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Herd's Nook",
+     "count": 1,
+     "hint": "wall:west+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Herd's Nook",
+     "count": 1,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Herd's Nook",
+     "count": 1,
+     "hint": "beside:Small table"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Herd's Nook",
+     "count": 1,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Herd's Nook",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Workbench",
+     "room": "Tack Room",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Tack Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Tack Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Tack Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Tack Room",
+     "count": 1,
+     "hint": "beside:Workbench"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Orchard Bothy",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Keepers' Room",
+     "share": "small",
+     "purpose": "Single-room seasonal shelter where the two orchard keepers sleep through blossom-tending and harvest weeks, with a hearth for cold nights and the last pressing's cider kept in the corner."
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Keepers' Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Straw pallet",
+     "room": "Keepers' Room",
+     "count": 2,
+     "hint": "row:east"
+    },
+    {
+     "template": "Great hearth",
+     "room": "Keepers' Room",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Keepers' Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Keepers' Room",
+     "count": 2,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Keepers' Room",
+     "count": 1,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Keepers' Room",
+     "count": 1,
+     "hint": "wall:north+beside:Great hearth"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Keepers' Room",
+     "count": 2,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Keepers' Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Woodcutter's Lodge",
+   "wall": "wood",
+   "ground": "plank floor",
+   "rooms": [
+    {
+     "name": "Lodge Hall",
+     "share": "small",
+     "purpose": "Main room where the two foresters eat, mend tools and plan the wood's felling, charcoal burns and patrols"
+    },
+    {
+     "name": "Bunk Room",
+     "share": "small",
+     "purpose": "Sleeping quarters for the two foresters after long days in Whisperwood"
+    }
+   ],
+   "connections": [
+    [
+     "Lodge Hall",
+     "Bunk Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Lodge Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Great hearth",
+     "room": "Lodge Hall",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "Small table",
+     "room": "Lodge Hall",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Lodge Hall",
+     "count": 2,
+     "hint": "around:Small table"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Lodge Hall",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Lodge Hall",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    },
+    {
+     "template": "Storage barrel",
+     "room": "Lodge Hall",
+     "count": 2,
+     "hint": "corner+away_from_door"
+    },
+    {
+     "template": "Straw pallet",
+     "room": "Bunk Room",
+     "count": 2,
+     "hint": "row:north"
+    },
+    {
+     "template": "Wooden stool",
+     "room": "Bunk Room",
+     "count": 2,
+     "hint": "beside:Straw pallet"
+    },
+    {
+     "template": "Wall shelf",
+     "room": "Bunk Room",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "Tallow candle",
+     "room": "Bunk Room",
+     "count": 1,
+     "hint": "beside:Wall shelf"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Hobsleigh Tudd",
+   "gender": "male",
+   "role": "head cook of the Old Hall kitchen",
+   "home": "Old Hall",
+   "work": "Old Hall",
+   "description": "A brownie who has run the Old Hall kitchen for forty years and wants the new baron to taste his plum duff before judging the house; he worries the flour bins sit at three finger-widths and quarter-day is a fortnight off.",
+   "physicalDescription": "Knee-high and flour-dusted, brown smock under a patched apron; one long white whisker he tugs whenever the bread falls flat."
+  },
+  {
+   "name": "Osric Quill",
+   "gender": "male",
+   "role": "steward and keeper of the household ledgers",
+   "home": "Old Hall",
+   "work": "Old Hall",
+   "description": "The late baron's clerk, still keeping the registers in his own neat hand, who wants the back taxes tallied honestly before the crown's men arrive; he worries his ledgers read like a shopping list of souls.",
+   "physicalDescription": "Dust-grey and parchment-dry in a mended clerk's coat, posture ramrod straight; a green wax stamp worn on a cord about his wrist."
+  },
+  {
+   "name": "Bracken Stoutpost",
+   "gender": "male",
+   "role": "gatekeeper of the estate road",
+   "home": "Gatehouse",
+   "work": "Gatehouse",
+   "description": "A soft-spoken half-ogre who minds the gate by day and drills alone with a rusted lance at dawn, wanting more than anything to be sworn a knight; he worries the tax riders will laugh themselves sick at him.",
+   "physicalDescription": "Broad as the gate he guards, knuckles like baked hams; a dented pot-helm polished so bright it shows his hopeful face."
+  },
+  {
+   "name": "Sella Quickstitch",
+   "gender": "female",
+   "role": "gatekeeper, locksmith and key-warden",
+   "home": "Gatehouse",
+   "work": "Gatehouse",
+   "description": "A gnome who keeps the second watch and mends every lock from granary to bath house, wanting to cut the new baron a proper set of ward-keys by week's end; she worries the west postern's hinges will fail on the one night it matters.",
+   "physicalDescription": "Pocket-sized with grey braids, wrapped in a patchwork watcher's cloak; a ring of twenty lockpicks strapped down her left forearm."
+  },
+  {
+   "name": "Wren of the Pear Tree",
+   "gender": "female",
+   "role": "head gardener of the estate grounds",
+   "home": "Garden Lodge",
+   "work": "Thornrose Estate",
+   "description": "A dryad whose mother-pear was storm-felled two winters back, now planting her third sapling by the lodge door; she wants the knotweed cleared off her roots before autumn and worries frost in the seed beds she cannot feel coming.",
+   "physicalDescription": "Bark-skinned arms leafing green at the wrists, moss-coloured gown; two ripe pears always tucked in her sash."
+  },
+  {
+   "name": "Caper Whitethorn",
+   "gender": "male",
+   "role": "under-gardener and hedge-trimmer",
+   "home": "Garden Lodge",
+   "work": "Thornrose Estate",
+   "description": "A satyr who plays his pipes to the bean rows to coax them up their strings, wanting his music taken as seriously as his shears; he worries the yew walk is swallowing the east path one inch a week.",
+   "physicalDescription": "Shaggy goat legs below a gardener's smock sewn with forty pockets; a dropped tuning peg lodged behind one curling horn."
+  },
+  {
+   "name": "Nettle Ashpot",
+   "gender": "female",
+   "role": "herbalist and brewer at the Still",
+   "home": "The Still",
+   "work": "The Still",
+   "description": "A goblin brewer of tonics, dyes and a cider that can strip paint, wanting a second copper kettle before pressing season; she worries her headache tincture will run dry exactly when the collectors visit.",
+   "physicalDescription": "Small and green-eared in leathers stained every colour of her vats; a sprig of feverfew tucked behind one pointed ear."
+  },
+  {
+   "name": "Bryony Sough",
+   "gender": "female",
+   "role": "dye apprentice and cider-presser",
+   "home": "The Still",
+   "work": "The Still",
+   "description": "A nixie apprentice who keeps the dye vats hot and the rough cider honest, wanting her blue dye to hold on wool for the first time; she worries the brook she was hatched in is silting over.",
+   "physicalDescription": "Damp-haired and web-fingered, apron striped with old dye-moons; a little wooden fish charm on a bootlace at her throat."
+  },
+  {
+   "name": "Flint Undermortise",
+   "gender": "male",
+   "role": "charmwright of the estate",
+   "home": "Charmwright's Workshop",
+   "work": "Charmwright's Workshop",
+   "description": "The dwarf who wards roof-slates, gate-hinges and the bath cistern alike, wanting an apprentice with steadier hands than his own; he worries the north gutter charm will lapse next month and he is one pair of hands short.",
+   "physicalDescription": "Barrel-chested, beard braids bound with copper charm-wire; a scorch-shaped handprint branded into his leather apron."
+  },
+  {
+   "name": "Mother Gersha",
+   "gender": "female",
+   "role": "infirmarian of the West Wing",
+   "home": "West Wing",
+   "work": "West Wing",
+   "description": "A grey-tusked orc nurse who has set four hundred bruises and keeps every old scar's story, wanting a fresh bolt of linen by the month's end; she worries the crown's collectors will bring more than paperwork to her door.",
+   "physicalDescription": "Broad and gently stooped, shawl pinned over a healer's smock; one tusk capped in silver from a debt long since forgiven."
+  },
+  {
+   "name": "Joram Fillery",
+   "gender": "male",
+   "role": "innkeeper of the Bent Antler",
+   "home": "Innkeep's Cottage",
+   "work": "The Bent Antler Inn",
+   "description": "Keeps four guest beds swept for tax collectors he knows will never pay, and wants the crown's debt settled before his taproom gets named on a seizure writ.",
+   "physicalDescription": "Stout and barrel-chested in a stained leather apron over brown wool; a chalk slate hangs from his belt for tallying tabs."
+  },
+  {
+   "name": "Petra Fillery",
+   "gender": "female",
+   "role": "inn cook and tap-wife",
+   "home": "Innkeep's Cottage",
+   "work": "The Bent Antler Inn",
+   "description": "Bakes two meat pies and forty loaves every market day and wants first refusal on the estate's flour surplus, but worries Joram's soft heart will run a tab for the wrong stranger.",
+   "physicalDescription": "Broad-hipped and strong-armed, grey-streaked hair under a clean linen coif; burn-scarred forearms she folds tight the moment a collector walks in."
+  },
+  {
+   "name": "Tilly Fillery",
+   "gender": "female",
+   "role": "potgirl and bar-runner at the inn",
+   "home": "Innkeep's Cottage",
+   "work": "The Bent Antler Inn",
+   "description": "A fourteen-year-old who trades village gossip for riddles with the estate gatekeepers and wants to be the first human in a decade asked to supper at Thornrose, worrying her father will bar the estate road if he finds out.",
+   "physicalDescription": "Wiry and quick in oversized inn livery pinned at the shoulders; wears a little brass key-charm from Sella Quickstitch on a bootlace."
+  },
+  {
+   "name": "Hal Brophy",
+   "gender": "male",
+   "role": "village blacksmith",
+   "home": "Brophy's Forge",
+   "work": "Brophy's Forge",
+   "description": "Shoes the estate's four cart-horses and mends its ploughs cheap because his mother once served the Old Hall, and wants his smithy tenure confirmed in writing before he worries the crown seizes his best customer's tools.",
+   "physicalDescription": "Hammer-shouldered and soot-browed in a heavy apron with rolled sleeves; keeps three spare horseshoe nails tucked behind one ear."
+  },
+  {
+   "name": "Dunstan Brophy",
+   "gender": "male",
+   "role": "apprentice smith",
+   "home": "Brophy's Forge",
+   "work": "Brophy's Forge",
+   "description": "Sixteen and far more interested in the estate's everyday charmwork than in the anvil, he wants one afternoon inside Flint Undermortise's workshop and worries his father needs him at the forge too much to ever ask.",
+   "physicalDescription": "Long-limbed and coltish in singed sleeves and a leather bib; a self-cut warding rune, backwards and inert, is scratched into his left cuff."
+  },
+  {
+   "name": "Bram Millward",
+   "gender": "male",
+   "role": "miller of the barony's grain",
+   "home": "Millbrook Mill",
+   "work": "Millbrook Mill",
+   "description": "Grinds the tithe honest, skimming nothing, and wants his dam-repair timber paid for before the frost, worrying that one more bad harvest will bring crown men to chain his wheel.",
+   "physicalDescription": "Flour-dusted and heavy-set in a wool coat with wooden millstone-peg buttons; tests every sack's grind with one wetted finger."
+  },
+  {
+   "name": "Nella Millward",
+   "gender": "female",
+   "role": "miller's wife and grain-accounts keeper",
+   "home": "Millbrook Mill",
+   "work": "Millbrook Mill",
+   "description": "Keeps the mill's tallies on notched sticks and wants them reconciled against Osric Quill's estate ledgers, worrying that the shortfall she suspects between the two is how a seizure quietly starts.",
+   "physicalDescription": "Trim and watchful in a grey shawl over a mill-sack apron; a fan of tally sticks bound with red string rides at her belt."
+  },
+  {
+   "name": "Odilia Harrow",
+   "gender": "female",
+   "role": "keeper of the general store",
+   "home": "Harrow's Store",
+   "work": "Harrow's Store",
+   "description": "Sells salt, thread and news from her ground-floor counter and wants the estate household's bulk custom, since thirty resident mouths buy a great deal of candle, but worries the reeve means to make her shop a tax-collection point.",
+   "physicalDescription": "Small, round and neat in a black gown with a shopkeeper's money-pouch; spectacles worn pushed up into her hair even while reading."
+  },
+  {
+   "name": "Tobbar Kedge",
+   "gender": "male",
+   "role": "cooper",
+   "home": "Cooper's Cottage",
+   "work": "Cooper's Cottage",
+   "description": "Binds the barony's cider and flour barrels and wants a standing order for forty casks a year from the estate's still, worrying that timber prices will climb now Whisperwood is pledged against the baron's debts.",
+   "physicalDescription": "Thick-forearmed and deliberate in a hazel-worker's canvas smock; a cooper's driver hangs from his neck on a leather thong."
+  },
+  {
+   "name": "Godwin Thrale",
+   "gender": "male",
+   "role": "village reeve",
+   "home": "Reeve's House",
+   "work": "Reeve's House",
+   "description": "Files the tax rolls in his cottage office and wants Nettlebrook's fields legally severed from Thornrose's debts, worrying that every kindness the village takes from the estate ties them into the same ledger.",
+   "physicalDescription": "Grey and spare in a good brown coat over clerk's black; has carried his iron deed-box to bed under one arm every night for a year."
+  },
+  {
+   "name": "Aldous Furrow",
+   "gender": "male",
+   "role": "tenant farmer of Hollyfield Farmhouse",
+   "home": "Hollyfield Farmhouse",
+   "work": "Hollyfields",
+   "description": "He rents twelve strips of wheat and hops from the estate and wants one third straight decent harvest to trim the arrears ledger, worrying that a single hailstorm would hand the whole farm to the crown.",
+   "physicalDescription": "Barrel-chested and sun-creased in a patched russet smock and mud-caked boots, with a brass tax-tally on a thong around his neck rubbed shiny from worrying it."
+  },
+  {
+   "name": "Maren Furrow",
+   "gender": "female",
+   "role": "poultry and hop keeper at Hollyfield Farmhouse",
+   "home": "Hollyfield Farmhouse",
+   "work": "Hollyfields",
+   "description": "She keeps forty-one hens and all the hop-tie work and wants her eggs on the Bent Antler's table every winter, but lies awake worrying that the arrears will bind her children to the estate like the nonhuman staff.",
+   "physicalDescription": "Broad-hipped and quick with a grey-streaked braid and a hop-twine bracelet, carrying an egg basket worn shiny on one hip."
+  },
+  {
+   "name": "Colm Furrow",
+   "gender": "male",
+   "role": "bird-scarer and scarecrow-keeper of the wheat strips",
+   "home": "Hollyfield Farmhouse",
+   "work": "Hollyfields",
+   "description": "Fifteen years old, he mends the nine charm-stitched scarecrows and wants Flint Undermortise to take him as an apprentice, worrying the estate's debt sale will scatter his family before that ever happens.",
+   "physicalDescription": "Lanky and freckled in an oversized coat with straw in the cuffs, three crow-feathers stitched to his cap for luck."
+  },
+  {
+   "name": "Betta Furrow",
+   "gender": "female",
+   "role": "goose-girl of the hedge rows",
+   "home": "Hollyfield Farmhouse",
+   "work": "Hollyfields",
+   "description": "Nine years old, she herds eleven geese along the holly hedges and wants a kid goat of her own to raise, worrying daily that the gander will lure her whole flock into Whisperwood.",
+   "physicalDescription": "Small and scabby-kneed in a goose-feather trimmed cape, never without a willow whistle on a string around her neck."
+  },
+  {
+   "name": "Wat Havers",
+   "gender": "male",
+   "role": "stockman of the Great Barn",
+   "home": "Great Barn",
+   "work": "Great Barn",
+   "description": "A loner who winters two oxen, four milch cows and the cart-horses in the Great Barn, he wants the sagging roof re-shingled before the first snow and worries the crown will impound the stock against the barony's debt.",
+   "physicalDescription": "Tall and stooped in a sheepskin vest over a sacking shirt, smelling of hay and liniment, always carrying a birch cow-switch."
+  },
+  {
+   "name": "Aldith Pippin",
+   "gender": "female",
+   "role": "orchard keeper and grafter of the apple rows",
+   "home": "Orchard Bothy",
+   "work": "Hollyfields",
+   "description": "Keeper of two hundred and thirty apple trees who wants to graft one cider apple worth naming before her knees give out, while worrying her yearly quarrel with Bryony Sough over the best press-rows will cost her the Still's custom.",
+   "physicalDescription": "Wiry and weathered in an apple-green headscarf, fingers permanently stained brown from graft-wax, a grafting knife at her belt worn to a sliver."
+  },
+  {
+   "name": "Osgar Deele",
+   "gender": "male",
+   "role": "seasonal apple-picker and bothy keeper",
+   "home": "Orchard Bothy",
+   "work": "Hollyfields",
+   "description": "A retired crown tally-assessor pruning apples under a false name, he wants ten quiet seasons among the rows but worries every new tax notice bears a seal written by clerks who once knew him.",
+   "physicalDescription": "Soft-handed for a farmhand, hiding ink-stained cuffs under leather gloves, and still carrying an old crown-issue quill case he cannot bring himself to throw away."
+  },
+  {
+   "name": "Hew Draycott",
+   "gender": "male",
+   "role": "forester and timber-warden of Whisperwood",
+   "home": "Woodcutter's Lodge",
+   "work": "Whisperwood",
+   "description": "The barony's only forester, who has marked forty sound oaks toward the tax tally and wants the wood cut honest enough to regrow, but worries over strange hoofprints on the north rides that belong to no villager he knows.",
+   "physicalDescription": "Lean and gray-shot, in a moss-green hood and patched leather jerkin, with an old bilhook scar across his left palm that he traces while counting."
+  },
+  {
+   "name": "Mabb Colyer",
+   "gender": "female",
+   "role": "charcoal burner of Whisperwood",
+   "home": "Woodcutter's Lodge",
+   "work": "Whisperwood",
+   "description": "A soot-quiet misfit tending five charcoal clamps a season who wants to stay off every ledger in the realm, worrying that a crown clerk's list might carry the debt-chain name she fled two baronies back.",
+   "physicalDescription": "Small and wiry, soot-grimed under a patched russet cloak, always smelling of char and re-tying a rowan charm at her wrist each dawn."
+  }
+ ],
+ "player": {
+  "name": "Edmund Bramblewick",
+  "gender": "male",
+  "role": "Newly arrived baron paying off back taxes and protecting the estate's bound household",
+  "home": "Old Hall",
+  "work": "Old Hall",
+  "description": "A distant nephew named heir by a dead baron's letter, determined to settle the crown's tax debt, mend Thornrose Estate, and keep its thirty registered residents from being seized and sold.",
+  "physicalDescription": "Lean and road-dusty in a mud-hemmed wool cloak, wearing a too-large baron's signet on a leather cord, with clerk's ink stains on his fingers",
+  "inventory": [
+   [
+    "Crusty barley loaf",
+    1
+   ],
+   [
+    "Mutton pasty",
+    2
+   ],
+   [
+    "Dried apple rings",
+    1
+   ],
+   [
+    "Jug of rough cider",
+    1
+   ]
+  ]
+ },
+ "compounds": [
+  {
+   "name": "Thornrose Court",
+   "zone": "Thornrose Estate",
+   "shape": "enclosure",
+   "courtyard": "medium",
+   "walls": "walkable",
+   "parts": [
+    {
+     "building": "Gatehouse",
+     "at": "edge:south:center",
+     "gate": true
+    },
+    {
+     "building": "Old Hall",
+     "at": "inside:center"
+    },
+    {
+     "building": "East Wing",
+     "at": "attached:Old Hall:east"
+    },
+    {
+     "building": "West Wing",
+     "at": "attached:Old Hall:west"
+    },
+    {
+     "building": "Garden Lodge",
+     "at": "corner:nw"
+    }
+   ]
+  }
+ ],
+ "narrativeRules": [
+  "Keep every turn cozy — bread baking, charms humming, roofs mended — and let darkness wait off-screen or in backstory.",
+  "House the thirty-odd nonhumans only at Thornrose Estate; keep Nettlebrook, Hollyfields and the mill stubbornly, politely human.",
+  "Residents are legally the estate's registered property; let each kindness or cruelty from the baron nudge his repute, never forcing his hand.",
+  "Make crown tax notices and seizure the true deadly stakes — never bandits, never blades in daylight.",
+  "When residents' old pursuers stir, show only rumors, hoofprints and wrong questions first; save any confrontation for a season's climax.",
+  "Let village suspicion thaw by inches — one kept promise, one shared loaf, one mended cart at a time.",
+  "Play every tax collector's visit as comedy stretched over dread: muddy boots, thin patience, cream cakes.",
+  "End each turn on some small domestic win, even when the ledger reads red."
+ ],
+ "narrativeFlavor": "adaptive",
+ "difficulty": "medium",
+ "currency": {
+  "name": "Copper Pennies",
+  "description": "Worn coppers stamped with the old baron's thorned rose, counted twice by everyone in Bramblewick.",
+  "format": "5 pennies"
+ },
+ "startingCurrency": 7,
+ "attributes": {
+  "strength": 4,
+  "dexterity": 4,
+  "intellect": 6,
+  "perception": 5,
+  "charisma": 6
+ },
+ "skills": {
+  "Ledgercraft": 3,
+  "Persuasion": 3,
+  "Law-Lore": 2,
+  "Appraisal": 2,
+  "Haggling": 2,
+  "Etiquette": 2,
+  "Discretion": 2,
+  "Hearthcraft": 1,
+  "Charm-Reading": 1,
+  "Horticulture": 1,
+  "Husbandry": 1,
+  "Carpentry": 1,
+  "Brewing": 1,
+  "Herblore": 1,
+  "Woodlore": 1,
+  "Riding": 1,
+  "Thatching": 0,
+  "Fowling": 0
+ },
+ "weatherKinds": [
+  "clear",
+  "rain",
+  "fog",
+  "wind",
+  "thunderstorm",
+  "snow"
+ ],
+ "variables": [
+  {
+   "name": "Crown Debt",
+   "emoji": "💰",
+   "type": "number",
+   "value": 120,
+   "initial": 120,
+   "min": 0,
+   "max": 150,
+   "ratePerHour": 0.02,
+   "highZone": {
+    "threshold": 130,
+    "effectDesc": "seizure threatened",
+    "emoji": "💸"
+   }
+  },
+  {
+   "name": "Larder",
+   "emoji": "🍲",
+   "type": "number",
+   "value": 8,
+   "initial": 8,
+   "min": 0,
+   "max": 12,
+   "ratePerHour": -0.1,
+   "lowZone": {
+    "threshold": 3,
+    "effectDesc": "hungry household",
+    "emoji": "⚠"
+   }
+  },
+  {
+   "name": "Charm Charge",
+   "emoji": "✨",
+   "type": "number",
+   "value": 6,
+   "initial": 6,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.05,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "charms flicker",
+    "emoji": "⚠"
+   }
+  },
+  {
+   "name": "Village Trust",
+   "emoji": "🤝",
+   "type": "number",
+   "value": 3,
+   "initial": 3,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.01,
+   "lowZone": {
+    "threshold": 4,
+    "effectDesc": "polite suspicion",
+    "emoji": "👀"
+   }
+  },
+  {
+   "name": "Rumours",
+   "emoji": "💬",
+   "type": "text",
+   "value": "They say the new baron arrived with empty pockets and a crown writ.",
+   "initial": "They say the new baron arrived with empty pockets and a crown writ."
+  },
+  {
+   "name": "Household Repute",
+   "emoji": "🏠",
+   "type": "text",
+   "value": "Wary but curious — they read their registry lines nightly and watch his hands.",
+   "initial": "Wary but curious — they read their registry lines nightly and watch his hands."
+  },
+  {
+   "name": "Old Shadows",
+   "emoji": "🌲",
+   "type": "text",
+   "value": "Quiet — only deer paths and charcoal smoke in Whisperwood.",
+   "initial": "Quiet — only deer paths and charcoal smoke in Whisperwood."
+  }
+ ],
+ "perkTrees": [
+  {
+   "name": "Charm and Craft",
+   "root": {
+    "name": "Apprentice's Eye",
+    "type": "passive",
+    "description": "After you spend a scene watching a resident work at their trade, you may attempt that same task once without rolling; the GM simply narrates a passable result from your careful mimicry.",
+    "physicalDescription": "A wide eye reflecting a workbench's glowing charm-light.",
+    "children": [
+     {
+      "name": "Charm-Touched Hands",
+      "type": "passive",
+      "description": "Charms you tend with your own hands keep their working an extra season before needing rekindling, and the GM must tell you plainly whenever one is close to failing.",
+      "physicalDescription": "Two cupped hands holding a small knot of blue charm-light.",
+      "children": [
+       {
+        "name": "Journeyman Charmwright",
+        "type": "active",
+        "description": "Once per session you may shape a minor everyday charm — warm a room, keep bread from molding, steady a ladder — from materials at hand, no roll required; working in Flint's workshop grants you a second use.",
+        "physicalDescription": "A chisel crossing a charm-knot above a workbench.",
+        "children": [
+         {
+          "name": "The Baron's Own",
+          "type": "passive",
+          "description": "You have made one masterpiece tool, garment or charm that is unmistakably yours; once per session, when using it, you may turn one failed roll into a plain success, and the GM may never have it lost to anything less than your own choice.",
+          "physicalDescription": "A masterwork hammer wrapped in a single rose-thorn vine.",
+          "children": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Key-Warden's Pupil",
+      "type": "active",
+      "description": "Once per session you may open, rekey or quietly jam any lock or ward on the estate as Sella taught you, without a roll and without leaving signs.",
+      "physicalDescription": "A ring of iron keys with one key glowing faintly.",
+      "children": []
+     },
+     {
+      "name": "Forge-Friend",
+      "type": "passive",
+      "description": "When you work alongside Hal Brophy or commission gear from the forge, you pay half the usual price in materials, and the GM treats the finished piece as quality gear that grants one reroll on a related task before it needs mending.",
+      "physicalDescription": "Crossed hammer and tongs before an anvil.",
+      "children": [
+       {
+        "name": "Mended Under Your Hands",
+        "type": "passive",
+        "description": "Whatever you mend — slate, harness, cartwheel — holds through the coming winter without complaint; the GM may not break it again except by storm, accident or malice.",
+        "physicalDescription": "A mended roof-slate bound with a bright new nail.",
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "The Baron's Ledger",
+   "root": {
+    "name": "Sum the Columns",
+    "type": "passive",
+    "description": "Whenever Osric walks you through the ledgers, the GM must point out one waste, skim or forgotten income in the estate's books, worth a small sum each season once you act on it.",
+    "physicalDescription": "An open ledger with a quill resting on a freshly inked column.",
+    "children": [
+     {
+      "name": "Fair Weigh and Just Measure",
+      "type": "passive",
+      "description": "Your weights are honest and your counts are true, and folk know it; the GM grants you fair prices at Harrow's Store and the mill, and villagers bring small disputes over sums to you before the reeve.",
+      "physicalDescription": "A set of brass scales perfectly balanced.",
+      "children": [
+       {
+        "name": "Market Sense",
+        "type": "active",
+        "description": "Once per trading trip you may declare a price 'too good' or 'too thin' before bargaining begins; the GM must answer honestly, then let you buy or sell at the better rate you named.",
+        "physicalDescription": "A coin balanced on a thumb, mid-flip.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Tithe-Day Ready",
+      "type": "passive",
+      "description": "No tax notice ever surprises you; the GM must name each crown demand at least a season before it falls due, along with one lawful way to stretch or split the payment.",
+      "physicalDescription": "A folded crown-sealed notice pinned to a calendar board.",
+      "children": [
+       {
+        "name": "The Crown's Own Tongue",
+        "type": "active",
+        "description": "Once per collector's visit you may cite a registration roll, charter clause or toll precedent from the barony's papers to delay a demand by a month, soften its terms, or trade it for goods in kind.",
+        "physicalDescription": "A scroll of statutes sealed with a wax crown.",
+        "children": [
+         {
+          "name": "Debt-Breaker",
+          "type": "passive",
+          "description": "You always know exactly how far the barony stands from clearing the crown's debt; whenever you could close the gap with one push, the GM must say so plainly and name the single largest lawful opportunity within reach.",
+          "physicalDescription": "A snapped chain lying across a ledger's closing page.",
+          "children": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Rents and Rightful Dues",
+      "type": "passive",
+      "description": "Rents, mill-tolls and hop-money come in a tenth heavier each season under your fixing, and the GM treats one overdue villager account per season as quietly settled in the estate's favor.",
+      "physicalDescription": "A tidy stack of rent-tallies tied with string.",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Thornrose Restored",
+   "root": {
+    "name": "Walk the Walls",
+    "type": "passive",
+    "description": "Once per session, while walking the estate's grounds or walls, the GM must reveal one developing trouble — a slipped slate, a lean in a fence, a worried resident — while it is still cheap and easy to fix.",
+    "physicalDescription": "Bootprints along a mossy wall-top under a rising sun.",
+    "children": [
+     {
+      "name": "Open Table",
+      "type": "active",
+      "description": "Once per week you may sit and eat at the residents' table in the Old Hall; everyone who shares the meal works with better heart that week, and the GM must show one resident's mood plainly softening toward you.",
+      "physicalDescription": "A long table set with bread, bowls and many hands.",
+      "children": [
+       {
+        "name": "Master of the Household",
+        "type": "passive",
+        "description": "Each season you may set two residents to a project of your choosing — mending, brewing, warding, planting — and the GM treats that work as done a full season early and done well.",
+        "physicalDescription": "A pointing hand above a ring of small cottage icons.",
+        "children": [
+         {
+          "name": "Barony Reborn",
+          "type": "passive",
+          "description": "Each time a building, field or trade of the estate is truly restored, the GM must permanently lower the crown's seizure threat by one step and let one rumor of Bramblewick's mending reach a friendly ear outside the barony.",
+          "physicalDescription": "A thorn-rose blooming over a mended manor roof.",
+          "children": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "name": "Kind Master's Name",
+      "type": "passive",
+      "description": "While your tracked reputation stands kinder than cruel and gentler than rough, the GM grants any resident's volunteered help without your asking, and newcomers to the estate are quick to trust you.",
+      "physicalDescription": "A heart-shaped leaf with a baron's coronet laid gently upon it.",
+      "children": [
+       {
+        "name": "Roofs and Rigging",
+        "type": "active",
+        "description": "Once per season you may declare a repair project — roof, well, wall-gap, cart — and rally the household to it; the GM halves its cost in coin and time and narrates the work as a scene of cheerful noise.",
+        "physicalDescription": "A ladder leaning on a freshly slated roof.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Village Voice",
+      "type": "passive",
+      "description": "The reeve, the innkeeper and the storekeeper speak plainly to you now; the GM shares Nettlebrook's news and worries freely, and once per session a villager will do you an unpaid favor.",
+      "physicalDescription": "A speech ribbon linking a manor and three cottages.",
+      "children": [
+       {
+        "name": "Ward the Gate",
+        "type": "passive",
+        "description": "The gatehouse watch and your ordered wards give early warning; when pursuers, collectors or other trouble comes up the estate road, the GM must grant the household a full scene's notice to hide, prepare or stand together.",
+        "physicalDescription": "A gatehouse arch glowing with a thin charm-ward line.",
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Reading of the Late Baron's Will",
+   "location": "Old Hall",
+   "day": 0,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "Osric Quill reads the will to an empty bench; the household spends your first night deciding you will not stay, and Sella Quickstitch quietly begins copying keys 'just in case'."
+  },
+  {
+   "name": "Crown Messenger at the Gate",
+   "location": "Gatehouse",
+   "day": 2,
+   "start": "11:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "Sella Quickstitch signs for the arrears schedule in your name; the crown clerk's ledger later notes 'baron not in attendance', a remark collectors repeat at every visit."
+  },
+  {
+   "name": "Welcome Ale for the New Baron",
+   "location": "The Bent Antler Inn",
+   "day": 4,
+   "start": "19:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "Joram Fillery taps the cask to a toast about your absence; Odilia Harrow starts quoting you stranger prices and the Furrows drag their feet on the harvest contracts."
+  },
+  {
+   "name": "Hops and Wheat Contract Signing",
+   "location": "Hollyfield Farmhouse",
+   "day": 6,
+   "start": "14:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "Aldous Furrow sells the year's hops to a buyer from the next valley before the week is out, and the estate's best cash coin rides away on his cart."
+  },
+  {
+   "name": "Morning Ledger Hour with Osric Quill",
+   "location": "Old Hall",
+   "day": 1,
+   "start": "08:00",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "The day's spending goes unchecked and Osric logs another entry under 'waste'; enough skipped mornings and the ledger's errors surface as a fine at the collector's table."
+  },
+  {
+   "name": "Evening Gate Report",
+   "location": "Gatehouse",
+   "day": 1,
+   "start": "18:00",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "Bracken Stoutpost logs the road alone; whatever strangers passed the estate that day goes unreported until their boots are already in the yard."
+  },
+  {
+   "name": "Reeve's Rent Court",
+   "location": "Reeve's House",
+   "day": 2,
+   "start": "10:00",
+   "hours": 2,
+   "recurrence": "weekly",
+   "missedConsequence": "Godwin Thrale settles the week's disputes without you and the village notes whose baron stayed away; rent grumbles fester until the next court."
+  },
+  {
+   "name": "Nettlebrook Market Morning",
+   "location": "Nettlebrook Village",
+   "day": 3,
+   "start": "08:00",
+   "hours": 4,
+   "recurrence": "weekly",
+   "missedConsequence": "Odilia Harrow moves the estate's surplus to a passing peddler at half its worth, and the green decides its baron is too proud for a market stall."
+  },
+  {
+   "name": "Charm Wards Renewal",
+   "location": "Charmwright's Workshop",
+   "day": 5,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "weekly",
+   "missedConsequence": "The cistern and roof-slate wards gutter; the Bath House runs cold and the next hard rain finds the Old Hall's loose slates uncharmed."
+  },
+  {
+   "name": "Charcoal Burn Watch",
+   "location": "Whisperwood",
+   "day": 6,
+   "start": "07:00",
+   "hours": 3,
+   "recurrence": "weekly",
+   "missedConsequence": "Mabb Colyer tends the kilns alone; hoofprints out of the north wood go unchallenged and the residents bolt their shutters a little early."
+  }
+ ],
+ "quests": [
+  {
+   "title": "The Baron's First Coin",
+   "objectives": [
+    {
+     "text": "Total the true debt beside Osric Quill in the Old Hall ledgers",
+     "prerequisites": [
+      {
+       "text": "Attend the reading of the late baron's will at the Old Hall",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Sign the hops and wheat contracts with Aldous Furrow at Hollyfield Farmhouse",
+     "prerequisites": [
+      {
+       "text": "Total the true debt beside Osric Quill in the Old Hall ledgers",
+       "primary": true
+      },
+      {
+       "text": "Drink the welcome ale at the Bent Antler Inn so Nettlebrook will deal with you",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Lay by the first payment of coin and sealed grain-rents in the Granary",
+     "prerequisites": [
+      {
+       "text": "Sign the hops and wheat contracts with Aldous Furrow at Hollyfield Farmhouse",
+       "primary": true
+      },
+      {
+       "text": "Sell Bram Millward's grist and Nettle Ashpot's cider at the Nettlebrook Village market",
+       "primary": false
+      },
+      {
+       "text": "Settle the Furrow boundary quarrel at Godwin Thrale's rent court in the Reeve's House",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Meet the crown collector at the Bent Antler Inn and pay the first installment before a seizure notice reaches the Gatehouse",
+     "prerequisites": [
+      {
+       "text": "Lay by the first payment of coin and sealed grain-rents in the Granary",
+       "primary": true
+      },
+      {
+       "text": "Have Hobsleigh Tudd feed the collector at the Old Hall table so his ledger hand stays generous",
+       "primary": false
+      },
+      {
+       "text": "Let Sella Quickstitch check the Gatehouse locks so every registered name on the rolls is accounted for",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Smoke on the North Path",
+   "objectives": [
+    {
+     "text": "Confirm the strangers' camp with Hew Draycott at the Woodcutter's Lodge",
+     "prerequisites": [
+      {
+       "text": "Walk the weekly charcoal burn watch beside Mabb Colyer in Whisperwood",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Trace who passed the estate road that week through Sella Quickstitch's gate ledger",
+     "prerequisites": [
+      {
+       "text": "Confirm the strangers' camp with Hew Draycott at the Woodcutter's Lodge",
+       "primary": true
+      },
+      {
+       "text": "Ask Tilly Fillery which travelers slept at the Bent Antler Inn",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Settle the matter quietly so no resident of Thornrose Estate is carried off",
+     "prerequisites": [
+      {
+       "text": "Trace who passed the estate road that week through Sella Quickstitch's gate ledger",
+       "primary": true
+      },
+      {
+       "text": "Have Flint Undermortise ward the East Wing shutters at the Charmwright's Workshop",
+       "primary": false
+      },
+      {
+       "text": "Pay their road-price from the Granary coin so they find nothing worth a second visit",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "frame": {
+  "genre": {
+   "primary": "fantasy",
+   "influences": [
+    "cozy slice-of-life comedy",
+    "slavery-and-debt dark undercurrents",
+    "estate management"
+   ]
+  },
+  "premise": "A letter names you heir to a run-down barony from a relative you never knew, and you arrive to find a sagging manor, a skeptical human village, and roughly thirty nonhuman residents legally registered as the estate's assets.",
+  "reality": "Enchantment is common in everyday craft and trade, but nonhumans are rare, expensive, and strictly controlled as registered property.",
+  "setting": {
+   "era": "late-medieval low-noble barony",
+   "technology": "pre-industrial craftsmanship with common enchantment",
+   "climate": "temperate rural countryside"
+  },
+  "tone": "cozy, comedic everyday life with darkness kept mostly off-screen",
+  "conflict": "The old baron died in debt, so a crown tax collector calls every 10-20 days, and falling behind means the estate — residents included — is seized.",
+  "playerRole": "The newly arrived baron, who stays to pay off the back taxes, restore the estate, and protect the household legally bound to it.",
+  "themes": [
+   "found family",
+   "debt and duty",
+   "kindness in a cruel world",
+   "rebuilding and restoration",
+   "reputation earned through small choices"
+  ],
+  "constraints": [
+   "The village is mostly human; the nonhuman residents all live at the estate.",
+   "Cozy wins by default — darker events stay mostly off-screen or in backstory.",
+   "Residents are legally the estate's registered property; how the player treats them is the player's choice, tracked as ongoing reputation stats (cruel/kind, rough/gentle, etc.).",
+   "Main deadly threats are crown seizure via tax collectors and residents' past pursuers, not day-to-day violence."
+  ],
+  "summary": "A letter names you heir to a barony you never knew existed. What you find is a sagging manor on a run-down estate, a nearby human village skeptical of yet another possibly-eccentric noble, and roughly thirty nonhuman residents legally registered as the estate's assets. In this world, enchantment is everyday and nonhumans are rare, expensive, strictly-controlled property; the household only exists because the old baron registered every one of them. But he died in debt, and the crown wants its back taxes. A tax collector calls every ten to twenty days, and seizure would mean everything sold — residents included. So the days turn warm and busy: cooking, crafting, fixing roofs, trading with villagers, earning trust one small job at a time, while old enemies sleep in the residents' pasts.",
+  "unresolved": [
+   "Chose a temperate rural climate (not specified in the answers).",
+   "Framed technology as pre-industrial with common enchantment (only 'fantasy, enchantment common' was given).",
+   "The old baron's identity, exact relation to the player, and cause of death left vague for later phases.",
+   "The specific mix of nonhuman resident species left to the people phase.",
+   "Exact resident count left flexible around ~30 so the map phase can bed them."
+  ]
+ },
+ "questionnaire": {
+  "mode": "long",
+  "answers": {
+   "genre": {
+    "choices": [
+     "Fantasy"
+    ],
+    "other": "Darker themes - Nonhumans treated as lesser and often enslaved or indentured."
+   },
+   "extraordinary": {
+    "choices": [],
+    "other": "Enchantment is common, but nonhumans are rare and expensive/strictly-controlled"
+   },
+   "tone": {
+    "choices": [],
+    "other": "Comedic and cozy, but with the undertones of darker happenings in the broader world and past trauma"
+   },
+   "player": {
+    "choices": [],
+    "other": "Inheritor of the estate, newly arrived"
+   },
+   "drive": {
+    "choices": [],
+    "other": "Community and relationships, the need to start making money with the estate to pay back taxes and prevent seizure of the estate (And its non-human residents, as they are considered property by the world at large)"
+   },
+   "play": {
+    "choices": [
+     "Trade and craft",
+     "Everyday life"
+    ],
+    "other": ""
+   },
+   "avoid": {
+    "choices": [],
+    "other": "The village should be mostly humans, it's the estate residents that should be nonhuman girls."
+   },
+   "stakes": {
+    "choices": [],
+    "other": "The estate and its residents"
+   },
+   "power": {
+    "choices": [],
+    "other": "The player rules the barony, but only for so long as they can catch up on taxes and pay the moving forward."
+   },
+   "source": {
+    "choices": [],
+    "other": "Birth and bloodline for non-humans and sorcery, but technology, study, pacts with outside forces, and other methods are possible."
+   },
+   "growth": {
+    "choices": [],
+    "other": "Training and skill which lead to gear, wealth, and improving/restoring the estate."
+   },
+   "danger": {
+    "choices": [
+     "Deadly"
+    ],
+    "other": ""
+   },
+   "time": {
+    "choices": [],
+    "other": "Debts due to maintain the estate and prevent seizure by the crown"
+   },
+   "inspirations": {
+    "choices": [],
+    "other": "Ashita no Familia (Manga); Monster Musume: Everyday Life with Monster Girls (Anime); No Umbrellas Allowed (Game - Not an estate, but inheriting a debt ridden shop); Shield Hero (Anime/Manga - Darker themes around slavery)"
+   }
+  },
+  "population": [
+   20,
+   40
+  ]
+ },
+ "extensions": [
+  "floors",
+  "lights",
+  "portals",
+  "region-groups"
+ ]
+}

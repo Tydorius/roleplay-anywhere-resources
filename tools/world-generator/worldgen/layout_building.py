@@ -430,6 +430,7 @@ def building_footprint(design, templates):
 # ------------------------------------------------------------------ units
 
 UNIT_SPINE = 3        # the corridor spine's width between the two unit rows
+UNIT_SPINE_NAME = "Corridor"
 UNIT_ROW_GAP = 1      # open cells between unit rows and the shared strip
 
 
@@ -547,7 +548,9 @@ def layout_units(design, rect, rng, templates, storey=1, make_entrance=True):
     # doors into the shared rooms (and its entrance) are the builder's own
     # auto-connect, never an alignment luck
     needs = room_needs(design, templates) if templates else _share_needs(design)
-    names = [r.name for r in design.rooms]
+    # a shared room the model called "Corridor" is the spine itself (its stair
+    # and furniture go there); a second room of that name would clash
+    names = [r.name for r in design.rooms if r.name.strip().lower() != UNIT_SPINE_NAME.lower()]
     strip_rooms = []
     if names and strip_h > 0:
         ay = rect.y if side == "south" else rect.y1 - strip_h + 1
@@ -571,9 +574,9 @@ def layout_units(design, rect, rng, templates, storey=1, make_entrance=True):
                     else Rect(side_rect.x, pos, side_rect.w, size)))
                 pos += size
     if vertical:
-        corridor = RoomOut("Corridor", Rect(rect.x + uw, rect.y, UNIT_SPINE, rect.h))
+        corridor = RoomOut(UNIT_SPINE_NAME, Rect(rect.x + uw, rect.y, UNIT_SPINE, rect.h))
     else:
-        corridor = RoomOut("Corridor", Rect(rect.x, rect.y + uh, rect.w, UNIT_SPINE))
+        corridor = RoomOut(UNIT_SPINE_NAME, Rect(rect.x, rect.y + uh, rect.w, UNIT_SPINE))
     b.rooms = strip_rooms + [corridor]
 
     # ---- unit copies down both sides of the spine, mirrored toward it

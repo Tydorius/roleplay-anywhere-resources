@@ -15,6 +15,11 @@ renderer are vendored — nothing outside this folder is needed.
 **Game version:** built for Anywhere RPG 0.18. Its only contract with the game is the
 0.18 scenario format; the extensions also need the 0.18 code-mod loader mods.
 
+> **Still in progress:** layout improvements are under way. Maps can come out long and wide,
+> with empty ground in places and squeezed furniture. A world's `plan.json` holds everything
+> the model wrote, so `layout --plan` (or **Re-roll layout…** in the editor) builds it again
+> under a new seed, or after a fix, with no model calls.
+
 ## Start it
 
 Double-click the launcher for your system in this folder. It asks its questions in a terminal

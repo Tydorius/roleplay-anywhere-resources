@@ -193,12 +193,11 @@ def _row_groups(row, plans):
     over: [], under: []}] in left-to-right order."""
     groups = []
     by_host = {}
+    in_row = {p.building for p in row}
     for p in row:
         fp = _fp(plans, p)
-        if p.slot_kind == "attached" and p.side in ("east", "west") \
-                and p.host in by_host:
-            by_host[p.host][p.side].append(p)
-            continue
+        if p.slot_kind == "attached" and p.host in in_row:
+            continue     # rides with its host (added once, below), never a group of its own
         g = {"width": fp[0], "height": fp[1], "part": p, "east": [], "west": [],
              "over": [], "under": []}
         groups.append(g)
@@ -212,11 +211,20 @@ def _row_groups(row, plans):
             g[p.side].append(p)
             g["width"] += fp[0]
             continue
-        spot = "over" if p.side == "north" else "under"
-        g[spot].append(p)
-        g["height"] = max(g["height"],
-                          (fp[1] + 1) if spot == "over" else fp[1] + 1)
+        g["over" if p.side == "north" else "under"].append(p)
+    # the height holds the host with its taller side wing (centred on it) and
+    # the deepest part above and below it, as _place_rows stacks them
+    for g in groups:
+        host_h = _fp(plans, g["part"])[1]
+        side_h = max([_fp(plans, q)[1] for q in g["east"] + g["west"]], default=0)
+        g["height"] = max(host_h, side_h) + _stack_depth(plans, g["over"]) \
+            + _stack_depth(plans, g["under"])
     return groups
+
+
+def _stack_depth(plans, parts):
+    """The depth the parts above (or below) a host take: the deepest one."""
+    return max([_fp(plans, q)[1] for q in parts], default=0)
 
 
 def _perimeter_attached(compound):
@@ -604,8 +612,11 @@ def _place_rows(compound, plans, geo, court):
             p = g["part"]
             fp = _fp(plans, p)
             west_total = sum(_fp(plans, q)[0] for q in g["west"])
-            under = sum(_fp(plans, q)[1] for q in g["under"])
-            gy = y + (g["height"] - fp[1] - under) // 2 + under
+            under = _stack_depth(plans, g["under"])
+            # centred on its taller side wing (rounded up, so the wing never
+            # reaches below the row); the parts above get the rest
+            side_h = max([_fp(plans, q)[1] for q in g["east"] + g["west"]], default=0)
+            gy = y + under + (max(fp[1], side_h) - fp[1] + 1) // 2
             out[p.building] = Rect(x + west_total, gy, fp[0], fp[1])
             wx = x + west_total
             for q in g["west"]:

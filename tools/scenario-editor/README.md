@@ -7,6 +7,8 @@ descriptions, and download a zip for **New Game → Import…**.
 The map, the editors and the reference safety from the plan are all in. Quests, the calendar,
 items and perks are still edited in the game's own New Game screen.
 
+![The editor with a generated world open: tools and problems on the left, the map with its minimap, and the object types on the right](media/scenario_editor_overview.png)
+
 ## Start it
 
 Double-click the launcher for your system in this folder. It opens the editor in your browser at
@@ -43,6 +45,10 @@ ready to edit or download. The generator is the standalone tool in
 [`../world-generator`](../world-generator); the editor only drives it — it still runs on its
 own from the command line.
 
+> **Still in progress:** the layout is being improved. Generated maps can run long and wide,
+> leave empty ground, and squeeze furniture. If a layout looks wrong, **Re-roll layout…** tries
+> another seed for free, and a report with the run's `out/` folder helps us fix it.
+
 The dialog's steps:
 
 1. **Pick a form** — quick (the idea alone), or the short (7 questions), medium (14) or long
@@ -51,10 +57,21 @@ The dialog's steps:
 2. **Answer the questions** with option chips (a question may allow two picks; **Other**
    opens a text box; everything can be skipped) and set the **resident count** (20–40 by
    default, 5–60 allowed).
-3. **Frame it** runs P0 as a short job and shows the frame — its whole contract under an
+3. **Other instructions or requests** (optional) takes anything the questions don't cover,
+   such as a plot outline, places or people you want, or house rules. It goes word for word to
+   the frame, the world plan, the people and the story phases.
+4. **Frame it** runs P0 as a short job and shows the frame — its whole contract under an
    **editable summary**. In the long form the model's own questions come back first and are
-   answered the same way. Frame it again for another try; changing the form resets the frame.
-4. **Generate world** starts the full job with the approved frame (a frame is needed first).
+   answered the same way, then **Frame it again** under them (or skip them all). Frame it
+   again for another try; changing the form resets the frame.
+5. **Generate world** starts the full job with the approved frame. It stays dimmed until there
+   is one, and says why if you press it early.
+
+- **Drafts.** The dialog saves itself as you go (in the generator's `out/drafts/`): the form,
+  your answers, the model's questions and the frame. **Saved drafts** at the top of the dialog
+  brings one back after a refresh or a closed dialog. A frame still being made when you leave
+  is written into the draft when it finishes, and a running generation gets its progress
+  window back when you reload the page.
 
 - **Your own key.** The model calls go through your own OpenAI-compatible provider (z.ai,
   OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
@@ -78,6 +95,13 @@ The dialog's steps:
   Ticking Floors turns Portals on with it (its stairs are portals). The mods come from
   `../code-mod-loader`; without the ones an extension names installed in the game, a world built
   with it won't work right. Lights is the exception: without its mod, the lamps just look plain.
+
+  With Floors, each upper storey sits in a dark band east of the play area, behind "The Edge of
+  the World", which the player never reaches on foot. Stairs carry people up and down.
+  The editor's Problems panel doesn't know about stair portals yet, so it lists upper-floor
+  rooms as "can't be reached on foot". The generator's own check follows the stairs.
+
+  ![Upper storeys in their band beside the play area](media/scenario_editor_z-levels.png)
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
   again from its saved `plan.json` under a new seed — no model calls, a few seconds — and it opens
   as a new workspace; the old one stays untouched. A framed world keeps its frame: the plan
@@ -122,6 +146,8 @@ The dialog's steps:
   an image editor's canvas resize. New cells go on the other sides, and everything moves with the
   map, doors included. A preview shows the old map inside the new one. A size that would cut
   anything off is refused, naming what.
+
+  ![The Map size dialog with its anchor grid and preview](media/scenario_editor_map-resize.png)
 - **Nothing breaks the map.** A move, resize, new region or paste that would leave two regions
   partly overlapping is refused, and so is anything that would leave the map.
 - **Delete is safe.** Delete removes what nothing uses. Something in use opens a dialog that
@@ -164,6 +190,8 @@ The dialog's steps:
     - turn it, or change its type.
     - **Edit type** opens the object type, where changes apply to every one placed: size,
       movement, bed, crafting, light, height, HP, money tier, tags and loot.
+
+    ![The object inspector with a tree selected](media/scenario_editor_object-editor.png)
   - **Person:**
     - name, gender, description, looks, mindset, sprite and colour, level, money, hostility and
       stance, and voice;
@@ -171,6 +199,8 @@ The dialog's steps:
     - their schedule: a 24-hour bar where you drag the line between two blocks to change the
       time (in 15-minute steps), and click a block to change where they are and what they're
       doing, split it or remove it.
+
+    ![The person inspector with a schedule bar](media/scenario_editor_npc-editor.png)
   - **Hostile type:** where they spawn, how many, sprite, level and loot.
   - Every inspector lists what uses the selected thing, each item clickable.
 - **Rename a region:** every schedule and calendar event that names it is updated as well.
