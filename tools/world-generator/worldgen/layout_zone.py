@@ -308,6 +308,7 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
 MEASURE_MARGIN = 2        # cells of slack for the zone's own paths and dressing
 MEASURE_TRIES = 12        # frames tried, each bigger, before giving up growing
 MEASURE_TIGHTEN = 6       # frames tried, each smaller, after one fits
+SCAN_FURNISH_SPOTS = 24   # spots whose rooms fail to furnish before a scan settles
 
 
 def _entry_mouths(w, h, sides, rng):
@@ -1372,7 +1373,13 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
             sc = (street.x + street.w // 2, street.y + street.h // 2)
             cands.sort(key=lambda p: abs(p[0] - sc[0]) + abs(p[1] - sc[1]))
         fallback = None
+        spoiled = 0
         for (bx, by) in cands:
+            # a room that will not furnish usually fails the same way at every
+            # spot: after a few such spots, settle for the first of them rather
+            # than furnishing again at every free cell of the zone
+            if spoiled >= SCAN_FURNISH_SPOTS:
+                break
             # the entrance is turned to face the street first; the original
             # orientation is still better than not placing the building
             if street is None:
@@ -1400,6 +1407,7 @@ def _scan_place(design, rect, street, fits, put, rollback, zone, templates, out,
                     _record_furniture(out, b)
                     return True
                 rollback(b)
+                spoiled += 1
                 if fallback is None:
                     fallback = (rd, (bx, by), yr)
         if fallback is not None:
