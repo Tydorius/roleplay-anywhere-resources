@@ -1884,6 +1884,7 @@ def sanitize_p4(d, templates, log, zone_name, buildings=()):
 # ----------------------------------------------------------------- P5 people
 
 P5_BATCH = 10           # the most people one batch call makes
+P5_ZONE_BATCHES = 4     # the most batch calls one zone gets (its homes' residents)
 
 
 def check_p5(d, buildings, zones, bedded=None, items=None,
@@ -2854,9 +2855,20 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                   for p in roster]
         return "\n".join(lines)
 
-    def _quota_line(zone):
+    def zone_unfilled(zone):
+        """The residents P1 promised this zone's homes that no batch has made
+        yet (a home over its promise counts as full, not as a credit)."""
+        return sum(max(0, b["residents"] - homes_taken.get(b["name"], 0))
+                   for b in zone["buildings"] if _check_int(b.get("residents")))
+
+    def _quota_line(zone, more=0):
+        if more:
+            return (f"exactly {more} more people for this zone's homes that "
+                    f"still have spots free (an earlier call made the rest).")
         if target is None:
-            return "the people this zone needs (its homes and workplaces)."
+            return (f"the people this zone needs (its homes and workplaces), "
+                    f"at most {P5_BATCH} in this reply; a later call makes the "
+                    f"rest.")
         beds = sum(beds_by_building.get(b["name"], 0) for b in zone["buildings"])
         want = min(P5_BATCH, max(1, beds, target - len(roster)))
         lo, hi = _population_range(questionnaire)
@@ -2868,30 +2880,46 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     item_lines = "\n".join(f"- {n}" for n in item_names) or "- (none)"
     # a zone with no buildings homes nobody: no batch for it (its foresters
     # and the like are made in another zone's batch, working this one)
+    # a zone whose homes P1 promised more residents than one batch makes gets
+    # follow-up batches for the rest (the first live couples run left three
+    # cottages empty), never past the asked-for range
     peopled = [z for z in p1["zones"] if z["buildings"]]
     for i, z in enumerate(peopled, 1):
-        d = call(f"p5-{slug(z['name'])}", "p5-people",
-                 event=("P5", f"people {i}/{len(peopled)}: {z['name']}"),
-                 setting_line=story_line, zone_line=_zone_line(z),
-                 zone_names_line=", ".join(zone_names),
-                 building_lines=_p5_blines(z), roster_block=_roster_block(),
-                 quota_line=_quota_line(z),
-                 _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
-                                              set(bedded_buildings()),
-                                              need=("npcs",),
-                                              roster={p["name"] for p in roster},
-                                              couples=couples_left()))
-        if d is None:
-            stats["dropped"].append((f"people of {z['name']}",
-                                     "no JSON; the zone went unpeopled"))
-            continue
-        batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
-                            bedded_buildings(), need=("npcs",),
-                            taken={p["name"] for p in roster}, max_npcs=P5_BATCH,
-                            couples=couples_left())
-        for p in batch["npcs"]:
-            roster.append(p)
-            homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
+        for n in range(P5_ZONE_BATCHES):
+            more = 0
+            if n:
+                more = min(P5_BATCH, zone_unfilled(z))
+                if target is not None:
+                    more = min(more, _population_range(questionnaire)[1] - len(roster))
+                if more <= 0:
+                    break
+            d = call(f"p5-{slug(z['name'])}" + (f"-{n + 1}" if n else ""), "p5-people",
+                     event=("P5", f"people {i}/{len(peopled)}: {z['name']}"
+                                  + (f" (batch {n + 1})" if n else "")),
+                     setting_line=story_line, zone_line=_zone_line(z),
+                     zone_names_line=", ".join(zone_names),
+                     building_lines=_p5_blines(z), roster_block=_roster_block(),
+                     quota_line=_quota_line(z, more),
+                     _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
+                                                  set(bedded_buildings()),
+                                                  need=("npcs",),
+                                                  roster={p["name"] for p in roster},
+                                                  couples=couples_left()))
+            if d is None:
+                stats["dropped"].append((f"people of {z['name']}",
+                                         "no JSON; the zone went unpeopled" if not n
+                                         else f"no JSON for batch {n + 1}"))
+                break
+            batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
+                                bedded_buildings(), need=("npcs",),
+                                taken={p["name"] for p in roster},
+                                max_npcs=more or P5_BATCH,
+                                couples=couples_left())
+            for p in batch["npcs"]:
+                roster.append(p)
+                homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
+            if not batch["npcs"]:
+                break
 
     # below the asked-for range after the zones: top up with one more batch
     # rather than failing, spread over any bedded building

@@ -251,6 +251,33 @@ class TestP5Batches(unittest.TestCase):
         self.assertTrue(any("capped at 10" in r for _w, r in stats["dropped"]),
                         stats["dropped"])
 
+    def test_a_zone_promised_more_than_a_batch_gets_a_second_batch(self):
+        """With no population target, one batch per zone left homes empty
+        once their promised residents passed ten: the zone now gets follow-up
+        batches until its homes are filled."""
+        p1 = populated_p1()
+        p1["zones"][0]["buildings"][1]["residents"] = 12
+        cottage = json.loads(json.dumps(CANNED_COTTAGE))
+        for f in cottage["furniture"]:
+            if f["template"] == "Straw bed":
+                f["count"] = 12
+        base = CANNED_P5_BATCH["npcs"][0]
+        first = {"npcs": [dict(base, name=f"Person {i}", home="Miller's Cottage")
+                          for i in range(10)]}
+        second = {"npcs": [dict(base, name=f"Person {i}", home="Miller's Cottage")
+                           for i in range(10, 12)]
+                  + [dict(base, name="Person 12", home="The Old Mill")]}
+        replies = populated_replies(p1=p1, batch=first)
+        replies[3] = _dump(cottage)
+        replies.insert(-1, _dump(second))   # between the batch and the player
+        client = ScriptedClient(replies)
+        plan, _stats = phases.run_phases("a mill village", client)
+        self.assertEqual(len(plan["npcs"]), 13)
+        prompts = [m[1]["content"] for m in client.sent]
+        self.assertTrue(any("exactly 3 more people" in p for p in prompts))
+        homes = [p["home"] for p in plan["npcs"]]
+        self.assertEqual(homes.count("Miller's Cottage"), 12)
+
     def test_below_the_range_tops_up_rather_than_failing(self):
         more = {"npcs": [dict(p, name=p["name"] + " II") for p in CANNED_P5_BATCH["npcs"]]}
         # top-ups run after the zone batches and BEFORE the player's own call
