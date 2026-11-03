@@ -640,7 +640,6 @@ def run(plan_data, seed=1, extensions=()):
 GROWTH_FACTOR = 1.4     # how much a zone's content sizing grows per pass
 GROWTH_ALLY = 1.15      # the other built zones grow with it, keeping their street blocks
 MAX_GROWTH_PASSES = 8   # 1.4^8 is about 14x: enough for the fullest plan
-REPLAY_TRIES = 4        # inner seeds a measured zone tries in its final rect
 
 
 def _dropped_count(world):
@@ -762,7 +761,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
         if not pieces:
             world.failures.append((f"zone {z.name}", "not placed"))
             continue
-        primary = max(pieces, key=lambda r: (r.w * r.h, r.x, r.y))
+        primary = pieces[0]   # the piece its content lays out in
         world.zones_by_name[z.name] = primary
         g, tex = zone_ground.get(z.ground, ("grass", "grass"))
         for i, prect in enumerate(pieces):
@@ -805,22 +804,12 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                 piece_label = f"{z.name} {_piece_direction(primary, prect)}"
             zout = None
             if i == 0 and z.name in m.zone_layout:
-                # a measured zone lays out with the inner seed it was
-                # measured with, mouths synthesized on the same entry sides
-                # (the map's real road mouths stay reserved besides). The
-                # real mouths can still tip a tight frame, so a layout that
-                # loses content tries a few more inner seeds in the same rect
+                # a measured zone replays the layout the map checked it with
                 inner, entry_sides = m.zone_layout[z.name]
-                for k in range(REPLAY_TRIES):
-                    zrng = random.Random(inner ^ (k * 0x9E3779B1))
-                    mouths = {(x + prect.x, y + prect.y) for (x, y)
-                              in layout_zone._entry_mouths(prect.w, prect.h,
-                                                           entry_sides, zrng)}
-                    reserved = set(m.zone_road_reserve.get(z.name, ())) | mouths
-                    zout = layout_zone.layout_zone(zz, prect, world.templates, zrng,
-                                                   road_reserved=reserved, map_ctx=m)
-                    if not any("no space in zone" in r for (_w, r) in zout.failures):
-                        break
+                zout = layout_zone.replay_zone(zz, prect, world.templates, inner,
+                                               entry_sides,
+                                               m.zone_road_reserve.get(z.name, ()),
+                                               map_ctx=m)
             else:
                 zout = layout_zone.layout_zone(zz, prect, world.templates, rng,
                                                road_reserved=m.zone_road_reserve.get(z.name),
