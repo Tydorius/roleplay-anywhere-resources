@@ -183,8 +183,8 @@ def _place_bed(world, room, tmpl):
 
 def _couples_by_home(plan):
     """The plan's couples as home name -> [[person, person], ...]: each home
-    the plan says has couples pairs that many pairs of its residents, in
-    order (P5's partner links, once written, pair the named people)."""
+    the plan says has couples pairs that many pairs of its residents, P5's
+    mutual partner links first, the rest in order."""
     people_by_home = {}
     for p in plan.npcs + [plan.player]:
         people_by_home.setdefault(p.home, []).append(p)
@@ -195,8 +195,27 @@ def _couples_by_home(plan):
             if c <= 0:
                 continue
             residents = people_by_home.get(b.name, [])
-            pairs = [residents[i:i + 2] for i in range(0, 2 * c, 2)]
-            out[b.name] = [p for p in pairs if len(p) == 2]
+            by_name = {p.name: p for p in residents}
+            pairs, taken = [], set()
+            for p in residents:                      # P5's partner links first
+                q = by_name.get((p.extras or {}).get("partner") or "")
+                if q is None or p.name in taken or q.name in taken:
+                    continue
+                if by_name.get((q.extras or {}).get("partner") or "") is p:
+                    pairs.append([p, q])
+                    taken |= {p.name, q.name}
+            for p in residents:                      # then the rest, in order
+                if len(pairs) >= c:
+                    break
+                if p.name in taken:
+                    continue
+                q = next((x for x in residents
+                          if x.name not in taken and x is not p), None)
+                if q is None:
+                    break
+                pairs.append([p, q])
+                taken |= {p.name, q.name}
+            out[b.name] = pairs[:c]
     return out
 
 
@@ -264,7 +283,7 @@ def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
             names = " and ".join(p.name for pair in pairs for p in pair) or home_name
             why = f"no free cell for a double bed in {home_name}"
             if room is not None:
-                why += "; two single beds instead"
+                why += "; one more single bed instead"
             world.failures.append((f"double bed for {names}", why))
             return
     residents = [p for p in plan.npcs + [plan.player] if p.home == home_name]

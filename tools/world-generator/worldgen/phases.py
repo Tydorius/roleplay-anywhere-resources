@@ -1887,11 +1887,13 @@ P5_BATCH = 10           # the most people one batch call makes
 
 
 def check_p5(d, buildings, zones, bedded=None, items=None,
-             need=("npcs", "player"), roster=()):
+             need=("npcs", "player"), roster=(), couples=None):
     """One P5 reply: a batch of npcs, the player, or (the old shape) both.
     ``need`` names the parts this call asked for — anything else in the reply
     is an error. ``items`` is the catalogue's item names, for the player's
-    starting inventory; ``roster`` the names already made, so nobody repeats."""
+    starting inventory; ``roster`` the names already made, so nobody repeats.
+    ``couples`` maps each home to the pairs its plan promised: that many
+    mutual same-home partner pairs, and nobody else a partner."""
     errors = []
     if not isinstance(d, dict):
         return ["P5: the reply is not a JSON object"]
@@ -1903,6 +1905,7 @@ def check_p5(d, buildings, zones, bedded=None, items=None,
         for i, p in enumerate(people):
             errors.extend(_person_errors(p, f"npcs[{i}]", buildings, zones,
                                          bedded, roster))
+        errors.extend(_partner_errors(people, couples))
     elif d.get("npcs"):
         errors.append("npcs: this call makes no npcs; reply npcs: [] "
                       "(or omit the field)")
@@ -1940,6 +1943,50 @@ def _person_errors(p, ctx, buildings, zones, bedded=None, roster=()):
     for k in ("description", "physicalDescription"):
         if not _is_str(p.get(k)):
             errors.append(f"{ctx}.{k}: required, one sentence")
+    return errors
+
+
+def _partner_errors(people, couples=None):
+    """Partners come in mutual same-home pairs, one pair per couple the plan
+    promised the home. A missing or extra pair is an error; sanitize_p5 drops
+    what still fails after the retries."""
+    errors = []
+    by_name = {p["name"]: p for p in people
+               if isinstance(p, dict) and _is_str(p.get("name"))}
+    whole = set()
+    for p in people:
+        if not isinstance(p, dict):
+            continue
+        partner = p.get("partner")
+        if partner is None:
+            continue
+        ctx = f"npc {p.get('name')}"
+        if not _is_str(partner):
+            errors.append(f"{ctx}.partner: the other one's full name, not {partner!r}")
+            continue
+        q = by_name.get(partner)
+        if q is None:
+            errors.append(f"{ctx}.partner: {partner!r} is not someone in this batch")
+        elif q.get("home") != p.get("home"):
+            errors.append(f"{ctx}.partner: {partner!r} lives in {q.get('home')!r}, "
+                          f"not with them in {p.get('home')!r}")
+        elif q.get("partner") != p["name"]:
+            errors.append(f"{ctx}.partner: {partner!r} does not name them back")
+        elif not (couples or {}).get(p.get("home"), 0):
+            errors.append(f"{ctx}.partner: their home has no couples; only a "
+                          f"couple's two get partner")
+        else:
+            whole.add((p["home"],) + tuple(sorted((p["name"], partner))))
+    # P5 runs a batch per zone, so only the homes this batch peoples (two or
+    # more of its residents here) owe their couples; too many is always wrong
+    homes_here = {}
+    for p in by_name.values():
+        homes_here[p.get("home")] = homes_here.get(p.get("home"), 0) + 1
+    for home, want in (couples or {}).items():
+        got = sum(1 for (h, _a, _b) in whole if h == home)
+        if got > want or (got < want and homes_here.get(home, 0) >= 2):
+            errors.append(f"npcs of {home}: the plan promises {want} couple(s); "
+                          f"the reply gives {got} whole partner pair(s)")
     return errors
 
 
@@ -1991,7 +2038,7 @@ def _player_item_errors(p, ctx, items):
 
 
 def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
-                need=("npcs", "player"), taken=(), max_npcs=None):
+                need=("npcs", "player"), taken=(), max_npcs=None, couples=None):
     bedded = [b for b in bedded if b in set(buildings)]
     if "npcs" in need:
         npcs, seen = [], set(taken)
@@ -2011,9 +2058,13 @@ def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
                 p["home"] = bedded[0]
             seen.add(p["name"])
             npcs.append(p)
+        _sanitize_partners(npcs, couples, log)
         d["npcs"] = npcs
     if "player" in need:
         player = d.get("player") if isinstance(d.get("player"), dict) else {}
+        if player.pop("partner", None) is not None:
+            log.append(("player", "partner dropped: the player is made in a call "
+                                   "of their own"))
         if not _is_str(player.get("name")):
             player["name"] = "The Traveller"
         if player.get("gender") not in ("male", "female"):
@@ -2034,6 +2085,36 @@ def sanitize_p5(d, buildings, zones, log, bedded=(), items=None,
         _sanitize_player_items(player, log, items)
         d["player"] = player
     return d
+
+
+def _sanitize_partners(npcs, couples, log):
+    """Keep only whole mutual same-home pairs, at most the home's couples
+    count; every other partner field is dropped with a log line rather than
+    failing the batch."""
+    couples = couples or {}
+    by_name = {p["name"]: p for p in npcs}
+    whole = {}
+    for p in npcs:
+        q = by_name.get(p.get("partner") or "")
+        if q and q.get("partner") == p["name"] and q.get("home") == p.get("home") \
+                and couples.get(p.get("home"), 0) > 0:
+            whole.setdefault((p["home"],) + tuple(sorted((p["name"], q["name"]))), True)
+    kept, count = set(), {}
+    for (home, a, b) in sorted(whole):
+        if count.get(home, 0) >= couples.get(home, 0):
+            continue
+        count[home] = count.get(home, 0) + 1
+        kept |= {a, b}
+    for p in npcs:
+        partner = p.get("partner")
+        if partner is None:
+            continue
+        if p["name"] in kept:
+            continue
+        log.append((f"npc {p['name']}",
+                    f"partner {partner!r} dropped: not a mutual pair at a home "
+                    f"with couples"))
+        p.pop("partner", None)
 
 
 def _sanitize_player_items(player, log, items):
@@ -2735,6 +2816,19 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     beds_by_building = {b["name"]: beds_of(b)
                         for z in p1["zones"] for b in z["buildings"]}
     homes_taken = {}       # building name -> people already sleeping there
+    # the pairs P5 must write as partners (home -> promised couples)
+    couples_by_home = {b["name"]: b["couples"]
+                       for z in p1["zones"] for b in z["buildings"]
+                       if _check_int(b.get("couples")) and b["couples"] > 0}
+
+    def couples_left():
+        """The couples each home still owes: those an earlier batch already
+        wrote as partners are taken off."""
+        left = dict(couples_by_home)
+        for p in roster:
+            if p.get("partner") and p.get("home") in left:
+                left[p["home"]] -= 0.5
+        return {h: int(n) for h, n in left.items() if n >= 1}
 
     def bedded_buildings():
         return [n for n, k in beds_by_building.items() if k > 0]
@@ -2785,14 +2879,16 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                  _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
                                               set(bedded_buildings()),
                                               need=("npcs",),
-                                              roster={p["name"] for p in roster}))
+                                              roster={p["name"] for p in roster},
+                                              couples=couples_left()))
         if d is None:
             stats["dropped"].append((f"people of {z['name']}",
                                      "no JSON; the zone went unpeopled"))
             continue
         batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
                             bedded_buildings(), need=("npcs",),
-                            taken={p["name"] for p in roster}, max_npcs=P5_BATCH)
+                            taken={p["name"] for p in roster}, max_npcs=P5_BATCH,
+                            couples=couples_left())
         for p in batch["npcs"]:
             roster.append(p)
             homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
@@ -2817,13 +2913,15 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                                                   set(zone_names),
                                                   set(bedded_buildings()),
                                                   need=("npcs",),
-                                                  roster={p["name"] for p in roster}))
+                                                  roster={p["name"] for p in roster},
+                                                  couples=couples_left()))
             if d is None:
                 stats["dropped"].append(("people top-up", "no JSON"))
                 break
             batch = sanitize_p5(d, building_names, zone_names, stats["dropped"],
                                 bedded_buildings(), need=("npcs",),
-                                taken={p["name"] for p in roster}, max_npcs=want)
+                                taken={p["name"] for p in roster}, max_npcs=want,
+                                couples=couples_left())
             for p in batch["npcs"]:
                 roster.append(p)
                 homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1

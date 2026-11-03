@@ -306,6 +306,123 @@ if __name__ == "__main__":
     unittest.main()
 
 
+class TestP5Partners(unittest.TestCase):
+    """P5 writes each couple as a mutual same-home partner pair; the plan
+    keeps the links and the layout seats each pair together."""
+
+    DOUBLE = {"name": "Double bed", "size": [2, 2], "walkability": 0.3,
+              "forSleep": True, "tags": ["bed"], "description": "A double bed.",
+              "physicalDescription": "wide wooden bed frame",
+              "rule": "against the wall of a sleeping room"}
+
+    def _pair_reply(self):
+        d = json.loads(json.dumps(CANNED_P5_BATCH))
+        berta = next(p for p in d["npcs"] if p["name"] == "Berta Miller")
+        colin = next(p for p in d["npcs"] if p["name"] == "Colin Miller")
+        return d, berta, colin
+
+    def test_a_mutual_same_home_pair_passes(self):
+        d, berta, colin = self._pair_reply()
+        berta["partner"] = colin["name"]
+        colin["partner"] = berta["name"]
+        errors = check_p5(d, {"The Old Mill", "Miller's Cottage"},
+                          {"Millbrook", "Wheatfields"},
+                          need=("npcs",),
+                          couples={"Miller's Cottage": 1})
+        self.assertEqual(errors, [])
+
+    def test_a_batch_owes_only_its_own_homes_couples(self):
+        """P5 runs one batch per zone: a couple promised to a home in another
+        zone is not this batch's to write."""
+        d, berta, colin = self._pair_reply()
+        berta["partner"] = colin["name"]
+        colin["partner"] = berta["name"]
+        errors = check_p5(d, {"The Old Mill", "Miller's Cottage"},
+                          {"Millbrook", "Wheatfields"},
+                          need=("npcs",),
+                          couples={"Miller's Cottage": 1, "Fen House": 1})
+        self.assertEqual(errors, [])
+
+    def test_a_partner_in_another_home_is_caught(self):
+        d, berta, colin = self._pair_reply()
+        berta["home"] = "Miller's Cottage"
+        colin["home"] = "The Old Mill"
+        berta["partner"] = colin["name"]
+        colin["partner"] = berta["name"]
+        errors = check_p5(d, {"The Old Mill", "Miller's Cottage"},
+                          {"Millbrook", "Wheatfields"},
+                          need=("npcs",),
+                          couples={"The Old Mill": 1, "Miller's Cottage": 1})
+        self.assertTrue(any("lives in" in e for e in errors), errors)
+
+    def test_a_one_sided_partner_is_caught(self):
+        d, berta, colin = self._pair_reply()
+        berta["partner"] = colin["name"]   # Colin never answers
+        errors = check_p5(d, {"The Old Mill", "Miller's Cottage"},
+                          {"Millbrook", "Wheatfields"},
+                          need=("npcs",), couples={"Miller's Cottage": 1})
+        self.assertTrue(any("does not name them back" in e for e in errors), errors)
+        self.assertTrue(any("gives 0 whole partner pair" in e for e in errors),
+                        errors)
+
+    def test_a_mismatched_pair_is_dropped_rather_than_failing_the_batch(self):
+        from worldgen.phases import sanitize_p5
+        d, berta, colin = self._pair_reply()
+        berta["partner"] = colin["name"]   # one-sided: dropped at sanitize
+        log = []
+        sanitize_p5(d, ["The Old Mill", "Miller's Cottage"],
+                    ["Millbrook", "Wheatfields"], log,
+                    need=("npcs",), couples={"Miller's Cottage": 1})
+        self.assertEqual(len(d["npcs"]), 5, "the people stay; only the link goes")
+        self.assertTrue(all("partner" not in p for p in d["npcs"]))
+        self.assertTrue(any("partner" in w + r for (w, r) in log), log)
+
+    def test_partners_share_the_double_room_and_the_child_the_other(self):
+        import worldgen
+        p1 = populated_p1()
+        cottage = p1["zones"][0]["buildings"][1]
+        cottage["residents"] = 3
+        cottage["couples"] = 1
+        design = json.loads(json.dumps(CANNED_COTTAGE))
+        design["rooms"].append({"name": "Child's Room", "share": "small",
+                                "purpose": "the child's bed"})
+        design["connections"].append(["Main Room", "Child's Room"])
+        design["furniture"] += [
+            {"template": "Double bed", "room": "Sleeping Loft", "count": 1,
+             "hint": "wall:north"},
+            {"template": "Straw bed", "room": "Child's Room", "count": 1,
+             "hint": "wall:north"}]
+        batch, berta, colin = self._pair_reply()
+        berta["partner"] = colin["name"]
+        colin["partner"] = berta["name"]
+        # the child sits between the partners in the roster, so only the
+        # partner links - not the order - can pair Berta with Colin
+        batch["npcs"].sort(key=lambda p: ["Aldous Miller", "Berta Miller",
+                                          "Edda Straw", "Colin Miller",
+                                          "Daria Wick"].index(p["name"]))
+        replies = populated_replies(p1=p1, batch=batch)
+        replies[1] = _dump({"templates": CANNED_TEMPLATES + [self.DOUBLE]})
+        replies[3] = _dump(design)
+        client = ScriptedClient(replies)
+        plan, _stats = phases.run_phases("a mill village", client)
+        by_name = {p["name"]: p for p in plan["npcs"]}
+        self.assertEqual(by_name["Berta Miller"]["partner"], "Colin Miller")
+        self.assertEqual(by_name["Colin Miller"]["partner"], "Berta Miller")
+        world = worldgen.run(plan, seed=1)
+        locs = {}
+        for c in world.characters:
+            locs[c.name] = next(b["location"] for b in c.schedule
+                                if b["role"] == "sleep")
+        self.assertEqual(locs["Berta Miller"], "Miller's Cottage Sleeping Loft")
+        self.assertEqual(locs["Colin Miller"], "Miller's Cottage Sleeping Loft")
+        self.assertEqual(locs["Edda Straw"], "Miller's Cottage Child's Room")
+        # the scenario format has no relationship field: partner stays in the
+        # plan, never in the spec
+        spec = worldgen.build_spec(world, plan)
+        for ent in spec["npcs"]:
+            self.assertNotIn("partner", ent)
+
+
 class TestPlanKeepsP1Layout(unittest.TestCase):
     """The first live 013 run planned a castle enclosure and a cotter row in
     P1, passed validation, and shipped neither: run_phases never copied
