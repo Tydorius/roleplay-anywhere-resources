@@ -98,8 +98,10 @@ The dialog's steps:
 
   With Floors, each upper storey sits in a dark band east of the play area, behind "The Edge of
   the World", which the player never reaches on foot. Stairs carry people up and down.
-  The editor's Problems panel doesn't know about stair portals yet, so it lists upper-floor
-  rooms as "can't be reached on foot". The generator's own check follows the stairs.
+  The Problems panel reads the scenario's mod data: its reachability walk goes through portals
+  (stairs included), a storey reached only by its stairs isn't reported as sealed, and floor
+  openings count as cells nobody can walk into. A note lists the code mods a scenario's data
+  needs. Region groups need no scenario data, so the panel can't tell when that mod is in use.
 
   ![Upper storeys in their band beside the play area](media/scenario_editor_z-levels.png)
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
@@ -182,7 +184,7 @@ The dialog's steps:
     - name, description, walls (or none), hostile, ground, texture, tints and day and night
       ambience;
     - its doors, each removable along with its matching other side;
-    - beds against the people who sleep there;
+    - beds against the people who sleep there (a 2×2 or larger bed sleeps two);
     - **who is here when:** a 24-hour strip of everyone whose schedule brings them here, by role.
       Click an hour to list them.
   - **Object:**
@@ -212,12 +214,13 @@ The dialog's steps:
 
 ```
 node --test
-python -m unittest discover -s test -p "test_worldgen.py"
+python -m unittest discover -s test -p "test_*.py"
 ```
 
 Run these from this folder. The node tests cover the map operations (`mapops.js`), schedules
 (`schedule.js`), references (`refs.js`) and the minimap's coordinate helpers (Node 18 or newer).
-The python tests cover the world generation endpoints against a mocked generator (no model calls);
+The python tests cover the world generation endpoints against a mocked generator (no model calls),
+and the checks' handling of code-mod data (portals, floors) and bed capacity;
 the generator's own suite runs from `../world-generator` with `python -m unittest`.
 
 ## Checks on their own
