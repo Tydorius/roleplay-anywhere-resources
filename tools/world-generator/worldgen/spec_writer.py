@@ -274,7 +274,15 @@ def _char_pos(world, c):
     return [pos[0], pos[1]]
 
 
+def _kind(c):
+    return (c.person.extras or {}).get("kind")
+
+
 def animation_for(c):
+    if _kind(c) == "child":
+        return "child"
+    if _kind(c) == "elder":
+        return "old-man" if c.gender == "male" else "old-woman"
     role = (c.person.role or "").lower()
     for key, (m, f) in ANIMATIONS.items():
         if key in role:
@@ -284,8 +292,11 @@ def animation_for(c):
 
 def voice_for(c):
     gender = "Male" if c.gender == "male" else "Female"
-    age = ["Senior"] if (c.person.role or "").lower().startswith("old") else ["Adult"]
-    return {"gender": gender, "age": age, "pitch": ["Average"], "tags": []}
+    if _kind(c) == "child":
+        return {"gender": gender, "age": ["Child"], "pitch": ["Brighter"], "tags": []}
+    old = _kind(c) == "elder" or (c.person.role or "").lower().startswith("old")
+    return {"gender": gender, "age": ["Senior"] if old else ["Adult"], "pitch": ["Average"],
+            "tags": []}
 
 
 def write_spec(out_dir, spec):

@@ -1,5 +1,6 @@
 """P1b, the cast: statuses and households decided before P5 names anyone."""
 import json
+import types
 import unittest
 
 import worldgen
@@ -8,6 +9,7 @@ from tests.test_model import (CANNED_COTTAGE, CANNED_P1, CANNED_P5_PLAYER, CANNE
                               ScriptedClient, _dump)
 from worldgen import cast, phases, questions, schedule
 from worldgen import cast as cast_mod
+from worldgen import spec_writer
 
 
 def a_p1():
@@ -360,6 +362,32 @@ class Flats(unittest.TestCase):
                  "households": [self.house("Tower", 2, 2) for _ in range(12)]
                  + [self.house("Inn", 1, 0, 0)]}
         self.assertEqual(cast_mod.check_p1b(reply, p1, 0, 100, False), [])
+
+
+class Ages(unittest.TestCase):
+    """The cast knows who is a child, so the built NPC must look and sound it."""
+
+    def person(self, kind=None, gender="female", role="cook"):
+        extras = {"kind": kind} if kind else {}
+        return types.SimpleNamespace(gender=gender,
+                                     person=types.SimpleNamespace(role=role, extras=extras))
+
+    def test_a_child(self):
+        c = self.person("child", role="the cook's daughter")
+        self.assertEqual(spec_writer.animation_for(c), "child")
+        self.assertEqual(spec_writer.voice_for(c)["age"], ["Child"])
+
+    def test_an_elder(self):
+        for gender, sprite in (("female", "old-woman"), ("male", "old-man")):
+            c = self.person("elder", gender=gender)
+            self.assertEqual(spec_writer.animation_for(c), sprite)
+            self.assertEqual(spec_writer.voice_for(c)["age"], ["Senior"])
+
+    def test_an_adult_keeps_their_role(self):
+        c = self.person("adult", gender="male", role="noodle cook")
+        self.assertEqual(spec_writer.voice_for(c)["age"], ["Adult"])
+        self.assertEqual(spec_writer.animation_for(c),
+                         spec_writer.animation_for(self.person(gender="male", role="noodle cook")))
 
 
 class TestEstimate(unittest.TestCase):

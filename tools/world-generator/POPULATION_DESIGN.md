@@ -242,7 +242,7 @@ block, and spend it at home or nearby.
 inn in their zone, home, or the open ground outside. A void zone has no outside. Visiting a
 neighbour's home waits for the relationships mod, which knows who is welcome where.
 
-**The cap.** `ROOM_CAP = 8` to start, in one constant. It's a judgement call: the game sets no such
+**The cap.** `ROOM_CAP = 8`, in one constant. It's a judgement call: the game sets no such
 limit, and live play should tune it. For every schedule block:
 - A walled room holds at most `ROOM_CAP` people at any hour.
 - An outdoor region holds at most `ROOM_CAP` per 615 cells (one 14-cell circle), at least
@@ -402,6 +402,6 @@ by hand.
 ## Open questions for Michael
 
 1. **Default:** should "Let the map decide" start ticked? This design assumes yes.
-2. **`ROOM_CAP`:** start at 8, or higher for busy taverns? It only needs one number to change.
+2. **`ROOM_CAP`:** settled at 8 (Michael, 2026-11-04).
 3. **Ambient crowds:** hostile templates can have `attacksOnSight: false`, which might give nameless
    passers-by in a dense city, at up to 6 a region. Worth testing, or are named people enough?
