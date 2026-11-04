@@ -3,6 +3,7 @@ each person's sleep block names a room that holds a sleep object — their
 home's when it has one, else the nearest bedded building of the same
 household, else a bed added to the home's most private room. Work places
 like a smithy or a chapel are never slept in."""
+import json
 import unittest
 
 import worldgen
@@ -175,6 +176,113 @@ class TestSleepNames(unittest.TestCase):
         for name in ("Bedside locker", "Bedroom dresser", "Cottage hearth",
                      "Herb bed", "Flower bed", "Seedbed", "Embedded panel"):
             self.assertFalse(is_sleep_name(name), name)
+
+
+class TestSchedulesUnderTheCap(unittest.TestCase):
+    """Everyone's day is planned together, so no room passes ROOM_CAP awake."""
+
+    @staticmethod
+    def _load(name):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "..", "fixtures", name)
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+
+    @staticmethod
+    def _awake(world):
+        from worldgen import schedule
+        rows = {}
+        for c in world.characters:
+            for b in c.schedule:
+                if b["role"] != "sleep":
+                    row = rows.setdefault(b["location"], [0] * 24)
+                    for h in schedule._block_hours(b["start"], b["end"]):
+                        row[h] += 1
+        return rows
+
+    def test_no_room_over_the_cap_at_any_hour(self):
+        from worldgen import schedule
+        for name in ("zombie-town.plan.json", "ashvale-framed.plan.json",
+                     "cyberpunk-framed.plan.json", "medieval-glm-plan.json"):
+            data = self._load(name)
+            world = worldgen.run(data, seed=1, extensions=tuple(data.get("extensions") or ()))
+            for room, row in self._awake(world).items():
+                self.assertLessEqual(max(row), schedule.room_cap(world, room), f"{name}: {room}")
+
+    def test_evenings_spread_out_and_stay_in_the_home_zone(self):
+        from worldgen import schedule
+        data = self._load("ashvale-framed.plan.json")
+        world = worldgen.run(data, seed=1, extensions=tuple(data.get("extensions") or ()))
+        spots = {b["location"] for c in world.characters for b in c.schedule
+                 if b["role"] == "leisure"}
+        self.assertGreater(len(spots), 3)
+
+        def zone(name):
+            r = world.regions_by_name[name]
+            while r.parent and r.name not in world.zones_by_name:
+                r = world.regions_by_name[r.parent]
+            return r.name
+        for c in world.characters:
+            home = schedule.home_building(world, c.person.home)
+            evening = next(b["location"] for b in c.schedule if b["role"] == "leisure")
+            if home is not None:
+                self.assertEqual(zone(evening), zone(home.layout.design.name), c.name)
+
+    def test_a_void_world_has_no_outdoors_to_spend_an_evening(self):
+        data = self._load("ship-void.plan.json")
+        world = worldgen.run(data, seed=1, extensions=tuple(data.get("extensions") or ()))
+        for c in world.characters:
+            for b in c.schedule:
+                if b["role"] == "leisure":
+                    self.assertNotIn(b["location"], world.void_zones, c.name)
+
+    def test_staff_spread_over_their_workplaces_rooms(self):
+        from worldgen import schedule
+        data = json.loads(json.dumps(GUEST_ROOM_PLAN))
+        for p in data["npcs"]:
+            p["work"] = "The Green Ox"
+        data["npcs"] += [dict(data["npcs"][0], name=f"Pot Boy {i}") for i in range(9)]
+        world = worldgen.run(data, seed=1)
+        rows = self._awake(world)
+        for room, row in rows.items():
+            self.assertLessEqual(max(row), schedule.room_cap(world, room), room)
+
+    def test_a_shift_sets_the_hours(self):
+        data = json.loads(json.dumps(GUEST_ROOM_PLAN))
+        data["npcs"][0]["shift"] = "evening"
+        data["npcs"][1]["shift"] = "night"
+        world = worldgen.run(data, seed=1)
+        days = {c.name: [(b["start"], b["end"], b["role"]) for b in c.schedule]
+                for c in world.characters}
+        self.assertEqual(days["Osric Bell"],
+                         [("00:00", "08:00", "sleep"), ("08:00", "14:00", "leisure"),
+                          ("14:00", "22:00", "work"), ("22:00", "00:00", "leisure")])
+        self.assertEqual(days["Hild Bell"],
+                         [("06:00", "08:00", "leisure"), ("08:00", "16:00", "sleep"),
+                          ("16:00", "22:00", "leisure"), ("22:00", "06:00", "work")])
+        self.assertEqual(days["The Wanderer"],
+                         [("06:00", "18:00", "work"), ("18:00", "22:00", "leisure"),
+                          ("22:00", "06:00", "sleep")])
+
+    def test_shifted_schedules_pass_the_builder(self):
+        import os
+        import tempfile
+        from worldgen import api
+        data = json.loads(json.dumps(TWO_BEDROOMS_PLAN))
+        data["npcs"][0]["shift"] = "evening"
+        data["npcs"][1]["shift"] = "night"
+        with tempfile.TemporaryDirectory() as tmp:
+            out = api._layout_and_build(data, seed=1, out_dir=os.path.join(tmp, "w"))
+            self.assertTrue(out["ok"], out)
+            self.assertEqual(out["validator_errors"], 0, out)
+
+    def test_inns_are_whole_words(self):
+        from worldgen.schedule import INN_WORD
+        for text in ("inn", "the old tavern", "a pub", "cyber bar", "teahouse"):
+            self.assertTrue(INN_WORD.search(text), text)
+        for text in ("cabin", "dining hall", "spinning shed", "barn", "barracks"):
+            self.assertFalse(INN_WORD.search(text), text)
 
 
 class TestP2Contract(unittest.TestCase):

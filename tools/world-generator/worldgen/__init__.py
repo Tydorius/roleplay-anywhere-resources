@@ -1152,9 +1152,10 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     starts |= world.reserved
     connected = checks.flood(world, starts, blocked)
     taken = set()
+    schedules = schedule_mod.plan_schedules(world, plan.npcs + [plan.player])
     for person in plan.npcs + [plan.player]:
         is_player = person is plan.player
-        sched, start_region = schedule_mod.make_schedule(world, person)
+        sched, start_region = schedules[person.name]
         pos, start_region = schedule_mod.start_cell(world, start_region, taken, connected)
         if pos is None:
             world.failures.append((f"character {person.name}", f"no free cell in {start_region}"))

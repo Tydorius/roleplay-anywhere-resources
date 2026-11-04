@@ -137,5 +137,57 @@ class Beds(unittest.TestCase):
                          [1, 1, 1, 2, 2])
 
 
+class Crowds(unittest.TestCase):
+    def people(self, n, place, role="work", start="06:00", end="18:00"):
+        rest = {"work": "leisure", "sleep": "work", "leisure": "work"}[role]
+        return [{"id": f"n{i}", "type": "npc", "name": f"N{i}", "pos": [2, 2],
+                 "schedule": [{"start": start, "end": end, "location": place, "role": role},
+                              {"start": end, "end": start, "location": "Lane", "role": rest}]}
+                for i in range(n)]
+
+    def world(self, *entities):
+        # the lane is big enough for everyone's off hours never to crowd it
+        regions = [region("r_lane", "Lane", (0, 0), (200, 100), wall=None),
+                   region("r_hall", "Hall", (5, 5), (10, 8), openings=[(14, 8)]),
+                   region("r_nook", "Nook", (7, 7), (3, 3), wall=None),
+                   region("r_yard", "Yard", (50, 5), (39, 19), wall=None),
+                   region("r_field", "Field", (100, 5), (60, 30), wall=None)]
+        scn = scenario(regions, list(entities))
+        scn["gridSize"] = [200, 100]
+        return scn
+
+    def crowd(self, scn, level="warning"):
+        return [m for m in msgs(scn, level) if "read" in m or "reads" in m]
+
+    def test_at_the_cap_is_fine(self):
+        self.assertEqual(self.crowd(self.world(*self.people(8, "Hall"))), [])
+
+    def test_over_the_cap_names_the_room_and_hour(self):
+        self.assertEqual(self.crowd(self.world(*self.people(9, "Hall"))),
+                         ["9 people are in 'Hall' at 06:00, more than the 8 the GM can read comfortably there."])
+
+    def test_an_unwalled_spot_inside_a_room_counts_as_that_room(self):
+        scn = self.world(*self.people(5, "Hall"), *[dict(p, id=p["id"] + "b") for p in self.people(5, "Nook")])
+        self.assertEqual(len(self.crowd(scn)), 1)
+        self.assertIn("10 people are in 'Hall'", self.crowd(scn)[0])
+
+    def test_people_at_different_hours_do_not_add_up(self):
+        morning = self.people(6, "Hall", start="06:00", end="12:00")
+        evening = [dict(p, id=p["id"] + "b") for p in self.people(6, "Hall", start="12:00", end="18:00")]
+        self.assertEqual(self.crowd(self.world(*morning, *evening)), [])
+
+    def test_open_ground_holds_more_when_it_is_bigger(self):
+        self.assertEqual(len(self.crowd(self.world(*self.people(9, "Yard")))), 1,
+                         "741 cells is one circle: cap 8")
+        self.assertEqual(self.crowd(self.world(*self.people(9, "Field"))), [],
+                         "1800 cells is two circles: cap 16")
+
+    def test_a_full_dormitory_is_a_note_not_a_warning(self):
+        scn = self.world(*self.people(10, "Hall", role="sleep", start="22:00", end="06:00"))
+        self.assertEqual(self.crowd(scn), [])
+        self.assertEqual(self.crowd(scn, "info"),
+                         ["10 sleep in 'Hall': the GM reads them all when the player is in there."])
+
+
 if __name__ == "__main__":
     unittest.main()

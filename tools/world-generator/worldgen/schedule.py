@@ -2,18 +2,39 @@
 
 Blocks are consecutive and cover 24 h (the last may wrap past midnight), each
 with an exact region name and a role of work, leisure or sleep — the format
-build_scenario.py accepts. Sleep always goes to a room that has a forSleep
-object, because the builder checks that: each person's assigned bedroom when
-the layout gave them one (assign_sleep_rooms), else a bedded room of their
-home's household — the nearest bedded building of the same zone. Work places
-like a smithy or a chapel are for daytime only.
+build_scenario.py accepts, and made for everyone at once so no room passes
+ROOM_CAP. Sleep always goes to a room that has a forSleep object, because the
+builder checks that: each person's assigned bedroom when the layout gave them
+one (assign_sleep_rooms), else a bedded room of their home's household — the
+nearest bedded building of the same zone. Work places like a smithy or a
+chapel are for waking hours only.
 """
+
+import random
+import re
 
 from .model import bed_capacity, is_spare_room
 
-SLEEP = ("22:00", "06:00")
-WORK = ("06:00", "18:00")
-LEISURE = ("18:00", "22:00")
+# who sleeps, works and relaxes when; the blocks of a shift cover the 24 hours
+SHIFTS = {
+    "day": {"sleep": ("22:00", "06:00"), "work": ("06:00", "18:00"),
+            "leisure": [("18:00", "22:00")]},
+    "evening": {"sleep": ("00:00", "08:00"), "work": ("14:00", "22:00"),
+                "leisure": [("08:00", "14:00"), ("22:00", "00:00")]},
+    "night": {"sleep": ("08:00", "16:00"), "work": ("22:00", "06:00"),
+              "leisure": [("06:00", "08:00"), ("16:00", "22:00")]},
+}
+
+# the most people awake in one walled room at any hour. The game sets no limit;
+# the GM reads everyone in a room in full each turn, and this keeps that short
+ROOM_CAP = 8
+CIRCLE_CELLS = 615     # one 14-cell circle: what the GM can see outdoors
+EVENING_WEIGHTS = {"inn": 0.45, "home": 0.35, "outside": 0.2}
+
+INN_WORD = re.compile(r"\b(inns?|taverns?|pubs?|bars?|alehouses?|saloons?|cantinas?|"
+                      r"teahouses?)\b")
+PASSAGE_WORD = re.compile(r"\b(corridors?|hallways?|landings?|stairs?|stairwells?|"
+                          r"passages?)\b")
 
 
 def room_capacity(world, room):
@@ -211,24 +232,32 @@ def work_location(world, person):
     return None
 
 
+def _is_inn(building):
+    """Whether a building is where people drink of an evening, by whole words:
+    a cabin and a dining hall are not inns."""
+    design = building.layout.design
+    return bool(INN_WORD.search(f"{design.kind or ''} {design.purpose or ''}".lower()))
+
+
+def _inn_room(building):
+    """An inn's gathering room: its common room, else the entrance room."""
+    design = building.layout.design
+    for room in building.layout.rooms:
+        if "common" in room.base_name.lower() \
+                or "common" in _room_purpose(design, room.base_name).lower():
+            return room.full_name
+    return building.layout.entrance_room.full_name
+
+
 def social_spot(world, person):
-    """Evening gathering spot: the inn's common room if the world has one, else
-    the home building's entrance room, else the home zone."""
+    """Last-resort evening spot, for someone with no home to start from: the
+    world's inn if it has one, else the home zone, else the first zone."""
     for b in world.buildings:
-        kind = (b.layout.design.kind or "") + " " + (b.layout.design.purpose or "")
-        if "inn" in kind.lower() or "tavern" in kind.lower():
-            for room in b.layout.rooms:
-                if "common" in room.base_name.lower() or "common" in _room_purpose(b.layout.design, room.base_name).lower():
-                    return room.full_name
-            return b.layout.entrance_room.full_name
-    home = person.home
-    for b in world.buildings:
-        if b.layout.design.name == home:
-            return b.layout.entrance_room.full_name
-    if home in world.zones_by_name:
-        return home
-    z = next(iter(world.zones_by_name), None)
-    return z
+        if _is_inn(b):
+            return _inn_room(b)
+    if person.home in world.zones_by_name:
+        return person.home
+    return next(iter(world.zones_by_name), None)
 
 
 def _room_purpose(design, base_name):
@@ -238,30 +267,178 @@ def _room_purpose(design, base_name):
     return ""
 
 
-def make_schedule(world, person):
-    """(schedule blocks, start_pos_region) for one person."""
-    room = resolve_sleep(world, person)
-    if room is not None:
-        sleep_loc = room.full_name
-    else:
-        # no bed to sleep in anywhere near (ensure_beds records the missing
-        # bed): sleep at home rather than in a work place
-        home = home_building(world, person.home)
-        sleep_loc = home.layout.entrance_room.full_name if home is not None \
-            else social_spot(world, person)
-    work_loc = work_location(world, person) or sleep_loc
-    leisure_loc = social_spot(world, person)
-    schedule = [
-        {"start": SLEEP[0], "end": SLEEP[1], "location": sleep_loc, "role": "sleep"},
-        {"start": WORK[0], "end": WORK[1], "location": work_loc, "role": "work"},
-        {"start": LEISURE[0], "end": LEISURE[1], "location": leisure_loc, "role": "leisure"},
-    ]
-    start_region = None
-    for r in schedule:
-        if r["start"] <= "08:00" < (r["end"] if r["end"] > r["start"] else "24:00"):
-            start_region = r["location"]
-            break
-    return schedule, (start_region or work_loc)
+def _block_hours(start, end):
+    """The clock hours a block covers (blocks start on the hour)."""
+    s, e = int(start[:2]), int(end[:2])
+    return [h % 24 for h in range(s, e if e > s else e + 24)]
+
+
+def _shift(person):
+    """The person's (sleep, work, leisure blocks) hours: day unless the plan
+    gave them an evening or night shift."""
+    return SHIFTS.get((person.extras or {}).get("shift"), SHIFTS["day"])
+
+
+def room_cap(world, name):
+    """How many people a region holds awake at once. The GM reads everyone
+    within 14 cells in the same walled room in full, so a walled room gets
+    ROOM_CAP and open ground ROOM_CAP per 14-cell circle."""
+    r = world.regions_by_name.get(name)
+    if r is None or r.wall:
+        return ROOM_CAP
+    return ROOM_CAP * max(1, (r.rect.w * r.rect.h) // CIRCLE_CELLS)
+
+
+class _Load:
+    """Who is where, hour by hour, while the schedules are made."""
+    def __init__(self, world):
+        self.world = world
+        self.hours = {}
+
+    def peak(self, name, hours):
+        row = self.hours.get(name)
+        return max((row[h] for h in hours), default=0) if row else 0
+
+    def fits(self, name, hours):
+        return self.peak(name, hours) < room_cap(self.world, name)
+
+    def add(self, name, hours):
+        row = self.hours.setdefault(name, [0] * 24)
+        for h in hours:
+            row[h] += 1
+
+
+def _outdoors(world, building_name):
+    """The open ground around a building: its nearest unwalled ancestor, or
+    None in a void zone, which has no outside."""
+    r = world.regions_by_name.get(building_name)
+    seen = set()
+    while r is not None and r.name not in seen:
+        seen.add(r.name)
+        if not r.wall and r.name != building_name:
+            if r.name in world.void_zones or world.void_default:
+                return None
+            return r.name
+        r = world.regions_by_name.get(r.parent) if r.parent else None
+    return None
+
+
+def _work_rooms(world, building):
+    """Where a building's staff stand: the entrance room, then its other
+    ground-floor rooms that aren't bedrooms or passages."""
+    entrance = building.layout.entrance_room
+    rooms = [r for r in building.layout.rooms
+             if r is not entrance and room_capacity(world, r) == 0
+             and not PASSAGE_WORD.search(r.base_name.lower())]
+    return [entrance.full_name] + [r.full_name for r in rooms]
+
+
+def _place_work(world, load, person, hours, sleep_loc):
+    """The person's work place, the least crowded room of their workplace.
+    A full workplace spills onto the ground outside, then home; a full stretch
+    of open ground spills into its buildings, then home."""
+    target = person.work or person.home
+    building = next((b for b in world.buildings
+                     if b.layout.design.name == target), None)
+    if building is None:
+        place = work_location(world, person) or sleep_loc
+        sheds = [b.layout.entrance_room.full_name for b in world.buildings
+                 if zone_of(world, b.layout.design.name) == place]
+        return next((n for n in [place] + sheds + [sleep_loc] if load.fits(n, hours)),
+                    place)
+    rooms = _work_rooms(world, building)
+    room = min(rooms, key=lambda n: load.peak(n, hours))
+    if load.fits(room, hours):
+        return room
+    for spill in (_outdoors(world, target), sleep_loc):
+        if spill is not None and load.fits(spill, hours):
+            return spill
+    return room
+
+
+def _home_spot(world, person, sleep_loc):
+    """Where someone spends time at home: the home's entrance room, or their
+    own flat in a unit building, whose entrance is everyone's lobby."""
+    home = home_building(world, person.home)
+    if home is None or getattr(home.layout, "unit_outs", None):
+        return sleep_loc
+    return home.layout.entrance_room.full_name
+
+
+def _nearest_inn(world, person):
+    """The gathering room of the nearest inn in the person's own zone."""
+    home = home_building(world, person.home)
+    if home is None:
+        return None
+    zone = zone_of(world, home.layout.design.name)
+    inns = [b for b in world.buildings if _is_inn(b)
+            and zone_of(world, b.layout.design.name) == zone]
+    if not inns:
+        return None
+    return _inn_room(min(inns, key=lambda b: (home.layout.rect.gap(b.layout.rect),
+                                              b.layout.design.name)))
+
+
+def _place_evening(world, load, person, hours, sleep_loc):
+    """The person's evening place: one seeded choice among the nearest inn,
+    home and the ground outside, the next choice when that one is full."""
+    rng = random.Random(f"{world.seed}:evening:{person.name}")
+    home = home_building(world, person.home)
+    spots = [(_nearest_inn(world, person), EVENING_WEIGHTS["inn"]),
+             (_home_spot(world, person, sleep_loc), EVENING_WEIGHTS["home"]),
+             (_outdoors(world, home.layout.design.name) if home is not None else None,
+              EVENING_WEIGHTS["outside"])]
+    spots = [(n, w) for n, w in spots if n is not None]
+    if not spots:
+        return social_spot(world, person) or sleep_loc
+    order = sorted(spots, key=lambda s: rng.random() ** (1 / s[1]), reverse=True)
+    for name, _w in order:
+        if load.fits(name, hours):
+            return name
+    return min((n for n, _w in spots), key=lambda n: load.peak(n, hours))
+
+
+def plan_schedules(world, people):
+    """{person name: (schedule blocks, start region)} for everyone at once, so
+    no room passes its cap: everyone's bed first, then the work places, then
+    the evenings, counting who is where at every hour. A bed sets its own
+    limit, so a room may sleep more than the cap."""
+    load = _Load(world)
+    sleeps, works, leisures = {}, {}, {}
+    for person in people:
+        room = resolve_sleep(world, person)
+        if room is not None:
+            sleeps[person.name] = room.full_name
+        else:
+            # no bed to sleep in anywhere near (ensure_beds records the missing
+            # bed): sleep at home rather than in a work place
+            home = home_building(world, person.home)
+            sleeps[person.name] = home.layout.entrance_room.full_name if home is not None \
+                else social_spot(world, person)
+        load.add(sleeps[person.name], _block_hours(*_shift(person)["sleep"]))
+    for person in people:
+        hours = _block_hours(*_shift(person)["work"])
+        works[person.name] = _place_work(world, load, person, hours, sleeps[person.name])
+        load.add(works[person.name], hours)
+    for person in people:
+        hours = [h for b in _shift(person)["leisure"] for h in _block_hours(*b)]
+        leisures[person.name] = _place_evening(world, load, person, hours, sleeps[person.name])
+        load.add(leisures[person.name], hours)
+    out = {}
+    for person in people:
+        shift = _shift(person)
+        blocks = [(shift["sleep"], sleeps[person.name], "sleep"),
+                  (shift["work"], works[person.name], "work")]
+        blocks += [(b, leisures[person.name], "leisure") for b in shift["leisure"]]
+        # a block that wraps past midnight goes last, as the builder expects
+        blocks.sort(key=lambda b: (b[0][1] <= b[0][0] and b[0][1] != "00:00", b[0][0]))
+        schedule = [{"start": b[0][0], "end": b[0][1], "location": b[1], "role": b[2]}
+                    for b in blocks]
+        start_region = next((r["location"] for r in schedule
+                             if r["start"] <= "08:00" < (r["end"] if r["end"] > r["start"]
+                                                         else "24:00")), works[person.name])
+        out[person.name] = (schedule, start_region)
+    return out
 
 
 def free_cell(world, region_name, taken=(), connected=None):

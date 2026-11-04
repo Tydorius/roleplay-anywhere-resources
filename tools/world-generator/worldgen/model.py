@@ -1051,7 +1051,7 @@ def parse_plan(data):
                       description=d.get("description", ""), physicalDescription=d.get("physicalDescription", ""),
                       extras={k: v for k, v in d.items()
                               if k in ("animationId", "level", "inventory", "equipment",
-                                       "partner")})
+                                       "partner", "shift")})
 
     npcs = [person(n) for n in data.get("npcs", [])]
     player = person(data.get("player", {"name": "Player"}))

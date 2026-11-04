@@ -175,7 +175,9 @@ The dialog's steps:
 - **Download zip** warns first if the Problems panel lists errors.
 - **Layers:** lock a layer so clicks go through it, or hide it.
 - **Problems:** the scenario is checked after every change (`scenario_checks.py`). Click a problem
-  to jump to it.
+  to jump to it. One check counts people by the hour: more than 8 awake in a walled room (or per
+  14-cell circle of open ground) gets a warning, because the GM reads everyone in a room in full
+  every turn. A room that only sleeps that many gets a note.
 - **Inspector:** the right-hand panel edits whatever you selected. Every field change is one undo
   step.
   - **Nothing selected:** browse object types, hostile types, people and regions by name. You can

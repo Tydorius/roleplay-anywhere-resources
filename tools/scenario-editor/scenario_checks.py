@@ -62,6 +62,8 @@ def meta():
             "roles": ["work", "leisure", "sleep"], "objectTags": OBJECT_TAGS, "voiceTags": VOICE_TAGS}
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 HOSTILE_BUFFER = 15  # cells between a hostile region and anywhere peaceful NPCs spend their day
+ROOM_CAP = 8         # people awake in one walled room: the GM reads each in full every turn
+CIRCLE_CELLS = 615   # one 14-cell circle: open ground gets ROOM_CAP per circle
 
 
 # ---------------------------------------------------------------- loading
@@ -550,6 +552,7 @@ def _map(scn, regions, by_name, add, mods):
                 add("warning", f"Nobody can stand beside {e.get('name')!r}.", e.get("id"))
 
     _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add)
+    _crowds(scn, regions, by_name, rects, parent, add)
 
 
 def bed_capacity(r):
@@ -605,6 +608,59 @@ def _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add):
             more = f" and {len(near) - 4} more" if len(near) > 4 else ""
             add("warning", f"Hostile {name[h]!r} is within {HOSTILE_BUFFER} cells of places peaceful NPCs use: "
                            f"{listed}{more}.", h, *[rid for _, rid in near])
+
+
+def _covers(block, minute):
+    s, e = _minutes(block["start"]), _minutes(block["end"])
+    if s == e:
+        return True
+    return s <= minute < e if s < e else minute >= s or minute < e
+
+
+def _crowds(scn, regions, by_name, rects, parent, add):
+    """People by the hour, the way the GM sees a space: everyone in the same
+    walled room, or on the same stretch of open ground. Sleepers are limited
+    by the beds, so a full barracks is a note and not a warning."""
+    walled = {r["id"] for r in regions if r.get("wall")}
+
+    def space(rid):
+        here = rid
+        while here:
+            if here in walled:
+                return here
+            here = parent.get(here)
+        return rid
+
+    awake, asleep = {}, {}
+    for e in scn.get("entities", []):
+        if e.get("type") != "npc":
+            continue
+        for b in e.get("schedule") or []:
+            r = (by_name.get(b.get("location")) or [None])[0]
+            if not r or not (HHMM.match(str(b.get("start", ""))) and HHMM.match(str(b.get("end", "")))):
+                continue
+            hours = (asleep if b.get("role") == "sleep" else awake).setdefault(
+                space(r["id"]), [set() for _ in range(24)])
+            for h in range(24):
+                if _covers(b, h * 60):
+                    hours[h].add(e.get("id"))
+
+    def cap(rid):
+        if rid in walled:
+            return ROOM_CAP
+        q = rects[rid]
+        return ROOM_CAP * max(1, (q[2] - q[0] + 1) * (q[3] - q[1] + 1) // CIRCLE_CELLS)
+
+    name = {r["id"]: r["name"] for r in regions}
+    for rid, hours in awake.items():
+        peak = max(range(24), key=lambda h: len(hours[h]))
+        if len(hours[peak]) > cap(rid):
+            add("warning", f"{len(hours[peak])} people are in {name[rid]!r} at {peak:02d}:00, more than the "
+                           f"{cap(rid)} the GM can read comfortably there.", rid, *sorted(hours[peak]))
+    for rid, hours in asleep.items():
+        most = max(len(who) for who in hours)
+        if most > cap(rid):
+            add("info", f"{most} sleep in {name[rid]!r}: the GM reads them all when the player is in there.", rid)
 
 
 def _media(media, add):

@@ -136,6 +136,14 @@ the home's beds. Beds in guest rooms and wards are **spare**: they need no
 owner, P5 doesn't count them as homes, and they stay empty unless a home runs
 out of its own beds.
 
+Everyone's day is then planned together. Staff spread over their workplace's
+rooms, each person gets a seeded evening place near home (the nearest inn in
+their zone, home, or the ground outside), and no walled room holds more than
+`ROOM_CAP` (8) people awake at any hour, nor open ground more than that per
+14-cell circle: the GM reads everyone in a room in full, every turn. A person
+may carry `"shift": "evening"` or `"night"`. See
+[POPULATION_DESIGN.md](POPULATION_DESIGN.md).
+
 **P6, the systems**, runs after the people in three calls — 6a rules and
 economy (narrative rules, flavor and difficulty, a currency whose format
 names a digit, a 25-point attribute spread, about 18 skills, weather from the
