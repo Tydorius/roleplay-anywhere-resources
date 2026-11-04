@@ -135,32 +135,30 @@ def assign_sleep_rooms(world, people, couples=None):
     an empty one so a household does not spread one person per room while
     another room has free beds. Beds nobody is assigned to simply stay free:
     an inn's or a hospital's spare beds have no owner. A person whose home
-    names one unit copy sleeps in that copy. People whose home runs out of
-    free beds get no entry — _ensure_beds and resolve_sleep fall back for
-    them."""
+    names one unit copy sleeps in that copy, and so does a household the cast
+    gave a flat number. People whose home runs out of free beds get no entry —
+    _ensure_beds and resolve_sleep fall back for them."""
     homes = {}
     for p in people:
         homes.setdefault(p.home, []).append(p)
     copies = unit_copies(world)
     for home, residents in homes.items():
         uo = copies.get(home, (None, None))[1]
-        if uo is None:
-            continue
-        beds = [r for r in uo.layout.rooms if room_capacity(world, r) > 0]
-        left = {r: room_capacity(world, r) for r in beds}
-        for p in residents:
-            room = next((r for r in beds if left[r] > 0), None)
-            if room is not None:
-                left[room] -= 1
-                world.sleep_assign[p.name] = room
+        if uo is not None:
+            _sleep_in_copy(world, uo, residents)
     for b in world.buildings:
         residents = homes.get(b.layout.design.name)
         if not residents:
             continue
+        flats = _flats_of(b)
+        for number in sorted({_flat_number(p) for p in residents} - {None}):
+            if number <= len(flats):
+                _sleep_in_copy(world, flats[number - 1],
+                               [p for p in residents if _flat_number(p) == number])
         pools = bedded_pools(world, b)
         cap = {r: room_capacity(world, r) for pool in pools for r in pool}
-        used = dict.fromkeys(cap, 0)
-        done = set()
+        used = {r: sum(1 for taken in world.sleep_assign.values() if taken is r) for r in cap}
+        done = {p.name for p in residents if p.name in world.sleep_assign}
         for pair in (couples or {}).get(b.layout.design.name, []):
             room = None
             for pool in pools:
@@ -185,6 +183,27 @@ def assign_sleep_rooms(world, people, couples=None):
                 used[room] += 1
                 world.sleep_assign[p.name] = room
                 break
+
+
+def _sleep_in_copy(world, copy, residents):
+    beds = [r for r in copy.layout.rooms if room_capacity(world, r) > 0]
+    left = {r: room_capacity(world, r) for r in beds}
+    for p in residents:
+        room = next((r for r in beds if left[r] > 0), None)
+        if room is not None:
+            left[room] -= 1
+            world.sleep_assign[p.name] = room
+
+
+def _flats_of(building):
+    """A building's stamped unit copies, in the order the cast numbers them."""
+    return [uo for layout in [building.layout] + [f.layout for f in building.floors]
+            for uo in getattr(layout, "unit_outs", []) or []]
+
+
+def _flat_number(person):
+    number = (person.extras or {}).get("flat")
+    return number if isinstance(number, int) and number > 0 else None
 
 
 def zone_of(world, building_name):

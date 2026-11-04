@@ -9,6 +9,8 @@ UNPEOPLED = ("occasional", "vacant", "abandoned")     # nobody lives or works he
 KINDS = ("adult", "child", "elder")
 SHIFTS = ("day", "evening", "night")
 MAX_CAST = 120          # about 10k tokens per ten people, so a ceiling on the bill
+MAX_FLATS = 48                 # a unit building's copies, across its storeys
+MAX_FLAT_BEDS = 8              # the beds stamped inside one copy
 FAMILY_SHARE = 3        # at least one home in three holds more than adults
 
 # what P3 and the later phases read about a building that isn't simply in use
@@ -45,6 +47,14 @@ def _unit_room(b):
         return None
     count, per = u.get("count"), u.get("residents")
     return (count if _whole(count) else 0) * (per if _whole(per) else 0)
+
+
+def _flats(b, status):
+    """True when a building's unit copies are homes, one to a household. An
+    inn's guest rooms are units too, so they stay as P1 planned them."""
+    u = b.get("units")
+    return (status == "home" and isinstance(u, dict)
+            and _whole(u.get("residents")) and u["residents"] > 0)
 
 
 def zone_people(zone):
@@ -131,7 +141,7 @@ def check_p1b(d, p1, lo, hi, strict):
     houses = d.get("households")
     if not isinstance(houses, list):
         return errors + ["households: required, a list"]
-    homes, family, working, beds = set(), set(), set(), {}
+    homes, family, working, beds, flats = set(), set(), set(), {}, {}
     for i, h in enumerate(houses):
         ctx = f"households[{i}]"
         if not isinstance(h, dict) or h.get("home") not in buildings:
@@ -153,6 +163,11 @@ def check_p1b(d, p1, lo, hi, strict):
             errors.append(f"{ctx}.couples: at most half the {adults} adult(s), not {couples!r}")
         homes.add(home)
         beds[home] = beds.get(home, 0) + len(people)
+        if _flats(buildings[home], status.get(home)):
+            flats[home] = flats.get(home, 0) + 1
+            if len(people) > MAX_FLAT_BEDS:
+                errors.append(f"{ctx}: a flat beds {MAX_FLAT_BEDS} at most, not {len(people)}; "
+                              "split the household")
         if any(m.get("kind") != "adult" for m in people):
             family.add(home)
         working.update(m.get("work") for m in people if m.get("kind") == "adult")
@@ -161,7 +176,10 @@ def check_p1b(d, p1, lo, hi, strict):
             errors.append(f"{n!r} is staffed but no household member works there")
     for n, k in beds.items():
         room = _unit_room(buildings[n])
-        if room is not None and k > room:
+        if n in flats:
+            if flats[n] > MAX_FLATS:
+                errors.append(f"{n!r} holds {MAX_FLATS} flats at most, not {flats[n]}")
+        elif room is not None and k > room:
             errors.append(f"{n!r} beds {room} across its copies, not {k}")
     total = sum(beds.values())
     if strict and not lo <= total <= hi:
@@ -221,7 +239,12 @@ def sanitize_p1b(d, p1, hi, log):
         members = [c for c in (_clean_member(m, home, buildings, zones, status, log)
                                for m in h.get("members") or []) if c]
         room = _unit_room(buildings[home])
-        if room is not None:
+        if _flats(buildings[home], status[home]):
+            members = members[:MAX_FLAT_BEDS]
+            if sum(1 for o in houses if o["home"] == home) >= MAX_FLATS:
+                log.append((f"household of {home}", f"dropped: {MAX_FLATS} flats at most"))
+                continue
+        elif room is not None:
             members = members[:max(0, room - beds.get(home, 0))]
         if total + len(members) > hi:
             log.append((f"household of {home}", f"dropped: the cast is capped at {hi}"))
@@ -258,6 +281,33 @@ def apply_cast(p1, cast):
                 couples = sum(h["couples"] for h in own)
                 if couples:
                     b["couples"] = couples
+    _size_flats(p1, cast)
+
+
+def _size_flats(p1, cast):
+    """One flat per household: a home building's copies are its households, and
+    each copy beds the largest of them. Copies are all one design, so a sameAs
+    tower and its owner take the bigger need of the two."""
+    buildings, _zones = _names(p1)
+    owner = {p["building"]: p["sameAs"] for c in p1.get("compounds") or []
+             for p in c.get("parts") or [] if p.get("sameAs")}
+    want = {}
+    for name, b in buildings.items():
+        own = [h for h in cast["households"] if h["home"] == name]
+        if not own or not _flats(b, cast["status"][name]):
+            continue
+        for number, h in enumerate(own, 1):
+            h["flat"] = number
+        count, beds = want.get(owner.get(name, name), (0, 0))
+        want[owner.get(name, name)] = (max(count, len(own)),
+                                       max([beds] + [len(h["members"]) for h in own]))
+    for name, b in buildings.items():
+        size = want.get(owner.get(name, name))
+        if size and isinstance(b.get("units"), dict):
+            u = b["units"]
+            u["count"], u["residents"] = size
+            if _whole(u.get("perStorey")) and u["perStorey"] > u["count"]:
+                u.pop("perStorey")
 
 
 def slots_of(cast):
@@ -265,7 +315,10 @@ def slots_of(cast):
     out = []
     for house, h in enumerate(cast["households"]):
         for m in h["members"]:
-            out.append(dict(m, slot=len(out) + 1, home=h["home"], house=house))
+            out.append(dict(m, slot=len(out) + 1, home=h["home"], house=house,
+                            couples=h.get("couples", 0)))
+            if "flat" in h:
+                out[-1]["flat"] = h["flat"]
     return out
 
 
@@ -281,15 +334,45 @@ def next_batch(slots, size):
     return batch
 
 
+def _couples_in(members):
+    """The pairs a household's slots can still make."""
+    adults = sum(1 for s in members if s["kind"] == "adult")
+    return min(members[0].get("couples", 0), adults // 2)
+
+
+def batch_couples(batch):
+    """{home: the pairs this batch owes}, counted from its own households, since
+    several households can share one unit building."""
+    out = {}
+    for house in dict.fromkeys(s["house"] for s in batch):
+        members = [s for s in batch if s["house"] == house]
+        if _couples_in(members):
+            home = members[0]["home"]
+            out[home] = out.get(home, 0) + _couples_in(members)
+    return out
+
+
+def _household_line(members):
+    numbers = ", ".join(str(s["slot"]) for s in members)
+    couples = _couples_in(members)
+    tail = f"; {couples} pair(s) of its adults are partners" if couples else ""
+    return f"- one household, slots {numbers}{tail}:"
+
+
 def slot_lines(batch):
     lines = []
-    for s in batch:
-        if s["kind"] == "adult":
-            shift = f", {s['shift']} shift" if s.get("shift") else ""
-            lines.append(f"- slot {s['slot']}: home {s['home']}, adult, {s['role']}, "
-                         f"works at {s['work']}{shift}")
-        else:
-            lines.append(f"- slot {s['slot']}: home {s['home']}, {s['kind']}, at home by day")
+    for house in dict.fromkeys(s["house"] for s in batch):
+        members = [s for s in batch if s["house"] == house]
+        if len(members) > 1:
+            lines.append(_household_line(members))
+        for s in members:
+            home = s["home"] + (f", flat {s['flat']}" if "flat" in s else "")
+            if s["kind"] == "adult":
+                shift = f", {s['shift']} shift" if s.get("shift") else ""
+                lines.append(f"- slot {s['slot']}: home {home}, adult, {s['role']}, "
+                             f"works at {s['work']}{shift}")
+            else:
+                lines.append(f"- slot {s['slot']}: home {home}, {s['kind']}, at home by day")
     return "\n".join(lines)
 
 
@@ -307,7 +390,7 @@ def fill_slots(d, batch):
     if not isinstance(people, list):
         return []
     open_slots = {s["slot"]: s for s in batch}
-    errors, seen = [], set()
+    errors, seen, house_of = [], set(), {}
     for i, p in enumerate(people):
         if not isinstance(p, dict):
             continue
@@ -316,7 +399,10 @@ def fill_slots(d, batch):
             errors.append(f"npcs[{i}].slot: {p.get('slot')!r} is not an open slot")
             continue
         seen.add(s["slot"])
+        house_of[p.get("name")] = s["house"]
         p["home"], p["kind"] = s["home"], s["kind"]
+        if "flat" in s:
+            p["flat"] = s["flat"]
         if s["kind"] == "adult":
             p["role"], p["work"] = s["role"], s["work"]
             for key in ("shift", "sells"):
@@ -327,4 +413,9 @@ def fill_slots(d, batch):
             if not _text(p.get("role")):
                 p["role"] = s["kind"]
     errors += [f"slot {n}: nobody took it" for n in open_slots if n not in seen]
+    for p in people:
+        if isinstance(p, dict) and isinstance(p.get("partner"), str) and p["partner"] in house_of \
+                and house_of[p["partner"]] != house_of.get(p.get("name")):
+            errors.append(f"{p.get('name')!r} and {p['partner']!r} are partners from two "
+                          "households; partners live in one")
     return errors

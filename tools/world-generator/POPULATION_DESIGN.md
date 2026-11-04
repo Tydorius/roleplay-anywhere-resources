@@ -170,6 +170,27 @@ children and elders stay home by day. `residents` and `couples` come from the li
 a village isn't all working adults. Worlds where that's wrong (a ship's crew, a barracks) are
 exempt when the frame says so.
 
+### One flat per household
+
+A `home` building's unit copies are its households: the cast sets how many flats it has, and each
+flat beds the largest household there. Each household gets a flat number, so a family sleeps
+together, and the couples reach P5 through its slots. A `sameAs` tower and its owner share one
+design, so they take the bigger need of the two. An inn's guest rooms stay as P1 planned them.
+
+Every flat in a building is the same size for now, so a lone tenant has spare beds.
+
+### Housing by wealth (later)
+
+Michael's direction, not built: wealth should decide housing as well as furnishing, in every
+setting. Poorer households share one flat, or a whole family lives in a two-bedroom cottage.
+Wealthier ones get more room: a couple in a private flat, a family in a larger flat, a merchant
+family in a two-storey townhouse.
+
+`ROOM_LIBRARY_DESIGN.md` already gives each building a `wealth` (`poor`, `modest`, `wealthy`,
+`elite`), which picks its materials and optional furniture. Housing should use those same four
+tiers and not a second scale. How they correlate is open: probably a tier on each household that
+sets the size of its flat or home, which means flats of more than one size in a building.
+
 ### Roles
 
 An adult member has a `role`, a `work`, a `shift` (`day`, `evening` or `night`, default `day`) and

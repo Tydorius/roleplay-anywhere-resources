@@ -7,6 +7,7 @@ from tests.test_013_population import populated_replies
 from tests.test_model import (CANNED_COTTAGE, CANNED_P1, CANNED_P5_PLAYER, CANNED_P6A, CANNED_P6B, CANNED_P6C,
                               ScriptedClient, _dump)
 from worldgen import cast, phases, questions, schedule
+from worldgen import cast as cast_mod
 
 
 def a_p1():
@@ -260,6 +261,105 @@ class Days(unittest.TestCase):
         data["zones"][0]["buildings"][0]["status"] = "vacant"
         world = worldgen.run(data, seed=1)
         self.assertFalse(schedule.is_inn(world.buildings[0]))
+
+
+class Flats(unittest.TestCase):
+    """One flat per household: the cast sizes a home building's copies."""
+
+    def p1(self, status_units=None):
+        return {"zones": [{"name": "Close", "buildings": [
+            {"name": "Tower", "units": {"name": "Flat", "count": 10, "residents": 2}},
+            {"name": "Tower II", "units": {"name": "Flat", "count": 10, "residents": 2}},
+            {"name": "Inn", "units": {"name": "Guest Room", "count": 6, "residents": 1}},
+        ]}], "compounds": [{"name": "Court", "zone": "Close", "parts": [
+            {"building": "Tower"}, {"building": "Tower II", "sameAs": "Tower"}]}]}
+
+    def house(self, home, adults=2, children=0, couples=1):
+        return {"home": home, "couples": couples,
+                "members": [{"kind": "adult", "role": "r", "work": "Inn"}] * adults
+                + [{"kind": "child"}] * children}
+
+    def cast(self, *houses):
+        return {"status": {"Tower": "home", "Tower II": "home", "Inn": "staffed"},
+                "why": {}, "households": list(houses)}
+
+    def units(self, p1, name):
+        return next(b for b in p1["zones"][0]["buildings"] if b["name"] == name)["units"]
+
+    def test_copies_follow_the_households(self):
+        p1 = self.p1()
+        cast = self.cast(self.house("Tower", 2, 3), self.house("Tower"), self.house("Tower"))
+        cast_mod.apply_cast(p1, cast)
+        self.assertEqual((self.units(p1, "Tower")["count"], self.units(p1, "Tower")["residents"]),
+                         (3, 5))
+        self.assertEqual([h["flat"] for h in cast["households"]], [1, 2, 3])
+
+    def test_a_same_as_tower_and_its_owner_take_the_bigger_need(self):
+        p1 = self.p1()
+        cast = self.cast(self.house("Tower"), self.house("Tower II", 2, 2),
+                         self.house("Tower II"), self.house("Tower II"))
+        cast_mod.apply_cast(p1, cast)
+        for name in ("Tower", "Tower II"):
+            self.assertEqual((self.units(p1, name)["count"], self.units(p1, name)["residents"]),
+                             (3, 4), name)
+
+    def test_an_inns_guest_rooms_stay_as_planned(self):
+        p1 = self.p1()
+        cast = self.cast(self.house("Inn", 2, 0))
+        cast_mod.apply_cast(p1, cast)
+        self.assertEqual(self.units(p1, "Inn")["count"], 6)
+        self.assertNotIn("flat", cast["households"][0])
+
+    def test_a_shrunken_tower_drops_a_floor_quota_it_cannot_meet(self):
+        p1 = self.p1()
+        self.units(p1, "Tower")["perStorey"] = 5
+        cast_mod.apply_cast(p1, self.cast(self.house("Tower")))
+        self.assertNotIn("perStorey", self.units(p1, "Tower"))
+
+    def test_slots_carry_the_flat_and_show_the_household(self):
+        p1 = self.p1()
+        cast = self.cast(self.house("Tower", 2, 1), self.house("Tower", 1, 0, couples=0))
+        cast_mod.apply_cast(p1, cast)
+        slots = cast_mod.slots_of(cast)
+        lines = cast_mod.slot_lines(slots)
+        self.assertIn("one household, slots 1, 2, 3; 1 pair(s)", lines)
+        self.assertIn("home Tower, flat 2", lines)
+        d = {"npcs": [{"slot": s["slot"], "name": f"P{s['slot']}"} for s in slots]}
+        self.assertEqual(cast_mod.fill_slots(d, slots), [])
+        self.assertEqual([p["flat"] for p in d["npcs"]], [1, 1, 1, 2])
+
+    def test_a_batch_owes_every_couple_of_its_households(self):
+        cast = self.cast(self.house("Tower"), self.house("Tower"), self.house("Inn", 1, 0, 0))
+        self.assertEqual(cast_mod.batch_couples(cast_mod.slots_of(cast)), {"Tower": 2})
+
+    def test_a_lone_adult_left_over_owes_no_couple(self):
+        slots = cast_mod.slots_of(self.cast(self.house("Tower")))
+        self.assertEqual(cast_mod.batch_couples(slots[:1]), {})
+
+    def test_partners_come_from_one_household(self):
+        slots = cast_mod.slots_of(self.cast(self.house("Tower"), self.house("Tower")))
+        d = {"npcs": [{"slot": s["slot"], "name": f"P{s['slot']}"} for s in slots]}
+        d["npcs"][0]["partner"], d["npcs"][2]["partner"] = "P3", "P1"
+        errors = cast_mod.fill_slots(d, slots)
+        self.assertTrue(any("two households" in e for e in errors), errors)
+
+    def test_a_household_too_big_for_a_flat_is_refused(self):
+        p1 = self.p1()
+        reply = {"buildings": [{"name": n, "status": s} for n, s in
+                               (("Tower", "home"), ("Tower II", "home"), ("Inn", "staffed"))],
+                 "noFamilies": "none",
+                 "households": [self.house("Tower", 9, 0, 0), self.house("Inn", 1, 0, 0)]}
+        errors = cast_mod.check_p1b(reply, p1, 0, 100, False)
+        self.assertTrue(any("split the household" in e for e in errors), errors)
+
+    def test_many_households_fit_a_tower_p1_sized_small(self):
+        p1 = self.p1()
+        reply = {"buildings": [{"name": n, "status": s} for n, s in
+                               (("Tower", "home"), ("Tower II", "home"), ("Inn", "staffed"))],
+                 "noFamilies": "none",
+                 "households": [self.house("Tower", 2, 2) for _ in range(12)]
+                 + [self.house("Inn", 1, 0, 0)]}
+        self.assertEqual(cast_mod.check_p1b(reply, p1, 0, 100, False), [])
 
 
 class TestEstimate(unittest.TestCase):

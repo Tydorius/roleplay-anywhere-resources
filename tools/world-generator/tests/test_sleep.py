@@ -790,6 +790,21 @@ class TestSleepRoomAssignment(unittest.TestCase):
             self.assertEqual(locs[p["name"]],
                              p["home"].replace("Grendel Flats ", "") + " Bedroom")
 
+    def test_a_flat_number_keeps_a_household_in_its_copy(self):
+        import json
+        import os
+        path = os.path.join(os.path.dirname(__file__), "..", "fixtures",
+                            "apartment-block.plan.json")
+        with open(path, encoding="utf-8") as fh:
+            data = json.load(fh)
+        people = [p for p in data["npcs"] if p["home"].startswith("Grendel Flats Apartment")]
+        people[0].update(home="Grendel Flats", flat=3)
+        people[1].update(home="Grendel Flats", flat=2)
+        locs = self._sleep_locations(worldgen.run(data, seed=1,
+                                                  extensions=tuple(data.get("extensions") or ())))
+        self.assertEqual(locs[people[0]["name"]], "Apartment 3 Bedroom")
+        self.assertEqual(locs[people[1]["name"]], "Apartment 2 Bedroom")
+
     def test_a_home_naming_a_copy_by_its_region_name(self):
         world = self._fixture("starship-decks.plan.json")
         locs = self._sleep_locations(world)

@@ -34,8 +34,8 @@ YARD_SIDES = ("front", "back", "left", "right")
 FILL_DENSITY = ("low", "medium", "high")
 EXTERIORS = ("", "void")
 UNIT_NUMBERING = ("plain", "storey")
-MAX_UNIT_COUNT = 48        # copies across the building's storeys
-MAX_UNIT_RESIDENTS = 8     # beds stamped inside each copy
+MAX_UNIT_COUNT = cast_mod.MAX_FLATS         # copies across the building's storeys
+MAX_UNIT_RESIDENTS = cast_mod.MAX_FLAT_BEDS  # beds stamped inside each copy
 
 MAX_BUILDINGS = 12      # across the whole P1 plan, before population lifts it
 MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
@@ -3047,7 +3047,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                 errors = cast_mod.fill_slots(x, batch)
                 return errors + check_p5(x, set(building_names), set(zone_names), need=("npcs",),
                                          roster={p["name"] for p in roster},
-                                         couples=couples_left())
+                                         couples=cast_mod.batch_couples(batch))
 
             d = call(f"p5-{slug(z['name'])}" + (f"-{n + 1}" if n else ""), "p5-people",
                      event=("P5", f"people {i}/{len(peopled)}: {z['name']}"
@@ -3065,7 +3065,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                          if isinstance(p, dict) and p.get("slot") in ids]
             made = sanitize_p5(d, building_names, zone_names, stats["dropped"], need=("npcs",),
                                taken={p["name"] for p in roster}, max_npcs=len(batch),
-                               couples=couples_left())
+                               couples=cast_mod.batch_couples(batch))
             for p in made["npcs"]:
                 filled = p.pop("slot")
                 open_slots[:] = [s for s in open_slots if s["slot"] != filled]

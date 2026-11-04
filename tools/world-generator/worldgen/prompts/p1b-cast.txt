@@ -34,7 +34,9 @@ Reply with ONE JSON object:
   workers are household members whose "work" names it. A staffed building needs
   at least one. Nobody lives or works in an occasional, vacant or abandoned one.
 - A building can be both: an inn's keeper may live in, so the inn is "staffed"
-  and has a household. A unit building may hold several households.
+  and has a household. A unit building holds several households, each in a
+  flat of its own: code sets how many flats it has and how many beds each from
+  your households, so ignore the copies its line lists. At most 8 to a household.
 - Families, not just workers: at least a third of the homes hold children or
   elders. Children and elders have no role or work; they stay home by day.
 - "couples" counts the pairs among a household's adults, at most half of them.
