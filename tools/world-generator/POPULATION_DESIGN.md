@@ -234,9 +234,20 @@ All of this is code, after layout, and it costs no tokens.
 
 **Hours.** `shift` sets the blocks: `day` as today; `evening` works 14:00-22:00 and sleeps
 00:00-08:00; `night` works 22:00-06:00 and sleeps 08:00-16:00. Children and elders have no work
-block, and spend it at home or nearby.
+block, and spend it at home: the entrance room of a house, or the main room of a flat.
 
 **Work.** Staff spread over their workplace's rooms rather than all standing in the entrance room.
+
+**Getting to work.** The work block starts early by the length of the walk, in quarter hours, so
+people arrive as their shift begins. People walk about 300 cells a game hour and a path runs about
+1.3 times the grid distance, measured in Downpour Block. A walk under 15 minutes changes nothing,
+and the limit is two hours.
+
+**Open-ground work.** The game's idle walk heads for any object in the scheduled region. A worker
+scheduled in a whole zone therefore crossed the market, walking through other shops' stock rooms to
+reach a puddle. So code makes a post for them: a small open region grown from a stall's footprint,
+stopping short of other stalls and buildings. Work objects come first, filler never counts, a post
+must be reachable, and two people share one. With no stall to stand at, the zone itself stays.
 
 **Evenings.** Each person gets one evening place, seeded, from what's near their home: the nearest
 inn in their zone, home, or the open ground outside. A void zone has no outside. Visiting a
@@ -389,7 +400,8 @@ over the cap, and P1b under about 10k tokens.
 1. **Schedules and the room cap.** Code only: shifts default to `day`, evenings spread, staff
    spread, cap applied, editor check. Worth shipping alone.
 2. **`sells`** from a simple rule (done), then from the cast (done, with step 3).
-3. **P1b cast, with statuses and households,** feeding P3 and P5. Dialog checkbox. (Done.)
+3. **P1b cast, with statuses and households,** feeding P3 and P5. Dialog checkbox. (Done, and
+   played through a full day in Downpour Block on 2026-11-04.)
 4. **Off-stage regions.** Generator and editor exceptions.
 5. **Live checks 1-4** on a hand-made scenario.
 6. **Clocks and unlocks in P6,** with the plain path.

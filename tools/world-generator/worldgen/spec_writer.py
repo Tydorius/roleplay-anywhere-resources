@@ -166,7 +166,7 @@ def build_spec(world, plan):
             "level": c.person.extras.get("level", 2),
             "animationId": animation_for(c),
             "description": c.person.description or c.name,
-            "physicalDescription": c.person.physicalDescription or c.name,
+            "physicalDescription": physical_for(c),
             "voiceProfile": voice_for(c),
             "schedule": c.schedule,
         }
@@ -235,7 +235,7 @@ def build_spec(world, plan):
         "currency": extras.get("currency", {"name": "Coin",
                                             "description": "The common coin of the region.",
                                             "format": "5 coins"}),
-        "startingCurrency": extras.get("startingCurrency", 5),
+        "startingCurrency": extras.get("startingCurrency", 100),
         "attributes": extras.get("attributes", {"strength": 5, "dexterity": 5, "intellect": 5,
                                                 "perception": 5, "charisma": 5}),
         "skills": extras.get("skills", {}),
@@ -288,6 +288,18 @@ def animation_for(c):
         if key in role:
             return m if c.gender == "male" else f
     return "casual-man" if c.gender == "male" else "casual-woman"
+
+
+def physical_for(c):
+    """The portrait prompt. A child's or an elder's own description rarely says
+    how old they are, and the portraits came out as adults until it did."""
+    text = c.person.physicalDescription or c.name
+    if _kind(c) == "child":
+        return f"A young child, under twelve years old, with a child's small round face. {text}"
+    if _kind(c) == "elder":
+        word = "man" if c.gender == "male" else "woman"
+        return f"Very old {word}, about eighty, deeply wrinkled, white hair. {text}"
+    return text
 
 
 def voice_for(c):

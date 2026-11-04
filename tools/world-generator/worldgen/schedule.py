@@ -10,11 +10,12 @@ nearest bedded building of the same zone. Work places like a smithy or a
 chapel are for waking hours only.
 """
 
+import math
 import random
 import re
 
 from .cast import UNPEOPLED
-from .model import bed_capacity, is_spare_room
+from .model import Rect, bed_capacity, is_spare_room
 
 # who sleeps, works and relaxes when; the blocks of a shift cover the 24 hours
 SHIFTS = {
@@ -36,6 +37,14 @@ INN_WORD = re.compile(r"\b(inns?|taverns?|pubs?|bars?|alehouses?|saloons?|cantin
                       r"teahouses?)\b")
 PASSAGE_WORD = re.compile(r"\b(corridors?|hallways?|landings?|stairs?|stairwells?|"
                           r"passages?)\b")
+
+# walking to work, measured in play: people cover about 300 cells in a game
+# hour, and a path runs about 1.3 times the straight-line grid distance
+WALK_CELLS_PER_HOUR = 300
+PATH_DETOUR = 1.3
+MAX_COMMUTE_MINUTES = 120
+POST_REACH = 3         # cells a post spreads each way from its stall
+POST_SHARE = 2         # people to a post
 
 
 def room_capacity(world, room):
@@ -372,14 +381,96 @@ def _work_rooms(world, building):
     return [entrance.full_name] + [r.full_name for r in rooms]
 
 
-def _place_work(world, load, person, hours, sleep_loc):
-    """The person's work place, the least crowded room of their workplace.
-    A full workplace spills onto the ground outside, then home; a full stretch
-    of open ground spills into its buildings, then home."""
+def _fits_region_tree(world, rect):
+    """Whether a new post can go here: the builder wants every pair of regions
+    nested or apart, this one mustn't swallow anything, and posts stay apart."""
+    return all(not r.rect.intersects(rect)
+               or (r.rect.contains_rect(rect) and r.kind != "post")
+               for r in world.regions)
+
+
+def _footprint(world, obj):
+    w, h = world.templates[obj.template].size
+    return Rect(obj.pos[0], obj.pos[1], w, h)
+
+
+def _post_rect(world, zone, obj, stalls):
+    """The open ground round an object, grown from its footprint one cell a
+    side at a time, so a stall against a wall still gets the room there is. A
+    post stops short of the next stall, which can have a post of its own."""
+    others = [_footprint(world, o) for o in stalls if o is not obj]
+
+    def fits(rect):
+        return zone.rect.contains_rect(rect) and _fits_region_tree(world, rect) \
+            and not any(rect.intersects(o) for o in others)
+
+    rect = _footprint(world, obj)
+    if not fits(rect):
+        return None
+    for _ in range(POST_REACH):
+        for dx, dy, dw, dh in ((-1, 0, 1, 0), (0, 0, 1, 0), (0, -1, 0, 1), (0, 0, 0, 1)):
+            grown = Rect(rect.x + dx, rect.y + dy, rect.w + dw, rect.h + dh)
+            if fits(grown):
+                rect = grown
+    return rect
+
+
+def _stalls(world, zone):
+    """The objects on a zone's open ground someone could stand at, work ones
+    first. Filler never qualifies."""
+    found = []
+    for o in world.objects:
+        tags = world.templates[o.template].tags or []
+        cell = tuple(o.pos)
+        if "filler" in tags or not zone.rect.contains_cell(cell):
+            continue
+        holder = _innermost(world, cell)
+        if holder is not None and not holder.wall:
+            found.append(("work" not in tags, cell, o))
+    return [f[2] for f in sorted(found, key=lambda f: f[:2])]
+
+
+def make_posts(world, zone_name, people, connected=None):
+    """Small open regions round a zone's stalls, for the people who work on its
+    open ground. The game's idle walk heads for any object in the scheduled
+    region, so a zone sends a stall-holder across the whole market, puddles and
+    other shops' back rooms included. A post nobody can walk to doesn't count.
+    Returns the post names, which may be none."""
+    zone = world.regions_by_name[zone_name]
+    posts = []
+    stalls = _stalls(world, zone)
+    for o in stalls:
+        if len(posts) * POST_SHARE >= people:
+            break
+        cell = tuple(o.pos)
+        rect = _post_rect(world, zone, o, stalls)
+        if rect is None or (connected is not None and not rect.cells() & connected):
+            continue
+        name = f"{zone_name} {o.template} Post"
+        if name in world.regions_by_name:
+            name = f"{name} {len(posts) + 1}"
+        region = type(zone)(name, rect, "post", parent=_innermost(world, cell).name,
+                            ground=zone.ground, ground_texture=zone.ground_texture,
+                            ambience=zone.ambience, ground_color=zone.ground_color,
+                            description=f"The spot round the {o.template} in {zone_name}.")
+        world.regions.append(region)
+        world.regions_by_name[name] = region
+        posts.append(name)
+    return posts
+
+
+def _place_work(world, load, person, hours, sleep_loc, posts=None):
+    """The person's work place, the least crowded room of their workplace, or
+    the emptiest post of an open zone. A full workplace spills onto the ground
+    outside, then home; a full stretch of open ground spills into its
+    buildings, then home."""
     target = person.work or person.home
     building = next((b for b in world.buildings
                      if b.layout.design.name == target), None)
     if building is None:
+        free = [n for n in (posts or {}).get(target, []) if load.peak(n, hours) < POST_SHARE]
+        if free:
+            return min(free, key=lambda n: load.peak(n, hours))
         place = work_location(world, person) or sleep_loc
         sheds = [b.layout.entrance_room.full_name for b in world.buildings
                  if zone_of(world, b.layout.design.name) == place]
@@ -396,12 +487,22 @@ def _place_work(world, load, person, hours, sleep_loc):
 
 
 def _home_spot(world, person, sleep_loc):
-    """Where someone spends time at home: the home's entrance room, or their
-    own flat in a unit building, whose entrance is everyone's lobby."""
+    """Where someone spends time at home: the home's entrance room, or the main
+    room of their own flat in a unit building, whose entrance is everyone's
+    lobby."""
     home = home_building(world, person.home)
-    if home is None or getattr(home.layout, "unit_outs", None):
+    if home is None:
         return sleep_loc
-    return home.layout.entrance_room.full_name
+    flats = _flats_of(home)
+    if not flats:
+        return home.layout.entrance_room.full_name
+    for flat in flats:
+        rooms = flat.layout.rooms
+        if any(r.full_name == sleep_loc for r in rooms):
+            awake = [r for r in rooms if room_capacity(world, r) == 0
+                     and not PASSAGE_WORD.search(r.base_name.lower())]
+            return awake[0].full_name if awake else sleep_loc
+    return sleep_loc
 
 
 def _nearest_inn(world, person):
@@ -437,12 +538,55 @@ def _place_evening(world, load, person, hours, sleep_loc):
     return min((n for n, _w in spots), key=lambda n: load.peak(n, hours))
 
 
-def plan_schedules(world, people):
+def _commute_minutes(world, start, end):
+    """How long the walk between two regions takes, in quarter hours. A walk
+    under a quarter hour takes none."""
+    a, b = world.regions_by_name.get(start), world.regions_by_name.get(end)
+    if a is None or b is None:
+        return 0
+    cells = abs((a.rect.x + a.rect.w // 2) - (b.rect.x + b.rect.w // 2)) \
+        + abs((a.rect.y + a.rect.h // 2) - (b.rect.y + b.rect.h // 2))
+    minutes = cells * PATH_DETOUR / WALK_CELLS_PER_HOUR * 60
+    return 0 if minutes < 15 else min(math.ceil(minutes / 15) * 15, MAX_COMMUTE_MINUTES)
+
+
+def _earlier(clock, minutes):
+    total = (int(clock[:2]) * 60 + int(clock[3:]) - minutes) % 1440
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
+def _leave_early(world, blocks):
+    """Start the work block by the length of the walk, so someone reaches work
+    as their shift begins. The block before it gives up the time."""
+    work = next((i for i, b in enumerate(blocks) if b[2] == "work"), None)
+    if work is None:
+        return blocks
+    (start, end), place, role = blocks[work]
+    before = next((i for i, b in enumerate(blocks) if b[0][1] == start), None)
+    if before is None:
+        return blocks
+    minutes = _commute_minutes(world, blocks[before][1], place)
+    if not minutes:
+        return blocks
+    leave = _earlier(start, minutes)
+    out = list(blocks)
+    out[work] = ((leave, end), place, role)
+    out[before] = ((blocks[before][0][0], leave), blocks[before][1], blocks[before][2])
+    return out
+
+
+def plan_schedules(world, people, connected=None):
     """{person name: (schedule blocks, start region)} for everyone at once, so
     no room passes its cap: everyone's bed first, then the work places, then
     the evenings, counting who is where at every hour. A bed sets its own
-    limit, so a room may sleep more than the cap."""
+    limit, so a room may sleep more than the cap. ``connected`` is the cells
+    reachable from the roads, when known."""
     load = _Load(world)
+    zone_staff = {}
+    for person in people:
+        if person.work in world.zones_by_name and not _stays_home(person):
+            zone_staff[person.work] = zone_staff.get(person.work, 0) + 1
+    posts = {z: make_posts(world, z, n, connected) for z, n in sorted(zone_staff.items())}
     sleeps, works, leisures = {}, {}, {}
     for person in people:
         room = resolve_sleep(world, person)
@@ -458,7 +602,7 @@ def plan_schedules(world, people):
     for person in people:
         hours = _block_hours(*_shift(person)["work"])
         works[person.name] = _home_spot(world, person, sleeps[person.name]) if _stays_home(person) \
-            else _place_work(world, load, person, hours, sleeps[person.name])
+            else _place_work(world, load, person, hours, sleeps[person.name], posts)
         load.add(works[person.name], hours)
     for person in people:
         hours = [h for b in _shift(person)["leisure"] for h in _block_hours(*b)]
@@ -472,6 +616,7 @@ def plan_schedules(world, people):
                   (shift["work"], works[person.name],
                    "leisure" if _stays_home(person) else "work")]
         blocks += [(b, leisures[person.name], "leisure") for b in shift["leisure"]]
+        blocks = _leave_early(world, blocks)
         # a block that wraps past midnight goes last, as the builder expects
         blocks.sort(key=lambda b: (b[0][1] <= b[0][0] and b[0][1] != "00:00", b[0][0]))
         schedule = [{"start": b[0][0], "end": b[0][1], "location": b[1], "role": b[2]}

@@ -22,7 +22,10 @@ import urllib.request
 PROVIDERS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                               "providers.json")
 REQUEST_TIMEOUT = 600   # seconds; one reasoning reply can take minutes
-MAX_TOKENS_CEILING = 65536   # how far an empty, budget-spent reply may double the budget
+MAX_TOKENS_CEILING = 65536   # how far a reply cut off at the budget may double it
+# phases whose reply can't fit the provider's usual budget. P2's catalogue hit
+# 16000 in half the live runs, reasoning included, and came back cut off
+PHASE_BUDGETS = {"p2": 32000}
 
 
 class LLMError(Exception):
@@ -130,6 +133,8 @@ class Client:
     drop just the bad entries), or None when no attempt parsed. Transport
     errors are retried like any other failure."""
 
+    last_cut = False   # the last call ended on a reply that ran out of budget
+
     def __init__(self, provider, providers_path=PROVIDERS_PATH, log_dir=None):
         cfg = load_provider(provider, providers_path)
         self.provider = provider
@@ -158,7 +163,8 @@ class Client:
                   "tokens": {"prompt": 0, "completion": 0, "total": 0}}
         t0 = time.time()
         result, last_parsed, ok = None, None, False
-        budget = self.max_tokens
+        budget = max(self.max_tokens, PHASE_BUDGETS.get(phase, 0))
+        cut = False
         for attempt in range(1, max_retries + 2):
             if attempt > 1:
                 self.retries += 1
@@ -167,13 +173,19 @@ class Client:
                 transport_error = None
             except LLMError as e:
                 raw, usage, transport_error = "", {}, str(e)
-            # a reasoning model that spends the whole budget thinking replies
-            # empty: retry the same messages with twice the budget
-            spent = not raw.strip() and int(usage.get("completion", 0) or 0) >= budget
+            # a reply that ran out of budget, whether it's empty (a reasoning
+            # model thinking past it) or stops mid-item: the bracket repair
+            # would close the stump into valid JSON and lose the rest, so it
+            # never counts, and the same messages go again with twice the budget
+            cut = not transport_error and (
+                usage.get("finish") == "length"
+                or int(usage.get("completion", 0) or 0) >= budget)
             parsed, parse_error = extract_json(raw)
             errors = []
             if transport_error:
                 errors.append(f"the request failed: {transport_error}")
+            elif cut:
+                errors.append(f"the reply was cut off at the {budget}-token limit")
             elif parse_error:
                 errors.append(parse_error)
             elif validate is not None:
@@ -194,7 +206,7 @@ class Client:
             if not errors:
                 result, ok = parsed, True
                 break
-            if attempt <= max_retries and spent:
+            if attempt <= max_retries and cut:
                 budget = min(budget * 2, MAX_TOKENS_CEILING)
             elif attempt <= max_retries:
                 messages = messages + [
@@ -203,6 +215,7 @@ class Client:
                      "Your reply had problems:\n- " + "\n- ".join(errors)
                      + "\nReply again with ONE corrected JSON object and nothing else."},
                 ]
+        self.last_cut = cut and not ok
         record["seconds"] = round(time.time() - t0, 3)
         record["ok"] = ok
         record["result"] = result if ok else last_parsed
@@ -245,7 +258,8 @@ class Client:
         usage = data.get("usage") or {}
         u = {"prompt": usage.get("prompt_tokens"),
              "completion": usage.get("completion_tokens"),
-             "total": usage.get("total_tokens")}
+             "total": usage.get("total_tokens"),
+             "finish": data["choices"][0].get("finish_reason")}
         return content, {k: v for k, v in u.items() if v is not None}
 
     # -------------------------------------------------------------- logging

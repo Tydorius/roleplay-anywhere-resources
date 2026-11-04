@@ -152,14 +152,20 @@ rooms, each person gets a seeded evening place near home (the nearest inn in
 their zone, home, or the ground outside), and no walled room holds more than
 `ROOM_CAP` (8) people awake at any hour, nor open ground more than that per
 14-cell circle: the GM reads everyone in a room in full, every turn. A person
-may carry `"shift": "evening"` or `"night"`. See
-[POPULATION_DESIGN.md](POPULATION_DESIGN.md).
+may carry `"shift": "evening"` or `"night"`. People leave early enough to reach
+work as their shift begins, and someone whose job is a whole open zone gets a
+small post round a stall. See [POPULATION_DESIGN.md](POPULATION_DESIGN.md).
 
 Who sells is decided in `worldgen/sellers.py`. A person's `"sells"` in the plan
 decides; without one, a trade in their role sells (a baker, a smith, a vendor,
 not an apprentice), and every working shop or inn gets at least one seller, its
 owner or keeper first. Sellers are written as `merchant: {}`, and the game stocks
 them itself. The player never sells.
+
+The game prices what it stocks on a fixed scale: it tells its model that one coin
+is about a US dollar and that a worker earns about 3000 a month, whatever the
+currency's own description says. P2 prices the catalogue on that scale, and the
+player's purse is at least `MIN_PURSE` (100).
 
 **P6, the systems**, runs after the people in three calls — 6a rules and
 economy (narrative rules, flavor and difficulty, a currency whose format
@@ -176,7 +182,10 @@ defaults (the Coin, an even 25-point spread).
 
 From measured runs: **25–35 model calls, 200–320k tokens, 30–55 minutes**
 per world (a reasoning-friendly `max_tokens` of 16000 is preset; flash-tier
-models are cheap — expect cents on a typical API plan). `estimate()` reports
+models are cheap — expect cents on a typical API plan; P2 alone starts at 32000,
+because its catalogue often passes 16000). A reply that runs out of budget never
+counts: it goes again with twice the budget, and a run that keeps only a cut-off
+reply says so in its dropped list. `estimate()` reports
 these numbers; for a saved plan it counts the calls exactly (P0 when the plan
 carries a frame, P1 and P2, one call per building and zone, the people
 batches and the three systems calls).

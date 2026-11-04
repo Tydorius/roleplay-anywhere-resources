@@ -417,7 +417,8 @@ class TestP5Batches(unittest.TestCase):
                   "value": 4, "description": "A ledger.",
                   "physicalDescription": "A thick ledger, white background"}]
         replies = populated_replies()
-        replies[1] = _dump({"templates": CANNED_TEMPLATES, "items": items})
+        replies[1] = _dump({"templates": CANNED_TEMPLATES, "items": items,
+                            "lootPools": {"Home": {"items": ["Ledger"]}}})
         player = json.loads(json.dumps(CANNED_P5_PLAYER))
         player["player"]["inventory"] = [["Rain cloak", 1], ["Ledger", 1]]
         player["player"]["equipment"] = {"weapon": "Walking staff"}

@@ -15,7 +15,7 @@ Reply with ONE JSON object with exactly these fields:
   "difficulty": "casual|medium|insane",
   "currency": {"name": "the coin's name", "description": "one sentence",
                "format": "5 pennies"},
-  "startingCurrency": 10,
+  "startingCurrency": 150,
   "attributes": {"strength": 5, "dexterity": 5, "intellect": 5,
                  "perception": 5, "charisma": 5},
   "skills": {"Skill name": 2, "...": 0},
@@ -43,5 +43,6 @@ Reply with ONE JSON object with exactly these fields:
   Number variables need sane min, max and initial (initial inside min..max);
   ratePerHour moves the value every hour, and a negative rate is a countdown.
   lowZone/highZone add a status pill under a threshold.
-- Price the catalogue honestly: startingCurrency should buy one to three of
-  the common items listed above.
+- startingCurrency is the player's purse, on the game's scale: one coin is
+  about a US dollar and a day's spending is about 50. Give them 100 to 700, a
+  few days' spending up to a week's wages, whatever suits their situation.

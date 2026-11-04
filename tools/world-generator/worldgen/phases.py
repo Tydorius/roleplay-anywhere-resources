@@ -1138,6 +1138,9 @@ def separate_names(d, log):
 # -------------------------------------------------------- P2 prop catalogue
 
 MAX_ITEMS = 80             # the hard ceiling over the 30-60 the prompt asks for
+# the game prices shops on a fixed scale, a coin being about a US dollar, and
+# its everyday wares run 15-50. Less than this and the player can't buy much
+MIN_PURSE = 100
 
 
 def _pool_entries(raw):
@@ -1165,6 +1168,8 @@ def check_p2(d, needs_double=False):
         items = []
     elif len(items) > MAX_ITEMS:
         errors.append(f"items: {len(items)} is too many; use 30-60")
+    if items and not d.get("lootPools"):
+        errors.append("lootPools: required with items, or every container stays empty")
     seen_items = set()
     for i, it in enumerate(items):
         ctx = f"items[{i}]"
@@ -2500,8 +2505,8 @@ def sanitize_p6a(d, log):
                        else f"The common coin of the region.",
                        "format": fmt}
     sc = d.get("startingCurrency")
-    out["startingCurrency"] = sc if not isinstance(sc, bool) \
-        and isinstance(sc, (int, float)) and sc >= 0 else 5
+    out["startingCurrency"] = max(sc, MIN_PURSE) if not isinstance(sc, bool) \
+        and isinstance(sc, (int, float)) else MIN_PURSE
     at = d.get("attributes") if isinstance(d.get("attributes"), dict) else {}
     if set(at) == set(ATTRIBUTE_KEYS) \
             and all(not isinstance(at[k], bool) and isinstance(at[k], int)
@@ -2686,6 +2691,9 @@ def _make_caller(client, stats, progress, cancel, exts=()):
                               "You reply with one JSON object and nothing else.",
                               assemble_prompt(tname, exts, **kw),
                               validate=kw.pop("_validate", None))
+        if getattr(client, "last_cut", False):
+            stats["dropped"].append((phase, "every reply was cut off at the token limit; "
+                                            "only what came through was kept"))
         stats["phase_log"].append({
             "phase": phase,
             "seconds": round(time.time() - t0, 1),

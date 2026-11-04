@@ -41,8 +41,11 @@ Reply with ONE JSON object:
 - 12 to 30 templates. One template per kind of thing, shared by all rooms.
 - 30 to 60 items: what this setting's containers hold — food, tools, keys,
   clothes, consumables, spares, a few valuables. Mostly common, some
-  uncommon, a few rare or better; value in the scenario's coin, always
-  positive. "physicalDescription" is the item's icon prompt and MUST end
+  uncommon, a few rare or better. "value" is a whole number, always positive,
+  on the game's own scale in every setting: one coin is worth about a US
+  dollar and an ordinary worker earns about 3000 a month, so a snack is 3, a
+  good meal 15, a sturdy tool 50. "physicalDescription" is the item's icon
+  prompt and MUST end
   with the words "white background".
 - "lootPools" are named lists of your item names, written for THIS setting,
   never generic. Make as many as the setting needs:

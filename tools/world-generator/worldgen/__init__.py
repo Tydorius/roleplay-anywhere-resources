@@ -18,7 +18,7 @@ class RegionOut:
                  group=None, ground_color=None, wall_color=None):
         self.name = name
         self.rect = rect
-        self.kind = kind          # zone | road | path | yard | building | room | boundary
+        self.kind = kind          # zone | road | path | yard | post | building | room | boundary
         self.parent = parent      # parent region name (nesting), or None
         self.wall = wall
         self.ground = ground
@@ -1157,7 +1157,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     starts |= world.reserved
     connected = checks.flood(world, starts, blocked)
     taken = set()
-    schedules = schedule_mod.plan_schedules(world, plan.npcs + [plan.player])
+    schedules = schedule_mod.plan_schedules(world, plan.npcs + [plan.player], connected)
     for person in plan.npcs + [plan.player]:
         is_player = person is plan.player
         sched, start_region = schedules[person.name]
