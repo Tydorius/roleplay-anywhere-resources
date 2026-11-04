@@ -122,7 +122,7 @@ class Inns(unittest.TestCase):
     def test_the_kind_decides_what_is_an_inn(self):
         class D:
             def __init__(self, kind, purpose):
-                self.kind, self.purpose = kind, purpose
+                self.kind, self.purpose, self.status = kind, purpose, ""
 
         class B:
             def __init__(self, kind, purpose):

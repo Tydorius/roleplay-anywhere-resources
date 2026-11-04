@@ -70,7 +70,7 @@ Fixing this is the cheapest and most valuable part of the design, and it needs n
 ```
 P0 frame
 P1 world         the zones and buildings, as today
-P1b cast  (new)  every building's status, the households, the roles, the visits
+P1b cast  (new)  every building's status and the households
 P2 catalogue
 P3 interiors     see each building's status, so an abandoned smithy looks abandoned
 P4 zones
@@ -111,33 +111,36 @@ budget. Off-stage people cost the same to write as anyone else.
 
 ## P1b: the cast
 
-One short model call. It sees the frame, every zone and every building's kind and purpose, and
-replies with a status for each building, the households, and any visits and unlocks.
+One model call. It sees the frame, every zone and every building's kind and purpose, and replies
+with a status for each building and the households.
 
 ```json
 {
   "buildings": [
     {"name": "Brannoc's Cottage", "status": "home"},
-    {"name": "The Spent Sail", "status": "staffed",
-     "roles": [{"role": "innkeeper", "shift": "evening", "sells": true, "home": "Innkeepers' House"},
-               {"role": "cook", "shift": "day"}]},
-    {"name": "The Old Forge", "status": "occasional", "why": "no smith since the plague; the caravan's smith works it when he's here",
-     "roles": [{"role": "travelling smith", "sells": true, "presence": "visit", "visit": "The Salt Caravan"}]},
-    {"name": "Chandler's Shop", "status": "vacant", "why": "the chandler died; the lease is open",
-     "roles": [{"role": "chandler", "sells": true, "presence": "unlock", "unlock": "Estate Standing"}]},
+    {"name": "The Spent Sail", "status": "staffed"},
+    {"name": "The Old Forge", "status": "occasional", "why": "no smith since the plague; the caravan's smith works it when he's here"},
+    {"name": "Chandler's Shop", "status": "vacant", "why": "the chandler died; the lease is open"},
     {"name": "The Watchtower", "status": "abandoned", "why": "the coast watch was disbanded a generation ago"}
   ],
   "households": [
     {"home": "Brannoc's Cottage", "couples": 1,
-     "members": [{"kind": "adult", "role": "fisher", "work": "Herring Strand"},
-                 {"kind": "adult", "role": "net-mender", "work": "Brannoc's Cottage"},
-                 {"kind": "child"}, {"kind": "child"}, {"kind": "elder"}]}
+     "members": [{"kind": "adult", "role": "fisher", "work": "Herring Strand", "sells": false},
+                 {"kind": "adult", "role": "net-mender", "work": "Brannoc's Cottage", "sells": true},
+                 {"kind": "child"}, {"kind": "child"}, {"kind": "elder"}]},
+    {"home": "Innkeepers' House", "couples": 1,
+     "members": [{"kind": "adult", "role": "innkeeper", "work": "The Spent Sail", "shift": "evening", "sells": true},
+                 {"kind": "adult", "role": "cook", "work": "The Spent Sail", "sells": false}]}
   ],
-  "visits": [{"name": "The Salt Caravan", "everyDays": 90, "stayDays": 5, "from": "On the Road"}],
-  "unlocks": [{"variable": "Estate Standing", "at": 60}],
-  "offstage": [{"place": "The Upper Stacks", "people": 6, "why": "corporate tenants the player will only meet by going up"}]
+  "noFamilies": "only when the world has none: a ship's crew, a barracks"
 }
 ```
+
+**As built:** everyone is a household member, and a staffed building's workers are the members whose
+`work` names it. An earlier draft also listed roles on each building, which counted the same person
+twice. Visits, unlocks and off-stage people aren't in the reply yet: they arrive with build steps 4
+and 6, and until then an `occasional` or `vacant` building has its status and its `why` and nobody
+in it.
 
 ### Building status
 
@@ -169,8 +172,8 @@ exempt when the frame says so.
 
 ### Roles
 
-A role has a `shift` (`day`, `evening` or `night`, default `day`), an optional `home`, `sells`, and
-a `presence`: `resident` (default), `visit`, `unlock` or `offstage`.
+An adult member has a `role`, a `work`, a `shift` (`day`, `evening` or `night`, default `day`) and
+`sells`. Steps 4 and 6 add a `presence`: `resident` (default), `visit`, `unlock` or `offstage`.
 
 `sells: true` writes `merchant: {}` on the person, and `sells: false` stops it. The game stocks a
 merchant by itself (`gen_merchant_stock`). A person with no `sells` falls back to the rule in
@@ -183,19 +186,21 @@ Not every role gets filled. The prompt says so, and the budget forces the choice
 
 ### Checks
 
-`check_p1b`: every building has a status; every home has members; `2 × couples ≤ adults`; a role's
-building exists; a `visit` or `unlock` it names exists; `everyDays` is 7-365; the total sits in the
-budget or the fixed range. `sanitize_p1b` treats a building with no status as `staffed` when it
-has a work purpose and `home` when P1 gave it residents, and logs it.
+`check_p1b`: every building has a status, and a shut one says why; every household has members;
+`2 × couples ≤ adults`; a member's work exists and isn't shut; a staffed building has a worker; a
+unit building holds what its copies bed; the share of family homes. A range the user set binds both
+ways, and the map's own budget only binds from above. `sanitize_p1b` treats a building with no
+status as `home` when P1 gave it residents and `staffed` otherwise, and logs it.
 
 If P1b produces nothing, the run carries on as today.
 
 ## P5: filling the slots
 
-Each zone batch lists its open slots instead of "about N people": the household members and roles
-still unmade. Follow-up batches run until they're filled (the mechanism from 2204a95).
+Each zone batch lists its open slots instead of "about N people", whole households at a time, so
+couples are named together. Follow-up batches run until they're filled.
 
-- `check_p5` gains: each person claims a slot, by `home` and `role`.
+- Each person replies with a slot number. Code fills in home, work, role, shift and `sells` from the
+  slot, so the model can't get them wrong, and a wrong or missing slot goes back as an error.
 - A slot still unfilled after the retries is dropped with a log line, and its building keeps its
   status. No world fails over a missing cook.
 - The bed-bound rule from 0d7f4f3 stays as the backstop. Without a cast it behaves as it does now.
@@ -362,8 +367,8 @@ over the cap, and P1b under about 10k tokens.
 
 1. **Schedules and the room cap.** Code only: shifts default to `day`, evenings spread, staff
    spread, cap applied, editor check. Worth shipping alone.
-2. **`sells`** from a simple rule (done), then from the cast (with step 3).
-3. **P1b cast, with statuses and households,** feeding P3 and P5. Dialog checkbox.
+2. **`sells`** from a simple rule (done), then from the cast (done, with step 3).
+3. **P1b cast, with statuses and households,** feeding P3 and P5. Dialog checkbox. (Done.)
 4. **Off-stage regions.** Generator and editor exceptions.
 5. **Live checks 1-4** on a hand-made scenario.
 6. **Clocks and unlocks in P6,** with the plain path.

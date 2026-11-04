@@ -3,6 +3,7 @@ all the plan has to say is who: an explicit `sells` on the person decides; else
 a trade in their role, or being the person who runs a shop or an inn."""
 import re
 
+from .cast import UNPEOPLED
 from .schedule import is_inn
 
 # trades that sell what they make; "miller's wife" and an apprentice don't
@@ -22,9 +23,11 @@ SELL_WORD = re.compile(r"\bsell(s|ing)?\b")
 
 
 def is_shop(building):
-    """Whether customers buy things here: an inn, or a shop by its kind. A
+    """Whether customers buy things here: an open inn, or a shop by its kind. A
     "store" is a shop too, and costs nothing if it's really a storehouse."""
     design = building.layout.design
+    if design.status in UNPEOPLED:
+        return False
     return (is_inn(building) or bool(SHOP_KIND.search((design.kind or "").lower()))
             or bool(SELL_WORD.search((design.purpose or "").lower())))
 

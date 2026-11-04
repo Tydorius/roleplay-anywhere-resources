@@ -13,6 +13,7 @@ chapel are for waking hours only.
 import random
 import re
 
+from .cast import UNPEOPLED
 from .model import bed_capacity, is_spare_room
 
 # who sleeps, works and relaxes when; the blocks of a shift cover the 24 hours
@@ -245,8 +246,11 @@ def work_location(world, person):
 def is_inn(building):
     """Whether a building is where people drink of an evening, by whole words:
     a cabin and a dining hall are not inns. Its kind decides, so the innkeeper's
-    cottage "beside the inn" is not one; the purpose speaks only without a kind."""
+    cottage "beside the inn" is not one; the purpose speaks only without a kind.
+    An inn that's shut draws nobody."""
     design = building.layout.design
+    if design.status in UNPEOPLED:
+        return False
     return bool(INN_WORD.search((design.kind or design.purpose or "").lower()))
 
 
@@ -288,6 +292,11 @@ def _shift(person):
     """The person's (sleep, work, leisure blocks) hours: day unless the plan
     gave them an evening or night shift."""
     return SHIFTS.get((person.extras or {}).get("shift"), SHIFTS["day"])
+
+
+def _stays_home(person):
+    """Children and elders have no work: they spend the day and evening at home."""
+    return (person.extras or {}).get("kind") in ("child", "elder")
 
 
 def room_cap(world, name):
@@ -429,17 +438,20 @@ def plan_schedules(world, people):
         load.add(sleeps[person.name], _block_hours(*_shift(person)["sleep"]))
     for person in people:
         hours = _block_hours(*_shift(person)["work"])
-        works[person.name] = _place_work(world, load, person, hours, sleeps[person.name])
+        works[person.name] = _home_spot(world, person, sleeps[person.name]) if _stays_home(person) \
+            else _place_work(world, load, person, hours, sleeps[person.name])
         load.add(works[person.name], hours)
     for person in people:
         hours = [h for b in _shift(person)["leisure"] for h in _block_hours(*b)]
-        leisures[person.name] = _place_evening(world, load, person, hours, sleeps[person.name])
+        leisures[person.name] = works[person.name] if _stays_home(person) \
+            else _place_evening(world, load, person, hours, sleeps[person.name])
         load.add(leisures[person.name], hours)
     out = {}
     for person in people:
         shift = _shift(person)
         blocks = [(shift["sleep"], sleeps[person.name], "sleep"),
-                  (shift["work"], works[person.name], "work")]
+                  (shift["work"], works[person.name],
+                   "leisure" if _stays_home(person) else "work")]
         blocks += [(b, leisures[person.name], "leisure") for b in shift["leisure"]]
         # a block that wraps past midnight goes last, as the builder expects
         blocks.sort(key=lambda b: (b[0][1] <= b[0][0] and b[0][1] != "00:00", b[0][0]))

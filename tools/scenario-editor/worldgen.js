@@ -123,10 +123,11 @@ function wgFormHtml(drafts) {
     ${field("Other instructions or requests",
             `<textarea id="wgNotes" rows="4" placeholder="anything the boxes above don't cover: a plot outline, places or people you want, house rules…"></textarea>`,
             "Optional. Sent word for word to the frame, the world plan, the people and the story phases.")}
+    ${field("Residents",
+            `<label class="check"><input type="checkbox" id="wgPopMap" checked> Let the map decide</label>
+             <div class="wg-pop"><input type="number" id="wgPopLo" value="${pop.default[0]}" min="${pop.min}" max="${pop.max}" step="1" disabled> <span class="note">to</span> <input type="number" id="wgPopHi" value="${pop.default[1]}" min="${pop.min}" max="${pop.max}" step="1" disabled></div>`,
+            `A hamlet is about 10–20 people, a village 20–45, one city block 30–60. Busy maps are fine: people are spread out so no room gets crowded. Untick to set your own number (${pop.min}–${pop.max}).`)}
     <div class="wg-row">
-      ${field("Residents",
-              `<div class="wg-pop"><input type="number" id="wgPopLo" value="${pop.default[0]}" min="${pop.min}" max="${pop.max}" step="1"> <span class="note">to</span> <input type="number" id="wgPopHi" value="${pop.default[1]}" min="${pop.min}" max="${pop.max}" step="1"></div>`,
-              `How many people live there (${pop.min}–${pop.max}).`)}
       ${field("Provider", `<select id="wgProvider">${wgProviderOptions()}</select>`)}
       ${field("Seed", `<input type="number" id="wgSeed" value="1" min="0" step="1">`,
               "Same idea and seed, same world.")}
@@ -235,10 +236,17 @@ function wgAnswers(dlg) {
 }
 
 function wgPopulation(dlg) {
+  if ($("wgPopMap").checked) return "map";
   const clamp = v => Math.min(wgBank.population.max, Math.max(wgBank.population.min, v));
   const lo = clamp(parseInt($("wgPopLo").value, 10) || wgBank.population.default[0]);
   const hi = clamp(parseInt($("wgPopHi").value, 10) || wgBank.population.default[1]);
   return [lo, Math.max(lo, hi)];
+}
+
+/** The checkbox and the two number boxes it switches off. */
+function wgSetPopMap(on) {
+  $("wgPopMap").checked = on;
+  $("wgPopLo").disabled = $("wgPopHi").disabled = on;
 }
 
 // ---------------------------------------------------------------- Frame it
@@ -398,7 +406,8 @@ async function wgResumeDraft(dlg, id) {
   wgRenderQuestions(dlg, mode);
   $("wgIdea").value = d.idea || "";
   $("wgNotes").value = d.notes || "";
-  if (d.population) { $("wgPopLo").value = d.population[0]; $("wgPopHi").value = d.population[1]; }
+  wgSetPopMap(!Array.isArray(d.population));
+  if (Array.isArray(d.population)) { $("wgPopLo").value = d.population[0]; $("wgPopHi").value = d.population[1]; }
   if (d.provider && [...$("wgProvider").options].some(o => o.value === d.provider)) $("wgProvider").value = d.provider;
   if (d.seed != null) $("wgSeed").value = d.seed;
   dlg.querySelectorAll("[data-ext]").forEach(cb => cb.checked = (d.extensions || []).includes(cb.dataset.ext));
@@ -521,6 +530,7 @@ function wgBindForm(dlg) {
       } catch { $("wgEstimate").textContent = ""; }
     }, 400);
   };
+  $("wgPopMap").onchange = e => wgSetPopMap(e.target.checked);
   $("wgIdea").oninput = estimate;
   dlg.querySelectorAll("[data-ext]").forEach(cb => cb.onchange = () => {
     // floors needs portals (its stairs are portals): turning floors on turns portals on too

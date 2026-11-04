@@ -136,6 +136,17 @@ the home's beds. Beds in guest rooms and wards are **spare**: they need no
 owner, P5 doesn't count them as homes, and they stay empty unless a home runs
 out of its own beds.
 
+**P1b, the cast**, runs straight after P1 on any `generate` run. It gives every
+building a status (`home`, `staffed`, `occasional`, `vacant` or `abandoned`, with
+a `why` for the shut ones) and lists the households, adults with a role, a
+workplace, a shift and whether they sell, plus children and elders who stay home
+by day. It writes `residents` and `couples` back onto the plan, so beds work as
+before. Later phases see each shut building's state and story in its building
+line, so P3 furnishes it that way and the quests can use it. P5 then names one
+person per slot, and code fills in the facts. The dialog's **Let the map decide**
+(population `"map"`) sizes the cast from each zone's kind; a range the user sets
+is firm. If P1b produces nothing, the run carries on without a cast.
+
 Everyone's day is then planned together. Staff spread over their workplace's
 rooms, each person gets a seeded evening place near home (the nearest inn in
 their zone, home, or the ground outside), and no walled room holds more than
@@ -163,7 +174,7 @@ defaults (the Coin, an even 25-point spread).
 
 ## Cost and time
 
-From measured runs: **18–27 model calls, 130–220k tokens, 25–50 minutes**
+From measured runs: **25–35 model calls, 200–320k tokens, 30–55 minutes**
 per world (a reasoning-friendly `max_tokens` of 16000 is preset; flash-tier
 models are cheap — expect cents on a typical API plan). `estimate()` reports
 these numbers; for a saved plan it counts the calls exactly (P0 when the plan

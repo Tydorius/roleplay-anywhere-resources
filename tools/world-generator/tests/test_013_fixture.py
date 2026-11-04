@@ -51,7 +51,7 @@ class MockedRunsPerMode(unittest.TestCase):
         for mode in ("quick", "short", "medium", "long"):
             with self.subTest(mode), tempfile.TemporaryDirectory() as tmp:
                 client = ScriptedClient(self._replies())
-                s = api.generate("a mill village", client=client, seed=1,
+                s = api.generate("a mill village", client=client, seed=1, cast=False,
                                  out_dir=tmp,
                                  questionnaire={"mode": mode, "answers": {},
                                                 "population": [20, 40]})

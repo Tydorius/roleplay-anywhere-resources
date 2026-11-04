@@ -198,6 +198,7 @@ class BuildingDesign:
     stairs_room: str = ""                              # ground room the stair rises from
     units: object = None                               # UnitSpec when it repeats units
     couples: int = 0                                   # P1: pairs of residents sharing a bed
+    status: str = ""                                   # P1b: home, staffed, vacant...
     upper: list = field(default_factory=list)          # [UpperStorey]
     rooms: list = field(default_factory=list)          # [RoomSpec]
     connections: list = field(default_factory=list)    # [[roomA, roomB]]
@@ -631,6 +632,7 @@ def _parse_building(d, designs):
         upper=upper,
         units=units,
         couples=(0 if units else max(0, int(d.get("couples", 0) or 0))),
+        status=d.get("status", "") or "",
         rooms=rooms,
         connections=[list(c) for c in g.get("connections", [])],
         entrance_room=g.get("entrance", {}).get("room", rooms[0].name if rooms else "Hall"),
@@ -1003,7 +1005,7 @@ def parse_plan(data):
                                         kind=own.kind, purpose=own.purpose,
                                         size_class=own.size_class,
                                         storeys=own.storeys, units=own.units,
-                                        couples=own.couples,
+                                        couples=own.couples, status=own.status,
                                         yard=own.yard, yard_props=own.yard_props)
                 by_name[p.building] = b
                 z.buildings[z.buildings.index(own)] = b
@@ -1051,7 +1053,7 @@ def parse_plan(data):
                       description=d.get("description", ""), physicalDescription=d.get("physicalDescription", ""),
                       extras={k: v for k, v in d.items()
                               if k in ("animationId", "level", "inventory", "equipment",
-                                       "partner", "shift", "sells")})
+                                       "partner", "shift", "sells", "kind")})
 
     npcs = [person(n) for n in data.get("npcs", [])]
     player = person(data.get("player", {"name": "Player"}))

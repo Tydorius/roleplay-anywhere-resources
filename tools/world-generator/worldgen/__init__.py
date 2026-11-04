@@ -761,6 +761,7 @@ def run(plan_data, seed=1, extensions=()):
     # or a storey grows (and the map with it) until everything the model
     # planned is placed
     growth = {}
+    stalled = 0
     for _ in range(MAX_GROWTH_PASSES):
         grow = _growth_scale(plan, world, growth)
         if not grow:
@@ -771,7 +772,10 @@ def run(plan_data, seed=1, extensions=()):
         retry, retry_data = attempt(growth)
         if _dropped_count(retry) > _dropped_count(world):
             break   # growing lost more than it placed; keep the better build
+        stalled = stalled + 1 if _dropped_count(retry) == _dropped_count(world) else 0
         world, winner = retry, retry_data
+        if stalled >= MAX_STALLED_PASSES:
+            break   # room isn't what it lacks, and each pass costs more than the last
     # a settlement zone sized to estimates can miss its measured building
     # coverage; one corrective pass, keeping whichever build landed closer
     # (nothing newly unplaced first, then the smaller coverage drift)
@@ -790,6 +794,7 @@ def run(plan_data, seed=1, extensions=()):
 GROWTH_FACTOR = 1.4     # how much a zone's content sizing grows per pass
 GROWTH_ALLY = 1.15      # the other built zones grow with it, keeping their street blocks
 MAX_GROWTH_PASSES = 8   # 1.4^8 is about 14x: enough for the fullest plan
+MAX_STALLED_PASSES = 2  # passes in a row that placed nothing more before giving up
 
 
 def _dropped_count(world):

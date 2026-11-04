@@ -18,6 +18,7 @@ import os
 BANK_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "questions.json")
 
 MODES = ("quick", "short", "medium", "long")
+MAP_DECIDES = "map"            # the population: no range, the cast sizes the world
 MAX_OTHER_CHARS = 400          # free text is a steer, not an essay
 MAX_NOTES_CHARS = 6000         # "Other instructions" may hold a plot outline
 
@@ -98,7 +99,10 @@ def population_limits(path=BANK_PATH):
 
 def sanitize_population(pair=None, path=BANK_PATH):
     """A resident range as [lo, hi]: the default when nothing usable was
-    given, clamped to the bank's allowed range, low before high."""
+    given, clamped to the bank's allowed range, low before high. MAP_DECIDES
+    stays as it is: the cast sizes the world, and there is no range."""
+    if pair == MAP_DECIDES:
+        return MAP_DECIDES
     default, lo_min, hi_max = population_limits(path)
     if isinstance(pair, (list, tuple)) and len(pair) == 2:
         try:

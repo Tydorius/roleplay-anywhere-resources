@@ -55,8 +55,9 @@ The dialog's steps:
    (14, and the model asks up to five more of its own) questionnaire from the generator's
    question bank.
 2. **Answer the questions** with option chips (a question may allow two picks; **Other**
-   opens a text box; everything can be skipped) and set the **resident count** (20–40 by
-   default, 5–60 allowed).
+   opens a text box; everything can be skipped). **Let the map decide** starts ticked, and the
+   generator then sizes the population from the map, marks which buildings are in use, and
+   leaves room for families. Untick it to set your own **resident count** (5–60).
 3. **Other instructions or requests** (optional) takes anything the questions don't cover,
    such as a plot outline, places or people you want, or house rules. It goes word for word to
    the frame, the world plan, the people and the story phases.
@@ -77,7 +78,7 @@ The dialog's steps:
   OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
   subscription. Add one in the dialog under **Provider settings**: it is stored in the generator's
   gitignored `providers.json`, and only the last four characters of the key are ever shown again.
-- **Cost and time.** A world takes **18–27 model calls, 130–220k tokens, 25–50 minutes** (the
+- **Cost and time.** A world takes **25–35 model calls, 200–320k tokens, 30–55 minutes** (the
   dialog shows the estimate before you start). On a flash-tier model that is cents on a typical
   API plan.
 - **Progress and cancel.** The dialog shows the phase as it goes (the frame, world plan,

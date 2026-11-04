@@ -10,9 +10,10 @@ import tempfile
 import threading
 import time
 import unittest
+from unittest import mock
 
 import launcher
-from worldgen import llm
+from worldgen import api, llm
 from tests.test_013_frame import a_frame
 from tests.test_model import ScriptedClient, canned_replies
 
@@ -157,6 +158,12 @@ class TestProviderCheck(unittest.TestCase):
 class TestWorlds(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.mkdtemp(prefix="worldgen-launcher-")
+        # the scripted replies are the worlds without a cast; test_cast has its own
+        generate = api.generate
+        patcher = mock.patch.object(api, "generate",
+                                    lambda *a, **k: generate(*a, cast=False, **k))
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)

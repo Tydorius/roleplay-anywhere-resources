@@ -441,6 +441,10 @@ def _spine_geometry(compound, plans):
         hub_w, hub_a = fp(hub)[0], fp(hub)[1]
     cross = max(ld + sw + rd, 2 * max(ld, rd) + sw if hub else 0, hub_w + 2)
     scx = (cross - sw) // 2
+    # along a corridor one clear cell keeps strangers apart, since the corridor
+    # is the way in. A cluster has none: the doors between touching parts are
+    # the only way past the hub, so its parts butt
+    gap = 1 if sw else 0
 
     placements, corridors = {}, []
 
@@ -452,12 +456,12 @@ def _spine_geometry(compound, plans):
     if cap_s is not None:
         f = fp(cap_s)
         put(cap_s, Rect(scx + sw // 2 - f[0] // 2, y, f[0], f[1]))
-        y += f[1] + 1
+        y += f[1] + gap
     spine_y0 = y
 
     # where the hub sits on the along axis, from the columns' extent alone
-    col_span = max(sum(along_of[p.building] + 1 for p in lefts),
-                   sum(along_of[p.building] + 1 for p in rights))
+    col_span = max(sum(along_of[p.building] + gap for p in lefts),
+                   sum(along_of[p.building] + gap for p in rights))
     hub_rect = None
     if hub is not None:
         if compound.hub_pos == "start":
@@ -466,7 +470,12 @@ def _spine_geometry(compound, plans):
             hub_y = spine_y0 + col_span
         else:
             hub_y = spine_y0 + max(0, (col_span - hub_a) // 2)
-        hub_rect = Rect(scx + sw // 2 - hub_w // 2, hub_y, hub_w, hub_a)
+        hub_x = scx + sw // 2 - hub_w // 2
+        if not sw and not (lefts and rights):
+            # one column: over it, not astride the line, or a narrow hub
+            # shares too little wall for a door
+            hub_x = scx - hub_w if lefts else scx
+        hub_rect = Rect(hub_x, hub_y, hub_w, hub_a)
         put(hub, hub_rect)
 
     # the columns, stacked with one clear cell between parts (no doors
@@ -479,12 +488,12 @@ def _spine_geometry(compound, plans):
             # columns stay south of it — hub_y = spine_y0 + col_span leaves
             # them exactly the span they need
             if hub_rect is not None and compound.hub_pos != "end" \
-                    and cy < hub_rect.y1 + 2:
-                cy = hub_rect.y1 + 2
+                    and cy < hub_rect.y1 + 1 + gap:
+                cy = hub_rect.y1 + 1 + gap
             c = cross_of[p.building]
             a = along_of[p.building]
             put(p, Rect(scx - c if side == "left" else scx + sw, cy, c, a))
-            cy += a + 1
+            cy += a + gap
         return cy
 
     col_end = max(column(lefts, "left"), column(rights, "right"))

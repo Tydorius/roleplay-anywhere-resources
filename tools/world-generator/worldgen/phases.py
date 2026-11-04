@@ -13,6 +13,7 @@ import re
 import string
 import time
 
+from . import cast as cast_mod
 from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
@@ -118,7 +119,11 @@ def _building_line(b):
     r = f", sleeps {n}" if _check_int(n) and n > 0 else ""
     c = b.get("couples")
     cp = f", {c} couple(s) sharing a double bed" if _check_int(c) and c > 0 else ""
-    return f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}{r}{cp}: {b.get('purpose', '')}{y}"
+    line = f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{s}{r}{cp}: {b.get('purpose', '')}{y}"
+    if b.get("status") in cast_mod.STATUS_NOTES:
+        why = f" {b['why']}" if b.get("why") else ""
+        line += f" [{b['status']}, {cast_mod.STATUS_NOTES[b['status']]}.{why}]"
+    return line
 
 
 def _units_line(b):
@@ -637,6 +642,8 @@ def _mode_line(mode):
 
 def _population_line(population):
     from . import questions as questions_mod
+    if population == questions_mod.MAP_DECIDES:
+        return "plan the place the idea needs; how many people live there is decided later"
     lo, hi = questions_mod.sanitize_population(population)
     return f"house {lo}-{hi} residents (aim near {(lo + hi) // 2}); the map must bed them"
 
@@ -867,6 +874,10 @@ def check_p1(d, floors=False, residents=None):
     bz = {b.get("name"): z.get("name") for z in zones if isinstance(z, dict)
           for b in (z.get("buildings") or []) if isinstance(b, dict)}
     errors.extend(compound_errors(d.get("compounds") or [], zn, bz))
+    cn = {c.get("name") for c in (d.get("compounds") or []) if isinstance(c, dict)}
+    for name in sorted(n for n in (zn | cn) & set(bz) if _is_str(n)):
+        errors.append(f"{name!r} names both a building and the zone or compound around it; "
+                      "every region needs its own name")
     part_names = {p.get("building") for c in (d.get("compounds") or [])
                   if isinstance(c, dict)
                   for p in (c.get("parts") or []) if isinstance(p, dict)}
@@ -1094,7 +1105,34 @@ def sanitize_p1(d, log, floors=False, residents=None):
             kept.append(c)
     d["compounds"] = kept
     d["zones"] = zones
+    separate_names(d, log)
     return d
+
+
+def separate_names(d, log):
+    """A zone or compound sharing a building's name: both become regions, and
+    the builder refuses two regions of one name after every call has been paid
+    for. The building keeps its name and the land around it takes a new one."""
+    buildings = {b["name"] for z in d["zones"] for b in z["buildings"]}
+    for z in d["zones"]:
+        if z["name"] in buildings:
+            old, new = z["name"], f"{z['name']} Grounds"
+            log.append((f"zone {old}", f"renamed {new!r}: a building has that name"))
+            z["name"] = new
+            for other in d["zones"]:
+                other["adjacentTo"] = [new if a == old else a
+                                       for a in other.get("adjacentTo") or []]
+            for road in d.get("roads") or []:
+                for end in ("from", "to"):
+                    if road.get(end) == old:
+                        road[end] = new
+            for c in d.get("compounds") or []:
+                if c.get("zone") == old:
+                    c["zone"] = new
+    for c in d.get("compounds") or []:
+        if c.get("name") in buildings:
+            log.append((f"compound {c['name']}", "renamed: a building has that name"))
+            c["name"] = f"{c['name']} Grounds"
 
 
 # -------------------------------------------------------- P2 prop catalogue
@@ -1369,10 +1407,15 @@ def design_double_beds(design, bed_templates):
 def resident_target(questionnaire):
     """The N P1 plans homes for: the population range's midpoint, None when
     nobody asked for a population."""
-    if not questionnaire:
+    if not questionnaire or _map_decides(questionnaire):
         return None
     lo, hi = _population_range(questionnaire)
     return (lo + hi) // 2
+
+
+def _map_decides(questionnaire):
+    from . import questions as questions_mod
+    return (questionnaire or {}).get("population") == questions_mod.MAP_DECIDES
 
 
 def _population_range(questionnaire):
@@ -2655,7 +2698,7 @@ def _make_caller(client, stats, progress, cancel, exts=()):
 
 
 def run_phases(idea, client, extensions=(), progress=None, cancel=None,
-               frame=None, questionnaire=None):
+               frame=None, questionnaire=None, cast=False):
     """Run the model phases and return (plan_dict, stats). ``frame`` is an
     approved World Frame from P0 (every phase gets it in place of the bare
     idea); ``questionnaire`` ``{"mode", "answers", "population"}`` runs P0
@@ -2663,7 +2706,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     asks again. Raises PhaseError when a structural phase (P0, P1, P2 cannot
     be salvaged, Cancelled when ``cancel()`` turns true between calls.
     ``extensions`` adds the enabled mod extensions' prompt fragments and
-    contract checks. ``progress`` gets one dict per model call, before it is
+    contract checks. ``cast`` runs P1b, which decides each building's status
+    and every household before P5 names them; a run where it produces nothing
+    carries on without one. ``progress`` gets one dict per model call, before it is
     made: ``{"phase": "P3", "label": "building 3/10: The Old Mill",
     "calls": 5, "tokens": 1234}`` — ``calls`` counts the call about to
     happen."""
@@ -2701,16 +2746,37 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     if not p1["zones"]:
         raise PhaseError("P1 produced no usable zones")
 
-    # ---- P2: the prop catalogue
     setting_line = _setting_line(p1, frame)
     # the people and story calls also get the "Other instructions" (a plot
     # outline belongs there); the many building and zone calls do not
     story_line = setting_line + _notes_block((frame or {}).get("notes"))
-    zone_lines = "\n".join(
-        f"- {_zone_line(z)}\n"
-        f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
-        f"  outdoor features: {', '.join(map(str, z.get('outdoor') or [])) or 'none'}"
-        for z in p1["zones"])
+
+    def world_lines():
+        return "\n".join(
+            f"- {_zone_line(z)}\n"
+            f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
+            f"  outdoor features: {', '.join(map(str, z.get('outdoor') or [])) or 'none'}"
+            for z in p1["zones"])
+
+    # ---- P1b: the cast. P2 onward see each building's status, and P5 fills
+    # its slots instead of working to a number
+    the_cast = None
+    if cast:
+        lo, hi, strict = cast_mod.budget(p1, None if target is None
+                                         else _population_range(questionnaire))
+        d = call("p1b", "p1b-cast", event=("P1b", "the cast"),
+                 setting_line=story_line, zone_lines=world_lines(),
+                 budget_line=cast_mod.budget_line(lo, hi, strict),
+                 _validate=lambda x: cast_mod.check_p1b(x, p1, lo, hi, strict))
+        the_cast = cast_mod.sanitize_p1b(d, p1, hi, stats["dropped"])
+        if the_cast is None:
+            stats["dropped"].append(("cast", "P1b gave no households: "
+                                             "the people are made without one"))
+        else:
+            cast_mod.apply_cast(p1, the_cast)
+
+    # ---- P2: the prop catalogue
+    zone_lines = world_lines()
     # a home with couples needs a double bed in the catalogue, so P2 is told
     needs_double = any(_check_int(b.get("couples")) and b["couples"] > 0
                        for z in p1["zones"] for b in z["buildings"])
@@ -2964,7 +3030,56 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     # follow-up batches for the rest (the first live couples run left three
     # cottages empty), never past the asked-for range
     peopled = [z for z in p1["zones"] if z["buildings"]]
+    open_slots = cast_mod.slots_of(the_cast) if the_cast else []
+
+    def fill_zone(i, z):
+        """Name the slots of this zone's households, a batch at a time. A slot
+        still open after the retries is dropped, and its home keeps its beds."""
+        homes = {b["name"] for b in z["buildings"]}
+        mine = [s for s in open_slots if s["home"] in homes]
+        for n in range(-(-len(mine) // P5_BATCH) + 2):
+            left = [s for s in open_slots if s["home"] in homes]
+            if not left:
+                return
+            batch = cast_mod.next_batch(left, P5_BATCH)
+
+            def check(x):
+                errors = cast_mod.fill_slots(x, batch)
+                return errors + check_p5(x, set(building_names), set(zone_names), need=("npcs",),
+                                         roster={p["name"] for p in roster},
+                                         couples=couples_left())
+
+            d = call(f"p5-{slug(z['name'])}" + (f"-{n + 1}" if n else ""), "p5-people",
+                     event=("P5", f"people {i}/{len(peopled)}: {z['name']}"
+                                  + (f" (batch {n + 1})" if n else "")),
+                     setting_line=story_line, zone_line=_zone_line(z),
+                     zone_names_line=", ".join(zone_names),
+                     building_lines=_p5_blines(z), roster_block=_roster_block(),
+                     quota_line=cast_mod.quota_line(batch), _validate=check)
+            if d is None:
+                stats["dropped"].append((f"people of {z['name']}", f"no JSON for batch {n + 1}"))
+                continue
+            cast_mod.fill_slots(d, batch)
+            ids = {s["slot"] for s in batch}
+            d["npcs"] = [p for p in d.get("npcs") or []
+                         if isinstance(p, dict) and p.get("slot") in ids]
+            made = sanitize_p5(d, building_names, zone_names, stats["dropped"], need=("npcs",),
+                               taken={p["name"] for p in roster}, max_npcs=len(batch),
+                               couples=couples_left())
+            for p in made["npcs"]:
+                filled = p.pop("slot")
+                open_slots[:] = [s for s in open_slots if s["slot"] != filled]
+                roster.append(p)
+                homes_taken[p["home"]] = homes_taken.get(p["home"], 0) + 1
+        for s in open_slots:
+            if s["home"] in homes:
+                stats["dropped"].append((f"slot {s['slot']}",
+                                         f"unfilled: {s.get('role', s['kind'])} at {s['home']}"))
+
     for i, z in enumerate(peopled, 1):
+        if the_cast:
+            fill_zone(i, z)
+            continue
         for n in range(P5_ZONE_BATCHES):
             room = sum(free_spots().values()) if bed_bound else P5_BATCH
             if room <= 0:
@@ -3010,7 +3125,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
 
     # below the asked-for range after the zones: top up with one more batch
     # rather than failing, spread over any bedded building
-    if target is not None:
+    if target is not None and not the_cast:
         lo, hi = _population_range(questionnaire)
         for extra in range(3):
             if len(roster) >= lo:
@@ -3159,6 +3274,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         if p1.get(key):
             plan[key] = p1[key]
     plan.update(systems)
+    if the_cast:
+        plan["cast"] = {"households": the_cast["households"]}
     if frame is not None:
         plan["frame"] = frame
     if questionnaire is not None:

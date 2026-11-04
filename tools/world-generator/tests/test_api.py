@@ -18,7 +18,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
         events = []
         client = ScriptedClient(canned_replies())
         with tempfile.TemporaryDirectory() as tmp:
-            summary = api.generate("a mill village", client=client, seed=3,
+            summary = api.generate("a mill village", client=client, seed=3, cast=False,
                                    out_dir=tmp, progress=events.append)
             zip_path = os.path.join(tmp, summary["zip"])
             self.assertTrue(os.path.exists(zip_path), summary)
@@ -52,7 +52,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(api.Cancelled) as caught:
-                api.generate("a mill village", client=client, seed=1,
+                api.generate("a mill village", client=client, seed=1, cast=False,
                              out_dir=tmp, cancel=cancel)
         # the run stopped at the first P3 call, which was never made
         self.assertIn("p3", str(caught.exception))
@@ -81,8 +81,8 @@ class TestEstimate(unittest.TestCase):
     def test_idea_uses_the_measured_runs(self):
         e = api.estimate("a fogbound harbour town of smugglers")
         self.assertTrue(e["calls_range"][0] <= e["calls"] <= e["calls_range"][1])
-        self.assertGreaterEqual(e["tokens"], 130000)
-        self.assertLessEqual(e["tokens"], 220000)
+        self.assertGreaterEqual(e["tokens"], 200000)
+        self.assertLessEqual(e["tokens"], 320000)
         self.assertTrue(e["minutes_range"][0] <= e["minutes"] <= e["minutes_range"][1])
         self.assertEqual(e["basis"].startswith("measured"), True)
 

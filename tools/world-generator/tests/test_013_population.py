@@ -10,7 +10,8 @@ from tests.test_model import (CANNED_COTTAGE, CANNED_MILL, CANNED_P1,
                               CANNED_TEMPLATES, ScriptedClient, canned_replies)
 from tests.test_013_frame import a_frame
 from worldgen import phases
-from worldgen.phases import building_cap, check_p1, check_p3, check_p5
+from worldgen.phases import (building_cap, check_p1, check_p3, check_p5, sanitize_p1,
+                             separate_names)
 
 
 def _dump(obj):
@@ -38,6 +39,33 @@ def populated_replies(p1=None, batch=None, player=None):
         _dump(batch if batch is not None else CANNED_P5_BATCH),
         _dump(player if player is not None else CANNED_P5_PLAYER),
     ]
+
+
+class TestRegionNames(unittest.TestCase):
+    """The builder refuses two regions of one name, so P1 mustn't send them."""
+
+    def clash(self):
+        d = json.loads(json.dumps(CANNED_P1))
+        d["zones"][0]["buildings"][0]["name"] = "Millbrook"
+        return d
+
+    def test_a_building_named_like_its_zone_is_an_error(self):
+        self.assertTrue(any("names both" in e for e in check_p1(self.clash())))
+
+    def test_the_zone_takes_a_new_name_everywhere(self):
+        log = []
+        d = sanitize_p1(self.clash(), log)
+        self.assertEqual(d["zones"][0]["name"], "Millbrook Grounds")
+        self.assertEqual(d["zones"][0]["buildings"][0]["name"], "Millbrook")
+        self.assertEqual(d["zones"][1]["adjacentTo"], ["Millbrook Grounds"])
+        self.assertEqual(d["roads"][0]["from"], "Millbrook Grounds")
+        self.assertTrue(any("renamed" in why for _what, why in log))
+
+    def test_a_compound_named_like_a_building_moves_aside(self):
+        d = {"zones": [{"name": "Z", "buildings": [{"name": "Keep"}]}],
+             "compounds": [{"name": "Keep", "zone": "Z"}]}
+        separate_names(d, [])
+        self.assertEqual(d["compounds"][0]["name"], "Keep Grounds")
 
 
 class TestBuildingCap(unittest.TestCase):

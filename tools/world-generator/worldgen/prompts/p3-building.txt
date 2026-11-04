@@ -29,6 +29,8 @@ Reply with ONE JSON object with exactly these fields:
   "yard": null or {"props": [{"template": "catalogue name", "count": 1, "hint": "outdoor hint"}]}
 }
 
+- A BUILDING line ending in [brackets] says what state it's in: design it that
+  way, in the rooms' purposes and the furniture you choose.
 - 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
   door; the entrance room must be one of "rooms".
 - The LOOT POOLS list names the pools the catalogue's containers draw from.
