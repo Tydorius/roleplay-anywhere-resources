@@ -168,6 +168,14 @@ class TestSleepNames(unittest.TestCase):
         self.assertTrue(is_sleep_name("Crate", ["bed"]))
         self.assertFalse(is_sleep_name("Crate", ["storage"]))
 
+    def test_whole_words_only(self):
+        for name in ("Straw Bed", "Bunk bed", "Featherbed", "Daybed", "Bedroll",
+                     "Camp cot", "Hammock", "Twin beds"):
+            self.assertTrue(is_sleep_name(name), name)
+        for name in ("Bedside locker", "Bedroom dresser", "Cottage hearth",
+                     "Herb bed", "Flower bed", "Seedbed", "Embedded panel"):
+            self.assertFalse(is_sleep_name(name), name)
+
 
 class TestP2Contract(unittest.TestCase):
     def test_check_p2_accepts_bool_forsleep(self):
@@ -670,6 +678,37 @@ class TestSleepRoomAssignment(unittest.TestCase):
         self.assertEqual(locs["Bex Tollerand"], "Cabin 2")
         self.assertEqual(locs["Rae Okonkwo"], "Cabin 7")
         self.assertEqual(locs["Wren Calloway"], "Cabin 12")
+
+    def test_a_unit_copy_gets_only_the_beds_it_lacks(self):
+        from types import SimpleNamespace as NS
+        from worldgen.layout_building import _unit_furniture
+        bed = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.3,
+                             description="", physicalDescription="", tags=["bed"],
+                             rule="", extras={"forSleep": True})
+        double = ObjectTemplate(name="Double bed", size=(2, 2), walkability=0.3,
+                                description="", physicalDescription="", tags=["bed"],
+                                rule="", extras={"forSleep": True})
+        chair = ObjectTemplate(name="Chair", size=(1, 1), walkability=0.0,
+                               description="", physicalDescription="", tags=[], rule="")
+        templates = {t.name: t for t in (bed, double, chair)}
+        from worldgen.model import FurniturePlan, RoomSpec
+
+        def beds(residents, *lines):
+            unit = NS(residents=residents,
+                      design=NS(furniture=list(lines),
+                                rooms=[RoomSpec(name="Room", purpose="a room", share="small")]))
+            out = _unit_furniture(NS(units=unit), templates)
+            return sum(f.count for f in out if f.template == "Bed")
+
+        self.assertEqual(beds(2), 2, "an unfurnished unit gets one per resident")
+        self.assertEqual(beds(2, FurniturePlan("Chair", "Room")), 2)
+        self.assertEqual(beds(2, FurniturePlan("Bed", "Room", count=2)), 2,
+                         "its own two beds are enough: no more stamped")
+        self.assertEqual(beds(3, FurniturePlan("Bed", "Room", count=1)), 3,
+                         "one of its own, two stamped")
+        self.assertEqual(beds(2, FurniturePlan("Double bed", "Room")), 0,
+                         "a double bed sleeps both")
+        self.assertEqual(beds(0, FurniturePlan("Chair", "Room")), 0)
 
     def test_a_home_naming_a_unit_building_fills_its_copies(self):
         from worldgen import schedule

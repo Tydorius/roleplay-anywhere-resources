@@ -246,8 +246,8 @@ class TestHospitalCatalogue(unittest.TestCase):
         w = worldgen.run(self.data, seed=1)
         spec = worldgen.build_spec(w, self.data)
         placements = placements_of(spec, "Bedside locker")
-        self.assertEqual(len(placements), 20,
-                         "the two wards' twelve patient rooms and two sluices")
+        self.assertEqual(len(placements), 8,
+                         "the north ward's six patient rooms and the two sluices")
         invs = {tuple(map(tuple, p["inventory"]))
                 for p in placements if isinstance(p, dict)}
         self.assertGreater(len(invs), 1, "the ward lockers all drew the same stock")

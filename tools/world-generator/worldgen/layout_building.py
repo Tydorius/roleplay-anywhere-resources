@@ -19,7 +19,8 @@ import dataclasses
 import math
 
 from .layout_map import _sizes_mins
-from .model import FurniturePlan, Rect, RoomSpec, SIDE_DX_DY, shared_wall_cells
+from .model import (FurniturePlan, Rect, RoomSpec, SIDE_DX_DY, bed_capacity,
+                    shared_wall_cells)
 
 FOOTPRINTS = {   # sizeClass -> (w, h); the outer ring is wall, so usable space is w-2 x h-2
     "hut": (8, 7),
@@ -452,13 +453,16 @@ def _bed_room(unit_design):
 
 
 def _unit_furniture(design, templates):
-    """One unit copy's furniture: its own pieces plus one bed per resident."""
+    """One unit copy's furniture: its own pieces plus a bed for each resident
+    they don't already sleep (P3 usually furnishes the unit with its beds)."""
     unit = design.units
     furn = list(unit.design.furniture)
-    if unit.residents and _sleep_name(templates):
+    sleeps = sum(f.count * bed_capacity(templates[f.template]) for f in furn
+                 if f.template in templates and templates[f.template].for_sleep)
+    if unit.residents > sleeps and _sleep_name(templates):
         furn.append(FurniturePlan(template=_sleep_name(templates),
                                   room=_bed_room(unit.design),
-                                  count=unit.residents))
+                                  count=unit.residents - sleeps))
     return furn
 
 
@@ -472,10 +476,16 @@ def units_per_storey(design):
 
 
 def _unit_size(design, templates):
-    """(w, h) of one unit copy, its residents' beds included."""
+    """(w, h) of one unit copy, with room for a bed per resident on top of its
+    own furniture: a copy turned to face the corridor can stack its rooms
+    where the plan sized them side by side, and that slack keeps a bedroom
+    deep enough for its bed."""
     unit = design.units
-    d = dataclasses.replace(unit.design, furniture=_unit_furniture(design, templates))
-    return _resolve_plan(d, templates)[:2]
+    furn = list(unit.design.furniture)
+    if unit.residents and _sleep_name(templates):
+        furn.append(FurniturePlan(template=_sleep_name(templates),
+                                  room=_bed_room(unit.design), count=unit.residents))
+    return _resolve_plan(dataclasses.replace(unit.design, furniture=furn), templates)[:2]
 
 
 def units_footprint(design, templates):

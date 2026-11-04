@@ -324,7 +324,11 @@ class Road:
     kind: str = "dirt"
 
 
-SLEEP_WORDS = ("bed", "bunk", "cot", "pallet", "hammock")
+# whole words, so a "Bedside locker" and a "Cottage hearth" are not beds; a
+# featherbed and a daybed are, and a herb bed is a garden
+SLEEP_WORD = re.compile(r"\b(\w*beds?|bedrolls?|bunks?|cots?|pallets?|hammocks?)\b")
+NOT_A_BED = re.compile(r"\b(herb|flower|seed|garden|vegetable|planting|river|"
+                       r"stream|sea|oyster|kelp|truck)\s*beds?\b")
 
 # ------------------------------------------------------------------ zone kinds
 
@@ -408,10 +412,10 @@ def building_coverage_target(zone, setting=None):
 def is_sleep_name(name, tags=()):
     """True for names/tags of things a person sleeps on: beds, cots, bunks,
     pallets, hammocks (a "Straw Bed" needs no bed tag to count)."""
-    n = (name or "").lower()
-    if any(w in n for w in SLEEP_WORDS):
-        return True
-    return any(w in (t or "").lower() for t in tags or () for w in SLEEP_WORDS)
+    def sleeps(text):
+        text = (text or "").lower()
+        return bool(SLEEP_WORD.search(text)) and not NOT_A_BED.search(text)
+    return sleeps(name) or any(sleeps(t) for t in tags or ())
 
 
 # rooms whose beds are for whoever comes: a traveller, a patient. They need no

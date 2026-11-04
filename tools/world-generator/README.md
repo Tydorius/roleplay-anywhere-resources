@@ -263,7 +263,8 @@ stamps the unit copies down both sides of it, mirrored so each copy's door
 faces the corridor (the builder's own auto-connect pair). Copies are named
 `Apartment 4` plainly or `Room 204` by storey. The 28x22 footprint cap
 applies to the unit, not the block: the building's length follows from the
-count. One bed per resident is stamped inside each copy, and
+count. Each copy gets a bed for every resident its own furniture doesn't
+already sleep, and
 `BuildingLayout.residents` reports the total for the population work. Proven
 by `fixtures/apartment-block.plan.json`.
 
