@@ -144,6 +144,12 @@ their zone, home, or the ground outside), and no walled room holds more than
 may carry `"shift": "evening"` or `"night"`. See
 [POPULATION_DESIGN.md](POPULATION_DESIGN.md).
 
+Who sells is decided in `worldgen/sellers.py`. A person's `"sells"` in the plan
+decides; without one, a trade in their role sells (a baker, a smith, a vendor,
+not an apprentice), and every working shop or inn gets at least one seller, its
+owner or keeper first. Sellers are written as `merchant: {}`, and the game stocks
+them itself. The player never sells.
+
 **P6, the systems**, runs after the people in three calls — 6a rules and
 economy (narrative rules, flavor and difficulty, a currency whose format
 names a digit, a 25-point attribute spread, about 18 skills, weather from the

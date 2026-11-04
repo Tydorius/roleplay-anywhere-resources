@@ -277,6 +277,16 @@ class TestSchedulesUnderTheCap(unittest.TestCase):
             self.assertTrue(out["ok"], out)
             self.assertEqual(out["validator_errors"], 0, out)
 
+    def test_a_building_in_a_compound_is_still_in_its_zone(self):
+        from types import SimpleNamespace as NS
+        from worldgen import schedule
+        regions = {"Green": NS(parent=None), "Inn Row": NS(parent="Green"),
+                   "The Inn": NS(parent="Inn Row"), "Cottage": NS(parent="Green")}
+        world = NS(regions_by_name=regions, zones_by_name={"Green": object()})
+        self.assertEqual(schedule.zone_of(world, "The Inn"), "Green")
+        self.assertEqual(schedule.zone_of(world, "Cottage"), "Green")
+        self.assertIsNone(schedule.zone_of(world, "Nowhere"))
+
     def test_inns_are_whole_words(self):
         from worldgen.schedule import INN_WORD
         for text in ("inn", "the old tavern", "a pub", "cyber bar", "teahouse"):

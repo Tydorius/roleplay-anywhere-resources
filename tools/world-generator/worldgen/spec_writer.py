@@ -4,6 +4,8 @@ out as both spec.json and spec.py (`SPEC = json.loads(...)`).
 """
 import json
 
+from .sellers import sellers as sellers_of
+
 GROUND_MAP = {"grass": ("grass", "grass"), "dirt": ("dirt", "dirt"),
               "gravel": ("gravel", "gravel"), "stone": ("stone", "rock"),
               "wood": ("wood", "floorboards")}
@@ -154,6 +156,8 @@ def build_spec(world, plan):
             spec_t["placements"] = by_template[t.name]
         object_templates.append(spec_t)
 
+    sellers = sellers_of(world)
+
     def character(c):
         ent = {
             "name": c.name,
@@ -185,7 +189,7 @@ def build_spec(world, plan):
             ent["inventory"] = inventory
         if equipment:
             ent["equipment"] = equipment
-        if "innkeeper" in (c.person.role or "").lower() or "merchant" in (c.person.role or "").lower():
+        if c.person.name in sellers:
             ent["merchant"] = {}
         return ent
 

@@ -172,9 +172,12 @@ exempt when the frame says so.
 A role has a `shift` (`day`, `evening` or `night`, default `day`), an optional `home`, `sells`, and
 a `presence`: `resident` (default), `visit`, `unlock` or `offstage`.
 
-`sells: true` writes `merchant: {}` on the person. Today `spec_writer` only does that when the role
-contains "innkeeper" or "merchant", so bakers and smiths can't trade. The game stocks a merchant by
-itself (`gen_merchant_stock`).
+`sells: true` writes `merchant: {}` on the person, and `sells: false` stops it. The game stocks a
+merchant by itself (`gen_merchant_stock`). A person with no `sells` falls back to the rule in
+`worldgen/sellers.py`, which is all that fixtures and saved plans have: a trade in their role sells,
+apprentices don't, and each working shop or inn has at least one seller, its owner or keeper first.
+The rule can't tell a looted shop from a working one, so in the zombie fixture a watchman and a
+squatter end up selling. The cast's `sells` and `status` replace it for new worlds.
 
 Not every role gets filled. The prompt says so, and the budget forces the choice.
 
@@ -359,7 +362,7 @@ over the cap, and P1b under about 10k tokens.
 
 1. **Schedules and the room cap.** Code only: shifts default to `day`, evenings spread, staff
    spread, cap applied, editor check. Worth shipping alone.
-2. **`sells`** from a simple rule, then from the cast.
+2. **`sells`** from a simple rule (done), then from the cast (with step 3).
 3. **P1b cast, with statuses and households,** feeding P3 and P5. Dialog checkbox.
 4. **Off-stage regions.** Generator and editor exceptions.
 5. **Live checks 1-4** on a hand-made scenario.

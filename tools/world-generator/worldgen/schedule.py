@@ -187,9 +187,19 @@ def assign_sleep_rooms(world, people, couples=None):
 
 
 def zone_of(world, building_name):
-    """The zone a building sits in, from its region parent."""
+    """The zone a building sits in. A compound or a row inside the zone is its
+    region parent, so walk up past those to the zone itself."""
     r = world.regions_by_name.get(building_name)
-    return r.parent if r is not None else None
+    if r is None:
+        return None
+    parent, seen = r.parent, {building_name}
+    while parent and parent not in world.zones_by_name and parent not in seen:
+        seen.add(parent)
+        up = world.regions_by_name.get(parent)
+        if up is None or not up.parent:
+            break
+        parent = up.parent
+    return parent
 
 
 def resolve_sleep(world, person):
@@ -232,11 +242,12 @@ def work_location(world, person):
     return None
 
 
-def _is_inn(building):
+def is_inn(building):
     """Whether a building is where people drink of an evening, by whole words:
-    a cabin and a dining hall are not inns."""
+    a cabin and a dining hall are not inns. Its kind decides, so the innkeeper's
+    cottage "beside the inn" is not one; the purpose speaks only without a kind."""
     design = building.layout.design
-    return bool(INN_WORD.search(f"{design.kind or ''} {design.purpose or ''}".lower()))
+    return bool(INN_WORD.search((design.kind or design.purpose or "").lower()))
 
 
 def _inn_room(building):
@@ -253,7 +264,7 @@ def social_spot(world, person):
     """Last-resort evening spot, for someone with no home to start from: the
     world's inn if it has one, else the home zone, else the first zone."""
     for b in world.buildings:
-        if _is_inn(b):
+        if is_inn(b):
             return _inn_room(b)
     if person.home in world.zones_by_name:
         return person.home
@@ -371,7 +382,7 @@ def _nearest_inn(world, person):
     if home is None:
         return None
     zone = zone_of(world, home.layout.design.name)
-    inns = [b for b in world.buildings if _is_inn(b)
+    inns = [b for b in world.buildings if is_inn(b)
             and zone_of(world, b.layout.design.name) == zone]
     if not inns:
         return None
