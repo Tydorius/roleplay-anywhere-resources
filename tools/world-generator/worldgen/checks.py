@@ -432,6 +432,53 @@ def _zone_fill(world):
     return out
 
 
+def _cut_off_cells(world, openings, jumps):
+    """Free cells inside a region that nobody can walk to from the start, by
+    the game's own rule rather than the builder's: walls are thin lines on a
+    walled region's border, a step across one needs the cell inside it to be an
+    opening, and every other cell of a room can be stood on. Objects that are
+    solid block their cells. (scenario_checks.py's Walls is the reference.)"""
+    W, H = world.grid
+    solid = set()
+    for o in world.objects:
+        t = world.templates[o.template]
+        if t.walkability <= 0:
+            solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + t.size[0])
+                      for y in range(o.pos[1], o.pos[1] + t.size[1])}
+    inside = {}
+    for r in world.regions:
+        if r.wall:
+            for c in r.rect.cells():
+                inside.setdefault(c, set()).add(r.name)
+
+    def can_step(a, b):
+        ia, ib = inside.get(a, set()), inside.get(b, set())
+        return all(a in openings[n] for n in ia - ib) and all(b in openings[n] for n in ib - ia)
+
+    start = world.player.pos if isinstance(world.player.pos, tuple) else tuple(world.player.pos)
+    seen, todo = {start}, [start]
+    while todo:
+        c = todo.pop()
+        x, y = c
+        steps = [n for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+                 if 0 <= n[0] < W and 0 <= n[1] < H and n not in solid and can_step(c, n)]
+        for n in steps + list(jumps.get(c, ())):
+            if n not in seen:
+                seen.add(n)
+                todo.append(n)
+    cells = set()
+    for r in world.regions:
+        if r.kind != "boundary":         # the floors extension's sealed dark strip
+            cells |= r.rect.cells()
+    # the strips a building leaves between its flats are behind walls on every
+    # side, with nothing in them: nobody is meant to stand there
+    for r in world.regions:
+        rooms = [c.rect.cells() for c in world.regions if c.parent == r.name]
+        if r.wall and rooms:
+            cells -= r.rect.cells() - set().union(*rooms)
+    return sorted(cells - solid - seen)
+
+
 def run_checks(world):
     openings = compute_openings(world)
     blocked, doors = walkability_grid(world, openings)
@@ -537,6 +584,9 @@ def run_checks(world):
         if area and b_area:
             building_coverage[zn] = round(100.0 * b_area / area, 1)
 
+    # ---- every cell someone could stand on, not just one per room
+    cut_off = _cut_off_cells(world, openings, jumps) if player else []
+
     # ---- characters reachable and on free cells
     char_issues = []
     for c in world.characters:
@@ -571,6 +621,9 @@ def run_checks(world):
         "density": {"rooms": room_density, "outdoor_per_100_cells": zone_density,
                     "building_coverage": building_coverage},
         "zone_fill": _zone_fill(world),
+        "open_cells_cut_off": {"total": len(cut_off), "cells": [list(c) for c in cut_off[:20]]},
+        "side_exits": [{"building": n, "room": r, "cell": list(c)}
+                       for (n, r, c) in getattr(world, "side_exits", [])],
         "doors_clear": not blocked_doors,
         "blocked_door_cells": [list(c) for c in blocked_doors],
         "walkways_clear": not blocked_walkways,

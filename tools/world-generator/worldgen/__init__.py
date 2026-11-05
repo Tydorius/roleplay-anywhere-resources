@@ -68,6 +68,7 @@ class World:
         self.reserved = set()
         self.failures = []
         self.fallbacks = []
+        self.side_exits = []
         self.default_ground = ("grass", "grass")   # the plan's dominant wild ground
         self.metrics = {}
         self.map_warnings = []      # non-fatal map notes (a grid past GRID_WARN)
@@ -985,6 +986,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.failures.extend([(w, r) if i == 0 else (f"{w} [{piece_label}]", r)
                                    for (w, r) in zout.failures])
             world.fallbacks.extend(zout.fallbacks)
+            world.side_exits.extend(zout.side_exits)
             if zout.spine_rects:
                 g, tex = zout.spine_ground
                 # the street leads the spine regions, so on a size tie the zone's

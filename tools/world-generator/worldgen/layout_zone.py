@@ -17,6 +17,7 @@ import random
 from collections import deque
 
 from . import layout_compound
+from .exits import add_exits, solid_ground
 from .hints import parse as parse_hint
 from .layout_building import building_footprint, layout_building
 from .layout_room import layout_room
@@ -76,6 +77,26 @@ class Placement:
         self.region = region   # region name the piece belongs to
 
 
+def _ring_loop(fp):
+    """The cells just outside a footprint, in order round it."""
+    x0 = min(c[0] for c in fp) - 1
+    x1 = max(c[0] for c in fp) + 1
+    y0 = min(c[1] for c in fp) - 1
+    y1 = max(c[1] for c in fp) + 1
+    return ([(x, y0) for x in range(x0, x1)] + [(x1, y) for y in range(y0, y1)]
+            + [(x, y1) for x in range(x1, x0, -1)] + [(x0, y) for y in range(y1, y0, -1)])
+
+
+def _splits_ground(fp, blocked, rect):
+    """Would something solid here join two separate obstacles? Walking round
+    it, the free cells must form one unbroken run: two runs mean it closes a
+    gap, and the ground either side of it no longer meets there. A piece may
+    stand alone or lean on one obstacle, so open ground keeps its shape however
+    many pieces go down."""
+    shut = [c in blocked or not rect.contains_cell(c) for c in _ring_loop(fp)]
+    return sum(1 for i, s in enumerate(shut) if s and not shut[i - 1]) > 1
+
+
 class BuildingOut:
     def __init__(self, layout, lot, yard_rect):
         self.layout = layout      # BuildingLayout
@@ -105,6 +126,9 @@ class ZoneOut:
         self.reserved = set()     # path + branch + entrance approach cells
         self.failures = []        # (what, reason) strings
         self.fallbacks = []       # hints that could not be met, placed anywhere free
+        self.side_exits = []      # (building or complex, room, cell) added by exits.py
+        self.ground_blocked = set()  # what stands on the open ground (see _splits_ground)
+        self.solid_props = set()  # cells of the solid props placed so far
 
 
 def _yard_rect(building_rect, design):
@@ -198,6 +222,10 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     # of placing each one, so a bad rotation can be undone); compounds go
     # in first, each as one block the other buildings pack around
     _place_buildings(zone, rect, out, rng, templates, mouths)
+
+    # ---- side doors, before anything is put down outside them
+    add_exits(out, templates)
+    out.ground_blocked = solid_ground(out)
 
     # ---- branches: reserved cells from each entrance approach to the path.
     # A compound part's courtyard-facing entrance is reached through the
@@ -295,6 +323,10 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
             # filler may pack against other filler (it never seals a reserved path)
             if ring & props_and_filler or ring & buildings_cells:
                 continue
+            if tmpl.walkability <= 0:
+                if _splits_ground(fp, out.ground_blocked, rect):
+                    continue
+                out.ground_blocked |= fp
             free_of_props |= fp
             out.props.append(Placement(f.template, pos, zone.name))
             count += 1
@@ -1744,7 +1776,9 @@ def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area
     feature = out.feature
     feature_cells = feature.cells() if feature is not None else set()
 
-    def free(pos):
+    solid = tmpl.walkability <= 0
+
+    def free(pos, spaced=True):
         fp = {(cx, cy) for cx in range(pos[0], pos[0] + w) for cy in range(pos[1], pos[1] + h)}
         if fp & occupied or fp & out.reserved:
             return False
@@ -1752,7 +1786,21 @@ def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area
             return False
         if feature is not None and not hint.center and fp & feature_cells:
             return False
+        if solid:
+            # a gap beside every solid prop, so a row of stalls has ways through
+            if spaced and set(_ring_loop(fp)) & out.solid_props:
+                return False
+            if _splits_ground(fp, out.ground_blocked, out.rect):
+                return False
         return True
+
+    def put(pos):
+        fp = {(cx, cy) for cx in range(pos[0], pos[0] + w) for cy in range(pos[1], pos[1] + h)}
+        occupied.update(fp)
+        if solid:
+            out.solid_props |= fp
+            out.ground_blocked |= fp
+        out.props.append(Placement(prop.template, pos, area_name))
 
     zone_center = out.rect.center()
     if hint.center and feature is not None:
@@ -1790,9 +1838,7 @@ def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area
             break
         if not free(pos):
             continue
-        fp = {(cx, cy) for cx in range(pos[0], pos[0] + w) for cy in range(pos[1], pos[1] + h)}
-        occupied |= fp
-        out.props.append(Placement(prop.template, pos, area_name))
+        put(pos)
         placed_count += 1
     if placed_count < prop.count and candidates:
         # the hint's own ground is full (a front band is mostly street):
@@ -1805,16 +1851,14 @@ def _place_props(out, prop, area_rect, templates, rng, occupied, buildings, area
         rest = [(x, y) for x in range(area_rect.x, area_rect.x1 - w + 2)
                 for y in range(area_rect.y, area_rect.y1 - h + 2)]
         rest.sort(key=lambda p: abs(p[0] - bc[0]) + abs(p[1] - bc[1]))
-        for pos in rest:
-            if placed_count >= prop.count:
-                break
-            if not free(pos):
-                continue
-            fp = {(cx, cy) for cx in range(pos[0], pos[0] + w)
-                  for cy in range(pos[1], pos[1] + h)}
-            occupied |= fp
-            out.props.append(Placement(prop.template, pos, area_name))
-            placed_count += 1
+        # the last pass lets pieces touch, though never across a gap
+        for spaced in (True, False):
+            for pos in rest:
+                if placed_count >= prop.count:
+                    break
+                if free(pos, spaced):
+                    put(pos)
+                    placed_count += 1
     if placed_count < prop.count:
         out.failures.append((f"prop {prop.template}",
                              f"placed {placed_count} of {prop.count} in {area_name}"))

@@ -394,6 +394,21 @@ One pool per genre, as a plan writes them:
 }
 ```
 
+## Ways out and ways through
+
+A building's design gives it one entrance, and a spine's only door to the outside
+is its gate. After the buildings stand, `worldgen/exits.py` adds side doors until
+every room is within `EXIT_REACH` (24 cells, 48 m) of a door to open ground, and
+any complex of two or more parts has at least two ways out. It stops at four new
+doors, or sooner if no door would shorten the longest walk. It prefers a public
+room when one will do. A walled enclosure keeps its walls, and a void zone has no
+ground to step onto. `metrics.json` lists what it added under `side_exits`.
+
+Outdoors, a solid prop keeps one free cell from other solid props where there is
+room, so a row of stalls has ways through. It may never join two separate
+obstacles, wherever it goes. `open_cells_cut_off` in `metrics.json` counts free
+cells nobody can walk to, by the game's own wall rule.
+
 ## How zones are sized
 
 A zone's ground follows what stands on it, not its size class alone. A zone
