@@ -31,6 +31,18 @@ class ScriptedClient(llm.Client):
         self._queue = list(replies)
         self.sent = []
 
+    def call(self, phase, system, user, validate=None, max_retries=2):
+        """P2's items call takes nothing from the queue: a script writes the
+        catalogue as one reply, and its items are read from there."""
+        if phase != "p2-items":
+            return super().call(phase, system, user, validate, max_retries)
+        for raw in self._queue:
+            parsed, _error = llm.extract_json(raw)
+            if isinstance(parsed, dict) and "templates" in parsed:
+                return {"items": parsed.get("items") or [],
+                        "lootPools": parsed.get("lootPools") or {}}
+        return {"items": [], "lootPools": {}}
+
     def _request(self, messages, max_tokens=None):
         self.sent.append([dict(m) for m in messages])
         usage = {"prompt": 10, "completion": 5, "total": 15}

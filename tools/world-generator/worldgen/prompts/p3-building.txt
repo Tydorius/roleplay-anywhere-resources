@@ -7,7 +7,7 @@ BUILDING: ${building_line}
 COMPOUND: ${compound_line}
 UNITS: ${units_line}
 
-CATALOGUE (name | size in cells | placement rule):
+CATALOGUE (name | size in cells | note on where it goes; a note is never a hint):
 ${catalogue_lines}
 
 LOOT POOLS (name: the items each holds) — empty when the catalogue has none:

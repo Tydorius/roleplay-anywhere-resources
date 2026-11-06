@@ -145,7 +145,9 @@ def _units_line(b):
 
 
 def _catalogue_lines(templates):
-    return "\n".join(f"- {t['name']} | {t['size'][0]}x{t['size'][1]} | {t.get('rule', '')}"
+    """P3's and P4's catalogue. The rule is marked as a note: printed bare where
+    a hint would go, one model copied it as a hint 93 times."""
+    return "\n".join(f"- {t['name']} | {t['size'][0]}x{t['size'][1]} | note: {t.get('rule', '')}"
                      for t in templates)
 
 
@@ -497,6 +499,144 @@ def hint_errors(hint, templates=None, buildings=None):
     return errors
 
 
+def repair_hint(hint, templates=(), buildings=()):
+    """A bad placement hint cut down to the words of the vocabulary in it: a
+    reference with the wrong case is corrected, one to nothing is dropped, and
+    a plain-English token keeps any vocabulary it holds ("north wall")."""
+    by_template = {n.lower(): n for n in templates}
+    by_building = {n.lower(): n for n in buildings}
+    keep = []
+    for token in re.split(r"[+,;]", hint if isinstance(hint, str) else ""):
+        for fixed in _repair_token(token.strip().strip("<>").strip(), by_template, by_building):
+            if fixed not in keep:
+                keep.append(fixed)
+    return "+".join(keep)
+
+
+def _repair_token(token, by_template, by_building):
+    key, _, value = token.partition(":")
+    key, value = key.strip().lower(), value.strip().strip("<>").strip().lower()
+    if key in ("beside", "around", "behind", "front") and value:
+        if key in ("beside", "around") and value in by_template:
+            return [f"{key}:{by_template[value]}"]
+        if key != "around" and value in by_building:
+            return [f"{key}:{by_building[value]}"]
+        return []
+    if key == "along" and value in hints_mod.SIDES:
+        return [f"wall:{value}"]
+    if token and not hints_mod.parse(token).unknown:
+        return [token]
+    low = token.lower()
+    found = re.findall(r"wall:(?:north|south|east|west)", low)
+    found += [f"wall:{side}" for side in re.findall(r"\b(north|south|east|west)\s+wall\b", low)]
+    found += [word for word in ("corner", "center", "near_door", "away_from_door") if word in low]
+    if "centre" in low:
+        found.append("center")
+    return found
+
+
+def _note(log, what, why):
+    """A repair's log line, once: a retried reply repeats the same fix."""
+    if (what, why) not in log:
+        log.append((what, why))
+
+
+def _repair_entry_hints(entries, ctx, templates, log, buildings=None):
+    """Bad hints in a list of furniture or props, repaired in place."""
+    for e in entries if isinstance(entries, list) else []:
+        if isinstance(e, dict) and hint_errors(e.get("hint", ""), templates=templates,
+                                               buildings=buildings):
+            fixed = repair_hint(e["hint"], templates, buildings or ())
+            _note(log, ctx, f"{e.get('template')} hint {e['hint']!r} -> {fixed!r}")
+            e["hint"] = fixed
+
+
+def _repair_rooms(owner):
+    """A building or unit reply whose rooms are bare names, or carry their own
+    furniture, reshaped into the contract. One model's inn lost every piece
+    because the furniture sat inside the rooms."""
+    rooms = owner.get("rooms")
+    if not isinstance(rooms, list):
+        return
+    owner["rooms"] = [{"name": r, "share": "medium", "purpose": r} if _is_str(r) else r
+                      for r in rooms]
+    for r in owner["rooms"]:
+        if not isinstance(r, dict) or not isinstance(r.get("furniture"), list):
+            continue
+        if not isinstance(owner.get("furniture"), list):
+            owner["furniture"] = []
+        for f in r.pop("furniture"):
+            if isinstance(f, dict):
+                f.setdefault("room", r.get("name"))
+                owner["furniture"].append(f)
+
+
+def repair_p1(d, log):
+    """What a retry would only delete. Runs before check_p1 on every reply, so
+    these never cost a call: residents 0 on a workplace, and residents or
+    couples on a unit building. A "unit building" of one copy that also says
+    who lives there is an ordinary home: as units it got a long corridor and
+    a bed for nobody."""
+    for z in (d.get("zones") or []) if isinstance(d, dict) else []:
+        for b in (z.get("buildings") or []) if isinstance(z, dict) else []:
+            if not isinstance(b, dict):
+                continue
+            if _check_int(b.get("residents")) and b["residents"] == 0:
+                b.pop("residents")
+            units = b.get("units")
+            if not units:
+                continue
+            if isinstance(units, dict) and units.get("count") == 1 and b.get("residents"):
+                _note(log, f"building {b.get('name')}", "one copy: an ordinary building, not units")
+                b["units"] = None
+                continue
+            for key in ("residents", "couples"):
+                if b.get(key) is not None:
+                    _note(log, f"building {b.get('name')}",
+                          f"{key} dropped: a unit building houses its copies x units.residents")
+                    b.pop(key)
+
+
+def repair_p3(d, building_name, templates, has_yard, log):
+    """What a retry would only delete or reshape, before check_p3: rooms given
+    as names, furniture nested in rooms, a yard the plan has no room for, and
+    hints outside the vocabulary."""
+    if not isinstance(d, dict):
+        return
+    ctx = f"building {building_name}"
+    unit = d.get("unit") if isinstance(d.get("unit"), dict) else None
+    _repair_rooms(d)
+    if unit:
+        _repair_rooms(unit)
+    if d.get("yard") and not has_yard:
+        _note(log, ctx, "yard dropped: the plan has no yard here")
+        d["yard"] = None
+    _repair_entry_hints(d.get("furniture"), ctx, templates, log)
+    if unit:
+        _repair_entry_hints(unit.get("furniture"), ctx, templates, log)
+    if isinstance(d.get("yard"), dict):
+        _repair_entry_hints(d["yard"].get("props"), ctx, templates, log)
+
+
+def repair_p4(d, zone_name, templates, buildings, log):
+    """Hints outside the vocabulary, repaired before check_p4."""
+    if isinstance(d, dict):
+        _repair_entry_hints(d.get("props"), f"zone {zone_name}", templates, log,
+                            buildings=set(buildings))
+
+
+def repair_player(d, log):
+    """A player carrying more than the five starting items loses the last few."""
+    p = d.get("player") if isinstance(d, dict) else None
+    if not isinstance(p, dict):
+        return
+    inv = p.get("inventory") if isinstance(p.get("inventory"), list) else []
+    eq = p.get("equipment") if isinstance(p.get("equipment"), dict) else {}
+    while len(inv) + len(eq) > 5:
+        gone = inv.pop() if inv else eq.pop(list(eq)[-1])
+        _note(log, "player", f"starting item {gone!r} dropped: five at most")
+
+
 def _prop_errors(props, ctx, templates, buildings=None, max_count=MAX_COUNT):
     errors = []
     names = set()
@@ -713,7 +853,7 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
                  notes_block=_notes_block(notes),
                  _validate=check_p0_clarify)
         if d is None:
-            raise PhaseError("P0-clarify produced no JSON at all")
+            raise PhaseError(_no_reply("P0-clarify", client))
         d = sanitize_p0_clarify(d, stats["dropped"])
         clarify_qs = d["questions"]
         if clarify_qs:
@@ -732,7 +872,7 @@ def run_frame(client, mode, answers=None, idea="", population=None, clarify=None
              clarify_block=cblock, notes_block=_notes_block(notes),
              _validate=check_p0)
     if d is None:
-        raise PhaseError("P0 produced no JSON at all")
+        raise PhaseError(_no_reply("P0", client))
     frm = sanitize_p0(d, stats["dropped"])
     if (notes or "").strip():
         frm["notes"] = notes.strip()
@@ -1154,14 +1294,23 @@ def _pool_entries(raw):
 
 
 def check_p2(d, needs_double=False):
-    """``needs_double``: a home in the plan has couples, so the catalogue
-    must hold a sleep object that sleeps two (at least 2 cells both ways)."""
+    """A whole catalogue, both of P2's replies together."""
+    errors = check_p2_templates(d, needs_double)
+    if isinstance(d, dict) and isinstance(d.get("templates"), list) and d["templates"]:
+        errors = errors + check_p2_items(d)
+    return errors[:MAX_ERRORS]
+
+
+def check_p2_items_reply(d):
+    """P2's first call, which is there to make the items."""
+    if not isinstance(d, dict) or not isinstance(d.get("items"), list) or not d["items"]:
+        return ["P2: the reply must be {\"items\": [...], \"lootPools\": {...}}, "
+                "with items a non-empty list"]
+    return check_p2_items(d)[:MAX_ERRORS]
+
+
+def check_p2_items(d):
     errors = []
-    if not isinstance(d, dict) or not isinstance(d.get("templates"), list) \
-            or not d["templates"]:
-        return ["P2: the reply must be {\"templates\": [...]}, a non-empty list"]
-    if len(d["templates"]) > 40:
-        errors.append(f"templates: {len(d['templates'])} is too many; use 12-30")
     items = d.get("items", [])
     if not isinstance(items, list):
         errors.append("items: must be a list of item templates (or omitted)")
@@ -1202,6 +1351,18 @@ def check_p2(d, needs_double=False):
         for n in entries:
             if not _is_str(n):
                 errors.append(f"loot pool {pname!r}: item name {n!r} is not a string")
+    return errors
+
+
+def check_p2_templates(d, needs_double=False):
+    """``needs_double``: a home in the plan has couples, so the catalogue
+    must hold a sleep object that sleeps two (at least 2 cells both ways)."""
+    errors = []
+    if not isinstance(d, dict) or not isinstance(d.get("templates"), list) \
+            or not d["templates"]:
+        return ["P2: the reply must be {\"templates\": [...]}, a non-empty list"]
+    if len(d["templates"]) > 40:
+        errors.append(f"templates: {len(d['templates'])} is too many; use 12-30")
     seen = set()
     for i, t in enumerate(d["templates"]):
         ctx = f"templates[{i}]"
@@ -2680,11 +2841,22 @@ def _make_caller(client, stats, progress, cancel, exts=()):
     def call(phase, tname, event=None, **kw):
         if cancel is not None and cancel():
             raise Cancelled(f"cancelled before the {phase} call")
+        shown = event or (phase.upper(), tname)
         if progress is not None:
-            progress({"phase": (event or (phase.upper(), tname))[0],
-                      "label": (event or (phase.upper(), tname))[1],
+            progress({"phase": shown[0], "label": shown[1],
                       "calls": client.calls + 1,
                       "tokens": client.tokens["total"]})
+
+        def waiting(w):
+            if cancel is not None and cancel():
+                raise Cancelled(f"cancelled while the provider was busy, during {phase}")
+            if progress is not None and w["first"]:
+                progress({"phase": shown[0],
+                          "label": f"{shown[1]}: the provider is busy (HTTP {w['code']}), "
+                                   f"trying again in {w['pause']}s",
+                          "calls": client.calls, "tokens": client.tokens["total"]})
+
+        client.on_wait = waiting
         t0 = time.time()
         before = (client.retries, client.tokens["total"])
         result = client.call(phase, "You generate scenario data for a map RPG. "
@@ -2703,6 +2875,15 @@ def _make_caller(client, stats, progress, cancel, exts=()):
         return result
 
     return call
+
+
+def _no_reply(phase, client):
+    """Why a phase has nothing: the provider's own error when it never answered,
+    so a dead key or a downed model doesn't read as the model failing."""
+    why = getattr(client, "last_error", None)
+    if why:
+        return f"{phase} got no reply from the provider: {why}"
+    return f"{phase} produced no JSON at all"
 
 
 def run_phases(idea, client, extensions=(), progress=None, cancel=None,
@@ -2747,9 +2928,10 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     target = resident_target(questionnaire)
     p1 = call("p1", "p1-world", event=("P1", "the world plan"),
               idea=(f"{idea}\n{fbrief}" if fbrief else idea),
-              _validate=lambda x: check_p1(x, floors=floors, residents=target))
+              _validate=lambda x: (repair_p1(x, stats["dropped"]),
+                                   check_p1(x, floors=floors, residents=target))[1])
     if p1 is None:
-        raise PhaseError("P1 produced no JSON at all")
+        raise PhaseError(_no_reply("P1", client))
     p1 = sanitize_p1(p1, stats["dropped"], floors=floors, residents=target)
     if not p1["zones"]:
         raise PhaseError("P1 produced no usable zones")
@@ -2788,11 +2970,23 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     # a home with couples needs a double bed in the catalogue, so P2 is told
     needs_double = any(_check_int(b.get("couples")) and b["couples"] > 0
                        for z in p1["zones"] for b in z["buildings"])
+    # two calls: as one reply it ran past every budget a small model had, and
+    # a world survives empty containers but not a missing catalogue. Items go
+    # first so a template can name its default pool
+    stock = call("p2-items", "p2-items", event=("P2", "the items"),
+                 setting_line=setting_line, zone_lines=zone_lines,
+                 _validate=check_p2_items_reply)
+    if stock is None:
+        stats["dropped"].append(("items", f"{_no_reply('P2', client)}; containers stay empty"))
+        stock = {}
+    pool_list = [n for (n, _p) in _pool_entries(stock.get("lootPools")) if _is_str(n)]
     p2 = call("p2", "p2-catalogue", event=("P2", "the prop catalogue"),
               setting_line=setting_line, zone_lines=zone_lines,
-              _validate=lambda x: check_p2(x, needs_double))
+              pool_names_line=", ".join(pool_list) or "(none)",
+              _validate=lambda x: check_p2_templates(x, needs_double))
     if p2 is None:
-        raise PhaseError("P2 produced no JSON at all")
+        raise PhaseError(_no_reply("P2", client))
+    p2["items"], p2["lootPools"] = stock.get("items") or [], stock.get("lootPools") or {}
     p2 = sanitize_p2(p2, stats["dropped"])
     if not p2["templates"]:
         raise PhaseError("P2 produced no usable templates")
@@ -2829,16 +3023,24 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     n_buildings = sum(1 for z in p1["zones"] for b in z["buildings"]
                       if b["name"] not in same_as_parts)
     seen_buildings = 0
+
+    def p3_check(x, b):
+        repair_p3(x, b["name"], tnames, bool(b.get("yard")), stats["dropped"])
+        return check_p3(x, b["name"], tnames, bool(b.get("yard")),
+                        storeys=(b.get("storeys", 1) if floors else None),
+                        units=b.get("units"), pools=pool_names, beds=bed_templates,
+                        residents=b.get("residents"), couples=b.get("couples"))
+
     for z in p1["zones"]:
         keep = []
         for b in z["buildings"]:
-            seen_buildings += 1
             if b["name"] in same_as_parts:
                 stats["dropped"].append(
                     (f"building {b['name']}",
                      f"P3 skipped: sameAs copies {same_as_parts[b['name']]!r}'s design"))
                 keep.append(b)
                 continue
+            seen_buildings += 1
             zl = _zone_line(z)
             d = call(f"p3-{slug(b['name'])}", "p3-building",
                      event=("P3", f"building {seen_buildings}/{n_buildings}: {b['name']}"),
@@ -2847,11 +3049,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                      compound_line=_compound_line(p1.get("compounds") or [], z, b),
                      units_line=_units_line(b), pool_lines=pool_lines,
                      building_name=b["name"],
-                     _validate=lambda x, n=b["name"], y=bool(b.get("yard")),
-                     s=(b.get("storeys", 1) if floors else None),
-                     u=b.get("units"), r=b.get("residents"), cp=b.get("couples"):
-                     check_p3(x, n, tnames, y, storeys=s, units=u, pools=pool_names,
-                              beds=bed_templates, residents=r, couples=cp))
+                     _validate=lambda x, b=b: p3_check(x, b))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
@@ -2894,7 +3092,9 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                  event=("P4", f"zone {i}/{n_zones}: {z['name']}"),
                  setting_line=setting_line, zone_line=_zone_line(z),
                  building_lines=blines, catalogue_lines=catalogue,
-                 _validate=lambda x, n=z["name"]: check_p4(x, n, tnames, building_names))
+                 _validate=lambda x, n=z["name"]: (
+                     repair_p4(x, n, tnames, building_names, stats["dropped"]),
+                     check_p4(x, n, tnames, building_names))[1])
         if d is None:
             stats["dropped"].append((f"zone {z['name']}", "dressing: no JSON, using dirt paths"))
             z["dressing"] = {"paths": "dirt", "props": [], "filler": []}
@@ -3052,6 +3252,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             batch = cast_mod.next_batch(left, P5_BATCH)
 
             def check(x):
+                cast_mod.pair_partners(x, batch)
                 errors = cast_mod.fill_slots(x, batch)
                 return errors + check_p5(x, set(building_names), set(zone_names), need=("npcs",),
                                          roster={p["name"] for p in roster},
@@ -3175,10 +3376,11 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
              setting_line=story_line, role_line=role_line,
              building_lines=_p5_blines(), roster_block=_roster_block(),
              item_lines=item_lines,
-             _validate=lambda x: check_p5(x, set(building_names), set(zone_names),
-                                          set(bedded_buildings()),
-                                          items=set(item_names), need=("player",),
-                                          roster={p["name"] for p in roster}))
+             _validate=lambda x: (repair_player(x, stats["dropped"]),
+                                  check_p5(x, set(building_names), set(zone_names),
+                                           set(bedded_buildings()),
+                                           items=set(item_names), need=("player",),
+                                           roster={p["name"] for p in roster}))[1])
     if d is None:
         stats["dropped"].append(("player", "P5 produced no JSON; using a default player"))
         player = sanitize_p5({"player": {}}, building_names, zone_names,

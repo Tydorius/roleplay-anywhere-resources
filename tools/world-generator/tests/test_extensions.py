@@ -11,7 +11,8 @@ PHASES = ("p1-world", "p2-catalogue", "p3-building", "p4-zone", "p5-people")
 
 KW = {
     "p1-world": {"idea": "a mill village"},
-    "p2-catalogue": {"setting_line": "SETTING", "zone_lines": "ZONES"},
+    "p2-catalogue": {"setting_line": "SETTING", "zone_lines": "ZONES",
+                     "pool_names_line": "POOLS"},
     "p3-building": {"setting_line": "SETTING", "zone_line": "ZONE",
                     "building_line": "BUILDING", "catalogue_lines": "CATALOGUE",
                     "compound_line": "none; this building stands on its own",

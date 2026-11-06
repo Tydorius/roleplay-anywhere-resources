@@ -1,0 +1,44 @@
+
+The world plan below is fixed. Write what its containers hold: the items of this
+setting and the loot pools that hand them out. The furniture comes in a later
+call; you are naming things people carry, not placing anything.
+
+WORLD: ${setting_line}
+
+THE PLAN:
+${zone_lines}
+
+Reply with ONE JSON object:
+{"items": [
+  {"name": "unique name",
+   "type": "wieldable|head|face|necklace|innerTorso|torso|gloves|pants|boots|ring|consumable|misc|material",
+   "quality": "common|uncommon|rare|epic|legendary",
+   "value": 5,
+   "description": "one in-world sentence",
+   "physicalDescription": "what it looks like as an icon, ending with the words white background"}
+ ],
+ "lootPools": {
+  "Kitchen cupboard": {"items": ["Bread", "Tin cup", "Knife"], "weights": {"Knife": 0.4}},
+  "Office desk": {"items": ["Ballpoint pen", "Keycard", "Memo"]},
+  "Ship locker": {"items": ["Ration pack", "Wrench", "Med-gel"]}
+ }
+}
+
+- 30 to 60 items: what this setting's containers hold — food, tools, keys,
+  clothes, consumables, spares, a few valuables. Mostly common, some
+  uncommon, a few rare or better. "value" is a whole number, always positive,
+  on the game's own scale in every setting: one coin is worth about a US
+  dollar and an ordinary worker earns about 3000 a month, so a snack is 3, a
+  good meal 15, a sturdy tool 50. "physicalDescription" is the item's icon
+  prompt and MUST end
+  with the words "white background".
+- "lootPools" are named lists of your item names, written for THIS setting,
+  never generic. Make as many as the setting needs:
+  - by room kind: what most bathrooms hold is not what most garages hold;
+  - by building or store kind: a clothing store, a sporting goods store and
+    a pharmacy each get their own pool.
+  One item may sit in many pools (a water bottle almost everywhere), another
+  in only one. Each pool may carry "weights" (item -> relative chance, most
+  1.0) to make some items rarer in that pool on top of the quality weighting.
+
+${rules}

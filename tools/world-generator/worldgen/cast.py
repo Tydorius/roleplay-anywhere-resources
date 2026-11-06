@@ -352,11 +352,36 @@ def batch_couples(batch):
     return out
 
 
+def _pairs_in(members):
+    """The slots of each couple in one household: its adults, two by two."""
+    adults = [s["slot"] for s in members if s["kind"] == "adult"]
+    return [(adults[2 * i], adults[2 * i + 1]) for i in range(_couples_in(members))]
+
+
 def _household_line(members):
     numbers = ", ".join(str(s["slot"]) for s in members)
-    couples = _couples_in(members)
-    tail = f"; {couples} pair(s) of its adults are partners" if couples else ""
+    pairs = " and ".join(f"slots {a} and {b}" for a, b in _pairs_in(members))
+    tail = f"; {pairs} are partners" if pairs else ""
     return f"- one household, slots {numbers}{tail}:"
+
+
+def pair_partners(d, batch):
+    """Write the "partner" fields of a P5 reply from the cast, in place. The
+    household says who the couples are, so this was never the model's to get
+    wrong: one model's retries were mostly pairs it had mismatched."""
+    people = d.get("npcs") if isinstance(d, dict) else None
+    if not isinstance(people, list):
+        return
+    by_slot = {}
+    for p in people:
+        if isinstance(p, dict):
+            p.pop("partner", None)
+            by_slot.setdefault(p.get("slot"), p)
+    for house in dict.fromkeys(s["house"] for s in batch):
+        for a, b in _pairs_in([s for s in batch if s["house"] == house]):
+            one, other = by_slot.get(a), by_slot.get(b)
+            if one and other and _text(one.get("name")) and _text(other.get("name")):
+                one["partner"], other["partner"] = other["name"], one["name"]
 
 
 def slot_lines(batch):
@@ -379,7 +404,9 @@ def slot_lines(batch):
 def quota_line(batch):
     return (f"exactly these {len(batch)} people, one per slot. Each entry carries \"slot\": its "
             "number. Code fills in home and work, and an adult's role, so leave those out; a "
-            "child's or elder's \"role\" says who they are (\"the fisher's daughter\").\n"
+            "child's or elder's \"role\" says who they are (\"the fisher's daughter\"). Code "
+            "also records the partners a household line names, so leave \"partner\" out, "
+            "but both their descriptions say so in a few words.\n"
             + slot_lines(batch))
 
 

@@ -6,6 +6,8 @@
     "Remote providers need a real api_key; local servers ignore the key but",
     "the field must exist (use \"none\"). Set max_tokens generously: these are",
     "reasoning-heavy calls and a small cap truncates the JSON replies.",
+    "Optional: \"timeout\" is the seconds allowed for one reply (default 1800),",
+    "\"rate_limit_wait\" the seconds to wait out a busy provider (default 900).",
     "Test one with:  python -m worldgen check-provider <name>"
   ],
   "zai": {
@@ -41,20 +43,23 @@
     "base_url": "http://localhost:11434/v1",
     "api_key": "none",
     "model": "llama3.1:8b",
-    "max_tokens": 16000
+    "max_tokens": 16000,
+    "timeout": 3600
   },
   "lmstudio": {
     "_comment": "LM Studio local server (Developer tab -> Start Server); model is whatever you loaded. Key unused.",
     "base_url": "http://localhost:1234/v1",
     "api_key": "none",
     "model": "qwen2.5-7b-instruct",
-    "max_tokens": 16000
+    "max_tokens": 16000,
+    "timeout": 3600
   },
   "llama-swap": {
     "_comment": "llama-swap proxies to locally configured models (https://github.com/mostlygeek/llama-swap); model = a name from its config. Key unused unless you put one in front of it.",
     "base_url": "http://localhost:8080/v1",
     "api_key": "none",
     "model": "your-model",
-    "max_tokens": 16000
+    "max_tokens": 16000,
+    "timeout": 3600
   }
 }

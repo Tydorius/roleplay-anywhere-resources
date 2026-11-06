@@ -123,7 +123,7 @@ def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
 def estimate(idea_or_plan):
     """Expected calls, tokens and minutes for one generation. ``idea_or_plan``
     is an idea string, a plan dict, or a path to a plan.json. A plan pins the
-    call count exactly (P1, P1b when it has a cast, P2, P5, one per building,
+    call count exactly (P1, P1b when it has a cast, P2's two, P5, one per building,
     one per zone, plus retries); an idea gets the midpoints of the measured
     runs."""
     plan = None
@@ -158,7 +158,8 @@ def estimate(idea_or_plan):
             people[zone] = people.get(zone, 0) + len(h.get("members") or [])
         p5_calls = sum(-(-n // phases.P5_BATCH) for n in people.values()) + 1
     p0_calls = 1 if (plan.get("frame") or plan.get("questionnaire")) else 0
-    calls = p0_calls + p1b_calls + 2 + p3_calls + len(zones) + p5_calls + 3   # + the three P6 calls
+    # P1 and P2's two, then the three P6 calls at the end
+    calls = p0_calls + p1b_calls + 3 + p3_calls + len(zones) + p5_calls + 3
     retries = 6                          # the most a measured run needed
     tokens = TOKENS_PER_CALL * calls
     return {"calls": calls, "calls_range": [calls, calls + retries],
@@ -168,7 +169,7 @@ def estimate(idea_or_plan):
                               round(TOKENS_PER_CALL * (calls + retries) / float(TOKENS_PER_MINUTE), 1)],
             "basis": f"plan {plan.get('name', '')!r}: "
                      + (f"{p0_calls} P0 call + " if p0_calls else "")
-                     + ("P1, P1b, P2" if p1b_calls else "P1, P2")
+                     + ("P1, P1b, P2 x2" if p1b_calls else "P1, P2 x2")
                      + f" + {p3_calls} buildings ({same_as} sameAs copies "
                        f"skipped) + {len(zones)} zones + {p5_calls} people calls "
                        f"+ 3 systems calls (+ retries)"}

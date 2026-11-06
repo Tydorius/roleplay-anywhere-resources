@@ -324,7 +324,7 @@ class Flats(unittest.TestCase):
         cast_mod.apply_cast(p1, cast)
         slots = cast_mod.slots_of(cast)
         lines = cast_mod.slot_lines(slots)
-        self.assertIn("one household, slots 1, 2, 3; 1 pair(s)", lines)
+        self.assertIn("one household, slots 1, 2, 3; slots 1 and 2 are partners", lines)
         self.assertIn("home Tower, flat 2", lines)
         d = {"npcs": [{"slot": s["slot"], "name": f"P{s['slot']}"} for s in slots]}
         self.assertEqual(cast_mod.fill_slots(d, slots), [])

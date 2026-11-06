@@ -96,7 +96,7 @@ class TestEstimate(unittest.TestCase):
         # peopled zone + the player's call (village.json carries no frame;
         # King's Wood has no buildings, so it gets no batch)
         peopled = sum(1 for z in plan["zones"] if z["buildings"])
-        self.assertEqual(e["calls"], 2 + buildings + zones + peopled + 1 + 3)
+        self.assertEqual(e["calls"], 3 + buildings + zones + peopled + 1 + 3)
         self.assertEqual(e["calls_range"][0], e["calls"])
         self.assertGreater(e["calls_range"][1], e["calls"], "retries add calls")
         self.assertEqual(e["tokens"], 8500 * e["calls"])

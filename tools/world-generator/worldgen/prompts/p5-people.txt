@@ -21,7 +21,8 @@ Reply with ONE JSON object:
 - This batch: ${quota_line}
 - Make the people the place needs: staff on duty in opening hours, families,
   rivals, and at least one person who doesn't fit (the misfit the story wants).
-- When a building line or a household line names couple(s) or pairs, that many
+- Unless this batch says code records them: when a building line or a
+  household line names couple(s) or pairs, that many
   pairs of that home's people are partners, always two of one household: the
   two of each pair carry "partner" (the other's full name,
   each naming the other), and both descriptions say so in a few words. Nobody

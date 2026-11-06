@@ -78,8 +78,8 @@ python -m worldgen check-provider zai
 python -m unittest          # the test suite
 ```
 
-- `generate` runs the model phases (P0 the world frame, P1 world plan, P2 prop
-  catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
+- `generate` runs the model phases (P0 the world frame, P1 world plan, P2 items
+  then the prop catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
   P6 rules, perks and the story clock) and builds the scenario. The last line
   is a JSON summary.
 - `layout` re-places a saved plan with a new seed and **no model calls** —
@@ -182,13 +182,33 @@ defaults (the Coin, an even 25-point spread).
 
 From measured runs: **25–35 model calls, 200–320k tokens, 30–55 minutes**
 per world (a reasoning-friendly `max_tokens` of 16000 is preset; flash-tier
-models are cheap — expect cents on a typical API plan; P2 alone starts at 32000,
-because its catalogue often passes 16000). A reply that runs out of budget never
-counts: it goes again with twice the budget, and a run that keeps only a cut-off
-reply says so in its dropped list. `estimate()` reports
+models are cheap — expect cents on a typical API plan; P2's two calls start at
+32000, because the catalogue often passes 16000). A reply that runs out of budget
+never counts: it goes again with twice the budget, and a run that keeps only a
+cut-off reply says so in its dropped list. `estimate()` reports
 these numbers; for a saved plan it counts the calls exactly (P0 when the plan
-carries a frame, P1 and P2, one call per building and zone, the people
+carries a frame, P1 and P2's two, one call per building and zone, the people
 batches and the three systems calls).
+
+### Slow models and free models
+
+Small models can finish a world, but they take longer and some need room to do it.
+A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes to
+2.5 hours and two to four times the tokens.
+
+- **`timeout`** in a provider's `providers.json` entry is the seconds allowed for
+  one reply (default 1800). Replies aren't streamed, so nothing arrives until the
+  model has finished: a local model at 19 tokens a second needs about 30 minutes
+  for a long reply. The local presets set 3600.
+- **`rate_limit_wait`** is how long one request waits out a busy provider, in
+  seconds (default 900). A 429 or 5xx reply is tried again after a pause, longer
+  each time, and the progress line says so. If the wait runs out the run stops
+  with an error that names the provider, since the model never saw the request.
+  Free models can stay rate-limited upstream for hours, whatever your own quota.
+- Slips that a retry would only delete are mended in code and listed under
+  "dropped/fixed": a hint outside the vocabulary, a yard the plan doesn't have,
+  furniture nested in its rooms, too many starting items, residents on a unit
+  building. Code also writes the couples' `partner` fields from the cast.
 
 ## Extensions (all off by default)
 
@@ -349,8 +369,9 @@ tube between: every walkable cell of the map is inside a walled region
 
 ## Item templates and loot pools
 
-Brief 012f gave P2 a second job: besides the furniture catalogue it returns
-**30-60 setting items** (`{name, type, quality, value, description,
+Brief 012f gave P2 a second job, now a call of its own that runs first (so the
+furniture catalogue can name default pools, and a world that loses this call
+still builds, with empty containers): **30-60 setting items** (`{name, type, quality, value, description,
 physicalDescription}`, the guide's type and quality lists) and named
 **`lootPools`** — lists of item names as specific as the setting needs, by room
 kind (a bathroom pool, a galley pool) and by building or store kind (a clothing
