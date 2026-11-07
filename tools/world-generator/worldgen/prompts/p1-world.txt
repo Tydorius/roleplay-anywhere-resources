@@ -26,6 +26,7 @@ Reply with ONE JSON object with exactly these fields:
          "purpose": "one phrase: what people do here",
          "units": {"name": "Apartment", "count": 12, "residents": 2},
          "residents": 4,
+         "couples": 1,
          "yard": null}
       ]
     }
@@ -111,7 +112,10 @@ These show the vocabulary, not templates. Combine shapes freely to fit the idea.
 - The brief may name how many residents to house. Plan enough homes and
   lodgings (houses, barracks, dormitories, inn rooms) to bed them all: a home
   building may carry "residents": n (how many sleep there; never on a unit
-  building, which houses copies x units.residents). Few separate homes beat
+  building, which houses copies x units.residents) and, beside it, "couples":
+  n (how many pairs of its residents share a double bed; at most half the
+  residents, and never on a unit building). Families usually have one couple;
+  an inn's or a manor's household may have more. Few separate homes beat
   one crowded hall: families, lodgers, staff quarters.
 - A zone's "arrangement", when set: "around_green" puts its buildings facing
   one open green (the largest opposite the road), "along_street" lines them

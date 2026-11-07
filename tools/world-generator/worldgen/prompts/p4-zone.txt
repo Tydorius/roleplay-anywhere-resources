@@ -6,7 +6,7 @@ ZONE: ${zone_line}
 BUILDINGS HERE:
 ${building_lines}
 
-CATALOGUE (name | size in cells | placement rule):
+CATALOGUE (name | size in cells | note on where it goes; a note is never a hint):
 ${catalogue_lines}
 
 Reply with ONE JSON object with exactly these fields:

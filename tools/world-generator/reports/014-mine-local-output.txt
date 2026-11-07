@@ -1,0 +1,449 @@
+p3 replies: 68 files; fixture plans: 19 files
+
+=== out p3 replies: 199 rooms, 755 furniture lines ===
+
+[bedroom] rooms: 76
+     116  Wooden stool
+      70  Tallow candle
+      64  Manor bed
+      51  Wall shelf
+      51  Straw-tick bed
+      46  Rushlight candle
+      44  Candle stub
+      39  Storage chest
+      36  Straw pallet
+      29  Straw mattress bed
+      28  Lidded chest
+      22  Great hearth
+    hints: away_from_door (79), wall:north (74), corner (68), beside:Manor bed (44), wall:west (40), row:north (37), beside:Straw mattress bed (31), beside:Wall shelf (28)
+
+[shop] rooms: 22
+      47  Storage barrel
+      32  Grain sack
+      30  Shelf rack
+      23  Sack stack
+      15  Wall shelf
+      14  Wooden stool
+      12  Tallow candle
+      12  Clothing rack
+      11  Service counter
+      10  Battery lantern
+       7  Storage chest
+       4  Small table
+    hints: corner (21), wall:north (15), wall:west (14), row:north (12), beside:Service counter (10), row:west (9), wall:east (8), center (8)
+
+[dining] rooms: 20
+     129  Wooden stool
+      41  Long bench
+      39  Tallow candle
+      38  Great hearth
+      31  Trestle table
+      26  Candle stub
+      15  Wall shelf
+      15  Storage barrel
+      12  Long table
+      10  Small table
+      10  Rushlight candle
+       7  Hanging lantern
+    hints: wall:north (42), center (41), away_from_door (25), corner (21), wall:east (20), wall:west (18), beside:Trestle table (16), wall:south (10)
+
+[kitchen] rooms: 20
+     184  Wooden stool
+      89  Great hearth
+      51  Tallow candle
+      43  Trestle table
+      42  Small table
+      42  Wall shelf
+      40  Rushlight candle
+      40  Kitchen chair
+      31  Pantry cupboard
+      24  Long bench
+      16  Straw mattress bed
+      16  Storage chest
+    hints: wall:north (92), center (66), away_from_door (57), wall:west (49), wall:east (49), corner (42), around:Small table (37), beside:Small table (31)
+
+[common_room] rooms: 18
+      32  Storage barrel
+      19  Wooden stool
+      14  Long bench
+      14  Shelf rack
+      11  Tallow candle
+      10  Waiting bench
+       9  Candle stub
+       9  Battery lantern
+       7  Plywood barricade
+       6  Trestle table
+       6  Grain sack
+       6  Service counter
+    hints: wall:north (13), corner (11), center (11), away_from_door (9), near_door (8), row:north (7), wall:south (6), row:south (6)
+
+[(other)] rooms: 13
+      18  Shelf rack
+      10  Battery lantern
+       7  Service counter
+       6  Tallow candle
+       6  Clothing rack
+       5  Long bench
+       4  Wooden stool
+       4  Candle stub
+       4  Hospital gurney
+       2  Workbench
+       2  Wall shelf
+       2  Storage barrel
+    hints: wall:north (8), corner (8), away_from_door (7), beside:Service counter (7), center (6), row:south (5), near_door (4), beside:Trestle table (4)
+
+[storage] rooms: 5
+      16  Grain sack
+       3  Wooden stool
+       2  Wall shelf
+       2  Tallow candle
+       2  Storage barrel
+       1  Broken cart
+       1  Gate lantern
+       1  Hanging lantern
+    hints: center (2), wall:north (2), beside:Wall shelf (2), row:east (2), near_door (2), row:north (2), corner (1), wall:west (1)
+
+[office] rooms: 5
+       4  Shelf rack
+       2  Storage barrel
+       2  Wooden stool
+       2  Battery lantern
+       1  Wall shelf
+       1  Tallow candle
+       1  Trestle table
+       1  Candle stub
+       1  Lidded chest
+       1  Clerk's desk
+       1  Rushlight candle
+       1  Storage chest
+    hints: corner (3), wall:north (3), away_from_door (3), beside:Wall shelf (2), wall:east (2), beside:Clerk's desk (2), wall:south (1), beside:Roll cot (1)
+
+[dormitory] rooms: 5
+       4  Wooden stool
+       3  Roll cot
+       3  Battery lantern
+       2  Straw pallet
+       2  Bunk cot
+       2  Rushlight candle
+       2  Shelf rack
+       1  Tallow candle
+       1  Storage chest
+       1  Great hearth
+       1  Kitchen cupboard
+       1  Boiling pot
+    hints: corner (5), away_from_door (5), wall:west (2), wall:south (2), wall:east (2), row:east (1), beside:Straw pallet (1), row:west (1)
+
+[guardroom] rooms: 4
+       6  Shelf rack
+       2  Wooden stool
+       2  Long bench
+       1  Gate lantern
+       1  Hanging lantern
+       1  Staircase
+       1  Wall shelf
+       1  Tallow candle
+       1  Trestle table
+       1  Candle stub
+       1  Plywood barricade
+       1  Battery lantern
+    hints: row:north (5), wall:north (4), near_door (2), wall:west (2), away_from_door (2), center (1), corner (1), wall:south (1)
+
+[ward] rooms: 4
+      12  Shelf rack
+       3  Storage barrel
+       1  Great hearth
+       1  Wooden stool
+       1  Wall shelf
+       1  Tallow candle
+       1  Service counter
+       1  Kitchen chair
+       1  Roll cot
+       1  Battery lantern
+    hints: row:north (8), away_from_door (2), wall:west (2), beside:Service counter (2), row:south (2), wall:north (1), row:east (1), beside:Great hearth (1)
+
+[forge] rooms: 3
+      12  Wooden stool
+       9  Storage barrel
+       6  Workbench
+       6  Anvil
+       3  Forge
+       3  Wall shelf
+       3  Smith's forge
+       3  Oak barrel
+       3  Trestle table
+       3  Long bench
+       3  Forge hearth
+       3  Hanging lantern
+    hints: wall:north (12), wall:west (12), corner (9), beside:Workbench (6), near_door (6), away_from_door (6), center (6), wall:east (3)
+
+[cell] rooms: 1
+       1  Straw-tick bed
+    hints: corner (1), away_from_door (1)
+
+[mill] rooms: 1
+       3  Storage barrel
+       3  Sack stack
+       2  Millstone
+       1  Workbench
+       1  Wooden stool
+       1  Wall shelf
+       1  Tallow candle
+       1  Trestle table
+       1  Long bench
+    hints: center (2), wall:west (2), beside:Millstone (1), wall:north (1), beside:Workbench (1), wall:east (1), beside:Wall shelf (1), row:east (1)
+
+[washroom] rooms: 1
+       3  Wash tub
+       3  Boiling pot
+       2  Kitchen chair
+       1  Kitchen table
+       1  Shelf rack
+       1  Battery lantern
+    hints: row:south (2), center (2), beside:Wash tub (1), around:Kitchen table (1), wall:west (1), corner (1)
+
+[laundry] rooms: 1
+       2  Clothing rack
+       1  Battery lantern
+    hints: symmetric (1), beside:Clothing rack (1)
+
+=== fixture plans: 423 rooms, 1372 furniture lines ===
+
+[bedroom] rooms: 105
+     123  Wooden stool
+      97  Straw bed
+      90  Manor bed
+      74  Tallow candle
+      60  Iron-Banded Chest
+      59  Wall shelf
+      58  Straw Bed
+      50  Storage chest
+      49  Apartment bed
+      48  Bunk bed
+      35  Battery lantern
+      34  Storage locker
+    hints: wall:north (229), corner (144), away_from_door (106), wall:south (80), row:north (57), beside:Manor bed (57), wall:west (46), beside:Straw Bed (44)
+
+[(other)] rooms: 66
+     223  Wooden stool
+      99  Wooden Stool
+      86  Trestle table
+      81  Clay hearth
+      80  Straw bed
+      56  Kitchen chair
+      36  Stone Hearth
+      36  Oak Table
+      33  Battery lantern
+      32  Shelf rack
+      30  Storage locker
+      28  Tallow candle
+    hints: center (173), wall:north (165), corner (107), wall:west (85), around:Trestle table (81), away_from_door (66), wall:east (55), near_door (51)
+
+[shop] rooms: 57
+      97  Storage barrel
+      79  Wall shelf
+      72  Supply crates
+      69  Taped supply crate
+      65  Wooden stool
+      58  Wire shelving rack
+      51  Grain sack
+      48  Counter stool
+      40  Store shelf
+      34  Oak barrel
+      32  Shop counter
+      32  Shelf stack
+    hints: corner (130), wall:north (121), center (93), beside:Serving counter (48), near_door (45), wall:west (43), wall:south (38), wall:east (37)
+
+[kitchen] rooms: 41
+     255  Wooden stool
+     161  Kitchen chair
+     112  Oak barrel
+     103  Wall shelf
+     101  Clay hearth
+      73  Trestle table
+      64  Storage chest
+      62  Tallow candle
+      60  Supply crates
+      60  Three-legged stool
+      59  Straw bed
+      55  Wooden Stool
+    hints: wall:north (232), corner (210), center (172), away_from_door (171), wall:west (133), wall:south (104), wall:east (82), around:Kitchen table (53)
+
+[common_room] rooms: 37
+     317  Wooden stool
+      93  Three-legged stool
+      56  Trestle table
+      56  Long bench
+      56  Wooden table
+      49  Oak Bench
+      35  Tallow candle
+      32  Storage barrel
+      28  Clay hearth
+      28  Straw bed
+      28  Barrel
+      28  Wooden Stool
+    hints: wall:north (102), center (77), away_from_door (59), corner (48), wall:east (38), near_door (38), wall:west (35), around:Trestle table (28)
+
+[dining] rooms: 27
+     199  Wooden stool
+      66  Counter stool
+      39  Trestle table
+      39  Three-legged stool
+      38  Long bench
+      36  Tallow candle
+      31  Wall shelf
+      25  Wooden table
+      25  Wooden Stool
+      24  Booth table
+      22  Grain Sack
+      21  Clay hearth
+    hints: wall:north (91), center (62), away_from_door (44), wall:east (36), wall:west (30), near_door (25), around:Trestle table (21), beside:Serving counter (20)
+
+[guardroom] rooms: 23
+     142  Wooden stool
+     128  Lidded chest
+      68  Guard bunk
+       8  Staircase
+       8  Wall shelf
+       8  Tallow candle
+       8  Storage locker
+       6  Shelf rack
+       4  Security desk
+       3  Taped supply crate
+       1  Gate lantern
+       1  Plywood barricade
+    hints: corner (144), wall:north (78), wall:south (72), wall:west (45), wall:east (33), beside:Wall shelf (8), row:north (8), away_from_door (4)
+
+[dormitory] rooms: 20
+      76  Guard bunk
+      68  Weapons rack
+      66  Wooden stool
+      28  Storage locker
+      24  Bunk bed
+       4  Stone hearth
+       4  Trestle table
+       4  Taped supply crate
+       3  Roll cot
+       3  Battery lantern
+       3  Wire shelving rack
+       2  Straw pallet
+    hints: corner (75), wall:west (42), wall:south (41), wall:east (40), wall:north (34), away_from_door (13), row:north (8), row:east (5)
+
+[storage] rooms: 12
+      56  Supply crates
+      32  Storage locker
+      16  Counter stool
+      10  Shelf rack
+       8  Booth table
+       4  Hardware shelving
+       3  Taped supply crate
+       3  Wall shelf
+       3  Tallow candle
+       3  Wooden stool
+       3  Grain Sack
+       2  Storage barrel
+    hints: corner (33), wall:north (18), away_from_door (8), beside:Booth table (8), cluster (8), wall:south (8), wall:west (5), row:north (4)
+
+[forge] rooms: 6
+      15  Wooden stool
+      12  Anvil
+       9  Smith's forge
+       9  Firewood stack
+       9  Straw bed
+       9  Storage barrel
+       6  Workbench
+       3  Stone forge
+       3  Forge
+       3  Wall shelf
+       3  Tool rack
+       3  Storage chest
+    hints: wall:north (21), corner (21), wall:west (18), beside:Smith's forge (12), beside:Workbench (9), beside:Anvil (6), wall:east (6), away_from_door (6)
+
+[ward] rooms: 6
+      12  Shelf rack
+       6  Taped supply crate
+       3  Wire shelving rack
+       3  Med-fridge
+       3  Storage barrel
+       1  Ripperdoc surgical chair
+       1  Filament strip light
+       1  Station desk
+       1  Filing cabinet
+       1  Great hearth
+       1  Wooden stool
+       1  Wall shelf
+    hints: row:north (8), corner (6), wall:west (5), away_from_door (3), wall:north (3), center (2), beside:Service counter (2), row:south (2)
+
+[office] rooms: 6
+       5  Storage barrel
+       4  Shelf rack
+       2  Hay bale
+       2  Battery lantern
+       1  Wall shelf
+       1  Tallow candle
+       1  Wooden stool
+       1  Sales counter
+       1  Garage workbench
+       1  Hay rick
+       1  Roll cot
+    hints: wall:north (3), corner (2), beside:Wall shelf (2), wall:south (2), near_door (2), away_from_door (2), row:west (1), beside:Roll cot (1)
+
+[chapel] rooms: 5
+      30  Long bench
+      30  Chapel Pew
+      25  Plank bench
+      20  Chapel pew
+      10  Lidded chest
+      10  Stone altar
+       5  Storage chest
+       5  Altar
+    hints: row:north (20), symmetric (20), corner (15), center (10), wall:east (10), row:south (10), wall:west (10), away_from_door (10)
+
+[mill] rooms: 5
+      18  Oak barrel
+      13  Grain sack
+      12  Trestle table
+       6  Firewood stack
+       3  Millstone
+       3  Wooden stool
+       3  Oil lamp
+       2  Storage chest
+       2  Three-legged stool
+       1  Millstone rig
+       1  Wooden table
+    hints: center (11), corner (8), wall:north (6), beside:Millstone (6), wall:west (3), wall:east (1), beside:Millstone rig (1), away_from_door (1)
+
+[washroom] rooms: 4
+      32  Washer machine
+      12  Storage locker
+       4  Vending machine
+       3  Wash tub
+       3  Boiling pot
+       2  Kitchen chair
+       1  Bathroom cabinet
+       1  Kitchen table
+       1  Shelf rack
+       1  Battery lantern
+    hints: row:south (6), row:east (4), row:west (4), wall:north (4), near_door (4), corner (2), center (2), beside:Wash tub (1)
+
+[workshop] rooms: 1
+       2  Straw bed
+       2  Wooden stool
+       1  Trestle table
+       1  Iron-bound chest
+    hints: wall:north (1), center (1), around:Trestle table (1), corner (1)
+
+[cell] rooms: 1
+       5  Grain sack
+       1  Barrel
+    hints: cluster (1), wall:north (1), corner (1), wall:west (1)
+
+[laundry] rooms: 1
+       2  Clothing rack
+       1  Battery lantern
+    hints: symmetric (1), beside:Clothing rack (1)
+
+=== out p3 replies: bed lines with count > 1: 41 ===
+    hint 'corner': 0   no hint: 0   any 'wall:' hint: 7   total beds in them: 102
+
+=== fixture plans: bed lines with count > 1: 68 ===
+    hint 'corner': 5   no hint: 0   any 'wall:' hint: 27   total beds in them: 158

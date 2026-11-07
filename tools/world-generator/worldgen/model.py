@@ -197,6 +197,8 @@ class BuildingDesign:
     storeys: int = 1                                   # 1-3 (floors extension)
     stairs_room: str = ""                              # ground room the stair rises from
     units: object = None                               # UnitSpec when it repeats units
+    couples: int = 0                                   # P1: pairs of residents sharing a bed
+    status: str = ""                                   # P1b: home, staffed, vacant...
     upper: list = field(default_factory=list)          # [UpperStorey]
     rooms: list = field(default_factory=list)          # [RoomSpec]
     connections: list = field(default_factory=list)    # [[roomA, roomB]]
@@ -323,7 +325,11 @@ class Road:
     kind: str = "dirt"
 
 
-SLEEP_WORDS = ("bed", "bunk", "cot", "pallet", "hammock")
+# whole words, so a "Bedside locker" and a "Cottage hearth" are not beds; a
+# featherbed and a daybed are, and a herb bed is a garden
+SLEEP_WORD = re.compile(r"\b(\w*beds?|bedrolls?|bunks?|cots?|pallets?|hammocks?)\b")
+NOT_A_BED = re.compile(r"\b(herb|flower|seed|garden|vegetable|planting|river|"
+                       r"stream|sea|oyster|kelp|truck)\s*beds?\b")
 
 # ------------------------------------------------------------------ zone kinds
 
@@ -407,10 +413,33 @@ def building_coverage_target(zone, setting=None):
 def is_sleep_name(name, tags=()):
     """True for names/tags of things a person sleeps on: beds, cots, bunks,
     pallets, hammocks (a "Straw Bed" needs no bed tag to count)."""
-    n = (name or "").lower()
-    if any(w in n for w in SLEEP_WORDS):
-        return True
-    return any(w in (t or "").lower() for t in tags or () for w in SLEEP_WORDS)
+    def sleeps(text):
+        text = (text or "").lower()
+        return bool(SLEEP_WORD.search(text)) and not NOT_A_BED.search(text)
+    return sleeps(name) or any(sleeps(t) for t in tags or ())
+
+
+# rooms whose beds are for whoever comes: a traveller, a patient. They need no
+# owner, so they stay empty unless a home runs out of its own beds. Whole words
+# only: a warden, a wardrobe and a steward are not a ward
+SPARE_ROOM = re.compile(r"\b(guests?|paying|lodging|lodgers?|letting|travell?ers?|"
+                        r"visitors?|patients?|wards?|infirmary|sick\w*|recovery|"
+                        r"convalesc\w*|triage)\b")
+
+
+def is_spare_room(name, purpose=""):
+    """Whether a room's beds are spare ones, by its name and purpose."""
+    return bool(SPARE_ROOM.search(f"{name} {purpose}".lower()))
+
+
+def bed_capacity(template):
+    """How many sleepers one sleep object holds: at least 2 cells in both
+    directions sleeps 2 (a double bed), anything narrower sleeps 1 — a 2x1
+    single bed turned on its side included. Takes a template or its
+    (width, height) pair."""
+    size = template.size if hasattr(template, "size") else template
+    w, h = size
+    return 2 if min(w, h) >= 2 else 1
 
 
 @dataclass
@@ -602,6 +631,8 @@ def _parse_building(d, designs):
         stairs_room=stairs_room if upper else "",
         upper=upper,
         units=units,
+        couples=(0 if units else max(0, int(d.get("couples", 0) or 0))),
+        status=d.get("status", "") or "",
         rooms=rooms,
         connections=[list(c) for c in g.get("connections", [])],
         entrance_room=g.get("entrance", {}).get("room", rooms[0].name if rooms else "Hall"),
@@ -974,6 +1005,7 @@ def parse_plan(data):
                                         kind=own.kind, purpose=own.purpose,
                                         size_class=own.size_class,
                                         storeys=own.storeys, units=own.units,
+                                        couples=own.couples, status=own.status,
                                         yard=own.yard, yard_props=own.yard_props)
                 by_name[p.building] = b
                 z.buildings[z.buildings.index(own)] = b
@@ -1020,7 +1052,8 @@ def parse_plan(data):
                       role=d.get("role", "villager"), home=d.get("home", ""), work=d.get("work", ""),
                       description=d.get("description", ""), physicalDescription=d.get("physicalDescription", ""),
                       extras={k: v for k, v in d.items()
-                              if k in ("animationId", "level", "inventory", "equipment")})
+                              if k in ("animationId", "level", "inventory", "equipment",
+                                       "partner", "shift", "sells", "kind", "flat")})
 
     npcs = [person(n) for n in data.get("npcs", [])]
     player = person(data.get("player", {"name": "Player"}))

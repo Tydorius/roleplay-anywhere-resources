@@ -31,6 +31,18 @@ class ScriptedClient(llm.Client):
         self._queue = list(replies)
         self.sent = []
 
+    def call(self, phase, system, user, validate=None, max_retries=2):
+        """P2's items call takes nothing from the queue: a script writes the
+        catalogue as one reply, and its items are read from there."""
+        if phase != "p2-items":
+            return super().call(phase, system, user, validate, max_retries)
+        for raw in self._queue:
+            parsed, _error = llm.extract_json(raw)
+            if isinstance(parsed, dict) and "templates" in parsed:
+                return {"items": parsed.get("items") or [],
+                        "lootPools": parsed.get("lootPools") or {}}
+        return {"items": [], "lootPools": {}}
+
     def _request(self, messages, max_tokens=None):
         self.sent.append([dict(m) for m in messages])
         usage = {"prompt": 10, "completion": 5, "total": 15}
@@ -395,6 +407,20 @@ class TestContracts(unittest.TestCase):
         self.assertTrue(any("used twice" in e for e in errors), errors)
         self.assertTrue(any("size" in e for e in errors), errors)
 
+    def test_p2_needs_a_double_bed_only_when_a_home_has_couples(self):
+        singles = [{"templates": [
+            {"name": "Straw bed", "size": [1, 2], "walkability": 0.3,
+             "forSleep": True, "description": "d", "physicalDescription": "p",
+             "tags": ["bed"], "rule": "r"}]}]
+        self.assertEqual(phases.check_p2(singles[0]), [])
+        self.assertTrue(any("double bed" in e for e in
+                            phases.check_p2(singles[0], needs_double=True)))
+        with_double = {"templates": singles[0]["templates"] + [
+            {"name": "Wide bed", "size": [2, 2], "walkability": 0.3,
+             "forSleep": True, "description": "d", "physicalDescription": "p",
+             "tags": ["bed"], "rule": "r"}]}
+        self.assertEqual(phases.check_p2(with_double, needs_double=True), [])
+
     def test_p3_unknown_references_and_bad_hint(self):
         tnames = {t["name"] for t in CANNED_TEMPLATES}
         d = json.loads(json.dumps(CANNED_MILL))
@@ -503,6 +529,19 @@ def canned_replies():
     ]
 
 
+class TestBedCapacity(unittest.TestCase):
+    """A sleep object at least 2 cells in both directions sleeps 2; anything
+    narrower sleeps 1, a 2x1 single bed turned on its side included."""
+
+    def test_sizes(self):
+        from worldgen.model import ObjectTemplate, bed_capacity
+        for size, want in [((1, 1), 1), ((1, 2), 1), ((2, 1), 1),
+                           ((2, 2), 2), ((3, 2), 2)]:
+            self.assertEqual(bed_capacity(size), want, f"{size} should sleep {want}")
+            self.assertEqual(bed_capacity(ObjectTemplate(name="B", size=size)),
+                             want, f"a {size} template should sleep {want}")
+
+
 class TestCannedFivePhases(unittest.TestCase):
     def test_plan_json_the_layout_accepts(self):
         client = ScriptedClient(canned_replies())
@@ -546,6 +585,25 @@ class TestCannedFivePhases(unittest.TestCase):
                          ["The Old Mill", "Miller's Cottage"])
         world = worldgen.run(plan, seed=1)
         self.assertEqual(len(world.buildings), 2)
+
+
+class TestSpareRooms(unittest.TestCase):
+    def test_inn_and_hospital_rooms_are_spare(self):
+        from worldgen.model import is_spare_room
+        for name, purpose in (("Guest Chamber", ""), ("Letting Room", ""),
+                              ("Lodging room", ""), ("Patient Room", ""),
+                              ("West Wing Rest Ward", ""), ("Sick Room", ""),
+                              ("Infirmary", ""), ("Room 3", "for travellers"),
+                              ("Back Room", "lodging for paying guests")):
+            self.assertTrue(is_spare_room(name, purpose), name)
+
+    def test_words_that_only_contain_ward_are_not(self):
+        from worldgen.model import is_spare_room
+        for name, purpose in (("Warden's Room", ""), ("Steward's Cabin", ""),
+                              ("Bedroom", "a wardrobe and a bed"),
+                              ("Master Bedchamber", "the parents' bed"),
+                              ("Keeper's Room", "the keeper's own bed")):
+            self.assertFalse(is_spare_room(name, purpose), name)
 
 
 if __name__ == "__main__":

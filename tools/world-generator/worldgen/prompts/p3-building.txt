@@ -7,7 +7,7 @@ BUILDING: ${building_line}
 COMPOUND: ${compound_line}
 UNITS: ${units_line}
 
-CATALOGUE (name | size in cells | placement rule):
+CATALOGUE (name | size in cells | note on where it goes; a note is never a hint):
 ${catalogue_lines}
 
 LOOT POOLS (name: the items each holds) — empty when the catalogue has none:
@@ -29,6 +29,8 @@ Reply with ONE JSON object with exactly these fields:
   "yard": null or {"props": [{"template": "catalogue name", "count": 1, "hint": "outdoor hint"}]}
 }
 
+- A BUILDING line ending in [brackets] says what state it's in: design it that
+  way, in the rooms' purposes and the furniture you choose.
 - 1 to 4 rooms (one for a hut). "connections" names rooms that share an inner
   door; the entrance room must be one of "rooms".
 - The LOOT POOLS list names the pools the catalogue's containers draw from.
@@ -56,7 +58,12 @@ Reply with ONE JSON object with exactly these fields:
   this setting's rooms hold: a bedroom has one bed per sleeper plus storage
   and a light source; a common room has several tables with seats; a workshop
   has its tools, materials and somewhere to sit; a shop has a counter and
-  shelves; a sickbay or lab has beds and equipment.
+  shelves; a sickbay or lab has beds and equipment. Guest rooms and wards may
+  hold more beds than the building has residents: those stay free for
+  travellers and patients. When the BUILDING line
+  says couples, each couple shares one double bed (2x2, sleeps two) in a
+  bedroom of its own, with children and everyone else in other rooms when the
+  building has them.
 - "template" must be a catalogue name EXACTLY as listed. "room" must be one of
   your own room names.
 - Furniture hints use ONLY the room vocabulary (wall:north, corner, center,

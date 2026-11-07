@@ -1,0 +1,6574 @@
+[
+ {
+  "id": "bed.pallet",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0.8,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "straw pallet"
+  },
+  "parts": {
+   "bedding": "plant"
+  },
+  "purposes": [
+   "bedroom",
+   "dormitory"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "note": "floor-level bed for the poorest rooms",
+  "aliases": [
+   "straw bed",
+   "straw-tick bed",
+   "straw mattress bed"
+  ]
+ },
+ {
+  "id": "bed.roll",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "walkability": 0.9,
+  "forSleep": true,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "bedroll"
+  },
+  "parts": {
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "dormitory"
+  ],
+  "sources": [
+   "dnd-srd",
+   "rimworld-wiki",
+   "local-replies"
+  ],
+  "aliases": [
+   "roll cot"
+  ]
+ },
+ {
+  "id": "bed.single",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "bed",
+   "scifi": "bunk"
+  },
+  "parts": {
+   "frame": "wood",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "dormitory"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "df-wiki",
+   "wikipedia-furniture",
+   "kenney-furniture"
+  ],
+  "aliases": [
+   "cot"
+  ]
+ },
+ {
+  "id": "bed.double",
+  "category": "bed",
+  "size": [
+   2,
+   2
+  ],
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "double bed"
+  },
+  "parts": {
+   "frame": "wood",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "bed.fourposter",
+  "category": "bed",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "four-poster bed"
+  },
+  "parts": {
+   "frame": "wood",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "bed.bunk",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "bunk bed"
+  },
+  "parts": {
+   "frame": "metal",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "dormitory",
+   "cell",
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "bunk cot",
+   "guard bunk",
+   "apartment bed"
+  ]
+ },
+ {
+  "id": "bed.hammock",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "hammock"
+  },
+  "parts": {
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "dormitory"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "bed.hospital",
+  "category": "bed",
+  "size": [
+   1,
+   2
+  ],
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "hospital bed"
+  },
+  "parts": {
+   "frame": "metal",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "ward"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "pa-fandom",
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "medical bed",
+   "gurney",
+   "hospital gurney"
+  ]
+ },
+ {
+  "id": "bed.crib",
+  "category": "bed",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": true,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "crib"
+  },
+  "parts": {
+   "frame": "wood",
+   "bedding": "fabric"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "chair.stool",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "stool"
+  },
+  "parts": {
+   "seat": "wood"
+  },
+  "purposes": [
+   "kitchen",
+   "dining",
+   "workshop",
+   "forge",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture",
+   "df-wiki",
+   "kenney-furniture"
+  ],
+  "aliases": [
+   "wooden stool",
+   "log stool"
+  ]
+ },
+ {
+  "id": "chair.wooden",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "wooden chair"
+  },
+  "parts": {
+   "seat": "wood"
+  },
+  "purposes": [
+   "dining",
+   "kitchen",
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "df-wiki"
+  ],
+  "aliases": [
+   "plywood chair"
+  ]
+ },
+ {
+  "id": "chair.upholstered",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "armchair"
+  },
+  "parts": {
+   "frame": "wood",
+   "cushion": "fabric"
+  },
+  "purposes": [
+   "common_room",
+   "office",
+   "dining"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "chair.office",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "office chair"
+  },
+  "parts": {
+   "seat": "synthetic"
+  },
+  "purposes": [
+   "office"
+  ],
+  "sources": [
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "chair (office)",
+   "leather chair"
+  ]
+ },
+ {
+  "id": "chair.folding",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "folding chair"
+  },
+  "parts": {
+   "seat": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "classroom"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "chair.deck",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "deck chair"
+  },
+  "parts": {
+   "frame": "wood",
+   "seat": "fabric"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "chair.beanbag",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "beanbag"
+  },
+  "parts": {
+   "cover": "synthetic"
+  },
+  "purposes": [
+   "bedroom",
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "bean bag"
+  ]
+ },
+ {
+  "id": "chair.barber",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "barber chair"
+  },
+  "parts": {
+   "seat": "leather"
+  },
+  "purposes": [
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "chair.pilot",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "flight seat",
+   "scifi": "pilot seat"
+  },
+  "parts": {
+   "seat": "synthetic"
+  },
+  "purposes": [
+   "bridge"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "airplane seat"
+  ],
+  "note": "transport seating read as bridge seating"
+ },
+ {
+  "id": "chair.throne",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "elite"
+  ],
+  "bands": [
+   "medieval"
+  ],
+  "names": {
+   "*": "throne"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "df-wiki"
+  ]
+ },
+ {
+  "id": "chair.rocking",
+  "category": "chair",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "rocking chair"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "bedroom",
+   "common_room"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "bench.wooden",
+  "category": "bench",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "bench"
+  },
+  "parts": {
+   "seat": "wood"
+  },
+  "purposes": [
+   "dining",
+   "common_room",
+   "classroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "wikipedia-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "wooden bench",
+   "long bench",
+   "plank bench",
+   "waiting bench"
+  ]
+ },
+ {
+  "id": "bench.pew",
+  "category": "bench",
+  "size": [
+   1,
+   3
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "pew"
+  },
+  "parts": {
+   "seat": "wood"
+  },
+  "purposes": [
+   "chapel"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "bench.park",
+  "category": "bench",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "park bench"
+  },
+  "parts": {
+   "frame": "metal",
+   "seat": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "bench (park)"
+  ]
+ },
+ {
+  "id": "bench.metal",
+  "category": "bench",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "metal bench"
+  },
+  "parts": {
+   "seat": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "cell"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "sofa.standard",
+  "category": "sofa",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "sofa"
+  },
+  "parts": {
+   "frame": "wood",
+   "cushion": "fabric"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "couch",
+   "wide sofa"
+  ]
+ },
+ {
+  "id": "sofa.love",
+  "category": "sofa",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "loveseat"
+  },
+  "parts": {
+   "cushion": "fabric"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "sofa.booth",
+  "category": "sofa",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "diner booth"
+  },
+  "parts": {
+   "seat": "leather"
+  },
+  "purposes": [
+   "shop",
+   "dining"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "table.nightstand",
+  "category": "table",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "nightstand"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "end table"
+  ]
+ },
+ {
+  "id": "table.kitchen",
+  "category": "table",
+  "size": [
+   1,
+   2
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "kitchen table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "kitchen",
+   "dining"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "table.dining",
+  "category": "table",
+  "size": [
+   2,
+   2
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "dining table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "dining",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "wikipedia-furniture",
+   "cdda-furniture",
+   "kenney-furniture"
+  ],
+  "aliases": [
+   "dining table (large)",
+   "dining table (small)"
+  ]
+ },
+ {
+  "id": "table.long",
+  "category": "table",
+  "size": [
+   2,
+   4
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "long table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "dining",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "table.trestle",
+  "category": "table",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "trestle table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "dining"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "refectory table"
+  ]
+ },
+ {
+  "id": "table.coffee",
+  "category": "table",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "coffee table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "table.folding",
+  "category": "table",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "folding table"
+  },
+  "parts": {
+   "top": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "table.round",
+  "category": "table",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "round table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "dining",
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "table (oval)"
+  ]
+ },
+ {
+  "id": "desk.writing",
+  "category": "desk",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "writing desk"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "office",
+   "bedroom"
+  ],
+  "sources": [
+   "wikipedia-furniture",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "desk.office",
+  "category": "desk",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "office desk"
+  },
+  "parts": {
+   "top": "synthetic"
+  },
+  "purposes": [
+   "office"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "desk.school",
+  "category": "desk",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "school desk"
+  },
+  "parts": {
+   "seat": "wood"
+  },
+  "purposes": [
+   "classroom"
+  ],
+  "sources": [
+   "pa-fandom",
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "desk.sorting",
+  "category": "desk",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "sorting desk"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "office",
+   "storage"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "console.computer",
+  "category": "console",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "computer station",
+   "scifi": "computer console"
+  },
+  "parts": {
+   "frame": "synthetic"
+  },
+  "purposes": [
+   "office",
+   "laboratory",
+   "classroom"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "console.ship",
+  "category": "console",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "scifi"
+  ],
+  "names": {
+   "*": "ship console"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "bridge",
+   "office"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "counter.shop",
+  "category": "counter",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "counter"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "shop counter",
+   "shop front",
+   "service counter",
+   "sales counter"
+  ]
+ },
+ {
+  "id": "counter.kitchen",
+  "category": "counter",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "kitchen counter"
+  },
+  "parts": {
+   "top": "stone"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "counter.bar",
+  "category": "counter",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "bar counter"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "common_room",
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "bar"
+  ]
+ },
+ {
+  "id": "counter.serving",
+  "category": "counter",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "serving table"
+  },
+  "parts": {
+   "top": "metal"
+  },
+  "purposes": [
+   "dining",
+   "kitchen"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "tray dispenser"
+  ]
+ },
+ {
+  "id": "shelf.bookcase",
+  "category": "shelf",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "bookcase"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "office",
+   "classroom",
+   "library",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "df-wiki",
+   "cdda-furniture",
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "bookshelf",
+   "library shelf"
+  ]
+ },
+ {
+  "id": "shelf.utility",
+  "category": "shelf",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "utility shelf"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "storage",
+   "workshop",
+   "laundry"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "storage shelf",
+   "wall shelf",
+   "wire shelving",
+   "hardware shelving"
+  ]
+ },
+ {
+  "id": "shelf.warehouse",
+  "category": "shelf",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "warehouse shelf"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "storage",
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "shelf.display",
+  "category": "shelf",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "display shelf"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "shop shelf",
+   "display rack"
+  ]
+ },
+ {
+  "id": "cabinet.wardrobe",
+  "category": "cabinet",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "wardrobe"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "armoire"
+  ]
+ },
+ {
+  "id": "cabinet.dresser",
+  "category": "cabinet",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "dresser"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "chest of drawers"
+  ]
+ },
+ {
+  "id": "cabinet.cupboard",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "cupboard"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "kitchen",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "cabinet.filing",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "filing cabinet"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "office",
+   "classroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "cabinet.medicine",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "medicine cabinet"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "ward",
+   "washroom",
+   "laboratory"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "cabinet.curio",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "display cabinet"
+  },
+  "parts": {
+   "case": "glass"
+  },
+  "purposes": [
+   "dining",
+   "common_room",
+   "shop"
+  ],
+  "sources": [
+   "wikipedia-furniture",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "curio cabinet",
+   "display case"
+  ]
+ },
+ {
+  "id": "cabinet.sideboard",
+  "category": "cabinet",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "sideboard"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "dining"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "buffet",
+   "hutch"
+  ]
+ },
+ {
+  "id": "cabinet.locker",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "locker"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "storage",
+   "guardroom",
+   "gym",
+   "dormitory"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "guard locker",
+   "storage locker"
+  ]
+ },
+ {
+  "id": "cabinet.safe",
+  "category": "cabinet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "safe"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "office",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "gun safe"
+  ]
+ },
+ {
+  "id": "cabinet.entertainment",
+  "category": "cabinet",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "entertainment center"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "chest.wooden",
+  "category": "chest",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "chest"
+  },
+  "parts": {
+   "case": "wood"
+  },
+  "purposes": [
+   "bedroom",
+   "storage"
+  ],
+  "sources": [
+   "df-wiki",
+   "dnd-srd",
+   "cdda-furniture",
+   "wikipedia-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "wooden chest",
+   "lidded chest",
+   "iron-banded chest",
+   "iron-bound chest"
+  ]
+ },
+ {
+  "id": "chest.crate",
+  "category": "chest",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "crate"
+  },
+  "parts": {
+   "case": "wood"
+  },
+  "purposes": [
+   "storage",
+   "workshop",
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "open crate",
+   "supply crate",
+   "taped supply crate"
+  ]
+ },
+ {
+  "id": "chest.footlocker",
+  "category": "chest",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "foot locker"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "dormitory",
+   "cell",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "chest.toybox",
+  "category": "chest",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "toy box"
+  },
+  "parts": {
+   "case": "wood"
+  },
+  "purposes": [
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "rack.coat",
+  "category": "rack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "coat rack"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "office",
+   "common_room",
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "hatstand",
+   "coat stand"
+  ]
+ },
+ {
+  "id": "rack.clothing",
+  "category": "rack",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "clothing rail"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "shop",
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "rack.weapon",
+  "category": "rack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "modern"
+  ],
+  "names": {
+   "*": "weapon rack"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "guardroom",
+   "storage"
+  ],
+  "sources": [
+   "df-wiki",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "weapons rack"
+  ]
+ },
+ {
+  "id": "rack.tool",
+  "category": "rack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "tool rack"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "workshop",
+   "forge",
+   "storage"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "tool cabinet"
+  ]
+ },
+ {
+  "id": "rack.wine",
+  "category": "rack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "wine rack"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "storage",
+   "common_room"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "rack.dumbbell",
+  "category": "rack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "dumbbell rack"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "gym"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "barrel.wooden",
+  "category": "barrel",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "barrel"
+  },
+  "parts": {
+   "vessel": "wood"
+  },
+  "purposes": [
+   "storage",
+   "common_room",
+   "forge"
+  ],
+  "sources": [
+   "df-wiki",
+   "dnd-srd",
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "wooden keg",
+   "oak barrel"
+  ]
+ },
+ {
+  "id": "barrel.metal",
+  "category": "barrel",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "metal drum"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "storage",
+   "workshop"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "metal barrel"
+  ]
+ },
+ {
+  "id": "bin.trash",
+  "category": "bin",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "trash can"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "washroom",
+   "office",
+   "workshop",
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "bin",
+   "metal trash can"
+  ]
+ },
+ {
+  "id": "bin.recycle",
+  "category": "bin",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "recycling bin"
+  },
+  "parts": {
+   "vessel": "synthetic"
+  },
+  "purposes": [
+   "kitchen",
+   "office"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "basket.wicker",
+  "category": "basket",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "basket"
+  },
+  "parts": {
+   "vessel": "plant"
+  },
+  "purposes": [
+   "storage",
+   "laundry",
+   "kitchen"
+  ],
+  "sources": [
+   "dnd-srd",
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "basket.laundry",
+  "category": "basket",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "laundry basket"
+  },
+  "parts": {
+   "vessel": "synthetic"
+  },
+  "purposes": [
+   "laundry",
+   "washroom"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "pallet.stacked",
+  "category": "pallet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "stacked pallet"
+  },
+  "parts": {
+   "base": "wood"
+  },
+  "purposes": [
+   "storage",
+   "shop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "packed pallet"
+  ]
+ },
+ {
+  "id": "light.candle",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.2,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "candle"
+  },
+  "parts": {
+   "holder": "metal"
+  },
+  "purposes": [
+   "bedroom",
+   "dining",
+   "chapel",
+   "common_room"
+  ],
+  "sources": [
+   "dnd-srd",
+   "rimworld-wiki",
+   "local-replies"
+  ],
+  "aliases": [
+   "candelabra",
+   "tallow candle",
+   "rushlight candle",
+   "candle stub"
+  ]
+ },
+ {
+  "id": "light.torch",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.3,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "torch"
+  },
+  "parts": {
+   "handle": "wood"
+  },
+  "purposes": [
+   "bedroom",
+   "dining",
+   "chapel",
+   "forge",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ],
+  "aliases": [
+   "wall torch"
+  ]
+ },
+ {
+  "id": "light.oillamp",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.4,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "oil lamp"
+  },
+  "parts": {
+   "vessel": "glass"
+  },
+  "purposes": [
+   "bedroom",
+   "office",
+   "storage"
+  ],
+  "sources": [
+   "dnd-srd"
+  ]
+ },
+ {
+  "id": "light.lantern",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.5,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "lantern"
+  },
+  "parts": {
+   "body": "metal",
+   "panel": "glass"
+  },
+  "purposes": [
+   "storage",
+   "workshop",
+   "forge"
+  ],
+  "sources": [
+   "dnd-srd",
+   "local-replies"
+  ],
+  "aliases": [
+   "battery lantern",
+   "hanging lantern",
+   "gate lantern"
+  ]
+ },
+ {
+  "id": "light.table",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.5,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "table lamp"
+  },
+  "parts": {
+   "shade": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "office",
+   "common_room"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "light.floor",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.5,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "floor lamp"
+  },
+  "parts": {
+   "shade": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "common_room",
+   "office"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ],
+  "aliases": [
+   "standing lamp"
+  ]
+ },
+ {
+  "id": "light.wall",
+  "category": "light",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.5,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "wall lamp",
+   "scifi": "wall light strip"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "bedroom",
+   "dormitory",
+   "ward",
+   "bridge"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "hearth.fireplace",
+  "category": "hearth",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.8,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "fireplace",
+   "medieval": "open hearth"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "common_room",
+   "dining",
+   "bedroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "stone fireplace",
+   "great hearth",
+   "stone hearth"
+  ]
+ },
+ {
+  "id": "hearth.brazier",
+  "category": "hearth",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.7,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "brazier"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "hearth.woodstove",
+  "category": "hearth",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.6,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "wood stove"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "bedroom",
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "pot stove",
+   "portable stove"
+  ]
+ },
+ {
+  "id": "hearth.furnace",
+  "category": "hearth",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.3,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "furnace"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "storage",
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "hearth.firebarrel",
+  "category": "hearth",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.7,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "fire barrel"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "note": "a cut drum with a fire in it, the squatter's hearth"
+ },
+ {
+  "id": "stove.pot",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval"
+  ],
+  "names": {
+   "*": "cauldron"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "dnd-srd"
+  ],
+  "note": "iron pot hung or set over the fire"
+ },
+ {
+  "id": "stove.clay",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval"
+  ],
+  "names": {
+   "*": "clay oven"
+  },
+  "parts": {
+   "body": "ceramic"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "clay hearth"
+  ]
+ },
+ {
+  "id": "stove.wood",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial"
+  ],
+  "names": {
+   "*": "cookstove"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "wood cookstove",
+   "hobo stove"
+  ]
+ },
+ {
+  "id": "stove.gas",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "gas range"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "gas oven"
+  ]
+ },
+ {
+  "id": "stove.electric",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "electric range"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "electric stove"
+  ]
+ },
+ {
+  "id": "stove.galley",
+  "category": "stove",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "scifi"
+  ],
+  "names": {
+   "*": "galley unit"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ],
+  "note": "RimWorld's electric stove read as the starship equivalent"
+ },
+ {
+  "id": "appliance.fridge",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "refrigerator"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "shop",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "pz-pfans"
+  ],
+  "aliases": [
+   "fridge",
+   "tall fridge",
+   "cooling unit"
+  ]
+ },
+ {
+  "id": "appliance.freezer",
+  "category": "appliance",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "chest freezer"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "appliance.washer",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "washing machine"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "laundry",
+   "washroom"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "laundry machine",
+   "washer machine"
+  ]
+ },
+ {
+  "id": "appliance.dryer",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "dryer"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "laundry"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "appliance.dishwasher",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "dishwasher"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "appliance.waterheater",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "water heater"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "storage",
+   "washroom"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "appliance.vending",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "vending machine"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "office"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "snack machine",
+   "drink machine"
+  ]
+ },
+ {
+  "id": "appliance.cooler",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "water cooler"
+  },
+  "parts": {
+   "vessel": "synthetic"
+  },
+  "purposes": [
+   "office"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "appliance.coffee",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "coffee machine"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "office",
+   "kitchen"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "appliance.microwave",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "microwave"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "office"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "appliance.fan",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "fan"
+  },
+  "parts": {
+   "body": "synthetic"
+  },
+  "purposes": [
+   "bedroom",
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "appliance.radiator",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "radiator"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "bedroom",
+   "office",
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "appliance.server",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "scifi"
+  ],
+  "names": {
+   "*": "server rack"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "office",
+   "laboratory",
+   "bridge"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "server stack"
+  ]
+ },
+ {
+  "id": "appliance.sewing",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "sewing machine"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "note": "sewing table entry read as the machine"
+ },
+ {
+  "id": "appliance.purifier",
+  "category": "appliance",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "water purifier"
+  },
+  "parts": {
+   "body": "synthetic"
+  },
+  "purposes": [
+   "washroom",
+   "kitchen"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "sink.basin",
+  "category": "sink",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "washstand"
+  },
+  "parts": {
+   "basin": "ceramic"
+  },
+  "purposes": [
+   "bedroom",
+   "washroom",
+   "kitchen"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "washbasin"
+  ]
+ },
+ {
+  "id": "sink.kitchen",
+  "category": "sink",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "sink",
+   "scifi": "galley sink"
+  },
+  "parts": {
+   "basin": "metal"
+  },
+  "purposes": [
+   "kitchen",
+   "laundry"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "utility sink"
+  ]
+ },
+ {
+  "id": "sink.bathroom",
+  "category": "sink",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "bathroom sink"
+  },
+  "parts": {
+   "basin": "ceramic"
+  },
+  "purposes": [
+   "washroom"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "sink and mirror"
+  ]
+ },
+ {
+  "id": "toilet.chamber",
+  "category": "toilet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "chamber pot"
+  },
+  "parts": {
+   "vessel": "ceramic"
+  },
+  "purposes": [
+   "bedroom",
+   "washroom"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "note": "the commode entry read as the pot itself"
+ },
+ {
+  "id": "toilet.standard",
+  "category": "toilet",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "toilet",
+   "scifi": "waste unit"
+  },
+  "parts": {
+   "vessel": "ceramic"
+  },
+  "purposes": [
+   "washroom",
+   "cell"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "bath.tub.wood",
+  "category": "bath",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "wooden bathtub"
+  },
+  "parts": {
+   "vessel": "wood"
+  },
+  "purposes": [
+   "washroom"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "bath.tub",
+  "category": "bath",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "bathtub"
+  },
+  "parts": {
+   "vessel": "ceramic"
+  },
+  "purposes": [
+   "washroom"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "bath.shower",
+  "category": "bath",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "shower",
+   "scifi": "sonic shower"
+  },
+  "parts": {
+   "stall": "glass"
+  },
+  "purposes": [
+   "washroom",
+   "cell"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "shower head"
+  ]
+ },
+ {
+  "id": "work.bench",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "workbench",
+   "scifi": "fabrication bench"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "workshop",
+   "laboratory"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "wikipedia-furniture",
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "work.carpenter",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "carpenter's bench"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "carpenter table"
+  ]
+ },
+ {
+  "id": "work.anvil",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "anvil"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "forge"
+  ],
+  "sources": [
+   "df-wiki",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.forge",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.6,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "forge"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "forge"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.bellows",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "bellows"
+  },
+  "parts": {
+   "body": "leather"
+  },
+  "purposes": [
+   "forge"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "blacksmith bellows"
+  ]
+ },
+ {
+  "id": "work.lathe",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "lathe"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.saw",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "table saw"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.drill",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "drill press"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.press",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "workshop press"
+  },
+  "parts": {
+   "body": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "hydraulic press"
+  ]
+ },
+ {
+  "id": "work.spin",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "spinning wheel"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.still",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "still"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.kiln",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.5,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "kiln"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "clay kiln",
+   "charcoal kiln"
+  ]
+ },
+ {
+  "id": "work.mill",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval"
+  ],
+  "names": {
+   "*": "quern"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "kitchen",
+   "workshop"
+  ],
+  "sources": [
+   "df-wiki",
+   "local-replies"
+  ],
+  "aliases": [
+   "millstone",
+   "millstone rig"
+  ]
+ },
+ {
+  "id": "work.butcher",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "butchering rack"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "kitchen",
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "rimworld-wiki"
+  ],
+  "aliases": [
+   "butcher table"
+  ]
+ },
+ {
+  "id": "work.churn",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "butter churn"
+  },
+  "parts": {
+   "vessel": "wood"
+  },
+  "purposes": [
+   "kitchen",
+   "workshop"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.vat",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "fermenting vat"
+  },
+  "parts": {
+   "vessel": "wood"
+  },
+  "purposes": [
+   "workshop",
+   "storage"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "rimworld-wiki"
+  ],
+  "aliases": [
+   "fermenting barrel"
+  ]
+ },
+ {
+  "id": "work.lab",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "lab bench"
+  },
+  "parts": {
+   "top": "stone"
+  },
+  "purposes": [
+   "laboratory"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.fumehood",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "fume hood"
+  },
+  "parts": {
+   "case": "glass"
+  },
+  "purposes": [
+   "laboratory"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "work.research",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "research bench"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "laboratory",
+   "library"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "work.hydroponics",
+  "category": "work",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "scifi"
+  ],
+  "names": {
+   "*": "hydroponics basin"
+  },
+  "parts": {
+   "basin": "metal",
+   "tray": "plant"
+  },
+  "purposes": [
+   "greenhouse"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "work.tailor",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "tailor bench"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "workshop"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ]
+ },
+ {
+  "id": "work.smelter",
+  "category": "work",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0.4,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "smelter"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "forge",
+   "workshop"
+  ],
+  "sources": [
+   "rimworld-wiki"
+  ],
+  "aliases": [
+   "electric smelter"
+  ]
+ },
+ {
+  "id": "board.black",
+  "category": "board",
+  "size": [
+   2,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "blackboard"
+  },
+  "parts": {
+   "panel": "wood"
+  },
+  "purposes": [
+   "classroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "chalkboard"
+  ]
+ },
+ {
+  "id": "board.flip",
+  "category": "board",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "flip board"
+  },
+  "parts": {
+   "panel": "synthetic"
+  },
+  "purposes": [
+   "classroom",
+   "office"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "whiteboard"
+  ]
+ },
+ {
+  "id": "board.map",
+  "category": "board",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "map board"
+  },
+  "parts": {
+   "panel": "wood"
+  },
+  "purposes": [
+   "office",
+   "bridge",
+   "guardroom"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "ent.tv",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "television"
+  },
+  "parts": {
+   "case": "synthetic"
+  },
+  "purposes": [
+   "common_room",
+   "bedroom"
+  ],
+  "sources": [
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "TV",
+   "large TV"
+  ]
+ },
+ {
+  "id": "ent.arcade",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "arcade machine"
+  },
+  "parts": {
+   "case": "synthetic"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "arcade cabinet"
+  ]
+ },
+ {
+  "id": "ent.pinball",
+  "category": "entertainment",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "pinball machine"
+  },
+  "parts": {
+   "case": "synthetic"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "wikipedia-furniture",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "ent.pool",
+  "category": "entertainment",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "pool table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "billiard table"
+  ]
+ },
+ {
+  "id": "ent.chess",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "chess table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "common_room",
+   "library"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "ent.piano",
+  "category": "entertainment",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "piano"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "common_room",
+   "chapel"
+  ],
+  "sources": [
+   "wikipedia-furniture",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "ent.organ",
+  "category": "entertainment",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "industrial"
+  ],
+  "names": {
+   "*": "pipe organ"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "chapel"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "ent.radio",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "radio"
+  },
+  "parts": {
+   "case": "wood"
+  },
+  "purposes": [
+   "common_room",
+   "bedroom",
+   "office"
+  ],
+  "sources": [
+   "pa-fandom",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "ent.gramophone",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy"
+  ],
+  "bands": [
+   "industrial"
+  ],
+  "names": {
+   "*": "gramophone"
+  },
+  "parts": {
+   "horn": "metal"
+  },
+  "purposes": [
+   "common_room",
+   "office"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "phonograph"
+  ]
+ },
+ {
+  "id": "ent.jukebox",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "jukebox"
+  },
+  "parts": {
+   "case": "metal"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "ent.speaker",
+  "category": "entertainment",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "speaker cabinet"
+  },
+  "parts": {
+   "case": "synthetic"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "ent.roulette",
+  "category": "entertainment",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "roulette table"
+  },
+  "parts": {
+   "top": "wood"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "gym.bench",
+  "category": "gym",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "weight bench"
+  },
+  "parts": {
+   "frame": "metal",
+   "cushion": "synthetic"
+  },
+  "purposes": [
+   "gym"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "gym.treadmill",
+  "category": "gym",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "treadmill",
+   "scifi": "gravity treadmill"
+  },
+  "parts": {
+   "body": "synthetic"
+  },
+  "purposes": [
+   "gym"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "gym.punchbag",
+  "category": "gym",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "punching bag"
+  },
+  "parts": {
+   "bag": "leather"
+  },
+  "purposes": [
+   "gym"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "heavy punching bag",
+   "punch bag"
+  ]
+ },
+ {
+  "id": "gym.dummy",
+  "category": "gym",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "training dummy"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "gym",
+   "guardroom"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "gym.machine",
+  "category": "gym",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "exercise machine"
+  },
+  "parts": {
+   "body": "synthetic"
+  },
+  "purposes": [
+   "gym"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "ergometer"
+  ]
+ },
+ {
+  "id": "decor.rug",
+  "category": "decor",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 1.0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "rug"
+  },
+  "parts": {
+   "pile": "fabric"
+  },
+  "purposes": [
+   "bedroom",
+   "common_room",
+   "dining"
+  ],
+  "sources": [
+   "pa-fandom",
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "mat"
+  ]
+ },
+ {
+  "id": "decor.plant",
+  "category": "decor",
+  "size": [
+   1,
+   1
+  ],
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "plant pot"
+  },
+  "parts": {
+   "plant": "plant"
+  },
+  "purposes": [
+   "office",
+   "common_room",
+   "bedroom"
+  ],
+  "sources": [
+   "rimworld-wiki",
+   "pa-fandom"
+  ],
+  "aliases": [
+   "houseplant",
+   "bonsai pot"
+  ]
+ },
+ {
+  "id": "decor.statue",
+  "category": "decor",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "*"
+  ],
+  "names": {
+   "*": "statue"
+  },
+  "parts": {
+   "body": "stone"
+  },
+  "purposes": [
+   "common_room",
+   "chapel",
+   "library"
+  ],
+  "sources": [
+   "df-wiki",
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "decor.painting",
+  "category": "decor",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "painting"
+  },
+  "parts": {
+   "frame": "wood"
+  },
+  "purposes": [
+   "dining",
+   "office",
+   "common_room",
+   "bedroom"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "decor.mirror",
+  "category": "decor",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "mirror"
+  },
+  "parts": {
+   "panel": "glass"
+  },
+  "purposes": [
+   "bedroom",
+   "shop",
+   "washroom"
+  ],
+  "sources": [
+   "dnd-srd",
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "decor.screen",
+  "category": "decor",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "folding screen"
+  },
+  "parts": {
+   "panel": "wood"
+  },
+  "purposes": [
+   "bedroom",
+   "washroom",
+   "ward"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "decor.tree",
+  "category": "decor",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "planter tree"
+  },
+  "parts": {
+   "plant": "plant"
+  },
+  "purposes": [
+   "office",
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom"
+  ],
+  "aliases": [
+   "indoor tree planter"
+  ]
+ },
+ {
+  "id": "decor.fountain",
+  "category": "decor",
+  "size": [
+   2,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "elite"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "fountain"
+  },
+  "parts": {
+   "basin": "stone"
+  },
+  "purposes": [
+   "common_room"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "decor.aquarium",
+  "category": "decor",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "aquarium"
+  },
+  "parts": {
+   "case": "glass"
+  },
+  "purposes": [
+   "office",
+   "common_room",
+   "shop"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ]
+ },
+ {
+  "id": "relig.altar",
+  "category": "religious",
+  "size": [
+   2,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "altar"
+  },
+  "parts": {
+   "top": "stone"
+  },
+  "purposes": [
+   "chapel"
+  ],
+  "sources": [
+   "pa-fandom",
+   "cdda-mapgen"
+  ]
+ },
+ {
+  "id": "relig.lectern",
+  "category": "religious",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "names": {
+   "*": "lectern"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "chapel",
+   "classroom"
+  ],
+  "sources": [
+   "wikipedia-furniture"
+  ],
+  "aliases": [
+   "pulpit"
+  ]
+ },
+ {
+  "id": "relig.mat",
+  "category": "religious",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 1.0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "modern"
+  ],
+  "names": {
+   "*": "prayer mat"
+  },
+  "parts": {
+   "pile": "fabric"
+  },
+  "purposes": [
+   "chapel"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "med.exam",
+  "category": "medical",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": "north",
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "exam chair"
+  },
+  "parts": {
+   "seat": "synthetic"
+  },
+  "purposes": [
+   "ward"
+  ],
+  "sources": [
+   "cdda-furniture",
+   "local-replies"
+  ],
+  "aliases": [
+   "surgical chair"
+  ]
+ },
+ {
+  "id": "med.ivpole",
+  "category": "medical",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "IV pole"
+  },
+  "parts": {
+   "pole": "metal"
+  },
+  "purposes": [
+   "ward"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "med.curtain",
+  "category": "medical",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 1.0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "privacy curtain"
+  },
+  "parts": {
+   "cloth": "fabric"
+  },
+  "purposes": [
+   "ward"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "med.slab",
+  "category": "medical",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "morgue slab"
+  },
+  "parts": {
+   "top": "stone"
+  },
+  "purposes": [
+   "ward"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "med.autoclave",
+  "category": "medical",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "wealthy",
+   "elite"
+  ],
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "names": {
+   "*": "autoclave"
+  },
+  "parts": {
+   "vessel": "metal"
+  },
+  "purposes": [
+   "ward",
+   "laboratory"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ]
+ },
+ {
+  "id": "sec.detector",
+  "category": "security",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "metal detector"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "guardroom"
+  ],
+  "sources": [
+   "pa-fandom"
+  ]
+ },
+ {
+  "id": "coffin.box",
+  "category": "coffin",
+  "size": [
+   1,
+   2
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest",
+   "wealthy"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "coffin"
+  },
+  "parts": {
+   "case": "wood"
+  },
+  "purposes": [
+   "chapel",
+   "storage"
+  ],
+  "sources": [
+   "df-wiki",
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "casket",
+   "sarcophagus"
+  ]
+ },
+ {
+  "id": "util.ladder",
+  "category": "utility",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "stepladder"
+  },
+  "parts": {
+   "frame": "metal"
+  },
+  "purposes": [
+   "storage",
+   "library"
+  ],
+  "sources": [
+   "cdda-furniture"
+  ],
+  "aliases": [
+   "wooden stepladder"
+  ]
+ },
+ {
+  "id": "sack.grain",
+  "category": "sack",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "grain sack"
+  },
+  "parts": {
+   "vessel": "fabric"
+  },
+  "purposes": [
+   "storage",
+   "kitchen",
+   "shop"
+  ],
+  "sources": [
+   "dnd-srd",
+   "local-replies"
+  ],
+  "aliases": [
+   "sack",
+   "sack stack"
+  ]
+ },
+ {
+  "id": "wood.stack",
+  "category": "wood",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor",
+   "modest"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "firewood stack"
+  },
+  "parts": {
+   "pile": "wood"
+  },
+  "purposes": [
+   "storage",
+   "forge"
+  ],
+  "sources": [
+   "local-replies",
+   "cdda-mapgen"
+  ],
+  "aliases": [
+   "wood pile"
+  ],
+  "note": "our replies stack firewood by hearths; CDDA houses stash wood the same way"
+ },
+ {
+  "id": "hay.bale",
+  "category": "hay",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "names": {
+   "*": "hay bale"
+  },
+  "parts": {
+   "pile": "plant"
+  },
+  "purposes": [
+   "storage"
+  ],
+  "sources": [
+   "pa-fandom",
+   "local-replies"
+  ],
+  "aliases": [
+   "hay rick"
+  ]
+ },
+ {
+  "id": "barricade.plywood",
+  "category": "barricade",
+  "size": [
+   1,
+   1
+  ],
+  "sizeGuessed": true,
+  "walkability": 0,
+  "forSleep": false,
+  "light": 0,
+  "back": null,
+  "wealth": [
+   "poor"
+  ],
+  "bands": [
+   "modern"
+  ],
+  "names": {
+   "*": "plywood barricade"
+  },
+  "parts": {
+   "body": "wood"
+  },
+  "purposes": [
+   "guardroom",
+   "storage"
+  ],
+  "sources": [
+   "local-replies"
+  ],
+  "note": "our zombie-town replies board rooms up; no public source in this survey has it"
+ }
+]

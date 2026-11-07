@@ -1,0 +1,48 @@
+Decide who lives and works in this world, before anyone is named. A later step
+names each person, and code builds the rooms and beds from your answer.
+
+WORLD: ${setting_line}
+ZONES AND BUILDINGS:
+${zone_lines}
+HOW MANY: ${budget_line}
+
+Reply with ONE JSON object:
+{
+  "buildings": [
+    {"name": "building name", "status": "home|staffed|occasional|vacant|abandoned",
+     "why": "one sentence, for occasional, vacant and abandoned: what happened here"}
+  ],
+  "households": [
+    {"home": "building name", "couples": 1,
+     "members": [
+       {"kind": "adult", "role": "herring fisher", "work": "building or zone name",
+        "shift": "day", "sells": false},
+       {"kind": "child"},
+       {"kind": "elder"}
+     ]}
+  ],
+  "noFamilies": "only when this world has no families, say why (a ship's crew, a barracks)"
+}
+
+- Give EVERY building a status. "home": a household lives here. "staffed": open,
+  with people working it. "occasional": a visitor works it now and then.
+  "vacant": closed but sound, waiting for someone. "abandoned": left to rot.
+- Not every building is in use. Choose what the world can really keep running.
+  A smithy with no smith, a shop whose owner died and an estate gone to seed are
+  story hooks, not gaps: mark them, and write a "why" worth a quest.
+- Everyone who lives here belongs to a household, and a staffed building's
+  workers are household members whose "work" names it. A staffed building needs
+  at least one. Nobody lives or works in an occasional, vacant or abandoned one.
+- A building can be both: an inn's keeper may live in, so the inn is "staffed"
+  and has a household. A unit building holds several households, each in a
+  flat of its own: code sets how many flats it has and how many beds each from
+  your households, so ignore the copies its line lists. At most 8 to a household.
+- Families, not just workers: at least a third of the homes hold children or
+  elders. Children and elders have no role or work; they stay home by day.
+- "couples" counts the pairs among a household's adults, at most half of them.
+- "shift" is "day" unless the work is really done later: a tavern's evening
+  staff, a night watch. "sells" is true when customers buy from this person,
+  and false otherwise, however the role sounds: a guard in a looted shop sells
+  nothing.
+
+${rules}

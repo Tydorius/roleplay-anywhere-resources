@@ -4,6 +4,8 @@ out as both spec.json and spec.py (`SPEC = json.loads(...)`).
 """
 import json
 
+from .sellers import sellers as sellers_of
+
 GROUND_MAP = {"grass": ("grass", "grass"), "dirt": ("dirt", "dirt"),
               "gravel": ("gravel", "gravel"), "stone": ("stone", "rock"),
               "wood": ("wood", "floorboards")}
@@ -154,6 +156,8 @@ def build_spec(world, plan):
             spec_t["placements"] = by_template[t.name]
         object_templates.append(spec_t)
 
+    sellers = sellers_of(world)
+
     def character(c):
         ent = {
             "name": c.name,
@@ -162,7 +166,7 @@ def build_spec(world, plan):
             "level": c.person.extras.get("level", 2),
             "animationId": animation_for(c),
             "description": c.person.description or c.name,
-            "physicalDescription": c.person.physicalDescription or c.name,
+            "physicalDescription": physical_for(c),
             "voiceProfile": voice_for(c),
             "schedule": c.schedule,
         }
@@ -185,7 +189,7 @@ def build_spec(world, plan):
             ent["inventory"] = inventory
         if equipment:
             ent["equipment"] = equipment
-        if "innkeeper" in (c.person.role or "").lower() or "merchant" in (c.person.role or "").lower():
+        if c.person.name in sellers:
             ent["merchant"] = {}
         return ent
 
@@ -231,7 +235,7 @@ def build_spec(world, plan):
         "currency": extras.get("currency", {"name": "Coin",
                                             "description": "The common coin of the region.",
                                             "format": "5 coins"}),
-        "startingCurrency": extras.get("startingCurrency", 5),
+        "startingCurrency": extras.get("startingCurrency", 100),
         "attributes": extras.get("attributes", {"strength": 5, "dexterity": 5, "intellect": 5,
                                                 "perception": 5, "charisma": 5}),
         "skills": extras.get("skills", {}),
@@ -270,7 +274,15 @@ def _char_pos(world, c):
     return [pos[0], pos[1]]
 
 
+def _kind(c):
+    return (c.person.extras or {}).get("kind")
+
+
 def animation_for(c):
+    if _kind(c) == "child":
+        return "child"
+    if _kind(c) == "elder":
+        return "old-man" if c.gender == "male" else "old-woman"
     role = (c.person.role or "").lower()
     for key, (m, f) in ANIMATIONS.items():
         if key in role:
@@ -278,10 +290,25 @@ def animation_for(c):
     return "casual-man" if c.gender == "male" else "casual-woman"
 
 
+def physical_for(c):
+    """The portrait prompt. A child's or an elder's own description rarely says
+    how old they are, and the portraits came out as adults until it did."""
+    text = c.person.physicalDescription or c.name
+    if _kind(c) == "child":
+        return f"A young child, under twelve years old, with a child's small round face. {text}"
+    if _kind(c) == "elder":
+        word = "man" if c.gender == "male" else "woman"
+        return f"Very old {word}, about eighty, deeply wrinkled, white hair. {text}"
+    return text
+
+
 def voice_for(c):
     gender = "Male" if c.gender == "male" else "Female"
-    age = ["Senior"] if (c.person.role or "").lower().startswith("old") else ["Adult"]
-    return {"gender": gender, "age": age, "pitch": ["Average"], "tags": []}
+    if _kind(c) == "child":
+        return {"gender": gender, "age": ["Child"], "pitch": ["Brighter"], "tags": []}
+    old = _kind(c) == "elder" or (c.person.role or "").lower().startswith("old")
+    return {"gender": gender, "age": ["Senior"] if old else ["Adult"], "pitch": ["Average"],
+            "tags": []}
 
 
 def write_spec(out_dir, spec):

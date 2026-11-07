@@ -4,7 +4,7 @@ their home and work; give everyone a real home building and a real workplace.
 WORLD: ${setting_line}
 ZONE: ${zone_line}
 ZONES (work may name any of them): ${zone_names_line}
-BUILDINGS (with the beds their furniture holds):
+BUILDINGS (with the sleepers their furniture beds):
 ${building_lines}
 ${roster_block}
 Reply with ONE JSON object:
@@ -12,6 +12,7 @@ Reply with ONE JSON object:
   "npcs": [
     {"name": "full name", "gender": "male|female", "role": "their trade or place",
      "home": "building name from the list", "work": "building or zone name from the lists",
+     "partner": "their partner's full name (only when the building line names a couple)",
      "description": "one sentence: who they are and what they want",
      "physicalDescription": "build, clothes, one telling detail"}
   ]
@@ -20,9 +21,16 @@ Reply with ONE JSON object:
 - This batch: ${quota_line}
 - Make the people the place needs: staff on duty in opening hours, families,
   rivals, and at least one person who doesn't fit (the misfit the story wants).
-- "home" must be a BUILDING from the list with a bed free (at most one person
-  per bed, counting the roster). "work" must be a building or a zone from the
-  lists (a forester works in the forest zone).
+- Unless this batch says code records them: when a building line or a
+  household line names couple(s) or pairs, that many
+  pairs of that home's people are partners, always two of one household: the
+  two of each pair carry "partner" (the other's full name,
+  each naming the other), and both descriptions say so in a few words. Nobody
+  else gets a partner field.
+- "home" must be a BUILDING from the list with a sleep spot free (at most
+  one person per spot — a double bed sleeps two — counting the roster).
+  "work" must be a building or a zone from the lists (a forester works in
+  the forest zone).
 - Names fit the setting; nobody in the world shares a name with the roster.
   Descriptions are specific: count things, mention one want and one worry.
 

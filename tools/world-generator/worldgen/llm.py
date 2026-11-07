@@ -1,8 +1,10 @@
 """OpenAI-compatible chat-completions client, standard library only (urllib).
 
 Providers come from ``providers.json`` at the repository root (gitignored):
-each entry has ``base_url``, ``api_key``, ``model`` and ``max_tokens``. Keys
-are never logged, printed or written to a call record.
+each entry has ``base_url``, ``api_key``, ``model`` and ``max_tokens``, and may
+set ``timeout`` (seconds to wait for one reply) and ``rate_limit_wait`` (seconds
+to wait out a busy provider per request). Keys are never logged, printed or
+written to a call record.
 
 Every phase call goes through :func:`Client.call`, which extracts one JSON
 object from the reply, checks it against a contract, and on bad JSON or a
@@ -15,18 +17,80 @@ are reasoning models: the provider's ``max_tokens`` is always sent, and only
 import json
 import os
 import re
+import socket
 import time
 import urllib.error
 import urllib.request
 
 PROVIDERS_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                               "providers.json")
-REQUEST_TIMEOUT = 600   # seconds; one reasoning reply can take minutes
-MAX_TOKENS_CEILING = 65536   # how far an empty, budget-spent reply may double the budget
+# seconds for one reply, unless the provider sets "timeout". Replies aren't
+# streamed, so nothing arrives until the model finishes: a 27B model at 19
+# tokens/s spent 27 minutes on one catalogue reply, which 600 would have failed
+# three times over, ending the run
+REQUEST_TIMEOUT = 1800
+# a provider that answers 429 or 5xx is waited out, up to this many seconds per
+# request unless it sets "rate_limit_wait". Free models are often rate-limited
+# upstream: three instant retries ended a run in half a second, before the model
+# saw a word, with an error that read as if the model had failed
+RATE_LIMIT_WAIT = 900
+BUSY_CODES = (408, 429, 500, 502, 503, 504)
+BUSY_FIRST_PAUSE, BUSY_LONGEST_PAUSE = 5, 120   # seconds, doubling between them
+MAX_TOKENS_CEILING = 65536   # how far a reply cut off at the budget may double it
+# phases whose reply can't fit the provider's usual budget. P2's catalogue hit
+# 16000 in half the live runs, reasoning included, and came back cut off
+PHASE_BUDGETS = {"p2": 32000, "p2-items": 32000}
 
 
 class LLMError(Exception):
     pass
+
+
+class HTTPStatusError(LLMError):
+    """The provider answered with an error status."""
+
+    def __init__(self, message, code, retry_after=None):
+        super().__init__(message)
+        self.code = code
+        self.retry_after = retry_after
+
+
+class ProviderBusy(LLMError):
+    """The provider stayed rate-limited or down past the wait. It ends the run:
+    the model was never asked, so nothing downstream can be salvaged."""
+
+
+def _retry_after(headers):
+    """A Retry-After header in seconds; the date form counts as absent."""
+    try:
+        return max(0, int((headers or {}).get("Retry-After", "")))
+    except (TypeError, ValueError):
+        return None
+
+
+def _seconds(cfg, key):
+    """A provider's optional seconds setting, or None when it isn't set."""
+    v = cfg.get(key)
+    if v is None:
+        return None
+    if isinstance(v, bool) or not isinstance(v, (int, float)) or v < 0:
+        raise LLMError(f"provider setting {key!r} must be a number of seconds, not {v!r}")
+    return v
+
+
+def _scrub(value):
+    """``value`` with lone surrogates removed from its strings, in place for
+    lists and dicts. A model can write one as a JSON escape; it parses, then
+    can't be written as UTF-8, which crashed a run 77 minutes in."""
+    if isinstance(value, str):
+        return value.encode("utf-8", "ignore").decode("utf-8")
+    if isinstance(value, list):
+        value[:] = [_scrub(v) for v in value]
+    elif isinstance(value, dict):
+        for k in list(value):
+            item = _scrub(value.pop(k))
+            value[_scrub(k)] = item
+    return value
 
 PLACEHOLDER_KEY = "YOUR_API_KEY"   # the example file's stand-in for a real key
 
@@ -128,7 +192,14 @@ class Client:
     failures; it returns the parsed object from the last attempt that
     produced JSON (even when a contract check failed on it, so the caller can
     drop just the bad entries), or None when no attempt parsed. Transport
-    errors are retried like any other failure."""
+    errors are retried like any other failure, except ProviderBusy, which
+    ends the run once the wait runs out."""
+
+    last_cut = False   # the last call ended on a reply that ran out of budget
+    last_error = None  # why the last attempt got no reply, for the run's error
+    timeout = None           # seconds for one reply; None is REQUEST_TIMEOUT
+    rate_limit_wait = None   # seconds to wait out a busy provider; None is RATE_LIMIT_WAIT
+    on_wait = None     # called about once a second during a wait; may raise to stop it
 
     def __init__(self, provider, providers_path=PROVIDERS_PATH, log_dir=None):
         cfg = load_provider(provider, providers_path)
@@ -136,6 +207,8 @@ class Client:
         self.base_url = cfg["base_url"].rstrip("/")
         self.model = cfg["model"]
         self.max_tokens = int(cfg.get("max_tokens", 16000))
+        self.timeout = _seconds(cfg, "timeout")
+        self.rate_limit_wait = _seconds(cfg, "rate_limit_wait")
         self._api_key = cfg["api_key"]
         self.log_dir = log_dir
         self.calls = 0
@@ -158,22 +231,41 @@ class Client:
                   "tokens": {"prompt": 0, "completion": 0, "total": 0}}
         t0 = time.time()
         result, last_parsed, ok = None, None, False
-        budget = self.max_tokens
+        budget = max(self.max_tokens, PHASE_BUDGETS.get(phase, 0))
+        cut = False
+        self.last_error = None
         for attempt in range(1, max_retries + 2):
             if attempt > 1:
                 self.retries += 1
             try:
                 raw, usage = self._request(messages, budget)
                 transport_error = None
+            except ProviderBusy as e:
+                record["attempts"].append({
+                    "attempt": attempt, "messages": [dict(m) for m in messages],
+                    "raw_reply": "", "parsed": None, "errors": [str(e)], "usage": {},
+                    "max_tokens": budget})
+                record["seconds"] = round(time.time() - t0, 3)
+                self.seconds += record["seconds"]
+                self._write_log(phase, record)
+                raise
             except LLMError as e:
                 raw, usage, transport_error = "", {}, str(e)
-            # a reasoning model that spends the whole budget thinking replies
-            # empty: retry the same messages with twice the budget
-            spent = not raw.strip() and int(usage.get("completion", 0) or 0) >= budget
+            # a reply that ran out of budget, whether it's empty (a reasoning
+            # model thinking past it) or stops mid-item: the bracket repair
+            # would close the stump into valid JSON and lose the rest, so it
+            # never counts, and the same messages go again with twice the budget
+            cut = not transport_error and (
+                usage.get("finish") == "length"
+                or int(usage.get("completion", 0) or 0) >= budget)
             parsed, parse_error = extract_json(raw)
+            parsed = _scrub(parsed)
+            self.last_error = transport_error
             errors = []
             if transport_error:
                 errors.append(f"the request failed: {transport_error}")
+            elif cut:
+                errors.append(f"the reply was cut off at the {budget}-token limit")
             elif parse_error:
                 errors.append(parse_error)
             elif validate is not None:
@@ -194,7 +286,7 @@ class Client:
             if not errors:
                 result, ok = parsed, True
                 break
-            if attempt <= max_retries and spent:
+            if attempt <= max_retries and cut:
                 budget = min(budget * 2, MAX_TOKENS_CEILING)
             elif attempt <= max_retries:
                 messages = messages + [
@@ -203,6 +295,7 @@ class Client:
                      "Your reply had problems:\n- " + "\n- ".join(errors)
                      + "\nReply again with ONE corrected JSON object and nothing else."},
                 ]
+        self.last_cut = cut and not ok
         record["seconds"] = round(time.time() - t0, 3)
         record["ok"] = ok
         record["result"] = result if ok else last_parsed
@@ -213,6 +306,43 @@ class Client:
         return record["result"]
 
     def _request(self, messages, max_tokens=None):
+        """One reply, waiting out a busy provider: a 429 or 5xx is tried again
+        after a pause (the provider's Retry-After when it's longer), until
+        the wait runs out and ProviderBusy ends the run."""
+        limit = RATE_LIMIT_WAIT if self.rate_limit_wait is None else self.rate_limit_wait
+        waited, pause = 0, BUSY_FIRST_PAUSE
+        while True:
+            try:
+                return self._post(messages, max_tokens)
+            except HTTPStatusError as e:
+                if e.code not in BUSY_CODES:
+                    raise
+                if waited >= limit:
+                    raise ProviderBusy(
+                        f"{self.model} on provider {self.provider!r} stayed busy or "
+                        f"rate-limited (HTTP {e.code}) for {round(waited / 60, 1)} minutes, so "
+                        f"the model never answered. That is the provider, not the model: try "
+                        f"again later, pick another model, or raise \"rate_limit_wait\" in "
+                        f"providers.json. Last reply: {str(e)[:200]}")
+                length = min(max(pause, e.retry_after or 0), BUSY_LONGEST_PAUSE)
+                self._wait(length, e.code, waited, limit)
+                waited += length
+                pause = min(pause * 2, BUSY_LONGEST_PAUSE)
+
+    def _wait(self, length, code, waited, limit):
+        """Sleep ``length`` seconds in short steps, so ``on_wait`` can report
+        the wait and a cancelled run needn't sit it out."""
+        left, first = length, True
+        while left > 0:
+            if self.on_wait is not None:
+                self.on_wait({"code": code, "pause": length, "waited": waited,
+                              "limit": limit, "first": first})
+            first = False
+            step = min(1, left)
+            time.sleep(step)
+            left -= step
+
+    def _post(self, messages, max_tokens=None):
         """POST /chat/completions. Returns (content, usage); raises LLMError."""
         body = json.dumps({"model": self.model, "messages": messages,
                            "max_tokens": max_tokens or self.max_tokens}).encode("utf-8")
@@ -220,8 +350,9 @@ class Client:
             self.base_url + "/chat/completions", data=body, method="POST",
             headers={"Content-Type": "application/json",
                      "Authorization": "Bearer " + self._api_key})
+        timeout = self.timeout or REQUEST_TIMEOUT
         try:
-            with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as resp:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             detail = ""
@@ -229,14 +360,17 @@ class Client:
                 detail = e.read().decode("utf-8", "replace")[:500]
             except Exception:
                 pass
-            raise LLMError(f"HTTP {e.code}: {detail or e.reason}")
+            raise HTTPStatusError(f"HTTP {e.code}: {detail or e.reason}", e.code,
+                                  _retry_after(e.headers))
         except urllib.error.URLError as e:
             raise LLMError(f"cannot reach the provider: {e.reason}")
         except (ValueError, KeyError) as e:
             raise LLMError(f"malformed provider response: {e}")
+        except (TimeoutError, socket.timeout):
+            raise LLMError(f"no reply within {timeout}s; a slow model may need a bigger "
+                           f"\"timeout\" in providers.json")
         except OSError as e:
-            # a read that times out mid-reply (TimeoutError / socket.timeout)
-            # or a dropped connection: retried like any failed request
+            # a dropped connection: retried like any failed request
             raise LLMError(f"the connection failed: {e!r}")
         try:
             content = data["choices"][0]["message"]["content"] or ""
@@ -245,7 +379,8 @@ class Client:
         usage = data.get("usage") or {}
         u = {"prompt": usage.get("prompt_tokens"),
              "completion": usage.get("completion_tokens"),
-             "total": usage.get("total_tokens")}
+             "total": usage.get("total_tokens"),
+             "finish": data["choices"][0].get("finish_reason")}
         return content, {k: v for k, v in u.items() if v is not None}
 
     # -------------------------------------------------------------- logging
@@ -257,7 +392,8 @@ class Client:
         slug = re.sub(r"[^a-z0-9-]+", "-", phase.lower()).strip("-")
         path = os.path.join(self.log_dir, f"{self.calls:02d}-{slug or 'call'}.json")
         tmp = path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
+        # raw replies keep what the model sent, lone surrogates included
+        with open(tmp, "w", encoding="utf-8", errors="backslashreplace") as f:
             json.dump(record, f, indent=1, ensure_ascii=False)
         os.replace(tmp, path)
 
@@ -292,8 +428,10 @@ def check_provider(name, providers_path=PROVIDERS_PATH):
             detail = e.read().decode("utf-8", "replace")[:300]
         except Exception:
             pass
+        busy = (" (the provider is rate-limited or busy right now; a run waits this out, "
+                "but on a free model it can last hours)") if e.code in BUSY_CODES else ""
         return {"ok": False, "provider": name, "model": cfg["model"],
-                "error": f"HTTP {e.code}: {detail or e.reason}"}
+                "error": f"HTTP {e.code}{busy}: {detail or e.reason}"}
     except urllib.error.URLError as e:
         return {"ok": False, "provider": name, "model": cfg["model"],
                 "error": f"cannot reach the provider: {e.reason}"}

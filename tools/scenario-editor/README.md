@@ -57,8 +57,9 @@ The dialog's steps:
    (14, and the model asks up to five more of its own) questionnaire from the generator's
    question bank.
 2. **Answer the questions** with option chips (a question may allow two picks; **Other**
-   opens a text box; everything can be skipped) and set the **resident count** (20–40 by
-   default, 5–60 allowed).
+   opens a text box; everything can be skipped). **Let the map decide** starts ticked, and the
+   generator then sizes the population from the map, marks which buildings are in use, and
+   leaves room for families. Untick it to set your own **resident count** (5–60).
 3. **Other instructions or requests** (optional) takes anything the questions don't cover,
    such as a plot outline, places or people you want, or house rules. It goes word for word to
    the frame, the world plan, the people and the story phases.
@@ -79,7 +80,7 @@ The dialog's steps:
   OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
   subscription. Add one in the dialog under **Provider settings**: it is stored in the generator's
   gitignored `providers.json`, and only the last four characters of the key are ever shown again.
-- **Cost and time.** A world takes **18–27 model calls, 130–220k tokens, 25–50 minutes** (the
+- **Cost and time.** A world takes **25–35 model calls, 200–320k tokens, 30–55 minutes** (the
   dialog shows the estimate before you start). On a flash-tier model that is cents on a typical
   API plan.
 - **Progress and cancel.** The dialog shows the phase as it goes (the frame, world plan,
@@ -100,8 +101,10 @@ The dialog's steps:
 
   With Floors, each upper storey sits in a dark band east of the play area, behind "The Edge of
   the World", which the player never reaches on foot. Stairs carry people up and down.
-  The editor's Problems panel doesn't know about stair portals yet, so it lists upper-floor
-  rooms as "can't be reached on foot". The generator's own check follows the stairs.
+  The Problems panel reads the scenario's mod data: its reachability walk goes through portals
+  (stairs included), a storey reached only by its stairs isn't reported as sealed, and floor
+  openings count as cells nobody can walk into. A note lists the code mods a scenario's data
+  needs. Region groups need no scenario data, so the panel can't tell when that mod is in use.
 
   ![Upper storeys in their band beside the play area](media/scenario_editor_z-levels.png)
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
@@ -175,7 +178,9 @@ The dialog's steps:
 - **Download zip** warns first if the Problems panel lists errors.
 - **Layers:** lock a layer so clicks go through it, or hide it.
 - **Problems:** the scenario is checked after every change (`scenario_checks.py`). Click a problem
-  to jump to it.
+  to jump to it. One check counts people by the hour: more than 8 awake in a walled room (or per
+  14-cell circle of open ground) gets a warning, because the GM reads everyone in a room in full
+  every turn. A room that only sleeps that many gets a note.
 - **Inspector:** the right-hand panel edits whatever you selected. Every field change is one undo
   step.
   - **Nothing selected:** browse object types, hostile types, people and regions by name. You can
@@ -184,7 +189,7 @@ The dialog's steps:
     - name, description, walls (or none), hostile, ground, texture, tints and day and night
       ambience;
     - its doors, each removable along with its matching other side;
-    - beds against the people who sleep there;
+    - beds against the people who sleep there (a 2×2 or larger bed sleeps two);
     - **who is here when:** a 24-hour strip of everyone whose schedule brings them here, by role.
       Click an hour to list them.
   - **Object:**
@@ -214,12 +219,13 @@ The dialog's steps:
 
 ```
 node --test
-python -m unittest discover -s test -p "test_worldgen.py"
+python -m unittest discover -s test -p "test_*.py"
 ```
 
 Run these from this folder. The node tests cover the map operations (`mapops.js`), schedules
 (`schedule.js`), references (`refs.js`) and the minimap's coordinate helpers (Node 18 or newer).
-The python tests cover the world generation endpoints against a mocked generator (no model calls);
+The python tests cover the world generation endpoints against a mocked generator (no model calls),
+and the checks' handling of code-mod data (portals, floors) and bed capacity;
 the generator's own suite runs from `../world-generator` with `python -m unittest`.
 
 ## Checks on their own

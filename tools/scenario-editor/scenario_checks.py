@@ -62,6 +62,8 @@ def meta():
             "roles": ["work", "leisure", "sleep"], "objectTags": OBJECT_TAGS, "voiceTags": VOICE_TAGS}
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 HOSTILE_BUFFER = 15  # cells between a hostile region and anywhere peaceful NPCs spend their day
+ROOM_CAP = 8         # people awake in one walled room: the GM reads each in full every turn
+CIRCLE_CELLS = 615   # one 14-cell circle: open ground gets ROOM_CAP per circle
 
 
 # ---------------------------------------------------------------- loading
@@ -134,11 +136,12 @@ def check(scn, media=frozenset()):
     by_name = {}
     for r in regions:
         by_name.setdefault(r.get("name"), []).append(r)
-    _regions(scn, regions, by_name, add)
+    mods = _code_mods(scn, regions, add)
+    _regions(scn, regions, by_name, add, mods)
     _templates(scn, regions, add)
     _entities(scn, by_name, media, add)
     if all(_has_geometry(r) for r in regions):
-        _map(scn, regions, by_name, add)
+        _map(scn, regions, by_name, add, mods)
     _media(media, add)
     order = {"error": 0, "warning": 1, "info": 2}
     out.sort(key=lambda p: order[p["level"]])
@@ -147,6 +150,81 @@ def check(scn, media=frozenset()):
 
 def _has_geometry(r):
     return all(isinstance(r.get(k), list) and len(r[k]) == 2 for k in ("position", "size"))
+
+
+def _code_mods(scn, regions, add):
+    """What the scenario's code-mod data (arpgMods) changes about the map, from the mods' READMEs in
+    ../code-mod-loader/examples:
+    - portals: each end is an object pad, a cell or a region. You step onto a pad (or into the region)
+      and come out on a free cell beside the other end (or anywhere in its region); twoWay works both ways;
+    - floors: a storey's openings are regions nobody can walk into, and its stairs are portals.
+    Returns {"portals": [(name, from_end, to_end, two_way)], "openings": {region ids}, "entered": {region
+    ids a portal leads into}}, where an end is ("pad" | "region", [cells]). A scenario without arpgMods
+    gets empty sets, so the plain checks are unchanged. Region groups need no scenario data, so the
+    checks can't tell when that mod is in use."""
+    out = {"portals": [], "openings": set(), "entered": set()}
+    mods = scn.get("arpgMods")
+    if not isinstance(mods, dict) or not mods:
+        return out
+    add("info", f"Uses code-mod data: {', '.join(sorted(mods))}. Those mods must be installed in the game.")
+    geo = [r for r in regions if _has_geometry(r)]
+    region_by = {}
+    for r in geo:
+        region_by.setdefault((r.get("name") or "").lower(), r)
+    tpl = {t.get("id"): t for t in scn.get("objectTemplates", [])}
+    obj_by = {}
+    for e in scn.get("entities", []):
+        if e.get("type") == "object" and isinstance(e.get("pos"), list) and len(e["pos"]) == 2:
+            obj_by.setdefault((e.get("name") or "").lower(), e)
+
+    def end(spec):
+        if not isinstance(spec, dict):
+            return None
+        if isinstance(spec.get("cell"), list) and len(spec["cell"]) == 2:
+            return "pad", [tuple(spec["cell"])]
+        if spec.get("object"):
+            e = obj_by.get(str(spec["object"]).lower())
+            if e:
+                t = tpl.get(e.get("templateId")) or {}
+                return "pad", cells(rect(e["pos"], e.get("size") or t.get("size") or [1, 1]))
+        if spec.get("region"):
+            r = region_by.get(str(spec["region"]).lower())
+            if r:
+                return "region", cells(rect(r["position"], r["size"]))
+        return None
+
+    portals = mods.get("portals") if isinstance(mods.get("portals"), list) else []
+    for p in portals:
+        if not isinstance(p, dict):
+            continue
+        a, b = end(p.get("from")), end(p.get("to"))
+        for side, e in (("from", a), ("to", b)):
+            if e is None:
+                add("warning", f"Portal {p.get('name')!r}: its {side} end names nothing on the map, so the portals "
+                               "mod drops it.")
+        if a and b:
+            out["portals"].append((p.get("name"), a, b, bool(p.get("twoWay"))))
+    floors = mods.get("floors") if isinstance(mods.get("floors"), list) else []
+    if floors and not portals:
+        add("warning", "arpgMods has floors but no portals: the storeys' stairs are portals, so nobody can reach them.")
+    for f in floors:
+        if not isinstance(f, dict):
+            continue
+        for key in ("area", "above"):
+            if f.get(key) and str(f[key]).lower() not in region_by:
+                add("warning", f"Floor {f.get('name')!r}: {key} {f[key]!r} names no region.")
+        for o in f.get("openings") or []:
+            r = region_by.get(str(o).lower())
+            if r:
+                out["openings"].add(r["id"])
+            else:
+                add("warning", f"Floor {f.get('name')!r}: opening {o!r} names no region.")
+    # a region a portal leads into (a storey reached only by its stairs) is not sealed
+    ends = {c for (_n, a, b, two) in out["portals"] for c in b[1] + (a[1] if two else [])}
+    for r in geo:
+        if any(c in ends for c in cells(rect(r["position"], r["size"]))):
+            out["entered"].add(r["id"])
+    return out
 
 
 def _top(scn, add):
@@ -171,7 +249,7 @@ def _top(scn, add):
         add("error", f"difficulty {scn['difficulty']!r} is not casual, medium or insane.")
 
 
-def _regions(scn, regions, by_name, add):
+def _regions(scn, regions, by_name, add, mods):
     gw, gh = (scn.get("gridSize") or [0, 0])[:2]
     for name, rs in by_name.items():
         if len(rs) > 1:
@@ -206,7 +284,7 @@ def _regions(scn, regions, by_name, add):
             if tuple(o) not in edge:
                 add("warning", f"{label}: door {list(o)} is not on its edge; the game moves it to the nearest edge cell.",
                     rid)
-        if r.get("wall") and not r.get("openings"):
+        if r.get("wall") and not r.get("openings") and rid not in mods["entered"] and rid not in mods["openings"]:
             add("warning", f"Walled region {r['name']!r} has no door, so it is sealed.", rid)
     for i, a in enumerate(regions):
         if not _has_geometry(a):
@@ -350,8 +428,9 @@ class Walls:
     border is blocked unless the cell on the inside is one of the region's openings, so every cell of a
     room can be stood on and a door is a cell of the room itself."""
 
-    def __init__(self, regions, solid, gw, gh):
-        self.solid, self.gw, self.gh = solid, gw, gh
+    def __init__(self, regions, solid, gw, gh, blocked=frozenset()):
+        self.solid, self.gw, self.gh, self.blocked = solid, gw, gh, blocked  # blocked: floor openings
+        self.jumps = {}  # cell -> cells a portal there puts you on (set by portal_jumps)
         self.inside = {}  # cell -> ids of the walled regions it is in
         self.doors = {}
         for r in regions:
@@ -361,7 +440,24 @@ class Walls:
                     self.inside.setdefault(c, set()).add(r["id"])
 
     def walkable(self, c):
-        return 0 <= c[0] < self.gw and 0 <= c[1] < self.gh and c not in self.solid
+        return 0 <= c[0] < self.gw and 0 <= c[1] < self.gh and c not in self.solid and c not in self.blocked
+
+    def portal_jumps(self, portals):
+        """Each portal end's cells -> where it puts you: anywhere in a region end, or a free cell beside a pad
+        (an object or a cell) on the pad's own side of any wall."""
+        def arrive(kind, cs):
+            if kind == "region":
+                return [c for c in cs if self.walkable(c)]
+            pad = set(cs)
+            home = self.inside.get(cs[0], set())
+            ring = {(x + dx, y + dy) for (x, y) in cs for dx in (-1, 0, 1) for dy in (-1, 0, 1)} - pad
+            return [c for c in ring if self.walkable(c) and self.inside.get(c, set()) == home]
+
+        for (_name, a, b, two) in portals:
+            for (src, dst) in ((a, b), (b, a)) if two else ((a, b),):
+                land = arrive(*dst)
+                for c in src[1]:
+                    self.jumps.setdefault(c, []).extend(land)
 
     def step(self, a, b):
         """Whether a person can step between neighbouring cells a and b (either way)."""
@@ -372,14 +468,15 @@ class Walls:
         seen, todo = {start}, [start]
         while todo:
             x, y = c = todo.pop()
-            for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
-                if n not in seen and self.walkable(n) and self.step(c, n):
+            steps = [n for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if self.walkable(n) and self.step(c, n)]
+            for n in steps + self.jumps.get(c, []):
+                if n not in seen:
                     seen.add(n)
                     todo.append(n)
         return seen
 
 
-def _map(scn, regions, by_name, add):
+def _map(scn, regions, by_name, add, mods):
     gw, gh = (scn.get("gridSize") or [0, 0])[:2]
     if not all(isinstance(v, (int, float)) for v in (gw, gh)):
         return
@@ -406,7 +503,9 @@ def _map(scn, regions, by_name, add):
                     add("warning", f"Objects {other.get('name')!r} and {e.get('name')!r} overlap at {list(c)}.",
                         other.get("id"), e.get("id"))
                 occupied[c] = e
-    walls = Walls(regions, solid, gw, gh)
+    blocked = {c for r in regions if r["id"] in mods["openings"] for c in cells(rects[r["id"]])}
+    walls = Walls(regions, solid, gw, gh, blocked)
+    walls.portal_jumps(mods["portals"])
 
     for r in regions:
         if not r.get("wall"):
@@ -437,11 +536,13 @@ def _map(scn, regions, by_name, add):
         seen = walls.flood(tuple(player["pos"]))
         for e in people:
             if e is not player and walls.walkable(tuple(e["pos"])) and tuple(e["pos"]) not in seen:
+                how = "on foot or through a portal" if mods["portals"] else "on foot"
                 add("warning" if e.get("hostile") else "error",
-                    f"{e.get('name')!r} can't be reached on foot from the player.", e.get("id"))
+                    f"{e.get('name')!r} can't be reached {how} from the player.", e.get("id"))
         for r in regions:
-            if r.get("wall") and not any(c in seen for c in cells(rects[r["id"]])):
-                add("error", f"Room {r['name']!r} can't be reached on foot from the player.", r["id"])
+            if r.get("wall") and r["id"] not in mods["openings"] and not any(c in seen for c in cells(rects[r["id"]])):
+                how = "on foot or through a portal" if mods["portals"] else "on foot"
+                add("error", f"Room {r['name']!r} can't be reached {how} from the player.", r["id"])
         for e in objs:
             t = tpl.get(e.get("templateId")) or {}
             x0, y0, x1, y1 = rect(e["pos"], e.get("size") or t.get("size") or [1, 1])
@@ -451,6 +552,13 @@ def _map(scn, regions, by_name, add):
                 add("warning", f"Nobody can stand beside {e.get('name')!r}.", e.get("id"))
 
     _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add)
+    _crowds(scn, regions, by_name, rects, parent, add)
+
+
+def bed_capacity(r):
+    """People one sleep object holds: 2 for a 2x2 or larger (a double bed), else 1 (a 1x2 or a 2x1 is a single
+    bed, turned or not). The game itself has no capacity: a sleeper takes any bed spot nobody has claimed."""
+    return 2 if min(r[2] - r[0], r[3] - r[1]) >= 1 else 1
 
 
 def _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add):
@@ -479,7 +587,7 @@ def _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add):
             for e in objs if (tpl.get(e.get("templateId")) or {}).get("forSleep")]
     for rid, who in sleepers.items():
         r = next(r for r in regions if r["id"] == rid)
-        n = sum(1 for b in beds if contains(rects[rid], b))
+        n = sum(bed_capacity(b) for b in beds if contains(rects[rid], b))
         if n == 0:
             add("warning", f"{len(who)} sleep in {r['name']!r}, which has nothing to sleep on.", rid, *sorted(who))
         elif n < len(who):
@@ -500,6 +608,59 @@ def _sleep_and_safety(scn, regions, by_name, rects, parent, objs, tpl, add):
             more = f" and {len(near) - 4} more" if len(near) > 4 else ""
             add("warning", f"Hostile {name[h]!r} is within {HOSTILE_BUFFER} cells of places peaceful NPCs use: "
                            f"{listed}{more}.", h, *[rid for _, rid in near])
+
+
+def _covers(block, minute):
+    s, e = _minutes(block["start"]), _minutes(block["end"])
+    if s == e:
+        return True
+    return s <= minute < e if s < e else minute >= s or minute < e
+
+
+def _crowds(scn, regions, by_name, rects, parent, add):
+    """People by the hour, the way the GM sees a space: everyone in the same
+    walled room, or on the same stretch of open ground. Sleepers are limited
+    by the beds, so a full barracks is a note and not a warning."""
+    walled = {r["id"] for r in regions if r.get("wall")}
+
+    def space(rid):
+        here = rid
+        while here:
+            if here in walled:
+                return here
+            here = parent.get(here)
+        return rid
+
+    awake, asleep = {}, {}
+    for e in scn.get("entities", []):
+        if e.get("type") != "npc":
+            continue
+        for b in e.get("schedule") or []:
+            r = (by_name.get(b.get("location")) or [None])[0]
+            if not r or not (HHMM.match(str(b.get("start", ""))) and HHMM.match(str(b.get("end", "")))):
+                continue
+            hours = (asleep if b.get("role") == "sleep" else awake).setdefault(
+                space(r["id"]), [set() for _ in range(24)])
+            for h in range(24):
+                if _covers(b, h * 60):
+                    hours[h].add(e.get("id"))
+
+    def cap(rid):
+        if rid in walled:
+            return ROOM_CAP
+        q = rects[rid]
+        return ROOM_CAP * max(1, (q[2] - q[0] + 1) * (q[3] - q[1] + 1) // CIRCLE_CELLS)
+
+    name = {r["id"]: r["name"] for r in regions}
+    for rid, hours in awake.items():
+        peak = max(range(24), key=lambda h: len(hours[h]))
+        if len(hours[peak]) > cap(rid):
+            add("warning", f"{len(hours[peak])} people are in {name[rid]!r} at {peak:02d}:00, more than the "
+                           f"{cap(rid)} the GM can read comfortably there.", rid, *sorted(hours[peak]))
+    for rid, hours in asleep.items():
+        most = max(len(who) for who in hours)
+        if most > cap(rid):
+            add("info", f"{most} sleep in {name[rid]!r}: the GM reads them all when the player is in there.", rid)
 
 
 def _media(media, add):

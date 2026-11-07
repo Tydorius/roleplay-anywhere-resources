@@ -78,8 +78,8 @@ python -m worldgen check-provider zai
 python -m unittest          # the test suite
 ```
 
-- `generate` runs the model phases (P0 the world frame, P1 world plan, P2 prop
-  catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
+- `generate` runs the model phases (P0 the world frame, P1 world plan, P2 items
+  then the prop catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
   P6 rules, perks and the story clock) and builds the scenario. The last line
   is a JSON summary.
 - `layout` re-places a saved plan with a new seed and **no model calls** —
@@ -122,11 +122,50 @@ Beside every form sits the **resident count**, defaulting to 20-40 (the
 game's own default) and allowed 5-60. P1 plans enough homes and lodgings to
 bed them (a building may carry `residents: n`, and a unit building's count is
 units x residents), P3 must give each promise real beds, and P5 people the
-place in batches — one call per zone with buildings, at most ten people each,
-the roster carried forward so names never repeat, then the player in a call
-of their own from the frame's role, carrying 2-5 starting items from the
-catalogue. Below the asked-for range the run tops up with further batches
-rather than failing.
+place in batches — one call per zone with buildings, at most ten people each
+and more calls while the zone's promised residents aren't all made, the roster
+carried forward so names never repeat, then the player in a call of their own
+from the frame's role, carrying 2-5 starting items from the catalogue. Below
+the asked-for range the run tops up with further batches rather than failing.
+With no resident count set, a plan whose P1 promised residents houses nobody
+past its beds.
+
+Each person gets a sleep room of their own at layout: a couple shares a double
+bed, a home naming one unit copy sleeps in that copy, and everyone else fills
+the home's beds. Beds in guest rooms and wards are **spare**: they need no
+owner, P5 doesn't count them as homes, and they stay empty unless a home runs
+out of its own beds.
+
+**P1b, the cast**, runs straight after P1 on any `generate` run. It gives every
+building a status (`home`, `staffed`, `occasional`, `vacant` or `abandoned`, with
+a `why` for the shut ones) and lists the households, adults with a role, a
+workplace, a shift and whether they sell, plus children and elders who stay home
+by day. It writes `residents` and `couples` back onto the plan, so beds work as
+before. Later phases see each shut building's state and story in its building
+line, so P3 furnishes it that way and the quests can use it. P5 then names one
+person per slot, and code fills in the facts. The dialog's **Let the map decide**
+(population `"map"`) sizes the cast from each zone's kind; a range the user sets
+is firm. If P1b produces nothing, the run carries on without a cast.
+
+Everyone's day is then planned together. Staff spread over their workplace's
+rooms, each person gets a seeded evening place near home (the nearest inn in
+their zone, home, or the ground outside), and no walled room holds more than
+`ROOM_CAP` (8) people awake at any hour, nor open ground more than that per
+14-cell circle: the GM reads everyone in a room in full, every turn. A person
+may carry `"shift": "evening"` or `"night"`. People leave early enough to reach
+work as their shift begins, and someone whose job is a whole open zone gets a
+small post round a stall. See [POPULATION_DESIGN.md](POPULATION_DESIGN.md).
+
+Who sells is decided in `worldgen/sellers.py`. A person's `"sells"` in the plan
+decides; without one, a trade in their role sells (a baker, a smith, a vendor,
+not an apprentice), and every working shop or inn gets at least one seller, its
+owner or keeper first. Sellers are written as `merchant: {}`, and the game stocks
+them itself. The player never sells.
+
+The game prices what it stocks on a fixed scale: it tells its model that one coin
+is about a US dollar and that a worker earns about 3000 a month, whatever the
+currency's own description says. P2 prices the catalogue on that scale, and the
+player's purse is at least `MIN_PURSE` (100).
 
 **P6, the systems**, runs after the people in three calls — 6a rules and
 economy (narrative rules, flavor and difficulty, a currency whose format
@@ -141,12 +180,35 @@ defaults (the Coin, an even 25-point spread).
 
 ## Cost and time
 
-From measured runs: **18–27 model calls, 130–220k tokens, 25–50 minutes**
+From measured runs: **25–35 model calls, 200–320k tokens, 30–55 minutes**
 per world (a reasoning-friendly `max_tokens` of 16000 is preset; flash-tier
-models are cheap — expect cents on a typical API plan). `estimate()` reports
+models are cheap — expect cents on a typical API plan; P2's two calls start at
+32000, because the catalogue often passes 16000). A reply that runs out of budget
+never counts: it goes again with twice the budget, and a run that keeps only a
+cut-off reply says so in its dropped list. `estimate()` reports
 these numbers; for a saved plan it counts the calls exactly (P0 when the plan
-carries a frame, P1 and P2, one call per building and zone, the people
+carries a frame, P1 and P2's two, one call per building and zone, the people
 batches and the three systems calls).
+
+### Slow models and free models
+
+Small models can finish a world, but they take longer and some need room to do it.
+A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes to
+2.5 hours and two to four times the tokens.
+
+- **`timeout`** in a provider's `providers.json` entry is the seconds allowed for
+  one reply (default 1800). Replies aren't streamed, so nothing arrives until the
+  model has finished: a local model at 19 tokens a second needs about 30 minutes
+  for a long reply. The local presets set 3600.
+- **`rate_limit_wait`** is how long one request waits out a busy provider, in
+  seconds (default 900). A 429 or 5xx reply is tried again after a pause, longer
+  each time, and the progress line says so. If the wait runs out the run stops
+  with an error that names the provider, since the model never saw the request.
+  Free models can stay rate-limited upstream for hours, whatever your own quota.
+- Slips that a retry would only delete are mended in code and listed under
+  "dropped/fixed": a hint outside the vocabulary, a yard the plan doesn't have,
+  furniture nested in its rooms, too many starting items, residents on a unit
+  building. Code also writes the couples' `partner` fields from the cast.
 
 ## Extensions (all off by default)
 
@@ -255,7 +317,8 @@ stamps the unit copies down both sides of it, mirrored so each copy's door
 faces the corridor (the builder's own auto-connect pair). Copies are named
 `Apartment 4` plainly or `Room 204` by storey. The 28x22 footprint cap
 applies to the unit, not the block: the building's length follows from the
-count. One bed per resident is stamped inside each copy, and
+count. Each copy gets a bed for every resident its own furniture doesn't
+already sleep, and
 `BuildingLayout.residents` reports the total for the population work. Proven
 by `fixtures/apartment-block.plan.json`.
 
@@ -306,8 +369,9 @@ tube between: every walkable cell of the map is inside a walled region
 
 ## Item templates and loot pools
 
-Brief 012f gave P2 a second job: besides the furniture catalogue it returns
-**30-60 setting items** (`{name, type, quality, value, description,
+Brief 012f gave P2 a second job, now a call of its own that runs first (so the
+furniture catalogue can name default pools, and a world that loses this call
+still builds, with empty containers): **30-60 setting items** (`{name, type, quality, value, description,
 physicalDescription}`, the guide's type and quality lists) and named
 **`lootPools`** — lists of item names as specific as the setting needs, by room
 kind (a bathroom pool, a galley pool) and by building or store kind (a clothing
@@ -350,6 +414,21 @@ One pool per genre, as a plan writes them:
                     "weights": {"Morphine ampoule": 0.2}}
 }
 ```
+
+## Ways out and ways through
+
+A building's design gives it one entrance, and a spine's only door to the outside
+is its gate. After the buildings stand, `worldgen/exits.py` adds side doors until
+every room is within `EXIT_REACH` (24 cells, 48 m) of a door to open ground, and
+any complex of two or more parts has at least two ways out. It stops at four new
+doors, or sooner if no door would shorten the longest walk. It prefers a public
+room when one will do. A walled enclosure keeps its walls, and a void zone has no
+ground to step onto. `metrics.json` lists what it added under `side_exits`.
+
+Outdoors, a solid prop keeps one free cell from other solid props where there is
+room, so a row of stalls has ways through. It may never join two separate
+obstacles, wherever it goes. `open_cells_cut_off` in `metrics.json` counts free
+cells nobody can walk to, by the game's own wall rule.
 
 ## How zones are sized
 

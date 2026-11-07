@@ -8,7 +8,8 @@ import dataclasses
 import random
 
 from . import checks, layout_map, layout_zone, schedule as schedule_mod, spec_writer
-from .model import ObjectTemplate, Rect, green_feature_name, parse_plan
+from .model import (ObjectTemplate, Rect, bed_capacity, green_feature_name,
+                    parse_plan)
 
 
 class RegionOut:
@@ -17,7 +18,7 @@ class RegionOut:
                  group=None, ground_color=None, wall_color=None):
         self.name = name
         self.rect = rect
-        self.kind = kind          # zone | road | path | yard | building | room | boundary
+        self.kind = kind          # zone | road | path | yard | post | building | room | boundary
         self.parent = parent      # parent region name (nesting), or None
         self.wall = wall
         self.ground = ground
@@ -67,6 +68,7 @@ class World:
         self.reserved = set()
         self.failures = []
         self.fallbacks = []
+        self.side_exits = []
         self.default_ground = ("grass", "grass")   # the plan's dominant wild ground
         self.metrics = {}
         self.map_warnings = []      # non-fatal map notes (a grid past GRID_WARN)
@@ -78,6 +80,7 @@ class World:
         self.solid_walls = set()       # cells of intentional wall objects
         self.void_zones = set()        # zone names with exterior "void"
         self.void_default = False      # every zone void: void default tile
+        self.sleep_assign = {}         # person name -> RoomOut with their bed
 
 
 def _most_private_room(world, b):
@@ -100,19 +103,44 @@ def _most_private_room(world, b):
 
 
 def _bed_template(world, plan_data):
-    """The catalogue's bed: the smallest sleep template, or a plain 1x2 Bed
-    added to the plan when the catalogue has none."""
-    beds = [t for t in world.templates.values() if t.for_sleep]
+    """The catalogue's bed: the smallest template the catalogue flags
+    forSleep, else the smallest its name calls a bed (a "Bedside locker" is
+    furniture, not a bed), or a plain 1x2 Bed added to the plan when the
+    catalogue has neither."""
+    flagged = [t for t in world.templates.values()
+               if t.extras.get("forSleep") is True]
+    beds = flagged or [t for t in world.templates.values() if t.for_sleep]
     if beds:
         return min(beds, key=lambda t: (t.size[0] * t.size[1], t.name))
-    t = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.0,
+    t = ObjectTemplate(name="Bed", size=(1, 2), walkability=0.3,
                        description="A plain bed.",
                        physicalDescription="A wooden bed frame with a straw mattress.",
                        tags=["bed"], rule="against the wall of a sleeping room",
                        extras={"forSleep": True})
     world.templates[t.name] = t
     plan_data.setdefault("templates", []).append(
-        {"name": t.name, "size": [1, 2], "walkability": 0.0, "forSleep": True,
+        {"name": t.name, "size": [1, 2], "walkability": 0.3, "forSleep": True,
+         "description": t.description, "physicalDescription": t.physicalDescription,
+         "tags": ["bed"], "rule": t.rule})
+    return t
+
+
+def _double_template(world, plan_data):
+    """The catalogue's double bed: the smallest template the catalogue flags
+    forSleep that sleeps two, or a plain 2x2 "Double bed" at walkability 0.3
+    added to the plan when the catalogue has none."""
+    doubles = [t for t in world.templates.values()
+               if t.for_sleep and bed_capacity(t) == 2]
+    if doubles:
+        return min(doubles, key=lambda t: (t.size[0] * t.size[1], t.name))
+    t = ObjectTemplate(name="Double bed", size=(2, 2), walkability=0.3,
+                       description="A plain double bed.",
+                       physicalDescription="A wide wooden bed frame with a straw mattress.",
+                       tags=["bed"], rule="against the wall of a sleeping room",
+                       extras={"forSleep": True})
+    world.templates[t.name] = t
+    plan_data.setdefault("templates", []).append(
+        {"name": t.name, "size": [2, 2], "walkability": 0.3, "forSleep": True,
          "description": t.description, "physicalDescription": t.physicalDescription,
          "tags": ["bed"], "rule": t.rule})
     return t
@@ -154,30 +182,153 @@ def _place_bed(world, room, tmpl):
     return None
 
 
+def _couples_by_home(plan):
+    """The plan's couples as home name -> [[person, person], ...]: each home
+    the plan says has couples pairs that many pairs of its residents, P5's
+    mutual partner links first, the rest in order."""
+    people_by_home = {}
+    for p in plan.npcs + [plan.player]:
+        people_by_home.setdefault(p.home, []).append(p)
+    out = {}
+    for z in plan.zones:
+        for b in z.buildings:
+            c = getattr(b, "couples", 0) or 0
+            if c <= 0:
+                continue
+            residents = people_by_home.get(b.name, [])
+            by_name = {p.name: p for p in residents}
+            pairs, taken = [], set()
+            for p in residents:                      # P5's partner links first
+                q = by_name.get((p.extras or {}).get("partner") or "")
+                if q is None or p.name in taken or q.name in taken:
+                    continue
+                if by_name.get((q.extras or {}).get("partner") or "") is p:
+                    pairs.append([p, q])
+                    taken |= {p.name, q.name}
+            for p in residents:                      # then the rest, in order
+                if len(pairs) >= c:
+                    break
+                if p.name in taken:
+                    continue
+                q = next((x for x in residents
+                          if x.name not in taken and x is not p), None)
+                if q is None:
+                    break
+                pairs.append([p, q])
+                taken |= {p.name, q.name}
+            out[b.name] = pairs[:c]
+    return out
+
+
+def _rooms_by_privacy(world, b):
+    """A building's rooms (ground and uppers), most private first: one named
+    or purposed for sleeping, else the farthest from the entrance door."""
+    import re
+    bl = b.layout
+    door = bl.entrance_door
+
+    def score(item):
+        room, design = item
+        purpose = next((r.purpose for r in design.rooms
+                        if r.name == room.base_name), "")
+        if re.search(r"bed|chamber|sleep|private|quarter",
+                     f"{room.base_name} {purpose}".lower()):
+            return (2, 0.0)
+        cx, cy = room.rect.center()
+        return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
+
+    rooms = [(r, bl.design) for r in bl.rooms]
+    for f in getattr(b, "floors", []) or []:
+        rooms += [(r, f.layout.design) for r in f.layout.rooms]
+    return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]
+
+
+def _double_beds_in(world, building):
+    """How many double beds a building's placed furniture holds."""
+    n = sum(schedule_mod.room_doubles(world, r) for r in building.layout.rooms)
+    for f in getattr(building, "floors", []) or []:
+        n += sum(schedule_mod.room_doubles(world, r) for r in f.layout.rooms)
+    return n
+
+
+def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
+    """One double bed per couple the plan promises this home, added in its
+    most private room that has space when the furniture holds none (two
+    single beds and a recorded failure when nothing fits a double), then the
+    home's sleep assignment re-run so both partners share the double room."""
+    home = next((b for b in world.buildings
+                 if b.layout.design.name == home_name), None)
+    if home is None:
+        return
+    want = getattr(home.layout.design, "couples", 0) or 0
+    while _double_beds_in(world, home) < want:
+        tmpl = _double_template(world, plan_data)
+        placed = None
+        for room in _rooms_by_privacy(world, home):
+            pos = _place_bed(world, room, tmpl)
+            if pos is not None:
+                room.furniture.placements.append((tmpl.name, pos))
+                world.objects.append(ObjectOut(tmpl.name, pos, room.full_name))
+                placed = room
+                break
+        if placed is None:
+            single = _bed_template(world, plan_data)
+            room = None
+            for r in _rooms_by_privacy(world, home):
+                pos = _place_bed(world, r, single)
+                if pos is not None:
+                    r.furniture.placements.append((single.name, pos))
+                    world.objects.append(ObjectOut(single.name, pos, r.full_name))
+                    room = r
+                    break
+            names = " and ".join(p.name for pair in pairs for p in pair) or home_name
+            why = f"no free cell for a double bed in {home_name}"
+            if room is not None:
+                why += "; one more single bed instead"
+            world.failures.append((f"double bed for {names}", why))
+            return
+    residents = [p for p in plan.npcs + [plan.player] if p.home == home_name]
+    schedule_mod.assign_sleep_rooms(world, residents,
+                                    couples={home_name: pairs})
+
+
 def _ensure_beds(world, plan, plan_data):
-    """Every person sleeps in a bed. A home whose building has no sleep object
-    borrows the nearest bedded building of its household (the same zone); when
-    the household has none, one bed is added to the home's most private room."""
+    """Every person sleeps in a bed. Couples come first: each home the plan
+    says has couples gets one double bed per couple (added when its furniture
+    holds none) with both partners assigned to it. Then a person the room
+    assignment left without one gets a bed added at home: in the home's
+    fullest bedded room when its beds are all taken (they stay home, crowded,
+    when that room has no free cell), else in its most private room. A
+    bedless home borrows the nearest bedded building of its household (the
+    same zone) first."""
+    for home_name, pairs in _couples_by_home(plan).items():
+        _ensure_couple_beds(world, plan, plan_data, home_name, pairs)
     for person in plan.npcs + [plan.player]:
-        home = next((b for b in world.buildings
-                     if b.layout.design.name == person.home), None)
-        if home is None or schedule_mod.sleep_room(world, person.home) is not None:
+        if world.sleep_assign.get(person.name) is not None:
+            continue   # the layout assigned them a bed of their own
+        home = schedule_mod.home_building(world, person.home)
+        if home is None:
             continue
-        zone = schedule_mod.zone_of(world, person.home)
-        if any(b is not home
-               and schedule_mod.zone_of(world, b.layout.design.name) == zone
-               and schedule_mod.sleep_room(world, b.layout.design.name) is not None
-               for b in world.buildings):
+        full = schedule_mod.sleep_room(world, home.layout.design.name)
+        zone = schedule_mod.zone_of(world, home.layout.design.name)
+        if full is None and any(
+                b is not home
+                and schedule_mod.zone_of(world, b.layout.design.name) == zone
+                and schedule_mod.sleep_room(world, b.layout.design.name) is not None
+                for b in world.buildings):
             continue   # the schedule will point at the household's bed
-        room = _most_private_room(world, home)
+        room = full or _most_private_room(world, home)
         tmpl = _bed_template(world, plan_data)
         pos = _place_bed(world, room, tmpl)
         if pos is None:
             world.failures.append((f"bed for {person.name}",
                                    f"no free cell for a bed in {room.full_name}"))
+            if full is not None:
+                world.sleep_assign[person.name] = full   # home, over capacity
             continue
         room.furniture.placements.append((tmpl.name, pos))
         world.objects.append(ObjectOut(tmpl.name, pos, room.full_name))
+        world.sleep_assign[person.name] = room
 
 
 def _emit_unit_regions(world, bl, parent_name, names_seen):
@@ -611,6 +762,7 @@ def run(plan_data, seed=1, extensions=()):
     # or a storey grows (and the map with it) until everything the model
     # planned is placed
     growth = {}
+    stalled = 0
     for _ in range(MAX_GROWTH_PASSES):
         grow = _growth_scale(plan, world, growth)
         if not grow:
@@ -621,7 +773,10 @@ def run(plan_data, seed=1, extensions=()):
         retry, retry_data = attempt(growth)
         if _dropped_count(retry) > _dropped_count(world):
             break   # growing lost more than it placed; keep the better build
+        stalled = stalled + 1 if _dropped_count(retry) == _dropped_count(world) else 0
         world, winner = retry, retry_data
+        if stalled >= MAX_STALLED_PASSES:
+            break   # room isn't what it lacks, and each pass costs more than the last
     # a settlement zone sized to estimates can miss its measured building
     # coverage; one corrective pass, keeping whichever build landed closer
     # (nothing newly unplaced first, then the smaller coverage drift)
@@ -640,6 +795,7 @@ def run(plan_data, seed=1, extensions=()):
 GROWTH_FACTOR = 1.4     # how much a zone's content sizing grows per pass
 GROWTH_ALLY = 1.15      # the other built zones grow with it, keeping their street blocks
 MAX_GROWTH_PASSES = 8   # 1.4^8 is about 14x: enough for the fullest plan
+MAX_STALLED_PASSES = 2  # passes in a row that placed nothing more before giving up
 
 
 def _dropped_count(world):
@@ -830,6 +986,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.failures.extend([(w, r) if i == 0 else (f"{w} [{piece_label}]", r)
                                    for (w, r) in zout.failures])
             world.fallbacks.extend(zout.fallbacks)
+            world.side_exits.extend(zout.side_exits)
             if zout.spine_rects:
                 g, tex = zout.spine_ground
                 # the street leads the spine regions, so on a size tie the zone's
@@ -988,6 +1145,8 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
         world.failures.append(("regions", f"duplicate region names: {sorted(set(dupes))}"))
 
     # ---- everyone sleeps in a bed, before the schedules pick the rooms
+    schedule_mod.assign_sleep_rooms(world, plan.npcs + [plan.player],
+                                    couples=_couples_by_home(plan))
     _ensure_beds(world, plan, plan_data)
 
     # ---- people: schedules from home and work, start cells on cells that
@@ -1000,9 +1159,10 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     starts |= world.reserved
     connected = checks.flood(world, starts, blocked)
     taken = set()
+    schedules = schedule_mod.plan_schedules(world, plan.npcs + [plan.player], connected)
     for person in plan.npcs + [plan.player]:
         is_player = person is plan.player
-        sched, start_region = schedule_mod.make_schedule(world, person)
+        sched, start_region = schedules[person.name]
         pos, start_region = schedule_mod.start_cell(world, start_region, taken, connected)
         if pos is None:
             world.failures.append((f"character {person.name}", f"no free cell in {start_region}"))

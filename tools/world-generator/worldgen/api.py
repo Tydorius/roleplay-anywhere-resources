@@ -32,9 +32,9 @@ VENDOR_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vendor")
 # measured full runs (brief 010): 13-18 calls, 100-150k tokens, 20-35 minutes;
 # brief 013's batched P5 (one call per zone plus the player) and the three P6
 # systems calls widen it
-MEASURED_CALLS = (18, 27)
-MEASURED_TOKENS = (130000, 220000)
-MEASURED_MINUTES = (25, 50)
+MEASURED_CALLS = (25, 35)
+MEASURED_TOKENS = (200000, 320000)
+MEASURED_MINUTES = (30, 55)
 TOKENS_PER_CALL = 8500       # prompt + completion, across the phases
 TOKENS_PER_MINUTE = 4500     # streaming reasoning models on a good day
 
@@ -50,7 +50,7 @@ def _check_extensions(extensions):
 
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
-             emit=None, frame=None, questionnaire=None):
+             emit=None, frame=None, questionnaire=None, cast=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -69,7 +69,7 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions,
                                     progress=progress, cancel=cancel,
-                                    frame=frame, questionnaire=questionnaire)
+                                    frame=frame, questionnaire=questionnaire, cast=cast)
     if extensions:
         plan["extensions"] = sorted(set(plan.get("extensions", [])) | set(extensions))
     phases.write_plan(plan, os.path.join(out_dir, "plan.json"))
@@ -123,8 +123,9 @@ def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
 def estimate(idea_or_plan):
     """Expected calls, tokens and minutes for one generation. ``idea_or_plan``
     is an idea string, a plan dict, or a path to a plan.json. A plan pins the
-    call count exactly (P1 + P2 + P5, one per building, one per zone, plus
-    retries); an idea gets the midpoints of the measured runs."""
+    call count exactly (P1, P1b when it has a cast, P2's two, P5, one per building,
+    one per zone, plus retries); an idea gets the midpoints of the measured
+    runs."""
     plan = None
     if isinstance(idea_or_plan, dict):
         plan = idea_or_plan
@@ -145,8 +146,20 @@ def estimate(idea_or_plan):
     p3_calls = max(0, buildings - same_as)
     # P5 batches: one call per zone with buildings, plus the player's own call
     p5_calls = sum(1 for z in zones if z.get("buildings")) + 1
+    # with a cast it's one call per ten people in the zone instead
+    households = (plan.get("cast") or {}).get("households") or []
+    p1b_calls = 1 if households else 0
+    if households:
+        zone_of = {b.get("name"): z.get("name") for z in zones
+                   for b in z.get("buildings") or []}
+        people = {}
+        for h in households:
+            zone = zone_of.get(h.get("home"))
+            people[zone] = people.get(zone, 0) + len(h.get("members") or [])
+        p5_calls = sum(-(-n // phases.P5_BATCH) for n in people.values()) + 1
     p0_calls = 1 if (plan.get("frame") or plan.get("questionnaire")) else 0
-    calls = p0_calls + 2 + p3_calls + len(zones) + p5_calls + 3   # + the three P6 calls
+    # P1 and P2's two, then the three P6 calls at the end
+    calls = p0_calls + p1b_calls + 3 + p3_calls + len(zones) + p5_calls + 3
     retries = 6                          # the most a measured run needed
     tokens = TOKENS_PER_CALL * calls
     return {"calls": calls, "calls_range": [calls, calls + retries],
@@ -156,7 +169,8 @@ def estimate(idea_or_plan):
                               round(TOKENS_PER_CALL * (calls + retries) / float(TOKENS_PER_MINUTE), 1)],
             "basis": f"plan {plan.get('name', '')!r}: "
                      + (f"{p0_calls} P0 call + " if p0_calls else "")
-                     + f"P1, P2 + {p3_calls} buildings ({same_as} sameAs copies "
+                     + ("P1, P1b, P2 x2" if p1b_calls else "P1, P2 x2")
+                     + f" + {p3_calls} buildings ({same_as} sameAs copies "
                        f"skipped) + {len(zones)} zones + {p5_calls} people calls "
                        f"+ 3 systems calls (+ retries)"}
 
