@@ -1,0 +1,3424 @@
+{
+ "name": "Frosthaven",
+ "worldBackground": "A rugged coastal hamlet where families eke out a living from the sea, its mood is one of quiet resilience and hard-won warmth. The villagers rely on the unpredictable tides and the mercy of the ocean, but tensions simmer beneath the surface—last winter’s storm took a fisherman’s life, and the widowed net-mender’s skills are both revered and resented. The inn, a rare beacon of hospitality, offers respite to weary travelers, though its owner’s sharp tongue keeps many at arm’s length.",
+ "setting": {
+  "era": "medieval",
+  "technology": "pre-industrial",
+  "density": "sparse",
+  "climate": "temperate coastal (cold, windy, frequent storms)"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Harbor Docks",
+   "kind": "docks",
+   "sizeClass": "medium",
+   "description": "A narrow, rocky stretch where fishing boats are moored and nets are mended.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Village Green",
+    "Net-Mender’s Yard"
+   ],
+   "outdoor": [
+    "dockside crane",
+    "wooden loading planks",
+    "tide pools",
+    "smokehouse"
+   ],
+   "arrangement": "along_street",
+   "buildings": [
+    {
+     "name": "Old Salt Tavern",
+     "kind": "inn",
+     "sizeClass": "medium",
+     "purpose": "lodging and meals for fishermen and travelers",
+     "units": {
+      "name": "Room",
+      "count": 4,
+      "residents": 2
+     },
+     "yard": null,
+     "status": "staffed"
+    },
+    {
+     "name": "Fishermen’s Storehouse",
+     "kind": "warehouse",
+     "sizeClass": "small",
+     "purpose": "storing catch, nets, and tools",
+     "yard": null,
+     "status": "occasional",
+     "why": "Used only during peak fishing seasons or when the village needs to consolidate supplies."
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "wooden_loading_planks",
+      "count": 5,
+      "hint": "along_path"
+     },
+     {
+      "template": "dockside_crane",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "wooden_barrel",
+      "count": 3,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "tide_pool",
+      "count": 3,
+      "hint": "scatter+along_path"
+     },
+     {
+      "template": "coil_of_rope",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "fishing_net_drying_rack",
+      "count": 2,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "rubble_pile",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "woodpile",
+      "count": 1,
+      "hint": "beside:Old Salt Tavern"
+     }
+    ],
+    "filler": [
+     {
+      "template": "windblown_tree",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Village Green",
+   "kind": "village",
+   "sizeClass": "small",
+   "description": "A windswept common where villagers gather, children play, and the well stands.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Harbor Docks",
+    "Net-Mender’s Yard",
+    "Fisherfolk Cottages"
+   ],
+   "outdoor": [
+    "village well",
+    "woodpile",
+    "playing children",
+    "fishing nets drying"
+   ],
+   "arrangement": "around_green",
+   "buildings": [
+    {
+     "name": "Village Chapel",
+     "kind": "chapel",
+     "sizeClass": "hut",
+     "purpose": "place of worship and community gatherings",
+     "yard": null,
+     "status": "staffed",
+     "residents": 1
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "village_well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "woodpile",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "windblown_tree",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "small_garden",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "playing_children",
+      "count": 3,
+      "hint": "scatter"
+     },
+     {
+      "template": "wooden_barrel",
+      "count": 2,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "coil_of_rope",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "rubble_pile",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "fishing_net_drying_rack",
+      "count": 2,
+      "hint": "cluster+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "windblown_tree",
+      "density": "low"
+     },
+     {
+      "template": "small_garden",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Net-Mender’s Yard",
+   "kind": "workshop",
+   "sizeClass": "small",
+   "description": "A cluttered space where nets are repaired and mended by the widowed craftsman.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Harbor Docks",
+    "Village Green"
+   ],
+   "outdoor": [
+    "net-drying racks",
+    "coil of rope",
+    "anvil and tools"
+   ],
+   "arrangement": "scattered",
+   "buildings": [
+    {
+     "name": "Net-Mender’s Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home and workshop of the widowed net-mender",
+     "yard": null,
+     "status": "home",
+     "residents": 2
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "fishing_net_drying_rack",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "anvil",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "wooden_crate",
+      "count": 4,
+      "hint": "scatter+beside:anvil"
+     },
+     {
+      "template": "coil_of_rope",
+      "count": 5,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "woodpile",
+      "count": 1,
+      "hint": "behind:Net-Mender’s Cottage"
+     },
+     {
+      "template": "windblown_tree",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "rubble_pile",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "wooden_stool",
+      "count": 2,
+      "hint": "beside:anvil"
+     },
+     {
+      "template": "wooden_shelf",
+      "count": 1,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "wooden_barrel",
+      "count": 2,
+      "hint": "scatter+edge"
+     }
+    ],
+    "filler": [
+     {
+      "template": "windblown_tree",
+      "density": "low"
+     },
+     {
+      "template": "coil_of_rope",
+      "density": "medium"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Fisherfolk Cottages",
+   "kind": "village",
+   "sizeClass": "medium",
+   "description": "A row of sturdy cottages where four fishing families live.",
+   "ground": "dirt",
+   "adjacentTo": [
+    "Village Green"
+   ],
+   "outdoor": [
+    "gardens",
+    "chickens",
+    "fishing rods leaning against walls"
+   ],
+   "arrangement": "along_street",
+   "buildings": [
+    {
+     "name": "Hale Family Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home of the fisherman and his wife, with two children",
+     "yard": null,
+     "status": "home",
+     "residents": 4,
+     "couples": 1
+    },
+    {
+     "name": "Bracken Family Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home of another fishing couple, with one child",
+     "yard": null,
+     "status": "home",
+     "residents": 3,
+     "couples": 1
+    },
+    {
+     "name": "Marlow Family Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home of a third fishing couple, with two children",
+     "yard": null,
+     "status": "home",
+     "residents": 4,
+     "couples": 1
+    },
+    {
+     "name": "Durn Family Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home of the fourth fishing couple, with one child",
+     "yard": null,
+     "status": "home",
+     "residents": 3,
+     "couples": 1
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "woodpile",
+      "count": 2,
+      "hint": "beside:Hale Family Cottage+beside:Marlow Family Cottage"
+     },
+     {
+      "template": "small_garden",
+      "count": 4,
+      "hint": "behind:Hale Family Cottage+behind:Bracken Family Cottage+behind:Marlow Family Cottage+behind:Durn Family Cottage"
+     },
+     {
+      "template": "chicken_coop",
+      "count": 4,
+      "hint": "beside:Hale Family Cottage+beside:Bracken Family Cottage+beside:Marlow Family Cottage+beside:Durn Family Cottage"
+     },
+     {
+      "template": "fishing_net_drying_rack",
+      "count": 3,
+      "hint": "cluster+edge"
+     },
+     {
+      "template": "fishing_rod_rack",
+      "count": 4,
+      "hint": "front:Hale Family Cottage+front:Bracken Family Cottage+front:Marlow Family Cottage+front:Durn Family Cottage"
+     },
+     {
+      "template": "wooden_barrel",
+      "count": 2,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "windblown_tree",
+      "count": 2,
+      "hint": "edge"
+     },
+     {
+      "template": "rubble_pile",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "lantern",
+      "count": 4,
+      "hint": "wall:any+beside:Hale Family Cottage+beside:Bracken Family Cottage+beside:Marlow Family Cottage+beside:Durn Family Cottage"
+     },
+     {
+      "template": "playing_children",
+      "count": 2,
+      "hint": "scatter+center"
+     }
+    ],
+    "filler": [
+     {
+      "template": "windblown_tree",
+      "density": "low"
+     },
+     {
+      "template": "fishing_net_drying_rack",
+      "density": "low"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Harbor Docks",
+   "to": "Village Green",
+   "kind": "cobble"
+  },
+  {
+   "from": "Village Green",
+   "to": "Net-Mender’s Yard",
+   "kind": "dirt"
+  },
+  {
+   "from": "Village Green",
+   "to": "Fisherfolk Cottages",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "double_bed",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A sturdy wooden bed with a thick straw mattress and wool blankets.",
+   "physicalDescription": "A 2x2 square with a slightly raised center for the sleeper.",
+   "tags": [
+    "bed",
+    "storage",
+    "home"
+   ],
+   "rule": "One per couple in Fisherfolk Cottages and Net-Mender’s Cottage; placed against a wall or in a corner."
+  },
+  {
+   "name": "single_bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A narrow bed for a child, with a thin mattress and a single blanket.",
+   "physicalDescription": "A 1x2 rectangle against a wall or in a corner.",
+   "tags": [
+    "bed",
+    "home"
+   ],
+   "rule": "One per child in Fisherfolk Cottages; placed beside a parent’s bed or in a separate corner."
+  },
+  {
+   "name": "wooden_table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A rough-hewn table for meals or mending nets.",
+   "physicalDescription": "A 2x1 rectangle with visible grain and scratches.",
+   "tags": [
+    "table",
+    "work",
+    "home",
+    "tavern"
+   ],
+   "rule": "One per cottage or room in Old Salt Tavern; placed against a wall or in the center of a room."
+  },
+  {
+   "name": "wooden_chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A simple chair with a carved backrest, often paired with tables.",
+   "physicalDescription": "A 1x1 square with a backrest extending slightly beyond the seat.",
+   "tags": [
+    "chair",
+    "home",
+    "tavern"
+   ],
+   "rule": "Around tables in homes and Old Salt Tavern; 2-4 chairs per table."
+  },
+  {
+   "name": "wooden_stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A low stool for sitting or reaching high shelves.",
+   "physicalDescription": "A 1x1 square with a short backrest or none.",
+   "tags": [
+    "stool",
+    "work",
+    "home"
+   ],
+   "rule": "Beside workbenches in Net-Mender’s Yard or near hearths in cottages."
+  },
+  {
+   "name": "hearth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.8,
+   "description": "A stone hearth with a fire burning low, casting warmth and light.",
+   "physicalDescription": "A 2x1 rectangle along a wall, with a fire pit in the center.",
+   "tags": [
+    "light",
+    "home",
+    "tavern",
+    "work"
+   ],
+   "rule": "One per cottage and Old Salt Tavern; placed against a north or east wall for shelter from wind."
+  },
+  {
+   "name": "wooden_chest",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A locked chest for storing tools, clothes, or food.",
+   "physicalDescription": "A 2x1 rectangle with a lid and iron fittings.",
+   "tags": [
+    "storage",
+    "home",
+    "tavern"
+   ],
+   "lootPool": "Fisherfolk Cottages",
+   "rule": "One per cottage; placed against a wall or in a corner."
+  },
+  {
+   "name": "wooden_shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A shelf for drying herbs, storing small items, or holding tools.",
+   "physicalDescription": "A 2x1 rectangle mounted on the wall, with pegs or hooks.",
+   "tags": [
+    "storage",
+    "home",
+    "work"
+   ],
+   "rule": "Beside hearths or workbenches; one per room in cottages or Net-Mender’s Cottage."
+  },
+  {
+   "name": "fishing_net_drying_rack",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden frame for drying and mending fishing nets.",
+   "physicalDescription": "A 3x1 rectangle with horizontal bars for hanging nets.",
+   "tags": [
+    "work",
+    "outdoor"
+   ],
+   "rule": "Clustered in Net-Mender’s Yard or along the edges of Fisherfolk Cottages."
+  },
+  {
+   "name": "anvil",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A heavy anvil for shaping metal tools or repairs.",
+   "physicalDescription": "A 2x2 square with a flat top and legs.",
+   "tags": [
+    "work",
+    "outdoor"
+   ],
+   "rule": "Center of Net-Mender’s Yard, surrounded by tools and coils of rope."
+  },
+  {
+   "name": "wooden_barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A barrel for storing fish, water, or ale.",
+   "physicalDescription": "A 1x1 circle-like shape with staves.",
+   "tags": [
+    "storage",
+    "outdoor",
+    "tavern"
+   ],
+   "lootPool": "Old Salt Tavern Bar",
+   "rule": "Scattered along Harbor Docks or beside Old Salt Tavern; 2-3 per zone."
+  },
+  {
+   "name": "wooden_crate",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A crate for storing tools, food, or catch.",
+   "physicalDescription": "A 1x1 square with visible planks and nails.",
+   "tags": [
+    "storage",
+    "outdoor",
+    "work"
+   ],
+   "lootPool": "Fishermen’s Storehouse",
+   "rule": "Scattered in Fishermen’s Storehouse or beside workbenches in Net-Mender’s Yard."
+  },
+  {
+   "name": "village_well",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stone well with a wooden bucket and pulley for drawing water.",
+   "physicalDescription": "A 1x1 square with a circular opening and a bucket hanging over it.",
+   "tags": [
+    "landmark",
+    "outdoor"
+   ],
+   "rule": "Center of Village Green; surrounded by a low stone wall."
+  },
+  {
+   "name": "woodpile",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stack of split firewood for heating and cooking.",
+   "physicalDescription": "A 2x2 pile of logs, often beside a hearth or cottage.",
+   "tags": [
+    "outdoor",
+    "home"
+   ],
+   "rule": "Beside cottages or along the edge of Village Green; one per 2-3 homes."
+  },
+  {
+   "name": "fishing_rod_rack",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A rack for leaning fishing rods against a wall.",
+   "physicalDescription": "A 1x2 vertical frame with hooks for rods.",
+   "tags": [
+    "outdoor",
+    "home"
+   ],
+   "rule": "Beside Fisherfolk Cottages or along Harbor Docks; one per cottage or dock."
+  },
+  {
+   "name": "tide_pool",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A shallow pool left by the receding tide, teeming with small fish and crabs.",
+   "physicalDescription": "A 2x2 square with a wet, rocky surface.",
+   "tags": [
+    "outdoor",
+    "landmark"
+   ],
+   "rule": "Scattered along Harbor Docks; 2-3 per dock section."
+  },
+  {
+   "name": "smokehouse",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A small wooden structure for smoking and preserving fish.",
+   "physicalDescription": "A 2x2 square with a sloped roof and vents for smoke.",
+   "tags": [
+    "outdoor",
+    "work"
+   ],
+   "rule": "Beside Harbor Docks or in a corner of Fishermen’s Storehouse."
+  },
+  {
+   "name": "dockside_crane",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden crane for loading and unloading heavy catches.",
+   "physicalDescription": "A 2x2 structure with a pulley and winch.",
+   "tags": [
+    "outdoor",
+    "work"
+   ],
+   "rule": "Along Harbor Docks; one per 3-4 dock sections."
+  },
+  {
+   "name": "wooden_loading_planks",
+   "size": [
+    1,
+    3
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "light": 0,
+   "description": "Rough planks bridging the gap between dock and shore.",
+   "physicalDescription": "A 1x3 rectangle extending from the dock to land.",
+   "tags": [
+    "outdoor",
+    "landmark"
+   ],
+   "rule": "Along Harbor Docks; 2-3 planks per dock section."
+  },
+  {
+   "name": "pews",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "Simple wooden benches for worshippers in the chapel.",
+   "physicalDescription": "A 1x2 rectangle with a backrest, arranged in rows.",
+   "tags": [
+    "home",
+    "chapel"
+   ],
+   "rule": "Row:south in Village Chapel; 4-6 pews per row."
+  },
+  {
+   "name": "altar",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A small altar with candles and religious symbols.",
+   "physicalDescription": "A 2x1 rectangle against the north wall of Village Chapel.",
+   "tags": [
+    "landmark",
+    "chapel"
+   ],
+   "rule": "Wall:north in Village Chapel; centered."
+  },
+  {
+   "name": "lantern",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "A metal lantern with a flickering flame for lighting.",
+   "physicalDescription": "A 1x1 square with a handle and glass cover.",
+   "tags": [
+    "light",
+    "home",
+    "tavern"
+   ],
+   "rule": "Wall:any in cottages or Old Salt Tavern; one per room."
+  },
+  {
+   "name": "chicken_coop",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A small coop for keeping chickens and eggs.",
+   "physicalDescription": "A 2x2 square with a sloped roof and small door.",
+   "tags": [
+    "outdoor",
+    "home"
+   ],
+   "rule": "Beside Fisherfolk Cottages; one per cottage."
+  },
+  {
+   "name": "small_garden",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.2,
+   "forSleep": false,
+   "light": 0,
+   "description": "A patch of soil with herbs, root vegetables, or greens.",
+   "physicalDescription": "A 2x2 square with rows of plants and a wooden fence.",
+   "tags": [
+    "outdoor",
+    "home"
+   ],
+   "rule": "Behind Fisherfolk Cottages or along the edge of Village Green."
+  },
+  {
+   "name": "playing_children",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "Children playing with wooden toys or a ball on the green.",
+   "physicalDescription": "A 1x1 square with scattered toys or a ball.",
+   "tags": [
+    "outdoor",
+    "landmark"
+   ],
+   "rule": "Scatter in Village Green; 2-3 groups of children."
+  },
+  {
+   "name": "windblown_tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A twisted tree bent by coastal winds, often bare or with sparse branches.",
+   "physicalDescription": "A 2x2 irregular shape with a gnarled trunk.",
+   "tags": [
+    "outdoor",
+    "landmark"
+   ],
+   "rule": "Scatter along the edges of Village Green or Fisherfolk Cottages; 1-2 per zone."
+  },
+  {
+   "name": "coil_of_rope",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A thick coil of hemp rope for fishing or mending nets.",
+   "physicalDescription": "A 1x1 circle of rope leaning against a wall or post.",
+   "tags": [
+    "outdoor",
+    "work"
+   ],
+   "rule": "Beside Net-Mender’s Cottage or along Harbor Docks; 2-3 coils per zone."
+  },
+  {
+   "name": "rubble_pile",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A pile of broken stones or driftwood from storms or repairs.",
+   "physicalDescription": "A 2x2 irregular pile of debris.",
+   "tags": [
+    "outdoor",
+    "landmark"
+   ],
+   "rule": "Scatter along Harbor Docks or edges of Village Green; 1-2 piles per zone."
+  }
+ ],
+ "items": [
+  {
+   "name": "Salt-Cured Herring",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A pungent, salty fish preserved for weeks, a staple of coastal diets.",
+   "physicalDescription": "A translucent, slightly curled fish on a wooden plank with salt crystals, white background"
+  },
+  {
+   "name": "Fishing Net Patch Kit",
+   "type": "misc",
+   "quality": "common",
+   "value": 12,
+   "description": "A small pouch of twine, needles, and spare mesh for quick repairs.",
+   "physicalDescription": "A worn leather pouch with twine and needles spilling out, white background"
+  },
+  {
+   "name": "Storm Lantern",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "A brass lantern with a thick glass chimney, designed to withstand coastal winds.",
+   "physicalDescription": "A brass lantern with a flickering flame inside a thick glass chimney, white background"
+  },
+  {
+   "name": "Net-Mender’s Gloves",
+   "type": "gloves",
+   "quality": "uncommon",
+   "value": 45,
+   "description": "Leather gloves reinforced with steel stitching to protect hands from sharp net fibers.",
+   "physicalDescription": "Thick, oil-stained leather gloves with visible steel stitching, white background"
+  },
+  {
+   "name": "Widow’s Locket",
+   "type": "necklace",
+   "quality": "rare",
+   "value": 200,
+   "description": "A small silver locket engraved with the initials of the net-mender’s lost husband.",
+   "physicalDescription": "A tarnished silver locket with a faded engraving, white background"
+  },
+  {
+   "name": "Smokehouse Brine",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "A jar of thick, salty brine used to preserve fish in the smokehouse.",
+   "physicalDescription": "A clay jar filled with dark, viscous liquid, white background"
+  },
+  {
+   "name": "Fisherman’s Knife",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 60,
+   "description": "A sturdy bone-handled knife with a serrated edge for gutting fish.",
+   "physicalDescription": "A knife with a bone handle and a rusted serrated blade, white background"
+  },
+  {
+   "name": "Tide Chart",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A handwritten chart of local tides, marked with notes from years of fishing.",
+   "physicalDescription": "A yellowed parchment with inked tide markings and annotations, white background"
+  },
+  {
+   "name": "Woolen Fisherman’s Shirt",
+   "type": "torso",
+   "quality": "common",
+   "value": 20,
+   "description": "A thick, salt-stained wool shirt worn by fishermen to ward off the cold.",
+   "physicalDescription": "A rough-spun wool shirt with salt stains and frayed cuffs, white background"
+  },
+  {
+   "name": "Storm Caller’s Bell",
+   "type": "misc",
+   "quality": "rare",
+   "value": 150,
+   "description": "A small brass bell said to ward off storms when rung at dawn.",
+   "physicalDescription": "A tarnished brass bell with a cracked handle, white background"
+  },
+  {
+   "name": "Dried Kelp Snack",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A tough, chewy strip of dried seaweed, a quick snack for fishermen.",
+   "physicalDescription": "A dark green, brittle strip of kelp, white background"
+  },
+  {
+   "name": "Rusty Hook Set",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 15,
+   "description": "A set of three fishing hooks, some still sharp, others bent from use.",
+   "physicalDescription": "Three hooks of varying sizes in a wooden box, white background"
+  },
+  {
+   "name": "Net-Mender’s Anvil",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 80,
+   "description": "A small, portable anvil used for shaping and repairing net weights.",
+   "physicalDescription": "A compact anvil with a worn striking face, white background"
+  },
+  {
+   "name": "Fisherman’s Compass",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 50,
+   "description": "A simple brass compass with a waterproof case, used for navigating foggy waters.",
+   "physicalDescription": "A round brass compass with a cracked glass cover, white background"
+  },
+  {
+   "name": "Storm-Proof Oilskin Cloak",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 120,
+   "description": "A heavy, waxed cloak designed to keep out wind and rain.",
+   "physicalDescription": "A dark green oilskin cloak with a hood, white background"
+  },
+  {
+   "name": "Healing Seaweed Poultice",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "A paste of crushed seaweed and herbs used to treat minor wounds.",
+   "physicalDescription": "A small clay pot with a greenish-brown paste, white background"
+  },
+  {
+   "name": "Fisherman’s Boots",
+   "type": "boots",
+   "quality": "common",
+   "value": 40,
+   "description": "Sturdy, waterproof boots with thick soles for walking on slippery docks.",
+   "physicalDescription": "Heavy boots with caked mud and reinforced soles, white background"
+  },
+  {
+   "name": "Tide Pool Specimen Jar",
+   "type": "misc",
+   "quality": "rare",
+   "value": 100,
+   "description": "A glass jar containing a preserved tide pool creature, studied by locals.",
+   "physicalDescription": "A clear glass jar with a strange, translucent organism inside, white background"
+  },
+  {
+   "name": "Net-Mender’s Tool Belt",
+   "type": "misc",
+   "quality": "common",
+   "value": 30,
+   "description": "A leather belt holding needles, twine, and small tools for net repair.",
+   "physicalDescription": "A worn leather belt with various tools hanging from it, white background"
+  },
+  {
+   "name": "Storm Warning Flag",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "A red flag hoisted to warn of incoming storms, torn at the edges.",
+   "physicalDescription": "A faded red flag with frayed edges, white background"
+  },
+  {
+   "name": "Fisherman’s Rations",
+   "type": "consumable",
+   "quality": "common",
+   "value": 10,
+   "description": "A cloth bundle of hardtack, cheese, and dried fish for long trips.",
+   "physicalDescription": "A rough cloth bundle with food items peeking out, white background"
+  },
+  {
+   "name": "Salted Cod",
+   "type": "consumable",
+   "quality": "common",
+   "value": 18,
+   "description": "A large, salted codfish, a prized catch for trade or feasts.",
+   "physicalDescription": "A large, salt-crusted fish hanging from a hook, white background"
+  },
+  {
+   "name": "Net Weight",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A lead weight used to sink fishing nets, slightly corroded.",
+   "physicalDescription": "A small, rusted lead weight with fishing line attached, white background"
+  },
+  {
+   "name": "Fisherman’s Journal",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 40,
+   "description": "A leather-bound journal recording catches, weather, and personal notes.",
+   "physicalDescription": "A worn leather journal with ink stains and handwritten entries, white background"
+  },
+  {
+   "name": "Storm-Proof Lantern Oil",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A bottle of thick, slow-burning oil for lanterns in high winds.",
+   "physicalDescription": "A glass bottle filled with dark, viscous oil, white background"
+  },
+  {
+   "name": "Fisherman’s Whistle",
+   "type": "misc",
+   "quality": "common",
+   "value": 8,
+   "description": "A small brass whistle used to call boats in during storms.",
+   "physicalDescription": "A tiny brass whistle with a tarnished finish, white background"
+  },
+  {
+   "name": "Net-Mender’s Apron",
+   "type": "torso",
+   "quality": "common",
+   "value": 10,
+   "description": "A thick, stained apron worn while repairing nets.",
+   "physicalDescription": "A heavy canvas apron with oil and thread stains, white background"
+  },
+  {
+   "name": "Fisherman’s Coat",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 70,
+   "description": "A heavy, waxed coat lined with wool for insulation against cold winds.",
+   "physicalDescription": "A dark, waxed coat with a high collar and wool lining, white background"
+  },
+  {
+   "name": "Storm Keeper’s Amulet",
+   "type": "necklace",
+   "quality": "rare",
+   "value": 250,
+   "description": "A small amulet carved from driftwood, said to protect against storms.",
+   "physicalDescription": "A carved wooden amulet with strange symbols, white background"
+  },
+  {
+   "name": "Dried Fish Jerky",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "Thin strips of dried fish, a portable and long-lasting snack.",
+   "physicalDescription": "A bundle of dark, leathery fish strips, white background"
+  },
+  {
+   "name": "Net Repair Twine",
+   "type": "misc",
+   "quality": "common",
+   "value": 6,
+   "description": "A spool of thick, durable twine used for mending nets.",
+   "physicalDescription": "A wooden spool with thick, white twine, white background"
+  },
+  {
+   "name": "Fisherman’s Hat",
+   "type": "head",
+   "quality": "common",
+   "value": 15,
+   "description": "A wide-brimmed hat to shield against sun and rain.",
+   "physicalDescription": "A weathered hat with a wide brim and faded stitching, white background"
+  },
+  {
+   "name": "Storm Charm",
+   "type": "misc",
+   "quality": "rare",
+   "value": 180,
+   "description": "A small, intricately carved charm believed to calm storms.",
+   "physicalDescription": "A tiny, polished stone charm with intricate carvings, white background"
+  },
+  {
+   "name": "Fisherman’s Belt",
+   "type": "misc",
+   "quality": "common",
+   "value": 12,
+   "description": "A sturdy leather belt with loops for tools and small items.",
+   "physicalDescription": "A thick leather belt with metal loops, white background"
+  },
+  {
+   "name": "Heated Brick",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A brick heated in the forge, used to warm hands or food.",
+   "physicalDescription": "A red-hot brick wrapped in a cloth, white background"
+  },
+  {
+   "name": "Net-Mender’s Hammer",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 55,
+   "description": "A small hammer used for shaping net weights and repairs.",
+   "physicalDescription": "A compact hammer with a worn wooden handle, white background"
+  },
+  {
+   "name": "Fisherman’s Gloves",
+   "type": "gloves",
+   "quality": "common",
+   "value": 25,
+   "description": "Thick gloves to protect hands from cold and sharp tools.",
+   "physicalDescription": "Heavy gloves with frayed cuffs and oil stains, white background"
+  },
+  {
+   "name": "Storm Warning Horn",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 60,
+   "description": "A brass horn blown to warn of approaching storms.",
+   "physicalDescription": "A curved brass horn with a tarnished finish, white background"
+  }
+ ],
+ "lootPools": {
+  "Old Salt Tavern Bar": {
+   "items": [
+    "Fisherman’s Rations",
+    "Dried Kelp Snack",
+    "Salted Cod",
+    "Storm Lantern",
+    "Fisherman’s Knife",
+    "Tide Chart",
+    "Storm Warning Flag"
+   ],
+   "weights": {
+    "Storm Lantern": 0.3,
+    "Fisherman’s Knife": 0.5,
+    "Tide Chart": 0.2
+   }
+  },
+  "Fishermen’s Storehouse": {
+   "items": [
+    "Fishing Net Patch Kit",
+    "Net Weight",
+    "Rusty Hook Set",
+    "Net Repair Twine",
+    "Net-Mender’s Hammer",
+    "Storm-Proof Oilskin Cloak",
+    "Fisherman’s Compass"
+   ],
+   "weights": {
+    "Fishing Net Patch Kit": 0.7,
+    "Net Weight": 0.6,
+    "Net Repair Twine": 0.5
+   }
+  },
+  "Net-Mender’s Cottage": {
+   "items": [
+    "Net-Mender’s Gloves",
+    "Net-Mender’s Apron",
+    "Net-Mender’s Tool Belt",
+    "Net-Mender’s Anvil",
+    "Widow’s Locket",
+    "Storm Caller’s Bell",
+    "Fisherman’s Journal"
+   ],
+   "weights": {
+    "Net-Mender’s Gloves": 0.8,
+    "Widow’s Locket": 0.1,
+    "Storm Caller’s Bell": 0.1
+   }
+  },
+  "Fisherfolk Cottages": {
+   "items": [
+    "Woolen Fisherman’s Shirt",
+    "Fisherman’s Boots",
+    "Healing Seaweed Poultice",
+    "Fisherman’s Coat",
+    "Storm-Proof Lantern Oil",
+    "Fisherman’s Whistle",
+    "Heated Brick"
+   ],
+   "weights": {
+    "Fisherman’s Boots": 0.6,
+    "Woolen Fisherman’s Shirt": 0.5,
+    "Healing Seaweed Poultice": 0.3
+   }
+  },
+  "Village Chapel": {
+   "items": [
+    "Storm Keeper’s Amulet",
+    "Storm Charm",
+    "Fisherman’s Hat",
+    "Tide Pool Specimen Jar"
+   ],
+   "weights": {
+    "Storm Keeper’s Amulet": 0.2,
+    "Tide Pool Specimen Jar": 0.1
+   }
+  },
+  "Harbor Docks": {
+   "items": [
+    "Salt-Cured Herring",
+    "Smokehouse Brine",
+    "Fisherman’s Belt",
+    "Storm Warning Horn",
+    "Fisherman’s Gloves"
+   ],
+   "weights": {
+    "Salt-Cured Herring": 0.7,
+    "Smokehouse Brine": 0.4
+   }
+  }
+ },
+ "buildings": [
+  {
+   "name": "Old Salt Tavern",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Old Salt Tavern Bar",
+   "rooms": [
+    {
+     "name": "Common Room",
+     "share": "large",
+     "purpose": "A wind-sheltered hall with a central hearth, where fishermen and travelers gather. The walls are lined with shelves holding lanterns, fishing tools, and preserved goods. A long wooden bar runs along the north wall, and tables with benches are scattered around."
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "purpose": "A functional cooking space with a large hearth, a wooden table for prep work, and shelves stocked with pots, pans, and preserved food. A barrel of fresh water sits near the door.",
+     "lootPool": "Old Salt Tavern Bar"
+    },
+    {
+     "name": "Guest Corridor",
+     "share": "small",
+     "purpose": "A narrow passage connecting the Common Room to the guest rooms and kitchen. Shelves line the walls, and lanterns provide light."
+    },
+    {
+     "name": "Unit_1",
+     "share": "small",
+     "purpose": "A modest guest room with a single bed, a small table, and a shelf for personal items."
+    },
+    {
+     "name": "Unit_2",
+     "share": "small",
+     "purpose": "A modest guest room with a single bed, a small table, and a shelf for personal items."
+    },
+    {
+     "name": "Unit_3",
+     "share": "small",
+     "purpose": "A modest guest room with a single bed, a small table, and a shelf for personal items."
+    },
+    {
+     "name": "Unit_4",
+     "share": "small",
+     "purpose": "A modest guest room with a single bed, a small table, and a shelf for personal items."
+    }
+   ],
+   "connections": [
+    [
+     "Common Room",
+     "Kitchen"
+    ],
+    [
+     "Common Room",
+     "Guest Corridor"
+    ],
+    [
+     "Guest Corridor",
+     "Unit_1"
+    ],
+    [
+     "Guest Corridor",
+     "Unit_2"
+    ],
+    [
+     "Guest Corridor",
+     "Unit_3"
+    ],
+    [
+     "Guest Corridor",
+     "Unit_4"
+    ]
+   ],
+   "entrance": {
+    "room": "Common Room",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "hearth",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Common Room",
+     "count": 3,
+     "hint": "wall:east+wall:west+wall:north"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Common Room",
+     "count": 12,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_barrel",
+     "room": "Common Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Common Room",
+     "count": 4,
+     "hint": "wall:any"
+    },
+    {
+     "template": "lantern",
+     "room": "Common Room",
+     "count": 6,
+     "hint": "wall:any"
+    },
+    {
+     "template": "hearth",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Kitchen",
+     "count": 3,
+     "hint": "wall:east+wall:west"
+    },
+    {
+     "template": "wooden_barrel",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Kitchen",
+     "count": 3,
+     "hint": "wall:any"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Guest Corridor",
+     "count": 2,
+     "hint": "wall:east+wall:west"
+    },
+    {
+     "template": "lantern",
+     "room": "Guest Corridor",
+     "count": 2,
+     "hint": "wall:north+wall:south"
+    },
+    {
+     "template": "single_bed",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Unit_1",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "single_bed",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Unit_2",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "single_bed",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Unit_3",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "single_bed",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Unit_4",
+     "count": 1,
+     "hint": "near_door"
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Guest Room",
+      "share": "small",
+      "purpose": "A modest room for travelers, furnished with a single bed, a small table, and a shelf for personal items. A lantern hangs near the door."
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Guest Room",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "single_bed",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "wall:south"
+     },
+     {
+      "template": "wooden_table",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "wall:north"
+     },
+     {
+      "template": "wooden_chair",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "beside:wooden_table"
+     },
+     {
+      "template": "wooden_shelf",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "wall:east"
+     },
+     {
+      "template": "wooden_chest",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "lantern",
+      "room": "Guest Room",
+      "count": 1,
+      "hint": "near_door"
+     }
+    ]
+   },
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Fishermen’s Storehouse",
+   "wall": "stone",
+   "ground": "packed earth",
+   "lootPool": "Fishermen’s Storehouse",
+   "rooms": [
+    {
+     "name": "Main Storage",
+     "share": "large",
+     "purpose": "A cavernous space lined with weathered stone walls, housing nets, tools, and preserved fish. The air is damp and smells faintly of salt and brine. A single lantern hangs from a rafter, casting long shadows. A small hearth in one corner provides meager warmth, and a smokehouse occupies a far wall, its door slightly ajar. The floor is uneven, with wooden planks laid over the packed earth in high-traffic areas.",
+     "lootPool": "Fishermen’s Storehouse"
+    },
+    {
+     "name": "Tool Shed",
+     "share": "medium",
+     "purpose": "A smaller, more organized space for tools and repair equipment. An anvil sits in the center, surrounded by coils of rope, hammers, and net-mending tools. Shelves line the walls, holding spare parts, twine, and patches. A wooden workbench runs along one wall, with a stool tucked beside it. The door to the Main Storage is visible through the open doorway.",
+     "lootPool": "Fishermen’s Storehouse"
+    }
+   ],
+   "connections": [
+    [
+     "Main Storage",
+     "Tool Shed"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Storage",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "wooden_shelf",
+     "room": "Main Storage",
+     "count": 8,
+     "hint": "wall:north+wall:south+wall:east+wall:west"
+    },
+    {
+     "template": "wooden_crate",
+     "room": "Main Storage",
+     "count": 12,
+     "hint": "scatter"
+    },
+    {
+     "template": "fishing_net_drying_rack",
+     "room": "Main Storage",
+     "count": 3,
+     "hint": "wall:east+wall:west"
+    },
+    {
+     "template": "hearth",
+     "room": "Main Storage",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "smokehouse",
+     "room": "Main Storage",
+     "count": 1,
+     "hint": "wall:west+corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Main Storage",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Tool Shed",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Tool Shed",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "anvil",
+     "room": "Tool Shed",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Tool Shed",
+     "count": 4,
+     "hint": "wall:north+wall:south+wall:east+wall:west"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Tool Shed",
+     "count": 2,
+     "hint": "wall:east+wall:west+corner"
+    },
+    {
+     "template": "coil_of_rope",
+     "room": "Tool Shed",
+     "count": 5,
+     "hint": "scatter"
+    },
+    {
+     "template": "wooden_crate",
+     "room": "Tool Shed",
+     "count": 4,
+     "hint": "scatter"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Village Chapel",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Village Chapel",
+   "rooms": [
+    {
+     "name": "Narthex",
+     "share": "small",
+     "purpose": "entryway and cloakroom for parishioners to remove wet or muddy gear before entering the chapel proper"
+    },
+    {
+     "name": "Chapel",
+     "share": "medium",
+     "purpose": "main worship space with an altar at the north end, rows of pews facing it, and a hearth for warmth during winter storms"
+    },
+    {
+     "name": "Sacristy",
+     "share": "small",
+     "purpose": "small storage room for vestments, candles, and religious texts; sleeps one visiting priest or acolyte"
+    }
+   ],
+   "connections": [
+    [
+     "Narthex",
+     "Chapel"
+    ],
+    [
+     "Chapel",
+     "Sacristy"
+    ]
+   ],
+   "entrance": {
+    "room": "Narthex",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "wooden_chest",
+     "room": "Narthex",
+     "count": 1,
+     "hint": "wall:north+corner",
+     "lootPool": "Village Chapel"
+    },
+    {
+     "template": "lantern",
+     "room": "Narthex",
+     "count": 2,
+     "hint": "wall:east+wall:west+near_door"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Narthex",
+     "count": 1,
+     "hint": "wall:south+beside:wooden_chest"
+    },
+    {
+     "template": "pews",
+     "room": "Chapel",
+     "count": 6,
+     "hint": "row:south+symmetric",
+     "lootPool": "Village Chapel"
+    },
+    {
+     "template": "altar",
+     "room": "Chapel",
+     "count": 1,
+     "hint": "wall:north+center"
+    },
+    {
+     "template": "hearth",
+     "room": "Chapel",
+     "count": 1,
+     "hint": "wall:east+corner"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Chapel",
+     "count": 1,
+     "hint": "wall:west+corner",
+     "lootPool": "Village Chapel"
+    },
+    {
+     "template": "lantern",
+     "room": "Chapel",
+     "count": 4,
+     "hint": "wall:any+scatter"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Chapel",
+     "count": 2,
+     "hint": "wall:north+beside:altar+wall:south+beside:pews"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Chapel",
+     "count": 2,
+     "hint": "beside:hearth"
+    },
+    {
+     "template": "single_bed",
+     "room": "Sacristy",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Sacristy",
+     "count": 1,
+     "hint": "wall:south+corner",
+     "lootPool": "Village Chapel"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Sacristy",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Sacristy",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Net-Mender’s Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Net-Mender’s Cottage",
+   "rooms": [
+    {
+     "name": "Workshop",
+     "share": "medium",
+     "purpose": "Net-mending and crafting space with tools, drying racks, and workbenches. The air smells of salt and tarred rope.",
+     "lootPool": "Net-Mender’s Cottage"
+    },
+    {
+     "name": "Living Space",
+     "share": "small",
+     "purpose": "A modest living area with a hearth, storage, and a bed for the net-mender. The walls are lined with shelves holding tools and mended nets."
+    }
+   ],
+   "connections": [
+    [
+     "Workshop",
+     "Living Space"
+    ]
+   ],
+   "entrance": {
+    "room": "Workshop",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "double_bed",
+     "room": "Living Space",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "wall:north+center"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Workshop",
+     "count": 2,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "hearth",
+     "room": "Living Space",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Living Space",
+     "count": 1,
+     "hint": "wall:north+corner",
+     "lootPool": "Net-Mender’s Cottage"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Workshop",
+     "count": 2,
+     "hint": "wall:east+wall:west"
+    },
+    {
+     "template": "fishing_net_drying_rack",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "wall:south+center"
+    },
+    {
+     "template": "anvil",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_crate",
+     "room": "Workshop",
+     "count": 3,
+     "hint": "scatter+near_door"
+    },
+    {
+     "template": "coil_of_rope",
+     "room": "Workshop",
+     "count": 4,
+     "hint": "scatter+wall:south"
+    },
+    {
+     "template": "lantern",
+     "room": "Living Space",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "wooden_barrel",
+     "room": "Workshop",
+     "count": 1,
+     "hint": "wall:west+corner"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Hale Family Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Fisherfolk Cottages",
+   "rooms": [
+    {
+     "name": "Main Hall",
+     "share": "medium",
+     "purpose": "living and working space",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "small",
+     "purpose": "private sleeping area for the couple"
+    },
+    {
+     "name": "Children's Nook",
+     "share": "small",
+     "purpose": "sleeping and play area for the two children"
+    }
+   ],
+   "connections": [
+    [
+     "Main Hall",
+     "Bedchamber"
+    ],
+    [
+     "Main Hall",
+     "Children's Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Hall",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "double_bed",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "single_bed",
+     "room": "Children's Nook",
+     "count": 2,
+     "hint": "symmetric+wall:east"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Main Hall",
+     "count": 3,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "hearth",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:east+away_from_door"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:south+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:hearth",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:west+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Children's Nook",
+     "count": 1,
+     "hint": "wall:north+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "lantern",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Children's Nook",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    },
+    {
+     "template": "fishing_rod_rack",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Bracken Family Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Fisherfolk Cottages",
+   "rooms": [
+    {
+     "name": "Main Hall",
+     "share": "medium",
+     "purpose": "living and working space",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Bedroom",
+     "share": "small",
+     "purpose": "private sleeping space for the couple",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Child's Nook",
+     "share": "small",
+     "purpose": "small sleeping and play area for the child",
+     "lootPool": "Fisherfolk Cottages"
+    }
+   ],
+   "connections": [
+    [
+     "Main Hall",
+     "Bedroom"
+    ],
+    [
+     "Main Hall",
+     "Child's Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Hall",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "double_bed",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "single_bed",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Main Hall",
+     "count": 2,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "hearth",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:north+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:hearth",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "lantern",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:south+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:west+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "lantern",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:east+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:north+corner",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "lantern",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:east+near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Marlow Family Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Fisherfolk Cottages",
+   "rooms": [
+    {
+     "name": "Entryway",
+     "share": "small",
+     "purpose": "narrow passage with storage and a place to remove boots",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Main Hall",
+     "share": "medium",
+     "purpose": "central living and dining space with a hearth for warmth and cooking",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Bedroom",
+     "share": "medium",
+     "purpose": "shared sleeping space for the couple, with a double bed and storage",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Children's Nook",
+     "share": "small",
+     "purpose": "small sleeping and play area for the two children, with single beds and a shelf",
+     "lootPool": "Fisherfolk Cottages"
+    }
+   ],
+   "connections": [
+    [
+     "Entryway",
+     "Main Hall"
+    ],
+    [
+     "Main Hall",
+     "Bedroom"
+    ],
+    [
+     "Main Hall",
+     "Children's Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Entryway",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "wooden_chest",
+     "room": "Entryway",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Entryway",
+     "count": 1,
+     "hint": "wall:north"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "center",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Main Hall",
+     "count": 3,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:hearth"
+    },
+    {
+     "template": "hearth",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:hearth"
+    },
+    {
+     "template": "lantern",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:south"
+    },
+    {
+     "template": "double_bed",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "lantern",
+     "room": "Bedroom",
+     "count": 1,
+     "hint": "wall:west"
+    },
+    {
+     "template": "single_bed",
+     "room": "Children's Nook",
+     "count": 2,
+     "hint": "symmetric+wall:north"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Children's Nook",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Children's Nook",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "lantern",
+     "room": "Children's Nook",
+     "count": 1,
+     "hint": "wall:west"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  },
+  {
+   "name": "Durn Family Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "lootPool": "Fisherfolk Cottages",
+   "rooms": [
+    {
+     "name": "Main Hall",
+     "share": "medium",
+     "purpose": "living and working space for the family; central hearth for warmth and cooking; space for mending nets and preparing meals",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "small",
+     "purpose": "private sleeping space for the couple; simple furnishings to withstand dampness",
+     "lootPool": "Fisherfolk Cottages"
+    },
+    {
+     "name": "Child's Nook",
+     "share": "small",
+     "purpose": "small sleeping space for the child; storage for toys and belongings",
+     "lootPool": "Fisherfolk Cottages"
+    }
+   ],
+   "connections": [
+    [
+     "Main Hall",
+     "Bedchamber"
+    ],
+    [
+     "Main Hall",
+     "Child's Nook"
+    ]
+   ],
+   "entrance": {
+    "room": "Main Hall",
+    "side": "west"
+   },
+   "furniture": [
+    {
+     "template": "double_bed",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "single_bed",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:north+corner"
+    },
+    {
+     "template": "wooden_table",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "wooden_chair",
+     "room": "Main Hall",
+     "count": 3,
+     "hint": "around:wooden_table"
+    },
+    {
+     "template": "wooden_stool",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:wooden_table"
+    },
+    {
+     "template": "hearth",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:east"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "beside:hearth"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "beside:double_bed"
+    },
+    {
+     "template": "wooden_chest",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:south+corner"
+    },
+    {
+     "template": "wooden_shelf",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "beside:single_bed"
+    },
+    {
+     "template": "lantern",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:north+away_from_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "lantern",
+     "room": "Child's Nook",
+     "count": 1,
+     "hint": "wall:north+near_door"
+    },
+    {
+     "template": "fishing_net_drying_rack",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:south+near_door"
+    },
+    {
+     "template": "fishing_rod_rack",
+     "room": "Main Hall",
+     "count": 1,
+     "hint": "wall:west+near_door"
+    }
+   ],
+   "yard": null,
+   "upper": [],
+   "stairs": null
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Mirabel Harkness",
+   "gender": "female",
+   "role": "tavern keeper",
+   "home": "Old Salt Tavern",
+   "work": "Old Salt Tavern",
+   "description": "A sharp-tongued woman who runs the inn with an iron fist, she wants the place to thrive but worries the villagers’ grudges will one day turn to fists.",
+   "physicalDescription": "Stocky with salt-cracked hands, she wears a stained apron over a dark dress and keeps her iron-gray hair tied back in a tight knot, always ready for a brawl or a brawl’s aftermath.",
+   "kind": "adult",
+   "shift": "evening",
+   "sells": true
+  },
+  {
+   "name": "Father Aldric Veyne",
+   "gender": "male",
+   "role": "chaplain",
+   "home": "Village Chapel",
+   "work": "Village Chapel",
+   "description": "A gaunt, silver-haired man who tends to the spiritual needs of the villagers but secretly fears the sea’s wrath after losing his brother in a storm; he longs for a sign of divine favor to ease the village’s grief.",
+   "physicalDescription": "Tall and lean, clad in a frayed brown robe, his hands are always stained with ink from recording births and deaths, and his eyes hold a quiet sorrow that never leaves.",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Eamon Harkness",
+   "gender": "male",
+   "role": "net-mender",
+   "home": "Net-Mender’s Cottage",
+   "work": "Net-Mender’s Yard",
+   "description": "A broad-shouldered widower who mends nets with calloused hands, his only comfort the quiet rhythm of his work—though he secretly fears the sea will take another from his village, as it did his wife.",
+   "physicalDescription": "Tall and lean, with salt-streaked dark hair tied back, he wears a patched woolen tunic and fingerless gloves, his left thumb permanently stained with tar from years of repair.",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Martha Harkness",
+   "gender": "female",
+   "role": "widow, at home by day",
+   "home": "Net-Mender’s Cottage",
+   "work": "Net-Mender’s Cottage",
+   "description": "Eamon’s wife, now aged and frail, spends her days tending the hearth and weaving small repairs into the nets he brings home—her hands still steady, though her voice is often lost to the wind’s howl.",
+   "physicalDescription": "Slender and silver-haired, she wears a thick shawl over a faded dress, her knuckles gnarled from years of stitching, and her eyes hold the quiet grief of a woman who lost her love to the same sea that sustains them.",
+   "kind": "elder",
+   "sells": false
+  },
+  {
+   "name": "Cedric Hale",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Hale Family Cottage",
+   "work": "Harbor Docks",
+   "description": "A broad-shouldered fisherman with a quiet but stubborn streak, Cedric clings to the old ways of mending nets himself rather than rely on Eamon’s yard, though his pride may cost him when the next storm hits.",
+   "physicalDescription": "Tall and barrel-chested, his face is permanently wind-chapped, and he wears a heavy wool tunic with a salt-stained leather belt.",
+   "partner": "Elspeth Hale",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Elspeth Hale",
+   "gender": "female",
+   "role": "herring fisher's wife",
+   "home": "Hale Family Cottage",
+   "work": "Hale Family Cottage",
+   "description": "A sharp-eyed woman who keeps the household running, Elspeth secretly fears her husband’s rivalry with the net-mender will bring misfortune, but she’d never admit it aloud.",
+   "physicalDescription": "Stocky and strong from years of hauling nets, her hands are rough, and she wears a dark apron over a simple wool dress, always pinned with a silver thimble.",
+   "partner": "Cedric Hale",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Finn Hale",
+   "gender": "male",
+   "role": "the fisher’s son",
+   "home": "Hale Family Cottage",
+   "work": "Hale Family Cottage",
+   "description": "A wiry 12-year-old with a chip on his shoulder, Finn begs his father to let him sail, but Cedric refuses—until the day a storm traps them both at sea.",
+   "physicalDescription": "Skinny and quick, his hair is perpetually tangled, and he wears a patched-up tunic with his father’s old fishing knife tucked into his belt.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Marnie Hale",
+   "gender": "female",
+   "role": "the fisher’s daughter",
+   "home": "Hale Family Cottage",
+   "work": "Hale Family Cottage",
+   "description": "A quiet 9-year-old who collects shells and whispers to the tide, Marnie believes the sea speaks to her—though her father calls it foolishness.",
+   "physicalDescription": "Small and delicate, her braids are often loose, and she wears a worn leather apron over her dress, always with a small pouch of shells at her belt.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Borin Bracken",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Bracken Family Cottage",
+   "work": "Harbor Docks",
+   "description": "A superstitious man who refuses to sail in storms, Borin blames the net-mender’s wife for his bad luck after her death, though he’d never dare say it to her face.",
+   "physicalDescription": "Short and stocky, his face is round and flushed, and he wears a thick, hooded cloak even in the village, as if warding off bad omens.",
+   "partner": "Thora Bracken",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Thora Bracken",
+   "gender": "female",
+   "role": "herring fisher's wife",
+   "home": "Bracken Family Cottage",
+   "work": "Bracken Family Cottage",
+   "description": "A sharp-tongued woman who runs the household with an iron fist, Thora resents the Hales’ defiance of the net-mender and would love to see Cedric’s boat sink—if only to prove her husband right.",
+   "physicalDescription": "Tall and lean, her dark hair is always pinned back, and she wears a high-collared dress with a silver brooch shaped like a fish.",
+   "partner": "Borin Bracken",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Tessa Bracken",
+   "gender": "female",
+   "role": "the fisher’s daughter",
+   "home": "Bracken Family Cottage",
+   "work": "Bracken Family Cottage",
+   "description": "A bold 11-year-old with a taste for trouble, Tessa sneaks into the net-mender’s yard to spy on the villagers, convinced she’ll uncover a secret that will make her famous.",
+   "physicalDescription": "Freckled and wiry, her clothes are always rumpled, and she wears a stolen fisherman’s cap too big for her head.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Garrick Marlow",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Marlow Family Cottage",
+   "work": "Harbor Docks",
+   "description": "A broad-shouldered man with calloused hands, Garrick is the elder Marlow son who shoulders his father’s duties after his death last winter; he fears the sea’s wrath but refuses to let his family starve.",
+   "physicalDescription": "Tall and wind-lean, his salt-streaked beard is braided back, and his woolen tunic is patched at the elbows from years of hauling nets.",
+   "partner": "Liora Marlow",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Liora Marlow",
+   "gender": "female",
+   "role": "herring fisher's wife",
+   "home": "Marlow Family Cottage",
+   "work": "Marlow Family Cottage",
+   "description": "Liora keeps the cottage running with a steady hand, mending nets and preserving fish while secretly longing for a life beyond the docks—she dreams of her sister’s weaving guild in the next village.",
+   "physicalDescription": "Her dark braid is always pinned with a silver thimble, and her apron is thick with flour and fish scales, her knuckles raw from stitching.",
+   "partner": "Garrick Marlow",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Riven Marlow",
+   "gender": "male",
+   "role": "the fisher’s son",
+   "home": "Marlow Family Cottage",
+   "work": "Marlow Family Cottage",
+   "description": "A wiry 12-year-old with a knack for knots, Riven mimics his father’s work but chafes at being called too young for the sea—he’s already carved a miniature boat from driftwood.",
+   "physicalDescription": "His hair is perpetually tangled from wind and salt, and his fingers are always stained with ink from scribbling tally marks on scraps of parchment.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Sylvie Marlow",
+   "gender": "female",
+   "role": "the fisher’s daughter",
+   "home": "Marlow Family Cottage",
+   "work": "Marlow Family Cottage",
+   "description": "Sylvie, 9, is the cottage’s unofficial storyteller, weaving tales of mermaids and lost ships to distract from the storms—she fears the dark but never lets it show.",
+   "physicalDescription": "Her dress is embroidered with tiny fish, and her eyes are always wide, as if listening for the next wave’s whisper.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Dain Durn",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Durn Family Cottage",
+   "work": "Harbor Docks",
+   "description": "A grizzled veteran of the sea, Dain resents Garrick’s rise and whispers that the younger man’s luck is borrowed—he clings to old superstitions, like never casting off on a Tuesday.",
+   "physicalDescription": "His face is a map of scars, and his cloak is lined with dried seaweed for luck, though he’d never admit it.",
+   "partner": "Hilda Durn",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Hilda Durn",
+   "gender": "female",
+   "role": "herring fisher's wife",
+   "home": "Durn Family Cottage",
+   "work": "Durn Family Cottage",
+   "description": "Hilda tends the cottage’s herb garden, brewing remedies for the village but secretly hoping her son will take the priest’s path—she fears the sea’s cruelty but dares not voice it.",
+   "physicalDescription": "Her hands are always damp from washing, and her sleeves are rolled to the elbows, revealing bruises from Dain’s temper.",
+   "partner": "Dain Durn",
+   "kind": "adult",
+   "sells": false
+  },
+  {
+   "name": "Orren Durn",
+   "gender": "male",
+   "role": "the fisher’s son",
+   "home": "Durn Family Cottage",
+   "work": "Durn Family Cottage",
+   "description": "A lanky 14-year-old with a talent for carving, Orren sells whittled fish to tourists but dreams of becoming a ship’s carpenter—he hides his sketches for fear his father will burn them.",
+   "physicalDescription": "His hair is perpetually tousled, and his tunic is always dusted with wood shavings, his fingers stained with linseed oil.",
+   "kind": "child",
+   "sells": false
+  }
+ ],
+ "player": {
+  "name": "Kaelan Veyne",
+  "gender": "male",
+  "role": "an outsider with a reason to stay the season",
+  "home": "Old Salt Tavern",
+  "work": "Village Chapel",
+  "description": "A former scribe turned wandering scholar, Kaelan seeks to document the village’s folklore and lost maritime traditions before the next storm season cuts him off from the mainland.",
+  "physicalDescription": "Lean and wind-burnished, clad in a patched woolen fisherman’s coat over a dark tunic, his left hand bears the faint scar of a ship’s rope burn—his only souvenir from a life at sea.",
+  "inventory": [],
+  "equipment": {
+   "torso": "Woolen Fisherman’s Shirt",
+   "wieldable1": "Fisherman’s Knife",
+   "necklace": "Storm Keeper’s Amulet",
+   "boots": "Fisherman’s Boots",
+   "gloves": "Net-Mender’s Gloves"
+  }
+ },
+ "compounds": [
+  {
+   "name": "Old Salt Tavern Compound",
+   "zone": "Harbor Docks",
+   "shape": "cluster",
+   "courtyard": "small",
+   "walls": "none",
+   "parts": [
+    {
+     "building": "Old Salt Tavern",
+     "at": "spine:hub"
+    }
+   ]
+  }
+ ],
+ "narrativeRules": [
+  "Emphasize the gale’s howl and the creak of ropes—every sound is a reminder of the sea’s power and the village’s fragility.",
+  "Let tensions simmer: a sharp word over a shared net, a glance that lingers too long, or a child’s laughter cutting through the cold.",
+  "Storms are never just weather—they’re tests of skill, luck, and who the village will turn to (or against) when the waves rise.",
+  "The Net-Mender’s Yard is a place of both reverence and resentment; his tools are prized, but his presence is a thorn in some ribs.",
+  "Food and fuel are scarce but never free—every coin spent at the Old Salt Tavern is a story of trust (or debt) told over ale.",
+  "The Chapel’s bell tolls for more than the dead; it marks the hours, the tides, and the moments when the village must choose: to help or to hoard.",
+  "A lost fishing knife or a snapped line isn’t just broken—it’s a call to action, a chance to prove worth, or a spark for blame.",
+  "The Storehouse’s dust is a metaphor: supplies rot, trust decays, and the village’s survival depends on who steps forward to mend what’s broken."
+ ],
+ "narrativeFlavor": "adaptive",
+ "difficulty": "medium",
+ "currency": {
+  "name": "fisher’s mark",
+  "description": "a silver coin stamped with a herring, worth a day’s catch or a night’s lodging at the Old Salt Tavern",
+  "format": "5 pennies = 1 mark"
+ },
+ "startingCurrency": 150,
+ "attributes": {
+  "strength": 5,
+  "dexterity": 6,
+  "intellect": 4,
+  "perception": 6,
+  "charisma": 4
+ },
+ "skills": {
+  "Net-Mending": 2,
+  "Fishing": 2,
+  "Boat Handling": 2,
+  "Storm Navigation": 1,
+  "First Aid": 1,
+  "Chapel Lore": 0,
+  "Tavern Banter": 1,
+  "Toolcraft": 1,
+  "Animal Handling": 0,
+  "Foraging": 0,
+  "Fire Tending": 1,
+  "Knot-Tying": 2,
+  "Weather Reading": 1,
+  "Local Politics": 0,
+  "Singing": 0,
+  "Storytelling": 0,
+  "Bargaining": 1,
+  "Swimming": 2
+ },
+ "weatherKinds": [
+  "clear",
+  "rain",
+  "fog",
+  "wind"
+ ],
+ "variables": [
+  {
+   "name": "Rumours",
+   "emoji": "🗣️",
+   "type": "text",
+   "value": "The Net-Mender’s daughter was seen speaking to a stranger in the docks.",
+   "initial": "The Net-Mender’s daughter was seen speaking to a stranger in the docks."
+  },
+  {
+   "name": "Supplies",
+   "emoji": "🐟",
+   "type": "number",
+   "value": 8,
+   "initial": 8,
+   "min": 0,
+   "max": 12,
+   "ratePerHour": -0.1,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "hunger pains and gnawing stomachs—some families ration their last meal.",
+    "emoji": "⚠️"
+   }
+  },
+  {
+   "name": "Net-Mender’s Favor",
+   "emoji": "🧵",
+   "type": "number",
+   "value": 0,
+   "initial": 0,
+   "min": -3,
+   "max": 3,
+   "ratePerHour": 0,
+   "lowZone": {
+    "threshold": -2,
+    "effectDesc": "The Net-Mender avoids your gaze; his tools are ‘unavailable’ when you need them.",
+    "emoji": "😠"
+   },
+   "highZone": {
+    "threshold": 2,
+    "effectDesc": "The Net-Mender offers a free repair or a word of advice—his respect is a rare currency.",
+    "emoji": "🙏"
+   }
+  },
+  {
+   "name": "Storm Warning",
+   "emoji": "🌪️",
+   "type": "text",
+   "value": "None",
+   "initial": "None"
+  },
+  {
+   "name": "Tavern Reputation",
+   "emoji": "🍻",
+   "type": "number",
+   "value": 0,
+   "initial": 0,
+   "min": -2,
+   "max": 2,
+   "ratePerHour": 0,
+   "lowZone": {
+    "threshold": -1,
+    "effectDesc": "The innkeeper serves your ale watered down and ignores your requests.",
+    "emoji": "😒"
+   },
+   "highZone": {
+    "threshold": 1,
+    "effectDesc": "The innkeeper offers you a free meal or a bed—your word carries weight.",
+    "emoji": "😊"
+   }
+  },
+  {
+   "name": "Fisherfolk Trust",
+   "emoji": "👨‍👩‍👧‍👦",
+   "type": "number",
+   "value": 0,
+   "initial": 0,
+   "min": -2,
+   "max": 2,
+   "ratePerHour": 0,
+   "lowZone": {
+    "threshold": -1,
+    "effectDesc": "Whispers follow you; offers of help turn to cold shoulders.",
+    "emoji": "👀"
+   },
+   "highZone": {
+    "threshold": 1,
+    "effectDesc": "Families share their catch or lend tools without hesitation.",
+    "emoji": "🤝"
+   }
+  }
+ ],
+ "perkTrees": [
+  {
+   "name": "The Fisher’s Path",
+   "root": {
+    "name": "Stranger’s Hands",
+    "type": "passive",
+    "description": "Your outsider status means villagers tolerate you but do not trust you. You gain a +1 to Persuasion checks when dealing with locals, but you cannot assume favors or shelter without earning them first.",
+    "physicalDescription": "A pair of rough, uncalloused hands gripping a wooden oar.",
+    "children": [
+     {
+      "name": "Net-Mender’s Apprentice",
+      "type": "active",
+      "description": "Spend 3 hours assisting Eamon Harkness in his yard, and he will teach you one basic knot or repair technique. Once per season, you may attempt a check to mend a net or rope without penalty.",
+      "physicalDescription": "A neatly tied square knot in a frayed rope.",
+      "children": [
+       {
+        "name": "Martha’s Trust",
+        "type": "passive",
+        "description": "Martha Harkness begins to share meals with you during storms. Once per season, she may reveal a family secret or a hidden grievance within the village if you’ve helped her husband.",
+        "physicalDescription": "A steaming bowl of fish stew passed through an open cottage door.",
+        "children": []
+       },
+       {
+        "name": "Storm-Watcher’s Instinct",
+        "type": "active",
+        "description": "Eamon teaches you to read the sea’s signs. Once per week, attempt a check to predict mild weather changes (e.g., incoming fog or light rain). Success grants a +1 to Survival checks for the next 24 hours.",
+        "physicalDescription": "A crow’s foot pattern carved into a wooden paddle.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Fisher’s Apprentice",
+      "type": "active",
+      "description": "A fishing family invites you to join their next trip if you assist them for a full day. Gain a +1 to Survival checks related to fishing for the season, and you may attempt to catch one extra fish per trip.",
+      "physicalDescription": "A wooden bucket half-filled with glistening herring.",
+      "children": [
+       {
+        "name": "The Family’s Mark",
+        "type": "passive",
+        "description": "The family you apprenticed under will offer you a place to stay during storms or share a meal if you’ve helped them. Once per season, they may grant you a small favor, like delivering a message or mending gear.",
+        "physicalDescription": "A handshake over a shared meal of salted herring.",
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "The Storm’s Endurance",
+   "root": {
+    "name": "Unyielding Will",
+    "type": "passive",
+    "description": "You endure Frosthaven’s hardships without complaint. Gain a +1 to Endurance checks in harsh weather, and you may attempt one additional check per day to push through fatigue.",
+    "physicalDescription": "A lone figure standing against a howling wind, chin raised.",
+    "children": [
+     {
+      "name": "Storm’s Lesson",
+      "type": "active",
+      "description": "Survive a severe storm without taking damage, and gain a temporary +2 to Endurance checks for 24 hours. Villagers who witness your resilience may treat you with slight respect afterward.",
+      "physicalDescription": "A shipwrecked mast half-buried in sand, scarred by salt.",
+      "children": [
+       {
+        "name": "Beacon of Hope",
+        "type": "passive",
+        "description": "Once per season, a villager in distress may turn to you for help, knowing you’ve faced storms before. They will offer a reward—whether a favor, a meal, or information—if you assist them.",
+        "physicalDescription": "A flickering lantern in a cottage window during a storm.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Cold’s Embrace",
+      "type": "passive",
+      "description": "You’re accustomed to the cold. Gain a +1 to Endurance checks in freezing conditions, and ignore minor cold-related penalties (e.g., slowed movement).",
+      "physicalDescription": "A breath of frost curling around a figure’s face.",
+      "children": [
+       {
+        "name": "Frost’s Grip",
+        "type": "active",
+        "description": "Endure a night of extreme cold without damage, and gain a +2 to Endurance checks for 48 hours. You may also warm another person by sharing body heat, granting them a +1 to Endurance for one hour.",
+        "physicalDescription": "Hands wrapped around a steaming mug of hot cider.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Wind’s Song",
+      "type": "active",
+      "description": "Attempt a check to interpret the wind’s direction or strength once per week. Success grants a +1 to Survival checks for navigation or weather prediction for 24 hours.",
+      "physicalDescription": "A feather caught in the wind, spinning lazily above the docks.",
+      "children": [
+       {
+        "name": "Sailor’s Whisper",
+        "type": "passive",
+        "description": "Fishermen may ask for your counsel before sailing. If you succeed on a check, they’ll follow your advice, improving their chances of safe passage.",
+        "physicalDescription": "A hand pointing toward the horizon, where the wind carries distant shores.",
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "name": "The Village’s Bond",
+   "root": {
+    "name": "Familiar Face",
+    "type": "passive",
+    "description": "Villagers no longer ignore you. Gain a +1 to Persuasion and Insight checks, and attempt one additional check per day to earn trust or uncover secrets.",
+    "physicalDescription": "A figure standing at the center of the Village Green, surrounded by villagers.",
+    "children": [
+     {
+      "name": "Chapel’s Welcome",
+      "type": "active",
+      "description": "Attend a service or help at the chapel, and Father Aldric will invite you to share a meal. Once per season, he may reveal a moral dilemma or offer a blessing granting a +1 to one check.",
+      "physicalDescription": "A wooden cross hanging above the chapel door.",
+      "children": [
+       {
+        "name": "Confessor’s Trust",
+        "type": "passive",
+        "description": "Once per season, a villager may seek your counsel. Offer advice based on their struggles, and if heeded, they may grant you a favor.",
+        "physicalDescription": "Hands clasped in prayer, symbolizing trust.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Family’s Bond",
+      "type": "active",
+      "description": "Spend a full day with a fishing family, and they’ll invite you to join their celebrations. Once per season, you may call upon them for aid, though they may expect something in return.",
+      "physicalDescription": "A shared meal around a crackling fire.",
+      "children": [
+       {
+        "name": "Heir’s Promise",
+        "type": "passive",
+        "description": "A child may ask for your help once per season. Succeed in assisting them, and they may reveal a secret or hidden truth about the village.",
+        "physicalDescription": "A child’s hand in yours, eyes wide with trust.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Tavern’s Keeper",
+      "type": "passive",
+      "description": "Mirabel offers you discounts or meals if you’ve helped her. Once per season, she may reveal a secret or gossip that could be useful.",
+      "physicalDescription": "A tankard raised in toast, the tavern’s warmth enveloping you.",
+      "children": [
+       {
+        "name": "Innkeeper’s Confidant",
+        "type": "active",
+        "description": "Once per season, Mirabel may reveal a secret about a villager or stranger. Use this information to earn favors, avoid danger, or uncover hidden truths.",
+        "physicalDescription": "A whispered conversation in the tavern’s corner.",
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Net-Mending Lesson",
+   "location": "Net-Mender’s Yard",
+   "day": 0,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "Eamon Harkness will not trust you with his craft, and the villagers will whisper that you lack the skills to contribute to their survival. You’ll be seen as a burden, and the door to the Old Salt Tavern will stay closed to you for the season."
+  },
+  {
+   "name": "Storm Warning Gathering",
+   "location": "Village Green",
+   "day": 2,
+   "start": "16:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "The villagers will assume you’re unprepared for the harsh realities of Frosthaven. You’ll be excluded from the storm preparations, and your reputation as an outsider will deepen—no one will share supplies or shelter with you if the winds pick up."
+  },
+  {
+   "name": "Herring Fishery Shift",
+   "location": "Harbor Docks",
+   "day": 3,
+   "start": "05:00",
+   "hours": 6,
+   "recurrence": "weekly",
+   "missedConsequence": "The fishermen will see you as unreliable. Cedric Hale will refuse to let you join their crew next time, and you’ll miss out on a chance to earn their trust—or their coin."
+  },
+  {
+   "name": "Chapel Service",
+   "location": "Village Chapel",
+   "day": 4,
+   "start": "10:00",
+   "hours": 1,
+   "recurrence": "weekly",
+   "missedConsequence": "Father Aldric will note your absence, and the villagers will assume you lack respect for their traditions. You’ll be seen as an outsider who doesn’t belong, and your path to integration will grow steeper."
+  },
+  {
+   "name": "Tide-Timing Drill",
+   "location": "Harbor Docks",
+   "day": 6,
+   "start": "06:00",
+   "hours": 3,
+   "recurrence": "none",
+   "missedConsequence": "The fishermen will mock your lack of knowledge about the tides. Borin Bracken will refuse to teach you anything further, and you’ll struggle to prove your worth in the village."
+  }
+ ],
+ "quests": [
+  {
+   "title": "Earn the Right to Stay",
+   "objectives": [
+    {
+     "text": "Help Eamon Harkness mend the storm-damaged nets for the village’s fishing fleet by the end of the week.",
+     "prerequisites": [
+      {
+       "text": "Learn the basics of net-mending from Eamon in Net-Mender’s Yard (day 0, 09:00–11:00).",
+       "primary": true
+      },
+      {
+       "text": "Assist Cedric Hale in repairing his personal fishing gear at the Harbor Docks (day 1, 14:00–16:00).",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Prove your worth to the villagers by participating in at least two fishing shifts or storm preparations before the next full moon.",
+     "prerequisites": [
+      {
+       "text": "Join the herring fishery shift on day 3 (05:00–11:00) at the Harbor Docks.",
+       "primary": true
+      },
+      {
+       "text": "Attend the Storm Warning Gathering on day 2 (16:00) at the Village Green and offer to help with preparations.",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Gain Father Aldric’s blessing by attending the Chapel Service on day 4 (10:00) and speaking with him afterward.",
+     "prerequisites": [
+      {
+       "text": "Attend the Chapel Service on day 4 (10:00–11:00) at the Village Chapel.",
+       "primary": true
+      },
+      {
+       "text": "Bring a small offering (e.g., a fish caught during your shift) to the Chapel by day 5.",
+       "primary": false
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Uncover the Truth Behind Last Winter’s Storm",
+   "objectives": [
+    {
+     "text": "Speak with Martha Harkness at Net-Mender’s Cottage to learn more about her late husband’s final days.",
+     "prerequisites": [
+      {
+       "text": "Visit Martha Harkness at Net-Mender’s Cottage on day 1 or 2 (after 12:00).",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Investigate the old fishing logs stored in the Fishermen’s Storehouse to find records of unusual weather patterns.",
+     "prerequisites": [
+      {
+       "text": "Gain access to the Fishermen’s Storehouse by asking Garrick Marlow for the key (day 2, 10:00–12:00).",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Confront Borin Bracken at the Harbor Docks about rumors of his involvement in last winter’s tragedy.",
+     "prerequisites": [
+      {
+       "text": "Find Borin Bracken at the Harbor Docks on day 5 or 6 (before 14:00).",
+       "primary": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "cast": {
+  "households": [
+   {
+    "home": "Old Salt Tavern",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "tavern keeper",
+      "work": "Old Salt Tavern",
+      "shift": "evening",
+      "sells": true
+     }
+    ]
+   },
+   {
+    "home": "Net-Mender’s Cottage",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "net-mender",
+      "work": "Net-Mender’s Yard",
+      "sells": true
+     },
+     {
+      "kind": "elder"
+     }
+    ]
+   },
+   {
+    "home": "Hale Family Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Harbor Docks",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher's wife",
+      "work": "Hale Family Cottage",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Bracken Family Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Harbor Docks",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher's wife",
+      "work": "Bracken Family Cottage",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Marlow Family Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Harbor Docks",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher's wife",
+      "work": "Marlow Family Cottage",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Durn Family Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Harbor Docks",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher's wife",
+      "work": "Durn Family Cottage",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Village Chapel",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "chaplain",
+      "work": "Village Chapel",
+      "sells": false
+     }
+    ]
+   }
+  ]
+ }
+}

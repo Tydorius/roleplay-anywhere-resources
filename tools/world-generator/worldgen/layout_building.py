@@ -498,7 +498,7 @@ def units_footprint(design, templates):
     per = units_per_storey(design)
     rows = max(1, -(-per // 2))
     vertical = design.entrance_side in ("south", "north")
-    strip_h = _shared_strip_height(design, templates, uw if vertical else uh)
+    strip_h = _strip_plan(design, templates, uw if vertical else uh)[0]
     if vertical:
         return (2 * uw + UNIT_SPINE,
                 strip_h + UNIT_ROW_GAP + rows * (uh + UNIT_ROW_GAP))
@@ -513,6 +513,66 @@ def _shared_strip_height(design, templates, width):
     if not needs:
         return 0
     return max(MIN_SIDE, max(_depth_for(a, width) for (a, _m) in needs.values()))
+
+
+def _strip_names(design):
+    """The shared rooms that go in the entrance strip. A shared room the model
+    called "Corridor" is the spine itself (its stair and furniture go there);
+    a second room of that name would clash."""
+    return [r.name for r in design.rooms
+            if r.name.strip().lower() != UNIT_SPINE_NAME.lower()]
+
+
+def _strip_plan(design, templates, along):
+    """(depth, [side a rows, side b rows]) for the shared-room strip, each row
+    ``(room names, depth)`` from the entrance end outward. Each side of the
+    corridor is ``along`` cells wide, one unit copy's width. While every
+    side's rooms fit side by side at their narrowest, each side is one row as
+    deep as the strip. Past that, each room takes a full-width row of its own,
+    the rooms shared between the sides by area, and the strip deepens.
+    Squeezing them into one row left rooms too thin to furnish: a model that
+    listed an inn's four guest rooms beside the unit design got four rooms in
+    an 11-cell row, and the build failed on furniture sitting on walls."""
+    names = _strip_names(design)
+    if not names:
+        return 0, [[], []]
+    needs = room_needs(design, templates) if templates else _share_needs(design)
+    half = -(-len(names) // 2)
+    groups = (names[:half], names[half:])
+    if all(sum(max(MIN_SIDE, needs.get(n, (1, MIN_SIDE))[1]) for n in g) <= along
+           or len(g) <= 1 for g in groups):
+        flat = _shared_strip_height(design, templates, along)
+        return flat, [[(g, flat)] if g else [] for g in groups]
+    depth_of = {n: max(MIN_SIDE, _depth_for(needs.get(n, (1, MIN_SIDE))[0], along))
+                for n in names}
+    sides, load = ([], []), [0, 0]
+    for n in sorted(names, key=lambda n: -depth_of[n]):
+        k = 0 if load[0] <= load[1] else 1
+        sides[k].append(n)
+        load[k] += depth_of[n]
+    depth = max(load)
+    out = []
+    for k, side in enumerate(sides):
+        side.sort(key=names.index)   # the plan's order from the entrance end
+        rs = [([n], depth_of[n]) for n in side]
+        if rs:
+            # the shallower side's last row takes up the slack
+            rs[-1] = (rs[-1][0], rs[-1][1] + depth - load[k])
+        out.append(rs)
+    return depth, out
+
+
+def _fit_rows(rows, total, full):
+    """The strip's rows scaled down when the block is shallower than the
+    strip wants; the last row takes what is left."""
+    if total >= full or not rows:
+        return rows
+    out, used = [], 0
+    for i, (group, d) in enumerate(rows):
+        nd = total - used if i == len(rows) - 1 else max(1, d * total // full)
+        out.append((group, nd))
+        used += nd
+    return out
 
 
 class UnitOut:
@@ -545,7 +605,8 @@ def layout_units(design, rect, rng, templates, storey=1, make_entrance=True):
     vertical = side in ("south", "north")
     uw, uh = _unit_size(design, templates)
     per = units_per_storey(design)
-    strip_h = min(_shared_strip_height(design, templates, uw if vertical else uh),
+    strip_full, side_rows = _strip_plan(design, templates, uw if vertical else uh)
+    strip_h = min(strip_full,
                   max(0, (rect.h if vertical else rect.w) - UNIT_ROW_GAP
                       - ((uh if vertical else uw) + UNIT_ROW_GAP)))
     b = BuildingLayout(design, rect)
@@ -558,31 +619,32 @@ def layout_units(design, rect, rng, templates, storey=1, make_entrance=True):
     # doors into the shared rooms (and its entrance) are the builder's own
     # auto-connect, never an alignment luck
     needs = room_needs(design, templates) if templates else _share_needs(design)
-    # a shared room the model called "Corridor" is the spine itself (its stair
-    # and furniture go there); a second room of that name would clash
-    names = [r.name for r in design.rooms if r.name.strip().lower() != UNIT_SPINE_NAME.lower()]
+    names = _strip_names(design)
     strip_rooms = []
     if names and strip_h > 0:
-        ay = rect.y if side == "south" else rect.y1 - strip_h + 1
-        ax = rect.x if side == "west" else rect.x1 - strip_h + 1
-        side_a = Rect(rect.x, ay, uw, strip_h) if vertical else \
-            Rect(ax, rect.y, strip_h, uh)
-        side_b = Rect(rect.x + uw + UNIT_SPINE, ay, uw, strip_h) if vertical else \
-            Rect(ax, rect.y + uh + UNIT_SPINE, strip_h, uh)
-        half = -(-len(names) // 2)
-        for (group, side_rect) in ((names[:half], side_a), (names[half:], side_b)):
-            if not group:
-                continue
-            along = side_rect.w if vertical else side_rect.h
-            weights = [needs.get(n, (1, MIN_SIDE))[0] for n in group]
-            mins = [max(MIN_SIDE, needs.get(n, (1, MIN_SIDE))[1]) for n in group]
-            sizes = _sizes_mins(along, weights, mins)
-            pos = side_rect.x if vertical else side_rect.y
-            for n, size in zip(group, sizes):
-                strip_rooms.append(RoomOut(
-                    n, Rect(pos, side_rect.y, size, side_rect.h) if vertical
-                    else Rect(side_rect.x, pos, side_rect.w, size)))
-                pos += size
+        for col, rows in enumerate(side_rows):
+            off = 0
+            for (group, depth) in _fit_rows(rows, strip_h, strip_full):
+                # each row a slice of the strip, the first at the entrance end
+                if vertical:
+                    x0 = rect.x + uw + UNIT_SPINE if col else rect.x
+                    y0 = rect.y + off if side == "south" else rect.y1 - off - depth + 1
+                    side_rect = Rect(x0, y0, uw, depth)
+                else:
+                    x0 = rect.x + off if side == "west" else rect.x1 - off - depth + 1
+                    y0 = rect.y + uh + UNIT_SPINE if col else rect.y
+                    side_rect = Rect(x0, y0, depth, uh)
+                off += depth
+                along = side_rect.w if vertical else side_rect.h
+                weights = [needs.get(n, (1, MIN_SIDE))[0] for n in group]
+                mins = [max(MIN_SIDE, needs.get(n, (1, MIN_SIDE))[1]) for n in group]
+                sizes = _sizes_mins(along, weights, mins)
+                pos = side_rect.x if vertical else side_rect.y
+                for n, size in zip(group, sizes):
+                    strip_rooms.append(RoomOut(
+                        n, Rect(pos, side_rect.y, size, side_rect.h) if vertical
+                        else Rect(side_rect.x, pos, side_rect.w, size)))
+                    pos += size
     if vertical:
         corridor = RoomOut(UNIT_SPINE_NAME, Rect(rect.x + uw, rect.y, UNIT_SPINE, rect.h))
     else:
