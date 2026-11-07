@@ -388,8 +388,9 @@ def _spine_side(part, axis):
     if part.slot_kind == "hub":
         return {"ns": "south", "ew": "west"}[axis]
     if part.slot_kind == "spine_end":
-        return "north" if part.side == "start" else "south" if axis == "ns" else \
-               "east" if part.side == "start" else "west"
+        if axis == "ns":
+            return "north" if part.side == "start" else "south"
+        return "east" if part.side == "start" else "west"
     if axis == "ns":
         return "east" if part.side == "left" else "west"
     return "north" if part.side == "left" else "south"
@@ -428,8 +429,13 @@ def _spine_geometry(compound, plans):
                   if p.slot_kind == "spine_end" and p.side == "end"), None)
 
     def fp(part, side=None):
+        """The part's size in this frame: (across, along). An east-west spine
+        is laid out north-south and transposed, so a footprint turns with it;
+        unturned, a live inn's wing landed on its neighbour and the corridor
+        started inside the hub, cut off from it."""
         design, inward, fps = plans[part.building]
-        return fps[side or _spine_side(part, compound.axis)]
+        w, h = fps[side or _spine_side(part, compound.axis)]
+        return (h, w) if compound.axis == "ew" else (w, h)
 
     # every part's cross extent (its depth into its column) and along extent
     cross_of = {p.building: fp(p)[0] for p in lefts + rights}

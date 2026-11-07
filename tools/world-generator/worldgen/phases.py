@@ -1245,8 +1245,25 @@ def sanitize_p1(d, log, floors=False, residents=None):
             kept.append(c)
     d["compounds"] = kept
     d["zones"] = zones
+    open_void_zones(d, log)
     separate_names(d, log)
     return d
+
+
+def open_void_zones(d, log):
+    """Void leaves only a compound's walled parts to walk in, so a building
+    standing alone in a void zone can never be reached: a small model sealed a
+    whole open-air hamlet this way, and not one of its 19 rooms could be entered.
+    Such a zone is open ground."""
+    parts = {p.get("building") for c in d.get("compounds") or []
+             for p in c.get("parts") or [] if isinstance(p, dict)}
+    for z in d["zones"]:
+        alone = [b["name"] for b in z["buildings"] if b["name"] not in parts]
+        if z.get("exterior") == "void" and alone:
+            log.append((f"zone {z['name']}",
+                        f"exterior void dropped (open ground): {alone[0]} stands outside "
+                        f"any compound, so nobody could reach it"))
+            z.pop("exterior")
 
 
 def separate_names(d, log):
