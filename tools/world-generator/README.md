@@ -192,6 +192,9 @@ batches and the three systems calls).
 
 ### Slow models and free models
 
+Choosing a model? [MODEL_RESULTS.md](MODEL_RESULTS.md) has test results for 22 models,
+local and free, including complete worlds built by six of them.
+
 Small models can finish a world, but they take longer and some need room to do it.
 A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes to
 2.5 hours and two to four times the tokens.
