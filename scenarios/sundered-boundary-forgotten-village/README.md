@@ -9,6 +9,8 @@ morning the birds are silent, the thin qi feels disturbed, and strangers have be
 `Sundered-Boundary-Forgotten-Village.scenario.zip`. All images are included (portraits, creatures,
 items, perks and map objects), so nothing needs generating at Start Game.
 
+Made for Anywhere RPG 0.18.
+
 | | |
 |---|---|
 | Map | 144×144: the village, its fields, the ridge, the tree lines and the forbidden woods beyond |
