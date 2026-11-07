@@ -147,6 +147,33 @@ person per slot, and code fills in the facts. The dialog's **Let the map decide*
 (population `"map"`) sizes the cast from each zone's kind; a range the user sets
 is firm. If P1b produces nothing, the run carries on without a cast.
 
+### Getting more buildings
+
+With **Let the map decide** ticked (the editor's default), P1 plans to the base cap
+of 12 buildings, and in testing models planned 6 to 12. The wild zones around the
+settlement keep their full size, so a small plan can leave a few buildings in a
+map of open ground and props. To get more:
+
+1. **Set a resident count.** Untick **Let the map decide** in the editor; the
+   launcher always asks for one. The cap becomes 12 plus one for every 3 residents
+   at the middle of the range, up to 28: a 20-40 range allows 22.
+2. **Ask in Other instructions or requests** (in the editor), which goes word for word to the world
+   plan. For example: "Give every household its own separate house. Plan at least
+   12 family houses as well as the inn, shops and workplaces. Put nearly every
+   building in one large village zone, and keep any forest, farmland or wild zones
+   small." Name any place you must have, such as a harbour, or its zone may come
+   back empty.
+
+In a test of the world plan alone (one fishing-village idea, Cydonia 24B, Gemma 4
+31B and Gemma 4 12B, two tries each, November 2026), plans averaged 8 buildings
+with **Let the map decide**, 11 with a 20-40 count, and 15 with the count and the
+instruction above. Models follow it differently: the Gemmas planned 15-16 homes,
+Cydonia 8 and 10.
+
+A house for every household is realistic, but a house for every person only works
+for small casts, because of the cap. **Re-roll layout…** places the same buildings
+again, so it can't add any; generate again instead.
+
 Everyone's day is then planned together. Staff spread over their workplace's
 rooms, each person gets a seeded evening place near home (the nearest inn in
 their zone, home, or the ground outside), and no walled room holds more than

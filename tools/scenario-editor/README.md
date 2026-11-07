@@ -59,7 +59,9 @@ The dialog's steps:
 2. **Answer the questions** with option chips (a question may allow two picks; **Other**
    opens a text box; everything can be skipped). **Let the map decide** starts ticked, and the
    generator then sizes the population from the map, marks which buildings are in use, and
-   leaves room for families. Untick it to set your own **resident count** (5–60).
+   leaves room for families. Untick it to set your own **resident count** (5–60). For more
+   buildings, set a count and ask for them in step 3: see the generator's
+   [Getting more buildings](../world-generator/README.md#getting-more-buildings).
 3. **Other instructions or requests** (optional) takes anything the questions don't cover,
    such as a plot outline, places or people you want, or house rules. It goes word for word to
    the frame, the world plan, the people and the story phases.
