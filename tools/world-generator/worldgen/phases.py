@@ -1882,11 +1882,48 @@ def _sanitize_unit(u, building_name, templates, log, pools=None):
     return u
 
 
+_NUMBERED_ROOM = re.compile(r"^(.*?)[\s_#-]*(?:no\.?\s*)?\d+$", re.I)
+
+
+def _drop_unit_copies(rooms, d, units, building_name, log):
+    """A unit building's shared rooms without the numbered copies of its unit
+    ("Unit_1", "Room 2", "Guest Room 3"), their furniture lines going with
+    them. Code stamps every copy from the one "unit" design; one model also
+    listed an inn's four guest rooms as shared rooms, and they crowded the
+    entrance strip. ``units`` is the P1 units object (or just true). A reply
+    whose rooms are all copies keeps them."""
+    bases = {"unit", "units"}
+    if isinstance(units, dict) and _is_str(units.get("name")):
+        bases.add(units["name"].strip().lower())
+    u = d.get("unit")
+    if isinstance(u, dict):
+        bases |= {r["name"].strip().lower() for r in (u.get("rooms") or [])
+                  if isinstance(r, dict) and _is_str(r.get("name"))}
+
+    def is_copy(name):
+        m = _NUMBERED_ROOM.match(name.strip())
+        return bool(m) and m.group(1).strip().lower() in bases
+
+    keep = [r for r in rooms if not is_copy(r["name"])]
+    if not keep or len(keep) == len(rooms):
+        return rooms
+    gone = [r["name"] for r in rooms if is_copy(r["name"])]
+    log.append((f"building {building_name}",
+                f"rooms {', '.join(gone)} dropped: numbered copies of the unit; "
+                "code stamps every copy"))
+    if isinstance(d.get("furniture"), list):
+        d["furniture"] = [f for f in d["furniture"]
+                          if not (isinstance(f, dict) and f.get("room") in gone)]
+    return keep
+
+
 def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
                 pools=None):
     """``storeys`` is the building's P1 storey count with floors enabled
-    (None when it is off, so upper/stairs are stripped). ``units`` is true
-    for a unit building: its nested "unit" design is kept and cleaned.
+    (None when it is off, so upper/stairs are stripped). ``units`` is the P1
+    units object (or just true) for a unit building: its nested "unit" design
+    is kept and cleaned, and shared rooms that are numbered copies of the unit
+    are dropped.
     ``pools`` is the catalogue's loot pool names; references outside it are
     dropped with a reason."""
     d["name"] = building_name
@@ -1897,6 +1934,8 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
         d["ground"] = "wood"
     rooms = [r for r in (d.get("rooms") or [])
              if isinstance(r, dict) and _is_str(r.get("name"))]
+    if units:
+        rooms = _drop_unit_copies(rooms, d, units, building_name, log)
     if not rooms:
         log.append((f"building {building_name}", "no usable rooms; using one 'Hall' room"))
         rooms = [{"name": "Hall", "share": "medium", "purpose": d.get("ground", "") or "hall"}]
@@ -3074,7 +3113,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                 continue
             design = sanitize_p3(d, b["name"], tnames, stats["dropped"],
                                  storeys=(b.get("storeys", 1) if floors else None),
-                                 units=bool(b.get("units")), pools=pool_names)
+                                 units=b.get("units") or False, pools=pool_names)
             designs.append(design)
             # a home that came back with fewer beds than P1 promised sleeps
             # only what its furniture beds (the layout's bed-ensuring pass
