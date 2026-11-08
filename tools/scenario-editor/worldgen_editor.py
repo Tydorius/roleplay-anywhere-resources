@@ -266,10 +266,12 @@ def _to_workspace(out_dir, summary, plan_path):
 
 
 def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None,
-                   draft=None):
+                   draft=None, library=True):
     """Start a full generation (model phases + layout + build) for ``idea``,
     with an approved World Frame and its questionnaire kept on the plan.
-    ``draft`` names the saved dialog draft, which records the run."""
+    ``draft`` names the saved dialog draft, which records the run.
+    ``library`` furnishes rooms from the room library (the default); False is
+    the old method, the model furnishing every room."""
     idea = str(idea or "").strip()
     questionnaire = _checked_questionnaire(questionnaire)
     if not idea and (frame is None and questionnaire is None):
@@ -298,7 +300,7 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
                                          "started": j["started"]}})
         summary = wgapi.generate(
             idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
-            frame=frame, questionnaire=questionnaire,
+            frame=frame, questionnaire=questionnaire, library=bool(library),
             progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                       calls=e.get("calls", 0), tokens=e.get("tokens", 0)),
             cancel=lambda: j["cancelRequested"])
@@ -406,7 +408,7 @@ def _merge_draft(draft_id, fields):
 
 # what the page may save; the frame and the run are the server's to write
 _DRAFT_FORM_KEYS = ("mode", "idea", "answers", "notes", "population", "provider", "seed",
-                    "extensions", "summary", "clarifyAnswers")
+                    "extensions", "library", "summary", "clarifyAnswers")
 
 
 def save_draft(draft_id, form):

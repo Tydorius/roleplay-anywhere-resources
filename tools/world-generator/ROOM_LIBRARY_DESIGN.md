@@ -34,7 +34,23 @@ after the one it stands beside or around, and move a corner piece to a wall when
 are taken. A couple's slot only takes a bed that sleeps two, and a single's slot one that sleeps
 one.
 
-Next is step 4 (P3 with the library). See "Open items from authoring" at the end.
+Step 4 is built too (2026-11-07), and the library is now **on by default**, with a toggle back
+to the old method (`--no-library`, **Use room library** in the editor dialog, a question in the
+launcher; `api.generate(library=False)`). In `worldgen/library_plan.py`:
+- P1 gets an add-on asking for `setting.band`, `setting.genre` and each building's `wealth` and
+  `condition`; code defaults anything missing (the band from the genre and era words).
+- An ordinary building whose kind matches exactly one suite skips P3. Otherwise P3 runs
+  `p3-library.txt`: the fitting suites and the purpose list, no catalogue, and rooms come back with
+  a `use` from the list.
+- Code expands each room into furniture lines from its layout (chosen by the room's share) and
+  adds the library templates to the plan, so `plan.json` is a plain plan and a re-roll needs no
+  library. Beds follow the cast: a couple to each master bedroom, the rest over the bedrooms,
+  spare beds in guest rooms; a home with nowhere to sleep gets a bedroom.
+- Unit buildings, and buildings with upper storeys under the floors extension, keep the old P3.
+- P2 still writes the whole catalogue (step 5 cuts it down), and grow slots aren't used yet,
+  because the room's final size isn't known when the plan is written.
+
+See "Open items from authoring" at the end.
 
 Target: the world generator in this folder.
 
@@ -589,6 +605,25 @@ layout failures and fallbacks, and the play-test look of a few rooms.
 The token target is a guess until this is done. P2's items and loot pools aren't touched, so P2's
 saving is only its template share.
 
+**First measurement (2026-11-07, step 4).** The fishing-hamlet idea on Magnum-Diamond 24B (Q4,
+local), seed 1, the library off and on at the same time. Each run planned its own hamlet, so the
+whole-run totals compare different worlds; per building is the fair figure.
+
+| | Library off | Library on |
+|---|---|---|
+| Calls / tokens, whole run | 17 / 64,854 | 16 / 53,726 |
+| Ordinary buildings | 5, all through P3 | 3: 2 through P3, 1 skipped (a suite fit) |
+| P3 tokens for them | 18,186 (3,637 a building) | 3,949 (1,975 a call, 1,316 a building) |
+| P1 tokens | 3,600 | 3,947 (the add-on) |
+| Unplaced pieces, validator errors | 0, 0 | 0, 0 |
+
+So P3 costs about half as much per call, and about a third as much per building once skips are
+counted. The inn was a unit building in both runs and took the old P3. Magnum ignored P1's
+add-on, so the band came from the era word and every building defaulted to modest and kept. In
+the library world the rooms read as rooms (a double bed in the master bedroom, a row of beds in the
+children's room), but they are sparse: grow slots aren't used yet, and the building still carves
+long, thin rooms.
+
 ## Build order
 
 Sized for GLM briefs: 3–4 changes each, with Claude checking each one.
@@ -620,8 +655,7 @@ Measure after step 4, the first point where tokens change.
 
 ## Open questions for Michael
 
-1. **Default on or off?** Proposal: off until the measurement in step 4, then on if it is no worse
-   on look and failures.
+1. **Default on or off?** Decided 2026-11-07: on, with a toggle back to the old method.
 2. **Four wealth tiers and four conditions**, or do you want a fifth tier (royal or corporate
    elite)?
 3. **Where the user library lives:** next to the generator (`library-user/`, simple, travels with

@@ -51,8 +51,9 @@ class MockedRunsPerMode(unittest.TestCase):
         for mode in ("quick", "short", "medium", "long"):
             with self.subTest(mode), tempfile.TemporaryDirectory() as tmp:
                 client = ScriptedClient(self._replies())
+                # the canned P3 replies are the old method's
                 s = api.generate("a mill village", client=client, seed=1, cast=False,
-                                 out_dir=tmp,
+                                 out_dir=tmp, library=False,
                                  questionnaire={"mode": mode, "answers": {},
                                                 "population": [20, 40]})
                 self.assertTrue(s["ok"], s)

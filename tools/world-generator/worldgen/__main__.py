@@ -39,6 +39,9 @@ def main(argv=None):
     gen.add_argument("--out", required=True)
     gen.add_argument("--seed", type=int, default=1)
     gen.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
+    gen.add_argument("--no-library", dest="library", action="store_false",
+                     help="furnish every room with the model (the old method) instead of "
+                          "the room library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
                      help="enable a mod extension, off by default (repeatable; "
                           "floors implies portals; recorded in plan.json)")
@@ -89,7 +92,7 @@ def main(argv=None):
                                    out_dir=args.out, progress=_print_event, emit=print)
         else:
             summary = api.generate(args.idea, provider=args.provider,
-                                   extensions=args.ext, seed=args.seed,
+                                   extensions=args.ext, seed=args.seed, library=args.library,
                                    out_dir=args.out, progress=_print_event,
                                    providers_path=args.providers, emit=print)
     except api.Cancelled:

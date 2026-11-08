@@ -378,6 +378,8 @@ class Launcher:
         if frame is None:
             return None
         exts = self.pick_extensions()
+        library = self.yes("Furnish rooms from the room library? (No: the model furnishes "
+                           "every room, the old method)", True)
         seed = self.ask("Seed (the same idea and seed give the same layout)", "1")
         seed = int(seed) if seed.isdigit() else 1
         est = api.estimate(idea or "a small world")
@@ -389,7 +391,7 @@ class Launcher:
         return self._run(lambda progress, emit: api.generate(
             idea, provider=provider, extensions=exts, seed=seed, out_dir=out_dir,
             progress=progress, providers_path=self.providers_path, client=self.client,
-            emit=emit, frame=frame,
+            emit=emit, frame=frame, library=library,
             questionnaire={"mode": mode, "answers": answers,
                            "population": population}), out_dir)
 

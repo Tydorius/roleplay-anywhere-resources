@@ -1,0 +1,285 @@
+"""Room library build step 4: the library in the model phases.
+
+With the room library on (the default), P1 also gives the setting's band and
+each building's wealth and condition; P3 picks a building recipe (a suite) and
+each room's purpose instead of writing furniture, or is skipped when the
+building's kind matches exactly one suite; and code expands every room into
+ordinary furniture lines and templates before plan.json is written. So a plan
+made with the library is a plain plan: a re-roll never reads the library, and
+the layout code places it like any other. Unit buildings keep the old P3.
+
+Everything here is called from ``phases.run_phases`` when ``library`` is true.
+"""
+import random
+
+from . import library as lib_mod
+from .library_rooms import Templates, compile_room
+
+SLEEP_FAMILIES = ("bedroom", "bedroom.master", "dormitory", "hut")
+BAND_WALL = {"medieval": "wood", "industrial": "brick", "modern": "brick", "scifi": "steel"}
+BAND_GROUND = {"medieval": "packed earth", "industrial": "floorboards", "modern": "tiles",
+               "scifi": "deck plating"}
+SPARE_PURPOSES = ("guest_room",)    # beds for travellers, not residents
+SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
+SIZE_ORDER = ("tiny", "small", "medium", "large")
+
+
+def load():
+    """The shipped library (a fresh load each run keeps tests independent)."""
+    return lib_mod.load(lib_mod.LIB_DIR)
+
+
+# ------------------------------------------------------------------ P1
+
+def band_of(lib, setting):
+    """The setting's band: P1's own when it gave a valid one, else read from
+    its genre, era and technology words through the alias list."""
+    s = setting or {}
+    if s.get("band") in lib.bands:
+        return s["band"]
+    text = " ".join(str(s.get(k, "")) for k in ("genre", "era", "technology")).lower()
+    aliases = lib.vocab.get("bandAliases", {})
+    for word in sorted(aliases, key=len, reverse=True):
+        if word in text:
+            return aliases[word]
+    for band in lib.bands:
+        if band in text:
+            return band
+    return "medieval"
+
+
+def sanitize_p1(p1, lib, log):
+    """Default the library fields P1 adds: setting.band and genre, and each
+    building's wealth and condition."""
+    s = p1.setdefault("setting", {})
+    band = band_of(lib, s)
+    if s.get("band") != band:
+        log.append(("P1 setting", f"band {s.get('band')!r} -> {band!r}"))
+        s["band"] = band
+    if not isinstance(s.get("genre"), str) or not s["genre"].strip():
+        s["genre"] = band
+    for z in p1.get("zones") or []:
+        for b in z.get("buildings") or []:
+            if b.get("wealth") not in lib.tiers:
+                if b.get("wealth") is not None:
+                    log.append((f"building {b.get('name')}", f"wealth {b['wealth']!r} -> 'modest'"))
+                b["wealth"] = "modest"
+            if b.get("condition") not in lib.vocab["conditions"]:
+                if b.get("condition") is not None:
+                    log.append((f"building {b.get('name')}",
+                                f"condition {b['condition']!r} -> 'kept'"))
+                b["condition"] = "kept"
+    return p1
+
+
+# ------------------------------------------------------------------ suites
+
+def _kind_words(kind):
+    k = str(kind or "").lower().strip()
+    return {k, k.split()[-1]} if k else set()
+
+
+def suite_candidates(lib, b, band):
+    """Suites that suit a P1 building: its band, size class and residents."""
+    r = b.get("residents") if isinstance(b.get("residents"), int) else 0
+    out = []
+    for s in sorted(lib.suites.values(), key=lambda s: s["id"]):
+        if band not in s.get("bands", []):
+            continue
+        if b.get("sizeClass") and b["sizeClass"] not in s.get("sizeClasses", []):
+            continue
+        lo, hi = s.get("residents", [0, 0])
+        if r and not lo <= r <= max(hi, lo):
+            continue
+        out.append(s)
+    return out
+
+
+def suite_by_kind(lib, b, band):
+    """The one suite whose kinds name this building's kind, or None when
+    none or several do (then P3 chooses)."""
+    words = _kind_words(b.get("kind"))
+    hits = [s for s in suite_candidates(lib, b, band)
+            if words & {k.lower() for k in s.get("kinds", [])}]
+    return hits[0] if len(hits) == 1 else None
+
+
+def can_skip_p3(b, compound_parts, notes=""):
+    """A building that can take a suite as it is: no units, not part of a
+    compound, and not named in the user's own instructions."""
+    if b.get("units") or b.get("name") in compound_parts:
+        return False
+    return not (notes and str(b.get("name", "")).lower() in notes.lower())
+
+
+def design_from_suite(suite, b, band, rng):
+    """A P3-shaped design made from a suite, for a building that skips P3."""
+    rooms = [{"name": r["name"], "share": r["share"], "use": r["purpose"],
+              "purpose": r["purpose"].replace("_", " ")} for r in suite["rooms"]]
+    return {"name": b["name"], "wall": BAND_WALL.get(band, "wood"),
+            "ground": BAND_GROUND.get(band, "wood"),
+            "rooms": rooms,
+            "connections": [list(c) for c in suite.get("connections", [])],
+            "entrance": {"room": suite["entrance"]["room"],
+                         "side": rng.choice(("north", "south", "east", "west"))},
+            "furniture": [], "yard": None, "suite": suite["id"]}
+
+
+def suite_lines(lib, b, band):
+    """P3's list of fitting suites: ``id | Room (purpose, share); ...``."""
+    lines = []
+    for s in suite_candidates(lib, b, band)[:12]:
+        rooms = "; ".join(f"{r['name']} ({r['purpose']}, {r['share']})" for r in s["rooms"])
+        lines.append(f"- {s['id']} | {rooms}")
+    return "\n".join(lines) or "(none fits; design the rooms yourself)"
+
+
+def purpose_line(lib):
+    return ", ".join(sorted(lib.vocab["purposes"]))
+
+
+# ------------------------------------------------------------------ P3 reply
+
+def check_p3(d, building_name, lib):
+    """Errors in a library P3 reply (rooms with purposes, no furniture)."""
+    errors = []
+    if not isinstance(d, dict):
+        return ["reply is not a JSON object"]
+    suite = d.get("suite")
+    if suite not in (None, "", "none") and suite not in lib.suites:
+        errors.append(f"suite {suite!r} is not one of the listed suites")
+    rooms = d.get("rooms")
+    if not rooms and suite in lib.suites:
+        return errors
+    if not isinstance(rooms, list) or not 1 <= len(rooms) <= 8:
+        return errors + ["rooms: 1 to 8 rooms, each {name, share, use, purpose}"]
+    names = []
+    for r in rooms:
+        if not isinstance(r, dict) or not isinstance(r.get("name"), str) or not r["name"].strip():
+            errors.append("each room needs a name")
+            continue
+        if r["name"] in names:
+            errors.append(f"room {r['name']!r} repeats")
+        names.append(r["name"])
+        if r.get("use") not in lib.vocab["purposes"]:
+            errors.append(f"room {r['name']!r}: use {r.get('use')!r} is not in the purpose list")
+    for c in d.get("connections") or []:
+        if not (isinstance(c, list) and len(c) == 2 and c[0] in names and c[1] in names):
+            errors.append(f"connection {c} names a room that isn't in rooms")
+    e = d.get("entrance") if isinstance(d.get("entrance"), dict) else {}
+    if e.get("room") not in names:
+        errors.append("entrance.room must be one of the rooms")
+    return errors
+
+
+def fill_from_suite(d, lib, b, band, rng):
+    """A reply that names a suite but leaves out its rooms takes the suite's."""
+    suite = lib.suites.get(d.get("suite"))
+    if suite and not d.get("rooms"):
+        base = design_from_suite(suite, b, band, rng)
+        for k in ("rooms", "connections", "entrance"):
+            d[k] = base[k]
+    return d
+
+
+# ------------------------------------------------------------------ expansion
+
+def _room_band(lib, family, share):
+    """The size band a room's share asks for, nearest one its family has."""
+    want = SHARE_BAND.get(share, "medium")
+    have = {b for l in lib.layouts_for(family) for b in l["sizeBands"]}
+    if not have:
+        return None
+    return min(have, key=lambda b: (abs(SIZE_ORDER.index(b) - SIZE_ORDER.index(want)),
+                                    SIZE_ORDER.index(b)))
+
+
+def _sleepers(lib, rooms, residents, couples):
+    """{room name: (singles, couples)}: one couple to each master bedroom,
+    the other residents shared over the single-bed rooms, a spare bed or two
+    in each guest room."""
+    fam = {r["name"]: lib.family_of(r.get("use")) for r in rooms}
+    masters = [r["name"] for r in rooms if fam[r["name"]] == "bedroom.master"]
+    singles_rooms = [r["name"] for r in rooms
+                     if fam[r["name"]] in ("bedroom", "dormitory", "hut")
+                     and r.get("use") not in SPARE_PURPOSES]
+    out = {r["name"]: (0, 0) for r in rooms}
+    placed_couples = min(couples, len(masters))
+    for name in masters[:placed_couples]:
+        out[name] = (0, 1)
+    left = max(0, residents - 2 * placed_couples)
+    if singles_rooms:
+        for i in range(left):
+            name = singles_rooms[i % len(singles_rooms)]
+            s, c = out[name]
+            out[name] = (s + 1, c)
+    for r in rooms:
+        if r.get("use") in SPARE_PURPOSES:
+            out[r["name"]] = (2 if r.get("share") == "large" else 1, 0)
+    return out
+
+
+def ensure_sleep_room(design, b, lib, log):
+    """A home whose rooms have nowhere to sleep gets a bedroom off its
+    entrance room, so the residents P1 promised have beds."""
+    residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
+    if residents <= 0:
+        return
+    if any(lib.family_of(r.get("use")) in SLEEP_FAMILIES for r in design["rooms"]):
+        return
+    couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
+    use = "master_bedroom" if couples and residents <= 2 else "bedroom"
+    name = "Bedroom"
+    while any(r["name"] == name for r in design["rooms"]):
+        name += " 2"
+    design["rooms"].append({"name": name, "share": "medium", "use": use, "purpose": "sleeping"})
+    entry = (design.get("entrance") or {}).get("room") or design["rooms"][0]["name"]
+    design.setdefault("connections", []).append([entry, name])
+    log.append((f"building {b['name']}", f"added {name}: {residents} residents had no bedroom"))
+
+
+def expand_design(lib, registry, design, b, band, genre, seed, log):
+    """Turn a library design's rooms into furniture lines (appended to
+    ``design["furniture"]``) and record each room's layout. Rooms without a
+    library ``use`` keep whatever furniture the design already has."""
+    rng = random.Random(f"{seed}|library|{b['name']}")
+    ensure_sleep_room(design, b, lib, log)
+    residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
+    couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
+    sleepers = _sleepers(lib, design["rooms"], residents, couples)
+    tier = b.get("wealth") if b.get("wealth") in lib.tiers else "modest"
+    cond = b.get("condition") if b.get("condition") in lib.vocab["conditions"] else "kept"
+    overrides = design.get("wealth") if isinstance(design.get("wealth"), dict) else {}
+    used = {}
+    for r in design["rooms"]:
+        use = r.get("use")
+        fam = lib.family_of(use)
+        if fam is None:
+            continue
+        sb = _room_band(lib, fam, r.get("share"))
+        pool = [l for l in sorted(lib.layouts_for(fam), key=lambda l: l["id"])
+                if sb in l["sizeBands"]]
+        if not pool:
+            log.append((f"building {b['name']}", f"room {r['name']}: no {fam} layout"))
+            continue
+        lay = rng.choice(pool)
+        room_tier = overrides.get(r["name"]) if overrides.get(r["name"]) in lib.tiers else tier
+        singles, cpl = sleepers.get(r["name"], (0, 0))
+        comp = compile_room(lib, registry, use, tuple(lay["minInterior"]), band, room_tier, cond,
+                            rng, singles=singles, couples=cpl, room=r["name"], grow=False,
+                            genre=genre, layout=lay)
+        for g in comp.gaps:
+            log.append((f"building {b['name']}", f"room {r['name']}: {g}"))
+        for f in comp.furniture:
+            design.setdefault("furniture", []).append(
+                {"template": f.template, "room": f.room, "count": f.count, "hint": f.hint})
+        used[r["name"]] = lay["id"]
+        if not r.get("purpose"):
+            r["purpose"] = use.replace("_", " ")
+    design["libraryLayouts"] = used
+    return design
+
+
+def registry_for(lib, seed, taken):
+    """The world's library templates, named apart from P2's own."""
+    return Templates(lib, seed, taken=taken)

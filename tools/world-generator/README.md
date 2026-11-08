@@ -82,6 +82,13 @@ python -m unittest          # the test suite
   then the prop catalogue, P3 one call per building, P4 one per zone, P5 people in batches,
   P6 rules, perks and the story clock) and builds the scenario. The last line
   is a JSON summary.
+- **The room library** furnishes ordinary rooms by default: P3 picks each room's
+  purpose (or is skipped when a building recipe fits its kind) and code furnishes the
+  room from [`library/`](library) — fewer tokens, and beds, tables and chairs set out
+  properly. `--no-library` (or unticking **Use room library** in the editor, or
+  answering no in the launcher) is the old method, the model furnishing every room.
+  Buildings with repeated units keep the old P3 either way. See
+  [ROOM_LIBRARY_DESIGN.md](ROOM_LIBRARY_DESIGN.md).
 - `layout` re-places a saved plan with a new seed and **no model calls** —
   re-roll the map, keep the world.
 - Each run writes `plan.json`, `spec.json`, `metrics.json`, the llm call logs,

@@ -88,6 +88,9 @@ The dialog's steps:
 - **Progress and cancel.** The dialog shows the phase as it goes (the frame, world plan,
   catalogue, building n/N, zone n/N, people, systems) with a Cancel button. If a run fails, it
   shows the error and the folder holding every call's prompt and reply.
+- **Use room library** — on by default: rooms are furnished from the generator's room library,
+  which uses fewer tokens and sets beds, tables and chairs out properly. Untick it for the old
+  method, where the model furnishes every room.
 - **Extensions** — all off by default, so the plain world imports and plays in the unmodded game:
 
   | Extension | What it adds | Game mods needed |
