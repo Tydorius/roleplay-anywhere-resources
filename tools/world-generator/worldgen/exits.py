@@ -71,8 +71,9 @@ def _floor(parts, corridors, templates):
             for (name, pos) in (room.furniture.placements if room.furniture else ()):
                 t = templates[name]
                 if t.walkability <= 0:
-                    furniture |= {(x, y) for x in range(pos[0], pos[0] + t.size[0])
-                                  for y in range(pos[1], pos[1] + t.size[1])}
+                    w, h = room.furniture.size_of(name, pos, templates)
+                    furniture |= {(x, y) for x in range(pos[0], pos[0] + w)
+                                  for y in range(pos[1], pos[1] + h)}
             inside = room.rect.interior().cells() - furniture
             rooms.append((b, room, inside))
             cells |= inside

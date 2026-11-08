@@ -1,0 +1,164 @@
+{
+  "layouts": [
+    {
+      "id": "bedroom.master.small.a",
+      "family": "bedroom.master",
+      "sizeBands": ["small"],
+      "minInterior": [4, 6],
+      "maxInterior": [5, 6],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:far", "count": "couples", "back": "wall"},
+        {"id": "side", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric"}
+      ],
+      "grow": [
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "bedroom.master.small.b",
+      "family": "bedroom.master",
+      "sizeBands": ["small"],
+      "minInterior": [4, 6],
+      "maxInterior": [5, 6],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:side+away_from_door", "count": "couples", "back": "wall"},
+        {"id": "side", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric"}
+      ],
+      "grow": [
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "seat", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "bedroom.master.medium.a",
+      "family": "bedroom.master",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [7, 7],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:far", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:store"},
+        {"role": "decor.floor", "size": [2, 2], "anchor": "center"}
+      ]
+    },
+    {
+      "id": "bedroom.master.medium.b",
+      "family": "bedroom.master",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 7],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:side+away_from_door", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat.lounge", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:store"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [2, 2], "anchor": "center"}
+      ]
+    },
+    {
+      "id": "bedroom.master.medium.c",
+      "family": "bedroom.master",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 7],
+      "maxInterior": [7, 8],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:far", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "wash", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:wash"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "bedroom.master.large.a",
+      "family": "bedroom.master",
+      "sizeBands": ["large"],
+      "minInterior": [7, 7],
+      "maxInterior": [10, 9],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:far", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"},
+        {"id": "rug", "role": "decor.floor", "size": [2, 2], "anchor": "center", "minWealth": "wealthy"},
+        {"id": "lounge", "role": "seat.lounge", "size": [1, 1], "anchor": "corner", "minWealth": "elite"}
+      ],
+      "grow": [
+        {"role": "storage.big", "size": [2, 1], "anchor": "beside:store", "back": "wall", "minWealth": "elite"},
+        {"role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "elite"},
+        {"role": "table.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:store"}
+      ]
+    },
+    {
+      "id": "bedroom.master.large.b",
+      "family": "bedroom.master",
+      "sizeBands": ["large"],
+      "minInterior": [8, 8],
+      "maxInterior": [10, 10],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:far", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "store2", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall", "minWealth": "elite"},
+        {"id": "fire", "role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall", "minWealth": "modest"},
+        {"id": "lounge", "role": "seat.lounge", "size": [1, 1], "anchor": "beside:fire", "minWealth": "wealthy"},
+        {"id": "table", "role": "table.small", "size": [1, 1], "anchor": "beside:lounge", "minWealth": "wealthy"},
+        {"id": "rug", "role": "decor.floor", "size": [2, 2], "anchor": "center", "minWealth": "elite"},
+        {"id": "lamp", "role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "elite"}
+      ],
+      "grow": [
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:store"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "bedroom.master.large.c",
+      "family": "bedroom.master",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [9, 10],
+      "slots": [
+        {"id": "bed", "role": "sleep.couple", "size": [2, 2], "anchor": "wall:side+away_from_door", "count": "couples", "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:bed+symmetric", "count": 2},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "store2", "role": "storage.big", "size": [2, 1], "anchor": "beside:store", "back": "wall", "minWealth": "elite"},
+        {"id": "vanity", "role": "table.small", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "stool", "role": "seat", "size": [1, 1], "anchor": "beside:vanity"},
+        {"id": "wash", "role": "wash.basin", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "lounge", "role": "seat.lounge", "size": [1, 1], "anchor": "corner", "minWealth": "wealthy"},
+        {"id": "lamp", "role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "elite"},
+        {"id": "rug", "role": "decor.floor", "size": [2, 1], "anchor": "beside:bed", "minWealth": "wealthy"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    }
+  ]
+}

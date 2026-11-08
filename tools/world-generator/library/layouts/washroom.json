@@ -1,0 +1,163 @@
+{
+  "layouts": [
+    {
+      "id": "washroom.tiny.a",
+      "family": "washroom",
+      "sizeBands": ["tiny"],
+      "minInterior": [2, 3],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:basin"}
+      ]
+    },
+    {
+      "id": "washroom.tiny.b",
+      "family": "washroom",
+      "sizeBands": ["tiny"],
+      "minInterior": [2, 5],
+      "maxInterior": [3, 5],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far+corner", "back": "wall", "minWealth": "modest"},
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:toilet", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "near_door"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "beside:bath"}
+      ]
+    },
+    {
+      "id": "washroom.tiny.c",
+      "family": "washroom",
+      "sizeBands": ["tiny"],
+      "minInterior": [3, 3],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": []
+    },
+    {
+      "id": "washroom.small.a",
+      "family": "washroom",
+      "sizeBands": ["small"],
+      "minInterior": [3, 4],
+      "maxInterior": [5, 5],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:toilet", "back": "wall"},
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far+corner", "back": "wall", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "beside:bath"}
+      ]
+    },
+    {
+      "id": "washroom.small.b",
+      "family": "washroom",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [5, 5],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:side+corner", "back": "wall"},
+        {"id": "towels", "role": "storage.small", "size": [1, 1], "anchor": "beside:basin", "optional": true},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:bath"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "washroom.small.c",
+      "family": "washroom",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [5, 6],
+      "slots": [
+        {"id": "toilets", "role": "wash.toilet", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "basins", "role": "wash.basin", "size": [1, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "corner", "back": "wall", "minWealth": "modest"},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "near_door"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "beside:basins", "back": "wall"}
+      ]
+    },
+    {
+      "id": "washroom.medium.a",
+      "family": "washroom",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 5],
+      "maxInterior": [7, 7],
+      "slots": [
+        {"id": "toilets", "role": "wash.toilet", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "basins", "role": "wash.basin", "size": [1, 1], "anchor": "row:near", "count": [1, 2], "back": "wall"},
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far", "back": "wall"},
+        {"id": "towels", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "wash.toilet", "size": [1, 1], "anchor": "beside:toilets", "back": "wall"},
+        {"role": "seat.long", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "wash.bath", "size": [1, 2], "anchor": "beside:bath", "back": "wall"}
+      ]
+    },
+    {
+      "id": "washroom.medium.b",
+      "family": "washroom",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 8],
+      "slots": [
+        {"id": "baths", "role": "wash.bath", "size": [1, 2], "anchor": "row:far", "count": [1, 4], "back": "wall"},
+        {"id": "basins", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "stove", "role": "heat", "size": [1, 1], "anchor": "corner"},
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:near+corner", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "near_door"},
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:stove"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "seat.long", "size": [2, 1], "anchor": "center"}
+      ]
+    },
+    {
+      "id": "washroom.medium.c",
+      "family": "washroom",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [7, 7],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "center"},
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:side+corner", "back": "wall"},
+        {"id": "basins", "role": "wash.basin", "size": [1, 1], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "towels", "role": "storage.small", "size": [1, 1], "anchor": "wall:side"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"},
+        {"id": "mat", "role": "decor.floor", "size": [1, 1], "anchor": "beside:bath", "minWealth": "wealthy"},
+        {"id": "warmer", "role": "heat", "size": [1, 1], "anchor": "wall:near", "minWealth": "wealthy"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:bath"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"}
+      ]
+    }
+  ]
+}

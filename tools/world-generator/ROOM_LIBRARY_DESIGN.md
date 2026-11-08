@@ -1,6 +1,94 @@
 # Room library: design
 
-Status: design only, nothing built (2026-11-03). Target: the world generator in this folder.
+Status (2026-11-07): the library's data and checker exist, but the generator doesn't use them
+yet. Built so far:
+- the vocabulary (`library/library.json`) and the authoring rules (`library/AUTHORING.md`);
+- `worldgen/library.py`: the loader, the checker, the text fill and a coverage report, run with
+  `python -m worldgen library check --coverage`;
+- default content written by Claude agents from the `library-seed/` drafts: 320 object types,
+  204 layouts in 26 families, 72 purposes, 85 suites across the four bands, and every material
+  class x band x wealth tier.
+
+Step 1 is built too (2026-11-07): `layout_room` turns any template with a `back`, and
+`wall:`/`row:` take `far`, `side` and `near`, measured from the room's door nearest the building
+entrance. The turn reaches the scenario as `rot` plus the turned size. Templates without a `back`
+(everything the model writes today) never turn, so the plain route is unchanged. Still to check
+by hand: that `rot` in an imported scenario survives into play.
+
+Step 3 is built too (2026-11-07), in `worldgen/library_rooms.py`:
+- `compile_room` turns a layout into today's `FurniturePlan` lines. It picks a layout that fits
+  the interior, fills each slot from the purpose's bindings (an id prefix such as `rack.weapon`
+  or a category, with neighbouring wealth tiers as a fallback), counts beds from singles and
+  couples, adds `minWealth` slots by tier, and adds each grow slot once while the room has space.
+- `Templates` holds one template per object, band, wealth and condition, named for play
+  ("Oak bed"), with its text filled from an RNG keyed by the template.
+- `furnish_room` compiles and places a room. When a piece can't be placed it leaves the optional
+  slots out, then redraws a couple of times and keeps the best result.
+- `layout_need` gives the building packer a room's size from the layout's `minInterior`. Wiring
+  it into `room_needs` is part of step 4.
+
+Measured: every one of the 204 layouts lays out at its smallest and largest interior, door on
+each wall, in all four bands at poor and elite, with every piece placed (13,056 rooms). Library
+rooms (pieces with a `back`) also keep the cell past each door's threshold clear, place a piece
+after the one it stands beside or around, and move a corner piece to a wall when the corners
+are taken. A couple's slot only takes a bed that sleeps two, and a single's slot one that sleeps
+one.
+
+Step 4 is built too (2026-11-07), and the library is now **on by default**, with a toggle back
+to the old method (`--no-library`, **Use room library** in the editor dialog, a question in the
+launcher; `api.generate(library=False)`). In `worldgen/library_plan.py`:
+- P1 gets an add-on asking for `setting.band`, `setting.genre` and each building's `wealth` and
+  `condition`; code defaults anything missing (the band from the genre and era words).
+- An ordinary building whose kind matches exactly one suite skips P3. Otherwise P3 runs
+  `p3-library.txt`: the fitting suites and the purpose list, no catalogue, and rooms come back with
+  a `use` from the list.
+- Code expands each room into furniture lines from its layout (chosen by the room's share) and
+  adds the library templates to the plan, so `plan.json` is a plain plan and a re-roll needs no
+  library. Beds follow the cast: a couple to each master bedroom, the rest over the bedrooms,
+  spare beds in guest rooms; a home with nowhere to sleep gets a bedroom.
+- Unit buildings, and buildings with upper storeys under the floors extension, keep the old P3.
+- P2 still writes the whole catalogue (step 5 cuts it down), and grow slots aren't used yet,
+  because the room's final size isn't known when the plan is written.
+
+Step 5 is partly built (2026-11-08):
+- Unit buildings go through the library P3 too. It plans the shared rooms plus ONE unit copy
+  with a purpose per room, code furnishes the copy (a bed per resident), and a reply with no
+  copy gets one fitting room (an inn's guest room, a ship's cabin). Only a building with upper
+  storeys under the floors extension still takes the old P3.
+- When no building needs the old P3, P2 gets an add-on (`prompts/library/p2-catalogue.txt`):
+  the catalogue is for the outside only (feature props, yard props, filler, outdoor lights), so it
+  no longer writes indoor furniture that would go unplaced. The double-bed check applies only to
+  old-P3 buildings.
+- **At most five rooms per library building.** The building packer splits one footprint into
+  five rooms and then collapses: a measured inn placed all 33 pieces in five rooms and dropped
+  34 of 40 in six. A live run hit it when a hamlet's inn took the eight-room coaching-inn suite,
+  overflowed the 28x22 cap and failed the build. Suites are trimmed to five rooms when used (the
+  entrance room, then rooms for the sleepers, then the rest, reconnecting any room cut off), and
+  P3 is told 1 to 5 rooms; many rooms of one kind belong in a unit building.
+- **Compact when it would overflow.** Code measures each library building with the layout's own
+  sizing (`_resolve_plan`) before writing the plan. If it would drop pieces, the rooms are
+  furnished again with their smallest layouts and no optional pieces, and if it still doesn't
+  fit, the least-needed room is left out. Every suite now furnishes with nothing dropped.
+  Library templates that end up unused stay out of the plan.
+- Found on the way (not fixed): when an overflowing building splits rooms into annexes, a
+  character's start cell can land on a piece of furniture and fail the build. The old method can
+  hit it too, with an oversized P3 design.
+- **Reuse first.** Three picks in four take an object the world already uses when one fits, so a
+  village's cottages share their beds and the game draws fewer sprites (41 library templates
+  down to 33 in the live world below).
+- **Live check (2026-11-08)**, the hamlet on Magnum-Diamond 24B with the library on: built with 0
+  unplaced pieces and 0 validator errors, 456 objects in 25 reachable rooms. P2's catalogue held
+  12 outdoor templates and nothing indoor. Two of four buildings skipped P3, and the inn went
+  through the library as a unit building (a guest-room copy). P2's own token count is no guide
+  with a model this terse (it took a retry this time); P3 per building is as measured above.
+- Not built yet: the gap call and the user library with duplicate merging. With the ordered
+  fallbacks in `purposes.json`, every required slot already has an object in every band, so
+  there is nothing for a gap call to ask for yet; it becomes useful once the library is grown
+  by hand or by users.
+
+See "Open items from authoring" at the end.
+
+Target: the world generator in this folder.
 
 ## Why
 
@@ -348,15 +436,17 @@ Checked in the 0.18 bundle (`index-DSU_zx7g.js`), 2026-11-03:
 - **Not yet checked:** that `rot` in an imported scenario survives into play. Step 1 of the build
   order checks this with a one-object scenario.
 
-What the generator does with it:
+What the generator does with it (built 2026-11-07, `worldgen/layout_room.py`):
 
-- `layout_room` tries all four turns for a piece with a `back`, and the turned footprint for odd
-  turns. A turnable 1×2 piece fits narrow rooms far more often than it does today.
-- For a slot with `back: "wall"`, it uses the one turn that puts the object's back against the
-  slot's wall.
-- For `around:<slot>` (chairs at a table), it turns each piece to face the target.
-- A piece with `back: null` keeps `rot` 0.
-- The spec writer emits `rot` and the turned `size` on each placed object.
+- A piece with a `back` placed by `wall:` or `row:` stands with its back to that wall, and in a
+  `corner` with its back to one of the corner's two walls. So `back: "wall"` on a slot is what
+  every wall slot gets anyway.
+- For `around:<slot>` (chairs at a table), each piece faces the target.
+- Anywhere else it tries the unturned footprint first, then the quarter turn, so a turnable
+  1×2 piece fits narrow rooms far more often.
+- A piece with no `back` keeps `rot` 0 and places exactly as before.
+- `ObjectOut.rot` carries the turn; the spec writer adds `"rot"` to the placement entry, and the
+  vendored builder writes `rot` and the turned `size` on the placed object.
 
 The model never reasons about rotation.
 
@@ -551,6 +641,25 @@ layout failures and fallbacks, and the play-test look of a few rooms.
 The token target is a guess until this is done. P2's items and loot pools aren't touched, so P2's
 saving is only its template share.
 
+**First measurement (2026-11-07, step 4).** The fishing-hamlet idea on Magnum-Diamond 24B (Q4,
+local), seed 1, the library off and on at the same time. Each run planned its own hamlet, so the
+whole-run totals compare different worlds; per building is the fair figure.
+
+| | Library off | Library on |
+|---|---|---|
+| Calls / tokens, whole run | 17 / 64,854 | 16 / 53,726 |
+| Ordinary buildings | 5, all through P3 | 3: 2 through P3, 1 skipped (a suite fit) |
+| P3 tokens for them | 18,186 (3,637 a building) | 3,949 (1,975 a call, 1,316 a building) |
+| P1 tokens | 3,600 | 3,947 (the add-on) |
+| Unplaced pieces, validator errors | 0, 0 | 0, 0 |
+
+So P3 costs about half as much per call, and about a third as much per building once skips are
+counted. The inn was a unit building in both runs and took the old P3. Magnum ignored P1's
+add-on, so the band came from the era word and every building defaulted to modest and kept. In
+the library world the rooms read as rooms (a double bed in the master bedroom, a row of beds in the
+children's room), but they are sparse: grow slots aren't used yet, and the building still carves
+long, thin rooms.
+
 ## Build order
 
 Sized for GLM briefs: 3–4 changes each, with Claude checking each one.
@@ -582,8 +691,7 @@ Measure after step 4, the first point where tokens change.
 
 ## Open questions for Michael
 
-1. **Default on or off?** Proposal: off until the measurement in step 4, then on if it is no worse
-   on look and failures.
+1. **Default on or off?** Decided 2026-11-07: on, with a toggle back to the old method.
 2. **Four wealth tiers and four conditions**, or do you want a fifth tier (royal or corporate
    elite)?
 3. **Where the user library lives:** next to the generator (`library-user/`, simple, travels with
@@ -592,3 +700,21 @@ Measure after step 4, the first point where tokens change.
    That would be a read-only import, without changing the editor's own data.
 5. **Items:** a P2 item library using the same text templates would remove most of P2's remaining
    cost. Do it after v1, or fold it in?
+
+## Open items from authoring (2026-11-07)
+
+The agents that wrote the default library asked for these. None is built yet.
+
+- **Anchors:** `wall:opposite`, the side wall facing a `wall:side` piece, so two rows of pews,
+  beds or shelves don't land on the same wall. Also rows that face another slot (pews towards an
+  altar, desks towards a board), and `between:door+<slot>` for a shop counter between the door
+  and the stock.
+- **Roles:** animal feed (stables use `storage.bulk`), a reading table, a filing cabinet, a
+  reception desk apart from `counter.serve`, and a clinic's instrument trolley.
+- **Material classes:** paper or card (a cardboard box, a map, a canvas) and wax.
+- **Text fill:** code now makes a fixed "a"/"an" agree with the word after it, drops a colour
+  that the material name already contains ("chrome chrome-plated"), and collapses a repeated word
+  ("marble marble altar"). `partsByBand` merges over `parts`.
+- **Coverage:** with ordered fallbacks in `purposes.json` (a medieval "control room" gets a map
+  table, a cramped sci-fi kitchen an appliance), every required slot has some object in every
+  band. About 1,900 slot x tier cells are filled only from a neighbouring wealth tier.

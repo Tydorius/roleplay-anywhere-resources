@@ -50,7 +50,7 @@ def _check_extensions(extensions):
 
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
-             emit=None, frame=None, questionnaire=None, cast=True):
+             emit=None, frame=None, questionnaire=None, cast=True, library=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -67,7 +67,7 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         kwargs = {"providers_path": providers_path} if providers_path else {}
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     t0 = time.time()
-    plan, stats = phases.run_phases(idea, client, extensions=extensions,
+    plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
                                     progress=progress, cancel=cancel,
                                     frame=frame, questionnaire=questionnaire, cast=cast)
     if extensions:

@@ -19,7 +19,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
         client = ScriptedClient(canned_replies())
         with tempfile.TemporaryDirectory() as tmp:
             summary = api.generate("a mill village", client=client, seed=3, cast=False,
-                                   out_dir=tmp, progress=events.append)
+                                   out_dir=tmp, progress=events.append, library=False)
             zip_path = os.path.join(tmp, summary["zip"])
             self.assertTrue(os.path.exists(zip_path), summary)
             for artifact in ("plan.json", "spec.json", "spec.py", "metrics.json"):
@@ -53,7 +53,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             with self.assertRaises(api.Cancelled) as caught:
                 api.generate("a mill village", client=client, seed=1, cast=False,
-                             out_dir=tmp, cancel=cancel)
+                             out_dir=tmp, cancel=cancel, library=False)
         # the run stopped at the first P3 call, which was never made
         self.assertIn("p3", str(caught.exception))
         self.assertEqual(client.calls, 2)

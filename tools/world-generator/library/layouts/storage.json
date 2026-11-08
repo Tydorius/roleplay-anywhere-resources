@@ -1,0 +1,210 @@
+{
+  "layouts": [
+    {
+      "id": "storage.tiny.a",
+      "family": "storage",
+      "sizeBands": ["tiny"],
+      "minInterior": [3, 3],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "box", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+      ]
+    },
+    {
+      "id": "storage.tiny.b",
+      "family": "storage",
+      "sizeBands": ["tiny"],
+      "minInterior": [2, 4],
+      "maxInterior": [2, 5],
+      "slots": [
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "wall:far+corner"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+      ]
+    },
+    {
+      "id": "storage.tiny.c",
+      "family": "storage",
+      "sizeBands": ["tiny"],
+      "minInterior": [3, 3],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "box", "role": "storage.small", "size": [1, 1], "anchor": "wall:side", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+      ]
+    },
+    {
+      "id": "storage.small.a",
+      "family": "storage",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "left", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "right", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "wall:far+corner", "count": [1, 2]}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "storage.small.b",
+      "family": "storage",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [2, 3]},
+        {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "box", "role": "storage.small", "size": [1, 1], "anchor": "wall:side"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+      ]
+    },
+    {
+      "id": "storage.small.c",
+      "family": "storage",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [5, 4],
+      "slots": [
+        {"id": "block", "role": "storage.bulk", "size": [2, 2], "anchor": "center"},
+        {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "rack", "role": "weapons", "size": [1, 1], "anchor": "wall:far", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "storage.medium.a",
+      "family": "storage",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [6, 8],
+      "slots": [
+        {"id": "left", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [3, 5], "back": "wall"},
+        {"id": "right", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [3, 5], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "wall:far+corner", "count": [1, 2]},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "wall:far"},
+        {"role": "light.small", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "storage.medium.b",
+      "family": "storage",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "island", "role": "shelving", "size": [3, 1], "anchor": "center", "count": [1, 2]},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [2, 4]},
+        {"id": "far", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "table.work", "size": [2, 1], "anchor": "near_door"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "storage.medium.c",
+      "family": "storage",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [6, 8],
+      "slots": [
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:far", "count": [3, 4], "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [2, 3]},
+        {"id": "boxes", "role": "storage.small", "size": [1, 1], "anchor": "wall:side", "count": [1, 2]},
+        {"id": "table", "role": "table.work", "size": [2, 1], "anchor": "center", "optional": true}
+      ],
+      "grow": [
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "storage.large.a",
+      "family": "storage",
+      "sizeBands": ["large"],
+      "minInterior": [8, 7],
+      "maxInterior": [14, 12],
+      "slots": [
+        {"id": "rows", "role": "shelving", "size": [4, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "far", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [2, 4]},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "shelving", "size": [4, 1], "anchor": "center"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "table.work", "size": [2, 1], "anchor": "near_door"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "storage.large.b",
+      "family": "storage",
+      "sizeBands": ["large"],
+      "minInterior": [8, 8],
+      "maxInterior": [14, 12],
+      "slots": [
+        {"id": "blocks", "role": "storage.bulk", "size": [2, 2], "anchor": "corner", "count": [2, 4]},
+        {"id": "shelves", "role": "shelving", "size": [2, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "desk", "role": "table.work", "size": [2, 1], "anchor": "near_door", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "beside:shelves", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [2, 2], "anchor": "center"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "storage.large.c",
+      "family": "storage",
+      "sizeBands": ["large"],
+      "minInterior": [7, 7],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "farrow", "role": "storage.bulk", "size": [1, 1], "anchor": "row:far", "count": [4, 6]},
+        {"id": "siderow", "role": "storage.bulk", "size": [1, 1], "anchor": "row:side", "count": [4, 6]},
+        {"id": "shelves", "role": "shelving", "size": [2, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "table.work", "size": [2, 1], "anchor": "center"}
+      ]
+    }
+  ]
+}

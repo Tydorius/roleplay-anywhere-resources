@@ -1,0 +1,424 @@
+{
+  "layouts": [
+    {
+      "id": "passage.tiny.a",
+      "family": "passage",
+      "sizeBands": [
+        "tiny"
+      ],
+      "minInterior": [
+        2,
+        3
+      ],
+      "maxInterior": [
+        3,
+        5
+      ],
+      "slots": [
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
+      ],
+      "grow": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "passage.small.a",
+      "family": "passage",
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        2,
+        6
+      ],
+      "maxInterior": [
+        3,
+        12
+      ],
+      "slots": [
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "rug",
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side",
+          "optional": true
+        },
+        {
+          "id": "lamp2",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:far",
+          "minWealth": "modest"
+        }
+      ],
+      "grow": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "passage.small.b",
+      "family": "passage",
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        4
+      ],
+      "maxInterior": [
+        5,
+        5
+      ],
+      "slots": [
+        {
+          "id": "bench",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "plant",
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "modest"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door",
+          "optional": true
+        }
+      ],
+      "grow": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:bench"
+        }
+      ]
+    },
+    {
+      "id": "passage.medium.a",
+      "family": "passage",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        5,
+        6
+      ],
+      "maxInterior": [
+        8,
+        9
+      ],
+      "slots": [
+        {
+          "id": "desk",
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "seats",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "row:side",
+          "count": 2,
+          "back": "wall"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "piece",
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center",
+          "minWealth": "wealthy"
+        },
+        {
+          "id": "lamp",
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        }
+      ],
+      "grow": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:seats"
+        }
+      ]
+    },
+    {
+      "id": "passage.medium.b",
+      "family": "passage",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        4,
+        7
+      ],
+      "maxInterior": [
+        6,
+        9
+      ],
+      "slots": [
+        {
+          "id": "lockers",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "row:side",
+          "count": [
+            1,
+            2
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "check",
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door",
+          "optional": true
+        },
+        {
+          "id": "plant",
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
+      ],
+      "grow": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side"
+        }
+      ]
+    },
+    {
+      "id": "passage.large.a",
+      "family": "passage",
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        7,
+        7
+      ],
+      "maxInterior": [
+        12,
+        12
+      ],
+      "slots": [
+        {
+          "id": "piece",
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "anchor": "center",
+          "optional": true
+        },
+        {
+          "id": "seats",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "row:side",
+          "count": [
+            2,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "desk",
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "lamp",
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "lamp2",
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "wealthy"
+        }
+      ],
+      "grow": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side"
+        }
+      ]
+    }
+  ]
+}

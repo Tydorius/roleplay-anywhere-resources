@@ -79,7 +79,16 @@ def _placements(world, plan):
         inv = loot_mod.draw_inventory(
             pool, items_by_name,
             f"{world.seed}|{o.template}|{len(entries) + 1}", setting) if pool else []
-        entries.append({"pos": pos, "inventory": [[n, c] for (n, c) in inv]} if inv else pos)
+        rot = getattr(o, "rot", 0) or 0
+        if inv or rot:
+            entry = {"pos": pos}
+            if inv:
+                entry["inventory"] = [[n, c] for (n, c) in inv]
+            if rot:
+                entry["rot"] = rot
+            entries.append(entry)
+        else:
+            entries.append(pos)
     return out
 
 

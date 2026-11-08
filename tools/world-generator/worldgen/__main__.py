@@ -1,4 +1,4 @@
-"""CLI: python -m worldgen layout|generate|check-provider ...
+"""CLI: python -m worldgen layout|generate|check-provider|library ...
 
 A thin wrapper over ``worldgen/api.py`` (the library the Scenario Editor
 drives). ``layout`` re-lays-out a saved plan with no model calls; ``generate``
@@ -39,6 +39,9 @@ def main(argv=None):
     gen.add_argument("--out", required=True)
     gen.add_argument("--seed", type=int, default=1)
     gen.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
+    gen.add_argument("--no-library", dest="library", action="store_false",
+                     help="furnish every room with the model (the old method) instead of "
+                          "the room library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
                      help="enable a mod extension, off by default (repeatable; "
                           "floors implies portals; recorded in plan.json)")
@@ -46,7 +49,20 @@ def main(argv=None):
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")
     chk.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
+    lib = sub.add_parser("library", help="check the room library and report its coverage")
+    lib.add_argument("action", choices=["check"], help="check: validate every library file")
+    lib.add_argument("--path", default=None, help="library folder (default: library/)")
+    lib.add_argument("--coverage", action="store_true",
+                     help="also list room slots that no object can fill")
     args = ap.parse_args(argv)
+
+    if args.command == "library":
+        from worldgen import library as library_mod
+        lb = library_mod.load(args.path or library_mod.LIB_DIR)
+        errors, warnings = library_mod.check(lb)
+        gaps = library_mod.coverage(lb) if args.coverage else None
+        library_mod.report(lb, errors, warnings, gaps)
+        return 1 if errors else 0
 
     if getattr(args, "ext", None):
         _full, notes = expand_notes(args.ext)
@@ -76,7 +92,7 @@ def main(argv=None):
                                    out_dir=args.out, progress=_print_event, emit=print)
         else:
             summary = api.generate(args.idea, provider=args.provider,
-                                   extensions=args.ext, seed=args.seed,
+                                   extensions=args.ext, seed=args.seed, library=args.library,
                                    out_dir=args.out, progress=_print_event,
                                    providers_path=args.providers, emit=print)
     except api.Cancelled:

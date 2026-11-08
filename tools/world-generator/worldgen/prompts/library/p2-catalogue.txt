@@ -1,0 +1,10 @@
+ROOM LIBRARY: every building's interior is furnished from the room library,
+so this catalogue is for the OUTSIDE only. This overrides "furniture for every
+room purpose" above: list NO beds, tables, chairs, benches, cupboards, chests,
+stoves, hearths, counters, shelves or other indoor furniture. List only:
+- a prop for each outdoor feature in the zones' "outdoor" lists (a well, a
+  market stall, a loading crane, a landing pad);
+- yard props for buildings with a yard (woodpiles, carts, crates, barrels);
+- filler for the wild ground (trees, bushes, rocks, rubble, wreckage);
+- outdoor lights (lamp posts, braziers, torches) where people walk at night.
+8 to 20 templates.

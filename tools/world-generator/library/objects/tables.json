@@ -1,0 +1,783 @@
+{
+  "objects": [
+    {
+      "id": "table.plank",
+      "category": "table",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "kitchen table",
+        "medieval": "plank table",
+        "industrial": "deal table",
+        "scifi": "fold-down table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "metal"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun}, big enough for a meal for two or a pile of chores.",
+        "physical": "Top-down view of a plain {noun}: a rectangular {top.color} {top} top, twice as wide as it is deep, legs at the corners."
+      },
+      "aliases": [
+        "kitchen table"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "table.dining",
+      "category": "table",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "dining table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} square {top} {noun} laid for four, with room in the middle for a centrepiece.",
+        "physical": "Top-down view of a square {noun}: {A:top.color} {top} top with a runner down the middle, one leg at each corner."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "wikipedia-furniture",
+        "cdda-furniture",
+        "kenney-furniture"
+      ]
+    },
+    {
+      "id": "table.long",
+      "category": "table",
+      "size": [
+        4,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "banquet table",
+        "medieval": "feasting table",
+        "industrial": "banqueting table",
+        "scifi": "wardroom table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} long enough to seat a whole household, with a place of honour at the head.",
+        "physical": "Top-down view of a very long {noun}: {A:top.color} {top} top twice as long as it is wide, a line of serving dishes down the middle."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki"
+      ]
+    },
+    {
+      "id": "table.trestle",
+      "category": "table",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "trestle table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} of boards laid over trestles, quick to strip down once the meal is done.",
+        "physical": "Top-down view of a long {noun}: three {top.color} {top} boards side by side, resting on X-shaped trestles at each end."
+      },
+      "aliases": [
+        "refectory table"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "table.mess",
+      "category": "table",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "canteen table",
+        "scifi": "mess table"
+      },
+      "parts": {
+        "top": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} bolted to the floor, with a raised lip to stop trays sliding off.",
+        "physical": "Top-down view of a long {noun}: {A:top.color} {top} top with a raised rim, bolted feet showing at the corners."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "table.round_small",
+      "category": "table",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "small round table",
+        "modern": "café table",
+        "scifi": "pedestal table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} just big enough for two cups and a game of cards.",
+        "physical": "Top-down view of a small {noun}: a round {top.color} {top} top on a single central post."
+      },
+      "aliases": [
+        "table (oval)"
+      ],
+      "sources": [
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "table.side",
+      "category": "table",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "side table",
+        "medieval": "carved side table",
+        "industrial": "occasional table",
+        "scifi": "accent table"
+      },
+      "parts": {
+        "top": "stone",
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "glass",
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with {A:top} top and slender {frame} legs, made to hold a lamp and a vase.",
+        "physical": "Top-down view of a small square {noun}: {A:top.color} {top} top with a bevelled edge, slim {frame.color} {frame} legs at the corners."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "table.coffee",
+      "category": "table",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "coffee table",
+        "industrial": "low tea table",
+        "scifi": "low table"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "glass"
+        }
+      },
+      "tags": [
+        "table",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} low {top} {noun} at knee height, set out in front of the seats.",
+        "physical": "Top-down view of a low {noun}: a long {top.color} {top} top with a lower shelf showing beneath."
+      },
+      "aliases": [],
+      "sources": [
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "nightstand.crate",
+      "category": "nightstand",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "upturned crate",
+        "industrial": "packing crate",
+        "modern": "milk crate",
+        "scifi": "supply case"
+      },
+      "parts": {
+        "body": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "body": "synthetic"
+        },
+        "scifi": {
+          "body": "synthetic"
+        }
+      },
+      "tags": [
+        "table",
+        "bedside",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} doing duty as a bedside table, a few small belongings on top.",
+        "physical": "Top-down view of a small {noun}: a square {body.color} {body} box turned on end, a few small objects on its top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "nightstand.plain",
+      "category": "nightstand",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "nightstand",
+        "medieval": "bedside table",
+        "industrial": "night table",
+        "scifi": "bedside unit"
+      },
+      "parts": {
+        "body": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "body": "synthetic"
+        }
+      },
+      "tags": [
+        "table",
+        "bedside",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} with one drawer for keepsakes and a top for a light.",
+        "physical": "Top-down view of a small {noun}: a square {body.color} {body} top, a drawer pull showing on the bottom edge."
+      },
+      "aliases": [
+        "end table"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "nightstand.fine",
+      "category": "nightstand",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fine nightstand",
+        "medieval": "carved night cabinet",
+        "industrial": "marble-topped commode",
+        "modern": "lacquered nightstand",
+        "scifi": "smart nightstand"
+      },
+      "parts": {
+        "body": "wood",
+        "top": "stone"
+      },
+      "partsByBand": {
+        "scifi": {
+          "body": "synthetic",
+          "top": "glass"
+        }
+      },
+      "tags": [
+        "table",
+        "bedside",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} under {A:top} top, with a little locked door for things kept private.",
+        "physical": "Top-down view of a fine {noun}: {A:top.color} {top} top over {A:body.color} {body} cabinet, a small keyhole on the bottom edge."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "desk.plain",
+      "category": "desk",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "desk",
+        "medieval": "clerk's table",
+        "industrial": "clerk's desk",
+        "modern": "student desk",
+        "scifi": "fold-out desk"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "metal"
+        }
+      },
+      "tags": [
+        "desk",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} with one shallow drawer and just enough room for papers and a light.",
+        "physical": "Top-down view of a plain {noun}: {A:top.color} {top} top with a few papers and a pen, the back edge at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "desk.writing",
+      "category": "desk",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "writing desk",
+        "industrial": "pedestal desk"
+      },
+      "parts": {
+        "top": "wood",
+        "inlay": "leather"
+      },
+      "partsByBand": {},
+      "tags": [
+        "desk",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} with {A:inlay.color} {inlay} writing surface, an inkwell and a row of pigeonholes.",
+        "physical": "Top-down view of a broad {noun}: {A:top.color} {top} top with an inset {inlay.color} {inlay} panel, an inkwell and quill, a row of pigeonholes along the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "wikipedia-furniture",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "desk.office",
+      "category": "desk",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "office desk",
+        "scifi": "work desk"
+      },
+      "parts": {
+        "top": "synthetic",
+        "frame": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "desk",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} with a drawer pedestal, a cable tray and space for a screen.",
+        "physical": "Top-down view of a tidy {noun}: {A:top.color} {top} top on {frame.color} {frame} legs, a drawer pedestal at the right, a keyboard space near the bottom edge."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom",
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "desk.executive",
+      "category": "desk",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "executive desk",
+        "scifi": "command desk"
+      },
+      "parts": {
+        "top": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "glass"
+        }
+      },
+      "tags": [
+        "desk",
+        "furniture"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} broad {top} {noun} with nothing on it but a nameplate, built to make visitors feel small.",
+        "physical": "Top-down view of a broad {noun}: a deep {top.color} {top} top with drawer pedestals at both ends, a nameplate near the bottom edge."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "desk.school",
+      "category": "desk",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "school desk",
+        "scifi": "study desk"
+      },
+      "parts": {
+        "top": "wood",
+        "frame": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic"
+        }
+      },
+      "tags": [
+        "desk",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} for a single pupil, with a lift-up lid and a groove for pencils.",
+        "physical": "Top-down view of a small {noun}: {A:top.color} {top} top sloping toward the bottom edge, a pencil groove along the top, {frame.color} {frame} legs."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom",
+        "rimworld-wiki"
+      ]
+    }
+  ]
+}

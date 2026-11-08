@@ -1,0 +1,1081 @@
+{
+  "objects": [
+    {
+      "id": "chair.plain",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "chair",
+        "medieval": "wooden chair",
+        "industrial": "kitchen chair",
+        "modern": "plastic chair",
+        "scifi": "moulded chair"
+      },
+      "parts": {
+        "seat": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "seat": "synthetic"
+        },
+        "scifi": {
+          "seat": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun}, plain and straight-backed, with one leg a touch shorter than the rest.",
+        "physical": "Top-down view of a simple {noun}: a square {seat.color} {seat} seat with the backrest along the top edge."
+      },
+      "aliases": [
+        "wooden chair",
+        "plywood chair"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "df-wiki"
+      ]
+    },
+    {
+      "id": "chair.high_back",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "high-backed chair",
+        "industrial": "carved dining chair",
+        "modern": "designer chair",
+        "scifi": "contour chair"
+      },
+      "parts": {
+        "frame": "wood",
+        "seat": "leather"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "seat": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with {A:seat.color} {seat} seat, made to be admired as much as sat on.",
+        "physical": "Top-down view of a tall {noun}: {A:seat.color} {seat} seat in {A:frame.color} {frame} frame, a shaped backrest along the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "chair.armchair",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "armchair",
+        "medieval": "great chair",
+        "industrial": "wingback armchair",
+        "scifi": "lounge seat"
+      },
+      "parts": {
+        "frame": "wood",
+        "cushion": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "cushion": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} deep {noun} with broad arms and a plump {cushion.color} {cushion} cushion.",
+        "physical": "Top-down view of a roomy {noun}: wide {frame.color} {frame} arms either side, {A:cushion.color} {cushion} seat cushion, a padded back along the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "chair.office",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "office chair",
+        "scifi": "task chair"
+      },
+      "parts": {
+        "seat": "synthetic",
+        "base": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat.color} {noun} on five castors that squeaks whenever it turns.",
+        "physical": "Top-down view of a swivelling {noun}: {A:seat.color} {seat} seat and curved back at the top, a five-spoke {base.color} {base} base peeking out beneath."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "chair.rocking",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "rocking chair"
+      },
+      "parts": {
+        "frame": "wood",
+        "cushion": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with {A:cushion.color} {cushion} cushion tied to its seat, creaking gently on its runners.",
+        "physical": "Top-down view of a slatted {noun}: {frame.color} {frame} seat and back at the top, curved runners showing past the top and bottom edges, {A:cushion.color} cushion on the seat."
+      },
+      "aliases": [],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "chair.pilot",
+      "category": "chair",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "flight seat",
+        "scifi": "pilot seat"
+      },
+      "parts": {
+        "seat": "synthetic",
+        "frame": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} padded {noun} with a five-point harness and control pads under each hand.",
+        "physical": "Top-down view of a bucket-shaped {noun}: {seat.color} {seat} padding, {frame.color} {frame} armrests with control pads, harness straps over the headrest at the top."
+      },
+      "aliases": [
+        "airplane seat"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "stool.plain",
+      "category": "stool",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stool",
+        "medieval": "three-legged stool",
+        "industrial": "wooden stool",
+        "modern": "plastic stool",
+        "scifi": "pedestal stool"
+      },
+      "parts": {
+        "seat": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "seat": "synthetic"
+        },
+        "scifi": {
+          "seat": "metal"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun}, low and sturdy and easy to kick out of the way.",
+        "physical": "Top-down view of a small {noun}: a round {seat.color} {seat} seat, the tips of its legs just showing."
+      },
+      "aliases": [
+        "wooden stool",
+        "log stool"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture",
+        "df-wiki",
+        "kenney-furniture"
+      ]
+    },
+    {
+      "id": "stool.bar",
+      "category": "stool",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bar stool",
+        "scifi": "counter stool"
+      },
+      "parts": {
+        "seat": "leather",
+        "frame": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "seat": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} tall {noun} with {A:seat.color} {seat} top and a ring to hook a boot on.",
+        "physical": "Top-down view of a tall {noun}: a round {seat.color} {seat} seat over {A:frame.color} {frame} footrest ring."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "stool.ottoman",
+      "category": "stool",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "ottoman",
+        "medieval": "cushioned stool",
+        "scifi": "gel pouf"
+      },
+      "parts": {
+        "cover": "fabric",
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "cover": "synthetic",
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} upholstered in {cover.color} {cover}, as good for propping up feet as for sitting.",
+        "physical": "Top-down view of a padded {noun}: a square {cover.color} {cover} top with buttoned tufts and short {frame.color} {frame} feet at the corners."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bench.plank",
+      "category": "bench",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wooden bench",
+        "medieval": "plank bench"
+      },
+      "parts": {
+        "seat": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun} on splayed legs, long enough for two to sit shoulder to shoulder.",
+        "physical": "Top-down view of a backless {noun}: one long {seat.color} {seat} board, the leg ends showing at each short edge."
+      },
+      "aliases": [
+        "long bench",
+        "plank bench",
+        "waiting bench"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "wikipedia-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "bench.long",
+      "category": "bench",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "long bench",
+        "medieval": "trestle bench",
+        "industrial": "refectory bench",
+        "scifi": "mess bench"
+      },
+      "parts": {
+        "seat": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "seat": "metal"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} long {seat} {noun} made to run beside a table and seat a whole row of diners.",
+        "physical": "Top-down view of a long backless {noun}: {A:seat.color} {seat} plank three times as long as it is wide, on sturdy legs."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bench.pew",
+      "category": "bench",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "pew",
+        "scifi": "contemplation bench"
+      },
+      "parts": {
+        "seat": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "seat": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun} with a straight back and a narrow shelf behind for the books of the faith.",
+        "physical": "Top-down view of a long {noun}: {A:seat.color} {seat} seat with its tall back along the top edge, a narrow ledge behind it, shaped ends at left and right."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "bench.settle",
+      "category": "bench",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "settle",
+        "industrial": "hall settle"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} high-backed {frame} {noun} that keeps the draughts off whoever sits in it.",
+        "physical": "Top-down view of a boxy {noun}: {A:frame.color} {frame} seat with a tall solid back along the top edge and high arms at each end."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bench.stone",
+      "category": "bench",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stone bench",
+        "medieval": "marble bench",
+        "industrial": "marble bench",
+        "scifi": "sculpted plinth bench"
+      },
+      "parts": {
+        "seat": "stone"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun} on carved feet, cool to the touch and heavy as a tomb.",
+        "physical": "Top-down view of a solid {noun}: a smooth {seat.color} {seat} slab with scrolled ends at left and right."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sofa.couch",
+      "category": "sofa",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "sofa",
+        "industrial": "settee",
+        "scifi": "lounge couch"
+      },
+      "parts": {
+        "frame": "wood",
+        "cushion": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "cushion": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "upholstered",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {cushion.color} {noun} with two deep cushions and a scatter of pillows.",
+        "physical": "Top-down view of a two-seat {noun}: {cushion.color} {cushion} cushions, a padded back along the top edge, rolled {frame.color} {frame} arms at left and right."
+      },
+      "aliases": [
+        "couch",
+        "wide sofa"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "sofa.grand",
+      "category": "sofa",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "leather sofa",
+        "industrial": "chesterfield",
+        "scifi": "curved lounge"
+      },
+      "parts": {
+        "cover": "leather",
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "cover": "synthetic",
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "seat",
+        "upholstered",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} long {noun} in {cover.color} {cover}, wide enough for a whole family to sink into.",
+        "physical": "Top-down view of a long three-seat {noun}: {cover.color} {cover} cushions in a row, a deep back along the top edge, broad {frame.color} {frame} arms at each end."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sofa.booth",
+      "category": "sofa",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "diner booth",
+        "industrial": "tavern booth",
+        "scifi": "mess booth"
+      },
+      "parts": {
+        "seat": "leather",
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "seat": "synthetic",
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "seat",
+        "upholstered",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a padded {seat.color} {seat} seat and a high back that hides its sitters from the room.",
+        "physical": "Top-down view of a fixed {noun}: a long {seat.color} {seat} bench seat with a tall padded back along the top edge, {frame.color} {frame} end panels at left and right."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "sofa.settle_cushioned",
+      "category": "sofa",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cushioned settle"
+      },
+      "parts": {
+        "frame": "wood",
+        "cushion": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "upholstered",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} heaped with {cushion.color} {cushion} cushions and a folded fur.",
+        "physical": "Top-down view of a padded {noun}: {A:frame.color} {frame} frame with a high back along the top edge, {cushion.color} {cushion} cushions along the seat."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sofa.daybed",
+      "category": "sofa",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "daybed",
+        "industrial": "chaise longue"
+      },
+      "parts": {
+        "cover": "fabric",
+        "frame": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "upholstered",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with one raised end, draped in {cover.color} {cover} for lounging away long afternoons.",
+        "physical": "Top-down view of a long {noun}: {A:cover.color} {cover} seat with a curved raised end at the left, a short back rail along the top edge, {frame.color} {frame} feet."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "throne.state",
+      "category": "throne",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "throne",
+        "industrial": "chair of state",
+        "modern": "ceremonial chair",
+        "scifi": "command throne"
+      },
+      "parts": {
+        "frame": "wood",
+        "cushion": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "cushion": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "state",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with a towering back and {A:cushion.color} {cushion} cushion, set where every eye in the room falls on it.",
+        "physical": "Top-down view of a grand {noun}: {A:cushion.color} {cushion} seat between heavy {frame.color} {frame} arms, a tall crested back along the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "df-wiki"
+      ]
+    },
+    {
+      "id": "throne.stone",
+      "category": "throne",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stone throne"
+      },
+      "parts": {
+        "seat": "stone",
+        "pelt": "leather"
+      },
+      "partsByBand": {},
+      "tags": [
+        "seat",
+        "state",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {seat} {noun} cut from a single block, softened only by {A:pelt.color} hide thrown across it.",
+        "physical": "Top-down view of a massive {noun}: a blocky {seat.color} {seat} seat and back along the top edge, {A:pelt.color} {pelt} hide draped over the seat."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "throne.gilded",
+      "category": "throne",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "gilded throne",
+        "scifi": "crystal throne"
+      },
+      "parts": {
+        "frame": "metal",
+        "cushion": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "glass",
+          "cushion": "synthetic"
+        }
+      },
+      "tags": [
+        "seat",
+        "state",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {frame} worked into crests and spires, its {cushion.color} {cushion} seat barely dented.",
+        "physical": "Top-down view of a richly ornate {noun}: {frame.color} {frame} frame with flared arms, {A:cushion.color} {cushion} seat, a fan-shaped back along the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    }
+  ]
+}

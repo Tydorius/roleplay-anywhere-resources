@@ -1,0 +1,176 @@
+{
+  "layouts": [
+    {
+      "id": "greenhouse.small.a",
+      "family": "greenhouse",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "beds", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 2},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "corner"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 2], "anchor": "row:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "greenhouse.small.b",
+      "family": "greenhouse",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bed", "role": "grow", "size": [2, 2], "anchor": "center"},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "corner"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 1], "anchor": "wall:far"},
+        {"role": "grow", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "greenhouse.small.c",
+      "family": "greenhouse",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "pots", "role": "grow", "size": [1, 1], "anchor": "row:far", "count": [3, 4]},
+        {"id": "bench", "role": "table.work", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 1], "anchor": "row:side"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:bench"}
+      ]
+    },
+    {
+      "id": "greenhouse.medium.a",
+      "family": "greenhouse",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "bedsA", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 2},
+        {"id": "bedsB", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 2},
+        {"id": "bench", "role": "table.work", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 2], "anchor": "row:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "greenhouse.medium.b",
+      "family": "greenhouse",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "island", "role": "grow", "size": [1, 2], "anchor": "center", "count": [2, 3]},
+        {"id": "wallbeds", "role": "grow", "size": [1, 1], "anchor": "row:far", "count": [2, 3]},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "corner"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "water", "role": "wash.basin", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 1], "anchor": "row:side"},
+        {"role": "table.work", "size": [2, 1], "anchor": "wall:side"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "greenhouse.medium.c",
+      "family": "greenhouse",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "racks", "role": "grow", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "siderack", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 2},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "pump", "role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 2], "anchor": "row:side"},
+        {"role": "computer", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "storage.cold", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "greenhouse.large.a",
+      "family": "greenhouse",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "bedsA", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 3},
+        {"id": "bedsB", "role": "grow", "size": [1, 2], "anchor": "row:side", "count": 3},
+        {"id": "middle", "role": "grow", "size": [1, 2], "anchor": "center", "count": [2, 3]},
+        {"id": "bench", "role": "table.work", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 2], "anchor": "center"},
+        {"role": "grow", "size": [1, 2], "anchor": "row:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "greenhouse.large.b",
+      "family": "greenhouse",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "trays", "role": "grow", "size": [2, 1], "anchor": "center", "count": [4, 6]},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "pumps", "role": "utility", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "bench", "role": "table.work", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "water", "role": "wash.basin", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "grow", "size": [2, 1], "anchor": "center"},
+        {"role": "grow", "size": [2, 1], "anchor": "row:side"},
+        {"role": "storage.cold", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "computer", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "greenhouse.large.c",
+      "family": "greenhouse",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "farbeds", "role": "grow", "size": [1, 1], "anchor": "row:far", "count": [3, 5]},
+        {"id": "sidebeds", "role": "grow", "size": [1, 1], "anchor": "row:side", "count": [3, 5]},
+        {"id": "fountain", "role": "decor.feature", "size": [2, 2], "anchor": "center", "optional": true, "minWealth": "wealthy"},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "beside:fountain", "optional": true},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "corner"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "grow", "size": [1, 1], "anchor": "row:side"},
+        {"role": "grow", "size": [1, 1], "anchor": "row:side"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

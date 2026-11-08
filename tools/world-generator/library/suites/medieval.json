@@ -1,0 +1,415 @@
+{
+  "_readme": [
+    "Medieval building recipes. Suites with bands [medieval, industrial] live here only;",
+    "industrial.json holds the industrial-only ones and a few more shared ones."
+  ],
+  "suites": [
+    {
+      "id": "hut.poor",
+      "kinds": ["hut", "hovel", "bothy", "shack", "shieling", "lean-to", "woodcutter's hut", "charcoal burner's hut"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["hut", "small"],
+      "residents": [1, 2],
+      "wealth": ["poor"],
+      "rooms": [
+        {"name": "Hut",      "purpose": "hut",     "share": "large"},
+        {"name": "Woodshed", "purpose": "storage", "share": "small"}
+      ],
+      "connections": [["Hut", "Woodshed"]],
+      "entrance": {"room": "Hut"}
+    },
+    {
+      "id": "cottage.small",
+      "kinds": ["cottage", "cot", "small cottage", "labourer's cottage", "crofter's cottage", "lodge"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["hut", "small"],
+      "residents": [1, 2],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Main room",  "purpose": "living_room",    "share": "large"},
+        {"name": "Bedchamber", "purpose": "master_bedroom", "share": "medium"}
+      ],
+      "connections": [["Main room", "Bedchamber"]],
+      "entrance": {"room": "Main room"}
+    },
+    {
+      "id": "cottage.family",
+      "kinds": ["cottage", "family cottage", "croft", "house", "home", "crofter's cottage"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [3, 7],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Hearth room",     "purpose": "living_room",    "share": "large"},
+        {"name": "Bedchamber",      "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Children's loft", "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [["Hearth room", "Bedchamber"], ["Hearth room", "Children's loft"]],
+      "entrance": {"room": "Hearth room"}
+    },
+    {
+      "id": "farmhouse.yeoman",
+      "kinds": ["farmhouse", "farmstead", "longhouse", "grange", "yeoman's house", "homestead", "farm"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [3, 9],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Hall",               "purpose": "living_room",    "share": "large"},
+        {"name": "Kitchen",            "purpose": "kitchen",        "share": "medium"},
+        {"name": "Dairy",              "purpose": "pantry",         "share": "small"},
+        {"name": "Bedchamber",         "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Children's chamber", "purpose": "bedroom",        "share": "small"},
+        {"name": "Farmhands' loft",    "purpose": "dormitory",      "share": "small"}
+      ],
+      "connections": [
+        ["Hall", "Kitchen"], ["Kitchen", "Dairy"], ["Hall", "Bedchamber"],
+        ["Hall", "Children's chamber"], ["Kitchen", "Farmhands' loft"]
+      ],
+      "entrance": {"room": "Hall"}
+    },
+    {
+      "id": "townhouse.merchant",
+      "kinds": ["townhouse", "town house", "merchant's house", "burgher's house", "house", "guildsman's house"],
+      "bands": ["medieval"],
+      "sizeClasses": ["medium", "large"],
+      "residents": [2, 7],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Hall",             "purpose": "living_room",    "share": "large"},
+        {"name": "Kitchen",          "purpose": "kitchen",        "share": "medium"},
+        {"name": "Buttery",          "purpose": "pantry",         "share": "small"},
+        {"name": "Counting room",    "purpose": "study",          "share": "small"},
+        {"name": "Solar",            "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Chamber",          "purpose": "bedroom",        "share": "small"},
+        {"name": "Servant's garret", "purpose": "servants_room",  "share": "small"}
+      ],
+      "connections": [
+        ["Hall", "Kitchen"], ["Kitchen", "Buttery"], ["Hall", "Counting room"],
+        ["Hall", "Solar"], ["Solar", "Chamber"], ["Kitchen", "Servant's garret"]
+      ],
+      "entrance": {"room": "Hall"}
+    },
+    {
+      "id": "manor.hall",
+      "kinds": ["manor", "manor house", "manor hall", "hall", "lord's hall", "great house", "keep", "baron's hall"],
+      "bands": ["medieval"],
+      "sizeClasses": ["large", "hall"],
+      "residents": [4, 14],
+      "wealth": ["wealthy", "elite"],
+      "rooms": [
+        {"name": "Great Hall",        "purpose": "great_hall",     "share": "large"},
+        {"name": "Kitchen",           "purpose": "kitchen",        "share": "medium"},
+        {"name": "Buttery",           "purpose": "pantry",         "share": "small"},
+        {"name": "Solar",             "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Family chamber",    "purpose": "bedroom",        "share": "medium"},
+        {"name": "Study",             "purpose": "study",          "share": "small"},
+        {"name": "Guest chamber",     "purpose": "guest_room",     "share": "small"},
+        {"name": "Servants' chamber", "purpose": "servants_room",  "share": "medium"}
+      ],
+      "connections": [
+        ["Great Hall", "Kitchen"], ["Kitchen", "Buttery"], ["Kitchen", "Servants' chamber"],
+        ["Great Hall", "Solar"], ["Solar", "Family chamber"], ["Great Hall", "Study"],
+        ["Great Hall", "Guest chamber"]
+      ],
+      "entrance": {"room": "Great Hall"}
+    },
+    {
+      "id": "inn.coaching",
+      "kinds": ["inn", "coaching inn", "hostelry", "wayside inn", "roadhouse", "posting house", "tavern"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [2, 6],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Taproom",           "purpose": "taproom",        "share": "large"},
+        {"name": "Kitchen",           "purpose": "kitchen",        "share": "medium"},
+        {"name": "Cellar",            "purpose": "cellar",         "share": "small"},
+        {"name": "Guest chamber",     "purpose": "guest_room",     "share": "small"},
+        {"name": "Best chamber",      "purpose": "guest_room",     "share": "small"},
+        {"name": "Travellers' loft",  "purpose": "dormitory",      "share": "medium"},
+        {"name": "Keepers' chamber",  "purpose": "master_bedroom", "share": "small"},
+        {"name": "Potboys' room",     "purpose": "servants_room",  "share": "small"}
+      ],
+      "connections": [
+        ["Taproom", "Kitchen"], ["Kitchen", "Cellar"], ["Taproom", "Guest chamber"],
+        ["Taproom", "Best chamber"], ["Taproom", "Travellers' loft"],
+        ["Kitchen", "Keepers' chamber"], ["Kitchen", "Potboys' room"]
+      ],
+      "entrance": {"room": "Taproom"}
+    },
+    {
+      "id": "tavern.alehouse",
+      "kinds": ["alehouse", "tavern", "taphouse", "pub", "village tavern", "beerhouse", "cider house"],
+      "bands": ["medieval"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 2],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Taproom",      "purpose": "taproom",        "share": "large"},
+        {"name": "Snug",         "purpose": "common_room",    "share": "small"},
+        {"name": "Cellar",       "purpose": "cellar",         "share": "small"},
+        {"name": "Back chamber", "purpose": "master_bedroom", "share": "small"}
+      ],
+      "connections": [["Taproom", "Snug"], ["Taproom", "Cellar"], ["Taproom", "Back chamber"]],
+      "entrance": {"room": "Taproom"}
+    },
+    {
+      "id": "smithy.forge",
+      "kinds": ["smithy", "forge", "blacksmith", "farrier", "blacksmith's shop", "armourer", "bladesmith"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["hut", "small", "medium"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Forge",      "purpose": "forge",   "share": "large"},
+        {"name": "Iron store", "purpose": "storage", "share": "small"}
+      ],
+      "connections": [["Forge", "Iron store"]],
+      "entrance": {"room": "Forge"}
+    },
+    {
+      "id": "smithy.house",
+      "kinds": ["smithy", "forge", "blacksmith", "smith's house", "farrier"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [1, 6],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Forge",            "purpose": "forge",          "share": "large"},
+        {"name": "Hearth room",      "purpose": "living_room",    "share": "medium"},
+        {"name": "Bedchamber",       "purpose": "master_bedroom", "share": "small"},
+        {"name": "Apprentices' loft", "purpose": "bedroom",       "share": "small"}
+      ],
+      "connections": [["Forge", "Hearth room"], ["Hearth room", "Bedchamber"], ["Hearth room", "Apprentices' loft"]],
+      "entrance": {"room": "Forge"}
+    },
+    {
+      "id": "carpenter.workshop",
+      "kinds": ["carpenter", "carpentry", "joiner", "cooper", "cooperage", "wheelwright", "woodworker", "bowyer", "cooper's cottage"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 5],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Workshop",     "purpose": "carpentry",      "share": "large"},
+        {"name": "Timber store", "purpose": "storage",        "share": "small"},
+        {"name": "Hearth room",  "purpose": "living_room",    "share": "medium"},
+        {"name": "Bedchamber",   "purpose": "master_bedroom", "share": "small"},
+        {"name": "Loft",         "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Workshop", "Timber store"], ["Workshop", "Hearth room"],
+        ["Hearth room", "Bedchamber"], ["Hearth room", "Loft"]
+      ],
+      "entrance": {"room": "Workshop"}
+    },
+    {
+      "id": "bakery.bakehouse",
+      "kinds": ["bakery", "bakehouse", "baker", "baker's shop", "pastry shop", "confectioner"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 5],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Bread shop",  "purpose": "shop",           "share": "small"},
+        {"name": "Bakehouse",   "purpose": "bakery",         "share": "large"},
+        {"name": "Flour store", "purpose": "storage",        "share": "small"},
+        {"name": "Bedchamber",  "purpose": "master_bedroom", "share": "small"},
+        {"name": "Loft",        "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Bread shop", "Bakehouse"], ["Bakehouse", "Flour store"],
+        ["Bakehouse", "Bedchamber"], ["Bakehouse", "Loft"]
+      ],
+      "entrance": {"room": "Bread shop"}
+    },
+    {
+      "id": "brewery.brewhouse",
+      "kinds": ["brewery", "brewhouse", "malthouse", "cidery", "meadery", "distillery", "winery"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Brewhouse",   "purpose": "brewery", "share": "large"},
+        {"name": "Malt loft",   "purpose": "storage", "share": "medium"},
+        {"name": "Cask cellar", "purpose": "cellar",  "share": "medium"},
+        {"name": "Tally room",  "purpose": "office",  "share": "small"}
+      ],
+      "connections": [["Brewhouse", "Malt loft"], ["Brewhouse", "Cask cellar"], ["Brewhouse", "Tally room"]],
+      "entrance": {"room": "Brewhouse"}
+    },
+    {
+      "id": "shop.general",
+      "kinds": ["general store", "shop", "store", "chandlery", "chandler", "trading post", "grocer", "mercer", "provisioner", "merchant's shop"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 6],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Shop floor",      "purpose": "general_store",  "share": "large"},
+        {"name": "Stock room",      "purpose": "storage",        "share": "small"},
+        {"name": "Back kitchen",    "purpose": "kitchen",        "share": "small"},
+        {"name": "Bedchamber",      "purpose": "master_bedroom", "share": "small"},
+        {"name": "Children's room", "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Shop floor", "Stock room"], ["Shop floor", "Back kitchen"],
+        ["Back kitchen", "Bedchamber"], ["Back kitchen", "Children's room"]
+      ],
+      "entrance": {"room": "Shop floor"}
+    },
+    {
+      "id": "chapel.village",
+      "kinds": ["chapel", "shrine", "wayside shrine", "oratory", "chantry", "kirk", "meeting house"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["hut", "small"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Nave",   "purpose": "chapel",  "share": "large"},
+        {"name": "Vestry", "purpose": "vestry", "share": "small"}
+      ],
+      "connections": [["Nave", "Vestry"]],
+      "entrance": {"room": "Nave"}
+    },
+    {
+      "id": "chapel.keeper",
+      "kinds": ["chapel", "shrine", "hermitage", "oratory", "wayside shrine", "chantry"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 1],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Nave",          "purpose": "chapel",  "share": "large"},
+        {"name": "Vestry",        "purpose": "vestry",  "share": "small"},
+        {"name": "Keeper's cell", "purpose": "bedroom", "share": "small"}
+      ],
+      "connections": [["Nave", "Vestry"], ["Vestry", "Keeper's cell"]],
+      "entrance": {"room": "Nave"}
+    },
+    {
+      "id": "church.parish",
+      "kinds": ["church", "temple", "parish church", "minster", "abbey church", "cathedral", "sanctuary"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [1, 2],
+      "wealth": ["modest", "wealthy", "elite"],
+      "rooms": [
+        {"name": "Nave",             "purpose": "chapel",  "share": "large"},
+        {"name": "Chancel",          "purpose": "shrine",  "share": "medium"},
+        {"name": "Vestry",           "purpose": "vestry",  "share": "small"},
+        {"name": "Priest's lodging", "purpose": "bedroom", "share": "small"}
+      ],
+      "connections": [["Nave", "Chancel"], ["Chancel", "Vestry"], ["Vestry", "Priest's lodging"]],
+      "entrance": {"room": "Nave"}
+    },
+    {
+      "id": "barracks.garrison",
+      "kinds": ["barracks", "garrison", "guardhouse", "guard house", "watch house", "militia hall", "armoury"],
+      "bands": ["medieval"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [4, 20],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Guardroom",       "purpose": "guardroom", "share": "medium"},
+        {"name": "Barracks",        "purpose": "barracks",  "share": "large"},
+        {"name": "Mess",            "purpose": "mess_hall", "share": "medium"},
+        {"name": "Armoury",         "purpose": "armoury",   "share": "small"},
+        {"name": "Sergeant's room", "purpose": "bedroom",   "share": "small"}
+      ],
+      "connections": [
+        ["Guardroom", "Barracks"], ["Guardroom", "Mess"], ["Guardroom", "Armoury"],
+        ["Barracks", "Sergeant's room"]
+      ],
+      "entrance": {"room": "Guardroom"}
+    },
+    {
+      "id": "tower.watch",
+      "kinds": ["tower", "watchtower", "gatehouse", "guard tower", "gate tower", "bastion", "wall tower"],
+      "bands": ["medieval"],
+      "sizeClasses": ["hut", "small"],
+      "residents": [1, 4],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Guard room", "purpose": "guardroom", "share": "large"},
+        {"name": "Bunk room",  "purpose": "barracks",  "share": "small"}
+      ],
+      "connections": [["Guard room", "Bunk room"]],
+      "entrance": {"room": "Guard room"}
+    },
+    {
+      "id": "stable.livery",
+      "kinds": ["stable", "stables", "livery", "livery stable", "coach house", "mews", "stable & coach house"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [1, 2],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Stalls",       "purpose": "stable",  "share": "large"},
+        {"name": "Tack room",    "purpose": "storage", "share": "small"},
+        {"name": "Coach house",  "purpose": "barn",    "share": "medium"},
+        {"name": "Grooms' loft", "purpose": "bedroom", "share": "small"}
+      ],
+      "connections": [["Stalls", "Tack room"], ["Stalls", "Coach house"], ["Stalls", "Grooms' loft"]],
+      "entrance": {"room": "Stalls"}
+    },
+    {
+      "id": "mill.grist",
+      "kinds": ["mill", "watermill", "windmill", "gristmill", "grist mill", "corn mill", "flour mill"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [1, 5],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Grinding floor",   "purpose": "mill",           "share": "large"},
+        {"name": "Grain store",      "purpose": "storage",        "share": "medium"},
+        {"name": "Miller's chamber", "purpose": "master_bedroom", "share": "small"},
+        {"name": "Hands' bothy",     "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Grinding floor", "Grain store"], ["Grinding floor", "Miller's chamber"],
+        ["Grinding floor", "Hands' bothy"]
+      ],
+      "entrance": {"room": "Grinding floor"}
+    },
+    {
+      "id": "apothecary.herbalist",
+      "kinds": ["apothecary", "herbalist", "healer", "herbalist cottage", "physician", "leech", "wise woman", "healer's house"],
+      "bands": ["medieval"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 4],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Shop",               "purpose": "apothecary",     "share": "medium"},
+        {"name": "Still room",         "purpose": "alchemy_lab",    "share": "medium"},
+        {"name": "Herb store",         "purpose": "storage",        "share": "small"},
+        {"name": "Sickroom",           "purpose": "infirmary",      "share": "small"},
+        {"name": "Bedchamber",         "purpose": "master_bedroom", "share": "small"},
+        {"name": "Apprentice's room",  "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Shop", "Still room"], ["Still room", "Herb store"], ["Shop", "Sickroom"],
+        ["Still room", "Bedchamber"], ["Still room", "Apprentice's room"]
+      ],
+      "entrance": {"room": "Shop"}
+    },
+    {
+      "id": "barn.threshing",
+      "kinds": ["barn", "tithe barn", "great barn", "threshing barn", "byre", "cowshed", "hay barn"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Threshing floor", "purpose": "barn",    "share": "large"},
+        {"name": "Byre",            "purpose": "stable",  "share": "medium"},
+        {"name": "Granary",         "purpose": "storage", "share": "medium"},
+        {"name": "Tool bay",        "purpose": "storage", "share": "small"}
+      ],
+      "connections": [["Threshing floor", "Byre"], ["Threshing floor", "Granary"], ["Threshing floor", "Tool bay"]],
+      "entrance": {"room": "Threshing floor"}
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "layouts": [
+    {
+      "id": "common_room.small.a",
+      "family": "common_room",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "sofa", "role": "seat.long", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "low", "role": "table.small", "size": [1, 1], "anchor": "center"},
+        {"id": "chairs", "role": "seat.lounge", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "heat", "role": "heat", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "decor.floor", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:near", "back": "wall"}
+      ]
+    },
+    {
+      "id": "common_room.small.b",
+      "family": "common_room",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "chairs", "role": "seat.lounge", "size": [1, 1], "anchor": "beside:heat+symmetric", "count": 2},
+        {"id": "low", "role": "table.small", "size": [1, 1], "anchor": "center"},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "decor.floor", "size": [1, 1], "anchor": "center"},
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:heat"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat.long", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+      ]
+    },
+    {
+      "id": "common_room.small.c",
+      "family": "common_room",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "bar", "role": "counter.serve", "size": [2, 1], "anchor": "wall:side"},
+        {"id": "keg", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:bar"},
+        {"id": "table", "role": "table.dining", "size": [1, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 3]},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "heat", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "seat.long", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "common_room.medium.a",
+      "family": "common_room",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "sofa", "role": "seat.long", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "chairs", "role": "seat.lounge", "size": [1, 1], "anchor": "beside:sofa+symmetric", "count": 2},
+        {"id": "low", "role": "table.small", "size": [2, 1], "anchor": "center"},
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"},
+        {"id": "rug", "role": "decor.floor", "size": [2, 2], "anchor": "center", "optional": true, "minWealth": "wealthy"}
+      ],
+      "grow": [
+        {"role": "books", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "music", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "common_room.medium.b",
+      "family": "common_room",
+      "sizeBands": ["medium"],
+      "minInterior": [7, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "bar", "role": "counter.serve", "size": [3, 1], "anchor": "wall:side"},
+        {"id": "kegs", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:bar", "count": [1, 2]},
+        {"id": "tables", "role": "table.dining", "size": [1, 1], "anchor": "center", "count": 2},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [4, 6]},
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "table.dining", "size": [1, 1], "anchor": "center"},
+        {"role": "game", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "common_room.medium.c",
+      "family": "common_room",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "game", "role": "game", "size": [2, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:game", "count": [2, 4]},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "side", "role": "table.small", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "music", "role": "music", "size": [2, 1], "anchor": "wall:far", "back": "wall", "minWealth": "modest"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "seat.lounge", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "common_room.large.a",
+      "family": "common_room",
+      "sizeBands": ["large"],
+      "minInterior": [9, 9],
+      "maxInterior": [14, 12],
+      "slots": [
+        {"id": "bar", "role": "counter.serve", "size": [4, 1], "anchor": "wall:side"},
+        {"id": "kegs", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:bar", "count": [2, 3]},
+        {"id": "tables", "role": "table.dining", "size": [2, 1], "anchor": "center", "count": [2, 4]},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [6, 12]},
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "lamps", "role": "light.small", "size": [1, 1], "anchor": "corner", "count": 2, "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "table.dining", "size": [2, 1], "anchor": "center"},
+        {"role": "seat.long", "size": [3, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "game", "size": [1, 1], "anchor": "corner"},
+        {"role": "music", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "common_room.large.b",
+      "family": "common_room",
+      "sizeBands": ["large"],
+      "minInterior": [10, 8],
+      "maxInterior": [16, 12],
+      "slots": [
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "state", "role": "seat.state", "size": [1, 1], "anchor": "beside:heat", "minWealth": "wealthy"},
+        {"id": "tables", "role": "table.dining", "size": [4, 1], "anchor": "center", "count": 2},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [8, 12]},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "serve", "role": "counter.serve", "size": [3, 1], "anchor": "wall:near", "optional": true},
+        {"id": "lights", "role": "light.big", "size": [1, 1], "anchor": "corner", "count": [1, 2], "minWealth": "modest"},
+        {"id": "feature", "role": "decor.feature", "size": [1, 1], "anchor": "beside:heat", "minWealth": "elite"}
+      ],
+      "grow": [
+        {"role": "table.dining", "size": [4, 1], "anchor": "center"},
+        {"role": "seat.long", "size": [3, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "music", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "weapons", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+      ]
+    },
+    {
+      "id": "common_room.large.c",
+      "family": "common_room",
+      "sizeBands": ["large"],
+      "minInterior": [9, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "sofa", "role": "seat.long", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "low", "role": "table.small", "size": [1, 1], "anchor": "beside:sofa"},
+        {"id": "chairs", "role": "seat.lounge", "size": [1, 1], "anchor": "around:low", "count": [2, 4]},
+        {"id": "bar", "role": "counter.serve", "size": [3, 1], "anchor": "wall:side"},
+        {"id": "tables", "role": "table.dining", "size": [2, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [4, 8]},
+        {"id": "game", "role": "game", "size": [2, 1], "anchor": "wall:side", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "heat", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "table.dining", "size": [2, 1], "anchor": "center"},
+        {"role": "music", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    }
+  ]
+}

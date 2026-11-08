@@ -1,0 +1,360 @@
+{
+  "_readme": [
+    "Industrial building recipes. The industrial band also draws on the shared",
+    "[medieval, industrial] suites in medieval.json (cottages, inn, smithy, mill, church...).",
+    "The shared suites here (warehouse, schoolhouse, tailor) are not repeated there."
+  ],
+  "suites": [
+    {
+      "id": "townhouse.terraced",
+      "kinds": ["townhouse", "town house", "terraced house", "terrace house", "row house", "rowhouse", "house"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [2, 7],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Parlour",       "purpose": "living_room",    "share": "large"},
+        {"name": "Kitchen",       "purpose": "kitchen",        "share": "medium"},
+        {"name": "Scullery",      "purpose": "scullery",       "share": "small"},
+        {"name": "Landing",       "purpose": "hallway",        "share": "small"},
+        {"name": "Front bedroom", "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Back bedroom",  "purpose": "bedroom",        "share": "small"},
+        {"name": "Box room",      "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Parlour", "Kitchen"], ["Kitchen", "Scullery"], ["Parlour", "Landing"],
+        ["Landing", "Front bedroom"], ["Landing", "Back bedroom"], ["Landing", "Box room"]
+      ],
+      "entrance": {"room": "Parlour"}
+    },
+    {
+      "id": "mansion.villa",
+      "kinds": ["mansion", "villa", "manor house", "manor", "country house", "town mansion", "great house", "hall"],
+      "bands": ["industrial"],
+      "sizeClasses": ["large", "hall"],
+      "residents": [3, 14],
+      "wealth": ["wealthy", "elite"],
+      "rooms": [
+        {"name": "Entrance hall",       "purpose": "lobby",          "share": "small"},
+        {"name": "Drawing room",        "purpose": "living_room",    "share": "large"},
+        {"name": "Dining room",         "purpose": "dining",         "share": "medium"},
+        {"name": "Kitchen",             "purpose": "kitchen",        "share": "medium"},
+        {"name": "Study",               "purpose": "study",          "share": "small"},
+        {"name": "Master bedroom",      "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Nursery",             "purpose": "nursery",        "share": "small"},
+        {"name": "Servants' quarters",  "purpose": "servants_room",  "share": "medium"}
+      ],
+      "connections": [
+        ["Entrance hall", "Drawing room"], ["Entrance hall", "Dining room"], ["Dining room", "Kitchen"],
+        ["Kitchen", "Servants' quarters"], ["Entrance hall", "Study"],
+        ["Entrance hall", "Master bedroom"], ["Master bedroom", "Nursery"]
+      ],
+      "entrance": {"room": "Entrance hall"}
+    },
+    {
+      "id": "tenement.cottage",
+      "kinds": ["tenement", "workers' cottage", "worker's cottage", "back-to-back", "company house", "miner's cottage", "row cottage", "slum house"],
+      "bands": ["industrial"],
+      "sizeClasses": ["hut", "small"],
+      "residents": [1, 6],
+      "wealth": ["poor"],
+      "rooms": [
+        {"name": "Front room", "purpose": "living_room",    "share": "large"},
+        {"name": "Bedroom",    "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Back room",  "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [["Front room", "Bedroom"], ["Front room", "Back room"]],
+      "entrance": {"room": "Front room"}
+    },
+    {
+      "id": "saloon.frontier",
+      "kinds": ["saloon", "bar", "tavern", "gin palace", "honky-tonk", "dance hall", "public house", "pub", "beer hall"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [1, 4],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Barroom",            "purpose": "taproom",        "share": "large"},
+        {"name": "Card room",          "purpose": "common_room",    "share": "medium"},
+        {"name": "Storeroom",          "purpose": "cellar",         "share": "small"},
+        {"name": "Upstairs hall",      "purpose": "hallway",        "share": "small"},
+        {"name": "Front room to let",  "purpose": "guest_room",     "share": "small"},
+        {"name": "Back room to let",   "purpose": "guest_room",     "share": "small"},
+        {"name": "Proprietor's room",  "purpose": "master_bedroom", "share": "small"},
+        {"name": "Barkeep's room",     "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [
+        ["Barroom", "Card room"], ["Barroom", "Storeroom"], ["Barroom", "Upstairs hall"],
+        ["Upstairs hall", "Front room to let"], ["Upstairs hall", "Back room to let"],
+        ["Upstairs hall", "Proprietor's room"], ["Storeroom", "Barkeep's room"]
+      ],
+      "entrance": {"room": "Barroom"}
+    },
+    {
+      "id": "hotel.railway",
+      "kinds": ["hotel", "railway hotel", "grand hotel", "commercial hotel", "temperance hotel", "station hotel"],
+      "bands": ["industrial"],
+      "sizeClasses": ["large", "hall"],
+      "residents": [2, 8],
+      "wealth": ["modest", "wealthy", "elite"],
+      "rooms": [
+        {"name": "Lobby",              "purpose": "lobby",          "share": "medium"},
+        {"name": "Dining room",        "purpose": "dining",         "share": "large"},
+        {"name": "Kitchen",            "purpose": "kitchen",        "share": "medium"},
+        {"name": "Smoking room",       "purpose": "lounge",         "share": "medium"},
+        {"name": "Guest room",         "purpose": "guest_room",     "share": "small"},
+        {"name": "Best suite",         "purpose": "guest_room",     "share": "medium"},
+        {"name": "Manager's quarters", "purpose": "master_bedroom", "share": "small"},
+        {"name": "Staff rooms",        "purpose": "servants_room",  "share": "small"}
+      ],
+      "connections": [
+        ["Lobby", "Dining room"], ["Lobby", "Smoking room"], ["Dining room", "Kitchen"],
+        ["Kitchen", "Staff rooms"], ["Lobby", "Guest room"], ["Lobby", "Best suite"],
+        ["Lobby", "Manager's quarters"]
+      ],
+      "entrance": {"room": "Lobby"}
+    },
+    {
+      "id": "boardinghouse.lodging",
+      "kinds": ["boarding house", "boardinghouse", "lodging house", "rooming house", "lodgings", "guest house", "pension"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [3, 9],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Parlour",          "purpose": "living_room",    "share": "medium"},
+        {"name": "Dining room",      "purpose": "dining",         "share": "medium"},
+        {"name": "Kitchen",          "purpose": "kitchen",        "share": "small"},
+        {"name": "Landlady's room",  "purpose": "master_bedroom", "share": "small"},
+        {"name": "Front lodgings",   "purpose": "bedroom",        "share": "small"},
+        {"name": "Back lodgings",    "purpose": "bedroom",        "share": "small"},
+        {"name": "Attic room",       "purpose": "bedroom",        "share": "small"},
+        {"name": "Washroom",         "purpose": "washroom",       "share": "small"}
+      ],
+      "connections": [
+        ["Parlour", "Dining room"], ["Dining room", "Kitchen"], ["Kitchen", "Landlady's room"],
+        ["Parlour", "Front lodgings"], ["Parlour", "Back lodgings"], ["Back lodgings", "Attic room"],
+        ["Kitchen", "Washroom"]
+      ],
+      "entrance": {"room": "Parlour"}
+    },
+    {
+      "id": "flophouse.dormitory",
+      "kinds": ["flophouse", "doss house", "bunkhouse", "hostel", "common lodging house", "workhouse", "mission house"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [4, 20],
+      "wealth": ["poor"],
+      "rooms": [
+        {"name": "Front desk",   "purpose": "reception", "share": "small"},
+        {"name": "Bunk room",    "purpose": "dormitory", "share": "large"},
+        {"name": "Washroom",     "purpose": "washroom",  "share": "small"},
+        {"name": "Keeper's room", "purpose": "bedroom",  "share": "small"}
+      ],
+      "connections": [["Front desk", "Bunk room"], ["Bunk room", "Washroom"], ["Front desk", "Keeper's room"]],
+      "entrance": {"room": "Front desk"}
+    },
+    {
+      "id": "factory.works",
+      "kinds": ["factory", "works", "manufactory", "textile mill", "cotton mill", "foundry", "ironworks", "cannery", "brickworks"],
+      "bands": ["industrial"],
+      "sizeClasses": ["large", "hall"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Factory floor",   "purpose": "workshop",  "share": "large"},
+        {"name": "Machine shop",    "purpose": "workshop",  "share": "medium"},
+        {"name": "Stores",          "purpose": "warehouse", "share": "medium"},
+        {"name": "Foreman's office", "purpose": "office",   "share": "small"},
+        {"name": "Wash house",      "purpose": "washroom",  "share": "small"}
+      ],
+      "connections": [
+        ["Factory floor", "Machine shop"], ["Factory floor", "Stores"],
+        ["Factory floor", "Foreman's office"], ["Factory floor", "Wash house"]
+      ],
+      "entrance": {"room": "Factory floor"}
+    },
+    {
+      "id": "workshop.machine",
+      "kinds": ["workshop", "machine shop", "engineering shop", "repair shop", "garage", "gunsmith", "locksmith", "clockmaker", "tinsmith"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Front counter", "purpose": "shop",     "share": "small"},
+        {"name": "Workshop",      "purpose": "workshop", "share": "large"},
+        {"name": "Stores",        "purpose": "storage",  "share": "small"}
+      ],
+      "connections": [["Front counter", "Workshop"], ["Workshop", "Stores"]],
+      "entrance": {"room": "Front counter"}
+    },
+    {
+      "id": "tailor.shop",
+      "kinds": ["tailor", "dressmaker", "seamstress", "milliner", "weaver", "draper", "clothier", "haberdasher", "weaver's cottage"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [1, 5],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Shop",        "purpose": "shop",           "share": "medium"},
+        {"name": "Workroom",    "purpose": "tailor",         "share": "large"},
+        {"name": "Kitchen",     "purpose": "kitchen",        "share": "small"},
+        {"name": "Bedroom",     "purpose": "master_bedroom", "share": "small"},
+        {"name": "Back bedroom", "purpose": "bedroom",       "share": "small"}
+      ],
+      "connections": [
+        ["Shop", "Workroom"], ["Workroom", "Kitchen"], ["Kitchen", "Bedroom"], ["Kitchen", "Back bedroom"]
+      ],
+      "entrance": {"room": "Shop"}
+    },
+    {
+      "id": "clinic.surgery",
+      "kinds": ["clinic", "doctor's office", "surgery", "dispensary", "infirmary", "cottage hospital", "hospital", "sanatorium"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Waiting room",    "purpose": "reception",  "share": "medium"},
+        {"name": "Consulting room", "purpose": "clinic",     "share": "medium"},
+        {"name": "Operating room",  "purpose": "surgery",    "share": "small"},
+        {"name": "Ward",            "purpose": "ward",       "share": "large"},
+        {"name": "Dispensary",      "purpose": "apothecary", "share": "small"}
+      ],
+      "connections": [
+        ["Waiting room", "Consulting room"], ["Waiting room", "Dispensary"],
+        ["Consulting room", "Operating room"], ["Consulting room", "Ward"]
+      ],
+      "entrance": {"room": "Waiting room"}
+    },
+    {
+      "id": "police.station",
+      "kinds": ["police station", "station house", "constabulary", "police office", "precinct", "watch house", "gaol"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large", "hall"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Front office",      "purpose": "reception", "share": "medium"},
+        {"name": "Inspector's office", "purpose": "office",   "share": "small"},
+        {"name": "Muster room",       "purpose": "guardroom", "share": "medium"},
+        {"name": "Armoury",           "purpose": "armoury",   "share": "small"},
+        {"name": "Cell passage",      "purpose": "hallway",   "share": "small"},
+        {"name": "Holding cell",      "purpose": "cell",      "share": "small"},
+        {"name": "Cell",              "purpose": "cell",      "share": "small"}
+      ],
+      "connections": [
+        ["Front office", "Inspector's office"], ["Front office", "Muster room"],
+        ["Muster room", "Armoury"], ["Muster room", "Cell passage"],
+        ["Cell passage", "Holding cell"], ["Cell passage", "Cell"]
+      ],
+      "entrance": {"room": "Front office"}
+    },
+    {
+      "id": "sheriff.office",
+      "kinds": ["sheriff's office", "sheriff", "marshal's office", "jailhouse", "jail", "town jail", "lockup"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest"],
+      "rooms": [
+        {"name": "Office",   "purpose": "office",  "share": "large"},
+        {"name": "Gun room", "purpose": "armoury", "share": "small"},
+        {"name": "Cell one", "purpose": "cell",    "share": "small"},
+        {"name": "Cell two", "purpose": "cell",    "share": "small"}
+      ],
+      "connections": [["Office", "Gun room"], ["Office", "Cell one"], ["Office", "Cell two"]],
+      "entrance": {"room": "Office"}
+    },
+    {
+      "id": "printshop.press",
+      "kinds": ["print shop", "printshop", "printer", "printing office", "printing works", "newspaper office", "newspaper", "gazette"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Front counter",  "purpose": "reception", "share": "small"},
+        {"name": "Editor's office", "purpose": "office",   "share": "small"},
+        {"name": "Composing room", "purpose": "printshop", "share": "medium"},
+        {"name": "Press room",     "purpose": "printshop", "share": "large"},
+        {"name": "Paper store",    "purpose": "storage",   "share": "small"}
+      ],
+      "connections": [
+        ["Front counter", "Editor's office"], ["Front counter", "Composing room"],
+        ["Composing room", "Press room"], ["Press room", "Paper store"]
+      ],
+      "entrance": {"room": "Front counter"}
+    },
+    {
+      "id": "station.rail",
+      "kinds": ["railway station", "train station", "station", "railroad depot", "depot", "halt", "coach station", "stagecoach office", "stage station"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Booking hall",           "purpose": "reception", "share": "medium"},
+        {"name": "Waiting room",           "purpose": "lounge",    "share": "large"},
+        {"name": "Stationmaster's office", "purpose": "office",    "share": "small"},
+        {"name": "Parcels office",         "purpose": "storage",   "share": "small"},
+        {"name": "Lavatory",               "purpose": "washroom",  "share": "small"}
+      ],
+      "connections": [
+        ["Booking hall", "Waiting room"], ["Booking hall", "Stationmaster's office"],
+        ["Booking hall", "Parcels office"], ["Waiting room", "Lavatory"]
+      ],
+      "entrance": {"room": "Booking hall"}
+    },
+    {
+      "id": "office.counting",
+      "kinds": ["office", "counting house", "bank", "land office", "assay office", "telegraph office", "post office", "shipping office", "company office"],
+      "bands": ["industrial"],
+      "sizeClasses": ["small", "medium", "large"],
+      "residents": [0, 0],
+      "wealth": ["modest", "wealthy", "elite"],
+      "rooms": [
+        {"name": "Front counter",    "purpose": "reception", "share": "medium"},
+        {"name": "Clerks' office",   "purpose": "office",    "share": "large"},
+        {"name": "Manager's office", "purpose": "study",     "share": "small"},
+        {"name": "Strongroom",       "purpose": "storage",   "share": "small"}
+      ],
+      "connections": [
+        ["Front counter", "Clerks' office"], ["Clerks' office", "Manager's office"],
+        ["Manager's office", "Strongroom"]
+      ],
+      "entrance": {"room": "Front counter"}
+    },
+    {
+      "id": "warehouse.storehouse",
+      "kinds": ["warehouse", "storehouse", "granary", "goods shed", "store house", "customs house", "fish store", "depot"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium", "large", "hall"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Loading bay", "purpose": "storage",   "share": "medium"},
+        {"name": "Store floor", "purpose": "warehouse", "share": "large"},
+        {"name": "Tally room",  "purpose": "office",    "share": "small"}
+      ],
+      "connections": [["Loading bay", "Store floor"], ["Loading bay", "Tally room"]],
+      "entrance": {"room": "Loading bay"}
+    },
+    {
+      "id": "schoolhouse.village",
+      "kinds": ["school", "schoolhouse", "school house", "dame school", "grammar school", "academy", "parish school"],
+      "bands": ["medieval", "industrial"],
+      "sizeClasses": ["small", "medium"],
+      "residents": [0, 0],
+      "wealth": ["poor", "modest", "wealthy"],
+      "rooms": [
+        {"name": "Cloakroom",       "purpose": "hallway",   "share": "small"},
+        {"name": "Schoolroom",      "purpose": "classroom", "share": "large"},
+        {"name": "Master's study",  "purpose": "study",     "share": "small"}
+      ],
+      "connections": [["Cloakroom", "Schoolroom"], ["Schoolroom", "Master's study"]],
+      "entrance": {"room": "Cloakroom"}
+    }
+  ]
+}

@@ -69,6 +69,7 @@ async function newWorldDialog() {
       provider: $("wgProvider").value,
       seed: wgSeedOf($("wgSeed")),
       extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
+      library: $("wgLibrary").checked,
       frame: wgFrame,
       questionnaire: {mode, answers: wgAnswers(dlg), population: wgPopulation(dlg),
                       notes: $("wgNotes").value.trim()},
@@ -143,6 +144,9 @@ function wgFormHtml(drafts) {
               "Stored in the generator's providers.json (gitignored); only its last four characters ever come back to this page.")}
       <button type="button" id="wgProvSave">Save provider</button>
     </details>
+    ${field("Room library",
+            `<label class="check"><input type="checkbox" id="wgLibrary" checked> Use room library</label>`,
+            "Rooms are furnished from the generator's room library: fewer tokens, and beds, tables and chairs set out properly. Untick for the old method, where the model furnishes every room.")}
     <div class="wg-exts">
       <span class="wg-exts-title">Extensions</span>
       <span class="note">All off: the plain world imports and plays in the unmodded game.</span>
@@ -374,7 +378,8 @@ function wgDraftState(dlg) {
   const s = {mode: wgModeOf(dlg), idea: $("wgIdea").value, answers: wgAnswers(dlg),
              notes: $("wgNotes").value, population: wgPopulation(dlg), provider: $("wgProvider").value,
              seed: wgSeedOf($("wgSeed")),
-             extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext)};
+             extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
+             library: $("wgLibrary").checked};
   if (wgFrame) s.summary = $("wgSummary").value;
   if (wgClarifyQuestions) s.clarifyAnswers = wgClarifyAnswers(dlg);
   return s;
@@ -411,6 +416,7 @@ async function wgResumeDraft(dlg, id) {
   if (d.provider && [...$("wgProvider").options].some(o => o.value === d.provider)) $("wgProvider").value = d.provider;
   if (d.seed != null) $("wgSeed").value = d.seed;
   dlg.querySelectorAll("[data-ext]").forEach(cb => cb.checked = (d.extensions || []).includes(cb.dataset.ext));
+  if (d.library != null) $("wgLibrary").checked = !!d.library;
   dlg.querySelectorAll(".wg-q[data-q]").forEach(box => {
     const q = wgQuestionById(box.dataset.q), a = (d.answers || {})[box.dataset.q];
     if (!q || !a) return;

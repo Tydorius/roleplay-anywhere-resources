@@ -1,0 +1,56 @@
+Plan ONE building's rooms for the world below. Code furnishes every room from
+a library by its purpose, splits the footprint and adds the doors; you never
+list furniture or give coordinates.
+
+SETTING: ${setting_line}
+ZONE: ${zone_line}
+BUILDING: ${building_line}
+COMPOUND: ${compound_line}
+UNITS: ${units_line}
+
+BUILDINGS LIKE THIS ONE (id | rooms as name (purpose, share)):
+${suite_lines}
+
+ROOM PURPOSES (use one of these for every room):
+${purpose_line}
+${yard_block}
+Reply with ONE JSON object with exactly these fields:
+{
+  "name": "${building_name}",
+  "suite": "an id from the list above that fits, or null",
+  "wall": "wood|brick|stone|steel",
+  "ground": "floor material, one or two words",
+  "rooms": [{"name": "...", "share": "small|medium|large", "use": "a purpose from the list",
+             "purpose": "one phrase: what this room is like here"}],
+  "connections": [["Room A", "Room B"]],
+  "entrance": {"room": "...", "side": "north|south|east|west"},
+  "wealth": {"room name": "poor|modest|wealthy|elite"},
+  "unit": null,
+  "yard": null
+}
+
+- Pick the suite that fits and keep or rename its rooms ("The Smithy"), add or
+  drop one when the building needs it, or plan the rooms yourself with "suite":
+  null. List the rooms either way; if they are exactly the suite's, you may
+  leave "rooms", "connections" and "entrance" out.
+- 1 to 5 rooms (one for a hut); a building with many rooms of one kind
+  (guest rooms, cells) repeats them as units instead. "connections" names rooms that share an inner
+  door; every room must be reachable from the entrance room.
+- Beds come from the purposes: a couple gets a master_bedroom, others a
+  bedroom, nursery, dormitory or crew_quarters, travellers a guest_room. Code
+  counts the beds from the residents on the BUILDING line.
+- A BUILDING line ending in [brackets] says what state it's in: choose the
+  rooms and their phrases to match.
+- "wealth" is optional: only for a room richer or poorer than the building
+  (the servants' room in a manor). Leave it {} otherwise.
+- The COMPOUND line says when the building is one part of a connected
+  structure: its entrance must make sense against its neighbours.
+- The UNITS line says when the building repeats one unit many times (guest
+  rooms, flats, cabins, cells): "rooms" are then only the SHARED rooms (the
+  common room, the kitchen, a hall), and "unit" is ONE copy, {"rooms",
+  "connections", "entrance"}, its rooms with a "use" too (a guest_room, a
+  bedroom, crew_quarters). Never list the copies one by one. Otherwise "unit"
+  is null.
+- "name" must be exactly "${building_name}".
+
+${rules}

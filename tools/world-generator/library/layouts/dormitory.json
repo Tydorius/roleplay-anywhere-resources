@@ -1,0 +1,682 @@
+{
+  "layouts": [
+    {
+      "id": "dormitory.medium.a",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        5,
+        5
+      ],
+      "maxInterior": [
+        7,
+        7
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:far",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ],
+      "grow": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
+      ]
+    },
+    {
+      "id": "dormitory.medium.b",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        7
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:side",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        }
+      ],
+      "grow": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table"
+        }
+      ]
+    },
+    {
+      "id": "dormitory.medium.c",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        6
+      ],
+      "maxInterior": [
+        8,
+        8
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:far",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "id": "store",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "stove",
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ],
+      "grow": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:stove"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "dormitory.large.a",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        7,
+        7
+      ],
+      "maxInterior": [
+        12,
+        10
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:far",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "id": "store",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
+      ],
+      "grow": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "dormitory.large.b",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        10,
+        6
+      ],
+      "maxInterior": [
+        14,
+        8
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:side",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "id": "stove",
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "store",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "benches",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        },
+        {
+          "id": "lamps",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ],
+      "grow": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:stove"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "dormitory.large.c",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        8,
+        7
+      ],
+      "maxInterior": [
+        12,
+        10
+      ],
+      "slots": [
+        {
+          "id": "beds",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:far",
+          "count": "singles",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:beds",
+          "count": [
+            2,
+            6
+          ]
+        },
+        {
+          "id": "store",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:near",
+          "back": "wall"
+        },
+        {
+          "id": "wash",
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        },
+        {
+          "id": "lamps",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "bin",
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door",
+          "optional": true
+        }
+      ],
+      "grow": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:wash",
+          "back": "wall"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
+      ]
+    }
+  ]
+}

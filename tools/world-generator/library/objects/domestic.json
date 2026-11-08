@@ -1,0 +1,2586 @@
+{
+  "objects": [
+    {
+      "id": "hearth.fire_pit",
+      "category": "hearth",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.8,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fire pit"
+      },
+      "parts": {
+        "ring": "stone"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} ring of {ring} round a bed of embers, the smoke finding its own way out through the thatch.",
+        "physical": "Top-down view of a round {noun}: a ring of {ring.color} {ring} stones around glowing orange embers and grey ash, a few half-burnt sticks crossing the middle."
+      },
+      "aliases": [
+        "floor hearth",
+        "central hearth"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hearth.fireplace",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.8,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fireplace",
+        "medieval": "hearth"
+      },
+      "parts": {
+        "surround": "stone",
+        "grate": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {surround} {noun} set into the wall, its {grate} firedogs holding a fire that warms the whole room.",
+        "physical": "Top-down view of a wall {noun}: a {surround.color} {surround} hearth slab jutting from the top edge, a dark firebox against the back wall with a {grate.color} {grate} grate of burning logs, a raised hearthstone along the bottom."
+      },
+      "aliases": [
+        "stone fireplace",
+        "open hearth",
+        "hearth"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "hearth.great_fireplace",
+      "category": "hearth",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 1.0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "great fireplace",
+        "industrial": "marble fireplace",
+        "modern": "feature fireplace"
+      },
+      "parts": {
+        "surround": "stone",
+        "mantel": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "surround": "stone",
+          "mantel": "metal"
+        }
+      },
+      "tags": [
+        "hearth",
+        "heat",
+        "landmark",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} wide enough to roast an ox, framed in {surround} under a {mantel} mantel that has seen a hundred feasts.",
+        "physical": "Top-down view of a wide {noun} against the top wall: a long {surround.color} {surround} surround, a deep firebox roaring with flame, a {mantel.color} {mantel} mantel shelf along the back edge, a broad hearthstone in front."
+      },
+      "aliases": [
+        "great hearth",
+        "baronial fireplace"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hearth.brazier",
+      "category": "hearth",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.7,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "brazier"
+      },
+      "parts": {
+        "bowl": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bowl} brazier on three legs, coals ticking and glowing, good for warming hands and lighting faces.",
+        "physical": "Top-down view of a round {noun}: a {bowl.color} {bowl} bowl heaped with red-hot coals, three short legs just visible at the rim, a faint ring of ash on the floor around it."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "hearth.woodstove",
+      "category": "hearth",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.4,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wood stove",
+        "industrial": "pot-belly stove",
+        "modern": "wood burner"
+      },
+      "parts": {
+        "body": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} that ticks as it heats, a kettle never far from its top.",
+        "physical": "Top-down view of a squat {noun}: a round {body.color} {body} top with a kettle ring, a flue pipe rising from the back near the top edge, a small glowing door on the bottom side."
+      },
+      "aliases": [
+        "pot stove",
+        "box stove"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "hearth.fire_barrel",
+      "category": "hearth",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.7,
+      "back": null,
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fire barrel"
+      },
+      "parts": {
+        "drum": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "ruin",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {drum} oil drum punched with holes, burning scrap and pallet wood for anyone who stands close.",
+        "physical": "Top-down view of a {noun}: a round {drum.color} {drum} drum rim, flames and burning splinters inside, rust-orange scorch marks down the sides and scattered ash around the base."
+      },
+      "aliases": [
+        "burn barrel",
+        "trash fire"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "hearth.holo_fire",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.6,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "holo-hearth"
+      },
+      "parts": {
+        "housing": "synthetic",
+        "emitter": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "luxury",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {housing} {noun} throwing up flames that give real warmth and never need feeding, a comfort for people far from any planet.",
+        "physical": "Top-down view of a low {noun} against the top wall: a sleek {housing.color} {housing} trough with a {emitter.color} {emitter} emitter strip, flickering amber holographic flames rising from it."
+      },
+      "aliases": [
+        "plasma fireplace",
+        "heat hearth"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "stove.cookfire",
+      "category": "stove",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.6,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cooking fire"
+      },
+      "parts": {
+        "pot": "metal",
+        "stones": "stone"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {pot} pot hangs from a tripod over the coals, something with barley in it always simmering.",
+        "physical": "Top-down view of a {noun}: a ring of {stones.color} {stones} stones around glowing coals, a round {pot.color} {pot} cauldron in the middle seen from above with a ladle in it, the tripod's three legs reaching out to the corners."
+      },
+      "aliases": [
+        "cauldron",
+        "cooking pot",
+        "pot over coals"
+      ],
+      "sources": [
+        "dnd-srd"
+      ]
+    },
+    {
+      "id": "stove.kitchen_hearth",
+      "category": "stove",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.9,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "kitchen hearth"
+      },
+      "parts": {
+        "hearth": "stone",
+        "crane": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {hearth} {noun} with a swinging {crane} crane and a spit, where whole joints turn while the cooks shout.",
+        "physical": "Top-down view of a long {noun} against the top wall: a {hearth.color} {hearth} hearth bed of fire, a spit with a roast across it, a {crane.color} {crane} pot crane swung out over the flames, a flagstone apron along the bottom."
+      },
+      "aliases": [
+        "cooking hearth",
+        "spit hearth"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "stove.cookstove",
+      "category": "stove",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.3,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cookstove"
+      },
+      "parts": {
+        "body": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} little {body} {noun} with two plates on top and an oven no bigger than a loaf.",
+        "physical": "Top-down view of a small {noun}: a square {body.color} {body} top with two round hot plates, a stovepipe at the top edge, a firebox door glowing at the bottom."
+      },
+      "aliases": [
+        "wood cookstove",
+        "hob stove"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "stove.range",
+      "category": "stove",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.3,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "range",
+        "industrial": "cast-iron range",
+        "modern": "range cooker"
+      },
+      "parts": {
+        "body": "metal",
+        "rail": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} with ovens on both sides and a {rail} rail for tea towels, the heart of a busy kitchen.",
+        "physical": "Top-down view of a wide {noun} against the top wall: a {body.color} {body} cooktop with four to six round plates or burners, a {rail.color} {rail} towel rail along the bottom edge, a flue or hood along the back."
+      },
+      "aliases": [
+        "kitchen range",
+        "AGA",
+        "professional range"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "stove.cooker",
+      "category": "stove",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cooker"
+      },
+      "parts": {
+        "body": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "kitchen",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} with four burners and an oven door gone yellow round the seal.",
+        "physical": "Top-down view of a {noun}: a square {body.color} {body} top with four rings in a two-by-two grid, a strip of control knobs along the top edge, one burner lit blue."
+      },
+      "aliases": [
+        "gas range",
+        "electric range",
+        "stove",
+        "oven"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "rimworld-wiki"
+      ]
+    },
+    {
+      "id": "stove.galley",
+      "category": "stove",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "galley unit"
+      },
+      "parts": {
+        "housing": "metal",
+        "panel": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "stove",
+        "cooking",
+        "kitchen",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {housing} {noun} that heats, steams and plates a meal at a word, its {panel} panel blinking a queue of orders.",
+        "physical": "Top-down view of a wide {noun} against the top wall: a {housing.color} {housing} counter with two flush induction pads, a recessed food slot, and a glowing {panel.color} {panel} control strip along the back edge."
+      },
+      "aliases": [
+        "food synthesizer",
+        "galley range"
+      ],
+      "sources": [
+        "rimworld-wiki"
+      ]
+    },
+    {
+      "id": "oven.bread_oven",
+      "category": "oven",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.4,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bread oven",
+        "industrial": "brick oven"
+      },
+      "parts": {
+        "dome": "ceramic",
+        "door": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "oven",
+        "cooking",
+        "baking",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {dome} {noun}, its domed back still warm hours after the morning loaves came out.",
+        "physical": "Top-down view of a {noun}: a rounded {dome.color} {dome} dome filling the square, a flat front lip at the bottom with a small {door.color} {door} door and a wooden peel leaning beside it."
+      },
+      "aliases": [
+        "clay oven",
+        "beehive oven",
+        "dome oven"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "oven.bakehouse",
+      "category": "oven",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "baker's oven",
+        "modern": "deck oven"
+      },
+      "parts": {
+        "chamber": "stone",
+        "door": "metal"
+      },
+      "partsByBand": {
+        "modern": {
+          "chamber": "metal",
+          "door": "glass"
+        }
+      },
+      "tags": [
+        "oven",
+        "baking",
+        "work",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} great {chamber} {noun} that bakes for the whole street, flour dust settled on everything near it.",
+        "physical": "Top-down view of a large {noun}: a broad {chamber.color} {chamber} block against the top wall with a vaulted roof, a wide {door.color} {door} oven mouth on the bottom edge, a stone apron and a long peel in front."
+      },
+      "aliases": [
+        "bakery oven",
+        "communal oven"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "oven.wall_oven",
+      "category": "oven",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.1,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wall oven",
+        "scifi": "bake cell"
+      },
+      "parts": {
+        "case": "metal",
+        "door": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "oven",
+        "baking",
+        "kitchen",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} built-in {noun} at eye height, its {door} door showing whatever is slowly turning brown inside.",
+        "physical": "Top-down view of a tall {noun} unit: a {case.color} {case} cabinet front, a dim warm glow through a {door.color} {door} window on the bottom edge, controls along the top."
+      },
+      "aliases": [
+        "double oven",
+        "built-in oven"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "fridge.icebox",
+      "category": "fridge",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "icebox"
+      },
+      "parts": {
+        "cabinet": "wood",
+        "lining": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "fridge",
+        "kitchen",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {cabinet} {noun} lined with {lining}, a block of ice sweating in the top and a drip pan that someone forgot to empty.",
+        "physical": "Top-down view of a square {noun}: a {cabinet.color} {cabinet} top with brass hinges along the back edge, a hinged lid showing a {lining.color} {lining}-lined ice compartment, a drip tray peeking out at the bottom."
+      },
+      "aliases": [
+        "ice chest",
+        "ice box"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "fridge.fridge",
+      "category": "fridge",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fridge",
+        "scifi": "cold locker"
+      },
+      "parts": {
+        "case": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "case": "synthetic"
+        }
+      },
+      "tags": [
+        "fridge",
+        "kitchen",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} humming to itself, its door papered with notes and magnets.",
+        "physical": "Top-down view of a {noun}: a square {case.color} {case} top, the door edge and handle along the bottom, a faint vent grille on the back edge."
+      },
+      "aliases": [
+        "refrigerator",
+        "tall fridge",
+        "cooling unit"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "pz-pfans"
+      ]
+    },
+    {
+      "id": "fridge.fridge_freezer",
+      "category": "fridge",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fridge-freezer",
+        "scifi": "stasis pantry"
+      },
+      "parts": {
+        "case": "metal",
+        "panel": "glass"
+      },
+      "partsByBand": {
+        "scifi": {
+          "case": "synthetic",
+          "panel": "glass"
+        }
+      },
+      "tags": [
+        "fridge",
+        "kitchen",
+        "storage",
+        "luxury"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} double-doored {noun} with a {panel} panel that dispenses ice and knows when the milk runs low.",
+        "physical": "Top-down view of a wide {noun}: a long {case.color} {case} top, two doors meeting in the middle of the bottom edge with long bar handles, a small {panel.color} {panel} panel by one handle."
+      },
+      "aliases": [
+        "American fridge",
+        "side-by-side fridge",
+        "stasis cabinet"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "appliance.washer",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "washing machine",
+        "scifi": "laundry unit"
+      },
+      "parts": {
+        "case": "metal",
+        "door": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "laundry"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} that shudders through its spin cycle and walks a little across the floor.",
+        "physical": "Top-down view of a square {noun}: a {case.color} {case} top with a detergent drawer and dials along the back edge, the round {door.color} {door} porthole door showing at the bottom edge."
+      },
+      "aliases": [
+        "washer",
+        "laundry machine"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "appliance.dryer",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "tumble dryer",
+        "scifi": "dry cycler"
+      },
+      "parts": {
+        "case": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "laundry"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} breathing warm, lint-scented air from its vent.",
+        "physical": "Top-down view of a square {noun}: a plain {case.color} {case} top, a control strip on the back edge, a vent hose curling off the top edge to the wall."
+      },
+      "aliases": [
+        "dryer",
+        "clothes dryer"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "appliance.dishwasher",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "dishwasher",
+        "scifi": "dish sanitiser"
+      },
+      "parts": {
+        "case": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "kitchen"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} tucked under the counter, sloshing quietly with a load of plates.",
+        "physical": "Top-down view of a {noun} under a worktop: a square {case.color} {case} top flush with the counter, a narrow control strip along the bottom edge."
+      },
+      "aliases": [],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "appliance.coffee_machine",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "coffee machine",
+        "scifi": "caf dispenser"
+      },
+      "parts": {
+        "body": "metal",
+        "pot": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "kitchen",
+        "office"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} on its own stand, the ring-stained heart of every early shift.",
+        "physical": "Top-down view of a small stand with a {noun}: a {body.color} {body} machine against the top edge, a {pot.color} {pot} jug on its plate, a stack of cups and a scatter of sugar sachets in front."
+      },
+      "aliases": [
+        "espresso machine",
+        "drinks dispenser"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "appliance.radiator",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "radiator"
+      },
+      "parts": {
+        "body": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "heat"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} under the window, clanking as the hot water reaches it.",
+        "physical": "Top-down view of a {noun} against the top wall: a narrow {body.color} {body} block of ribbed fins, a valve knob at one end, pipes vanishing into the floor."
+      },
+      "aliases": [
+        "heater",
+        "cast-iron radiator"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "appliance.climate_unit",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "climate unit"
+      },
+      "parts": {
+        "housing": "metal",
+        "grille": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "heat"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {housing} {noun} that keeps the cabin at a steady body-warm temperature and complains in a low hum when the door is left open.",
+        "physical": "Top-down view of a {noun} against the top wall: a {housing.color} {housing} box with a {grille.color} {grille} intake grille, a small green status light, a faint shimmer of warm air at the bottom edge."
+      },
+      "aliases": [
+        "heater unit",
+        "environmental unit",
+        "air scrubber"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "appliance.mangle",
+      "category": "appliance",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "mangle"
+      },
+      "parts": {
+        "frame": "metal",
+        "rollers": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "appliance",
+        "laundry"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with two {rollers} rollers and a big crank handle, for squeezing the wash before it goes on the line.",
+        "physical": "Top-down view of a {noun}: a {frame.color} {frame} frame holding two long {rollers.color} {rollers} rollers side by side, a large wheel crank at one side, a tub for catching water at the bottom edge."
+      },
+      "aliases": [
+        "wringer",
+        "clothes mangle"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sink.wash_basin",
+      "category": "sink",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wash basin"
+      },
+      "parts": {
+        "bowl": "wood",
+        "stool": "wood"
+      },
+      "partsByBand": {
+        "industrial": {
+          "bowl": "metal",
+          "stool": "wood"
+        }
+      },
+      "tags": [
+        "sink",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bowl} bowl of cold water set on a stool, with a scrap of cloth and a sliver of soap beside it.",
+        "physical": "Top-down view of a {noun}: a round {bowl.color} {bowl} bowl of water on a square {stool.color} {stool} stool, a folded rag and a jug beside it."
+      },
+      "aliases": [
+        "washbowl",
+        "basin and stool"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sink.washstand",
+      "category": "sink",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "washstand",
+        "medieval": "laver"
+      },
+      "parts": {
+        "stand": "wood",
+        "basin": "ceramic",
+        "top": "stone"
+      },
+      "partsByBand": {},
+      "tags": [
+        "sink",
+        "washroom",
+        "bedroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {stand} {noun} topped with {top}, a painted {basin} basin and matching ewer waiting for morning.",
+        "physical": "Top-down view of a {noun}: a {top.color} {top} top with a round {basin.color} {basin} basin sunk in the middle, a tall ewer at the back edge, a folded towel hanging from the side rail."
+      },
+      "aliases": [
+        "washbasin",
+        "marble washstand",
+        "lavabo"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "sink.scullery",
+      "category": "sink",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "scullery sink",
+        "medieval": "stone sink"
+      },
+      "parts": {
+        "basin": "stone"
+      },
+      "partsByBand": {
+        "industrial": {
+          "basin": "ceramic"
+        }
+      },
+      "tags": [
+        "sink",
+        "kitchen"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} shallow {basin} {noun} worn smooth by years of scouring pots, a drain hole leading out through the wall.",
+        "physical": "Top-down view of a long {noun} against the top wall: a shallow rectangular {basin.color} {basin} trough with a drain hole at one end, a bucket and scrubbing brush on the rim."
+      },
+      "aliases": [
+        "slopstone",
+        "Belfast sink",
+        "butler sink"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sink.kitchen",
+      "category": "sink",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "kitchen sink",
+        "scifi": "galley sink"
+      },
+      "parts": {
+        "basin": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "sink",
+        "kitchen"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {basin} {noun} with a dripping tap and a stack of mugs nobody admits to.",
+        "physical": "Top-down view of a {noun} in a worktop: a square {basin.color} {basin} bowl with a drain at its centre, a tap at the top edge, a draining rack to one side."
+      },
+      "aliases": [
+        "utility sink"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "sink.bathroom",
+      "category": "sink",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bathroom sink",
+        "scifi": "wash basin"
+      },
+      "parts": {
+        "basin": "ceramic"
+      },
+      "partsByBand": {
+        "scifi": {
+          "basin": "synthetic"
+        }
+      },
+      "tags": [
+        "sink",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {basin} {noun} under a small mirror, toothbrushes crowding the edge.",
+        "physical": "Top-down view of a {noun}: a rounded {basin.color} {basin} basin with a tap at the top edge, a soap dish and toothbrush cup on the rim."
+      },
+      "aliases": [
+        "sink and mirror",
+        "hand basin"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "sink.vanity",
+      "category": "sink",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "double vanity",
+        "scifi": "grooming station"
+      },
+      "parts": {
+        "top": "stone",
+        "basin": "ceramic"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic",
+          "basin": "glass"
+        }
+      },
+      "tags": [
+        "sink",
+        "washroom",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top}-topped {noun} with twin {basin} basins under a wall of lit mirror.",
+        "physical": "Top-down view of a long {noun} against the top wall: a {top.color} {top} counter with two oval {basin.color} {basin} basins, taps at the back edge, folded towels and bottles between them."
+      },
+      "aliases": [
+        "vanity unit",
+        "twin basin"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bath.wash_tub",
+      "category": "bath",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wash tub",
+        "industrial": "tin bath"
+      },
+      "parts": {
+        "tub": "wood"
+      },
+      "partsByBand": {
+        "industrial": {
+          "tub": "metal"
+        }
+      },
+      "tags": [
+        "bath",
+        "washroom",
+        "laundry"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {tub} {noun} dragged out on bath night, for laundry the rest of the week.",
+        "physical": "Top-down view of a round {noun}: a {tub.color} {tub} tub with grey soapy water, a scrubbing board leaning in it, wet splashes on the floor around."
+      },
+      "aliases": [
+        "half barrel",
+        "hip bath",
+        "laundry tub"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bath.wooden_tub",
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bathing tub"
+      },
+      "parts": {
+        "tub": "wood",
+        "lining": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {tub} {noun} lined with {lining} so no splinter troubles its bather, a stool beside it for the hot water buckets.",
+        "physical": "Top-down view of a long oval {noun}: {tub.color} {tub} staves bound with iron hoops, a {lining.color} {lining} sheet draped over the rim, steaming water inside, a stool at one end."
+      },
+      "aliases": [
+        "wooden bathtub",
+        "bathing barrel"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "bath.clawfoot",
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "clawfoot bath",
+        "modern": "roll-top bath"
+      },
+      "parts": {
+        "tub": "ceramic",
+        "feet": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} deep {tub} {noun} on four {feet} feet, the kind you sink into up to your chin.",
+        "physical": "Top-down view of a free-standing {noun}: a long rounded {tub.color} {tub} tub with a rolled rim, taps at the end nearest the top edge, four small {feet.color} {feet} claw feet peeking out at the corners."
+      },
+      "aliases": [
+        "roll-top tub",
+        "slipper bath"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bath.bathtub",
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bathtub"
+      },
+      "parts": {
+        "tub": "ceramic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {tub} {noun} with a shower curtain on a rail and a ring of soap scum at the waterline.",
+        "physical": "Top-down view of a built-in {noun} against the top wall: a long rectangular {tub.color} {tub} tub, taps and drain at one end, a shower curtain bunched along one side."
+      },
+      "aliases": [
+        "bath",
+        "tub"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "bath.shower",
+      "category": "bath",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "shower",
+        "scifi": "sonic shower"
+      },
+      "parts": {
+        "stall": "glass",
+        "tray": "ceramic"
+      },
+      "partsByBand": {
+        "scifi": {
+          "stall": "glass",
+          "tray": "synthetic"
+        }
+      },
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} cubicle behind a {stall} screen, the tray never quite dry.",
+        "physical": "Top-down view of a square {noun} stall: a {tray.color} {tray} tray with a drain in the middle, a shower head on the top wall, a {stall.color} {stall} screen along the bottom edge."
+      },
+      "aliases": [
+        "shower stall",
+        "shower head"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "bath.plunge_pool",
+      "category": "bath",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "sunken bath",
+        "modern": "hot tub",
+        "scifi": "immersion pool"
+      },
+      "parts": {
+        "basin": "stone"
+      },
+      "partsByBand": {
+        "modern": {
+          "basin": "synthetic"
+        },
+        "scifi": {
+          "basin": "synthetic"
+        }
+      },
+      "tags": [
+        "bath",
+        "washroom",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {basin} {noun} big enough for four, its warm water scented and still.",
+        "physical": "Top-down view of a square {noun}: a {basin.color} {basin} rim around a pool of clear blue-green water, steps down at one corner, towels folded on one edge."
+      },
+      "aliases": [
+        "bathing pool",
+        "jacuzzi",
+        "spa pool"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "toilet.chamber_pot",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.7,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "chamber pot"
+      },
+      "parts": {
+        "pot": "ceramic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "toilet",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {pot} {noun} pushed into the corner, best not looked into before it is emptied.",
+        "physical": "Top-down view of a small round {noun}: a {pot.color} {pot} pot with a curled handle on one side, a wooden lid half over it, on bare floor."
+      },
+      "aliases": [
+        "po",
+        "piss pot"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "toilet.close_stool",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "close stool",
+        "industrial": "commode"
+      },
+      "parts": {
+        "box": "wood",
+        "seat": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "toilet",
+        "washroom",
+        "bedroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {box} {noun} with a padded {seat} lid, a respectable box with a pot hidden inside.",
+        "physical": "Top-down view of a boxy {noun}: a square {box.color} {box} chest with a hinged lid along the back edge, a {seat.color} {seat} cushion on top, a carrying handle on each side."
+      },
+      "aliases": [
+        "commode chair",
+        "night stool"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "toilet.water_closet",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "water closet"
+      },
+      "parts": {
+        "bowl": "ceramic",
+        "seat": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "toilet",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bowl} {noun} with a {seat} seat and a high cistern overhead, flushed by a chain that rattles like a church bell.",
+        "physical": "Top-down view of a {noun}: a rounded {bowl.color} {bowl} bowl with a {seat.color} {seat} seat, a cistern box on the top wall, a pull chain dangling down beside it."
+      },
+      "aliases": [
+        "WC",
+        "flush toilet",
+        "high-tank toilet"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "toilet.standard",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "toilet",
+        "scifi": "waste unit"
+      },
+      "parts": {
+        "bowl": "ceramic"
+      },
+      "partsByBand": {
+        "scifi": {
+          "bowl": "metal"
+        }
+      },
+      "tags": [
+        "toilet",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bowl} {noun} with a cracked seat lid and a roll of paper balanced on the cistern.",
+        "physical": "Top-down view of a {noun}: an oval {bowl.color} {bowl} bowl with the seat up, a rectangular cistern against the top wall, a paper roll beside it."
+      },
+      "aliases": [
+        "lavatory",
+        "loo",
+        "steel toilet"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "toilet.sanitation",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "smart toilet",
+        "scifi": "sanitation unit"
+      },
+      "parts": {
+        "bowl": "ceramic",
+        "panel": "synthetic"
+      },
+      "partsByBand": {
+        "scifi": {
+          "bowl": "synthetic",
+          "panel": "glass"
+        }
+      },
+      "tags": [
+        "toilet",
+        "washroom",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} that warms its seat, washes, dries and logs the user's health without being asked.",
+        "physical": "Top-down view of a sleek {noun}: a smooth wall-hung {bowl.color} {bowl} bowl with no visible cistern, a {panel.color} {panel} control panel glowing softly on the top wall."
+      },
+      "aliases": [
+        "bidet toilet",
+        "sanitation pod"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "firewood.log_stack",
+      "category": "firewood",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "log stack",
+        "modern": "log store"
+      },
+      "parts": {
+        "logs": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "firewood",
+        "fuel"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} stack of split {logs} logs, bark side out, enough to see the house through a cold week.",
+        "physical": "Top-down view of a {noun} against the top wall: rows of round {logs.color} {logs} log ends stacked neatly, bark curls and wood chips scattered at the bottom edge."
+      },
+      "aliases": [
+        "woodpile",
+        "firewood",
+        "log pile"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "firewood.kindling_basket",
+      "category": "firewood",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "kindling basket",
+        "modern": "log basket"
+      },
+      "parts": {
+        "basket": "plant",
+        "sticks": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "firewood",
+        "fuel"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {basket} {noun} by the fire, piled with {sticks} sticks and a few twists of dry straw.",
+        "physical": "Top-down view of a round {noun}: a woven {basket.color} {basket} rim, a jumble of thin {sticks.color} {sticks} sticks and split logs inside."
+      },
+      "aliases": [
+        "log basket",
+        "wood basket"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "firewood.coal_scuttle",
+      "category": "firewood",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "coal scuttle"
+      },
+      "parts": {
+        "bucket": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "firewood",
+        "fuel"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bucket} {noun} half full of coal, with a small shovel stuck in the top.",
+        "physical": "Top-down view of a {noun}: a tilted {bucket.color} {bucket} bucket with a wide lip, black lumps of coal inside, a short shovel handle across it."
+      },
+      "aliases": [
+        "coal hod",
+        "coal bucket"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "firewood.fuel_cans",
+      "category": "firewood",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fuel cans",
+        "scifi": "power cell rack"
+      },
+      "parts": {
+        "cans": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "cans": "synthetic"
+        }
+      },
+      "tags": [
+        "firewood",
+        "fuel"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} cluster of {cans} {noun}, sloshing or humming with whatever keeps the lights on.",
+        "physical": "Top-down view of {noun}: three or four squat {cans.color} {cans} containers packed together with handles and caps on top, warning labels on their sides."
+      },
+      "aliases": [
+        "jerry cans",
+        "paraffin cans",
+        "power cells"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "utility.ladder",
+      "category": "utility",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stepladder",
+        "medieval": "ladder",
+        "scifi": "access ladder"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "utility",
+        "tool"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} propped where the last job left it.",
+        "physical": "Top-down view of a folded {noun}: two long {frame.color} {frame} rails with rungs between them, a paint-spattered top step."
+      },
+      "aliases": [
+        "stepladder",
+        "wooden stepladder"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "utility.mop_bucket",
+      "category": "utility",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "mop bucket",
+        "medieval": "pail and broom"
+      },
+      "parts": {
+        "bucket": "metal",
+        "handle": "wood"
+      },
+      "partsByBand": {
+        "medieval": {
+          "bucket": "wood",
+          "handle": "wood"
+        },
+        "modern": {
+          "bucket": "synthetic",
+          "handle": "metal"
+        },
+        "scifi": {
+          "bucket": "synthetic",
+          "handle": "metal"
+        }
+      },
+      "tags": [
+        "utility",
+        "cleaning"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bucket} {noun} with grey water in the bottom and a {handle} handle leaning out of it.",
+        "physical": "Top-down view of a {noun}: a round {bucket.color} {bucket} bucket of murky water with a wringer at one side, a long {handle.color} {handle} handle angled across the square."
+      },
+      "aliases": [
+        "mop and pail",
+        "cleaning bucket"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "utility.generator",
+      "category": "utility",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "generator",
+        "scifi": "power node"
+      },
+      "parts": {
+        "housing": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "utility",
+        "power"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {housing} {noun} that rumbles and stinks, but keeps the fridge cold and the lights burning.",
+        "physical": "Top-down view of a boxy {noun}: a {housing.color} {housing} casing with vents along the top, a fuel cap and pull handle on one side, cables snaking off the top edge."
+      },
+      "aliases": [
+        "diesel generator",
+        "genset",
+        "power cell bank"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "utility.boiler",
+      "category": "utility",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "boiler",
+        "industrial": "coal boiler"
+      },
+      "parts": {
+        "body": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "utility",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} in the back room, its little window glowing as it heats water for the whole house.",
+        "physical": "Top-down view of a {noun} against the top wall: a round {body.color} {body} drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge."
+      },
+      "aliases": [
+        "furnace",
+        "water heater",
+        "back boiler"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "stove.food_synth",
+      "category": "stove",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "food synthesiser"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "panel": "glass"
+      },
+      "tags": [
+        "kitchen",
+        "cooking",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell} {noun} that prints a hot meal from paste cartridges, its menu worn to the three dishes anyone orders.",
+        "physical": "Top-down view of {A:noun}: a squat {shell.color} {shell} box against the top edge, a {panel} hatch and glowing menu panel facing the bottom."
+      },
+      "aliases": [
+        "food printer",
+        "nutrient dispenser"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1946 @@
+{
+  "suites": [
+    {
+      "id": "house.modern_small",
+      "kinds": [
+        "house",
+        "small house",
+        "bungalow",
+        "cottage",
+        "home",
+        "residence",
+        "starter home"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small"
+      ],
+      "residents": [
+        1,
+        2
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Living room",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Bedroom",
+          "purpose": "master_bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Bathroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Living room",
+          "Kitchen"
+        ],
+        [
+          "Living room",
+          "Bedroom"
+        ],
+        [
+          "Bedroom",
+          "Bathroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Living room"
+      }
+    },
+    {
+      "id": "house.modern_family",
+      "kinds": [
+        "house",
+        "family house",
+        "family home",
+        "home",
+        "residence",
+        "townhouse",
+        "suburban house",
+        "ranch house"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium"
+      ],
+      "residents": [
+        3,
+        6
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Living room",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Hallway",
+          "purpose": "hallway",
+          "share": "small"
+        },
+        {
+          "name": "Master bedroom",
+          "purpose": "master_bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Kids' bedroom",
+          "purpose": "bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Spare bedroom",
+          "purpose": "bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Bathroom",
+          "purpose": "washroom",
+          "share": "small"
+        },
+        {
+          "name": "Garage",
+          "purpose": "garage",
+          "share": "medium"
+        }
+      ],
+      "connections": [
+        [
+          "Living room",
+          "Kitchen"
+        ],
+        [
+          "Living room",
+          "Hallway"
+        ],
+        [
+          "Hallway",
+          "Master bedroom"
+        ],
+        [
+          "Hallway",
+          "Kids' bedroom"
+        ],
+        [
+          "Hallway",
+          "Spare bedroom"
+        ],
+        [
+          "Hallway",
+          "Bathroom"
+        ],
+        [
+          "Kitchen",
+          "Garage"
+        ]
+      ],
+      "entrance": {
+        "room": "Living room"
+      }
+    },
+    {
+      "id": "house.modern_large",
+      "kinds": [
+        "mansion",
+        "villa",
+        "estate",
+        "large house",
+        "manor house",
+        "mcmansion",
+        "penthouse",
+        "residence"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "large",
+        "hall"
+      ],
+      "residents": [
+        2,
+        5
+      ],
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Living room",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Dining room",
+          "purpose": "dining",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Study",
+          "purpose": "study",
+          "share": "small"
+        },
+        {
+          "name": "Master suite",
+          "purpose": "master_bedroom",
+          "share": "large"
+        },
+        {
+          "name": "Bedroom",
+          "purpose": "bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Guest room",
+          "purpose": "guest_room",
+          "share": "medium"
+        },
+        {
+          "name": "Bathroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Living room",
+          "Dining room"
+        ],
+        [
+          "Dining room",
+          "Kitchen"
+        ],
+        [
+          "Living room",
+          "Study"
+        ],
+        [
+          "Living room",
+          "Master suite"
+        ],
+        [
+          "Living room",
+          "Bedroom"
+        ],
+        [
+          "Living room",
+          "Guest room"
+        ],
+        [
+          "Living room",
+          "Bathroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Living room"
+      }
+    },
+    {
+      "id": "trailer.modern",
+      "kinds": [
+        "trailer",
+        "mobile home",
+        "caravan",
+        "camper",
+        "double-wide",
+        "trailer home"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small"
+      ],
+      "residents": [
+        1,
+        3
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Living area",
+          "purpose": "living_room",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchenette",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Bedroom",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Bunk room",
+          "purpose": "bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Living area",
+          "Kitchenette"
+        ],
+        [
+          "Living area",
+          "Bedroom"
+        ],
+        [
+          "Living area",
+          "Bunk room"
+        ],
+        [
+          "Kitchenette",
+          "Washroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Living area"
+      }
+    },
+    {
+      "id": "shack.modern",
+      "kinds": [
+        "shack",
+        "shanty",
+        "cabin",
+        "hut",
+        "lean-to",
+        "hovel",
+        "shed"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small"
+      ],
+      "residents": [
+        1,
+        2
+      ],
+      "wealth": [
+        "poor"
+      ],
+      "rooms": [
+        {
+          "name": "Shack",
+          "purpose": "hut",
+          "share": "large"
+        },
+        {
+          "name": "Lean-to",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Shack",
+          "Lean-to"
+        ]
+      ],
+      "entrance": {
+        "room": "Shack"
+      }
+    },
+    {
+      "id": "shop.corner_store",
+      "kinds": [
+        "convenience store",
+        "corner shop",
+        "corner store",
+        "bodega",
+        "mini mart",
+        "general store",
+        "grocery",
+        "variety store",
+        "dollar store",
+        "kiosk",
+        "gas station"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Sales floor",
+          "purpose": "general_store",
+          "share": "large"
+        },
+        {
+          "name": "Stock room",
+          "purpose": "storage",
+          "share": "medium"
+        },
+        {
+          "name": "Back office",
+          "purpose": "office",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Sales floor",
+          "Stock room"
+        ],
+        [
+          "Sales floor",
+          "Back office"
+        ]
+      ],
+      "entrance": {
+        "room": "Sales floor"
+      }
+    },
+    {
+      "id": "shop.modern_with_flat",
+      "kinds": [
+        "shop",
+        "store",
+        "corner shop",
+        "family store",
+        "general store",
+        "grocery",
+        "convenience store"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium"
+      ],
+      "residents": [
+        1,
+        4
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Sales floor",
+          "purpose": "general_store",
+          "share": "large"
+        },
+        {
+          "name": "Stock room",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Flat",
+          "purpose": "living_room",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Owner's bedroom",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Kids' room",
+          "purpose": "bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Bathroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Sales floor",
+          "Stock room"
+        ],
+        [
+          "Stock room",
+          "Flat"
+        ],
+        [
+          "Flat",
+          "Kitchen"
+        ],
+        [
+          "Flat",
+          "Owner's bedroom"
+        ],
+        [
+          "Flat",
+          "Kids' room"
+        ],
+        [
+          "Flat",
+          "Bathroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Sales floor"
+      }
+    },
+    {
+      "id": "shop.modern_retail",
+      "kinds": [
+        "shop",
+        "store",
+        "clothing store",
+        "hardware store",
+        "sporting goods store",
+        "boutique",
+        "bookshop",
+        "electronics store",
+        "outlet",
+        "pawn shop"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Sales floor",
+          "purpose": "shop",
+          "share": "large"
+        },
+        {
+          "name": "Stock room",
+          "purpose": "storage",
+          "share": "medium"
+        },
+        {
+          "name": "Back office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Restroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Sales floor",
+          "Stock room"
+        ],
+        [
+          "Stock room",
+          "Back office"
+        ],
+        [
+          "Stock room",
+          "Restroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Sales floor"
+      }
+    },
+    {
+      "id": "diner.modern",
+      "kinds": [
+        "diner",
+        "cafe",
+        "coffee shop",
+        "restaurant",
+        "takeout",
+        "takeout counter",
+        "burger joint",
+        "pizzeria",
+        "bistro"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Dining room",
+          "purpose": "dining",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Walk-in",
+          "purpose": "pantry",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Dining room",
+          "Kitchen"
+        ],
+        [
+          "Kitchen",
+          "Walk-in"
+        ],
+        [
+          "Dining room",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Dining room"
+      }
+    },
+    {
+      "id": "bar.modern",
+      "kinds": [
+        "bar",
+        "pub",
+        "dive bar",
+        "tavern",
+        "saloon",
+        "lounge",
+        "sports bar",
+        "roadhouse",
+        "nightclub"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Bar room",
+          "purpose": "taproom",
+          "share": "large"
+        },
+        {
+          "name": "Back room",
+          "purpose": "lounge",
+          "share": "medium"
+        },
+        {
+          "name": "Keg room",
+          "purpose": "cellar",
+          "share": "small"
+        },
+        {
+          "name": "Office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Bar room",
+          "Back room"
+        ],
+        [
+          "Bar room",
+          "Keg room"
+        ],
+        [
+          "Keg room",
+          "Office"
+        ],
+        [
+          "Bar room",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Bar room"
+      }
+    },
+    {
+      "id": "clinic.modern",
+      "kinds": [
+        "clinic",
+        "doctor's office",
+        "medical practice",
+        "surgery",
+        "health centre",
+        "health center",
+        "urgent care",
+        "clinic wing",
+        "vet",
+        "dentist"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Waiting room",
+          "purpose": "reception",
+          "share": "medium"
+        },
+        {
+          "name": "Exam room",
+          "purpose": "clinic",
+          "share": "medium"
+        },
+        {
+          "name": "Treatment room",
+          "purpose": "clinic",
+          "share": "small"
+        },
+        {
+          "name": "Doctor's office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Supply closet",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Restroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Waiting room",
+          "Exam room"
+        ],
+        [
+          "Waiting room",
+          "Treatment room"
+        ],
+        [
+          "Waiting room",
+          "Restroom"
+        ],
+        [
+          "Exam room",
+          "Doctor's office"
+        ],
+        [
+          "Treatment room",
+          "Supply closet"
+        ]
+      ],
+      "entrance": {
+        "room": "Waiting room"
+      }
+    },
+    {
+      "id": "pharmacy.modern",
+      "kinds": [
+        "pharmacy",
+        "drugstore",
+        "chemist",
+        "drug store",
+        "dispensary"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Sales floor",
+          "purpose": "shop",
+          "share": "large"
+        },
+        {
+          "name": "Dispensary",
+          "purpose": "apothecary",
+          "share": "medium"
+        },
+        {
+          "name": "Stockroom",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Back office",
+          "purpose": "office",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Sales floor",
+          "Dispensary"
+        ],
+        [
+          "Dispensary",
+          "Stockroom"
+        ],
+        [
+          "Stockroom",
+          "Back office"
+        ]
+      ],
+      "entrance": {
+        "room": "Sales floor"
+      }
+    },
+    {
+      "id": "police.modern_station",
+      "kinds": [
+        "police station",
+        "sheriff's office",
+        "precinct",
+        "police",
+        "station house",
+        "police post",
+        "jail"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Front desk",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Bullpen",
+          "purpose": "office",
+          "share": "large"
+        },
+        {
+          "name": "Chief's office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Interview room",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Holding cells",
+          "purpose": "cell",
+          "share": "medium"
+        },
+        {
+          "name": "Armoury",
+          "purpose": "armoury",
+          "share": "small"
+        },
+        {
+          "name": "Break room",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Locker room",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Front desk",
+          "Bullpen"
+        ],
+        [
+          "Bullpen",
+          "Chief's office"
+        ],
+        [
+          "Bullpen",
+          "Interview room"
+        ],
+        [
+          "Bullpen",
+          "Holding cells"
+        ],
+        [
+          "Bullpen",
+          "Armoury"
+        ],
+        [
+          "Bullpen",
+          "Break room"
+        ],
+        [
+          "Break room",
+          "Locker room"
+        ]
+      ],
+      "entrance": {
+        "room": "Front desk"
+      }
+    },
+    {
+      "id": "firestation.modern",
+      "kinds": [
+        "fire station",
+        "firehouse",
+        "fire hall",
+        "fire department",
+        "ambulance station",
+        "rescue station"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        6
+      ],
+      "wealth": [
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Engine bay",
+          "purpose": "garage",
+          "share": "large"
+        },
+        {
+          "name": "Watch office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Gear room",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Day room",
+          "purpose": "lounge",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Bunk room",
+          "purpose": "dormitory",
+          "share": "medium"
+        },
+        {
+          "name": "Locker room",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Engine bay",
+          "Watch office"
+        ],
+        [
+          "Engine bay",
+          "Gear room"
+        ],
+        [
+          "Engine bay",
+          "Day room"
+        ],
+        [
+          "Day room",
+          "Kitchen"
+        ],
+        [
+          "Day room",
+          "Bunk room"
+        ],
+        [
+          "Bunk room",
+          "Locker room"
+        ]
+      ],
+      "entrance": {
+        "room": "Engine bay"
+      }
+    },
+    {
+      "id": "garage.modern_auto",
+      "kinds": [
+        "garage",
+        "auto shop",
+        "auto workshop",
+        "auto repair",
+        "mechanic",
+        "body shop",
+        "repair shop",
+        "service station",
+        "tire shop"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Bay one",
+          "purpose": "garage",
+          "share": "large"
+        },
+        {
+          "name": "Bay two",
+          "purpose": "garage",
+          "share": "medium"
+        },
+        {
+          "name": "Parts room",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Front office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Front office",
+          "Bay one"
+        ],
+        [
+          "Bay one",
+          "Bay two"
+        ],
+        [
+          "Bay one",
+          "Parts room"
+        ],
+        [
+          "Bay two",
+          "Washroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Front office"
+      }
+    },
+    {
+      "id": "church.modern",
+      "kinds": [
+        "church",
+        "chapel",
+        "parish church",
+        "baptist church",
+        "mission",
+        "congregation",
+        "meeting house",
+        "synagogue",
+        "mosque",
+        "temple"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Sanctuary",
+          "purpose": "chapel",
+          "share": "large"
+        },
+        {
+          "name": "Vestry",
+          "purpose": "vestry",
+          "share": "small"
+        },
+        {
+          "name": "Fellowship hall",
+          "purpose": "common_room",
+          "share": "medium"
+        },
+        {
+          "name": "Church kitchen",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Sanctuary",
+          "Vestry"
+        ],
+        [
+          "Sanctuary",
+          "Fellowship hall"
+        ],
+        [
+          "Fellowship hall",
+          "Church kitchen"
+        ],
+        [
+          "Fellowship hall",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Sanctuary"
+      }
+    },
+    {
+      "id": "school.modern_small",
+      "kinds": [
+        "school",
+        "schoolhouse",
+        "elementary school",
+        "primary school",
+        "grade school",
+        "high school",
+        "academy",
+        "community school"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Main hall",
+          "purpose": "common_room",
+          "share": "large"
+        },
+        {
+          "name": "Front office",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Classroom 1",
+          "purpose": "classroom",
+          "share": "medium"
+        },
+        {
+          "name": "Classroom 2",
+          "purpose": "classroom",
+          "share": "medium"
+        },
+        {
+          "name": "Classroom 3",
+          "purpose": "classroom",
+          "share": "medium"
+        },
+        {
+          "name": "Library",
+          "purpose": "library",
+          "share": "medium"
+        },
+        {
+          "name": "Staff room",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Main hall",
+          "Front office"
+        ],
+        [
+          "Main hall",
+          "Classroom 1"
+        ],
+        [
+          "Main hall",
+          "Classroom 2"
+        ],
+        [
+          "Main hall",
+          "Classroom 3"
+        ],
+        [
+          "Main hall",
+          "Library"
+        ],
+        [
+          "Front office",
+          "Staff room"
+        ],
+        [
+          "Main hall",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Main hall"
+      }
+    },
+    {
+      "id": "motel.office",
+      "kinds": [
+        "motel",
+        "motel office",
+        "motor inn",
+        "motor lodge",
+        "roadside motel",
+        "hotel office"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        1,
+        2
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Front office",
+          "purpose": "reception",
+          "share": "medium"
+        },
+        {
+          "name": "Manager's quarters",
+          "purpose": "living_room",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchenette",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Manager's bedroom",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Laundry",
+          "purpose": "laundry",
+          "share": "small"
+        },
+        {
+          "name": "Linen store",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Front office",
+          "Manager's quarters"
+        ],
+        [
+          "Manager's quarters",
+          "Kitchenette"
+        ],
+        [
+          "Manager's quarters",
+          "Manager's bedroom"
+        ],
+        [
+          "Front office",
+          "Laundry"
+        ],
+        [
+          "Laundry",
+          "Linen store"
+        ]
+      ],
+      "entrance": {
+        "room": "Front office"
+      }
+    },
+    {
+      "id": "laundromat.modern",
+      "kinds": [
+        "laundromat",
+        "laundrette",
+        "laundry",
+        "wash house",
+        "dry cleaner"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Wash floor",
+          "purpose": "laundry",
+          "share": "large"
+        },
+        {
+          "name": "Back room",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Restroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Wash floor",
+          "Back room"
+        ],
+        [
+          "Wash floor",
+          "Restroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Wash floor"
+      }
+    },
+    {
+      "id": "warehouse.modern",
+      "kinds": [
+        "warehouse",
+        "depot",
+        "storage facility",
+        "distribution centre",
+        "distribution center",
+        "storehouse",
+        "utility",
+        "self storage"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large",
+        "hall"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Warehouse floor",
+          "purpose": "warehouse",
+          "share": "large"
+        },
+        {
+          "name": "Loading dock",
+          "purpose": "storage",
+          "share": "medium"
+        },
+        {
+          "name": "Site office",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Break room",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Loading dock",
+          "Warehouse floor"
+        ],
+        [
+          "Warehouse floor",
+          "Site office"
+        ],
+        [
+          "Site office",
+          "Break room"
+        ],
+        [
+          "Break room",
+          "Washroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Loading dock"
+      }
+    },
+    {
+      "id": "gym.modern",
+      "kinds": [
+        "gym",
+        "fitness centre",
+        "fitness center",
+        "health club",
+        "boxing gym",
+        "dojo",
+        "martial arts school",
+        "rec centre"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Front desk",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Weight room",
+          "purpose": "gym",
+          "share": "large"
+        },
+        {
+          "name": "Studio",
+          "purpose": "training_hall",
+          "share": "medium"
+        },
+        {
+          "name": "Locker room",
+          "purpose": "washroom",
+          "share": "medium"
+        },
+        {
+          "name": "Office",
+          "purpose": "office",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Front desk",
+          "Weight room"
+        ],
+        [
+          "Weight room",
+          "Studio"
+        ],
+        [
+          "Weight room",
+          "Locker room"
+        ],
+        [
+          "Front desk",
+          "Office"
+        ]
+      ],
+      "entrance": {
+        "room": "Front desk"
+      }
+    },
+    {
+      "id": "office.modern_floor",
+      "kinds": [
+        "office",
+        "office building",
+        "offices",
+        "office block",
+        "firm",
+        "agency",
+        "law office",
+        "real estate office",
+        "bank",
+        "newspaper office",
+        "town hall"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Reception",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Open-plan office",
+          "purpose": "office",
+          "share": "large"
+        },
+        {
+          "name": "Manager's office",
+          "purpose": "study",
+          "share": "small"
+        },
+        {
+          "name": "Meeting room",
+          "purpose": "office",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchenette",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Copy room",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Reception",
+          "Open-plan office"
+        ],
+        [
+          "Reception",
+          "Meeting room"
+        ],
+        [
+          "Open-plan office",
+          "Manager's office"
+        ],
+        [
+          "Open-plan office",
+          "Kitchenette"
+        ],
+        [
+          "Open-plan office",
+          "Copy room"
+        ],
+        [
+          "Open-plan office",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Reception"
+      }
+    },
+    {
+      "id": "shelter.modern_fortified_home",
+      "kinds": [
+        "survivor shelter",
+        "survivors' shelter",
+        "safehouse",
+        "safe house",
+        "holdout",
+        "fortified house",
+        "bunker",
+        "compound",
+        "stronghold",
+        "residence"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        3,
+        10
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Common room",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Supply room",
+          "purpose": "storage",
+          "share": "medium"
+        },
+        {
+          "name": "Armoury",
+          "purpose": "armoury",
+          "share": "small"
+        },
+        {
+          "name": "Bunk room",
+          "purpose": "dormitory",
+          "share": "medium"
+        },
+        {
+          "name": "Couple's room",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Watch post",
+          "purpose": "guardroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Watch post",
+          "Common room"
+        ],
+        [
+          "Common room",
+          "Kitchen"
+        ],
+        [
+          "Kitchen",
+          "Supply room"
+        ],
+        [
+          "Common room",
+          "Armoury"
+        ],
+        [
+          "Common room",
+          "Bunk room"
+        ],
+        [
+          "Common room",
+          "Couple's room"
+        ]
+      ],
+      "entrance": {
+        "room": "Watch post"
+      }
+    },
+    {
+      "id": "shelter.modern_converted_store",
+      "kinds": [
+        "survivor shelter",
+        "survivors' camp",
+        "refuge",
+        "holdout",
+        "camp",
+        "fortified store",
+        "barricaded store",
+        "outpost"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        4,
+        14
+      ],
+      "wealth": [
+        "poor"
+      ],
+      "rooms": [
+        {
+          "name": "Barricade",
+          "purpose": "guardroom",
+          "share": "small"
+        },
+        {
+          "name": "Camp floor",
+          "purpose": "common_room",
+          "share": "large"
+        },
+        {
+          "name": "Bunks",
+          "purpose": "dormitory",
+          "share": "large"
+        },
+        {
+          "name": "Leader's room",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Cookhouse",
+          "purpose": "kitchen",
+          "share": "small"
+        },
+        {
+          "name": "Stockroom",
+          "purpose": "storage",
+          "share": "medium"
+        },
+        {
+          "name": "Sick bay",
+          "purpose": "infirmary",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Barricade",
+          "Camp floor"
+        ],
+        [
+          "Camp floor",
+          "Bunks"
+        ],
+        [
+          "Camp floor",
+          "Leader's room"
+        ],
+        [
+          "Camp floor",
+          "Cookhouse"
+        ],
+        [
+          "Cookhouse",
+          "Stockroom"
+        ],
+        [
+          "Camp floor",
+          "Sick bay"
+        ]
+      ],
+      "entrance": {
+        "room": "Barricade"
+      }
+    }
+  ]
+}

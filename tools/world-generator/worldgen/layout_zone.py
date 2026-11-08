@@ -265,7 +265,7 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
     for b in out.buildings:
         for room in b.layout.rooms:
             for (name, pos) in room.furniture.placements:
-                w, h = templates[name].size
+                w, h = room.furniture.size_of(name, pos, templates)
                 occupied |= {(x, y) for x in range(pos[0], pos[0] + w) for y in range(pos[1], pos[1] + h)}
     occupied |= out.field_cells
 
@@ -935,7 +935,12 @@ def _furnish(out, b, zone, templates, rng):
                        if f.room not in {r.base_name for r in bl.rooms}]
             for f in unknown:
                 failures.append((f"piece {f.template}", f"room {f.room!r} not in building"))
-            room.furniture = layout_room(room.rect, sorted(room.doors), furniture, templates, rng)
+            # far/side/near are measured from the door people come in by: the
+            # one nearest the building's entrance
+            entry = getattr(bl, "entrance_door", None)
+            main = min(sorted(room.doors), key=lambda d: abs(d[0] - entry[0]) + abs(d[1] - entry[1]))                 if entry and room.doors else None
+            room.furniture = layout_room(room.rect, sorted(room.doors), furniture, templates, rng,
+                                         main_door=main)
             for (t, n, reason) in room.furniture.failures:
                 failures.append((f"piece {t} in {room.base_name}",
                                  f"placed {n} of the requested count: {reason}"))

@@ -1,0 +1,161 @@
+{
+  "layouts": [
+    {
+      "id": "shop.small.a",
+      "family": "shop",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "stock", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "counter", "role": "counter.serve", "size": [2, 1], "anchor": "center"},
+        {"id": "show", "role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:counter"}
+      ]
+    },
+    {
+      "id": "shop.small.b",
+      "family": "shop",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [2, 1], "anchor": "wall:side+near_door"},
+        {"id": "till", "role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"id": "stock", "role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "show", "role": "display", "size": [1, 1], "anchor": "center"}
+      ],
+      "grow": [
+        {"role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "shop.small.c",
+      "family": "shop",
+      "sizeBands": ["small"],
+      "minInterior": [3, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "stock", "role": "shelving", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "counter", "role": "counter.serve", "size": [2, 1], "anchor": "away_from_door"},
+        {"id": "show", "role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+      ]
+    },
+    {
+      "id": "shop.medium.a",
+      "family": "shop",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [3, 1], "anchor": "center"},
+        {"id": "stock", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "shows", "role": "display", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "display", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "shop.medium.b",
+      "family": "shop",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [2, 1], "anchor": "wall:side+near_door"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "beside:counter", "back": "wall", "optional": true},
+        {"id": "stock", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "islands", "role": "display", "size": [2, 1], "anchor": "center", "count": [1, 2]},
+        {"id": "wall", "role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "display", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "shop.medium.c",
+      "family": "shop",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 5],
+      "maxInterior": [7, 6],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [3, 1], "anchor": "center+away_from_door"},
+        {"id": "stock", "role": "shelving", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": 2},
+        {"id": "window", "role": "display", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "optional": true, "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "display", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+      ]
+    },
+    {
+      "id": "shop.large.a",
+      "family": "shop",
+      "sizeBands": ["large"],
+      "minInterior": [8, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [3, 1], "anchor": "center"},
+        {"id": "stock", "role": "shelving", "size": [2, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "sides", "role": "shelving", "size": [2, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "islands", "role": "display", "size": [2, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "light", "role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "wealthy"}
+      ],
+      "grow": [
+        {"role": "display", "size": [2, 1], "anchor": "center"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "shop.large.b",
+      "family": "shop",
+      "sizeBands": ["large"],
+      "minInterior": [8, 7],
+      "maxInterior": [11, 9],
+      "slots": [
+        {"id": "counter", "role": "counter.serve", "size": [4, 1], "anchor": "wall:side"},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:counter", "count": [2, 3]},
+        {"id": "stock", "role": "shelving", "size": [1, 1], "anchor": "row:far", "count": [3, 6], "back": "wall"},
+        {"id": "shows", "role": "display", "size": [1, 1], "anchor": "center", "count": [2, 4]},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "near_door", "optional": true},
+        {"id": "lamps", "role": "light.small", "size": [1, 1], "anchor": "corner", "count": [1, 2], "minWealth": "modest"},
+        {"id": "store", "role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "display", "size": [1, 1], "anchor": "center"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:counter"}
+      ]
+    }
+  ]
+}

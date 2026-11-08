@@ -34,10 +34,11 @@ class RegionOut:
 
 
 class ObjectOut:
-    def __init__(self, template, pos, region):
+    def __init__(self, template, pos, region, rot=0):
         self.template = template
         self.pos = pos
         self.region = region
+        self.rot = rot          # quarter turns clockwise (0-3); the spec writes it
 
 
 class CharOut:
@@ -156,7 +157,7 @@ def _place_bed(world, room, tmpl):
         return None
     occupied = set()
     for (t, pos) in room.furniture.placements:
-        w, h = world.templates[t].size
+        w, h = room.furniture.size_of(t, pos, world.templates)
         occupied |= {(x, y) for x in range(pos[0], pos[0] + w)
                      for y in range(pos[1], pos[1] + h)}
     reserved, door_inner = reserve_walkways(rect, sorted(room.doors))
@@ -173,7 +174,7 @@ def _place_bed(world, room, tmpl):
               for y in range(pos[1], pos[1] + tmpl.size[1])}
         if fp & occupied or fp & reserved:
             continue
-        placements = [(n, p, world.templates[n].size)
+        placements = [(n, p, room.furniture.size_of(n, p, world.templates))
                       for (n, p) in room.furniture.placements]
         placements.append((tmpl.name, pos, tmpl.size))
         if (tmpl.name, pos) not in _boxed_positions(placements, world.templates,
@@ -366,7 +367,8 @@ def _emit_unit_regions(world, bl, parent_name, names_seen):
                                          description=next((r.purpose for r in ul.design.rooms
                                                            if r.name == room.base_name), "")))
             for (tname, pos) in room.furniture.placements:
-                objects.append(ObjectOut(tname, pos, room.full_name))
+                objects.append(ObjectOut(tname, pos, room.full_name,
+                                         room.furniture.rot(tname, pos)))
     return regions, objects
 
 
@@ -1124,7 +1126,8 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                         reg.entrance_door = bl.entrance_door if (bl.entrance_room is room) else None
                         world.regions.append(reg)
                     for (tname, pos) in room.furniture.placements:
-                        world.objects.append(ObjectOut(tname, pos, room.full_name))
+                        world.objects.append(ObjectOut(tname, pos, room.full_name,
+                                                       room.furniture.rot(tname, pos)))
                 uregs, uobjs = _emit_unit_regions(world, bl, building_name, names_seen)
                 world.regions.extend(uregs)
                 world.objects.extend(uobjs)

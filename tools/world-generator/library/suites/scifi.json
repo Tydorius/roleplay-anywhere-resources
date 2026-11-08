@@ -1,0 +1,1452 @@
+{
+  "suites": [
+    {
+      "id": "quarters.scifi_crew",
+      "kinds": [
+        "crew quarters",
+        "quarters",
+        "berth",
+        "crew block",
+        "crew module",
+        "hab module",
+        "compartment",
+        "bunkhouse",
+        "barracks"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        2,
+        8
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Crew bunks",
+          "purpose": "crew_quarters",
+          "share": "large"
+        },
+        {
+          "name": "Rec nook",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Lockers",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Head",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Rec nook",
+          "Crew bunks"
+        ],
+        [
+          "Crew bunks",
+          "Lockers"
+        ],
+        [
+          "Crew bunks",
+          "Head"
+        ]
+      ],
+      "entrance": {
+        "room": "Rec nook"
+      }
+    },
+    {
+      "id": "cabin.scifi_captain",
+      "kinds": [
+        "captain's cabin",
+        "captain's quarters",
+        "officer's quarters",
+        "officers' quarters",
+        "stateroom",
+        "cabin",
+        "berth",
+        "admiral's quarters"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        1,
+        2
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Day cabin",
+          "purpose": "study",
+          "share": "large"
+        },
+        {
+          "name": "Sleeping cabin",
+          "purpose": "master_bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Head",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Day cabin",
+          "Sleeping cabin"
+        ],
+        [
+          "Sleeping cabin",
+          "Head"
+        ]
+      ],
+      "entrance": {
+        "room": "Day cabin"
+      }
+    },
+    {
+      "id": "hab.scifi_family",
+      "kinds": [
+        "hab",
+        "habitat",
+        "family unit",
+        "conapt",
+        "residence",
+        "apartment",
+        "home",
+        "family quarters"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        2,
+        5
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Living module",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Galley nook",
+          "purpose": "galley",
+          "share": "small"
+        },
+        {
+          "name": "Parents' cabin",
+          "purpose": "master_bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Kids' bunks",
+          "purpose": "bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Hygiene cell",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Living module",
+          "Galley nook"
+        ],
+        [
+          "Living module",
+          "Parents' cabin"
+        ],
+        [
+          "Living module",
+          "Kids' bunks"
+        ],
+        [
+          "Living module",
+          "Hygiene cell"
+        ]
+      ],
+      "entrance": {
+        "room": "Living module"
+      }
+    },
+    {
+      "id": "bridge.scifi",
+      "kinds": [
+        "bridge",
+        "control",
+        "command deck",
+        "bridge deck",
+        "flight deck",
+        "cockpit",
+        "ops",
+        "control room",
+        "command centre",
+        "station ops"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Bridge",
+          "purpose": "bridge",
+          "share": "large"
+        },
+        {
+          "name": "Comms room",
+          "purpose": "control_room",
+          "share": "small"
+        },
+        {
+          "name": "Ready room",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Head",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Bridge",
+          "Comms room"
+        ],
+        [
+          "Bridge",
+          "Ready room"
+        ],
+        [
+          "Ready room",
+          "Head"
+        ]
+      ],
+      "entrance": {
+        "room": "Bridge"
+      }
+    },
+    {
+      "id": "engineering.scifi",
+      "kinds": [
+        "engineering",
+        "engine room",
+        "engineering bay",
+        "reactor room",
+        "fabricator bay",
+        "machine shop",
+        "maintenance bay",
+        "workshop",
+        "tech shop"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Main engineering",
+          "purpose": "control_room",
+          "share": "large"
+        },
+        {
+          "name": "Fabricator bay",
+          "purpose": "fabricator",
+          "share": "medium"
+        },
+        {
+          "name": "Parts store",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Chief engineer's office",
+          "purpose": "office",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Main engineering",
+          "Fabricator bay"
+        ],
+        [
+          "Fabricator bay",
+          "Parts store"
+        ],
+        [
+          "Main engineering",
+          "Chief engineer's office"
+        ]
+      ],
+      "entrance": {
+        "room": "Main engineering"
+      }
+    },
+    {
+      "id": "medbay.scifi",
+      "kinds": [
+        "medbay",
+        "sickbay",
+        "sick bay",
+        "infirmary",
+        "med centre",
+        "medical bay",
+        "clinic",
+        "hospital",
+        "med deck"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Treatment bay",
+          "purpose": "clinic",
+          "share": "large"
+        },
+        {
+          "name": "Surgery",
+          "purpose": "surgery",
+          "share": "medium"
+        },
+        {
+          "name": "Recovery ward",
+          "purpose": "infirmary",
+          "share": "medium"
+        },
+        {
+          "name": "Med stores",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "CMO's office",
+          "purpose": "office",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Treatment bay",
+          "Surgery"
+        ],
+        [
+          "Treatment bay",
+          "Recovery ward"
+        ],
+        [
+          "Treatment bay",
+          "Med stores"
+        ],
+        [
+          "Treatment bay",
+          "CMO's office"
+        ]
+      ],
+      "entrance": {
+        "room": "Treatment bay"
+      }
+    },
+    {
+      "id": "galley.scifi_mess",
+      "kinds": [
+        "galley",
+        "mess",
+        "mess hall",
+        "crew mess",
+        "canteen",
+        "cafeteria",
+        "wardroom",
+        "food court"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Mess",
+          "purpose": "mess_hall",
+          "share": "large"
+        },
+        {
+          "name": "Galley",
+          "purpose": "galley",
+          "share": "medium"
+        },
+        {
+          "name": "Cold store",
+          "purpose": "pantry",
+          "share": "small"
+        },
+        {
+          "name": "Head",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Mess",
+          "Galley"
+        ],
+        [
+          "Galley",
+          "Cold store"
+        ],
+        [
+          "Mess",
+          "Head"
+        ]
+      ],
+      "entrance": {
+        "room": "Mess"
+      }
+    },
+    {
+      "id": "cargo.scifi_hold",
+      "kinds": [
+        "cargo hold",
+        "cargo bay",
+        "hold",
+        "bay",
+        "airlock bay",
+        "hangar",
+        "loading bay",
+        "freight depot",
+        "warehouse"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large",
+        "hall"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Cargo deck",
+          "purpose": "warehouse",
+          "share": "large"
+        },
+        {
+          "name": "Airlock",
+          "purpose": "airlock",
+          "share": "small"
+        },
+        {
+          "name": "Loadmaster's booth",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Secure cage",
+          "purpose": "armoury",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Airlock",
+          "Cargo deck"
+        ],
+        [
+          "Cargo deck",
+          "Loadmaster's booth"
+        ],
+        [
+          "Cargo deck",
+          "Secure cage"
+        ]
+      ],
+      "entrance": {
+        "room": "Airlock"
+      }
+    },
+    {
+      "id": "hydroponics.scifi",
+      "kinds": [
+        "hydroponics bay",
+        "hydroponics",
+        "hydro bay",
+        "greenhouse",
+        "farm module",
+        "agri-dome",
+        "grow room",
+        "vertical farm"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Grow bay",
+          "purpose": "hydroponics_bay",
+          "share": "large"
+        },
+        {
+          "name": "Seed lab",
+          "purpose": "laboratory",
+          "share": "small"
+        },
+        {
+          "name": "Pump room",
+          "purpose": "workshop",
+          "share": "small"
+        },
+        {
+          "name": "Nutrient store",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Grow bay",
+          "Seed lab"
+        ],
+        [
+          "Grow bay",
+          "Pump room"
+        ],
+        [
+          "Pump room",
+          "Nutrient store"
+        ]
+      ],
+      "entrance": {
+        "room": "Grow bay"
+      }
+    },
+    {
+      "id": "security.scifi_brig",
+      "kinds": [
+        "security office",
+        "security station",
+        "brig",
+        "watch post",
+        "checkpoint",
+        "precinct",
+        "police station",
+        "enforcer post",
+        "guard post"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Monitoring room",
+          "purpose": "security_office",
+          "share": "medium"
+        },
+        {
+          "name": "Ready room",
+          "purpose": "guardroom",
+          "share": "medium"
+        },
+        {
+          "name": "Interview room",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Brig",
+          "purpose": "cell",
+          "share": "medium"
+        },
+        {
+          "name": "Armoury",
+          "purpose": "armoury",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Monitoring room",
+          "Ready room"
+        ],
+        [
+          "Monitoring room",
+          "Interview room"
+        ],
+        [
+          "Monitoring room",
+          "Brig"
+        ],
+        [
+          "Ready room",
+          "Armoury"
+        ]
+      ],
+      "entrance": {
+        "room": "Monitoring room"
+      }
+    },
+    {
+      "id": "lab.scifi_module",
+      "kinds": [
+        "lab",
+        "laboratory",
+        "lab module",
+        "research module",
+        "research lab",
+        "science lab",
+        "research station",
+        "biolab"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Decon",
+          "purpose": "washroom",
+          "share": "small"
+        },
+        {
+          "name": "Main lab",
+          "purpose": "laboratory",
+          "share": "large"
+        },
+        {
+          "name": "Clean room",
+          "purpose": "laboratory",
+          "share": "small"
+        },
+        {
+          "name": "Specimen store",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Lead's office",
+          "purpose": "study",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Decon",
+          "Main lab"
+        ],
+        [
+          "Main lab",
+          "Clean room"
+        ],
+        [
+          "Main lab",
+          "Specimen store"
+        ],
+        [
+          "Main lab",
+          "Lead's office"
+        ]
+      ],
+      "entrance": {
+        "room": "Decon"
+      }
+    },
+    {
+      "id": "capsule.scifi_flat",
+      "kinds": [
+        "capsule flat",
+        "capsule",
+        "micro-apartment",
+        "micro flat",
+        "coffin flat",
+        "flat",
+        "apartment",
+        "conapt",
+        "pod"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small"
+      ],
+      "residents": [
+        1,
+        2
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Living cube",
+          "purpose": "living_room",
+          "share": "medium"
+        },
+        {
+          "name": "Kitchenette",
+          "purpose": "galley",
+          "share": "small"
+        },
+        {
+          "name": "Sleep alcove",
+          "purpose": "master_bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Wet cell",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Living cube",
+          "Kitchenette"
+        ],
+        [
+          "Living cube",
+          "Sleep alcove"
+        ],
+        [
+          "Living cube",
+          "Wet cell"
+        ]
+      ],
+      "entrance": {
+        "room": "Living cube"
+      }
+    },
+    {
+      "id": "squat.scifi",
+      "kinds": [
+        "squat",
+        "flop",
+        "flophouse",
+        "crash pad",
+        "den",
+        "hideout",
+        "gang den",
+        "safehouse"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        2,
+        8
+      ],
+      "wealth": [
+        "poor"
+      ],
+      "rooms": [
+        {
+          "name": "Squat floor",
+          "purpose": "common_room",
+          "share": "large"
+        },
+        {
+          "name": "Bunks",
+          "purpose": "dormitory",
+          "share": "medium"
+        },
+        {
+          "name": "Stash",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Squat floor",
+          "Bunks"
+        ],
+        [
+          "Squat floor",
+          "Stash"
+        ]
+      ],
+      "entrance": {
+        "room": "Squat floor"
+      }
+    },
+    {
+      "id": "capsulehotel.scifi",
+      "kinds": [
+        "capsule hotel",
+        "pod hotel",
+        "coffin hotel",
+        "hostel",
+        "sleep pods"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        12
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Reception lobby",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Capsule hall",
+          "purpose": "dormitory",
+          "share": "large"
+        },
+        {
+          "name": "Shower block",
+          "purpose": "washroom",
+          "share": "small"
+        },
+        {
+          "name": "Linen store",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Reception lobby",
+          "Capsule hall"
+        ],
+        [
+          "Capsule hall",
+          "Shower block"
+        ],
+        [
+          "Reception lobby",
+          "Linen store"
+        ]
+      ],
+      "entrance": {
+        "room": "Reception lobby"
+      }
+    },
+    {
+      "id": "noodlebar.scifi",
+      "kinds": [
+        "noodle bar",
+        "noodle shop",
+        "ramen bar",
+        "ramen stall",
+        "street kitchen",
+        "food stall",
+        "teahouse",
+        "diner",
+        "takeout"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "rooms": [
+        {
+          "name": "Counter",
+          "purpose": "dining",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Cold store",
+          "purpose": "pantry",
+          "share": "small"
+        },
+        {
+          "name": "Staff room",
+          "purpose": "lounge",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Counter",
+          "Kitchen"
+        ],
+        [
+          "Kitchen",
+          "Cold store"
+        ],
+        [
+          "Kitchen",
+          "Staff room"
+        ]
+      ],
+      "entrance": {
+        "room": "Counter"
+      }
+    },
+    {
+      "id": "ripperdoc.scifi",
+      "kinds": [
+        "ripperdoc",
+        "ripper parlor",
+        "ripper clinic",
+        "implant clinic",
+        "chop shop",
+        "street clinic",
+        "back-alley clinic",
+        "clinic",
+        "body shop"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        1
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Waiting nook",
+          "purpose": "reception",
+          "share": "small"
+        },
+        {
+          "name": "Parlor bay",
+          "purpose": "surgery",
+          "share": "large"
+        },
+        {
+          "name": "Tool bay",
+          "purpose": "fabricator",
+          "share": "medium"
+        },
+        {
+          "name": "Parts fridge",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Doc's cot",
+          "purpose": "bedroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Waiting nook",
+          "Parlor bay"
+        ],
+        [
+          "Parlor bay",
+          "Tool bay"
+        ],
+        [
+          "Tool bay",
+          "Parts fridge"
+        ],
+        [
+          "Tool bay",
+          "Doc's cot"
+        ]
+      ],
+      "entrance": {
+        "room": "Waiting nook"
+      }
+    },
+    {
+      "id": "corpoffice.scifi",
+      "kinds": [
+        "corporate office",
+        "corp office",
+        "office",
+        "offices",
+        "headquarters",
+        "hq",
+        "executive suite",
+        "arcology office",
+        "branch office"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large",
+        "hall"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Lobby",
+          "purpose": "lobby",
+          "share": "medium"
+        },
+        {
+          "name": "Cubicle floor",
+          "purpose": "office",
+          "share": "large"
+        },
+        {
+          "name": "Conference room",
+          "purpose": "office",
+          "share": "medium"
+        },
+        {
+          "name": "Executive office",
+          "purpose": "study",
+          "share": "medium"
+        },
+        {
+          "name": "Server closet",
+          "purpose": "server_room",
+          "share": "small"
+        },
+        {
+          "name": "Break room",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Lobby",
+          "Cubicle floor"
+        ],
+        [
+          "Lobby",
+          "Conference room"
+        ],
+        [
+          "Cubicle floor",
+          "Executive office"
+        ],
+        [
+          "Cubicle floor",
+          "Server closet"
+        ],
+        [
+          "Cubicle floor",
+          "Break room"
+        ],
+        [
+          "Break room",
+          "Washroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Lobby"
+      }
+    },
+    {
+      "id": "club.scifi",
+      "kinds": [
+        "club",
+        "nightclub",
+        "bar",
+        "dance club",
+        "cantina",
+        "lounge",
+        "dive bar",
+        "rave"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Dance floor",
+          "purpose": "lounge",
+          "share": "large"
+        },
+        {
+          "name": "Bar",
+          "purpose": "taproom",
+          "share": "medium"
+        },
+        {
+          "name": "VIP booth",
+          "purpose": "lounge",
+          "share": "small"
+        },
+        {
+          "name": "Back room",
+          "purpose": "office",
+          "share": "small"
+        },
+        {
+          "name": "Stock room",
+          "purpose": "cellar",
+          "share": "small"
+        },
+        {
+          "name": "Restrooms",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Bar",
+          "Dance floor"
+        ],
+        [
+          "Dance floor",
+          "VIP booth"
+        ],
+        [
+          "Bar",
+          "Back room"
+        ],
+        [
+          "Back room",
+          "Stock room"
+        ],
+        [
+          "Dance floor",
+          "Restrooms"
+        ]
+      ],
+      "entrance": {
+        "room": "Bar"
+      }
+    },
+    {
+      "id": "datacentre.scifi",
+      "kinds": [
+        "data centre",
+        "data center",
+        "server farm",
+        "data vault",
+        "net hub",
+        "node",
+        "datahaven",
+        "server room"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large",
+        "hall"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "rooms": [
+        {
+          "name": "Security desk",
+          "purpose": "security_office",
+          "share": "small"
+        },
+        {
+          "name": "Network ops",
+          "purpose": "control_room",
+          "share": "medium"
+        },
+        {
+          "name": "Server hall",
+          "purpose": "server_room",
+          "share": "large"
+        },
+        {
+          "name": "Cooling plant",
+          "purpose": "workshop",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Security desk",
+          "Network ops"
+        ],
+        [
+          "Network ops",
+          "Server hall"
+        ],
+        [
+          "Server hall",
+          "Cooling plant"
+        ],
+        [
+          "Security desk",
+          "Washroom"
+        ]
+      ],
+      "entrance": {
+        "room": "Security desk"
+      }
+    },
+    {
+      "id": "shrine.scifi",
+      "kinds": [
+        "shrine",
+        "temple",
+        "chapel",
+        "church",
+        "meditation hall",
+        "sanctuary",
+        "street shrine",
+        "observation chapel"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "small",
+        "medium"
+      ],
+      "residents": [
+        0,
+        1
+      ],
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Shrine",
+          "purpose": "shrine",
+          "share": "large"
+        },
+        {
+          "name": "Meditation alcove",
+          "purpose": "shrine",
+          "share": "small"
+        },
+        {
+          "name": "Offerings store",
+          "purpose": "storage",
+          "share": "small"
+        },
+        {
+          "name": "Keeper's cell",
+          "purpose": "bedroom",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Shrine",
+          "Meditation alcove"
+        ],
+        [
+          "Shrine",
+          "Offerings store"
+        ],
+        [
+          "Offerings store",
+          "Keeper's cell"
+        ]
+      ],
+      "entrance": {
+        "room": "Shrine"
+      }
+    }
+  ]
+}

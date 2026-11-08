@@ -1,0 +1,583 @@
+{
+  "layouts": [
+    {
+      "id": "laundry.small.a",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        4
+      ],
+      "maxInterior": [
+        5,
+        5
+      ],
+      "slots": [
+        {
+          "id": "washers",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:far",
+          "count": [
+            1,
+            2
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "dryer",
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washers",
+          "back": "wall"
+        },
+        {
+          "id": "basket",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washers"
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        }
+      ],
+      "grow": [
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:dryer",
+          "back": "wall"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "laundry.small.b",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        3,
+        5
+      ],
+      "maxInterior": [
+        4,
+        6
+      ],
+      "slots": [
+        {
+          "id": "washer",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:far+corner",
+          "back": "wall"
+        },
+        {
+          "id": "basin",
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washer",
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "dryer",
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "basket",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door",
+          "optional": true
+        }
+      ],
+      "grow": [
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:dryer",
+          "back": "wall"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        }
+      ]
+    },
+    {
+      "id": "laundry.small.c",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        5
+      ],
+      "maxInterior": [
+        5,
+        6
+      ],
+      "slots": [
+        {
+          "id": "tub",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "racks",
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:side",
+          "count": [
+            1,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "baskets",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ],
+      "grow": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:tub"
+        },
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "laundry.medium.a",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        5,
+        5
+      ],
+      "maxInterior": [
+        8,
+        7
+      ],
+      "slots": [
+        {
+          "id": "washers",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:far",
+          "count": [
+            2,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "dryers",
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washers",
+          "count": [
+            1,
+            2
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "basket",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washers"
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "press",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        }
+      ],
+      "grow": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        },
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ]
+    },
+    {
+      "id": "laundry.medium.b",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        8
+      ],
+      "slots": [
+        {
+          "id": "washers",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:side",
+          "count": [
+            2,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "racks",
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:far",
+          "count": [
+            1,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:near",
+          "back": "wall"
+        },
+        {
+          "id": "baskets",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "bucket",
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
+      ],
+      "grow": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        }
+      ]
+    },
+    {
+      "id": "laundry.medium.c",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        6
+      ],
+      "maxInterior": [
+        8,
+        8
+      ],
+      "slots": [
+        {
+          "id": "washers",
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:far",
+          "count": [
+            1,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "basin",
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:washers",
+          "back": "wall"
+        },
+        {
+          "id": "racks",
+          "role": "laundry.dry",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "id": "table",
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "baskets",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ],
+      "grow": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        }
+      ]
+    }
+  ]
+}

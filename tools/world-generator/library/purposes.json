@@ -1,0 +1,1124 @@
+{
+  "_readme": [
+    "Each purpose binds layout roles to object categories, in order of preference.",
+    "\"*\" holds the defaults every purpose inherits; a purpose lists only what it changes."
+  ],
+  "*": {
+    "roles": {
+      "sleep": [
+        "bed"
+      ],
+      "sleep.couple": [
+        "bed"
+      ],
+      "sleep.child": [
+        "crib",
+        "bed"
+      ],
+      "bedside": [
+        "nightstand",
+        "table.side",
+        "table.round_small"
+      ],
+      "storage.big": [
+        "wardrobe",
+        "cabinet.cupboard",
+        "cabinet.dresser",
+        "cabinet.sideboard"
+      ],
+      "storage.small": [
+        "chest",
+        "locker",
+        "crate",
+        "basket"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "crate",
+        "sack",
+        "pallet"
+      ],
+      "storage.cold": [
+        "fridge",
+        "barrel",
+        "chest"
+      ],
+      "shelving": [
+        "shelf",
+        "bookcase"
+      ],
+      "seat": [
+        "chair",
+        "stool"
+      ],
+      "seat.long": [
+        "bench",
+        "sofa"
+      ],
+      "seat.lounge": [
+        "sofa",
+        "chair"
+      ],
+      "seat.state": [
+        "throne",
+        "chair"
+      ],
+      "table.dining": [
+        "table.dining",
+        "table.trestle",
+        "table.plank",
+        "table.long",
+        "table.mess",
+        "table.round_small"
+      ],
+      "table.small": [
+        "table.side",
+        "table.round_small",
+        "table.coffee",
+        "nightstand"
+      ],
+      "table.work": [
+        "table.trestle",
+        "table.plank",
+        "workbench",
+        "table.dining"
+      ],
+      "desk": [
+        "desk",
+        "table"
+      ],
+      "counter.serve": [
+        "counter"
+      ],
+      "counter.prep": [
+        "counter",
+        "table"
+      ],
+      "display": [
+        "display",
+        "shelf.goods",
+        "shelf.boutique",
+        "rack.clothing"
+      ],
+      "heat": [
+        "hearth",
+        "stove",
+        "appliance.radiator",
+        "appliance.climate_unit"
+      ],
+      "cook": [
+        "stove",
+        "hearth",
+        "oven"
+      ],
+      "bake": [
+        "oven",
+        "stove"
+      ],
+      "wash.basin": [
+        "sink"
+      ],
+      "wash.bath": [
+        "bath"
+      ],
+      "wash.toilet": [
+        "toilet"
+      ],
+      "laundry.wash": [
+        "appliance.washer",
+        "appliance.mangle",
+        "bath",
+        "sink"
+      ],
+      "laundry.dry": [
+        "rack.drying",
+        "appliance.dryer"
+      ],
+      "light.small": [
+        "light"
+      ],
+      "light.big": [
+        "light"
+      ],
+      "decor.floor": [
+        "rug",
+        "plant",
+        "statue",
+        "decor"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ],
+      "work.primary": [
+        "workbench"
+      ],
+      "work.secondary": [
+        "workbench",
+        "table"
+      ],
+      "work.tool": [
+        "rack.tool",
+        "chest",
+        "cabinet.cupboard"
+      ],
+      "work.material": [
+        "crate",
+        "pallet",
+        "barrel",
+        "sack"
+      ],
+      "teach": [
+        "board"
+      ],
+      "lectern": [
+        "lectern"
+      ],
+      "altar": [
+        "altar"
+      ],
+      "devotion": [
+        "religious",
+        "light",
+        "statue"
+      ],
+      "books": [
+        "bookcase",
+        "shelf"
+      ],
+      "music": [
+        "instrument"
+      ],
+      "game": [
+        "game",
+        "table"
+      ],
+      "screen": [
+        "screen",
+        "board"
+      ],
+      "radio": [
+        "radio"
+      ],
+      "computer": [
+        "computer",
+        "desk",
+        "table"
+      ],
+      "control": [
+        "console",
+        "computer",
+        "table",
+        "desk"
+      ],
+      "server": [
+        "server",
+        "cabinet",
+        "bookcase",
+        "shelf"
+      ],
+      "med.bed": [
+        "hospital_bed",
+        "bed"
+      ],
+      "med.station": [
+        "medical.exam_table",
+        "medical.operating_table",
+        "medical.autodoc",
+        "medical.herbalist_table",
+        "table.trestle"
+      ],
+      "med.supply": [
+        "cabinet.medicine",
+        "medical.autoclave",
+        "medical.iv_stand",
+        "cabinet"
+      ],
+      "med.screen": [
+        "medical.privacy_curtain",
+        "decor.screen",
+        "medical",
+        "decor"
+      ],
+      "cell.bed": [
+        "cell_bed",
+        "bed"
+      ],
+      "exercise": [
+        "gym"
+      ],
+      "grow": [
+        "hydroponics",
+        "plant"
+      ],
+      "animal": [
+        "feed",
+        "crate"
+      ],
+      "fuel": [
+        "firewood",
+        "crate"
+      ],
+      "waste": [
+        "bin"
+      ],
+      "coat": [
+        "rack.coat",
+        "wardrobe"
+      ],
+      "weapons": [
+        "rack.weapon",
+        "security.gun_locker",
+        "locker"
+      ],
+      "security": [
+        "security.detector",
+        "security.turnstile",
+        "security"
+      ],
+      "utility": [
+        "utility"
+      ],
+      "coffin": [
+        "coffin"
+      ]
+    }
+  },
+  "bedroom": {
+    "roles": {}
+  },
+  "master_bedroom": {
+    "roles": {}
+  },
+  "guest_room": {
+    "roles": {}
+  },
+  "nursery": {
+    "roles": {
+      "sleep.child": [
+        "crib"
+      ],
+      "storage.small": [
+        "chest",
+        "basket"
+      ]
+    }
+  },
+  "servants_room": {
+    "roles": {
+      "storage.big": [
+        "cabinet",
+        "wardrobe"
+      ]
+    }
+  },
+  "dormitory": {
+    "roles": {
+      "storage.small": [
+        "locker",
+        "chest"
+      ]
+    }
+  },
+  "barracks": {
+    "roles": {
+      "storage.small": [
+        "locker",
+        "chest"
+      ],
+      "weapons": [
+        "rack.weapon",
+        "locker"
+      ]
+    }
+  },
+  "crew_quarters": {
+    "roles": {
+      "storage.small": [
+        "locker"
+      ],
+      "storage.big": [
+        "locker",
+        "wardrobe"
+      ]
+    }
+  },
+  "hut": {
+    "roles": {
+      "heat": [
+        "hearth",
+        "stove",
+        "appliance.climate_unit"
+      ],
+      "cook": [
+        "hearth",
+        "stove"
+      ]
+    }
+  },
+  "kitchen": {
+    "roles": {
+      "table.work": [
+        "table",
+        "counter"
+      ]
+    }
+  },
+  "galley": {
+    "roles": {
+      "storage.cold": [
+        "fridge"
+      ],
+      "table.work": [
+        "counter",
+        "table"
+      ]
+    }
+  },
+  "dining": {
+    "roles": {
+      "storage.big": [
+        "cabinet"
+      ]
+    }
+  },
+  "mess_hall": {
+    "roles": {
+      "table.dining": [
+        "table.mess",
+        "table.long",
+        "table.dining",
+        "table.trestle",
+        "table"
+      ],
+      "seat.long": [
+        "bench"
+      ]
+    }
+  },
+  "common_room": {
+    "roles": {}
+  },
+  "living_room": {
+    "roles": {
+      "seat.long": [
+        "sofa",
+        "bench"
+      ],
+      "table.small": [
+        "table.coffee",
+        "table.side",
+        "table.round_small"
+      ]
+    }
+  },
+  "taproom": {
+    "roles": {
+      "counter.serve": [
+        "counter"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "crate"
+      ],
+      "game": [
+        "game"
+      ]
+    }
+  },
+  "great_hall": {
+    "roles": {
+      "seat.state": [
+        "throne",
+        "chair"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor"
+      ],
+      "table.dining": [
+        "table.long",
+        "table.trestle",
+        "table.dining",
+        "table"
+      ]
+    }
+  },
+  "lounge": {
+    "roles": {
+      "seat.long": [
+        "sofa"
+      ],
+      "seat.lounge": [
+        "sofa",
+        "chair"
+      ]
+    }
+  },
+  "shop": {
+    "roles": {
+      "display": [
+        "display",
+        "shelf",
+        "rack"
+      ],
+      "shelving": [
+        "shelf",
+        "display"
+      ]
+    }
+  },
+  "general_store": {
+    "roles": {
+      "display": [
+        "shelf",
+        "display",
+        "rack"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "sack",
+        "crate"
+      ]
+    }
+  },
+  "apothecary": {
+    "roles": {
+      "display": [
+        "shelf",
+        "display",
+        "cabinet"
+      ],
+      "counter.serve": [
+        "counter"
+      ],
+      "work.primary": [
+        "alchemy",
+        "lab",
+        "workbench"
+      ]
+    }
+  },
+  "storage": {
+    "roles": {}
+  },
+  "pantry": {
+    "roles": {
+      "storage.bulk": [
+        "sack",
+        "barrel",
+        "crate",
+        "basket"
+      ],
+      "shelving": [
+        "shelf.pantry",
+        "shelf",
+        "cabinet.cupboard"
+      ],
+      "storage.cold": [
+        "fridge"
+      ]
+    }
+  },
+  "cellar": {
+    "roles": {
+      "storage.bulk": [
+        "barrel",
+        "crate",
+        "sack"
+      ],
+      "shelving": [
+        "rack.wine",
+        "shelf.pantry",
+        "shelf"
+      ]
+    }
+  },
+  "warehouse": {
+    "roles": {
+      "storage.bulk": [
+        "pallet",
+        "crate",
+        "barrel"
+      ],
+      "shelving": [
+        "shelf",
+        "rack"
+      ]
+    }
+  },
+  "armoury": {
+    "roles": {
+      "shelving": [
+        "rack.weapon",
+        "shelf"
+      ],
+      "storage.bulk": [
+        "crate",
+        "chest"
+      ],
+      "storage.big": [
+        "locker",
+        "cabinet"
+      ],
+      "display": [
+        "rack.weapon",
+        "decor.armour"
+      ],
+      "weapons": [
+        "rack.weapon",
+        "security.gun_locker",
+        "locker"
+      ]
+    }
+  },
+  "office": {
+    "roles": {
+      "storage.big": [
+        "cabinet.filing",
+        "cabinet.cupboard",
+        "bookcase"
+      ]
+    }
+  },
+  "study": {
+    "roles": {
+      "books": [
+        "bookcase"
+      ],
+      "storage.big": [
+        "cabinet.filing",
+        "bookcase",
+        "cabinet.cupboard"
+      ]
+    }
+  },
+  "reception": {
+    "roles": {
+      "counter.serve": [
+        "counter",
+        "desk"
+      ],
+      "seat.long": [
+        "bench",
+        "sofa"
+      ]
+    }
+  },
+  "washroom": {
+    "roles": {}
+  },
+  "bathhouse": {
+    "roles": {
+      "seat.long": [
+        "bench"
+      ]
+    }
+  },
+  "workshop": {
+    "roles": {}
+  },
+  "forge": {
+    "roles": {
+      "work.primary": [
+        "forge"
+      ],
+      "work.secondary": [
+        "anvil",
+        "workbench",
+        "lathe",
+        "table"
+      ],
+      "work.tool": [
+        "rack"
+      ],
+      "work.material": [
+        "firewood",
+        "crate",
+        "barrel"
+      ],
+      "heat": [
+        "forge",
+        "hearth"
+      ]
+    }
+  },
+  "carpentry": {
+    "roles": {
+      "work.secondary": [
+        "lathe",
+        "workbench"
+      ],
+      "work.tool": [
+        "rack",
+        "chest"
+      ],
+      "work.material": [
+        "firewood",
+        "pallet",
+        "crate"
+      ]
+    }
+  },
+  "tailor": {
+    "roles": {
+      "work.primary": [
+        "loom",
+        "workbench"
+      ],
+      "work.secondary": [
+        "loom",
+        "table"
+      ],
+      "work.tool": [
+        "rack.tool",
+        "chest"
+      ],
+      "work.material": [
+        "basket",
+        "crate"
+      ],
+      "display": [
+        "rack.clothing",
+        "display.mannequin",
+        "display"
+      ]
+    }
+  },
+  "pottery": {
+    "roles": {
+      "work.primary": [
+        "kiln",
+        "lathe",
+        "workbench"
+      ],
+      "work.secondary": [
+        "lathe",
+        "workbench"
+      ],
+      "work.tool": [
+        "shelf",
+        "rack"
+      ],
+      "work.material": [
+        "crate",
+        "sack",
+        "barrel"
+      ]
+    }
+  },
+  "brewery": {
+    "roles": {
+      "work.primary": [
+        "still"
+      ],
+      "work.secondary": [
+        "still",
+        "workbench"
+      ],
+      "work.tool": [
+        "rack"
+      ],
+      "work.material": [
+        "barrel",
+        "sack"
+      ],
+      "storage.bulk": [
+        "barrel"
+      ]
+    }
+  },
+  "bakery": {
+    "roles": {
+      "work.primary": [
+        "oven"
+      ],
+      "work.secondary": [
+        "table",
+        "counter",
+        "workbench"
+      ],
+      "work.tool": [
+        "shelf",
+        "rack"
+      ],
+      "work.material": [
+        "sack",
+        "basket"
+      ],
+      "heat": [
+        "oven",
+        "hearth"
+      ]
+    }
+  },
+  "butchery": {
+    "roles": {
+      "work.primary": [
+        "butcher"
+      ],
+      "work.secondary": [
+        "table",
+        "counter"
+      ],
+      "work.tool": [
+        "rack"
+      ],
+      "work.material": [
+        "barrel",
+        "crate"
+      ]
+    }
+  },
+  "printshop": {
+    "roles": {
+      "work.primary": [
+        "press"
+      ],
+      "work.secondary": [
+        "workbench",
+        "table"
+      ],
+      "work.tool": [
+        "rack",
+        "shelf"
+      ],
+      "work.material": [
+        "crate",
+        "pallet"
+      ]
+    }
+  },
+  "garage": {
+    "roles": {
+      "work.primary": [
+        "workbench",
+        "lathe"
+      ],
+      "work.secondary": [
+        "lathe",
+        "workbench"
+      ],
+      "work.tool": [
+        "rack",
+        "cabinet"
+      ],
+      "work.material": [
+        "barrel",
+        "crate",
+        "pallet"
+      ]
+    }
+  },
+  "fabricator": {
+    "roles": {
+      "work.primary": [
+        "lathe",
+        "workbench"
+      ],
+      "work.secondary": [
+        "workbench",
+        "computer",
+        "table"
+      ],
+      "work.tool": [
+        "rack",
+        "locker"
+      ],
+      "work.material": [
+        "crate",
+        "pallet"
+      ]
+    }
+  },
+  "chapel": {
+    "roles": {}
+  },
+  "shrine": {
+    "roles": {
+      "altar": [
+        "altar",
+        "religious"
+      ],
+      "devotion": [
+        "religious",
+        "light",
+        "plant"
+      ]
+    }
+  },
+  "classroom": {
+    "roles": {}
+  },
+  "ward": {
+    "roles": {}
+  },
+  "infirmary": {
+    "roles": {}
+  },
+  "clinic": {
+    "roles": {}
+  },
+  "surgery": {
+    "roles": {
+      "med.station": [
+        "medical"
+      ]
+    }
+  },
+  "cell": {
+    "roles": {}
+  },
+  "bridge": {
+    "roles": {
+      "control": [
+        "console",
+        "table",
+        "desk"
+      ]
+    }
+  },
+  "control_room": {
+    "roles": {}
+  },
+  "security_office": {
+    "roles": {
+      "screen": [
+        "screen",
+        "computer",
+        "board"
+      ],
+      "weapons": [
+        "security.gun_locker",
+        "rack.weapon",
+        "locker"
+      ],
+      "storage.big": [
+        "cabinet.filing",
+        "locker"
+      ]
+    }
+  },
+  "laboratory": {
+    "roles": {
+      "work.primary": [
+        "lab",
+        "workbench"
+      ],
+      "work.secondary": [
+        "lab",
+        "computer",
+        "workbench",
+        "table"
+      ],
+      "work.tool": [
+        "cabinet",
+        "shelf"
+      ]
+    }
+  },
+  "alchemy_lab": {
+    "roles": {
+      "work.primary": [
+        "alchemy",
+        "lab"
+      ],
+      "work.secondary": [
+        "alchemy",
+        "still",
+        "workbench"
+      ],
+      "work.tool": [
+        "shelf",
+        "cabinet"
+      ],
+      "work.material": [
+        "barrel",
+        "basket",
+        "crate"
+      ]
+    }
+  },
+  "library": {
+    "roles": {
+      "books": [
+        "bookcase"
+      ]
+    }
+  },
+  "archive": {
+    "roles": {
+      "books": [
+        "bookcase",
+        "shelf",
+        "cabinet"
+      ],
+      "shelving": [
+        "shelf",
+        "bookcase",
+        "cabinet"
+      ]
+    }
+  },
+  "laundry": {
+    "roles": {}
+  },
+  "guardroom": {
+    "roles": {
+      "weapons": [
+        "rack.weapon",
+        "security.gun_locker",
+        "locker"
+      ]
+    }
+  },
+  "gym": {
+    "roles": {}
+  },
+  "training_hall": {
+    "roles": {
+      "weapons": [
+        "rack.weapon"
+      ]
+    }
+  },
+  "greenhouse": {
+    "roles": {
+      "grow": [
+        "plant",
+        "hydroponics"
+      ]
+    }
+  },
+  "hydroponics_bay": {
+    "roles": {
+      "grow": [
+        "hydroponics",
+        "plant"
+      ]
+    }
+  },
+  "hallway": {
+    "roles": {}
+  },
+  "lobby": {
+    "roles": {
+      "counter.serve": [
+        "counter",
+        "desk"
+      ],
+      "seat.long": [
+        "sofa",
+        "bench"
+      ]
+    }
+  },
+  "airlock": {
+    "roles": {
+      "storage.big": [
+        "locker",
+        "wardrobe"
+      ],
+      "utility": [
+        "utility",
+        "security"
+      ]
+    }
+  },
+  "server_room": {
+    "roles": {
+      "control": [
+        "server",
+        "console",
+        "cabinet"
+      ],
+      "computer": [
+        "computer",
+        "server",
+        "desk",
+        "table"
+      ]
+    }
+  },
+  "mill": {
+    "roles": {
+      "work.primary": [
+        "mill"
+      ],
+      "work.secondary": [
+        "mill",
+        "workbench"
+      ],
+      "work.material": [
+        "sack",
+        "barrel"
+      ],
+      "storage.bulk": [
+        "sack",
+        "barrel"
+      ]
+    }
+  },
+  "barn": {
+    "roles": {
+      "storage.bulk": [
+        "feed",
+        "sack",
+        "crate",
+        "barrel"
+      ],
+      "work.material": [
+        "feed",
+        "firewood"
+      ],
+      "animal": [
+        "feed"
+      ]
+    }
+  },
+  "scullery": {
+    "roles": {
+      "cook": [
+        "sink",
+        "stove"
+      ],
+      "counter.prep": [
+        "counter",
+        "table"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "basket"
+      ]
+    }
+  },
+  "vestry": {
+    "roles": {
+      "storage.big": [
+        "wardrobe",
+        "cabinet"
+      ],
+      "shelving": [
+        "shelf",
+        "cabinet"
+      ],
+      "storage.small": [
+        "chest"
+      ]
+    }
+  },
+  "stable": {
+    "roles": {
+      "work.material": [
+        "feed",
+        "firewood"
+      ],
+      "storage.bulk": [
+        "feed",
+        "sack",
+        "barrel"
+      ]
+    }
+  }
+}

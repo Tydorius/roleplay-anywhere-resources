@@ -1,0 +1,171 @@
+{
+  "layouts": [
+    {
+      "id": "chapel.small.a",
+      "family": "chapel",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "pews", "role": "seat.long", "size": [2, 1], "anchor": "row:side", "count": [1, 2]},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:altar", "optional": true},
+        {"id": "candle", "role": "devotion", "size": [1, 1], "anchor": "corner", "optional": true, "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "chapel.small.b",
+      "family": "chapel",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "candles", "role": "devotion", "size": [1, 1], "anchor": "beside:altar+symmetric", "count": 2},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "center", "optional": true}
+      ],
+      "grow": [
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "chapel.small.c",
+      "family": "chapel",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "mats", "role": "devotion", "size": [1, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "lights", "role": "light.small", "size": [1, 1], "anchor": "beside:altar+symmetric", "count": 2}
+      ],
+      "grow": [
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
+        {"role": "devotion", "size": [1, 1], "anchor": "wall:side"}
+      ]
+    },
+    {
+      "id": "chapel.medium.a",
+      "family": "chapel",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:altar"},
+        {"id": "pewsA", "role": "seat.long", "size": [2, 1], "anchor": "row:side", "count": 2},
+        {"id": "pewsB", "role": "seat.long", "size": [2, 1], "anchor": "row:side", "count": 2},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [2, 1], "anchor": "row:side"},
+        {"role": "devotion", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "chapel.medium.b",
+      "family": "chapel",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "candles", "role": "devotion", "size": [1, 1], "anchor": "beside:altar+symmetric", "count": 2},
+        {"id": "pews", "role": "seat.long", "size": [3, 1], "anchor": "center", "count": 2},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:altar"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [3, 1], "anchor": "center"},
+        {"role": "light.small", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "chapel.medium.c",
+      "family": "chapel",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 2], "anchor": "center"},
+        {"id": "benches", "role": "seat.long", "size": [2, 1], "anchor": "around:altar", "count": [2, 3]},
+        {"id": "shrines", "role": "devotion", "size": [1, 1], "anchor": "corner", "count": 2},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "light.small", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "devotion", "size": [1, 1], "anchor": "wall:far"}
+      ]
+    },
+    {
+      "id": "chapel.large.a",
+      "family": "chapel",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:altar"},
+        {"id": "font", "role": "devotion", "size": [1, 1], "anchor": "beside:altar", "optional": true},
+        {"id": "pewsA", "role": "seat.long", "size": [3, 1], "anchor": "row:side", "count": 2},
+        {"id": "pewsB", "role": "seat.long", "size": [3, 1], "anchor": "row:side", "count": 2},
+        {"id": "lights", "role": "light.big", "size": [1, 1], "anchor": "corner", "count": 2, "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [3, 1], "anchor": "row:side"},
+        {"role": "seat.long", "size": [3, 1], "anchor": "row:side"},
+        {"role": "light.small", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "devotion", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "chapel.large.b",
+      "family": "chapel",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 2], "anchor": "wall:far", "back": "wall"},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:altar"},
+        {"id": "pews", "role": "seat.long", "size": [4, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "candles", "role": "devotion", "size": [1, 1], "anchor": "row:side", "count": [2, 3]},
+        {"id": "lamp", "role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "wealthy"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [4, 1], "anchor": "center"},
+        {"role": "decor.feature", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "devotion", "size": [1, 1], "anchor": "row:side"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "chapel.large.c",
+      "family": "chapel",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "altar", "role": "altar", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "stallsA", "role": "seat.long", "size": [2, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "stallsB", "role": "seat.long", "size": [2, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "center"},
+        {"id": "candles", "role": "devotion", "size": [1, 1], "anchor": "beside:altar+symmetric", "count": 2},
+        {"id": "lights", "role": "light.small", "size": [1, 1], "anchor": "corner", "count": 2}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [2, 1], "anchor": "row:side"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

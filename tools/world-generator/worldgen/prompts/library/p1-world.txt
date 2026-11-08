@@ -1,0 +1,7 @@
+ROOM LIBRARY: add these fields as well.
+- In "setting": "band": "medieval|industrial|modern|scifi" (the nearest: fantasy and
+  ancient are medieval; steampunk, Victorian and Western are industrial; present day,
+  near future and post-apocalyptic are modern; cyberpunk, space and starships are
+  scifi), and "genre": "one or two words, e.g. fantasy, cyberpunk, zombie".
+- On each building: "wealth": "poor|modest|wealthy|elite" (who owns it, not its
+  condition) and "condition": "ruined|worn|kept|pristine" (a rich house can be ruined).
