@@ -1,0 +1,1614 @@
+{
+  "_readme": "Counters, displays, shelves, racks and bookcases. See library/AUTHORING.md.",
+  "objects": [
+    {
+      "id": "counter.shop",
+      "category": "counter",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "shop counter",
+        "medieval": "trade counter",
+        "scifi": "service counter"
+      },
+      "parts": {
+        "top": "wood",
+        "front": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "top": "synthetic",
+          "front": "wood"
+        },
+        "scifi": {
+          "top": "synthetic",
+          "front": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "shop"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun}, its edge rubbed smooth where coins and goods change hands.",
+        "physical": "Top-down view of {A:noun} two cells wide: {top.color} {top} top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there."
+      },
+      "aliases": [
+        "shop front",
+        "sales counter",
+        "service counter"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "counter.shop_long",
+      "category": "counter",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "long counter",
+        "medieval": "merchant's counter",
+        "scifi": "long service counter"
+      },
+      "parts": {
+        "top": "wood",
+        "panel": "glass"
+      },
+      "partsByBand": {
+        "medieval": {
+          "top": "wood",
+          "panel": "wood"
+        },
+        "modern": {
+          "top": "stone",
+          "panel": "glass"
+        },
+        "scifi": {
+          "top": "synthetic",
+          "panel": "glass"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "shop"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} topped with {top} and fronted with {panel} panels, long enough to serve three customers at once.",
+        "physical": "Top-down view of {A:noun} three cells wide: one unbroken {top.color} {top} top, a hinged flap at the right end, scales and a ledger along the top edge on the keeper's side."
+      },
+      "aliases": [
+        "sales counter",
+        "shop counter"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "counter.plank",
+      "category": "counter",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "plank counter",
+        "modern": "makeshift counter"
+      },
+      "parts": {
+        "top": "wood",
+        "legs": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "top": "wood",
+          "legs": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "shop"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {top} boards laid across two {legs} trestles, sagging a little in the middle.",
+        "physical": "Top-down view of {A:noun} two cells wide: two or three {top.color} {top} boards side by side with uneven ends, trestle legs showing at either end."
+      },
+      "aliases": [
+        "trestle counter",
+        "stall board"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "counter.bar",
+      "category": "counter",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bar",
+        "medieval": "tap counter",
+        "industrial": "saloon bar",
+        "modern": "bar counter",
+        "scifi": "drinks bar"
+      },
+      "parts": {
+        "top": "wood",
+        "rail": "metal"
+      },
+      "partsByBand": {
+        "medieval": {
+          "top": "wood",
+          "rail": "wood"
+        },
+        "scifi": {
+          "top": "synthetic",
+          "rail": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "bar",
+        "shop"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} ringed with old cup marks, {A:rail} foot rail running along its base.",
+        "physical": "Top-down view of {A:noun} three cells wide: long {top.color} {top} top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge."
+      },
+      "aliases": [
+        "bar",
+        "taproom bar"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "counter.bar_grand",
+      "category": "counter",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "grand bar",
+        "medieval": "carved tap counter",
+        "modern": "cocktail bar",
+        "scifi": "lit cocktail bar"
+      },
+      "parts": {
+        "top": "stone",
+        "front": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "glass",
+          "front": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "bar",
+        "shop"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with {A:top.color} {top} top and a panelled {front} front, polished until the light swims in it.",
+        "physical": "Top-down view of {A:noun} three cells wide: glossy {top.color} {top} top, a thin foot rail along the bottom edge, ranks of bottles and glasses on a back shelf along the top edge."
+      },
+      "aliases": [
+        "cocktail bar",
+        "saloon bar"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "counter.kitchen",
+      "category": "counter",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "worktop",
+        "medieval": "kitchen board",
+        "industrial": "kitchen counter",
+        "modern": "kitchen counter",
+        "scifi": "galley counter"
+      },
+      "parts": {
+        "top": "wood",
+        "base": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "top": "synthetic",
+          "base": "wood"
+        },
+        "scifi": {
+          "top": "metal",
+          "base": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "kitchen"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} scored by years of knife work, with {base} cupboards underneath.",
+        "physical": "Top-down view of {A:noun} two cells wide: {top.color} {top} work surface, a chopping board and a crock of utensils near the top edge against the wall."
+      },
+      "aliases": [
+        "kitchen counter",
+        "work counter"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "counter.kitchen_stone",
+      "category": "counter",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stone worktop",
+        "modern": "stone countertop",
+        "scifi": "composite galley counter"
+      },
+      "parts": {
+        "top": "stone",
+        "base": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic",
+          "base": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "kitchen"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of cool {top.color} {top} over {base} cupboards, wide enough to roll pastry or plate a banquet.",
+        "physical": "Top-down view of {A:noun} two cells wide: a single smooth {top.color} {top} slab with a faint vein pattern, a row of jars along the top edge, a folded cloth at one end."
+      },
+      "aliases": [
+        "marble counter",
+        "stone counter"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "counter.reception",
+      "category": "counter",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "reception counter",
+        "industrial": "front desk",
+        "scifi": "reception desk"
+      },
+      "parts": {
+        "top": "wood",
+        "front": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "top": "stone",
+          "front": "synthetic"
+        },
+        "scifi": {
+          "top": "synthetic",
+          "front": "metal"
+        }
+      },
+      "tags": [
+        "counter",
+        "furniture",
+        "office"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a raised {top} ledge where visitors sign in, the clerk's side hidden behind {A:front} front.",
+        "physical": "Top-down view of {A:noun} three cells wide: a raised {top.color} {top} ledge along the bottom edge, a lower desk surface behind it toward the top with a bell, a ledger and a lamp."
+      },
+      "aliases": [
+        "front desk",
+        "check-in desk"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "counter.serving",
+      "category": "counter",
+      "size": [
+        3,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "serving counter",
+        "modern": "steam-table counter",
+        "scifi": "ration line"
+      },
+      "parts": {
+        "top": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "counter",
+        "furniture",
+        "kitchen",
+        "dining"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {top} {noun} set with deep trays for ladling food onto a queue of plates.",
+        "physical": "Top-down view of {A:noun} three cells wide: {top.color} {top} surface with a row of four sunken food trays, a stack of plates at the left end, a tray slide along the bottom edge."
+      },
+      "aliases": [
+        "serving table",
+        "tray dispenser"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "display.table",
+      "category": "display",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "display table",
+        "medieval": "market stall table",
+        "scifi": "display bench"
+      },
+      "parts": {
+        "top": "wood",
+        "cloth": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "top": "synthetic",
+          "cloth": "synthetic"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} draped in {cloth.color} {cloth}, its wares laid out in neat rows for passers-by.",
+        "physical": "Top-down view of {A:noun} two cells wide: {cloth.color} {cloth} cloth over the {top} top, small goods arranged in rows, a price slate at the top edge."
+      },
+      "aliases": [
+        "stall table",
+        "goods table"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "display.case",
+      "category": "display",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "display case",
+        "scifi": "sealed display case"
+      },
+      "parts": {
+        "frame": "wood",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "metal",
+          "pane": "glass"
+        },
+        "scifi": {
+          "frame": "metal",
+          "pane": "glass"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame}-framed {noun}, its goods resting on cloth under {A:pane} lid you can look through but not reach into.",
+        "physical": "Top-down view of {A:noun} two cells wide: thin {frame.color} {frame} border around a clear {pane} top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side)."
+      },
+      "aliases": [
+        "glass case",
+        "showcase",
+        "counter case"
+      ],
+      "sources": [
+        "wikipedia-furniture",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "display.vitrine",
+      "category": "display",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "vitrine",
+        "medieval": "glazed cabinet"
+      },
+      "parts": {
+        "frame": "wood",
+        "pane": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "display",
+        "furniture",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with small leaded {pane} panes, its shelves holding the house's finest pieces.",
+        "physical": "Top-down view of a tall {noun}: square {frame.color} {frame} top with a carved cornice, the glazed door along the bottom edge, its back flat against the top edge."
+      },
+      "aliases": [
+        "curio cabinet",
+        "display cabinet"
+      ],
+      "sources": [
+        "wikipedia-furniture",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "display.pedestal",
+      "category": "display",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "display plinth",
+        "scifi": "display pedestal"
+      },
+      "parts": {
+        "base": "stone",
+        "cushion": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "base": "metal",
+          "cushion": "synthetic"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "shop",
+        "decor"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {base} {noun} that lifts one prized piece to eye height on {A:cushion.color} {cushion} cushion.",
+        "physical": "Top-down view of a square {noun}: {base.color} {base} top with a narrow moulded rim, {A:cushion.color} cushion in the centre holding a single small object."
+      },
+      "aliases": [
+        "plinth",
+        "exhibit stand"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "display.mannequin",
+      "category": "display",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "mannequin",
+        "industrial": "dress form",
+        "scifi": "fitting mannequin"
+      },
+      "parts": {
+        "body": "fabric",
+        "stand": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "body": "synthetic",
+          "stand": "metal"
+        },
+        "scifi": {
+          "body": "synthetic",
+          "stand": "metal"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "shop",
+        "clothing"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} on {A:stand} stand, dressed in the shop's best outfit with the price pinned to a sleeve.",
+        "physical": "Top-down view of {A:noun}: the head and shoulders of {A:body.color} {body} figure in a draped garment, on a round {stand.color} {stand} base, the figure facing the bottom edge."
+      },
+      "aliases": [
+        "dress form",
+        "shop dummy"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "shelf.goods",
+      "category": "shelf",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "goods shelf",
+        "medieval": "stock shelf",
+        "modern": "store shelving unit",
+        "scifi": "stock shelving unit"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "shelf",
+        "furniture",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} crowded with wares, the cheap goods low down and the dear ones within the keeper's reach.",
+        "physical": "Top-down view of a shallow {noun} two cells wide: {frame.color} {frame} shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight."
+      },
+      "aliases": [
+        "shop shelf",
+        "display shelf",
+        "store shelf"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "shelf.utility",
+      "category": "shelf",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "utility shelf",
+        "industrial": "iron shelf",
+        "modern": "wire shelving unit",
+        "scifi": "equipment shelf"
+      },
+      "parts": {
+        "frame": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "shelf",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} holding tins, coils of cable, spare parts and odds and ends that needed somewhere to go.",
+        "physical": "Top-down view of a small {noun}: {frame.color} {frame} uprights at the four corners, a slatted top shelf with boxes and coiled cable, back against the top edge."
+      },
+      "aliases": [
+        "storage shelf",
+        "wall shelf",
+        "wire shelving",
+        "hardware shelving"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "shelf.warehouse",
+      "category": "shelf",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "heavy shelving unit",
+        "scifi": "cargo rack unit"
+      },
+      "parts": {
+        "frame": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "shelf",
+        "furniture",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} two storeys tall, its deep shelves stacked with boxed and labelled stock.",
+        "physical": "Top-down view of {A:noun} two cells wide: heavy {frame.color} {frame} uprights at each corner and the middle, the top deck covered with cartons, labels facing the bottom edge."
+      },
+      "aliases": [
+        "warehouse shelf",
+        "racking",
+        "pallet racking"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "shelf.pantry",
+      "category": "shelf",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "pantry shelf",
+        "medieval": "larder shelf",
+        "scifi": "provisions rack"
+      },
+      "parts": {
+        "frame": "wood",
+        "jar": "ceramic"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "wood",
+          "jar": "glass"
+        },
+        "scifi": {
+          "frame": "metal",
+          "jar": "synthetic"
+        }
+      },
+      "tags": [
+        "shelf",
+        "furniture",
+        "kitchen",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} lined with {jar} jars, crocks and bundled dry goods, each one labelled.",
+        "physical": "Top-down view of {A:noun} two cells wide: {frame.color} {frame} shelf edge along the bottom, rows of {jar.color} {jar} jars and tied bundles, back against the top edge."
+      },
+      "aliases": [
+        "larder shelf",
+        "pantry shelves"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "shelf.boutique",
+      "category": "shelf",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "boutique shelf",
+        "medieval": "carved wall shelf",
+        "industrial": "mirrored shop shelf",
+        "scifi": "lit display shelf"
+      },
+      "parts": {
+        "frame": "wood",
+        "shelf": "glass"
+      },
+      "partsByBand": {
+        "medieval": {
+          "frame": "wood",
+          "shelf": "wood"
+        },
+        "scifi": {
+          "frame": "metal",
+          "shelf": "glass"
+        }
+      },
+      "tags": [
+        "shelf",
+        "furniture",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {frame} and {shelf}, each piece set well apart from the next so it can be admired alone.",
+        "physical": "Top-down view of {A:noun} two cells wide: slim {frame.color} {frame} frame, {A:shelf} shelf with a few widely spaced objects, decorative moulding along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "etagere",
+        "whatnot"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "rack.clothing",
+      "category": "rack",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "clothing rack",
+        "medieval": "hanging pole",
+        "industrial": "clothes rail",
+        "scifi": "garment rail"
+      },
+      "parts": {
+        "frame": "metal",
+        "garment": "fabric"
+      },
+      "partsByBand": {
+        "medieval": {
+          "frame": "wood",
+          "garment": "fabric"
+        }
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "shop",
+        "clothing"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} hung end to end with {garment} garments, sleeves brushing whoever walks past.",
+        "physical": "Top-down view of {A:noun} two cells wide: a straight {frame.color} {frame} bar across the middle with a crowded row of hanging {garment.color} clothes seen from above, feet at either end."
+      },
+      "aliases": [
+        "clothes rail",
+        "garment rack"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "rack.weapon",
+      "category": "rack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "weapon rack",
+        "industrial": "rifle rack",
+        "modern": "gun rack"
+      },
+      "parts": {
+        "frame": "wood",
+        "fitting": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "fitting": "synthetic"
+        }
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "weapons",
+        "shop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with notched slots for long arms, a couple of them still filled.",
+        "physical": "Top-down view of {A:noun}: {frame.color} {frame} frame against the top edge with a row of notches, the tips of three long weapons leaning back into it, {A:fitting} bar locking them in place."
+      },
+      "aliases": [
+        "weapons rack",
+        "arms rack"
+      ],
+      "sources": [
+        "df-wiki",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "rack.coat",
+      "category": "rack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "coat rack",
+        "medieval": "peg stand",
+        "industrial": "hatstand",
+        "scifi": "coat stand"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "rack",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with a coat or two hanging from its hooks and a hat on top.",
+        "physical": "Top-down view of {A:noun}: small round {frame.color} {frame} base, a central post with four hooks pointing outward, a coat draped over one side."
+      },
+      "aliases": [
+        "hatstand",
+        "coat stand"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "rack.tool",
+      "category": "rack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "tool rack",
+        "scifi": "tool wall"
+      },
+      "parts": {
+        "frame": "wood",
+        "tool": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic",
+          "tool": "metal"
+        }
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "workshop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with an outline painted round each hanging tool, so a missing one shows at once.",
+        "physical": "Top-down view of {A:noun}: {frame.color} {frame} board against the top edge with {tool} hand tools hung on a row of pegs, a narrow tray of fixings along the bottom."
+      },
+      "aliases": [
+        "tool board",
+        "pegboard",
+        "tool cabinet"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "rack.wine",
+      "category": "rack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wine rack",
+        "scifi": "bottle rack"
+      },
+      "parts": {
+        "frame": "wood",
+        "bottle": "glass"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "bottle": "glass"
+        }
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "storage",
+        "cellar"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} of diamond-shaped cubbies, each holding a dusty {bottle.color} bottle neck-out.",
+        "physical": "Top-down view of {A:noun}: {frame.color} {frame} lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows."
+      },
+      "aliases": [
+        "bottle rack"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "rack.drying",
+      "category": "rack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "drying rack",
+        "medieval": "drying frame",
+        "industrial": "clothes horse"
+      },
+      "parts": {
+        "frame": "wood",
+        "cloth": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "rack",
+        "furniture",
+        "laundry"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} hung with damp {cloth} laundry and the smell of soap.",
+        "physical": "Top-down view of a folding {noun}: parallel {frame.color} {frame} rails with {cloth.color} sheets and shirts draped over them."
+      },
+      "aliases": [
+        "airer",
+        "clothes horse"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bookcase.standard",
+      "category": "bookcase",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bookcase",
+        "scifi": "data-slate shelf"
+      },
+      "parts": {
+        "frame": "wood",
+        "binding": "leather"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "wood",
+          "binding": "fabric"
+        },
+        "scifi": {
+          "frame": "metal",
+          "binding": "synthetic"
+        }
+      },
+      "tags": [
+        "bookcase",
+        "furniture",
+        "books"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} filled shelf by shelf with {binding}-bound volumes, a few lying flat where the rows ran out.",
+        "physical": "Top-down view of {A:noun} two cells wide: {frame.color} {frame} top, the spines of {binding.color} books visible along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "bookshelf",
+        "library shelf"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "df-wiki",
+        "cdda-furniture",
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "bookcase.small",
+      "category": "bookcase",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "small bookshelf",
+        "medieval": "book shelf",
+        "scifi": "slate rack"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "bookcase",
+        "furniture",
+        "books"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} holding a handful of well-thumbed books and a few keepsakes.",
+        "physical": "Top-down view of a narrow {noun}: {frame.color} {frame} top, a short row of book spines along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "bookshelf"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bookcase.library",
+      "category": "bookcase",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "library bookcase",
+        "medieval": "carved bookcase",
+        "industrial": "glazed bookcase",
+        "scifi": "archive stack"
+      },
+      "parts": {
+        "frame": "wood",
+        "binding": "leather"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "binding": "synthetic"
+        }
+      },
+      "tags": [
+        "bookcase",
+        "furniture",
+        "books"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} that reaches the ceiling, a rolling ladder hooked to its rail and titles marching along every shelf.",
+        "physical": "Top-down view of a tall {noun} two cells wide: heavy {frame.color} {frame} cornice, a ladder rail along the bottom edge with a ladder hooked at one end, rows of {binding.color} spines."
+      },
+      "aliases": [
+        "library shelves",
+        "bookcase"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bookcase.scroll",
+      "category": "bookcase",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "scroll rack"
+      },
+      "parts": {
+        "frame": "wood",
+        "scroll": "leather"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bookcase",
+        "furniture",
+        "books"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} built as a honeycomb of round cubbies, a rolled {scroll} scroll tucked into each with its tag hanging out.",
+        "physical": "Top-down view of {A:noun} two cells wide: {frame.color} {frame} frame, rows of round cubbies with {scroll.color} scroll ends facing the bottom edge, small tags dangling."
+      },
+      "aliases": [
+        "scroll case",
+        "pigeonholes"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1879 @@
+{
+  "_readme": "Cabinets, wardrobes, lockers, chests, crates, barrels, sacks, baskets, bins and pallets. See library/AUTHORING.md.",
+  "objects": [
+    {
+      "id": "cabinet.cupboard",
+      "category": "cabinet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cupboard",
+        "scifi": "storage cabinet"
+      },
+      "parts": {
+        "frame": "wood",
+        "handle": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal",
+          "handle": "synthetic"
+        }
+      },
+      "tags": [
+        "cabinet",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} whose door sticks halfway and has to be lifted to close.",
+        "physical": "Top-down view of {A:noun}: square {frame.color} {frame} top, a pair of doors along the bottom edge with small {handle} handles, back against the top edge."
+      },
+      "aliases": [
+        "kitchen cupboard",
+        "store cupboard"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "cabinet.dresser",
+      "category": "cabinet",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "dresser",
+        "scifi": "drawer unit"
+      },
+      "parts": {
+        "frame": "wood",
+        "knob": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic",
+          "knob": "metal"
+        }
+      },
+      "tags": [
+        "cabinet",
+        "furniture",
+        "bedroom"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with deep drawers, a hairbrush and a dish of pins left on top.",
+        "physical": "Top-down view of {A:noun} two cells wide: {frame.color} {frame} top with a small mirror stand and a dish, drawer fronts with {knob} knobs along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "chest of drawers",
+        "bureau"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "cabinet.sideboard",
+      "category": "cabinet",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "sideboard",
+        "medieval": "court cupboard",
+        "modern": "credenza",
+        "scifi": "service credenza"
+      },
+      "parts": {
+        "frame": "wood",
+        "plate": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic",
+          "plate": "metal"
+        }
+      },
+      "tags": [
+        "cabinet",
+        "furniture",
+        "dining"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} set out with polished {plate} plate, its cupboards keeping the good linen.",
+        "physical": "Top-down view of a long {noun} two cells wide: {frame.color} {frame} top with a row of {plate.color} dishes and a tall jug, cupboard doors along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "buffet",
+        "hutch",
+        "credenza"
+      ],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "cabinet.filing",
+      "category": "cabinet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "filing cabinet",
+        "scifi": "records cabinet"
+      },
+      "parts": {
+        "frame": "metal"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "wood"
+        }
+      },
+      "tags": [
+        "cabinet",
+        "furniture",
+        "office"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with four labelled drawers, the bottom one jammed shut.",
+        "physical": "Top-down view of {A:noun}: plain {frame.color} {frame} top with a wire tray of papers, drawer handles along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "file cabinet"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "cabinet.medicine",
+      "category": "cabinet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "medicine cabinet",
+        "medieval": "physic cupboard",
+        "scifi": "med cabinet"
+      },
+      "parts": {
+        "frame": "metal",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "medieval": {
+          "frame": "wood",
+          "pane": "wood"
+        }
+      },
+      "tags": [
+        "cabinet",
+        "furniture",
+        "medical"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with {A:pane}-fronted door, its shelves crowded with bottles, salves and rolled bandages.",
+        "physical": "Top-down view of a narrow {noun}: {frame.color} {frame} top, {A:pane} door along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "physic cupboard",
+        "first-aid cabinet"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "cabinet.safe",
+      "category": "cabinet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "safe",
+        "industrial": "iron safe",
+        "scifi": "vault box"
+      },
+      "parts": {
+        "case": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "cabinet",
+        "furniture",
+        "valuables",
+        "office"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun}, squat and impossibly heavy, its lock worn bright by its owner's hand.",
+        "physical": "Top-down view of a squat {noun}: heavy {case.color} {case} box with rounded corners, the door and lock along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "gun safe",
+        "strongroom safe"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "wardrobe.standard",
+      "category": "wardrobe",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "wardrobe",
+        "medieval": "clothes press",
+        "scifi": "clothes closet"
+      },
+      "parts": {
+        "frame": "wood",
+        "handle": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic",
+          "handle": "metal"
+        }
+      },
+      "tags": [
+        "wardrobe",
+        "furniture",
+        "bedroom"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with two tall doors that never quite meet, coats and shirts crowded inside.",
+        "physical": "Top-down view of {A:noun} two cells wide: flat {frame.color} {frame} top with a hatbox at one end, double doors with {handle} handles along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "clothes cupboard",
+        "closet"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "wardrobe.armoire",
+      "category": "wardrobe",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "armoire",
+        "medieval": "carved armoire",
+        "scifi": "dressing unit"
+      },
+      "parts": {
+        "frame": "wood",
+        "inlay": "metal"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic",
+          "inlay": "glass"
+        }
+      },
+      "tags": [
+        "wardrobe",
+        "furniture",
+        "bedroom"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {frame.color} {frame} inlaid with {inlay}, big enough to hide two people and a whole season's clothes.",
+        "physical": "Top-down view of a massive {noun} two cells wide: {frame.color} {frame} top edged with carved moulding and {inlay.color} {inlay} inlay, doors along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "armoire",
+        "wardrobe"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "wardrobe.narrow",
+      "category": "wardrobe",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "narrow wardrobe",
+        "medieval": "clothes cupboard",
+        "modern": "flat-pack wardrobe",
+        "scifi": "fold-out closet"
+      },
+      "parts": {
+        "frame": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic"
+        }
+      },
+      "tags": [
+        "wardrobe",
+        "furniture",
+        "bedroom"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} barely wider than its door, a single change of clothes hanging inside.",
+        "physical": "Top-down view of a slim {noun}: square {frame.color} {frame} top, a single door along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "single wardrobe"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "locker.standard",
+      "category": "locker",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "locker",
+        "industrial": "steel locker",
+        "scifi": "crew locker"
+      },
+      "parts": {
+        "door": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "locker",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {door} {noun} with louvred vents, a name scratched into the paint beside the latch.",
+        "physical": "Top-down view of a single {noun}: plain {door.color} {door} top, the vented door along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "storage locker",
+        "guard locker"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "locker.bank",
+      "category": "locker",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "locker bank",
+        "scifi": "locker row"
+      },
+      "parts": {
+        "door": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "locker",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of four narrow {door} doors, two padlocked and one hanging open on an empty hook.",
+        "physical": "Top-down view of {A:noun} two cells wide: {door.color} {door} top divided into four narrow compartments, numbered doors along the bottom edge, back against the top edge."
+      },
+      "aliases": [
+        "lockers",
+        "row of lockers"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "locker.footlocker",
+      "category": "locker",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "footlocker",
+        "medieval": "kit chest",
+        "scifi": "bunk locker"
+      },
+      "parts": {
+        "case": "metal",
+        "strap": "leather"
+      },
+      "partsByBand": {
+        "medieval": {
+          "case": "wood",
+          "strap": "leather"
+        },
+        "scifi": {
+          "case": "synthetic",
+          "strap": "synthetic"
+        }
+      },
+      "tags": [
+        "locker",
+        "furniture",
+        "storage",
+        "dormitory"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} meant for the foot of a bunk, stencilled with a number and held shut by {strap} straps.",
+        "physical": "Top-down view of a low {noun}: rectangular {case.color} {case} lid with a stencilled number, two {strap.color} straps across it, a handle at either end."
+      },
+      "aliases": [
+        "foot locker",
+        "kit box"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "chest.wooden",
+      "category": "chest",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "chest",
+        "modern": "storage chest"
+      },
+      "parts": {
+        "case": "wood",
+        "band": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "chest",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} with a flat lid and a hasp but no lock, the kind every household keeps.",
+        "physical": "Top-down view of {A:noun}: plank {case.color} {case} lid with two {band} straps across it, a simple hasp on one long edge."
+      },
+      "aliases": [
+        "wooden chest",
+        "lidded chest",
+        "blanket chest"
+      ],
+      "sources": [
+        "df-wiki",
+        "dnd-srd",
+        "cdda-furniture",
+        "wikipedia-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "chest.ironbound",
+      "category": "chest",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "banded chest"
+      },
+      "parts": {
+        "case": "wood",
+        "band": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "chest",
+        "furniture",
+        "storage",
+        "valuables"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of thick {case} wrapped in {band} bands, with a lock it would take a smith to break.",
+        "physical": "Top-down view of a heavy {noun}: domed {case.color} {case} lid crossed by three {band.color} {band} bands, a large lock plate on one long edge, studded corners."
+      },
+      "aliases": [
+        "iron-bound chest",
+        "iron-banded chest"
+      ],
+      "sources": [
+        "df-wiki",
+        "dnd-srd",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "chest.strongbox",
+      "category": "chest",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "strongbox",
+        "scifi": "lockbox"
+      },
+      "parts": {
+        "case": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "chest",
+        "furniture",
+        "valuables"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun}, small enough to carry but too heavy to run with, bolted to the floor.",
+        "physical": "Top-down view of a compact {noun}: {case.color} {case} lid with riveted edges, a keyhole plate on one long side, a bolt head at each corner fixing it down."
+      },
+      "aliases": [
+        "coffer",
+        "cash box"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "chest.trunk",
+      "category": "chest",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "travel trunk",
+        "medieval": "travelling chest",
+        "industrial": "steamer trunk"
+      },
+      "parts": {
+        "case": "leather",
+        "trim": "metal"
+      },
+      "partsByBand": {
+        "medieval": {
+          "case": "wood",
+          "trim": "metal"
+        }
+      },
+      "tags": [
+        "chest",
+        "furniture",
+        "storage",
+        "travel"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} scuffed from the road, still half packed as if its owner might leave tonight.",
+        "physical": "Top-down view of {A:noun}: {case.color} {case} lid with {trim} corners and two slats running across, a carrying handle at each short end."
+      },
+      "aliases": [
+        "trunk",
+        "steamer trunk"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "chest.case",
+      "category": "chest",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "equipment case",
+        "scifi": "gear case"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "latch": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "chest",
+        "furniture",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell} {noun} with foam-lined compartments and snap latches that bite careless fingers.",
+        "physical": "Top-down view of a hard-shell {noun}: ribbed {shell.color} {shell} lid, two {latch} latches along one long edge, a moulded handle in the middle."
+      },
+      "aliases": [
+        "hard case",
+        "flight case"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "crate.wooden",
+      "category": "crate",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "crate",
+        "scifi": "supply crate"
+      },
+      "parts": {
+        "case": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "case": "synthetic"
+        }
+      },
+      "tags": [
+        "crate",
+        "furniture",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {case} {noun} sealed tight, a shipper's mark stamped on its side.",
+        "physical": "Top-down view of a square {noun}: {case.color} {case} lid with reinforced edges and a stencilled mark in one corner."
+      },
+      "aliases": [
+        "supply crate",
+        "packing crate",
+        "open crate"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "crate.stack",
+      "category": "crate",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "crate stack",
+        "scifi": "cargo stack"
+      },
+      "parts": {
+        "case": "wood",
+        "strap": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "case": "metal",
+          "strap": "synthetic"
+        }
+      },
+      "tags": [
+        "crate",
+        "furniture",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} piled two high and lashed with {strap}, the bottom row bowing under the weight.",
+        "physical": "Top-down view of {A:noun} two by two cells: four {case.color} {case} crate lids in a square, the top layer slightly offset, {strap.color} straps crossing them."
+      },
+      "aliases": [
+        "stacked crates",
+        "crate pile"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "crate.cardboard",
+      "category": "crate",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cardboard box"
+      },
+      "parts": {
+        "tape": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "crate",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} sagging under two more stacked on top, sealed with {tape.color} tape and a scrawled label.",
+        "physical": "Top-down view of {A:noun}: brown card flaps sealed with a strip of {tape.color} tape, a smaller box sitting crooked on top."
+      },
+      "aliases": [
+        "carton",
+        "moving boxes"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "crate.container",
+      "category": "crate",
+      "size": [
+        2,
+        4
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "shipping container",
+        "scifi": "cargo container"
+      },
+      "parts": {
+        "shell": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "crate",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell} {noun} with corrugated walls and a faded owner's code, its end doors chained shut.",
+        "physical": "Top-down view of a long {noun} two cells wide and four tall: corrugated {shell.color} {shell} roof with ribs running across, corner castings at all four corners, the door end at the bottom edge."
+      },
+      "aliases": [
+        "cargo container",
+        "conex",
+        "intermodal container"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "barrel.wooden",
+      "category": "barrel",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "barrel",
+        "modern": "wooden barrel"
+      },
+      "parts": {
+        "stave": "wood",
+        "hoop": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "barrel",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {stave} {noun} bound with {hoop} hoops, the bung stained dark by whatever it holds.",
+        "physical": "Top-down view of a round {noun}: circular {stave.color} {stave} lid made of planks, two {hoop.color} hoops visible at the rim, a bung near the edge."
+      },
+      "aliases": [
+        "wooden keg",
+        "oak barrel",
+        "water butt"
+      ],
+      "sources": [
+        "df-wiki",
+        "dnd-srd",
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "barrel.cask_rack",
+      "category": "barrel",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cask stillage",
+        "modern": "wine cask rack",
+        "scifi": "spirit cask rack"
+      },
+      "parts": {
+        "stave": "wood",
+        "cradle": "wood"
+      },
+      "partsByBand": {
+        "scifi": {
+          "stave": "wood",
+          "cradle": "metal"
+        }
+      },
+      "tags": [
+        "barrel",
+        "storage",
+        "cellar",
+        "bar"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} cradling two {stave} casks on their sides, a tap in each and a drip tray below.",
+        "physical": "Top-down view of {A:noun} two cells wide: two {stave.color} {stave} casks lying side by side on {A:cradle} cradle, their round ends with taps facing the bottom edge."
+      },
+      "aliases": [
+        "stillage",
+        "cask rack",
+        "tun"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "barrel.drum",
+      "category": "barrel",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "steel drum",
+        "modern": "oil drum",
+        "scifi": "fluid drum"
+      },
+      "parts": {
+        "vessel": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "barrel",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {vessel} {noun} with ribbed sides and a hazard mark half scraped away.",
+        "physical": "Top-down view of a round {noun}: flat {vessel.color} {vessel} lid with a rolled rim and two small screw caps, one near the edge."
+      },
+      "aliases": [
+        "metal barrel",
+        "oil drum"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "barrel.keg",
+      "category": "barrel",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "keg",
+        "scifi": "pressure keg"
+      },
+      "parts": {
+        "vessel": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "barrel",
+        "storage",
+        "bar"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {vessel} {noun}, cold to the touch, with a coupler and hose still clamped to its neck.",
+        "physical": "Top-down view of a round {noun}: domed {vessel.color} {vessel} top inside a ring of hand-holes, a coupler at the centre trailing a short hose."
+      },
+      "aliases": [
+        "beer keg"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "sack.grain",
+      "category": "sack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.5,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "grain sack",
+        "modern": "feed sack",
+        "scifi": "bulk bag"
+      },
+      "parts": {
+        "sack": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "sack": "synthetic"
+        }
+      },
+      "tags": [
+        "sack",
+        "storage",
+        "food"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {sack} {noun}, fat with its load and tied off at the neck with twine.",
+        "physical": "Top-down view of a slumped {noun}: lumpy {sack.color} {sack} bag with its tied neck flopped to one side, a little spilled grain beside it."
+      },
+      "aliases": [
+        "sack",
+        "flour sack",
+        "sack stack"
+      ],
+      "sources": [
+        "dnd-srd",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "sack.kitbag",
+      "category": "sack",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "kitbag",
+        "modern": "duffel bag",
+        "scifi": "gear bag"
+      },
+      "parts": {
+        "bag": "fabric",
+        "strap": "leather"
+      },
+      "partsByBand": {
+        "modern": {
+          "bag": "synthetic",
+          "strap": "synthetic"
+        },
+        "scifi": {
+          "bag": "synthetic",
+          "strap": "synthetic"
+        }
+      },
+      "tags": [
+        "sack",
+        "storage",
+        "travel"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {bag} {noun} stuffed until its seams strain, dumped where its owner dropped it.",
+        "physical": "Top-down view of a long {noun}: cylindrical {bag.color} {bag} bag lying on its side, {A:strap} carry strap looped over the top."
+      },
+      "aliases": [
+        "duffel",
+        "sea bag"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "basket.wicker",
+      "category": "basket",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "basket",
+        "modern": "wicker basket"
+      },
+      "parts": {
+        "weave": "plant"
+      },
+      "partsByBand": {},
+      "tags": [
+        "basket",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {weave} {noun} with a mended handle, heaped with whatever needed carrying last: turnips, kindling or wool.",
+        "physical": "Top-down view of a round {noun}: tightly woven {weave.color} {weave} rim, the open top heaped with produce, a bent handle arching across."
+      },
+      "aliases": [
+        "wicker basket",
+        "market basket"
+      ],
+      "sources": [
+        "dnd-srd",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "basket.hamper",
+      "category": "basket",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "hamper",
+        "medieval": "lidded basket"
+      },
+      "parts": {
+        "weave": "plant",
+        "lining": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "basket",
+        "storage"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {weave} {noun} with a snug lid and {A:lining.color} {lining} lining, packed with linen or a picnic.",
+        "physical": "Top-down view of a rectangular {noun}: closed {weave.color} {weave} lid with a fastening loop at the front and a handle at each short end."
+      },
+      "aliases": [
+        "picnic hamper",
+        "linen hamper"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "basket.laundry",
+      "category": "basket",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.6,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "laundry basket",
+        "scifi": "laundry tote"
+      },
+      "parts": {
+        "tub": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "basket",
+        "laundry"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {tub} {noun} overflowing with clothes that may or may not be clean.",
+        "physical": "Top-down view of an oval {noun}: perforated {tub.color} {tub} sides, crumpled shirts and socks piled above the rim."
+      },
+      "aliases": [
+        "laundry hamper"
+      ],
+      "sources": [
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "bin.waste",
+      "category": "bin",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.5,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "waste bin",
+        "medieval": "slop bucket",
+        "industrial": "ash bin",
+        "modern": "trash can",
+        "scifi": "waste receptacle"
+      },
+      "parts": {
+        "vessel": "metal"
+      },
+      "partsByBand": {
+        "medieval": {
+          "vessel": "wood"
+        },
+        "scifi": {
+          "vessel": "synthetic"
+        }
+      },
+      "tags": [
+        "bin",
+        "waste"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {vessel} {noun} nobody has emptied for a while, and the smell says so.",
+        "physical": "Top-down view of a round {noun}: {vessel.color} {vessel} rim with scraps and crumpled rubbish inside, a lid lying askew."
+      },
+      "aliases": [
+        "bin",
+        "rubbish bin",
+        "trash can"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "bin.recycle",
+      "category": "bin",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "recycling bin",
+        "scifi": "reclamation bin"
+      },
+      "parts": {
+        "vessel": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bin",
+        "waste"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {vessel} {noun} split into sorted slots that most people ignore.",
+        "physical": "Top-down view of a square {noun}: {vessel.color} {vessel} lid divided into three openings, each marked with a symbol."
+      },
+      "aliases": [
+        "recycling bins"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom"
+      ]
+    },
+    {
+      "id": "bin.dumpster",
+      "category": "bin",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "dumpster",
+        "industrial": "refuse skip",
+        "scifi": "waste hopper"
+      },
+      "parts": {
+        "body": "metal",
+        "lid": "synthetic"
+      },
+      "partsByBand": {
+        "industrial": {
+          "body": "metal",
+          "lid": "metal"
+        }
+      },
+      "tags": [
+        "bin",
+        "waste"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} with a split {lid} lid and rubbish spilling from one corner.",
+        "physical": "Top-down view of {A:noun} two cells wide: heavy {body.color} {body} box, a hinged {lid.color} {lid} lid along the top edge propped half open, bags poking out."
+      },
+      "aliases": [
+        "skip",
+        "rubbish skip"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bin.scrap",
+      "category": "bin",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "scrap bin",
+        "scifi": "salvage bin"
+      },
+      "parts": {
+        "vessel": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bin",
+        "workshop"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {vessel} {noun} heaped with offcuts, bent brackets and a few parts too good to throw out.",
+        "physical": "Top-down view of a square {noun}: thick {vessel.color} {vessel} walls around a jumble of metal offcuts and wire."
+      },
+      "aliases": [
+        "scrap hopper",
+        "offcut bin"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "pallet.goods",
+      "category": "pallet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "loaded pallet",
+        "scifi": "cargo skid"
+      },
+      "parts": {
+        "base": "wood",
+        "wrap": "synthetic"
+      },
+      "partsByBand": {
+        "industrial": {
+          "base": "wood",
+          "wrap": "fabric"
+        },
+        "scifi": {
+          "base": "metal",
+          "wrap": "synthetic"
+        }
+      },
+      "tags": [
+        "pallet",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} stacked chest-high with sacks and cartons and bound in {wrap}.",
+        "physical": "Top-down view of a square {noun}: boxes stacked in a tight block under {wrap.color} {wrap} wrapping, the {base} slats showing at the edges."
+      },
+      "aliases": [
+        "stacked pallet",
+        "packed pallet"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "pallet.bulk",
+      "category": "pallet",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "pallet block",
+        "scifi": "cargo skid block"
+      },
+      "parts": {
+        "base": "wood",
+        "wrap": "synthetic"
+      },
+      "partsByBand": {
+        "industrial": {
+          "base": "wood",
+          "wrap": "fabric"
+        },
+        "scifi": {
+          "base": "metal",
+          "wrap": "synthetic"
+        }
+      },
+      "tags": [
+        "pallet",
+        "storage",
+        "warehouse"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of four loaded pallets pushed into a square, the top cartons crushed by careless stacking.",
+        "physical": "Top-down view of {A:noun} two by two cells: four square pallet loads under {wrap.color} {wrap} wrap with thin gaps between them, {base} slats showing at the outer edges."
+      },
+      "aliases": [
+        "pallet stack",
+        "bulk pallets"
+      ],
+      "sources": [
+        "cdda-furniture"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,444 @@
+{
+  "objects": [
+    {
+      "id": "light.candle",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "candle stand",
+        "industrial": "candlestick stand"
+      },
+      "parts": {
+        "stand": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {stand} {noun} holding one fat candle, its wax run down in long tears.",
+        "physical": "Top-down view of a {noun}: a small round {stand.color} {stand} drip pan with a single lit candle in the middle, a soft yellow halo around it."
+      },
+      "aliases": [
+        "tallow candle",
+        "rushlight",
+        "candle stub",
+        "pricket"
+      ],
+      "sources": [
+        "dnd-srd",
+        "rimworld-wiki",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "light.candelabrum",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.35,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "candelabrum"
+      },
+      "parts": {
+        "stand": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} tall {stand} {noun} with branching arms, every one crowned with a candle.",
+        "physical": "Top-down view of a standing {noun}: five or seven lit candles arranged in a ring and centre on {stand.color} {stand} arms, a warm bright glow, a heavy round foot under it."
+      },
+      "aliases": [
+        "candelabra",
+        "candle tree"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "light.torch",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.4,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "torch stand"
+      },
+      "parts": {
+        "pole": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {pole} {noun} with a pitch-soaked torch that spits and smokes.",
+        "physical": "Top-down view of a {noun}: a round {pole.color} {pole} base and cup holding a burning torch head, orange flame and a smudge of soot on the floor around it."
+      },
+      "aliases": [
+        "torch",
+        "cresset",
+        "wall torch"
+      ],
+      "sources": [
+        "rimworld-wiki"
+      ]
+    },
+    {
+      "id": "light.oil_lamp",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.4,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "oil lamp",
+        "industrial": "paraffin lamp"
+      },
+      "parts": {
+        "lamp": "ceramic",
+        "stand": "wood"
+      },
+      "partsByBand": {
+        "industrial": {
+          "lamp": "glass",
+          "stand": "wood"
+        }
+      },
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {lamp} {noun} on a {stand} stand, its little flame steady as long as no one opens the door.",
+        "physical": "Top-down view of a small {stand.color} {stand} stand with a {noun}: a {lamp.color} {lamp} lamp seen from above, a single flame at its spout and a ring of warm light."
+      },
+      "aliases": [
+        "clay lamp",
+        "kerosene lamp"
+      ],
+      "sources": [
+        "dnd-srd"
+      ]
+    },
+    {
+      "id": "light.lantern",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "lantern",
+        "medieval": "horn lantern",
+        "industrial": "storm lantern",
+        "modern": "battery lantern",
+        "scifi": "glow lantern"
+      },
+      "parts": {
+        "body": "metal",
+        "panel": "glass"
+      },
+      "partsByBand": {
+        "modern": {
+          "body": "synthetic",
+          "panel": "glass"
+        },
+        "scifi": {
+          "body": "synthetic",
+          "panel": "glass"
+        }
+      },
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} set down on the floor, throwing a ring of light big enough to work by.",
+        "physical": "Top-down view of a {noun}: a square or round {body.color} {body} cap with a carrying handle, light spilling through {panel.color} {panel} sides onto the floor around it."
+      },
+      "aliases": [
+        "hanging lantern",
+        "gate lantern",
+        "hurricane lamp"
+      ],
+      "sources": [
+        "dnd-srd",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "light.gas_lamp",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": null,
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "gas lamp"
+      },
+      "parts": {
+        "post": "metal",
+        "globe": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {post} {noun} with a {globe} globe, hissing faintly as it burns.",
+        "physical": "Top-down view of a standing {noun}: a round {globe.color} {globe} globe glowing white-gold, a {post.color} {post} post and base beneath, a thin gas pipe running to the wall."
+      },
+      "aliases": [
+        "gasolier",
+        "standard gas lamp"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "light.floor_lamp",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "floor lamp"
+      },
+      "parts": {
+        "shade": "fabric",
+        "stem": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a {shade} shade, tilted toward the best chair in the room.",
+        "physical": "Top-down view of a {noun}: a round {shade.color} {shade} shade seen from above with a bright ring at its rim, a {stem.color} {stem} base just showing beyond it, a cable trailing to the wall."
+      },
+      "aliases": [
+        "standing lamp",
+        "standard lamp",
+        "table lamp",
+        "arc lamp"
+      ],
+      "sources": [
+        "rimworld-wiki"
+      ]
+    },
+    {
+      "id": "light.light_panel",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "light panel"
+      },
+      "parts": {
+        "frame": "metal",
+        "panel": "synthetic"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} glowing a flat, shadowless white that never flickers and never feels like daylight.",
+        "physical": "Top-down view of a {noun}: a thin {frame.color} {frame} frame standing against the top wall holding a glowing {panel.color} {panel} sheet, a wash of cool white light on the floor in front."
+      },
+      "aliases": [
+        "light strip",
+        "wall light strip",
+        "lumen panel"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "light.light_pillar",
+      "category": "light",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.7,
+      "back": null,
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "light pillar"
+      },
+      "parts": {
+        "column": "glass",
+        "base": "metal"
+      },
+      "partsByBand": {},
+      "tags": [
+        "light",
+        "luxury"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {column} {noun} that breathes slowly from blue to gold, setting the mood of the whole room.",
+        "physical": "Top-down view of a round {noun}: a glowing {column.color} {column} column seen end-on inside a ring of {base.color} {base}, soft coloured light spreading out across the floor."
+      },
+      "aliases": [
+        "light column",
+        "glow pillar",
+        "light tower"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    }
+  ]
+}

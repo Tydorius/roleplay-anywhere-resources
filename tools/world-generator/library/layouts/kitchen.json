@@ -1,0 +1,175 @@
+{
+  "layouts": [
+    {
+      "id": "kitchen.small.a",
+      "family": "kitchen",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "beside:cook", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:side+corner", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "table.work", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "kitchen.small.b",
+      "family": "kitchen",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "beside:cook", "count": 2, "back": "wall"},
+        {"id": "run", "role": "counter.prep", "size": [2, 1], "anchor": "wall:side+away_from_door", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:run", "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "oven", "role": "bake", "size": [1, 1], "anchor": "wall:far", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "table.work", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "kitchen.small.c",
+      "family": "kitchen",
+      "sizeBands": ["small"],
+      "minInterior": [3, 5],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "beside:cook", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:far", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "counter.prep", "size": [1, 1], "anchor": "beside:basin", "back": "wall"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "kitchen.medium.a",
+      "family": "kitchen",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 5],
+      "maxInterior": [7, 6],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "beside:cook", "count": [2, 3], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "work", "role": "table.work", "size": [2, 1], "anchor": "center"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "bake", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:work"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "kitchen.medium.b",
+      "family": "kitchen",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "beside:cook", "back": "wall", "optional": true},
+        {"id": "prep", "role": "counter.prep", "size": [2, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:prep", "back": "wall"},
+        {"id": "work", "role": "table.work", "size": [2, 1], "anchor": "center"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "fuel", "role": "fuel", "size": [1, 1], "anchor": "beside:cook", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:work"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "kitchen.medium.c",
+      "family": "kitchen",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 6],
+      "maxInterior": [6, 8],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "row:far", "count": [2, 4], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:cook", "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "oven", "role": "bake", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true},
+        {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "table.work", "size": [2, 1], "anchor": "center"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "kitchen.large.a",
+      "family": "kitchen",
+      "sizeBands": ["large"],
+      "minInterior": [7, 7],
+      "maxInterior": [10, 9],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [2, 1], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:far+corner", "back": "wall", "optional": true},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "row:side", "count": [3, 5], "back": "wall"},
+        {"id": "work", "role": "table.work", "size": [3, 1], "anchor": "center"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "oven", "role": "bake", "size": [1, 1], "anchor": "beside:cook", "back": "wall", "optional": true},
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:work"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "table.work", "size": [2, 1], "anchor": "center"},
+        {"role": "fuel", "size": [1, 1], "anchor": "corner"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "kitchen.large.b",
+      "family": "kitchen",
+      "sizeBands": ["large"],
+      "minInterior": [8, 7],
+      "maxInterior": [11, 9],
+      "slots": [
+        {"id": "cook", "role": "cook", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "prep", "role": "counter.prep", "size": [1, 1], "anchor": "beside:cook", "count": [2, 3], "back": "wall"},
+        {"id": "island", "role": "table.work", "size": [2, 1], "anchor": "center", "count": 2},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall", "optional": true},
+        {"id": "pass", "role": "counter.serve", "size": [3, 1], "anchor": "wall:near", "optional": true},
+        {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "bake", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

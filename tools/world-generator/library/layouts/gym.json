@@ -1,0 +1,175 @@
+{
+  "layouts": [
+    {
+      "id": "gym.small.a",
+      "family": "gym",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bench", "role": "exercise", "size": [1, 2], "anchor": "wall:side", "back": "wall"},
+        {"id": "bags", "role": "exercise", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "rack", "role": "storage.small", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [2, 1], "anchor": "wall:near"},
+        {"role": "exercise", "size": [1, 1], "anchor": "corner"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "gym.small.b",
+      "family": "gym",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "mat", "role": "exercise", "size": [2, 2], "anchor": "center"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "bag", "role": "exercise", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "weapons", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "seat", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "gym.small.c",
+      "family": "gym",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "machines", "role": "exercise", "size": [1, 2], "anchor": "row:far", "count": 2, "back": "wall"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "seat", "size": [1, 1], "anchor": "corner"},
+        {"role": "radio", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "gym.medium.a",
+      "family": "gym",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "machines", "role": "exercise", "size": [1, 2], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "bags", "role": "exercise", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "racks", "role": "storage.small", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 2], "anchor": "row:far"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "screen", "size": [2, 1], "anchor": "wall:side"}
+      ]
+    },
+    {
+      "id": "gym.medium.b",
+      "family": "gym",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "ring", "role": "exercise", "size": [2, 2], "anchor": "center"},
+        {"id": "dummies", "role": "exercise", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "rack", "role": "weapons", "size": [1, 1], "anchor": "wall:far", "back": "wall", "optional": true},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "weapons", "size": [1, 1], "anchor": "beside:rack"},
+        {"role": "exercise", "size": [1, 1], "anchor": "row:side"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "gym.medium.c",
+      "family": "gym",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "stations", "role": "exercise", "size": [1, 1], "anchor": "row:side", "count": [2, 4], "back": "wall"},
+        {"id": "benches", "role": "exercise", "size": [1, 2], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner", "optional": true},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 1], "anchor": "row:side"},
+        {"role": "decor.floor", "size": [2, 2], "anchor": "center"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "gym.large.a",
+      "family": "gym",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "machines", "role": "exercise", "size": [1, 2], "anchor": "center", "count": [4, 6]},
+        {"id": "racks", "role": "storage.small", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "bags", "role": "exercise", "size": [1, 1], "anchor": "corner", "count": 2},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 2], "anchor": "center"},
+        {"role": "exercise", "size": [1, 2], "anchor": "center"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"role": "screen", "size": [2, 1], "anchor": "wall:far"}
+      ]
+    },
+    {
+      "id": "gym.large.b",
+      "family": "gym",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "ring", "role": "exercise", "size": [3, 3], "anchor": "center"},
+        {"id": "dummies", "role": "exercise", "size": [1, 1], "anchor": "row:far", "count": [3, 4], "back": "wall"},
+        {"id": "racks", "role": "weapons", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "benches", "role": "seat.long", "size": [2, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 1], "anchor": "row:far"},
+        {"role": "weapons", "size": [1, 1], "anchor": "beside:racks"},
+        {"role": "light.big", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "gym.large.c",
+      "family": "gym",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "machines", "role": "exercise", "size": [1, 2], "anchor": "row:far", "count": [3, 4], "back": "wall"},
+        {"id": "weights", "role": "exercise", "size": [1, 2], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "mat", "role": "exercise", "size": [2, 2], "anchor": "center"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "exercise", "size": [1, 2], "anchor": "row:far"},
+        {"role": "exercise", "size": [1, 1], "anchor": "corner"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"role": "radio", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

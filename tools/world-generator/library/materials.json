@@ -1,0 +1,805 @@
+{
+  "_readme": [
+    "Material class, then band, then wealth tier: 2-4 materials, each with 1-3 colours.",
+    "Names read before a noun (rough pine table) and as a part (with grey homespun covers).",
+    "Wealth shows in the words: poor is rough and cheap, elite is rare, fine or inlaid. See AUTHORING.md."
+  ],
+  "wood": {
+    "medieval": {
+      "poor": [
+        {"name": "rough pine", "colors": ["pale", "grey-brown"]},
+        {"name": "split birch", "colors": ["silver-grey", "pale"]},
+        {"name": "knotty fir", "colors": ["yellowish", "grey"]}
+      ],
+      "modest": [
+        {"name": "ash", "colors": ["honey", "pale"]},
+        {"name": "beech", "colors": ["light brown"]},
+        {"name": "elm", "colors": ["mid-brown", "tawny"]}
+      ],
+      "wealthy": [
+        {"name": "oak", "colors": ["golden-brown", "honey"]},
+        {"name": "cherrywood", "colors": ["reddish-brown"]},
+        {"name": "yew", "colors": ["amber", "russet"]}
+      ],
+      "elite": [
+        {"name": "carved walnut", "colors": ["dark brown"]},
+        {"name": "inlaid ebony", "colors": ["black"]},
+        {"name": "gilded oak", "colors": ["gold", "golden-brown"]},
+        {"name": "carved cedar", "colors": ["red-brown"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "crate pine", "colors": ["pale", "grey"]},
+        {"name": "rough deal", "colors": ["grey-brown", "pale"]},
+        {"name": "creosoted plank", "colors": ["black-brown"]}
+      ],
+      "modest": [
+        {"name": "varnished pine", "colors": ["amber", "honey"]},
+        {"name": "stained beech", "colors": ["chestnut", "mid-brown"]},
+        {"name": "bentwood", "colors": ["brown", "honey"]}
+      ],
+      "wealthy": [
+        {"name": "varnished mahogany", "colors": ["deep red", "red-brown"]},
+        {"name": "polished walnut", "colors": ["dark brown"]},
+        {"name": "burr elm", "colors": ["tawny", "honey"]}
+      ],
+      "elite": [
+        {"name": "inlaid rosewood", "colors": ["deep red", "purple-brown"]},
+        {"name": "french-polished ebony", "colors": ["black"]},
+        {"name": "satinwood marquetry", "colors": ["pale gold", "honey"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "particleboard", "colors": ["beige", "white"]},
+        {"name": "cheap laminate", "colors": ["white", "grey"]},
+        {"name": "pallet wood", "colors": ["pale", "grey"]}
+      ],
+      "modest": [
+        {"name": "pine veneer", "colors": ["pale", "honey"]},
+        {"name": "painted mdf", "colors": ["white", "grey", "sage"]},
+        {"name": "beech-effect laminate", "colors": ["light brown"]}
+      ],
+      "wealthy": [
+        {"name": "solid oak", "colors": ["honey", "golden-brown"]},
+        {"name": "walnut veneer", "colors": ["dark brown"]},
+        {"name": "birch plywood", "colors": ["pale", "blonde"]}
+      ],
+      "elite": [
+        {"name": "reclaimed teak", "colors": ["golden-brown", "honey"]},
+        {"name": "live-edge walnut", "colors": ["dark brown", "chocolate"]},
+        {"name": "smoked oak", "colors": ["charcoal", "dark brown"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "pressed fibreboard", "colors": ["grey", "beige"]},
+        {"name": "salvage composite", "colors": ["grey", "mottled brown"]},
+        {"name": "pulpboard", "colors": ["drab", "grey"]}
+      ],
+      "modest": [
+        {"name": "resin-bonded wood", "colors": ["honey", "amber"]},
+        {"name": "grown-wood laminate", "colors": ["pale", "light brown"]}
+      ],
+      "wealthy": [
+        {"name": "vat-grown oak", "colors": ["golden-brown"]},
+        {"name": "stabilised walnut", "colors": ["dark brown", "bronze"]},
+        {"name": "resin-cored maple", "colors": ["honey", "teal"]}
+      ],
+      "elite": [
+        {"name": "heirloom terran oak", "colors": ["honey", "golden-brown"]},
+        {"name": "glowing burl", "colors": ["dark blue", "teal"]},
+        {"name": "old-earth mahogany", "colors": ["deep red"]}
+      ]
+    }
+  },
+  "metal": {
+    "medieval": {
+      "poor": [
+        {"name": "rough iron", "colors": ["black", "dark grey"]},
+        {"name": "hammered tin", "colors": ["dull grey"]},
+        {"name": "scrap iron", "colors": ["dark grey", "rust-brown"]}
+      ],
+      "modest": [
+        {"name": "wrought iron", "colors": ["black"]},
+        {"name": "pewter", "colors": ["dull grey", "silver-grey"]},
+        {"name": "copper", "colors": ["copper", "ruddy"]}
+      ],
+      "wealthy": [
+        {"name": "brass", "colors": ["brass", "gold"]},
+        {"name": "bronze", "colors": ["bronze", "dark gold"]},
+        {"name": "polished steel", "colors": ["silver-grey"]}
+      ],
+      "elite": [
+        {"name": "silver", "colors": ["silver", "white"]},
+        {"name": "gilded bronze", "colors": ["gold"]},
+        {"name": "damascened steel", "colors": ["grey", "silver"]},
+        {"name": "chased gold", "colors": ["gold", "red-gold"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "tin sheet", "colors": ["grey", "dull silver"]},
+        {"name": "scrap iron", "colors": ["dark grey", "rust-brown"]},
+        {"name": "galvanised iron", "colors": ["grey", "dull silver"]}
+      ],
+      "modest": [
+        {"name": "cast iron", "colors": ["black", "dark grey"]},
+        {"name": "enamelled iron", "colors": ["white", "cream", "dark green"]},
+        {"name": "sheet steel", "colors": ["grey"]}
+      ],
+      "wealthy": [
+        {"name": "brass", "colors": ["brass", "gold"]},
+        {"name": "polished copper", "colors": ["copper", "rose-gold"]},
+        {"name": "nickel-plated steel", "colors": ["silver"]}
+      ],
+      "elite": [
+        {"name": "engraved silver", "colors": ["silver"]},
+        {"name": "gilt brass", "colors": ["gold"]},
+        {"name": "chased bronze", "colors": ["bronze", "dark gold"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "thin sheet steel", "colors": ["grey"]},
+        {"name": "galvanised steel", "colors": ["dull grey"]},
+        {"name": "tubular steel", "colors": ["grey", "black", "red"]}
+      ],
+      "modest": [
+        {"name": "powder-coated steel", "colors": ["black", "white", "grey"]},
+        {"name": "aluminium", "colors": ["silver", "matt grey"]},
+        {"name": "chrome-plated steel", "colors": ["chrome"]}
+      ],
+      "wealthy": [
+        {"name": "stainless steel", "colors": ["silver", "brushed grey"]},
+        {"name": "brushed steel", "colors": ["silver-grey"]},
+        {"name": "anodised aluminium", "colors": ["black", "bronze", "champagne"]}
+      ],
+      "elite": [
+        {"name": "polished brass", "colors": ["gold", "brass"]},
+        {"name": "cast bronze", "colors": ["bronze"]},
+        {"name": "titanium", "colors": ["gunmetal", "grey"]},
+        {"name": "rose-gold plate", "colors": ["rose-gold"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "scrap alloy", "colors": ["gunmetal", "mottled grey"]},
+        {"name": "salvage plate", "colors": ["dull grey", "rust-brown"]},
+        {"name": "stamped duralloy", "colors": ["grey"]}
+      ],
+      "modest": [
+        {"name": "duralloy", "colors": ["gunmetal", "grey"]},
+        {"name": "anodised alloy", "colors": ["blue-grey", "black", "orange"]},
+        {"name": "titanium", "colors": ["grey"]}
+      ],
+      "wealthy": [
+        {"name": "brushed titanium", "colors": ["silver-grey", "gunmetal"]},
+        {"name": "polished chromalloy", "colors": ["chrome", "silver"]},
+        {"name": "ceramet alloy", "colors": ["graphite", "bronze"]}
+      ],
+      "elite": [
+        {"name": "iridescent alloy", "colors": ["oil-slick", "violet"]},
+        {"name": "gold-plated titanium", "colors": ["gold"]},
+        {"name": "liquid-metal", "colors": ["mirror-silver"]},
+        {"name": "nanoforged platinum", "colors": ["platinum", "white"]}
+      ]
+    }
+  },
+  "stone": {
+    "medieval": {
+      "poor": [
+        {"name": "fieldstone", "colors": ["grey", "brown-grey"]},
+        {"name": "rough-hewn stone", "colors": ["grey"]},
+        {"name": "rubble stone", "colors": ["grey", "ochre"]}
+      ],
+      "modest": [
+        {"name": "dressed sandstone", "colors": ["buff", "ochre", "red"]},
+        {"name": "limestone", "colors": ["cream", "pale grey"]},
+        {"name": "slate", "colors": ["blue-grey"]}
+      ],
+      "wealthy": [
+        {"name": "granite", "colors": ["grey", "speckled"]},
+        {"name": "polished limestone", "colors": ["cream"]},
+        {"name": "carved sandstone", "colors": ["honey", "rose"]}
+      ],
+      "elite": [
+        {"name": "marble", "colors": ["white", "grey-veined"]},
+        {"name": "alabaster", "colors": ["milk-white"]},
+        {"name": "porphyry", "colors": ["purple", "deep red"]},
+        {"name": "carved marble", "colors": ["white", "rose"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "rough flagstone", "colors": ["grey"]},
+        {"name": "rubble stone", "colors": ["grey", "sooty"]},
+        {"name": "grey slate", "colors": ["grey", "charcoal"]}
+      ],
+      "modest": [
+        {"name": "slate", "colors": ["blue-grey", "charcoal"]},
+        {"name": "scrubbed sandstone", "colors": ["buff"]},
+        {"name": "york stone", "colors": ["buff", "grey"]}
+      ],
+      "wealthy": [
+        {"name": "polished granite", "colors": ["grey", "pink"]},
+        {"name": "marble", "colors": ["white", "grey-veined"]},
+        {"name": "terrazzo", "colors": ["speckled", "cream"]}
+      ],
+      "elite": [
+        {"name": "carrara marble", "colors": ["white", "blue-veined"]},
+        {"name": "onyx", "colors": ["honey", "black"]},
+        {"name": "malachite", "colors": ["green"]},
+        {"name": "verde antique", "colors": ["dark green"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "bare concrete", "colors": ["grey"]},
+        {"name": "cinder block", "colors": ["grey"]},
+        {"name": "rough concrete", "colors": ["grey", "dirty grey"]}
+      ],
+      "modest": [
+        {"name": "polished concrete", "colors": ["grey", "pale grey"]},
+        {"name": "terrazzo", "colors": ["speckled white", "grey"]},
+        {"name": "cultured stone", "colors": ["beige"]}
+      ],
+      "wealthy": [
+        {"name": "granite", "colors": ["black", "speckled grey"]},
+        {"name": "quartz composite", "colors": ["white", "grey"]},
+        {"name": "travertine", "colors": ["cream", "beige"]}
+      ],
+      "elite": [
+        {"name": "calacatta marble", "colors": ["white", "gold-veined"]},
+        {"name": "onyx", "colors": ["honey", "black"]},
+        {"name": "honed basalt", "colors": ["charcoal"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "printed regolith", "colors": ["grey", "rust-red"]},
+        {"name": "aggregate block", "colors": ["grey"]},
+        {"name": "fused regolith", "colors": ["charcoal", "dun"]}
+      ],
+      "modest": [
+        {"name": "sintered stone", "colors": ["grey", "sand"]},
+        {"name": "cast basalt", "colors": ["charcoal"]},
+        {"name": "ferrocrete", "colors": ["grey"]}
+      ],
+      "wealthy": [
+        {"name": "lunar basalt", "colors": ["charcoal", "black"]},
+        {"name": "polished sinterstone", "colors": ["white", "pearl"]},
+        {"name": "cultured granite", "colors": ["speckled", "slate"]}
+      ],
+      "elite": [
+        {"name": "martian marble", "colors": ["rose", "rust-veined"]},
+        {"name": "asteroid jade", "colors": ["deep green"]},
+        {"name": "meteoric stone", "colors": ["black", "glittering"]},
+        {"name": "lattice quartz", "colors": ["clear", "pale violet"]}
+      ]
+    }
+  },
+  "fabric": {
+    "medieval": {
+      "poor": [
+        {"name": "homespun", "colors": ["grey", "dun"]},
+        {"name": "sacking", "colors": ["dun", "brown"]},
+        {"name": "coarse hemp", "colors": ["dun", "oatmeal"]}
+      ],
+      "modest": [
+        {"name": "wool", "colors": ["grey", "russet", "green"]},
+        {"name": "undyed linen", "colors": ["oatmeal", "cream"]},
+        {"name": "felt", "colors": ["brown", "grey"]}
+      ],
+      "wealthy": [
+        {"name": "fine linen", "colors": ["white", "cream"]},
+        {"name": "dyed wool", "colors": ["madder-red", "woad-blue", "green"]},
+        {"name": "quilted linen", "colors": ["cream", "saffron"]}
+      ],
+      "elite": [
+        {"name": "silk", "colors": ["crimson", "gold", "purple"]},
+        {"name": "velvet", "colors": ["deep red", "royal blue"]},
+        {"name": "brocade", "colors": ["gold", "crimson"]},
+        {"name": "embroidered samite", "colors": ["white", "gold"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "shoddy wool", "colors": ["grey", "mud-brown"]},
+        {"name": "burlap", "colors": ["dun"]},
+        {"name": "flour-sack cotton", "colors": ["off-white", "faded"]}
+      ],
+      "modest": [
+        {"name": "calico", "colors": ["cream", "faded blue"]},
+        {"name": "striped ticking", "colors": ["blue-striped", "grey-striped"]},
+        {"name": "wool serge", "colors": ["navy", "black"]},
+        {"name": "flannel", "colors": ["red", "grey"]}
+      ],
+      "wealthy": [
+        {"name": "damask", "colors": ["cream", "burgundy"]},
+        {"name": "chintz", "colors": ["rose", "green"]},
+        {"name": "plush velvet", "colors": ["bottle-green", "maroon"]}
+      ],
+      "elite": [
+        {"name": "silk brocade", "colors": ["gold", "crimson"]},
+        {"name": "embroidered velvet", "colors": ["deep purple", "emerald"]},
+        {"name": "lace-trimmed satin", "colors": ["ivory"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "thin polyester", "colors": ["grey", "navy", "faded blue"]},
+        {"name": "fleece", "colors": ["grey", "maroon"]},
+        {"name": "cheap acrylic", "colors": ["beige", "brown"]}
+      ],
+      "modest": [
+        {"name": "cotton", "colors": ["white", "blue", "grey"]},
+        {"name": "polycotton", "colors": ["grey", "beige", "white"]},
+        {"name": "microfibre", "colors": ["charcoal", "cream"]}
+      ],
+      "wealthy": [
+        {"name": "egyptian cotton", "colors": ["white", "ivory"]},
+        {"name": "linen", "colors": ["oatmeal", "sage"]},
+        {"name": "velvet", "colors": ["emerald", "mustard"]}
+      ],
+      "elite": [
+        {"name": "silk", "colors": ["champagne", "ivory", "black"]},
+        {"name": "cashmere", "colors": ["camel", "dove-grey"]},
+        {"name": "merino", "colors": ["charcoal", "cream"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "recycled polyfibre", "colors": ["grey", "faded orange"]},
+        {"name": "reclaimed polyfelt", "colors": ["grey", "khaki"]},
+        {"name": "ration-issue weave", "colors": ["drab", "grey"]}
+      ],
+      "modest": [
+        {"name": "thermal weave", "colors": ["grey", "blue-grey"]},
+        {"name": "nanofibre", "colors": ["white", "teal"]},
+        {"name": "spacer mesh", "colors": ["grey", "navy"]}
+      ],
+      "wealthy": [
+        {"name": "smart-fabric", "colors": ["shifting blue", "white", "pearl"]},
+        {"name": "memory weave", "colors": ["silver-grey", "white"]}
+      ],
+      "elite": [
+        {"name": "spider silk", "colors": ["pearl", "iridescent"]},
+        {"name": "photonic silk", "colors": ["shimmering violet", "starlight"]},
+        {"name": "living fabric", "colors": ["soft green", "opal"]}
+      ]
+    }
+  },
+  "leather": {
+    "medieval": {
+      "poor": [
+        {"name": "rawhide", "colors": ["tan", "pale"]},
+        {"name": "goatskin", "colors": ["brown"]},
+        {"name": "rough hide", "colors": ["brown", "grey-brown"]}
+      ],
+      "modest": [
+        {"name": "tanned cowhide", "colors": ["brown", "tan"]},
+        {"name": "sheepskin", "colors": ["cream", "grey"]},
+        {"name": "wolfskin", "colors": ["grey"]},
+        {"name": "oiled leather", "colors": ["dark brown"]}
+      ],
+      "wealthy": [
+        {"name": "tooled leather", "colors": ["chestnut", "oxblood"]},
+        {"name": "calfskin", "colors": ["tan", "black"]},
+        {"name": "deerskin", "colors": ["fawn", "buff"]}
+      ],
+      "elite": [
+        {"name": "gilt-tooled morocco", "colors": ["red", "green"]},
+        {"name": "embossed cordovan", "colors": ["oxblood", "burgundy"]},
+        {"name": "ermine-trimmed kidskin", "colors": ["white", "cream"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "rough hide", "colors": ["brown"]},
+        {"name": "pigskin", "colors": ["tan", "pink-brown"]},
+        {"name": "scrap leather", "colors": ["brown", "black"]}
+      ],
+      "modest": [
+        {"name": "harness leather", "colors": ["brown", "black"]},
+        {"name": "cowhide", "colors": ["brown"]},
+        {"name": "waxed leather", "colors": ["tan"]}
+      ],
+      "wealthy": [
+        {"name": "buttoned leather", "colors": ["oxblood", "bottle-green"]},
+        {"name": "morocco", "colors": ["red", "maroon"]},
+        {"name": "patent leather", "colors": ["black"]}
+      ],
+      "elite": [
+        {"name": "gilt-tooled calfskin", "colors": ["tan", "burgundy"]},
+        {"name": "crocodile hide", "colors": ["dark green", "black"]},
+        {"name": "russia leather", "colors": ["red-brown"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "bonded leather", "colors": ["black", "brown"]},
+        {"name": "split suede", "colors": ["tan"]},
+        {"name": "budget leather", "colors": ["black"]}
+      ],
+      "modest": [
+        {"name": "leather", "colors": ["black", "brown", "tan"]},
+        {"name": "suede", "colors": ["tan", "grey"]}
+      ],
+      "wealthy": [
+        {"name": "aniline leather", "colors": ["cognac", "tan"]},
+        {"name": "full-grain leather", "colors": ["brown", "black"]},
+        {"name": "nubuck", "colors": ["grey", "sand"]}
+      ],
+      "elite": [
+        {"name": "italian calfskin", "colors": ["cognac", "oxblood"]},
+        {"name": "ostrich leather", "colors": ["taupe"]},
+        {"name": "saddle-stitched hide", "colors": ["chestnut"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "synth-hide", "colors": ["grey", "brown"]},
+        {"name": "recycled hide", "colors": ["mottled brown"]},
+        {"name": "leather scrap", "colors": ["dun", "black"]}
+      ],
+      "modest": [
+        {"name": "vat-grown leather", "colors": ["tan", "brown", "black"]},
+        {"name": "bonded synth-hide", "colors": ["black", "grey"]}
+      ],
+      "wealthy": [
+        {"name": "cultured calfskin", "colors": ["cognac", "black"]},
+        {"name": "grown suede", "colors": ["sand", "grey"]}
+      ],
+      "elite": [
+        {"name": "xeno-hide", "colors": ["iridescent green", "violet"]},
+        {"name": "cultured sharkskin", "colors": ["slate", "silver"]},
+        {"name": "living-grain leather", "colors": ["deep red"]}
+      ]
+    }
+  },
+  "glass": {
+    "medieval": {
+      "poor": [
+        {"name": "horn", "colors": ["cloudy amber"]},
+        {"name": "oiled parchment", "colors": ["yellowed", "cream"]}
+      ],
+      "modest": [
+        {"name": "green glass", "colors": ["bottle-green", "cloudy"]},
+        {"name": "forest glass", "colors": ["green", "brownish"]}
+      ],
+      "wealthy": [
+        {"name": "clear glass", "colors": ["clear", "pale green"]},
+        {"name": "leaded glass", "colors": ["clear", "pale green"]}
+      ],
+      "elite": [
+        {"name": "stained glass", "colors": ["ruby", "cobalt", "gold"]},
+        {"name": "venetian crystal", "colors": ["clear", "sparkling"]},
+        {"name": "rock crystal", "colors": ["clear"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "bottle glass", "colors": ["green", "brown"]},
+        {"name": "rippled glass", "colors": ["greenish"]}
+      ],
+      "modest": [
+        {"name": "plate glass", "colors": ["clear"]},
+        {"name": "pressed glass", "colors": ["clear", "amber"]}
+      ],
+      "wealthy": [
+        {"name": "bevelled glass", "colors": ["clear"]},
+        {"name": "cut glass", "colors": ["clear", "sparkling"]},
+        {"name": "frosted glass", "colors": ["white"]}
+      ],
+      "elite": [
+        {"name": "lead crystal", "colors": ["clear", "sparkling"]},
+        {"name": "etched crystal", "colors": ["clear"]},
+        {"name": "tiffany glass", "colors": ["amber", "opal", "emerald"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "wired glass", "colors": ["clear", "greenish"]},
+        {"name": "thin float glass", "colors": ["clear"]}
+      ],
+      "modest": [
+        {"name": "float glass", "colors": ["clear"]},
+        {"name": "toughened glass", "colors": ["clear", "smoked"]},
+        {"name": "frosted glass", "colors": ["white"]}
+      ],
+      "wealthy": [
+        {"name": "tempered glass", "colors": ["clear", "smoked grey"]},
+        {"name": "smoked glass", "colors": ["bronze", "grey"]}
+      ],
+      "elite": [
+        {"name": "low-iron glass", "colors": ["crystal-clear"]},
+        {"name": "hand-blown glass", "colors": ["amber", "cobalt"]},
+        {"name": "murano glass", "colors": ["red", "gold", "blue"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "recycled glass", "colors": ["greenish", "grey"]},
+        {"name": "fused silica", "colors": ["cloudy"]}
+      ],
+      "modest": [
+        {"name": "transparisteel", "colors": ["clear", "blue-tinted"]},
+        {"name": "aluminium glass", "colors": ["clear"]}
+      ],
+      "wealthy": [
+        {"name": "smart glass", "colors": ["clear", "smoked", "opaque white"]},
+        {"name": "electrochromic glass", "colors": ["blue-tinted", "clear"]}
+      ],
+      "elite": [
+        {"name": "synthetic sapphire", "colors": ["clear", "blue"]},
+        {"name": "holo-glass", "colors": ["iridescent"]},
+        {"name": "diamond glass", "colors": ["crystal-clear"]}
+      ]
+    }
+  },
+  "ceramic": {
+    "medieval": {
+      "poor": [
+        {"name": "earthenware", "colors": ["red-brown", "ochre"]},
+        {"name": "unglazed clay", "colors": ["terracotta", "buff"]}
+      ],
+      "modest": [
+        {"name": "glazed earthenware", "colors": ["green", "brown", "yellow"]},
+        {"name": "stoneware", "colors": ["grey", "brown"]}
+      ],
+      "wealthy": [
+        {"name": "salt-glazed stoneware", "colors": ["grey", "brown"]},
+        {"name": "tin-glazed ware", "colors": ["white", "blue"]},
+        {"name": "majolica", "colors": ["blue", "yellow"]}
+      ],
+      "elite": [
+        {"name": "porcelain", "colors": ["white", "blue-and-white"]},
+        {"name": "celadon", "colors": ["sea-green", "jade"]},
+        {"name": "painted faience", "colors": ["turquoise", "cobalt"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "brown earthenware", "colors": ["brown"]},
+        {"name": "terracotta", "colors": ["terracotta", "red"]}
+      ],
+      "modest": [
+        {"name": "stoneware", "colors": ["cream", "brown"]},
+        {"name": "ironstone", "colors": ["white"]},
+        {"name": "glazed fireclay", "colors": ["white", "cream"]}
+      ],
+      "wealthy": [
+        {"name": "bone china", "colors": ["white", "ivory"]},
+        {"name": "delftware", "colors": ["blue", "white"]},
+        {"name": "majolica", "colors": ["green", "cobalt"]}
+      ],
+      "elite": [
+        {"name": "sevres porcelain", "colors": ["royal blue", "gold"]},
+        {"name": "hand-painted porcelain", "colors": ["white", "rose", "gold"]},
+        {"name": "gilt bone china", "colors": ["white", "gold"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "cheap stoneware", "colors": ["white", "beige"]},
+        {"name": "terracotta", "colors": ["terracotta", "orange"]}
+      ],
+      "modest": [
+        {"name": "vitreous china", "colors": ["white"]},
+        {"name": "glazed tile", "colors": ["white", "grey", "blue"]}
+      ],
+      "wealthy": [
+        {"name": "porcelain", "colors": ["white", "matt black"]},
+        {"name": "stoneware", "colors": ["speckled grey", "sage"]}
+      ],
+      "elite": [
+        {"name": "handmade porcelain", "colors": ["white", "celadon"]},
+        {"name": "raku-fired clay", "colors": ["smoky black", "copper"]},
+        {"name": "crackle-glaze stoneware", "colors": ["ivory", "sea-green"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "cast ceramic", "colors": ["grey", "off-white"]},
+        {"name": "printed clay", "colors": ["terracotta", "grey"]}
+      ],
+      "modest": [
+        {"name": "ceramic composite", "colors": ["white", "grey"]},
+        {"name": "sintered ceramic", "colors": ["grey", "cream"]}
+      ],
+      "wealthy": [
+        {"name": "zirconia ceramic", "colors": ["white", "black"]},
+        {"name": "silicon carbide", "colors": ["black", "charcoal"]}
+      ],
+      "elite": [
+        {"name": "self-healing ceramic", "colors": ["pearl", "white"]},
+        {"name": "translucent porcelain", "colors": ["glowing white", "pale blue"]},
+        {"name": "cermet", "colors": ["gunmetal"]}
+      ]
+    }
+  },
+  "synthetic": {
+    "medieval": {
+      "poor": [
+        {"name": "waxed cloth", "colors": ["dun", "brown"]},
+        {"name": "tarred canvas", "colors": ["black", "brown"]},
+        {"name": "rough horn", "colors": ["cloudy", "brown"]}
+      ],
+      "modest": [
+        {"name": "horn", "colors": ["cloudy amber", "brown"]},
+        {"name": "pressed horn", "colors": ["amber", "cream"]},
+        {"name": "painted gesso", "colors": ["white", "red", "blue"]}
+      ],
+      "wealthy": [
+        {"name": "lacquer", "colors": ["red", "black"]},
+        {"name": "amber resin", "colors": ["amber", "honey"]},
+        {"name": "polished horn", "colors": ["honey", "black"]}
+      ],
+      "elite": [
+        {"name": "cinnabar lacquer", "colors": ["cinnabar", "black"]},
+        {"name": "tortoiseshell", "colors": ["amber", "mottled brown"]},
+        {"name": "ivory", "colors": ["ivory", "cream"]},
+        {"name": "mother-of-pearl", "colors": ["pearl", "opal"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "oilcloth", "colors": ["faded green", "brown", "black"]},
+        {"name": "tarred canvas", "colors": ["black"]},
+        {"name": "linoleum", "colors": ["brown", "red"]}
+      ],
+      "modest": [
+        {"name": "oilcloth", "colors": ["white", "red-checked"]},
+        {"name": "linoleum", "colors": ["brown", "green"]},
+        {"name": "vulcanite", "colors": ["black"]}
+      ],
+      "wealthy": [
+        {"name": "bakelite", "colors": ["brown", "black", "cream"]},
+        {"name": "celluloid", "colors": ["ivory", "amber"]},
+        {"name": "japanned tin", "colors": ["black", "gold"]}
+      ],
+      "elite": [
+        {"name": "gutta-percha", "colors": ["black", "dark brown"]},
+        {"name": "tortoiseshell celluloid", "colors": ["amber", "mottled brown"]},
+        {"name": "japanned lacquer", "colors": ["black", "gold"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "cheap plastic", "colors": ["white", "grey", "faded blue"]},
+        {"name": "vinyl", "colors": ["brown", "black"]},
+        {"name": "polystyrene", "colors": ["white"]}
+      ],
+      "modest": [
+        {"name": "moulded plastic", "colors": ["white", "grey", "red"]},
+        {"name": "vinyl", "colors": ["black", "cream"]},
+        {"name": "melamine", "colors": ["white", "beige"]}
+      ],
+      "wealthy": [
+        {"name": "acrylic", "colors": ["clear", "white"]},
+        {"name": "high-gloss lacquer", "colors": ["white", "black"]},
+        {"name": "solid surface", "colors": ["white", "grey"]}
+      ],
+      "elite": [
+        {"name": "carbon fibre", "colors": ["black", "charcoal"]},
+        {"name": "lucite", "colors": ["clear", "smoky"]},
+        {"name": "lacquered resin", "colors": ["black", "ivory"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "recycled polymer", "colors": ["grey", "mottled", "khaki"]},
+        {"name": "printed plastic", "colors": ["grey", "white"]},
+        {"name": "salvage plex", "colors": ["cloudy"]}
+      ],
+      "modest": [
+        {"name": "moulded polymer", "colors": ["white", "grey", "orange"]},
+        {"name": "polycarbonate", "colors": ["clear", "grey"]},
+        {"name": "plasteel", "colors": ["grey", "white"]}
+      ],
+      "wealthy": [
+        {"name": "carbon-weave", "colors": ["black", "charcoal"]},
+        {"name": "memory polymer", "colors": ["white", "pearl"]},
+        {"name": "aerogel", "colors": ["pale blue"]}
+      ],
+      "elite": [
+        {"name": "nanocarbon", "colors": ["black", "deep violet"]},
+        {"name": "liquid-crystal polymer", "colors": ["iridescent", "chrome"]},
+        {"name": "graphene composite", "colors": ["black", "pearl"]}
+      ]
+    }
+  },
+  "plant": {
+    "medieval": {
+      "poor": [
+        {"name": "straw", "colors": ["golden", "pale"]},
+        {"name": "rush", "colors": ["green-brown", "dun"]},
+        {"name": "bracken", "colors": ["brown"]}
+      ],
+      "modest": [
+        {"name": "wicker", "colors": ["honey", "pale"]},
+        {"name": "woven reed", "colors": ["tan"]},
+        {"name": "willow", "colors": ["pale", "grey-green"]}
+      ],
+      "wealthy": [
+        {"name": "fine wicker", "colors": ["honey", "golden"]},
+        {"name": "sweet rushes", "colors": ["green", "golden"]},
+        {"name": "potted rosemary", "colors": ["grey-green"]}
+      ],
+      "elite": [
+        {"name": "gilded wicker", "colors": ["gold", "honey"]},
+        {"name": "potted orange tree", "colors": ["dark green", "orange"]},
+        {"name": "fine rattan", "colors": ["honey"]}
+      ]
+    },
+    "industrial": {
+      "poor": [
+        {"name": "straw", "colors": ["dun", "golden"]},
+        {"name": "cornhusk", "colors": ["pale", "straw-yellow"]},
+        {"name": "coir", "colors": ["brown"]}
+      ],
+      "modest": [
+        {"name": "wicker", "colors": ["honey", "white"]},
+        {"name": "cane", "colors": ["honey", "pale"]},
+        {"name": "aspidistra", "colors": ["dark green"]}
+      ],
+      "wealthy": [
+        {"name": "rattan", "colors": ["honey", "golden"]},
+        {"name": "woven cane", "colors": ["honey"]},
+        {"name": "potted fern", "colors": ["green"]},
+        {"name": "kentia palm", "colors": ["green"]}
+      ],
+      "elite": [
+        {"name": "loom wicker", "colors": ["gold", "white"]},
+        {"name": "potted orchid", "colors": ["white", "purple"]},
+        {"name": "bamboo", "colors": ["golden", "pale green"]}
+      ]
+    },
+    "modern": {
+      "poor": [
+        {"name": "jute", "colors": ["tan", "sand"]},
+        {"name": "seagrass", "colors": ["sand", "green-brown"]},
+        {"name": "straw", "colors": ["pale"]}
+      ],
+      "modest": [
+        {"name": "rattan", "colors": ["honey", "white"]},
+        {"name": "bamboo", "colors": ["pale gold", "honey"]},
+        {"name": "spider plant", "colors": ["green", "variegated"]}
+      ],
+      "wealthy": [
+        {"name": "water hyacinth", "colors": ["tan", "honey"]},
+        {"name": "fiddle-leaf fig", "colors": ["dark green"]},
+        {"name": "monstera", "colors": ["deep green"]}
+      ],
+      "elite": [
+        {"name": "living moss", "colors": ["deep green", "emerald"]},
+        {"name": "olive tree", "colors": ["silver-green"]},
+        {"name": "hand-woven rattan", "colors": ["honey", "golden"]}
+      ]
+    },
+    "scifi": {
+      "poor": [
+        {"name": "algae mat", "colors": ["dull green", "brown"]},
+        {"name": "dried kelp", "colors": ["brown", "olive"]},
+        {"name": "mycelium board", "colors": ["cream", "grey"]}
+      ],
+      "modest": [
+        {"name": "hydro-moss", "colors": ["green", "lime"]},
+        {"name": "mycelium weave", "colors": ["cream", "tan"]},
+        {"name": "grown bamboo", "colors": ["pale green"]}
+      ],
+      "wealthy": [
+        {"name": "living moss", "colors": ["emerald"]},
+        {"name": "gene-tailored ivy", "colors": ["deep green", "silver"]},
+        {"name": "cultured rattan", "colors": ["honey"]}
+      ],
+      "elite": [
+        {"name": "bioluminescent moss", "colors": ["glowing blue", "teal"]},
+        {"name": "living vine-weave", "colors": ["emerald", "gold"]},
+        {"name": "xeno-orchid", "colors": ["violet", "white"]}
+      ]
+    }
+  }
+}

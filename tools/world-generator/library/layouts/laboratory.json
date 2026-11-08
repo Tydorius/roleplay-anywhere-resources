@@ -1,0 +1,184 @@
+{
+  "layouts": [
+    {
+      "id": "laboratory.small.a",
+      "family": "laboratory",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bench", "role": "work.primary", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "hood", "role": "work.secondary", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:bench", "optional": true}
+      ],
+      "grow": [
+        {"role": "storage.cold", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:side"}
+      ]
+    },
+    {
+      "id": "laboratory.small.b",
+      "family": "laboratory",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bench", "role": "work.primary", "size": [2, 1], "anchor": "center"},
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "stock", "role": "work.material", "size": [1, 1], "anchor": "corner"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "around:bench", "optional": true}
+      ],
+      "grow": [
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:far"},
+        {"role": "work.tool", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "laboratory.small.c",
+      "family": "laboratory",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bench", "role": "work.primary", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "hood", "role": "work.secondary", "size": [2, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "corner", "optional": true},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:bench"}
+      ],
+      "grow": [
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "laboratory.medium.a",
+      "family": "laboratory",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "benches", "role": "work.primary", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "hood", "role": "work.secondary", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:benches", "count": [1, 2]},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "computer", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "laboratory.medium.b",
+      "family": "laboratory",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "island", "role": "work.primary", "size": [2, 2], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:island", "count": [2, 3]},
+        {"id": "hood", "role": "work.secondary", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "storage.cold", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.tool", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "laboratory.medium.c",
+      "family": "laboratory",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:terminals", "count": [1, 2]},
+        {"id": "bench", "role": "work.primary", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "scope", "role": "work.secondary", "size": [1, 1], "anchor": "beside:bench"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "corner"},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "server", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "laboratory.large.a",
+      "family": "laboratory",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "islands", "role": "work.primary", "size": [2, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:islands", "count": [2, 4]},
+        {"id": "hoods", "role": "work.secondary", "size": [2, 1], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "corner"},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "work.primary", "size": [2, 1], "anchor": "center"},
+        {"role": "computer", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "wall:near"}
+      ]
+    },
+    {
+      "id": "laboratory.large.b",
+      "family": "laboratory",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "benches", "role": "work.primary", "size": [2, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "sidebenches", "role": "work.secondary", "size": [2, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"},
+        {"id": "table", "role": "table.work", "size": [2, 2], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:benches", "count": [2, 3]},
+        {"id": "stock", "role": "work.material", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "around:table"},
+        {"role": "storage.cold", "size": [1, 1], "anchor": "corner"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "light.big", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "laboratory.large.c",
+      "family": "laboratory",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "rig", "role": "work.secondary", "size": [2, 2], "anchor": "center"},
+        {"id": "benches", "role": "work.primary", "size": [2, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:terminals", "count": 2},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "corner"},
+        {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "plant", "role": "utility", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "server", "size": [1, 1], "anchor": "corner"},
+        {"role": "security", "size": [1, 1], "anchor": "near_door"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

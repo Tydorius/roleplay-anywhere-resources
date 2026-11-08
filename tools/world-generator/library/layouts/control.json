@@ -1,0 +1,179 @@
+{
+  "layouts": [
+    {
+      "id": "control.small.a",
+      "family": "control",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "consoles", "role": "control", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:consoles"},
+        {"id": "terminal", "role": "computer", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "screen", "size": [2, 1], "anchor": "wall:side"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:consoles"}
+      ]
+    },
+    {
+      "id": "control.small.b",
+      "family": "control",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "desk", "role": "control", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
+        {"id": "screens", "role": "screen", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "terminal", "role": "computer", "size": [1, 1], "anchor": "beside:desk", "optional": true}
+      ],
+      "grow": [
+        {"role": "weapons", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "control.small.c",
+      "family": "control",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "helm", "role": "control", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "chair", "role": "seat", "size": [1, 1], "anchor": "center"},
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:terminals"},
+        {"role": "server", "size": [1, 1], "anchor": "corner"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "control.medium.a",
+      "family": "control",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "consoles", "role": "control", "size": [2, 1], "anchor": "row:far", "count": 2, "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:consoles", "count": 2},
+        {"id": "command", "role": "seat.state", "size": [1, 1], "anchor": "center"},
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "screen", "role": "screen", "size": [2, 1], "anchor": "wall:side", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:terminals"},
+        {"role": "server", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "control.medium.b",
+      "family": "control",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "table", "role": "table.work", "size": [2, 2], "anchor": "center"},
+        {"id": "console", "role": "control", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 3]},
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "row:side", "count": 2, "back": "wall"},
+        {"id": "server", "role": "server", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "around:table"},
+        {"role": "screen", "size": [2, 1], "anchor": "wall:side"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "control.medium.c",
+      "family": "control",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "screens", "role": "screen", "size": [2, 1], "anchor": "row:far", "count": [1, 2], "back": "wall"},
+        {"id": "desk", "role": "control", "size": [2, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:desk", "count": [1, 2]},
+        {"id": "guns", "role": "weapons", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "terminal", "role": "computer", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "security", "size": [1, 1], "anchor": "near_door"},
+        {"role": "server", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "control.large.a",
+      "family": "control",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "consoles", "role": "control", "size": [2, 1], "anchor": "row:far", "count": 3, "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:consoles", "count": 3},
+        {"id": "command", "role": "seat.state", "size": [1, 1], "anchor": "center"},
+        {"id": "terminals", "role": "computer", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "screen", "role": "screen", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "servers", "role": "server", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:terminals"},
+        {"role": "control", "size": [2, 1], "anchor": "wall:side"},
+        {"role": "server", "size": [1, 1], "anchor": "corner"},
+        {"role": "table.small", "size": [1, 1], "anchor": "beside:command"}
+      ]
+    },
+    {
+      "id": "control.large.b",
+      "family": "control",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "table", "role": "table.work", "size": [3, 2], "anchor": "center"},
+        {"id": "console", "role": "control", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "sideconsoles", "role": "control", "size": [2, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [3, 4]},
+        {"id": "screen", "role": "screen", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "server", "role": "server", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "beside:sideconsoles"},
+        {"role": "computer", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "around:table"}
+      ]
+    },
+    {
+      "id": "control.large.c",
+      "family": "control",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "servers", "role": "server", "size": [1, 1], "anchor": "row:side", "count": [3, 4], "back": "wall"},
+        {"id": "console", "role": "control", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "pod", "role": "computer", "size": [1, 1], "anchor": "center", "count": [2, 4]},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:pod", "count": [2, 3]},
+        {"id": "screen", "role": "screen", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"id": "plant", "role": "utility", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "server", "size": [1, 1], "anchor": "row:side"},
+        {"role": "seat", "size": [1, 1], "anchor": "around:pod"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    }
+  ]
+}

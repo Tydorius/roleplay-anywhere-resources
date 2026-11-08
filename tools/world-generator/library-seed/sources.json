@@ -172,5 +172,25 @@
    "room roles"
   ],
   "entries": 23
+ },
+ {
+  "id": "claude-authored",
+  "title": "Written for this library by Claude (Anthropic) agents, 2026-11-07",
+  "url": "",
+  "licence": "MPL-2.0 (this repository)",
+  "shareAlike": false,
+  "covers": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "gives": [
+   "names",
+   "sizes",
+   "text",
+   "layouts"
+  ],
+  "entries": 0
  }
 ]

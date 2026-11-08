@@ -1,0 +1,120 @@
+{
+  "layouts": [
+    {
+      "id": "stable.medium.a",
+      "family": "stable",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "stalls", "role": "animal", "size": [2, 2], "anchor": "row:far", "count": 2, "back": "wall"},
+        {"id": "trough", "role": "animal", "size": [1, 1], "anchor": "beside:stalls"},
+        {"id": "tack", "role": "work.tool", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "stable.medium.b",
+      "family": "stable",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "stalls", "role": "animal", "size": [1, 2], "anchor": "row:side", "count": [3, 4], "back": "wall"},
+        {"id": "tack", "role": "work.tool", "size": [1, 1], "anchor": "wall:near", "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"id": "trough", "role": "animal", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "ladder", "role": "utility", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "animal", "size": [1, 2], "anchor": "row:side"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "stable.medium.c",
+      "family": "stable",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "manger", "role": "animal", "size": [2, 1], "anchor": "center"},
+        {"id": "stalls", "role": "animal", "size": [1, 2], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "wall:near", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "stable.large.a",
+      "family": "stable",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "stalls", "role": "animal", "size": [2, 2], "anchor": "row:side", "count": 3, "back": "wall"},
+        {"id": "tack", "role": "work.tool", "size": [1, 1], "anchor": "wall:near", "count": [1, 2], "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [2, 3]},
+        {"id": "trough", "role": "animal", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "animal", "size": [2, 2], "anchor": "row:side"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"},
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "stable.large.b",
+      "family": "stable",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "stallsA", "role": "animal", "size": [1, 2], "anchor": "row:side", "count": 3, "back": "wall"},
+        {"id": "stallsB", "role": "animal", "size": [1, 2], "anchor": "row:side", "count": 3, "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": 2},
+        {"id": "tack", "role": "work.tool", "size": [1, 1], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "trough", "role": "animal", "size": [2, 1], "anchor": "wall:near", "back": "wall", "optional": true},
+        {"id": "ladder", "role": "utility", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "animal", "size": [1, 2], "anchor": "row:side"},
+        {"role": "animal", "size": [1, 2], "anchor": "row:side"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "stable.large.c",
+      "family": "stable",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "pen", "role": "animal", "size": [3, 3], "anchor": "center"},
+        {"id": "stalls", "role": "animal", "size": [1, 2], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "corner", "count": [1, 2]},
+        {"id": "tools", "role": "work.tool", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "dung", "role": "waste", "size": [1, 1], "anchor": "near_door", "optional": true}
+      ],
+      "grow": [
+        {"role": "animal", "size": [1, 2], "anchor": "row:far"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "work.material", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "utility", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "layouts": [
+    {
+      "id": "classroom.small.a",
+      "family": "classroom",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tdesk", "role": "desk", "size": [1, 1], "anchor": "beside:board"},
+        {"id": "tseat", "role": "seat", "size": [1, 1], "anchor": "beside:tdesk"},
+        {"id": "desks", "role": "desk", "size": [1, 1], "anchor": "center", "count": [2, 3]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "desk", "size": [1, 1], "anchor": "center"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "classroom.small.b",
+      "family": "classroom",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "table", "role": "desk", "size": [2, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 3]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "wall:side", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "around:table"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "classroom.small.c",
+      "family": "classroom",
+      "sizeBands": ["small"],
+      "minInterior": [5, 4],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "desks", "role": "desk", "size": [1, 1], "anchor": "row:side", "count": [2, 3]},
+        {"id": "tdesk", "role": "desk", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tseat", "role": "seat", "size": [1, 1], "anchor": "beside:tdesk"},
+        {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "desk", "size": [1, 1], "anchor": "row:side"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "classroom.medium.a",
+      "family": "classroom",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tdesk", "role": "desk", "size": [2, 1], "anchor": "beside:board"},
+        {"id": "tseat", "role": "seat", "size": [1, 1], "anchor": "beside:tdesk"},
+        {"id": "desks", "role": "desk", "size": [1, 1], "anchor": "center", "count": [4, 5]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "desk", "size": [1, 1], "anchor": "center"},
+        {"role": "desk", "size": [1, 1], "anchor": "center"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "classroom.medium.b",
+      "family": "classroom",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tdesk", "role": "desk", "size": [1, 1], "anchor": "beside:board"},
+        {"id": "tseat", "role": "seat", "size": [1, 1], "anchor": "beside:tdesk", "optional": true},
+        {"id": "desksA", "role": "desk", "size": [1, 1], "anchor": "row:side", "count": [2, 4]},
+        {"id": "desksB", "role": "desk", "size": [1, 1], "anchor": "row:side", "count": [2, 3]}
+      ],
+      "grow": [
+        {"role": "desk", "size": [1, 1], "anchor": "row:side"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:near"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "classroom.medium.c",
+      "family": "classroom",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "table", "role": "desk", "size": [2, 2], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [3, 4]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "around:table"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "classroom.large.a",
+      "family": "classroom",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tdesk", "role": "desk", "size": [2, 1], "anchor": "beside:board"},
+        {"id": "tseat", "role": "seat", "size": [1, 1], "anchor": "beside:tdesk"},
+        {"id": "desks", "role": "desk", "size": [1, 1], "anchor": "center", "count": [8, 12]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
+        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "desk", "size": [1, 1], "anchor": "center"},
+        {"role": "desk", "size": [1, 1], "anchor": "center"},
+        {"role": "shelving", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "classroom.large.b",
+      "family": "classroom",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "lectern", "role": "lectern", "size": [1, 1], "anchor": "beside:board"},
+        {"id": "benches", "role": "seat.long", "size": [3, 1], "anchor": "center", "count": [3, 4]},
+        {"id": "books", "role": "books", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "lights", "role": "light.big", "size": [1, 1], "anchor": "corner", "count": 2, "minWealth": "modest"}
+      ],
+      "grow": [
+        {"role": "seat.long", "size": [3, 1], "anchor": "center"},
+        {"role": "screen", "size": [2, 1], "anchor": "wall:far"},
+        {"role": "books", "size": [1, 1], "anchor": "wall:side"}
+      ]
+    },
+    {
+      "id": "classroom.large.c",
+      "family": "classroom",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 10],
+      "slots": [
+        {"id": "board", "role": "teach", "size": [3, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "tdesk", "role": "desk", "size": [1, 1], "anchor": "beside:board"},
+        {"id": "tables", "role": "desk", "size": [2, 1], "anchor": "center", "count": [3, 4]},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [4, 6]},
+        {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side", "count": [1, 2], "back": "wall"}
+      ],
+      "grow": [
+        {"role": "seat", "size": [1, 1], "anchor": "around:tables"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

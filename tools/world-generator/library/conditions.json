@@ -1,0 +1,16 @@
+{
+  "_readme": [
+    "Condition word per material class, read before the material (rotting oak bench).",
+    "The main part's class picks the word; * is the fallback. kept is always empty."
+  ],
+  "*":         {"ruined": "wrecked",        "worn": "worn",      "kept": "", "pristine": "spotless"},
+  "wood":      {"ruined": "rotting",        "worn": "scuffed",   "kept": "", "pristine": "polished"},
+  "metal":     {"ruined": "rusted-through", "worn": "tarnished", "kept": "", "pristine": "gleaming"},
+  "stone":     {"ruined": "crumbling",      "worn": "weathered", "kept": "", "pristine": "immaculate"},
+  "fabric":    {"ruined": "moth-eaten",     "worn": "threadbare", "kept": "", "pristine": "crisp"},
+  "leather":   {"ruined": "mildewed",       "worn": "creased",   "kept": "", "pristine": "supple"},
+  "glass":     {"ruined": "shattered",      "worn": "scratched", "kept": "", "pristine": "sparkling"},
+  "ceramic":   {"ruined": "cracked",        "worn": "chipped",   "kept": "", "pristine": "flawless"},
+  "synthetic": {"ruined": "melted",         "worn": "faded",     "kept": "", "pristine": "glossy"},
+  "plant":     {"ruined": "withered",       "worn": "frayed",    "kept": "", "pristine": "fresh"}
+}

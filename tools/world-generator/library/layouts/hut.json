@@ -1,0 +1,119 @@
+{
+  "layouts": [
+    {
+      "id": "hut.small.a",
+      "family": "hut",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [5, 5],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:far+corner", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [1, 1], "anchor": "center"},
+        {"id": "table", "role": "table.dining", "size": [1, 1], "anchor": "wall:side"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": 2}
+      ],
+      "grow": [
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "fuel", "size": [1, 1], "anchor": "near_door"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "hut.small.b",
+      "family": "hut",
+      "sizeBands": ["small"],
+      "minInterior": [4, 6],
+      "maxInterior": [5, 6],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:side+away_from_door", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "table", "role": "table.dining", "size": [1, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": 2}
+      ],
+      "grow": [
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:fire"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "hut.small.c",
+      "family": "hut",
+      "sizeBands": ["small"],
+      "minInterior": [4, 5],
+      "maxInterior": [5, 6],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:side+away_from_door", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "table", "role": "table.dining", "size": [1, 1], "anchor": "near_door"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "beside:table", "count": 2}
+      ],
+      "grow": [
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:fire"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bed"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:near", "back": "wall"}
+      ]
+    },
+    {
+      "id": "hut.medium.a",
+      "family": "hut",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [7, 7],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:far+corner", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 3]},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "beside:bed"}
+      ],
+      "grow": [
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:fire"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "hut.medium.b",
+      "family": "hut",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 5],
+      "maxInterior": [7, 6],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:far+corner", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [1, 1], "anchor": "center"},
+        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "wall:side"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": 2},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "beside:bed"}
+      ],
+      "grow": [
+        {"role": "fuel", "size": [1, 1], "anchor": "near_door"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"},
+        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"role": "decor.floor", "size": [1, 1], "anchor": "beside:bed"}
+      ]
+    },
+    {
+      "id": "hut.medium.c",
+      "family": "hut",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 6],
+      "maxInterior": [8, 7],
+      "slots": [
+        {"id": "bed", "role": "sleep", "size": [1, 2], "anchor": "wall:side+away_from_door", "count": "singles", "back": "wall"},
+        {"id": "fire", "role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "cook", "role": "cook", "size": [1, 1], "anchor": "beside:fire", "back": "wall"},
+        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
+        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 4]},
+        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "beside:bed"}
+      ],
+      "grow": [
+        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "fuel", "size": [1, 1], "anchor": "beside:fire"},
+        {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+        {"role": "storage.big", "size": [2, 1], "anchor": "wall:near", "back": "wall"}
+      ]
+    }
+  ]
+}

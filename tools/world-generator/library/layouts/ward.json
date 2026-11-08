@@ -1,0 +1,127 @@
+{
+  "layouts": [
+    {
+      "id": "ward.medium.a",
+      "family": "ward",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "beds", "role": "med.bed", "size": [1, 2], "anchor": "row:far", "count": [3, 4], "back": "wall"},
+        {"id": "screens", "role": "med.screen", "size": [1, 1], "anchor": "beside:beds", "count": [1, 2]},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:beds"},
+        {"role": "seat", "size": [1, 1], "anchor": "near_door"},
+        {"role": "waste", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "ward.medium.b",
+      "family": "ward",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "bedsA", "role": "med.bed", "size": [1, 2], "anchor": "row:side", "count": 2, "back": "wall"},
+        {"id": "bedsB", "role": "med.bed", "size": [1, 2], "anchor": "row:side", "count": 2, "back": "wall"},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "screen", "role": "med.screen", "size": [1, 1], "anchor": "beside:bedsA"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "near_door", "optional": true},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "med.screen", "size": [1, 1], "anchor": "beside:bedsB"},
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:bedsA"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "ward.medium.c",
+      "family": "ward",
+      "sizeBands": ["medium"],
+      "minInterior": [6, 5],
+      "maxInterior": [8, 6],
+      "slots": [
+        {"id": "beds", "role": "med.bed", "size": [1, 2], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "screens", "role": "med.screen", "size": [1, 1], "anchor": "beside:beds", "count": 2},
+        {"id": "desk", "role": "desk", "size": [1, 1], "anchor": "near_door"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "med.supply", "size": [1, 1], "anchor": "wall:side"},
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:beds"},
+        {"role": "waste", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "ward.large.a",
+      "family": "ward",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "bedsA", "role": "med.bed", "size": [1, 2], "anchor": "row:side", "count": [3, 4], "back": "wall"},
+        {"id": "bedsB", "role": "med.bed", "size": [1, 2], "anchor": "row:side", "count": [3, 4], "back": "wall"},
+        {"id": "desk", "role": "desk", "size": [1, 1], "anchor": "center"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "wall:far", "count": [1, 2], "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "wall:near", "back": "wall", "optional": true}
+      ],
+      "grow": [
+        {"role": "med.bed", "size": [1, 2], "anchor": "row:side"},
+        {"role": "med.bed", "size": [1, 2], "anchor": "row:side"},
+        {"role": "med.screen", "size": [1, 1], "anchor": "beside:bedsA"},
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:bedsB"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "ward.large.b",
+      "family": "ward",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "beds", "role": "med.bed", "size": [1, 2], "anchor": "row:far", "count": [4, 5], "back": "wall"},
+        {"id": "sides", "role": "bedside", "size": [1, 1], "anchor": "beside:beds", "count": [2, 3]},
+        {"id": "screens", "role": "med.screen", "size": [1, 1], "anchor": "beside:beds", "count": [2, 3]},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "wall:side", "count": 2, "back": "wall"},
+        {"id": "desk", "role": "desk", "size": [1, 1], "anchor": "near_door"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"}
+      ],
+      "grow": [
+        {"role": "med.bed", "size": [1, 2], "anchor": "row:side"},
+        {"role": "med.station", "size": [1, 2], "anchor": "wall:side"},
+        {"role": "waste", "size": [1, 1], "anchor": "corner"},
+        {"role": "seat", "size": [1, 1], "anchor": "beside:beds"}
+      ]
+    },
+    {
+      "id": "ward.large.c",
+      "family": "ward",
+      "sizeBands": ["large"],
+      "minInterior": [7, 8],
+      "maxInterior": [12, 14],
+      "slots": [
+        {"id": "beds", "role": "med.bed", "size": [1, 2], "anchor": "center", "count": [4, 6]},
+        {"id": "supply", "role": "med.supply", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
+        {"id": "screens", "role": "med.screen", "size": [1, 1], "anchor": "beside:beds", "count": [2, 3]},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "corner"},
+        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "near_door", "optional": true},
+        {"id": "bin", "role": "waste", "size": [1, 1], "anchor": "corner", "optional": true}
+      ],
+      "grow": [
+        {"role": "med.bed", "size": [1, 2], "anchor": "row:far"},
+        {"role": "bedside", "size": [1, 1], "anchor": "beside:beds"},
+        {"role": "desk", "size": [1, 1], "anchor": "near_door"},
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

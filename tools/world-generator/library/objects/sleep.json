@@ -1,0 +1,1243 @@
+{
+  "objects": [
+    {
+      "id": "bed.pallet",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "straw pallet"
+      },
+      "parts": {
+        "bedding": "plant",
+        "cover": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {bedding} stuffed into {A:cover.color} {cover} tick, pressed flat where someone sleeps.",
+        "physical": "Top-down view of a flat {noun} on the floor: a lumpy {cover.color} {cover} tick with {bedding.color} {bedding} poking from the seams, a rolled bundle for a pillow at the top."
+      },
+      "aliases": [
+        "straw bed",
+        "straw-tick bed",
+        "straw mattress bed"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "bed.roll",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bedroll",
+        "modern": "sleeping bag"
+      },
+      "parts": {
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "modern": {
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {cover.color} {noun} spread on the bare floor, its ties trailing loose.",
+        "physical": "Top-down view of {A:cover.color} {cover} {noun} laid flat on the floor, the top corner turned back like a blanket."
+      },
+      "aliases": [
+        "roll cot"
+      ],
+      "sources": [
+        "dnd-srd",
+        "rimworld-wiki",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "bed.cot",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cot",
+        "industrial": "camp cot",
+        "modern": "folding cot",
+        "scifi": "fold-down rack"
+      },
+      "parts": {
+        "frame": "metal",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with a taut {cover.color} {cover} sling and one thin blanket.",
+        "physical": "Top-down view of a narrow {noun}: {frame.color} {frame} side rails, a stretched {cover.color} {cover} bed, a flat pillow at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.single",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bed",
+        "industrial": "iron bedstead",
+        "modern": "single bed",
+        "scifi": "berth"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} made up with {cover.color} {cover} blankets tucked tight.",
+        "physical": "Top-down view of a single {noun}: {frame.color} {frame} frame, {cover.color} {cover} blanket folded back, a pale pillow against the headboard at the top."
+      },
+      "aliases": [
+        "cot",
+        "single bed"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "df-wiki",
+        "wikipedia-furniture",
+        "kenney-furniture"
+      ]
+    },
+    {
+      "id": "bed.fine_single",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "fine bed",
+        "medieval": "curtained bed",
+        "industrial": "brass bedstead",
+        "modern": "platform bed"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {frame}, its {cover.color} {cover} coverlet smoothed flat and heaped with pillows.",
+        "physical": "Top-down view of a narrow {noun}: {A:frame.color} {frame} frame with a tall headboard at the top, {A:cover.color} {cover} coverlet, three stacked pillows."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.sleep_pod",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "sleep pod"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "lid": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell.color} {noun} whose {lid} lid hisses shut over a contoured gel mattress.",
+        "physical": "Top-down view of a rounded capsule {noun}: {shell.color} {shell} shell, a clear {lid} lid over a pale contoured mattress, a glowing control strip at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.hammock",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": null,
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "hammock"
+      },
+      "parts": {
+        "net": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {net.color} {net} {noun} slung between two hooks, swaying at a touch.",
+        "physical": "Top-down view of a slung {noun}: a long {net.color} {net} sling pinched at both ends, ropes running to hooks at the top and bottom."
+      },
+      "aliases": [],
+      "sources": [
+        "cdda-furniture",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "bed.double_pallet",
+      "category": "bed",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "double pallet",
+        "medieval": "double straw pallet",
+        "industrial": "double mattress",
+        "modern": "floor mattress",
+        "scifi": "double foam mat"
+      },
+      "parts": {
+        "bedding": "plant",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "modern": {
+          "bedding": "synthetic"
+        },
+        "scifi": {
+          "bedding": "synthetic",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} wide {noun} laid on the floor, its {cover.color} {cover} cover sagging in two hollows where a pair sleep.",
+        "physical": "Top-down view of a broad {noun} lying flat on the floor: {A:cover.color} {cover} cover with two dents side by side, two flat pillows at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.double",
+      "category": "bed",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "double bed",
+        "industrial": "double bedstead",
+        "scifi": "double berth"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} wide enough for two, under {A:cover.color} {cover} quilt.",
+        "physical": "Top-down view of a double {noun}: {frame.color} {frame} frame, {A:cover.color} {cover} quilt, two pillows side by side against the headboard at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "bed.fourposter",
+      "category": "bed",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "four-poster bed"
+      },
+      "parts": {
+        "frame": "wood",
+        "hangings": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} hung with heavy {hangings.color} {hangings} curtains that close out the cold.",
+        "physical": "Top-down view of a canopied {noun}: four {frame.color} {frame} posts at the corners joined by a canopy rail, {hangings.color} {hangings} drapes tied back, bolster and pillows at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "bed.king",
+      "category": "bed",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "king-size bed"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a padded {frame} headboard and crisp {cover.color} {cover} sheets.",
+        "physical": "Top-down view of a very wide {noun}: {frame.color} {frame} headboard at the top, {cover.color} {cover} duvet, four pillows in a row, a folded throw across the foot."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.pod_double",
+      "category": "bed",
+      "size": [
+        2,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "luxury sleep pod"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "cover": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} big enough for two, its curved {shell.color} hood dimming to a soft night-glow.",
+        "physical": "Top-down view of a wide oval {noun}: {shell.color} {shell} rim, {A:cover.color} {cover} mattress with two pillows, a curved hood over the top edge."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "bed.bunk",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bunk bed",
+        "medieval": "plank bunk",
+        "industrial": "iron bunk",
+        "scifi": "bunk rack"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "metal"
+        },
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} two-tier {noun} of {frame}, each level with a thin {cover.color} {cover} blanket.",
+        "physical": "Top-down view of a two-tier {noun}: the upper {cover.color} {cover} mattress fills the {frame.color} {frame} frame, a ladder on one long side, pillow at the top."
+      },
+      "aliases": [
+        "bunk cot",
+        "guard bunk"
+      ],
+      "sources": [
+        "cdda-furniture",
+        "pa-fandom",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "bed.capsule",
+      "category": "bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "capsule bunk",
+        "scifi": "crew capsule"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "cover": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell.color} {noun} with a reading light, a cubby shelf and a pull-down blind for privacy.",
+        "physical": "Top-down view of a boxed {noun}: {shell.color} {shell} walls on three sides, open along the bottom edge, {A:cover.color} {cover} mattress and pillow at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "crib.cradle",
+      "category": "crib",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cradle"
+      },
+      "parts": {
+        "frame": "wood",
+        "bedding": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "child",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} on curved rockers, {A:bedding.color} {bedding} blanket folded inside.",
+        "physical": "Top-down view of a small {noun}: {frame.color} {frame} sides around {A:bedding.color} {bedding} blanket, the head end hooded at the top, rocker tips showing at the corners."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "crib.cot",
+      "category": "crib",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "crib",
+        "industrial": "barred cot",
+        "scifi": "infant cot"
+      },
+      "parts": {
+        "frame": "wood",
+        "bedding": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "child",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with barred sides, {A:bedding.color} {bedding} blanket and one small soft toy.",
+        "physical": "Top-down view of a small {noun}: {A:frame.color} {frame} rectangle of bars around {A:bedding.color} {bedding} mattress, a tiny pillow at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "rimworld-wiki",
+        "wikipedia-furniture"
+      ]
+    },
+    {
+      "id": "crib.fine",
+      "category": "crib",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "bassinet",
+        "medieval": "canopied cradle",
+        "industrial": "lace bassinet",
+        "modern": "designer crib",
+        "scifi": "nursery pod"
+      },
+      "parts": {
+        "frame": "wood",
+        "drape": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "child",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} of {frame} under {A:drape.color} {drape} canopy, fit for an heir.",
+        "physical": "Top-down view of a small {noun}: {A:frame.color} {frame} basket with {A:drape.color} {drape} canopy drawn over the top end, a tiny pillow beneath it."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "cell_bed.plank",
+      "category": "cell_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "plank bed",
+        "medieval": "plank shelf",
+        "industrial": "plank cot"
+      },
+      "parts": {
+        "frame": "wood",
+        "bedding": "plant"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "prison",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} chained to the wall, with a scatter of {bedding} for a mattress.",
+        "physical": "Top-down view of a bare {noun}: {frame.color} {frame} boards, a thin heap of {bedding.color} {bedding}, a chain at each top corner, head end at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "cell_bed.bolted",
+      "category": "cell_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "cell bunk",
+        "industrial": "iron cell cot",
+        "modern": "steel bunk",
+        "scifi": "fold-down cell bunk"
+      },
+      "parts": {
+        "frame": "metal",
+        "mattress": "fabric"
+      },
+      "partsByBand": {
+        "modern": {
+          "mattress": "synthetic"
+        },
+        "scifi": {
+          "mattress": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "prison",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} bolted in place, its {mattress.color} mattress no thicker than a thumb.",
+        "physical": "Top-down view of a bare {noun}: {A:frame.color} {frame} tray with bolt heads along its edges, a thin {mattress.color} {mattress} pad, no pillow, head end at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "pa-fandom",
+        "cdda-furniture"
+      ]
+    },
+    {
+      "id": "cell_bed.slab",
+      "category": "cell_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "stone ledge",
+        "modern": "concrete bed plinth",
+        "scifi": "poured slab bunk"
+      },
+      "parts": {
+        "base": "stone"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "prison",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {base} {noun} built out from the wall, cold to lie on and impossible to move.",
+        "physical": "Top-down view of a solid {noun}: one {base.color} {base} block running from the wall at the top, smooth along its length."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "cell_bed.privileged",
+      "category": "cell_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "detention bed",
+        "medieval": "tower-room bed",
+        "industrial": "officer's cell bed",
+        "scifi": "detention berth"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "prison",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with a proper {cover.color} {cover} blanket, a courtesy for a prisoner worth keeping well.",
+        "physical": "Top-down view of a narrow {noun}: {A:frame.color} {frame} frame fixed to the floor, {A:cover.color} {cover} blanket, a real pillow at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hospital_bed.cot",
+      "category": "hospital_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "sickbed",
+        "medieval": "infirmary cot",
+        "industrial": "ward cot",
+        "modern": "field cot",
+        "scifi": "triage cot"
+      },
+      "parts": {
+        "frame": "wood",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "industrial": {
+          "frame": "metal"
+        },
+        "modern": {
+          "frame": "metal"
+        },
+        "scifi": {
+          "frame": "metal",
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "medical",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with a coarse {cover.color} {cover} sheet and a bucket tucked beneath it.",
+        "physical": "Top-down view of a plain {noun}: {frame.color} {frame} frame, {A:cover.color} {cover} sheet pulled straight, a small pillow at the top."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hospital_bed.ward",
+      "category": "hospital_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "industrial",
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "hospital bed",
+        "industrial": "iron ward bed",
+        "scifi": "med bed"
+      },
+      "parts": {
+        "frame": "metal",
+        "cover": "fabric"
+      },
+      "partsByBand": {
+        "scifi": {
+          "cover": "synthetic"
+        }
+      },
+      "tags": [
+        "bed",
+        "medical",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} on castors, its side rails raised and the patient's record hung at the foot.",
+        "physical": "Top-down view of a wheeled {noun}: {frame.color} {frame} side rails, {A:cover.color} {cover} sheet, the head section raised at the top, castors at the corners."
+      },
+      "aliases": [
+        "medical bed",
+        "gurney",
+        "hospital gurney"
+      ],
+      "sources": [
+        "rimworld-wiki",
+        "pa-fandom",
+        "cdda-furniture",
+        "local-replies"
+      ]
+    },
+    {
+      "id": "hospital_bed.curtained",
+      "category": "hospital_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "curtained sickbed",
+        "industrial": "private sickbed"
+      },
+      "parts": {
+        "frame": "wood",
+        "curtain": "fabric"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "medical",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} screened by {curtain.color} {curtain} curtains, a physician's stool waiting at its side.",
+        "physical": "Top-down view of a screened {noun}: {frame.color} {frame} frame and bolster at the top, {curtain.color} {curtain} curtains drawn round three sides on a rail."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hospital_bed.intensive",
+      "category": "hospital_bed",
+      "size": [
+        1,
+        2
+      ],
+      "walkability": 0.3,
+      "forSleep": true,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern",
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "intensive-care bed",
+        "scifi": "regeneration bed"
+      },
+      "parts": {
+        "frame": "metal",
+        "panel": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "bed",
+        "medical",
+        "furniture"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} wired to a bank of monitors that chirp with every heartbeat.",
+        "physical": "Top-down view of a wired {noun}: {frame.color} {frame} frame, a pale sheet, {A:panel.color} {panel} monitor arm curving over the head at the top, cables trailing down one side."
+      },
+      "aliases": [],
+      "sources": [
+        "claude-authored"
+      ]
+    }
+  ]
+}

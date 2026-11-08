@@ -1,6 +1,18 @@
 # Room library: design
 
-Status: design only, nothing built (2026-11-03). Target: the world generator in this folder.
+Status (2026-11-07): the library's data and checker exist, but the generator doesn't use them
+yet. Built so far:
+- the vocabulary (`library/library.json`) and the authoring rules (`library/AUTHORING.md`);
+- `worldgen/library.py`: the loader, the checker, the text fill and a coverage report, run with
+  `python -m worldgen library check --coverage`;
+- default content written by Claude agents from the `library-seed/` drafts: 320 object types,
+  204 layouts in 26 families, 72 purposes, 85 suites across the four bands, and every material
+  class x band x wealth tier.
+
+Next is build order step 1 (rotation and the `far`/`side`/`near` anchors in `layout_room`), then
+step 3 (compiling layouts into furniture lines). See "Open items from authoring" at the end.
+
+Target: the world generator in this folder.
 
 ## Why
 
@@ -592,3 +604,21 @@ Measure after step 4, the first point where tokens change.
    That would be a read-only import, without changing the editor's own data.
 5. **Items:** a P2 item library using the same text templates would remove most of P2's remaining
    cost. Do it after v1, or fold it in?
+
+## Open items from authoring (2026-11-07)
+
+The agents that wrote the default library asked for these. None is built yet.
+
+- **Anchors:** `wall:opposite`, the side wall facing a `wall:side` piece, so two rows of pews,
+  beds or shelves don't land on the same wall. Also rows that face another slot (pews towards an
+  altar, desks towards a board), and `between:door+<slot>` for a shop counter between the door
+  and the stock.
+- **Roles:** animal feed (stables use `storage.bulk`), a reading table, a filing cabinet, a
+  reception desk apart from `counter.serve`, and a clinic's instrument trolley.
+- **Material classes:** paper or card (a cardboard box, a map, a canvas) and wax.
+- **Text fill:** code now makes a fixed "a"/"an" agree with the word after it, drops a colour
+  that the material name already contains ("chrome chrome-plated"), and collapses a repeated word
+  ("marble marble altar"). `partsByBand` merges over `parts`.
+- **Coverage:** with ordered fallbacks in `purposes.json` (a medieval "control room" gets a map
+  table, a cramped sci-fi kitchen an appliance), every required slot has some object in every
+  band. About 1,900 slot x tier cells are filled only from a neighbouring wealth tier.
