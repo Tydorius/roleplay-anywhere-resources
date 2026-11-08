@@ -7,13 +7,17 @@ the parse succeeds but no constraint flags are set.
 from dataclasses import dataclass, field
 
 SIDES = ("north", "south", "east", "west")
+# sides relative to a room's main door, resolved by the room placer:
+# far = the wall across from the door, near = the door's own wall,
+# side = a wall at right angles to it
+REL_SIDES = ("far", "side", "near")
 
 
 @dataclass
 class Hint:
     raw: str
-    walls: tuple = ()            # sides from wall:<side>
-    row: str = None              # side from row:<side>
+    walls: tuple = ()            # sides from wall:<side> (absolute or far/side/near)
+    row: str = None              # side from row:<side> (absolute or far/side/near)
     corner: bool = False
     center: bool = False
     beside: str = None           # template name from beside:<template>
@@ -49,13 +53,13 @@ def parse(text):
         key = key.strip()
         value = value.strip()
         if key == "wall":
-            if value in SIDES:
+            if value in SIDES or value in REL_SIDES:
                 h.walls = h.walls + (value,)
             elif value == "any":
                 pass
             else:
                 h.unknown = h.unknown + (token,)
-        elif key == "row" and value in SIDES:
+        elif key == "row" and (value in SIDES or value in REL_SIDES):
             h.row = value
         elif key == "beside" and value:
             h.beside = value

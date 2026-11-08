@@ -365,7 +365,10 @@ class Builder:
                 else:
                     pos, extra = pl, {}
                 pos = self.at(pos, f"{name} #{i}")
-                size = t["size"]
+                # "rot": quarter turns clockwise; the game draws the sprite turned
+                # and the placed object's size is the turned footprint
+                rot = int(extra.get("rot", 0) or 0) % 4
+                size = [t["size"][1], t["size"][0]] if rot % 2 else t["size"]
                 for c in cells(pos, size):
                     if c in self.reserved:
                         self.err(f"{name} #{i} covers a character's starting cell {c}")
@@ -376,6 +379,8 @@ class Builder:
                      "templateId": t["id"]}
                 if "money" in extra:
                     e["money"] = extra["money"]
+                if rot:
+                    e["rot"] = rot
                 ents.append(e)
         # scattered filler: {"scatter": [{"region": name, "count": n}]} drops n copies on
         # free cells of an open region (never inside nested walled rooms or on doors' approach)

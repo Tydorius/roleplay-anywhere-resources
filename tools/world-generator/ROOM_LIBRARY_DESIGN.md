@@ -9,8 +9,14 @@ yet. Built so far:
   204 layouts in 26 families, 72 purposes, 85 suites across the four bands, and every material
   class x band x wealth tier.
 
-Next is build order step 1 (rotation and the `far`/`side`/`near` anchors in `layout_room`), then
-step 3 (compiling layouts into furniture lines). See "Open items from authoring" at the end.
+Step 1 is built too (2026-11-07): `layout_room` turns any template with a `back`, and
+`wall:`/`row:` take `far`, `side` and `near`, measured from the room's door nearest the building
+entrance. The turn reaches the scenario as `rot` plus the turned size. Templates without a `back`
+(everything the model writes today) never turn, so the plain route is unchanged. Still to check
+by hand: that `rot` in an imported scenario survives into play.
+
+Next is step 3 (compiling layouts into furniture lines). See "Open items from authoring" at the
+end.
 
 Target: the world generator in this folder.
 
@@ -360,15 +366,17 @@ Checked in the 0.18 bundle (`index-DSU_zx7g.js`), 2026-11-03:
 - **Not yet checked:** that `rot` in an imported scenario survives into play. Step 1 of the build
   order checks this with a one-object scenario.
 
-What the generator does with it:
+What the generator does with it (built 2026-11-07, `worldgen/layout_room.py`):
 
-- `layout_room` tries all four turns for a piece with a `back`, and the turned footprint for odd
-  turns. A turnable 1×2 piece fits narrow rooms far more often than it does today.
-- For a slot with `back: "wall"`, it uses the one turn that puts the object's back against the
-  slot's wall.
-- For `around:<slot>` (chairs at a table), it turns each piece to face the target.
-- A piece with `back: null` keeps `rot` 0.
-- The spec writer emits `rot` and the turned `size` on each placed object.
+- A piece with a `back` placed by `wall:` or `row:` stands with its back to that wall, and in a
+  `corner` with its back to one of the corner's two walls. So `back: "wall"` on a slot is what
+  every wall slot gets anyway.
+- For `around:<slot>` (chairs at a table), each piece faces the target.
+- Anywhere else it tries the unturned footprint first, then the quarter turn, so a turnable
+  1×2 piece fits narrow rooms far more often.
+- A piece with no `back` keeps `rot` 0 and places exactly as before.
+- `ObjectOut.rot` carries the turn; the spec writer adds `"rot"` to the placement entry, and the
+  vendored builder writes `rot` and the turned `size` on the placed object.
 
 The model never reasons about rotation.
 
