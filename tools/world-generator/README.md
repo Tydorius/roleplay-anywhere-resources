@@ -87,7 +87,9 @@ python -m unittest          # the test suite
   room from [`library/`](library) — fewer tokens, and beds, tables and chairs set out
   properly. `--no-library` (or unticking **Use room library** in the editor, or
   answering no in the launcher) is the old method, the model furnishing every room.
-  Buildings with repeated units keep the old P3 either way. See
+  With the library, P2's catalogue is only for the outside (feature props, yard props,
+  filler), and unit buildings (an inn's guest rooms, flats) are furnished from it too; only
+  buildings with upper storeys under the floors extension keep the old P3. See
   [ROOM_LIBRARY_DESIGN.md](ROOM_LIBRARY_DESIGN.md).
 - `layout` re-places a saved plan with a new seed and **no model calls** —
   re-roll the map, keep the world.

@@ -60,10 +60,15 @@ def sleeps_right(role, obj):
     return True
 
 
-def pick_object(lib, purpose, role, size, band, tier, rng, genre=None):
+REUSE_SHARE = 0.75   # how often a pick takes an object the world already uses
+
+
+def pick_object(lib, purpose, role, size, band, tier, rng, genre=None, prefer=()):
     """(object, widened): the first bound category with an object for the
     band and tier that fits ``size``; failing that, the nearest other tier.
-    (None, False) is a gap."""
+    (None, False) is a gap. ``prefer`` holds object ids the world already
+    uses: most picks take one of those when it fits, so a village's cottages
+    share their beds and the game draws fewer sprites."""
     roles = ((lib.purposes.get(purpose) or {}).get("roles") or {})
     cats = roles.get(role)
     if cats is None:
@@ -81,6 +86,9 @@ def pick_object(lib, purpose, role, size, band, tier, rng, genre=None):
                     and sleeps_right(role, o)
                     and (not o.get("onlyGenres") or (genre or "") in o["onlyGenres"])]
             if objs:
+                reuse = [o for o in objs if o["id"] in prefer]
+                if reuse and rng.random() < REUSE_SHARE:
+                    return rng.choice(reuse), i > 0
                 return rng.choice(objs), i > 0
     return None, False
 
@@ -122,6 +130,10 @@ class Templates:
 
     def templates(self):
         return list(self.by_key.values())
+
+    def used_ids(self):
+        """Object ids with a template already."""
+        return {k[0] for k in self.by_key}
 
 
 @dataclass
@@ -165,7 +177,7 @@ def compile_room(lib, registry, purpose, interior, band, tier, condition, rng,
         if count <= 0:
             return
         obj, widened = pick_object(lib, purpose, slot.get("role"), slot.get("size"),
-                                   band, tier, rng, genre)
+                                   band, tier, rng, genre, prefer=registry.used_ids())
         if obj is None:
             # an optional or grow slot with nothing to fill it is just left out
             if required:

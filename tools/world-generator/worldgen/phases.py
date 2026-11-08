@@ -3052,9 +3052,16 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
 
     # ---- P2: the prop catalogue
     zone_lines = world_lines()
+    # with the library, only a building with upper storeys (floors) still
+    # needs the old P3 and so a furniture catalogue; without one, P2 writes
+    # the outside only
+    old_p3 = [b for z in p1["zones"] for b in z["buildings"]
+              if not lib or (floors and _check_int(b.get("storeys")) and b["storeys"] > 1)]
+    p2_append = _library_fragment("p2-catalogue") if lib and not old_p3 else ""
     # a home with couples needs a double bed in the catalogue, so P2 is told
-    needs_double = any(_check_int(b.get("couples")) and b["couples"] > 0
-                       for z in p1["zones"] for b in z["buildings"])
+    # (the library has doubles of its own)
+    needs_double = bool(old_p3) and any(_check_int(b.get("couples")) and b["couples"] > 0
+                                        for b in old_p3)
     # two calls: as one reply it ran past every budget a small model had, and
     # a world survives empty containers but not a missing catalogue. Items go
     # first so a template can name its default pool
@@ -3066,7 +3073,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         stock = {}
     pool_list = [n for (n, _p) in _pool_entries(stock.get("lootPools")) if _is_str(n)]
     p2 = call("p2", "p2-catalogue", event=("P2", "the prop catalogue"),
-              setting_line=setting_line, zone_lines=zone_lines,
+              setting_line=setting_line, zone_lines=zone_lines, _append=p2_append,
               pool_names_line=", ".join(pool_list) or "(none)",
               _validate=lambda x: check_p2_templates(x, needs_double))
     if p2 is None:
@@ -3118,14 +3125,14 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         """A library design for an ordinary building, or None to use the
         old P3 (units, upper storeys) or when P3 gave nothing."""
         nonlocal seen_buildings
-        if b.get("units") or (floors and _check_int(b.get("storeys")) and b["storeys"] > 1):
+        if floors and _check_int(b.get("storeys")) and b["storeys"] > 1:
             return False
         rng = _random.Random(f"{world_seed}|{b['name']}")
         suite = library_plan.suite_by_kind(lib, b, band) \
             if library_plan.can_skip_p3(b, compound_parts, notes) else None
         seen_buildings += 1
         if suite is not None:
-            d = library_plan.design_from_suite(suite, b, band, rng)
+            d = library_plan.trim_rooms(lib, library_plan.design_from_suite(suite, b, band, rng), b)
             stats["dropped"].append((f"building {b['name']}",
                                      f"P3 skipped: the {suite['id']} suite fits its kind"))
         else:
@@ -3141,24 +3148,34 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                      setting_line=setting_line, zone_line=_zone_line(z),
                      building_line=_building_line(b),
                      compound_line=_compound_line(p1.get("compounds") or [], z, b),
+                     units_line=library_plan.units_line(b),
                      suite_lines=library_plan.suite_lines(lib, b, band),
                      purpose_line=purposes_line, yard_block=yard_block,
                      building_name=b["name"],
                      _validate=lambda x, b=b: library_plan.check_p3(
                          library_plan.fill_from_suite(x, lib, b, band,
                                                       _random.Random(f"{world_seed}|{b['name']}")),
-                         b["name"], lib))
+                         b["name"], lib, units=b.get("units")))
             if d is None:
                 stats["dropped"].append((f"building {b['name']}",
                                          "dropped: P3 produced no JSON, keeping the P1 shell"))
                 return None
             d = library_plan.fill_from_suite(d, lib, b, band, rng)
         d["furniture"] = []
+        if b.get("units"):
+            if not (isinstance(d.get("unit"), dict) and d["unit"].get("rooms")):
+                d["unit"] = library_plan.default_unit(b)
+            d["unit"]["furniture"] = []
+        else:
+            d.pop("unit", None)
         design = sanitize_p3(d, b["name"], tnames, stats["dropped"],
                              storeys=(b.get("storeys", 1) if floors else None),
-                             units=False, pools=pool_names)
-        library_plan.expand_design(lib, registry, design, b, band, genre, world_seed,
-                                   stats["dropped"])
+                             units=b.get("units") or False, pools=pool_names)
+        library_plan.expand_fitting(lib, registry, design, b, band, genre, world_seed,
+                                    stats["dropped"], ensure_beds=not b.get("units"))
+        if b.get("units"):
+            library_plan.expand_unit(lib, registry, design, b, band, genre, world_seed,
+                                     stats["dropped"])
         for t in registry.templates():
             if t.get("forSleep"):
                 bed_templates[t["name"]] = bed_capacity(tuple(t["size"]))
@@ -3235,8 +3252,11 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         z["buildings"] = keep
     if registry is not None:
         # the library's templates join P2's, so P5 counts their beds and the
-        # plan carries them: a re-roll never needs the library again
-        templates.extend(registry.templates())
+        # plan carries them: a re-roll never needs the library again. Ones a
+        # compact re-furnishing left unused stay out (the game draws a sprite
+        # for every template)
+        used = library_plan.used_templates(designs)
+        templates.extend(t for t in registry.templates() if t["name"] in used)
 
     # ---- P4: one call per zone
     building_names = [b["name"] for z in p1["zones"] for b in z["buildings"]]
@@ -3646,8 +3666,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     if questionnaire is not None:
         plan["questionnaire"] = questionnaire
     if lib:
-        plan["library"] = {"version": lib.vocab.get("version", 1),
-                           "band": band, "templates": len(registry.templates())}
+        plan["library"] = {"version": lib.vocab.get("version", 1), "band": band,
+                           "templates": sum(1 for t in templates if t.get("libraryId"))}
     return plan, stats
 
 

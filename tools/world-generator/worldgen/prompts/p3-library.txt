@@ -6,6 +6,7 @@ SETTING: ${setting_line}
 ZONE: ${zone_line}
 BUILDING: ${building_line}
 COMPOUND: ${compound_line}
+UNITS: ${units_line}
 
 BUILDINGS LIKE THIS ONE (id | rooms as name (purpose, share)):
 ${suite_lines}
@@ -24,6 +25,7 @@ Reply with ONE JSON object with exactly these fields:
   "connections": [["Room A", "Room B"]],
   "entrance": {"room": "...", "side": "north|south|east|west"},
   "wealth": {"room name": "poor|modest|wealthy|elite"},
+  "unit": null,
   "yard": null
 }
 
@@ -31,7 +33,8 @@ Reply with ONE JSON object with exactly these fields:
   drop one when the building needs it, or plan the rooms yourself with "suite":
   null. List the rooms either way; if they are exactly the suite's, you may
   leave "rooms", "connections" and "entrance" out.
-- 1 to 8 rooms (one for a hut). "connections" names rooms that share an inner
+- 1 to 5 rooms (one for a hut); a building with many rooms of one kind
+  (guest rooms, cells) repeats them as units instead. "connections" names rooms that share an inner
   door; every room must be reachable from the entrance room.
 - Beds come from the purposes: a couple gets a master_bedroom, others a
   bedroom, nursery, dormitory or crew_quarters, travellers a guest_room. Code
@@ -42,6 +45,12 @@ Reply with ONE JSON object with exactly these fields:
   (the servants' room in a manor). Leave it {} otherwise.
 - The COMPOUND line says when the building is one part of a connected
   structure: its entrance must make sense against its neighbours.
+- The UNITS line says when the building repeats one unit many times (guest
+  rooms, flats, cabins, cells): "rooms" are then only the SHARED rooms (the
+  common room, the kitchen, a hall), and "unit" is ONE copy, {"rooms",
+  "connections", "entrance"}, its rooms with a "use" too (a guest_room, a
+  bedroom, crew_quarters). Never list the copies one by one. Otherwise "unit"
+  is null.
 - "name" must be exactly "${building_name}".
 
 ${rules}

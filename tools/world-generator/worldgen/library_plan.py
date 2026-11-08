@@ -22,6 +22,10 @@ BAND_GROUND = {"medieval": "packed earth", "industrial": "floorboards", "modern"
 SPARE_PURPOSES = ("guest_room",)    # beds for travellers, not residents
 SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
 SIZE_ORDER = ("tiny", "small", "medium", "large")
+# the building packer splits one footprint into at most five rooms before it
+# starts dropping everything (measured: 5 rooms place all 33 pieces of an inn,
+# 6 rooms drop 34 of 40); more rooms belong in a unit building
+MAX_ROOMS = 5
 
 
 def load():
@@ -112,6 +116,45 @@ def can_skip_p3(b, compound_parts, notes=""):
     return not (notes and str(b.get("name", "")).lower() in notes.lower())
 
 
+def trim_rooms(lib, design, b, limit=MAX_ROOMS):
+    """Cut a design to ``limit`` rooms: the entrance room, then rooms for the
+    sleepers (a master bedroom per couple, bedrooms for the rest), then the
+    others in order. Connections to cut rooms go, and a room left without a
+    way in is joined to the entrance room."""
+    rooms = design.get("rooms") or []
+    if len(rooms) <= limit:
+        return design
+    entry = (design.get("entrance") or {}).get("room") or rooms[0]["name"]
+    residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
+    couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
+    fam = {r["name"]: lib.family_of(r.get("use")) for r in rooms}
+    order = [r["name"] for r in rooms if r["name"] == entry]
+    masters = [r["name"] for r in rooms if fam[r["name"]] == "bedroom.master"][:couples]
+    singles = residents - 2 * len(masters)
+    others = [r["name"] for r in rooms if fam[r["name"]] in ("bedroom", "dormitory", "hut")
+              and r.get("use") not in SPARE_PURPOSES][:1 if singles > 0 else 0]
+    for n in masters + others + [r["name"] for r in rooms]:
+        if n not in order:
+            order.append(n)
+    keep = set(order[:limit])
+    design["rooms"] = [r for r in rooms if r["name"] in keep]
+    design["connections"] = [c for c in design.get("connections") or []
+                             if c[0] in keep and c[1] in keep]
+    linked = {entry}
+    grew = True
+    while grew:
+        grew = False
+        for a, c in design["connections"]:
+            if (a in linked) != (c in linked):
+                linked |= {a, c}
+                grew = True
+    for r in design["rooms"]:
+        if r["name"] not in linked:
+            design["connections"].append([entry, r["name"]])
+            linked.add(r["name"])
+    return design
+
+
 def design_from_suite(suite, b, band, rng):
     """A P3-shaped design made from a suite, for a building that skips P3."""
     rooms = [{"name": r["name"], "share": r["share"], "use": r["purpose"],
@@ -138,10 +181,55 @@ def purpose_line(lib):
     return ", ".join(sorted(lib.vocab["purposes"]))
 
 
+def units_line(b):
+    """P3's line on a unit building: shared rooms plus ONE copy, by purpose."""
+    u = b.get("units")
+    if not isinstance(u, dict) or not u.get("count"):
+        return "none"
+    per = u.get("residents") if isinstance(u.get("residents"), int) else 0
+    who = f", {per} resident(s) in each" if per else ""
+    return (f"THIS BUILDING REPEATS UNITS: {u['count']} copies of one "
+            f"'{u.get('name', 'Apartment')}'{who}. Give the building's SHARED rooms in "
+            "\"rooms\" and ONE copy in \"unit\": {\"rooms\", \"connections\", \"entrance\"}, "
+            "its rooms with a \"use\" like any other. Code stamps every copy, furnishes it "
+            "with a bed per resident and gives each its own door.")
+
+
+def default_unit(b):
+    """A unit design for a unit building whose P3 reply gave none: one room
+    whose purpose fits the building (an inn's guest room, a ship's cabin)."""
+    u = b.get("units") or {}
+    name = str(u.get("name") or "Room")
+    words = f"{b.get('kind', '')} {name}".lower()
+    if any(w in words for w in ("inn", "hotel", "motel", "tavern", "lodg", "guest")):
+        use = "guest_room"
+    elif any(w in words for w in ("cabin", "berth", "bunk", "crew", "barrack")):
+        use = "crew_quarters"
+    elif any(w in words for w in ("cell", "brig")):
+        use = "cell"
+    elif any(w in words for w in ("ward", "patient")):
+        use = "ward"
+    else:
+        use = "bedroom"
+    return {"rooms": [{"name": name, "share": "medium", "use": use, "purpose": name.lower()}],
+            "connections": [], "entrance": {"room": name, "side": "south"}, "furniture": []}
+
+
 # ------------------------------------------------------------------ P3 reply
 
-def check_p3(d, building_name, lib):
-    """Errors in a library P3 reply (rooms with purposes, no furniture)."""
+def check_p3(d, building_name, lib, units=None):
+    """Errors in a library P3 reply (rooms with purposes, no furniture). A
+    unit building's "unit" copy is checked the same way when it is given; a
+    missing one gets ``default_unit``."""
+    errors = []
+    if units and isinstance(d, dict) and isinstance(d.get("unit"), dict) \
+            and d["unit"].get("rooms"):
+        for e in check_p3(dict(d["unit"]), building_name, lib):
+            errors.append("unit: " + e)
+    return errors + _check_rooms(d, building_name, lib)
+
+
+def _check_rooms(d, building_name, lib):
     errors = []
     if not isinstance(d, dict):
         return ["reply is not a JSON object"]
@@ -151,8 +239,8 @@ def check_p3(d, building_name, lib):
     rooms = d.get("rooms")
     if not rooms and suite in lib.suites:
         return errors
-    if not isinstance(rooms, list) or not 1 <= len(rooms) <= 8:
-        return errors + ["rooms: 1 to 8 rooms, each {name, share, use, purpose}"]
+    if not isinstance(rooms, list) or not 1 <= len(rooms) <= MAX_ROOMS:
+        return errors + [f"rooms: 1 to {MAX_ROOMS} rooms, each {{name, share, use, purpose}}"]
     names = []
     for r in rooms:
         if not isinstance(r, dict) or not isinstance(r.get("name"), str) or not r["name"].strip():
@@ -176,7 +264,7 @@ def fill_from_suite(d, lib, b, band, rng):
     """A reply that names a suite but leaves out its rooms takes the suite's."""
     suite = lib.suites.get(d.get("suite"))
     if suite and not d.get("rooms"):
-        base = design_from_suite(suite, b, band, rng)
+        base = trim_rooms(lib, design_from_suite(suite, b, band, rng), b)
         for k in ("rooms", "connections", "entrance"):
             d[k] = base[k]
     return d
@@ -238,12 +326,78 @@ def ensure_sleep_room(design, b, lib, log):
     log.append((f"building {b['name']}", f"added {name}: {residents} residents had no bedroom"))
 
 
-def expand_design(lib, registry, design, b, band, genre, seed, log):
+def expand_unit(lib, registry, design, b, band, genre, seed, log):
+    """Furnish a unit building's one copy from the library: its rooms by
+    purpose, with the copy's residents as single sleepers."""
+    unit = design.get("unit")
+    if not isinstance(unit, dict) or not unit.get("rooms"):
+        design["unit"] = unit = default_unit(b)
+    u = b.get("units") or {}
+    per = u.get("residents") if isinstance(u.get("residents"), int) else 0
+    copy = {"name": f"{b['name']} unit", "residents": per, "couples": 0,
+            "wealth": b.get("wealth"), "condition": b.get("condition")}
+    unit.setdefault("furniture", [])
+    expand_design(lib, registry, unit, copy, band, genre, seed, log, ensure_beds=per > 0)
+    return design
+
+
+def drops_at_layout(design, b, registry):
+    """How many pieces the building packer would drop from this design: the
+    layout code's own measure (it grows a building to the 28x22 cap, splits
+    rooms into annexes, then drops pieces). Unit buildings size by their
+    copies and never drop this way, so they count 0."""
+    from .layout_building import _resolve_plan
+    from .library_rooms import object_templates
+    from .model import _parse_building
+    if b.get("units"):
+        return 0
+    bd = _parse_building(dict(b), {b["name"]: design})
+    return len(_resolve_plan(bd, object_templates(registry))[4])
+
+
+def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds=True):
+    """``expand_design``, then again compactly (each room's smallest layout,
+    no optional pieces) when the full version would overflow the building."""
+    keep = list(design.get("furniture") or [])
+    expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds)
+    lost = drops_at_layout(design, b, registry)
+    if lost:
+        after = lost
+        n = len(design["rooms"])
+        while True:
+            design["furniture"] = list(keep)
+            expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=False,
+                          compact=True)
+            after = drops_at_layout(design, b, registry)
+            if not after or len(design["rooms"]) <= 2:
+                break
+            # still over: give up a room (the least needed, by trim_rooms' order)
+            trim_rooms(lib, design, b, limit=len(design["rooms"]) - 1)
+        cut = n - len(design["rooms"])
+        log.append((f"building {b['name']}",
+                    f"furnished compactly: the full rooms would drop {lost} piece(s) at the "
+                    f"building cap" + (f"; {cut} room(s) left out" if cut else "")
+                    + (f"; {after} still drop" if after else "")))
+    return design
+
+
+def used_templates(designs):
+    """Template names any design's furniture (unit copies included) uses."""
+    used = set()
+    for d in designs:
+        for f in (d.get("furniture") or []) + ((d.get("unit") or {}).get("furniture") or []):
+            used.add(f.get("template"))
+    return used
+
+
+def expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=True,
+                  compact=False):
     """Turn a library design's rooms into furniture lines (appended to
     ``design["furniture"]``) and record each room's layout. Rooms without a
     library ``use`` keep whatever furniture the design already has."""
     rng = random.Random(f"{seed}|library|{b['name']}")
-    ensure_sleep_room(design, b, lib, log)
+    if ensure_beds:
+        ensure_sleep_room(design, b, lib, log)
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
     couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
     sleepers = _sleepers(lib, design["rooms"], residents, couples)
@@ -256,7 +410,7 @@ def expand_design(lib, registry, design, b, band, genre, seed, log):
         fam = lib.family_of(use)
         if fam is None:
             continue
-        sb = _room_band(lib, fam, r.get("share"))
+        sb = _room_band(lib, fam, "small" if compact else r.get("share"))
         pool = [l for l in sorted(lib.layouts_for(fam), key=lambda l: l["id"])
                 if sb in l["sizeBands"]]
         if not pool:
@@ -267,7 +421,7 @@ def expand_design(lib, registry, design, b, band, genre, seed, log):
         singles, cpl = sleepers.get(r["name"], (0, 0))
         comp = compile_room(lib, registry, use, tuple(lay["minInterior"]), band, room_tier, cond,
                             rng, singles=singles, couples=cpl, room=r["name"], grow=False,
-                            genre=genre, layout=lay)
+                            genre=genre, layout=lay, optional=not compact)
         for g in comp.gaps:
             log.append((f"building {b['name']}", f"room {r['name']}: {g}"))
         for f in comp.furniture:

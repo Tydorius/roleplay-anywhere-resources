@@ -50,6 +50,42 @@ launcher; `api.generate(library=False)`). In `worldgen/library_plan.py`:
 - P2 still writes the whole catalogue (step 5 cuts it down), and grow slots aren't used yet,
   because the room's final size isn't known when the plan is written.
 
+Step 5 is partly built (2026-11-08):
+- Unit buildings go through the library P3 too. It plans the shared rooms plus ONE unit copy
+  with a purpose per room, code furnishes the copy (a bed per resident), and a reply with no
+  copy gets one fitting room (an inn's guest room, a ship's cabin). Only a building with upper
+  storeys under the floors extension still takes the old P3.
+- When no building needs the old P3, P2 gets an add-on (`prompts/library/p2-catalogue.txt`):
+  the catalogue is for the outside only (feature props, yard props, filler, outdoor lights), so it
+  no longer writes indoor furniture that would go unplaced. The double-bed check applies only to
+  old-P3 buildings.
+- **At most five rooms per library building.** The building packer splits one footprint into
+  five rooms and then collapses: a measured inn placed all 33 pieces in five rooms and dropped
+  34 of 40 in six. A live run hit it when a hamlet's inn took the eight-room coaching-inn suite,
+  overflowed the 28x22 cap and failed the build. Suites are trimmed to five rooms when used (the
+  entrance room, then rooms for the sleepers, then the rest, reconnecting any room cut off), and
+  P3 is told 1 to 5 rooms; many rooms of one kind belong in a unit building.
+- **Compact when it would overflow.** Code measures each library building with the layout's own
+  sizing (`_resolve_plan`) before writing the plan. If it would drop pieces, the rooms are
+  furnished again with their smallest layouts and no optional pieces, and if it still doesn't
+  fit, the least-needed room is left out. Every suite now furnishes with nothing dropped.
+  Library templates that end up unused stay out of the plan.
+- Found on the way (not fixed): when an overflowing building splits rooms into annexes, a
+  character's start cell can land on a piece of furniture and fail the build. The old method can
+  hit it too, with an oversized P3 design.
+- **Reuse first.** Three picks in four take an object the world already uses when one fits, so a
+  village's cottages share their beds and the game draws fewer sprites (41 library templates
+  down to 33 in the live world below).
+- **Live check (2026-11-08)**, the hamlet on Magnum-Diamond 24B with the library on: built with 0
+  unplaced pieces and 0 validator errors, 456 objects in 25 reachable rooms. P2's catalogue held
+  12 outdoor templates and nothing indoor. Two of four buildings skipped P3, and the inn went
+  through the library as a unit building (a guest-room copy). P2's own token count is no guide
+  with a model this terse (it took a retry this time); P3 per building is as measured above.
+- Not built yet: the gap call and the user library with duplicate merging. With the ordered
+  fallbacks in `purposes.json`, every required slot already has an object in every band, so
+  there is nothing for a gap call to ask for yet; it becomes useful once the library is grown
+  by hand or by users.
+
 See "Open items from authoring" at the end.
 
 Target: the world generator in this folder.
