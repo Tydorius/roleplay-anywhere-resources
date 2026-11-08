@@ -3,118 +3,590 @@
     {
       "id": "guardroom.small.a",
       "family": "guardroom",
-      "sizeBands": ["small"],
-      "minInterior": [4, 4],
-      "maxInterior": [6, 4],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        4
+      ],
+      "maxInterior": [
+        6,
+        4
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": 2},
-        {"id": "rack", "role": "weapons", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
-        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        },
+        {
+          "id": "rack",
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ],
       "grow": [
-        {"role": "seat", "size": [1, 1], "anchor": "around:table"},
-        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "guardroom.small.b",
       "family": "guardroom",
-      "sizeBands": ["small"],
-      "minInterior": [4, 4],
-      "maxInterior": [6, 4],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        4
+      ],
+      "maxInterior": [
+        6,
+        4
+      ],
       "slots": [
-        {"id": "desk", "role": "desk", "size": [1, 1], "anchor": "near_door"},
-        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
-        {"id": "rack", "role": "weapons", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "corner"},
-        {"id": "brazier", "role": "heat", "size": [1, 1], "anchor": "corner", "optional": true}
+        {
+          "id": "desk",
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "seat",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:desk"
+        },
+        {
+          "id": "rack",
+          "role": "weapons",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "locker",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "id": "brazier",
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        }
       ],
       "grow": [
-        {"role": "coat", "size": [1, 1], "anchor": "near_door"},
-        {"role": "seat", "size": [1, 1], "anchor": "wall:side"},
-        {"role": "security", "size": [1, 1], "anchor": "near_door"}
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side"
+        },
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ]
     },
     {
       "id": "guardroom.small.c",
       "family": "guardroom",
-      "sizeBands": ["small"],
-      "minInterior": [5, 4],
-      "maxInterior": [6, 4],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        5,
+        4
+      ],
+      "maxInterior": [
+        6,
+        4
+      ],
       "slots": [
-        {"id": "bunk", "role": "sleep", "size": [1, 2], "anchor": "wall:far+corner", "count": "singles", "back": "wall", "optional": true},
-        {"id": "table", "role": "table.small", "size": [1, 1], "anchor": "center"},
-        {"id": "seat", "role": "seat", "size": [1, 1], "anchor": "around:table"},
-        {"id": "rack", "role": "weapons", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
-        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"}
+        {
+          "id": "bunk",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "wall:far+corner",
+          "count": "singles",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "table",
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seat",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table"
+        },
+        {
+          "id": "rack",
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ],
       "grow": [
-        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bunk"},
-        {"role": "heat", "size": [1, 1], "anchor": "corner"},
-        {"role": "seat", "size": [1, 1], "anchor": "around:table"}
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:bunk"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table"
+        }
       ]
     },
     {
       "id": "guardroom.medium.a",
       "family": "guardroom",
-      "sizeBands": ["medium"],
-      "minInterior": [6, 5],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 4]},
-        {"id": "rack", "role": "weapons", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"id": "lockers", "role": "storage.small", "size": [1, 1], "anchor": "row:side", "count": [2, 3], "back": "wall"},
-        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "rack",
+          "role": "weapons",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "lockers",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:side",
+          "count": [
+            2,
+            3
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ],
       "grow": [
-        {"role": "heat", "size": [1, 1], "anchor": "corner"},
-        {"role": "weapons", "size": [1, 1], "anchor": "beside:rack"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "security", "size": [1, 1], "anchor": "near_door"}
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:rack"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ]
     },
     {
       "id": "guardroom.medium.b",
       "family": "guardroom",
-      "sizeBands": ["medium"],
-      "minInterior": [6, 5],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "bunks", "role": "sleep", "size": [1, 2], "anchor": "row:far", "count": "singles", "back": "wall", "optional": true},
-        {"id": "table", "role": "table.small", "size": [1, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": 2},
-        {"id": "racks", "role": "weapons", "size": [1, 1], "anchor": "wall:side", "count": [1, 2], "back": "wall"},
-        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"},
-        {"id": "locker", "role": "storage.small", "size": [1, 1], "anchor": "beside:bunks"},
-        {"id": "heat", "role": "heat", "size": [1, 1], "anchor": "corner", "optional": true}
+        {
+          "id": "bunks",
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "anchor": "row:far",
+          "count": "singles",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "table",
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        },
+        {
+          "id": "racks",
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:side",
+          "count": [
+            1,
+            2
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "locker",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:bunks"
+        },
+        {
+          "id": "heat",
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        }
       ],
       "grow": [
-        {"role": "storage.small", "size": [1, 1], "anchor": "beside:bunks"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "seat", "size": [1, 1], "anchor": "around:table"}
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:bunks"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table"
+        }
       ]
     },
     {
       "id": "guardroom.medium.c",
       "family": "guardroom",
-      "sizeBands": ["medium"],
-      "minInterior": [6, 5],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "racks", "role": "weapons", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
-        {"id": "desk", "role": "desk", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"id": "dseat", "role": "seat", "size": [1, 1], "anchor": "beside:desk"},
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 3]},
-        {"id": "coat", "role": "coat", "size": [1, 1], "anchor": "near_door"}
+        {
+          "id": "racks",
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "row:far",
+          "count": [
+            1,
+            2
+          ],
+          "back": "wall"
+        },
+        {
+          "id": "desk",
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "dseat",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:desk"
+        },
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": 2
+        },
+        {
+          "id": "coat",
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        }
       ],
       "grow": [
-        {"role": "storage.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "security", "size": [1, 1], "anchor": "near_door"},
-        {"role": "heat", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     }
   ]

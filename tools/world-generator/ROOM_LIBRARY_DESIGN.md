@@ -15,8 +15,26 @@ entrance. The turn reaches the scenario as `rot` plus the turned size. Templates
 (everything the model writes today) never turn, so the plain route is unchanged. Still to check
 by hand: that `rot` in an imported scenario survives into play.
 
-Next is step 3 (compiling layouts into furniture lines). See "Open items from authoring" at the
-end.
+Step 3 is built too (2026-11-07), in `worldgen/library_rooms.py`:
+- `compile_room` turns a layout into today's `FurniturePlan` lines. It picks a layout that fits
+  the interior, fills each slot from the purpose's bindings (an id prefix such as `rack.weapon`
+  or a category, with neighbouring wealth tiers as a fallback), counts beds from singles and
+  couples, adds `minWealth` slots by tier, and adds each grow slot once while the room has space.
+- `Templates` holds one template per object, band, wealth and condition, named for play
+  ("Oak bed"), with its text filled from an RNG keyed by the template.
+- `furnish_room` compiles and places a room. When a piece can't be placed it leaves the optional
+  slots out, then redraws a couple of times and keeps the best result.
+- `layout_need` gives the building packer a room's size from the layout's `minInterior`. Wiring
+  it into `room_needs` is part of step 4.
+
+Measured: every one of the 204 layouts lays out at its smallest and largest interior, door on
+each wall, in all four bands at poor and elite, with every piece placed (13,056 rooms). Library
+rooms (pieces with a `back`) also keep the cell past each door's threshold clear, place a piece
+after the one it stands beside or around, and move a corner piece to a wall when the corners
+are taken. A couple's slot only takes a bed that sleeps two, and a single's slot one that sleeps
+one.
+
+Next is step 4 (P3 with the library). See "Open items from authoring" at the end.
 
 Target: the world generator in this folder.
 

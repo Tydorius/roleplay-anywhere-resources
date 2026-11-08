@@ -138,6 +138,15 @@ def layout_room(rect, door_cells, furniture, templates, rng, keep_clear=None, ma
     out = RoomLayout()
     out.reserved, door_inner = reserve_walkways(rect, door_cells)
     inter = rect.interior()
+    # a library room (its pieces have backs) also keeps the cell past each
+    # door's threshold clear: pieces anchored near the door can otherwise ring
+    # the threshold and seal the room. The plain route keeps its old reservation.
+    library_room = any(back_of(templates.get(f.template)) for f in furniture)
+    if library_room:
+        for (dx, dy), (ix, iy) in zip(door_cells, door_inner):
+            step = (ix + (ix - dx), iy + (iy - dy))
+            if inter.contains_cell(step):
+                out.reserved.add(step)
     if inter.w < 1 or inter.h < 1:
         for f in furniture:
             out.failures.append((f.template, 0, "room interior too small"))
@@ -361,6 +370,10 @@ def layout_room(rect, door_cells, furniture, templates, rng, keep_clear=None, ma
                         pts.append((p, r))
             k = rng.randrange(len(pts)) if pts else 0
             out_c = pts[k:] + pts[:k]
+            # four corners fill fast: a piece that finds them taken stands
+            # back to a wall rather than anywhere
+            for r, side in enumerate(TURN_SIDES):
+                out_c.extend((p, r) for p in wall_filter(side, sz(r)) if (p, r) not in pts)
         else:
             out_c = any_turn(size)
         if hint.center:
@@ -431,7 +444,23 @@ def layout_room(rect, door_cells, furniture, templates, rng, keep_clear=None, ma
             t = templates.get(name)
             return t.size[0] * t.size[1] if t else 0
 
-        plans = sorted(furniture, key=lambda f: -area(f.template))
+        if library_room:
+            # a piece goes after the one it stands beside or around, so the
+            # chairs never look for a table that isn't down yet
+            depth = {}
+
+            def dep(f, seen=()):
+                h = parse_hint(f.hint)
+                ref = h.around or h.beside
+                if not ref or f.template in seen:
+                    return 0
+                tgt = [g for g in furniture if g.template == ref]
+                return 1 + max((dep(g, seen + (f.template,)) for g in tgt), default=-1)
+            for f in furniture:
+                depth[id(f)] = dep(f)
+            plans = sorted(furniture, key=lambda f: (depth[id(f)], -area(f.template)))
+        else:
+            plans = sorted(furniture, key=lambda f: -area(f.template))
         for f in plans:
             if f.template not in templates:
                 failures.append((f.template, 0, "unknown template"))
@@ -450,6 +479,12 @@ def layout_room(rect, door_cells, furniture, templates, rng, keep_clear=None, ma
                     hint.row = resolve(hint.row)[0]
                 cands, reason = ordered_candidates(hint, tmpl.size, placed)
                 anywhere = all_positions(tmpl.size)
+                if library_room and hint.corner and cands:
+                    # corners taken: along a wall before anywhere
+                    seen = set(cands)
+                    for side in TURN_SIDES:
+                        cands = cands + [q for q in wall_filter(side, tmpl.size) if q not in seen]
+                        seen.update(cands)
             if not cands:
                 fallbacks.append((f.template, reason or "no candidate positions"))
                 cands = anywhere

@@ -395,7 +395,10 @@ def _check_purposes(lib, err, warn):
                 err(f"purposes.{p}.{role}: needs a list of categories")
                 continue
             for c in cs:
-                if c not in cats:
+                if "." in c:
+                    if not any(binding_matches(c, o) for o in lib.objects.values()):
+                        err(f"purposes.{p}.{role}: no object id matches {c!r}")
+                elif c not in cats:
                     err(f"purposes.{p}.{role}: unknown category {c!r}")
     if not lib.purposes:
         return
@@ -509,6 +512,15 @@ def check(lib, sources_path=SOURCES_PATH):
 
 # ------------------------------------------------------------------ coverage
 
+def binding_matches(entry, obj):
+    """A purpose binding entry names a category ("rack") or an object id or
+    id prefix ("rack.weapon"), which picks out pieces a category lumps together."""
+    if "." in entry:
+        oid = obj.get("id") or ""
+        return oid == entry or oid.startswith(entry + ".")
+    return obj.get("category") == entry
+
+
 def candidates(lib, purpose, role, size, band, tier):
     """Objects that can fill a slot of ``role`` and ``size`` in a ``purpose``
     room of ``band`` at ``tier``, in the role's category order."""
@@ -518,7 +530,7 @@ def candidates(lib, purpose, role, size, band, tier):
     out = []
     for cat in entry:
         for o in lib.objects.values():
-            if o.get("category") != cat:
+            if not binding_matches(cat, o):
                 continue
             if o.get("bands") != ["*"] and band not in (o.get("bands") or []):
                 continue
@@ -526,6 +538,12 @@ def candidates(lib, purpose, role, size, band, tier):
                 continue
             if size is not None and _size_ok(o.get("size"), hi=8) and not _fits(o["size"], size):
                 continue
+            if _size_ok(o.get("size"), hi=8):
+                small = min(o["size"]) < 2
+                if role == "sleep.couple" and small:
+                    continue      # a couple's bed sleeps two
+                if role in ("sleep", "sleep.child", "cell.bed", "med.bed") and not small:
+                    continue      # a single's bed sleeps one
             out.append(o)
     return out
 

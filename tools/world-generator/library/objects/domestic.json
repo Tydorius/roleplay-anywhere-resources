@@ -2535,6 +2535,52 @@
       "sources": [
         "cdda-furniture"
       ]
+    },
+    {
+      "id": "stove.food_synth",
+      "category": "stove",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.2,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "food synthesiser"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "panel": "glass"
+      },
+      "tags": [
+        "kitchen",
+        "cooking",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell} {noun} that prints a hot meal from paste cartridges, its menu worn to the three dishes anyone orders.",
+        "physical": "Top-down view of {A:noun}: a squat {shell.color} {shell} box against the top edge, a {panel} hatch and glowing menu panel facing the bottom."
+      },
+      "aliases": [
+        "food printer",
+        "nutrient dispenser"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
     }
   ]
 }

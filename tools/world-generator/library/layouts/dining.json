@@ -3,177 +3,913 @@
     {
       "id": "dining.small.a",
       "family": "dining",
-      "sizeBands": ["small"],
-      "minInterior": [4, 5],
-      "maxInterior": [4, 6],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        5
+      ],
+      "maxInterior": [
+        4,
+        6
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [2, 4]},
-        {"id": "board", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "board",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        }
       ],
       "grow": [
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
-        {"role": "heat", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.small.b",
       "family": "dining",
-      "sizeBands": ["small"],
-      "minInterior": [4, 4],
-      "maxInterior": [6, 4],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        4,
+        4
+      ],
+      "maxInterior": [
+        6,
+        4
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "wall:far"},
-        {"id": "bench", "role": "seat.long", "size": [2, 1], "anchor": "beside:table", "back": "wall"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [1, 2]},
-        {"id": "chest", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far"
+        },
+        {
+          "id": "bench",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "beside:table",
+          "back": "wall"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "chest",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        }
       ],
       "grow": [
-        {"role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.small.c",
       "family": "dining",
-      "sizeBands": ["small"],
-      "minInterior": [5, 4],
-      "maxInterior": [6, 4],
+      "sizeBands": [
+        "small"
+      ],
+      "minInterior": [
+        5,
+        4
+      ],
+      "maxInterior": [
+        6,
+        4
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [2, 1], "anchor": "center"},
-        {"id": "benches", "role": "seat.long", "size": [2, 1], "anchor": "beside:table+symmetric", "count": 2},
-        {"id": "store", "role": "storage.small", "size": [1, 1], "anchor": "corner", "optional": true},
-        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "benches",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "beside:table+symmetric",
+          "count": 2
+        },
+        {
+          "id": "store",
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "modest"
+        }
       ],
       "grow": [
-        {"role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"role": "seat", "size": [1, 1], "anchor": "beside:table"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.medium.a",
       "family": "dining",
-      "sizeBands": ["medium"],
-      "minInterior": [6, 5],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        5
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [3, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [4, 6]},
-        {"id": "board", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"id": "lamp", "role": "light.big", "size": [1, 1], "anchor": "corner", "minWealth": "wealthy"},
-        {"id": "rug", "role": "decor.floor", "size": [1, 1], "anchor": "corner", "optional": true, "minWealth": "wealthy"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "id": "board",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "lamp",
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "wealthy"
+        },
+        {
+          "id": "rug",
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "optional": true,
+          "minWealth": "wealthy"
+        }
       ],
       "grow": [
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "heat", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.medium.b",
       "family": "dining",
-      "sizeBands": ["medium"],
-      "minInterior": [6, 6],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        6,
+        6
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "tables", "role": "table.dining", "size": [2, 1], "anchor": "center", "count": [1, 2]},
-        {"id": "benches", "role": "seat.long", "size": [2, 1], "anchor": "around:tables", "count": [2, 4]},
-        {"id": "serve", "role": "counter.serve", "size": [2, 1], "anchor": "wall:far"}
+        {
+          "id": "tables",
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "center",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": "benches",
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "around:tables",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "id": "serve",
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far"
+        }
       ],
       "grow": [
-        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
-        {"role": "storage.small", "size": [1, 1], "anchor": "beside:serve"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:serve"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        }
       ]
     },
     {
       "id": "dining.medium.c",
       "family": "dining",
-      "sizeBands": ["medium"],
-      "minInterior": [7, 5],
-      "maxInterior": [8, 6],
+      "sizeBands": [
+        "medium"
+      ],
+      "minInterior": [
+        7,
+        5
+      ],
+      "maxInterior": [
+        8,
+        6
+      ],
       "slots": [
-        {"id": "table", "role": "table.dining", "size": [4, 1], "anchor": "center"},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:table", "count": [4, 6]},
-        {"id": "head", "role": "seat.state", "size": [1, 1], "anchor": "beside:table", "minWealth": "wealthy"},
-        {"id": "board", "role": "storage.big", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+        {
+          "id": "table",
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:table",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "id": "head",
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:table",
+          "minWealth": "wealthy"
+        },
+        {
+          "id": "board",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "modest"
+        }
       ],
       "grow": [
-        {"role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
-        {"role": "light.big", "size": [1, 1], "anchor": "corner"},
-        {"role": "decor.feature", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.large.a",
       "family": "dining",
-      "sizeBands": ["large"],
-      "minInterior": [10, 8],
-      "maxInterior": [14, 12],
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        10,
+        8
+      ],
+      "maxInterior": [
+        14,
+        12
+      ],
       "slots": [
-        {"id": "tables", "role": "table.dining", "size": [3, 1], "anchor": "center", "count": [2, 4]},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [8, 16]},
-        {"id": "serve", "role": "counter.serve", "size": [3, 1], "anchor": "wall:far"},
-        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+        {
+          "id": "tables",
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "center",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:tables",
+          "count": [
+            8,
+            16
+          ]
+        },
+        {
+          "id": "serve",
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "wall:far"
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "modest"
+        }
       ],
       "grow": [
-        {"role": "table.dining", "size": [3, 1], "anchor": "center"},
-        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
-        {"role": "storage.small", "size": [1, 1], "anchor": "beside:serve"},
-        {"role": "light.big", "size": [1, 1], "anchor": "corner"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:serve"
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.large.b",
       "family": "dining",
-      "sizeBands": ["large"],
-      "minInterior": [10, 9],
-      "maxInterior": [14, 12],
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        10,
+        9
+      ],
+      "maxInterior": [
+        14,
+        12
+      ],
       "slots": [
-        {"id": "high", "role": "table.dining", "size": [4, 1], "anchor": "wall:far"},
-        {"id": "highseats", "role": "seat", "size": [1, 1], "anchor": "around:high", "count": [3, 6]},
-        {"id": "state", "role": "seat.state", "size": [1, 1], "anchor": "beside:high", "minWealth": "wealthy"},
-        {"id": "long", "role": "table.dining", "size": [6, 1], "anchor": "center"},
-        {"id": "benches", "role": "seat.long", "size": [3, 1], "anchor": "around:long", "count": [2, 4]},
-        {"id": "board", "role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"id": "heat", "role": "heat", "size": [2, 1], "anchor": "wall:side", "back": "wall", "optional": true},
-        {"id": "lights", "role": "light.big", "size": [1, 1], "anchor": "corner", "count": [1, 2], "minWealth": "wealthy"}
+        {
+          "id": "high",
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "anchor": "wall:far"
+        },
+        {
+          "id": "highseats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:high",
+          "count": [
+            3,
+            6
+          ]
+        },
+        {
+          "id": "state",
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:high",
+          "minWealth": "wealthy"
+        },
+        {
+          "id": "long",
+          "role": "table.dining",
+          "size": [
+            6,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "id": "benches",
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "around:long",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "id": "board",
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "id": "heat",
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "lights",
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "count": [
+            1,
+            2
+          ],
+          "minWealth": "wealthy"
+        }
       ],
       "grow": [
-        {"role": "table.dining", "size": [6, 1], "anchor": "center"},
-        {"role": "storage.big", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
-        {"role": "decor.feature", "size": [1, 1], "anchor": "corner"},
-        {"role": "light.small", "size": [1, 1], "anchor": "corner"},
-        {"role": "music", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "table.dining",
+          "size": [
+            6,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:side",
+          "back": "wall"
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "music",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     },
     {
       "id": "dining.large.c",
       "family": "dining",
-      "sizeBands": ["large"],
-      "minInterior": [8, 8],
-      "maxInterior": [12, 10],
+      "sizeBands": [
+        "large"
+      ],
+      "minInterior": [
+        8,
+        8
+      ],
+      "maxInterior": [
+        12,
+        10
+      ],
       "slots": [
-        {"id": "tables", "role": "table.dining", "size": [1, 1], "anchor": "center", "count": [4, 6]},
-        {"id": "seats", "role": "seat", "size": [1, 1], "anchor": "around:tables", "count": [8, 12]},
-        {"id": "serve", "role": "counter.serve", "size": [3, 1], "anchor": "wall:side"},
-        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "beside:serve", "back": "wall", "optional": true},
-        {"id": "waste", "role": "waste", "size": [1, 1], "anchor": "near_door"},
-        {"id": "lamp", "role": "light.small", "size": [1, 1], "anchor": "corner", "minWealth": "modest"}
+        {
+          "id": "tables",
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "id": "seats",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "around:tables",
+          "count": [
+            6,
+            10
+          ]
+        },
+        {
+          "id": "serve",
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "anchor": "wall:side"
+        },
+        {
+          "id": "cold",
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "beside:serve",
+          "back": "wall",
+          "optional": true
+        },
+        {
+          "id": "waste",
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "near_door"
+        },
+        {
+          "id": "lamp",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner",
+          "minWealth": "modest"
+        }
       ],
       "grow": [
-        {"role": "table.dining", "size": [1, 1], "anchor": "center"},
-        {"role": "decor.floor", "size": [1, 1], "anchor": "corner"},
-        {"role": "screen", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
-        {"role": "waste", "size": [1, 1], "anchor": "corner"}
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "center"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        },
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "anchor": "wall:far",
+          "back": "wall"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "anchor": "corner"
+        }
       ]
     }
   ]

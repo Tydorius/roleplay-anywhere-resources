@@ -17,11 +17,14 @@
       ],
       "bedside": [
         "nightstand",
-        "table"
+        "table.side",
+        "table.round_small"
       ],
       "storage.big": [
         "wardrobe",
-        "cabinet"
+        "cabinet.cupboard",
+        "cabinet.dresser",
+        "cabinet.sideboard"
       ],
       "storage.small": [
         "chest",
@@ -61,15 +64,24 @@
         "chair"
       ],
       "table.dining": [
-        "table"
+        "table.dining",
+        "table.trestle",
+        "table.plank",
+        "table.long",
+        "table.mess",
+        "table.round_small"
       ],
       "table.small": [
-        "table",
+        "table.side",
+        "table.round_small",
+        "table.coffee",
         "nightstand"
       ],
       "table.work": [
-        "table",
-        "workbench"
+        "table.trestle",
+        "table.plank",
+        "workbench",
+        "table.dining"
       ],
       "desk": [
         "desk",
@@ -84,19 +96,20 @@
       ],
       "display": [
         "display",
-        "shelf",
-        "rack"
+        "shelf.goods",
+        "shelf.boutique",
+        "rack.clothing"
       ],
       "heat": [
         "hearth",
         "stove",
-        "appliance"
+        "appliance.radiator",
+        "appliance.climate_unit"
       ],
       "cook": [
         "stove",
         "hearth",
-        "oven",
-        "appliance"
+        "oven"
       ],
       "bake": [
         "oven",
@@ -112,13 +125,14 @@
         "toilet"
       ],
       "laundry.wash": [
-        "appliance",
+        "appliance.washer",
+        "appliance.mangle",
         "bath",
         "sink"
       ],
       "laundry.dry": [
-        "rack",
-        "appliance"
+        "rack.drying",
+        "appliance.dryer"
       ],
       "light.small": [
         "light"
@@ -145,9 +159,9 @@
         "table"
       ],
       "work.tool": [
-        "rack",
+        "rack.tool",
         "chest",
-        "cabinet"
+        "cabinet.cupboard"
       ],
       "work.material": [
         "crate",
@@ -209,14 +223,21 @@
         "bed"
       ],
       "med.station": [
-        "medical",
-        "table"
+        "medical.exam_table",
+        "medical.operating_table",
+        "medical.autodoc",
+        "medical.herbalist_table",
+        "table.trestle"
       ],
       "med.supply": [
-        "medical",
+        "cabinet.medicine",
+        "medical.autoclave",
+        "medical.iv_stand",
         "cabinet"
       ],
       "med.screen": [
+        "medical.privacy_curtain",
+        "decor.screen",
         "medical",
         "decor"
       ],
@@ -243,14 +264,17 @@
         "bin"
       ],
       "coat": [
-        "rack"
+        "rack.coat",
+        "wardrobe"
       ],
       "weapons": [
-        "rack",
-        "locker",
-        "security"
+        "rack.weapon",
+        "security.gun_locker",
+        "locker"
       ],
       "security": [
+        "security.detector",
+        "security.turnstile",
         "security"
       ],
       "utility": [
@@ -304,7 +328,7 @@
         "chest"
       ],
       "weapons": [
-        "rack",
+        "rack.weapon",
         "locker"
       ]
     }
@@ -325,12 +349,11 @@
       "heat": [
         "hearth",
         "stove",
-        "appliance"
+        "appliance.climate_unit"
       ],
       "cook": [
         "hearth",
-        "stove",
-        "appliance"
+        "stove"
       ]
     }
   },
@@ -363,6 +386,10 @@
   "mess_hall": {
     "roles": {
       "table.dining": [
+        "table.mess",
+        "table.long",
+        "table.dining",
+        "table.trestle",
         "table"
       ],
       "seat.long": [
@@ -378,6 +405,11 @@
       "seat.long": [
         "sofa",
         "bench"
+      ],
+      "table.small": [
+        "table.coffee",
+        "table.side",
+        "table.round_small"
       ]
     }
   },
@@ -404,6 +436,12 @@
       "decor.feature": [
         "statue",
         "decor"
+      ],
+      "table.dining": [
+        "table.long",
+        "table.trestle",
+        "table.dining",
+        "table"
       ]
     }
   },
@@ -474,9 +512,9 @@
         "basket"
       ],
       "shelving": [
+        "shelf.pantry",
         "shelf",
-        "rack",
-        "cabinet"
+        "cabinet.cupboard"
       ],
       "storage.cold": [
         "fridge"
@@ -491,7 +529,8 @@
         "sack"
       ],
       "shelving": [
-        "rack",
+        "rack.wine",
+        "shelf.pantry",
         "shelf"
       ]
     }
@@ -512,7 +551,8 @@
   "armoury": {
     "roles": {
       "shelving": [
-        "rack"
+        "rack.weapon",
+        "shelf"
       ],
       "storage.bulk": [
         "crate",
@@ -523,21 +563,34 @@
         "cabinet"
       ],
       "display": [
-        "rack"
+        "rack.weapon",
+        "decor.armour"
       ],
       "weapons": [
-        "rack",
+        "rack.weapon",
+        "security.gun_locker",
         "locker"
       ]
     }
   },
   "office": {
-    "roles": {}
+    "roles": {
+      "storage.big": [
+        "cabinet.filing",
+        "cabinet.cupboard",
+        "bookcase"
+      ]
+    }
   },
   "study": {
     "roles": {
       "books": [
         "bookcase"
+      ],
+      "storage.big": [
+        "cabinet.filing",
+        "bookcase",
+        "cabinet.cupboard"
       ]
     }
   },
@@ -619,7 +672,7 @@
         "table"
       ],
       "work.tool": [
-        "rack",
+        "rack.tool",
         "chest"
       ],
       "work.material": [
@@ -627,7 +680,8 @@
         "crate"
       ],
       "display": [
-        "rack",
+        "rack.clothing",
+        "display.mannequin",
         "display"
       ]
     }
@@ -836,9 +890,13 @@
         "board"
       ],
       "weapons": [
-        "security",
-        "locker",
-        "rack"
+        "security.gun_locker",
+        "rack.weapon",
+        "locker"
+      ],
+      "storage.big": [
+        "cabinet.filing",
+        "locker"
       ]
     }
   },
@@ -909,9 +967,9 @@
   "guardroom": {
     "roles": {
       "weapons": [
-        "rack",
-        "locker",
-        "security"
+        "rack.weapon",
+        "security.gun_locker",
+        "locker"
       ]
     }
   },
@@ -921,7 +979,7 @@
   "training_hall": {
     "roles": {
       "weapons": [
-        "rack"
+        "rack.weapon"
       ]
     }
   },
