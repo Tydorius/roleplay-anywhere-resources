@@ -1,0 +1,1939 @@
+{
+ "band": "medieval",
+ "objects": {
+  "alchemy.apothecary": {
+   "template": "Glazed earthenware apothecary's bench [alchemy.apothecary]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "jars": "glazed earthenware",
+    "top": "elm"
+   },
+   "physical": "Top-down view of an apothecary's bench: a mid-brown elm counter with a mortar and pestle and a pair of scales, rows of small drawers and brown glazed earthenware jars along the top edge.",
+   "reviewed": true
+  },
+  "alchemy.bench": {
+   "template": "Green glass alchemist's bench [alchemy.bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "glassware": "green glass",
+    "top": "beech"
+   },
+   "physical": "Top-down view of an alchemist's bench: a dark brown stained beech tabletop with a darker rim, cluttered with bottle-green glass flasks and a copper alembic over a small burner, jars and a skull along the top edge, black scorch marks on the top.",
+   "reviewed": true
+  },
+  "altar.offering": {
+   "template": "Stoneware offering table [altar.offering]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dish": "stoneware",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a small offering table: a mid-brown elm top with a tiny figure at the top edge, a grey stoneware offering dish and a stub of candle in front.",
+   "reviewed": true
+  },
+  "altar.stone": {
+   "template": "Slate stone altar [altar.stone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "block": "slate",
+    "cloth": "felt"
+   },
+   "physical": "Top-down view of the stone altar: a solid blue-grey slate block, a grey felt cloth across the top, candlesticks at each end and a cross or symbol at the top edge.",
+   "reviewed": true
+  },
+  "anvil.block": {
+   "template": "Pewter anvil [anvil.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "anvil": "pewter",
+    "stand": "elm"
+   },
+   "physical": "Top-down view of an anvil: a silver-grey pewter anvil with its horn pointing left, set on a round mid-brown elm stand, a hammer resting beside it.",
+   "reviewed": true
+  },
+  "anvil.quench_trough": {
+   "template": "Pewter slack tub [anvil.quench_trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "pewter",
+    "tub": "elm"
+   },
+   "physical": "Top-down view of a slack tub: a squat tawny elm tub bound with silver-grey pewter hoops, filled with dark water with a rainbow sheen.",
+   "reviewed": true
+  },
+  "barrel.cask_rack": {
+   "template": "Beech cask stillage [barrel.cask_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cradle": "beech",
+    "stave": "elm"
+   },
+   "physical": "Top-down view of a cask stillage two cells wide: two mid-brown elm casks lying side by side on a beech cradle, their round ends with taps facing the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.wooden": {
+   "template": "Copper barrel [barrel.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoop": "copper",
+    "stave": "elm"
+   },
+   "physical": "Top-down view of a round barrel: circular tawny elm lid made of planks, two hoops visible at the rim, a bung near the edge.",
+   "reviewed": true
+  },
+  "basket.hamper": {
+   "template": "Felt lidded basket [basket.hamper]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "felt",
+    "weave": "willow"
+   },
+   "physical": "Top-down view of a rectangular lidded basket: closed grey-green willow lid with a fastening loop at the front and a handle at each short end.",
+   "reviewed": true
+  },
+  "basket.wicker": {
+   "template": "Woven reed basket [basket.wicker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "woven reed"
+   },
+   "physical": "Top-down view of a round basket: tightly woven tan woven reed rim, the open top heaped with produce, a bent handle arching across.",
+   "reviewed": true
+  },
+  "bath.plunge_pool": {
+   "template": "Marble sunken bath [bath.plunge_pool]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "basin": "marble"
+   },
+   "physical": "Top-down view of a square sunken bath: a grey-veined marble rim around a pool of clear blue-green water, steps down at one corner, towels folded on one edge.",
+   "reviewed": true
+  },
+  "bath.wash_tub": {
+   "template": "Beech wash tub [bath.wash_tub]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "beech"
+   },
+   "physical": "Top-down view of a round wash tub: a light brown beech tub with grey soapy water, a scrubbing board leaning in it, wet splashes on the floor around.",
+   "reviewed": true
+  },
+  "bath.wooden_tub": {
+   "template": "Fine linen bathing tub [bath.wooden_tub]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "lining": "fine linen",
+    "tub": "yew"
+   },
+   "physical": "Top-down view of a long oval bathing tub: amber yew staves bound with iron hoops, a cream fine linen sheet draped over the rim, steaming water inside, a stool at one end.",
+   "reviewed": true
+  },
+  "bed.bunk": {
+   "template": "Undyed linen plank bunk [bed.bunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "undyed linen",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a two-tier plank bunk: the upper oatmeal undyed linen mattress fills the pale ash frame, a ladder on one long side, pillow at the top.",
+   "reviewed": true
+  },
+  "bed.double": {
+   "template": "Undyed linen double bed [bed.double]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "undyed linen",
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a double bed: light brown beech frame, a cream undyed linen quilt, two pillows side by side against the headboard at the top.",
+   "reviewed": true
+  },
+  "bed.double_pallet": {
+   "template": "Bracken double straw pallet [bed.double_pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "bracken",
+    "cover": "coarse hemp"
+   },
+   "physical": "Top-down view of a broad double straw pallet lying flat on the floor: a dun coarse hemp cover with two dents side by side, two flat pillows at the top.",
+   "reviewed": true
+  },
+  "bed.fine_single": {
+   "template": "Fine linen curtained bed [bed.fine_single]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "fine linen",
+    "frame": "yew"
+   },
+   "physical": "Top-down view of a narrow curtained bed: an amber yew frame with a tall headboard at the top, a white fine linen coverlet, three stacked pillows.",
+   "reviewed": true
+  },
+  "bed.fourposter": {
+   "template": "Yew four-poster bed [bed.fourposter]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "yew",
+    "hangings": "dyed wool"
+   },
+   "physical": "Top-down view of a canopied four-poster bed: four amber yew posts at the corners joined by a canopy rail, woad-blue dyed wool drapes tied back, bolster and pillows at the top.",
+   "reviewed": true
+  },
+  "bed.hammock": {
+   "template": "Felt hammock [bed.hammock]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "net": "felt"
+   },
+   "physical": "Top-down view of a slung hammock: a long brown felt sling pinched at both ends, ropes running to hooks at the top and bottom.",
+   "reviewed": true
+  },
+  "bed.pallet": {
+   "template": "Rush straw pallet [bed.pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "rush",
+    "cover": "sacking"
+   },
+   "physical": "Top-down view of a flat straw pallet on the floor: one flat rectangular tick of dark dun-brown sacking with a darker stitched hem all round, short green-brown rush tufts at the seams, a rolled sacking bundle for a pillow at the top.",
+   "reviewed": true
+  },
+  "bed.roll": {
+   "template": "Undyed linen bedroll [bed.roll]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "undyed linen"
+   },
+   "physical": "Top-down view of a cream undyed linen bedroll laid flat on the floor, the top corner turned back like a blanket.",
+   "reviewed": true
+  },
+  "bed.single": {
+   "template": "Wool bed [bed.single]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "wool",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a single bed: pale ash frame, grey wool blanket folded back, a pale pillow against the headboard at the top.",
+   "reviewed": true
+  },
+  "bench.long": {
+   "template": "Ash trestle bench [bench.long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "ash"
+   },
+   "physical": "Top-down view of a long backless trestle bench: a honey ash plank three times as long as it is wide, on sturdy legs.",
+   "reviewed": true
+  },
+  "bench.pew": {
+   "template": "Elm pew [bench.pew]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "elm"
+   },
+   "physical": "Top-down view of a long pew: a tawny elm seat with its tall back along the top edge, a narrow ledge behind it, shaped ends at left and right.",
+   "reviewed": true
+  },
+  "bench.plank": {
+   "template": "Elm plank bench [bench.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "elm"
+   },
+   "physical": "Top-down view of a backless plank bench: one long mid-brown elm board, the leg ends showing at each short edge.",
+   "reviewed": true
+  },
+  "bench.settle": {
+   "template": "Elm settle [bench.settle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm"
+   },
+   "physical": "Top-down view of a boxy settle: a tawny elm seat with a tall solid back along the top edge and high arms at each end.",
+   "reviewed": true
+  },
+  "bench.stone": {
+   "template": "Granite marble bench [bench.stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "seat": "granite"
+   },
+   "physical": "Top-down view of a solid marble bench: a smooth speckled granite slab with scrolled ends at left and right.",
+   "reviewed": true
+  },
+  "bin.waste": {
+   "template": "Ash slop bucket [bin.waste]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "ash"
+   },
+   "physical": "Top-down view of a round slop bucket: honey ash rim with scraps and crumpled rubbish inside, a lid lying askew.",
+   "reviewed": true
+  },
+  "board.black": {
+   "template": "Ash slate board [board.black]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "ash",
+    "panel": "dressed sandstone"
+   },
+   "physical": "Top-down view of the slate board: a long thick mid-brown ash frame along the top edge holding a dark dressed sandstone slab that fills the area toward the bottom, a narrow brown wooden chalk ledge along its bottom side with two short chalk stubs.",
+   "reviewed": true
+  },
+  "board.map": {
+   "template": "Tanned cowhide map stand [board.map]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "map": "tanned cowhide",
+    "panel": "beech"
+   },
+   "physical": "Top-down view of the map stand: a wide light brown beech board along the top edge, joined below it by a thick dark beech frame holding a stretched tanned brown leather map inked with dark routes, filling the bottom half.",
+   "reviewed": true
+  },
+  "board.notice": {
+   "template": "Elm notice board [board.notice]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "elm",
+    "frame": "beech"
+   },
+   "physical": "Top-down view of the notice board: a light brown beech rail along the top edge, below it a dark brown cork board in a thick beech frame covered in yellowed parchment and brown paper notices, a few scraps poking past its edge.",
+   "reviewed": true
+  },
+  "bookcase.library": {
+   "template": "Calfskin carved bookcase [bookcase.library]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "binding": "calfskin",
+    "frame": "cherrywood"
+   },
+   "physical": "Top-down view of a tall carved bookcase two cells wide: heavy reddish-brown cherrywood cornice, a ladder rail along the bottom edge with a ladder hooked at one end, rows of tan spines.",
+   "reviewed": true
+  },
+  "bookcase.scroll": {
+   "template": "Beech scroll rack [bookcase.scroll]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech",
+    "scroll": "tanned cowhide"
+   },
+   "physical": "Top-down view of a scroll rack two cells wide: light brown beech frame, rows of round cubbies with scroll ends facing the bottom edge, small tags dangling.",
+   "reviewed": true
+  },
+  "bookcase.small": {
+   "template": "Elm book shelf [bookcase.small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm"
+   },
+   "physical": "Top-down view of a narrow book shelf: mid-brown elm top, a short row of book spines along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "bookcase.standard": {
+   "template": "Sheepskin bookcase [bookcase.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "binding": "sheepskin",
+    "frame": "elm"
+   },
+   "physical": "Top-down view of a bookcase two cells wide: tawny elm top, the spines of grey books visible along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "butcher.block": {
+   "template": "Ash chopping block [butcher.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "block": "ash",
+    "cleaver": "wrought iron"
+   },
+   "physical": "Top-down view of a chopping block: a thick square pale ash end-grain block with a dark stained hollow in the middle, a wrought iron cleaver stuck in one corner.",
+   "reviewed": true
+  },
+  "butcher.hook_rail": {
+   "template": "Ash butchering frame [butcher.hook_rail]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "posts": "ash",
+    "rail": "wrought iron"
+   },
+   "physical": "Top-down view of a butchering frame: a long black wrought iron bar along the top edge on two ash posts, hanging carcasses shown as pale shapes below it, a drip tray underneath.",
+   "reviewed": true
+  },
+  "cabinet.cupboard": {
+   "template": "Elm cupboard [cabinet.cupboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "handle": "pewter"
+   },
+   "physical": "Top-down view of a cupboard: square tawny elm top, a pair of doors along the bottom edge with small pewter handles, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.medicine": {
+   "template": "Elm physic cupboard [cabinet.medicine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "pane": "ash"
+   },
+   "physical": "Top-down view of a narrow physic cupboard: tawny elm top, an ash door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.sideboard": {
+   "template": "Cherrywood court cupboard [cabinet.sideboard]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "cherrywood",
+    "plate": "polished steel"
+   },
+   "physical": "Top-down view of a long court cupboard two cells wide: reddish-brown cherrywood top with a row of silver-grey dishes and a tall jug, cupboard doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cell_bed.plank": {
+   "template": "Woven reed plank shelf [cell_bed.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "woven reed",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a bare plank shelf: solid dark honey ash boards laid edge to edge with no gaps and a darker wooden rim, a thin flat mat of tan woven reed on them, a short thick iron chain at each top corner, head end at the top.",
+   "reviewed": true
+  },
+  "cell_bed.privileged": {
+   "template": "Dyed wool tower-room bed [cell_bed.privileged]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "dyed wool",
+    "frame": "cherrywood"
+   },
+   "physical": "Top-down view of a narrow tower-room bed: a reddish-brown cherrywood frame fixed to the floor, a woad-blue dyed wool blanket, a real pillow at the top.",
+   "reviewed": true
+  },
+  "cell_bed.slab": {
+   "template": "Rubble stone stone ledge [cell_bed.slab]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "base": "rubble stone"
+   },
+   "physical": "Top-down view of a solid stone ledge: one ochre rubble stone block running from the wall at the top, smooth along its length.",
+   "reviewed": true
+  },
+  "chair.armchair": {
+   "template": "Undyed linen great chair [chair.armchair]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "undyed linen",
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a roomy great chair: wide light brown beech arms either side, a cream undyed linen seat cushion, a padded back along the top edge.",
+   "reviewed": true
+  },
+  "chair.high_back": {
+   "template": "Yew high-backed chair [chair.high_back]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "yew",
+    "seat": "calfskin"
+   },
+   "physical": "Top-down view of a tall high-backed chair: a tan calfskin seat in a russet yew frame, a shaped backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.plain": {
+   "template": "Beech wooden chair [chair.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "beech"
+   },
+   "physical": "Top-down view of a simple wooden chair: a square light brown beech seat with the backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.rocking": {
+   "template": "Felt rocking chair [chair.rocking]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "felt",
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a slatted rocking chair: light brown beech seat and back at the top, curved runners showing past the top and bottom edges, a grey cushion on the seat.",
+   "reviewed": true
+  },
+  "chest.ironbound": {
+   "template": "Pewter banded chest [chest.ironbound]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "band": "pewter",
+    "case": "elm"
+   },
+   "physical": "Top-down view of a heavy banded chest: a rectangular box, longer from left to right, with a gently rounded tawny elm lid and straight square ends, three dull grey pewter bands crossing the lid from top to bottom, a large lock plate on the bottom long edge, iron studs on the four corners.",
+   "reviewed": true
+  },
+  "chest.strongbox": {
+   "template": "Brass strongbox [chest.strongbox]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "brass"
+   },
+   "physical": "Top-down view of a compact strongbox: brass lid with riveted edges, a keyhole plate on one long side, a bolt head at each corner fixing it down.",
+   "reviewed": true
+  },
+  "chest.trunk": {
+   "template": "Elm travelling chest [chest.trunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "elm",
+    "trim": "wrought iron"
+   },
+   "physical": "Top-down view of a travelling chest: mid-brown elm lid with wrought iron corners and two slats running across, a carrying handle at each short end.",
+   "reviewed": true
+  },
+  "chest.wooden": {
+   "template": "Pewter chest [chest.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "band": "pewter",
+    "case": "beech"
+   },
+   "physical": "Top-down view of a chest: plank light brown beech lid with two pewter straps across it, a simple hasp on one long edge.",
+   "reviewed": true
+  },
+  "coffin.bier": {
+   "template": "Ash bier [coffin.bier]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "ash",
+    "pall": "wool"
+   },
+   "physical": "Top-down view of a bier: a long flat dark honey ash stretcher with a thick carrying pole sticking out at each corner, a green wool cloth draped over a long rounded shape that covers it completely with no face showing, head at the top.",
+   "reviewed": true
+  },
+  "coffin.plain": {
+   "template": "Beech coffin [coffin.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "beech",
+    "handles": "wrought iron"
+   },
+   "physical": "Top-down view of a coffin: a six-sided light brown beech box wider at the shoulders near the top, wrought iron handles along the sides, a lid with a simple plate.",
+   "reviewed": true
+  },
+  "coffin.sarcophagus": {
+   "template": "Polished limestone sarcophagus [coffin.sarcophagus]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "lid": "polished limestone",
+    "tomb": "polished limestone"
+   },
+   "physical": "Top-down view of a sarcophagus: a heavy cream polished limestone tomb chest with a lid carved as a lying figure, head at the top, feet at the bottom.",
+   "reviewed": true
+  },
+  "counter.bar": {
+   "template": "Elm tap counter [counter.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "elm",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a tap counter three cells wide: long tawny elm top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge.",
+   "reviewed": true
+  },
+  "counter.bar_grand": {
+   "template": "Yew carved tap counter [counter.bar_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "front": "yew",
+    "top": "granite"
+   },
+   "physical": "Top-down view of a carved tap counter three cells wide: glossy speckled granite top, a thin foot rail along the bottom edge, ranks of bottles and glasses on a back shelf along the top edge.",
+   "reviewed": true
+  },
+  "counter.kitchen": {
+   "template": "Elm kitchen board [counter.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "elm",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a kitchen board two cells wide: mid-brown elm work surface, a chopping board and a crock of utensils near the top edge against the wall.",
+   "reviewed": true
+  },
+  "counter.kitchen_stone": {
+   "template": "Oak stone worktop [counter.kitchen_stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "oak",
+    "top": "carved sandstone"
+   },
+   "physical": "Top-down view of a stone worktop two cells wide: a single smooth rose carved sandstone slab with a faint vein pattern, a row of jars along the top edge, a folded cloth at one end.",
+   "reviewed": true
+  },
+  "counter.plank": {
+   "template": "Knotty fir plank counter [counter.plank]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "knotty fir",
+    "top": "rough pine"
+   },
+   "physical": "Top-down view of a plank counter two cells wide: three long rough golden pine boards running from left to right side by side with uneven ends, the dark ends of two trestles showing at either end.",
+   "reviewed": true
+  },
+  "counter.shop": {
+   "template": "Beech trade counter [counter.shop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "beech",
+    "top": "ash"
+   },
+   "physical": "Top-down view of a trade counter two cells wide: honey ash top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there.",
+   "reviewed": true
+  },
+  "counter.shop_long": {
+   "template": "Ash merchant's counter [counter.shop_long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "ash",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a merchant's counter three cells wide: one unbroken mid-brown elm top, a hinged flap at the right end, scales and a ledger along the top edge on the keeper's side.",
+   "reviewed": true
+  },
+  "crate.stack": {
+   "template": "Beech crate stack [crate.stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "beech",
+    "strap": "wool"
+   },
+   "physical": "Top-down view of a crate stack two by two cells: four light brown beech crate lids in a square, the top layer slightly offset, grey straps crossing them.",
+   "reviewed": true
+  },
+  "crate.wooden": {
+   "template": "Elm crate [crate.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "elm"
+   },
+   "physical": "Top-down view of a square crate: tawny elm lid with reinforced edges and a stencilled mark in one corner.",
+   "reviewed": true
+  },
+  "crib.cradle": {
+   "template": "Felt cradle [crib.cradle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "felt",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a small cradle: an oblong honey ash box with a curved wooden hood over the head end at the top, a flat brown felt blanket folded inside, rocker tips showing at the corners.",
+   "reviewed": true
+  },
+  "crib.fine": {
+   "template": "Quilted linen canopied cradle [crib.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "drape": "quilted linen",
+    "frame": "cherrywood"
+   },
+   "physical": "Top-down view of a small canopied cradle: a reddish-brown cherrywood basket with a cream quilted linen canopy drawn over the top end, a tiny pillow beneath it.",
+   "reviewed": true
+  },
+  "decor.armour": {
+   "template": "Brass suit of armour [decor.armour]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "plate": "brass",
+    "stand": "oak"
+   },
+   "physical": "Top-down view of the suit of armour: broad gold brass shoulders and helm seen from above, on a small golden-brown oak base, front toward the bottom.",
+   "reviewed": true
+  },
+  "decor.banner": {
+   "template": "Wool banner stand [decor.banner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "wool",
+    "pole": "elm"
+   },
+   "physical": "Top-down view of the banner stand: a weighted round mid-brown elm foot with a pole, a green wool banner hanging in folds along the top edge.",
+   "reviewed": true
+  },
+  "decor.fountain": {
+   "template": "Polished limestone basin fountain [decor.fountain]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "polished limestone",
+    "spout": "bronze"
+   },
+   "physical": "Top-down view of a round basin fountain: a cream polished limestone rim around rippled water, a bronze spout at the centre.",
+   "reviewed": true
+  },
+  "decor.globe": {
+   "template": "Brass armillary sphere [decor.globe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "sphere": "brass",
+    "stand": "yew"
+   },
+   "physical": "Top-down view of the armillary sphere: a large brass sphere in a ring mount, centred on a round amber yew stand.",
+   "reviewed": true
+  },
+  "decor.mirror": {
+   "template": "Elm polished mirror [decor.mirror]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "glass": "copper"
+   },
+   "physical": "Top-down view of the polished mirror: a thin tawny elm frame on two splayed feet along the top edge, the copper face toward the bottom.",
+   "reviewed": true
+  },
+  "decor.painting": {
+   "template": "Fine linen painting on an easel [decor.painting]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "canvas": "fine linen",
+    "easel": "cherrywood"
+   },
+   "physical": "Top-down view of the painting on an easel: a three-legged reddish-brown cherrywood easel, the framed fine linen canvas a thin line along the top, its face toward the bottom.",
+   "reviewed": true
+  },
+  "decor.screen": {
+   "template": "Undyed linen folding screen [decor.screen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "undyed linen",
+    "panel": "ash"
+   },
+   "physical": "Seen from above at a steep three-quarter angle: a free-standing folding screen of three tall panels standing in a zigzag, each panel madder-red dyed linen in a thick mid-brown ash frame, dark iron hinges between them, the zigzag of the panel tops clearly visible.",
+   "reviewed": true
+  },
+  "desk.plain": {
+   "template": "Beech clerk's table [desk.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech"
+   },
+   "physical": "Top-down view of a plain clerk's table: a light brown beech top with a few papers and a pen, the back edge at the top.",
+   "reviewed": true
+  },
+  "desk.writing": {
+   "template": "Tooled leather writing desk [desk.writing]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "inlay": "tooled leather",
+    "top": "cherrywood"
+   },
+   "physical": "Top-down view of a broad writing desk: a reddish-brown cherrywood top with an inset chestnut tooled leather panel, an inkwell and quill, a row of pigeonholes along the top edge.",
+   "reviewed": true
+  },
+  "display.pedestal": {
+   "template": "Granite display plinth [display.pedestal]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "granite",
+    "cushion": "dyed wool"
+   },
+   "physical": "Top-down view of a square display plinth: speckled granite top with a narrow moulded rim, a woad-blue cushion in the centre holding a single small object.",
+   "reviewed": true
+  },
+  "display.table": {
+   "template": "Felt market stall table [display.table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "felt",
+    "top": "ash"
+   },
+   "physical": "Top-down view of a market stall table two cells wide: brown felt cloth over the ash top, small goods arranged in rows, a price slate at the top edge.",
+   "reviewed": true
+  },
+  "display.vitrine": {
+   "template": "Cherrywood glazed cabinet [display.vitrine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "cherrywood",
+    "pane": "clear glass"
+   },
+   "physical": "Top-down view of a tall glazed cabinet: square reddish-brown cherrywood top with a carved cornice, the glazed door along the bottom edge, its back flat against the top edge.",
+   "reviewed": true
+  },
+  "feed.hay_bale": {
+   "template": "Woven reed hay bale [feed.hay_bale]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hay": "woven reed",
+    "twine": "willow"
+   },
+   "physical": "Top-down view of a hay bale: a rectangular block of tan woven reed with two twine bands across it, loose stalks around the edges.",
+   "reviewed": true
+  },
+  "feed.stall": {
+   "template": "Wicker stall [feed.stall]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "wicker",
+    "walls": "beech"
+   },
+   "physical": "Top-down view of a stall: three light brown beech partition walls open at the bottom edge, a manger at the top, pale wicker covering the floor.",
+   "reviewed": true
+  },
+  "feed.trough": {
+   "template": "Woven reed trough [feed.trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "feed": "woven reed",
+    "trough": "beech"
+   },
+   "physical": "Top-down view of a trough: a long narrow light brown beech trough holding tan woven reed or water.",
+   "reviewed": true
+  },
+  "firewood.kindling_basket": {
+   "template": "Woven reed kindling basket [firewood.kindling_basket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basket": "woven reed",
+    "sticks": "ash"
+   },
+   "physical": "Top-down view of a round kindling basket: a woven tan woven reed rim, a jumble of thin pale ash sticks and split logs inside.",
+   "reviewed": true
+  },
+  "firewood.log_stack": {
+   "template": "Ash log stack [firewood.log_stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "logs": "ash"
+   },
+   "physical": "Top-down view of a log stack against the top wall: rows of round pale ash log ends stacked neatly, bark curls and wood chips scattered at the bottom edge.",
+   "reviewed": true
+  },
+  "forge.hearth": {
+   "template": "Slate smith's forge [forge.hearth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hearth": "slate",
+    "hood": "wrought iron"
+   },
+   "physical": "Top-down view of a smith's forge: a raised blue-grey slate hearth with a bright orange firepot in the middle, a black wrought iron hood over the top edge, a bellows or blower at one end and tongs hung on the side.",
+   "reviewed": true
+  },
+  "forge.pit": {
+   "template": "Rubble stone pit forge [forge.pit]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bed": "rubble stone",
+    "bellows": "rawhide"
+   },
+   "physical": "Top-down view of a pit forge: a low ring of ochre rubble stone around glowing orange coals, a small tan rawhide bellows pointing in from one side.",
+   "reviewed": true
+  },
+  "game.cards": {
+   "template": "Beech dice table [game.cards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech",
+    "top": "felt"
+   },
+   "physical": "Top-down view of a square dice table: a brown felt playing surface edged in light brown beech, a scatter of cards and coins at the centre.",
+   "reviewed": true
+  },
+  "game.chess": {
+   "template": "Ash chess table [game.chess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "ash"
+   },
+   "physical": "Top-down view of a small square chess table: an inlaid checkered honey ash board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "gym.pell": {
+   "template": "Limestone pell [gym.pell]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "limestone",
+    "post": "elm"
+   },
+   "physical": "Top-down view of a pell: a thick round mid-brown elm post set in a limestone base, the top chewed with sword cuts.",
+   "reviewed": true
+  },
+  "hearth.brazier": {
+   "template": "Wrought iron brazier [hearth.brazier]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "wrought iron"
+   },
+   "physical": "Top-down view of a round brazier: a black wrought iron bowl heaped with red-hot coals, three short legs just visible at the rim, a faint ring of ash on the floor around it.",
+   "reviewed": true
+  },
+  "hearth.fire_pit": {
+   "template": "Slate fire pit [hearth.fire_pit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "ring": "slate"
+   },
+   "physical": "Top-down view of a round fire pit: a ring of blue-grey slate stones around glowing orange embers and grey ash, a few half-burnt sticks crossing the middle.",
+   "reviewed": true
+  },
+  "hearth.fireplace": {
+   "template": "Copper hearth [hearth.fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "grate": "copper",
+    "surround": "dressed sandstone"
+   },
+   "physical": "Top-down view of a wall hearth: an ochre dressed sandstone hearth slab jutting from the top edge, a dark firebox against the back wall with a copper grate of burning logs, a raised hearthstone along the bottom.",
+   "reviewed": true
+  },
+  "hearth.great_fireplace": {
+   "template": "Oak great fireplace [hearth.great_fireplace]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "mantel": "oak",
+    "surround": "polished limestone"
+   },
+   "physical": "Top-down view of a wide great fireplace against the top wall: a long cream polished limestone surround, a deep firebox roaring with flame, a honey oak mantel shelf along the back edge, a broad hearthstone in front.",
+   "reviewed": true
+  },
+  "hospital_bed.cot": {
+   "template": "Undyed linen infirmary cot [hospital_bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "undyed linen",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a plain infirmary cot: pale ash frame, a cream undyed linen sheet pulled straight, a small pillow at the top.",
+   "reviewed": true
+  },
+  "hospital_bed.curtained": {
+   "template": "Dyed wool curtained sickbed [hospital_bed.curtained]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "curtain": "dyed wool",
+    "frame": "cherrywood"
+   },
+   "physical": "Top-down view of a screened curtained sickbed: reddish-brown cherrywood frame and bolster at the top, green dyed wool curtains drawn round three sides on a rail.",
+   "reviewed": true
+  },
+  "hydroponics.potting_table": {
+   "template": "Stoneware planting table [hydroponics.potting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pots": "stoneware",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a planting table: a tawny elm table with heaps of dark soil, small grey stoneware pots of green seedlings, a trowel and watering can, stacked pots along the top edge.",
+   "reviewed": true
+  },
+  "instrument.great_drum": {
+   "template": "Sheepskin great drum [instrument.great_drum]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "head": "sheepskin",
+    "shell": "ash"
+   },
+   "physical": "Top-down view of the great drum: a round grey sheepskin drumhead laced to a honey ash shell, a padded beater resting across it.",
+   "reviewed": true
+  },
+  "instrument.harp": {
+   "template": "Ash floor harp [instrument.harp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "ash",
+    "strings": "bronze"
+   },
+   "physical": "Seen from above at a steep three-quarter angle: a floor harp laid flat on its side so its whole outline shows, a tall triangle with a thick straight dark stained ash sound box along the bottom, a curved ash neck along the top and a straight front pillar, dark bronze strings in parallel lines between neck and sound box.",
+   "reviewed": true
+  },
+  "instrument.organ": {
+   "template": "Oak pipe organ [instrument.organ]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "oak",
+    "pipes": "polished steel"
+   },
+   "physical": "Top-down view of the pipe organ: a row of silver-grey polished steel pipe tops along the top edge, a honey oak console with stepped keyboards and a bench toward the bottom.",
+   "reviewed": true
+  },
+  "kiln.brick": {
+   "template": "Wrought iron brick kiln [kiln.brick]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "wrought iron",
+    "walls": "slate"
+   },
+   "physical": "Top-down view of a brick kiln: a thick-walled square of blue-grey slate with a chimney at the top edge, an arched wrought iron door at the bottom edge and fire ports on both sides.",
+   "reviewed": true
+  },
+  "kiln.clay": {
+   "template": "Limestone clay kiln [kiln.clay]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "limestone",
+    "dome": "glazed earthenware"
+   },
+   "physical": "Top-down view of a clay kiln: a round yellow glazed earthenware dome with a smoke hole in the middle, a small firing mouth at the bottom edge, ringed by pale grey limestone.",
+   "reviewed": true
+  },
+  "lathe.pole": {
+   "template": "Elm pole lathe [lathe.pole]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bed": "elm",
+    "cord": "willow"
+   },
+   "physical": "Top-down view of a pole lathe: a long mid-brown elm bed with two upright centres holding a turning blank, a willow cord running up to the top edge, a treadle and shavings below.",
+   "reviewed": true
+  },
+  "lathe.potters_wheel": {
+   "template": "Elm potter's wheel [lathe.potters_wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "wheel": "limestone"
+   },
+   "physical": "Top-down view of a potter's wheel: a round pale grey limestone wheel head with a wet clay pot in the middle, an elm seat at the bottom edge, a water bowl beside it.",
+   "reviewed": true
+  },
+  "lathe.saw_bench": {
+   "template": "Pewter sawing trestle [lathe.saw_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "blade": "pewter",
+    "table": "elm"
+   },
+   "physical": "Top-down view of a sawing trestle: a rectangular tawny elm table with a pewter blade slot along the middle, a fence along one side, sawdust heaped below.",
+   "reviewed": true
+  },
+  "lectern.pulpit": {
+   "template": "Polished limestone pulpit [lectern.pulpit]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "polished limestone",
+    "cloth": "fine linen"
+   },
+   "physical": "Top-down view of the pulpit: a six-sided cream polished limestone box on a raised base, a short stair at one side, a cream fine linen cloth draped over the front edge toward the bottom.",
+   "reviewed": true
+  },
+  "lectern.reading": {
+   "template": "Elm lectern [lectern.reading]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "elm"
+   },
+   "physical": "Top-down view of the lectern: a tawny elm column with a slanted reading top, the high edge at the top, the speaker's side toward the bottom.",
+   "reviewed": true
+  },
+  "light.candelabrum": {
+   "template": "Bronze candelabrum [light.candelabrum]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "bronze"
+   },
+   "physical": "Top-down view of a floor candelabrum: a heavy round dark gold bronze base disc, seven short candles in a ring and one in the centre on bronze arms radiating like spokes, each candle top a small lit flame.",
+   "reviewed": true
+  },
+  "light.candle": {
+   "template": "Pewter candle stand [light.candle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stand": "pewter"
+   },
+   "physical": "Top-down view of a candle stand: a small round silver-grey pewter drip pan with a single lit candle in the middle, a soft yellow halo around it.",
+   "reviewed": true
+  },
+  "light.lantern": {
+   "template": "Pewter horn lantern [light.lantern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "pewter",
+    "panel": "forest glass"
+   },
+   "physical": "Top-down view of a horn lantern: a square or round silver-grey pewter cap with a carrying handle, light spilling through brownish forest glass sides onto the floor around it.",
+   "reviewed": true
+  },
+  "light.oil_lamp": {
+   "template": "Stoneware oil lamp [light.oil_lamp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lamp": "stoneware",
+    "stand": "beech"
+   },
+   "physical": "Top-down view of a small light brown beech stand with an oil lamp: a brown stoneware lamp seen from above, a single flame at its spout and a ring of warm light.",
+   "reviewed": true
+  },
+  "light.torch": {
+   "template": "Pewter torch stand [light.torch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pole": "pewter"
+   },
+   "physical": "Top-down view of a torch stand: a round dull grey pewter base and cup holding a burning torch head, orange flame and a smudge of soot on the floor around it.",
+   "reviewed": true
+  },
+  "locker.footlocker": {
+   "template": "Ash kit chest [locker.footlocker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "ash",
+    "strap": "wolfskin"
+   },
+   "physical": "Top-down view of a low kit chest: rectangular honey ash lid with a stencilled number, two grey straps across it, a handle at either end.",
+   "reviewed": true
+  },
+  "loom.floor": {
+   "template": "Elm floor loom [loom.floor]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "warp": "felt"
+   },
+   "physical": "Top-down view of a floor loom: a square mid-brown elm frame with brown warp threads running from top to bottom, treadles and a weaver's bench at the bottom edge, woven cloth rolled at the bottom.",
+   "reviewed": true
+  },
+  "loom.spinning_wheel": {
+   "template": "Undyed linen spinning wheel [loom.spinning_wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fibre": "undyed linen",
+    "wheel": "ash"
+   },
+   "physical": "Seen from above at a steep three-quarter angle: a spinning wheel, a large spoked honey ash wheel standing upright at one end of a low slanted ash bench, a spindle with a russet wool bobbin at the other end, nothing else around it.",
+   "reviewed": true
+  },
+  "medical.herbalist_table": {
+   "template": "Wicker herbalist's table [medical.herbalist_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "herbs": "wicker",
+    "top": "ash"
+   },
+   "physical": "Top-down view of a herbalist's table: a pale ash table with bundles of honey wicker laid out, small bowls, a mortar and rolled bandages, herb bunches hanging along the top edge.",
+   "reviewed": true
+  },
+  "medical.operating_table": {
+   "template": "Ash surgeon's board [medical.operating_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "ash",
+    "top": "elm"
+   },
+   "physical": "Top-down view of a surgeon's board: a narrow tawny elm table on an ash base, a head rest at the top, arm boards to each side, a tray of instruments beside it.",
+   "reviewed": true
+  },
+  "mill.grindstone": {
+   "template": "Elm grindstone [mill.grindstone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "wheel": "dressed sandstone"
+   },
+   "physical": "Top-down view of a grindstone: a round buff dressed sandstone wheel seen edge-on as a thick bar, mounted in an elm frame with a crank or motor on one side, a water trough or tray below.",
+   "reviewed": true
+  },
+  "mill.millstones": {
+   "template": "Cherrywood millstones [mill.millstones]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "cherrywood",
+    "stones": "carved sandstone"
+   },
+   "physical": "Top-down view of a millstones: a large round reddish-brown cherrywood casing around a broad honey carved sandstone millstone, a grain hopper over the centre, a flour chute at the bottom edge.",
+   "reviewed": true
+  },
+  "mill.quern": {
+   "template": "Elm quern [mill.quern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "handle": "elm",
+    "stones": "slate"
+   },
+   "physical": "Top-down view of a quern: two stacked round blue-grey slate millstones with a hole in the middle, an upright elm handle near the rim, a ring of flour around the base.",
+   "reviewed": true
+  },
+  "nightstand.crate": {
+   "template": "Knotty fir upturned crate [nightstand.crate]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "knotty fir"
+   },
+   "physical": "Top-down view of a small upturned crate: a square yellowish knotty fir box turned on end, a few small objects on its top.",
+   "reviewed": true
+  },
+  "nightstand.fine": {
+   "template": "Yew carved night cabinet [nightstand.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "yew",
+    "top": "polished limestone"
+   },
+   "physical": "Top-down view of a fine carved night cabinet: a cream polished limestone top over an amber yew cabinet, a small keyhole on the bottom edge.",
+   "reviewed": true
+  },
+  "nightstand.plain": {
+   "template": "Ash bedside table [nightstand.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "ash"
+   },
+   "physical": "Top-down view of a small bedside table: a square pale ash top, a drawer pull showing on the bottom edge.",
+   "reviewed": true
+  },
+  "oven.bakehouse": {
+   "template": "Slate baker's oven [oven.bakehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "chamber": "slate",
+    "door": "copper"
+   },
+   "physical": "Top-down view of a large baker's oven: a broad blue-grey slate block against the top wall with a vaulted roof, a wide copper oven mouth on the bottom edge, a stone apron and a long peel in front.",
+   "reviewed": true
+  },
+  "oven.bread_oven": {
+   "template": "Glazed earthenware bread oven [oven.bread_oven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dome": "glazed earthenware",
+    "door": "copper"
+   },
+   "physical": "Top-down view of a bread oven: a rounded brown glazed earthenware dome filling the square, a flat front lip at the bottom with a small ruddy copper door and a wooden peel leaning beside it.",
+   "reviewed": true
+  },
+  "plant.herb_pot": {
+   "template": "Willow pot of herbs [plant.herb_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "willow",
+    "pot": "stoneware"
+   },
+   "physical": "Top-down view of a round grey stoneware pot of herbs seen from above: a tight clump of pale leaves filling the rim.",
+   "reviewed": true
+  },
+  "plant.potted": {
+   "template": "Wicker potted shrub [plant.potted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "wicker",
+    "pot": "stoneware"
+   },
+   "physical": "Top-down view of the potted shrub: a round grey stoneware pot almost hidden under a spray of honey wicker fronds.",
+   "reviewed": true
+  },
+  "plant.tree": {
+   "template": "Woven reed tubbed orange tree [plant.tree]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "foliage": "woven reed",
+    "planter": "ash"
+   },
+   "physical": "Top-down view of the tubbed orange tree: a square honey ash planter under a wide round crown of tan leaves that spills past its edges.",
+   "reviewed": true
+  },
+  "press.fruit": {
+   "template": "Wrought iron cider press [press.fruit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "screw": "wrought iron",
+    "tub": "elm"
+   },
+   "physical": "Top-down view of a cider press: a round slatted mid-brown elm basket with a pressing plate and wrought iron screw on top, a spout and bucket at the bottom edge.",
+   "reviewed": true
+  },
+  "press.printing": {
+   "template": "Beech screw press [press.printing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech",
+    "platen": "wrought iron"
+   },
+   "physical": "Top-down view of a screw press: a light brown beech frame with a flat wrought iron bed sliding out toward the bottom, a long lever arm to one side, stacked paper and an ink slab along the top edge.",
+   "reviewed": true
+  },
+  "rack.clothing": {
+   "template": "Elm hanging pole [rack.clothing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "garment": "felt"
+   },
+   "physical": "Top-down view of a hanging pole two cells wide: a straight mid-brown elm bar across the middle with a crowded row of hanging brown clothes seen from above, feet at either end.",
+   "reviewed": true
+  },
+  "rack.coat": {
+   "template": "Beech peg stand [rack.coat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a peg stand: small round light brown beech base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "reviewed": true
+  },
+  "rack.drying": {
+   "template": "Wool drying frame [rack.drying]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "wool",
+    "frame": "elm"
+   },
+   "physical": "Top-down view of a folding drying frame: parallel tawny elm rails with russet sheets and shirts draped over them.",
+   "reviewed": true
+  },
+  "rack.tool": {
+   "template": "Ash tool rack [rack.tool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "ash",
+    "tool": "pewter"
+   },
+   "physical": "Top-down view of a tool rack: pale ash board against the top edge with pewter hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "reviewed": true
+  },
+  "rack.weapon": {
+   "template": "Wrought iron weapon rack [rack.weapon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fitting": "wrought iron",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a weapon rack: honey ash frame against the top edge with a row of notches, the tips of three long weapons leaning back into it, a wrought iron bar locking them in place.",
+   "reviewed": true
+  },
+  "rack.wine": {
+   "template": "Green glass wine rack [rack.wine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bottle": "green glass",
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a wine rack: light brown beech lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows.",
+   "reviewed": true
+  },
+  "religious.candle_rack": {
+   "template": "Wrought iron votive candle stand [religious.candle_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rack": "wrought iron"
+   },
+   "physical": "Top-down view of the votive candle stand: a stepped black wrought iron tray filled with rows of small lit candles, a sand tray at the front toward the bottom.",
+   "reviewed": true
+  },
+  "religious.font": {
+   "template": "Limestone font [religious.font]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "limestone",
+    "cover": "beech"
+   },
+   "physical": "Top-down view of the font: a round pale grey limestone basin on an eight-sided base, a light brown beech lid with a knob at its centre.",
+   "reviewed": true
+  },
+  "religious.prayer_mat": {
+   "template": "Felt prayer mat [religious.prayer_mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "felt"
+   },
+   "physical": "Top-down view of the prayer mat: a small oblong of brown felt with a pointed arch motif at the top end and a fringe at the bottom.",
+   "reviewed": true
+  },
+  "rug.carpet": {
+   "template": "Fine linen knotted carpet [rug.carpet]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "border": "fine linen",
+    "pile": "quilted linen"
+   },
+   "physical": "Top-down view of a large oblong knotted carpet: saffron quilted linen centre with a central medallion, a wide cream border, fringe along the short sides.",
+   "reviewed": true
+  },
+  "rug.hide": {
+   "template": "Tanned cowhide hide rug [rug.hide]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hide": "tanned cowhide"
+   },
+   "physical": "Top-down view of the hide rug: a brown animal pelt spread flat, four legs splayed to the corners, head at the top.",
+   "reviewed": true
+  },
+  "rug.mat": {
+   "template": "Woven reed rush mat [rug.mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "woven reed"
+   },
+   "physical": "Top-down view of a small oblong rush mat: tan woven reed in rough bands, frayed ends at left and right.",
+   "reviewed": true
+  },
+  "rug.runner": {
+   "template": "Undyed linen runner [rug.runner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "undyed linen"
+   },
+   "physical": "Top-down view of a long narrow runner running from top to bottom: flat woven madder-red dyed linen with a dark brown stripe down each long edge and a dark brown border at each end.",
+   "reviewed": true
+  },
+  "rug.woven": {
+   "template": "Felt woven rug [rug.woven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "felt"
+   },
+   "physical": "Top-down view of a square woven rug: brown felt field, a plain contrasting border, short fringe at the top and bottom edges.",
+   "reviewed": true
+  },
+  "sack.grain": {
+   "template": "Felt grain sack [sack.grain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "sack": "felt"
+   },
+   "physical": "Top-down view of a slumped grain sack: lumpy brown felt bag with its tied neck flopped to one side, a little spilled grain beside it.",
+   "reviewed": true
+  },
+  "shelf.boutique": {
+   "template": "Yew carved wall shelf [shelf.boutique]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "yew",
+    "shelf": "yew"
+   },
+   "physical": "Top-down view of a carved wall shelf two cells wide: slim russet yew frame, a yew shelf with a few widely spaced objects, decorative moulding along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.goods": {
+   "template": "Beech stock shelf [shelf.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a shallow stock shelf two cells wide: light brown beech shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "reviewed": true
+  },
+  "shelf.pantry": {
+   "template": "Elm larder shelf [shelf.pantry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "jar": "glazed earthenware"
+   },
+   "physical": "Top-down view of a larder shelf two cells wide: tawny elm shelf edge along the bottom, rows of yellow glazed earthenware jars and tied bundles, back against the top edge.",
+   "reviewed": true
+  },
+  "sink.scullery": {
+   "template": "Slate stone sink [sink.scullery]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "slate"
+   },
+   "physical": "Top-down view of a long stone sink against the top wall: a shallow rectangular blue-grey slate trough with a drain hole at one end, a bucket and scrubbing brush on the rim.",
+   "reviewed": true
+  },
+  "sink.wash_basin": {
+   "template": "Elm wash basin [sink.wash_basin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "elm",
+    "stool": "ash"
+   },
+   "physical": "Top-down view of a wash basin: a round tawny elm bowl of water on a square honey ash stool, a folded rag and a jug beside it.",
+   "reviewed": true
+  },
+  "sink.washstand": {
+   "template": "Majolica laver [sink.washstand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "majolica",
+    "stand": "oak",
+    "top": "polished limestone"
+   },
+   "physical": "Top-down view of a laver: a cream polished limestone top with a round yellow majolica basin sunk in the middle, a tall ewer at the back edge, a folded towel hanging from the side rail.",
+   "reviewed": true
+  },
+  "sofa.daybed": {
+   "template": "Dyed wool daybed [sofa.daybed]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "dyed wool",
+    "frame": "cherrywood"
+   },
+   "physical": "Top-down view of a long daybed: a green dyed wool seat with a curved raised end at the left, a short back rail along the top edge, reddish-brown cherrywood feet.",
+   "reviewed": true
+  },
+  "sofa.settle_cushioned": {
+   "template": "Wool cushioned settle [sofa.settle_cushioned]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "wool",
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a padded cushioned settle: a honey ash frame with a high back along the top edge, grey wool cushions along the seat.",
+   "reviewed": true
+  },
+  "statue.bust": {
+   "template": "Dressed sandstone bust on a pedestal [statue.bust]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bust": "dressed sandstone",
+    "pedestal": "ash"
+   },
+   "physical": "Top-down view of the bust on a pedestal: a square pale ash pedestal topped by a buff dressed sandstone head and shoulders, face toward the bottom.",
+   "reviewed": true
+  },
+  "statue.carving": {
+   "template": "Ash carved figure [statue.carving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "ash"
+   },
+   "physical": "Top-down view of a small honey ash carved figure on a squat base: a rough human shape, head at the top.",
+   "reviewed": true
+  },
+  "statue.figure": {
+   "template": "Granite statue [statue.figure]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "granite",
+    "plinth": "polished limestone"
+   },
+   "physical": "Top-down view of the statue: a square cream polished limestone plinth with a speckled granite standing figure, head and shoulders central, raised arm reaching to one side.",
+   "reviewed": true
+  },
+  "still.brew_kettle": {
+   "template": "Slate brewing copper [still.brew_kettle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "slate",
+    "kettle": "copper"
+   },
+   "physical": "Top-down view of a brewing copper: a large round ruddy copper kettle with a steaming open top, set into a blue-grey slate firebox, a ladle hooked on the rim.",
+   "reviewed": true
+  },
+  "still.pot": {
+   "template": "Pewter alembic [still.pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "coil": "pewter",
+    "pot": "wrought iron"
+   },
+   "physical": "Top-down view of an alembic: a round black wrought iron pot with a domed top, a pewter pipe coiling into a cooling bucket beside it, a jug under the spout.",
+   "reviewed": true
+  },
+  "still.vat": {
+   "template": "Wrought iron fermenting tun [still.vat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "wrought iron",
+    "vat": "ash"
+   },
+   "physical": "Top-down view of a fermenting tun: a wide round pale ash vat bound with wrought iron hoops, a loose lid and a paddle laid across the top.",
+   "reviewed": true
+  },
+  "stool.ottoman": {
+   "template": "Quilted linen cushioned stool [stool.ottoman]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "quilted linen",
+    "frame": "oak"
+   },
+   "physical": "Top-down view of a padded cushioned stool: a square saffron quilted linen top with buttoned tufts and short honey oak feet at the corners.",
+   "reviewed": true
+  },
+  "stool.plain": {
+   "template": "Elm three-legged stool [stool.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "elm"
+   },
+   "physical": "Top-down view of a small three-legged stool: a round tawny elm seat, the tips of its legs just showing.",
+   "reviewed": true
+  },
+  "stove.cookfire": {
+   "template": "Copper cooking fire [stove.cookfire]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pot": "copper",
+    "stones": "slate"
+   },
+   "physical": "Top-down view of a cooking fire: a ring of blue-grey slate stones around glowing coals, a round copper cauldron in the middle seen from above with a ladle in it, the tripod's three legs reaching out to the corners.",
+   "reviewed": true
+  },
+  "stove.kitchen_hearth": {
+   "template": "Copper kitchen hearth [stove.kitchen_hearth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "crane": "copper",
+    "hearth": "dressed sandstone"
+   },
+   "physical": "Top-down view of a long kitchen hearth against the top wall: a red dressed sandstone hearth bed of fire, a spit with a roast across it, a ruddy copper pot crane swung out over the flames, a flagstone apron along the bottom.",
+   "reviewed": true
+  },
+  "table.dining": {
+   "template": "Beech dining table [table.dining]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech"
+   },
+   "physical": "Top-down view of a square dining table: a light brown beech top with a runner down the middle, one leg at each corner.",
+   "reviewed": true
+  },
+  "table.long": {
+   "template": "Oak feasting table [table.long]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "oak"
+   },
+   "physical": "Top-down view of a very long feasting table: a honey oak top twice as long as it is wide, a line of serving dishes down the middle.",
+   "reviewed": true
+  },
+  "table.plank": {
+   "template": "Elm plank table [table.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "elm"
+   },
+   "physical": "Top-down view of a plain plank table: a rectangular tawny elm top, twice as wide as it is deep, legs at the corners.",
+   "reviewed": true
+  },
+  "table.round_small": {
+   "template": "Elm small round table [table.round_small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "elm"
+   },
+   "physical": "Top-down view of a small round table: a round tawny elm top on a single central post.",
+   "reviewed": true
+  },
+  "table.side": {
+   "template": "Yew carved side table [table.side]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "yew",
+    "top": "polished limestone"
+   },
+   "physical": "Top-down view of a small square carved side table: a cream polished limestone top with a bevelled edge, slim russet yew legs at the corners.",
+   "reviewed": true
+  },
+  "table.trestle": {
+   "template": "Beech trestle table [table.trestle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech"
+   },
+   "physical": "Top-down view of a long trestle table: three light brown beech boards side by side, resting on X-shaped trestles at each end.",
+   "reviewed": true
+  },
+  "throne.gilded": {
+   "template": "Velvet gilded throne [throne.gilded]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "cushion": "velvet",
+    "frame": "gilded bronze"
+   },
+   "physical": "Top-down view of a richly ornate gilded throne: gold gilded bronze frame with flared arms, a deep red velvet seat, a fan-shaped back along the top edge.",
+   "reviewed": true
+  },
+  "throne.state": {
+   "template": "Quilted linen throne [throne.state]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cushion": "quilted linen",
+    "frame": "yew"
+   },
+   "physical": "Top-down view of a grand throne: a cream quilted linen seat between heavy russet yew arms, a tall crested back along the top edge.",
+   "reviewed": true
+  },
+  "throne.stone": {
+   "template": "Deerskin stone throne [throne.stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "pelt": "deerskin",
+    "seat": "polished limestone"
+   },
+   "physical": "Top-down view of a massive stone throne: a blocky cream polished limestone seat and back along the top edge, a fawn deerskin hide draped over the seat.",
+   "reviewed": true
+  },
+  "toilet.chamber_pot": {
+   "template": "Stoneware chamber pot [toilet.chamber_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pot": "stoneware"
+   },
+   "physical": "Top-down view of a small round chamber pot: a brown stoneware pot with a curled handle on one side, a wooden lid half over it, on bare floor.",
+   "reviewed": true
+  },
+  "toilet.close_stool": {
+   "template": "Elm close stool [toilet.close_stool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "elm",
+    "seat": "wool"
+   },
+   "physical": "Top-down view of a boxy close stool: a square tawny elm chest with a hinged lid along the back edge, a green wool cushion on top, a carrying handle on each side.",
+   "reviewed": true
+  },
+  "utility.ladder": {
+   "template": "Elm ladder [utility.ladder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm"
+   },
+   "physical": "Top-down view of a folded ladder: two long mid-brown elm rails with rungs between them, a paint-spattered top step.",
+   "reviewed": true
+  },
+  "utility.mop_bucket": {
+   "template": "Ash pail and broom [utility.mop_bucket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "ash",
+    "handle": "beech"
+   },
+   "physical": "Top-down view of a pail and broom: a round pale ash bucket of murky water with a wringer at one side, a long light brown beech handle angled across the square.",
+   "reviewed": true
+  },
+  "wardrobe.armoire": {
+   "template": "Cherrywood carved armoire [wardrobe.armoire]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "cherrywood",
+    "inlay": "polished steel"
+   },
+   "physical": "Top-down view of a massive carved armoire two cells wide: reddish-brown cherrywood top edged with carved moulding and silver-grey polished steel inlay, doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.narrow": {
+   "template": "Beech clothes cupboard [wardrobe.narrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech"
+   },
+   "physical": "Top-down view of a slim clothes cupboard: square light brown beech top, a single door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.standard": {
+   "template": "Elm clothes press [wardrobe.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "elm",
+    "handle": "wrought iron"
+   },
+   "physical": "Top-down view of a clothes press two cells wide: flat mid-brown elm top with a hatbox at one end, double doors with wrought iron handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.cutting_table": {
+   "template": "Felt cutting table [workbench.cutting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "felt",
+    "top": "beech"
+   },
+   "physical": "Top-down view of a cutting table: a smooth light brown beech top with a length of grey felt spread across it, shears, chalk and pins, a rack of bolts along the top edge.",
+   "reviewed": true
+  },
+  "workbench.joiner": {
+   "template": "Beech joiner's bench [workbench.joiner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech",
+    "vise": "wrought iron"
+   },
+   "physical": "Top-down view of a joiner's bench: a heavy light brown beech top with a row of bench-dog holes, a wrought iron screw vise at the right end, a shelf of planes and chisels along the top edge.",
+   "reviewed": true
+  },
+  "workbench.master": {
+   "template": "Brass master's workbench [workbench.master]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "fittings": "brass",
+    "top": "yew"
+   },
+   "physical": "Top-down view of a long master's workbench: a broad russet yew top with two vises, a brass rule set into the near edge, rows of small drawers and hung tools along the top edge.",
+   "reviewed": true
+  },
+  "workbench.rough": {
+   "template": "Split birch trestle bench [workbench.rough]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "split birch",
+    "top": "rough pine"
+   },
+   "physical": "Top-down view of a trestle bench: a long pale rough pine plank top resting on two split birch supports, a few loose tools and shavings on it, a strip of nails along the top edge.",
+   "reviewed": true
+  }
+ }
+}

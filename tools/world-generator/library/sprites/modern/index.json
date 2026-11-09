@@ -1,0 +1,2614 @@
+{
+ "band": "modern",
+ "objects": {
+  "altar.church": {
+   "template": "Beech-effect laminate altar [altar.church]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "beech-effect laminate",
+    "top": "terrazzo"
+   },
+   "physical": "Top-down view of a modern altar: a long speckled white terrazzo slab on a light brown beech-effect laminate base, a white cloth runner, two candles and a book, a cross at the top edge.",
+   "reviewed": true
+  },
+  "altar.offering": {
+   "template": "Glazed tile household shrine [altar.offering]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dish": "glazed tile",
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a small household shrine: a sage painted mdf top with a tiny figure at the top edge, a white glazed tile offering dish and a stub of candle in front.",
+   "reviewed": true
+  },
+  "anvil.block": {
+   "template": "Aluminium anvil [anvil.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "anvil": "aluminium",
+    "stand": "aluminium"
+   },
+   "physical": "Top-down view of an anvil: a matt grey aluminium anvil with its horn pointing left, set on a round matt grey aluminium stand, a hammer resting beside it.",
+   "reviewed": true
+  },
+  "anvil.quench_trough": {
+   "template": "Aluminium quench tank [anvil.quench_trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "aluminium",
+    "tub": "powder-coated steel"
+   },
+   "physical": "Top-down view of a quench tank: a squat grey powder-coated steel tub bound with matt grey aluminium hoops, filled with dark water with a rainbow sheen.",
+   "reviewed": true
+  },
+  "appliance.coffee_machine": {
+   "template": "Chrome-plated steel coffee machine [appliance.coffee_machine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "chrome-plated steel",
+    "pot": "frosted glass"
+   },
+   "physical": "Top-down view of a small stand with a coffee machine: a chrome-plated steel machine against the top edge, a white frosted glass jug on its plate, a stack of cups and a scatter of sugar sachets in front.",
+   "reviewed": true
+  },
+  "appliance.dishwasher": {
+   "template": "Stainless steel dishwasher [appliance.dishwasher]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "stainless steel"
+   },
+   "physical": "Top-down view of a dishwasher under a worktop: a square brushed grey stainless steel top flush with the counter, a narrow control strip along the bottom edge.",
+   "reviewed": true
+  },
+  "appliance.dryer": {
+   "template": "Powder-coated steel tumble dryer [appliance.dryer]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "powder-coated steel"
+   },
+   "physical": "Top-down view of a square tumble dryer: a plain black powder-coated steel top, a control strip on the back edge, a vent hose curling off the top edge to the wall.",
+   "reviewed": true
+  },
+  "appliance.radiator": {
+   "template": "Powder-coated steel radiator [appliance.radiator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "powder-coated steel"
+   },
+   "physical": "Top-down view of a radiator against the top wall: a narrow grey powder-coated steel block of ribbed fins, a valve knob at one end, pipes vanishing into the floor.",
+   "reviewed": true
+  },
+  "appliance.washer": {
+   "template": "Chrome-plated steel washing machine [appliance.washer]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "chrome-plated steel",
+    "door": "frosted glass"
+   },
+   "physical": "Top-down view of a square washing machine: a chrome-plated steel top with a detergent drawer and dials along the back edge, the round white frosted glass porthole door showing at the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.cask_rack": {
+   "template": "Beech-effect laminate wine cask rack [barrel.cask_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cradle": "beech-effect laminate",
+    "stave": "pine veneer"
+   },
+   "physical": "Top-down view of a wine cask rack two cells wide: two pale pine veneer casks lying side by side on a beech-effect laminate cradle, their round ends with taps facing the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.drum": {
+   "template": "Powder-coated steel oil drum [barrel.drum]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "powder-coated steel"
+   },
+   "physical": "Top-down view of a round oil drum: flat white powder-coated steel lid with a rolled rim and two small screw caps, one near the edge.",
+   "reviewed": true
+  },
+  "barrel.keg": {
+   "template": "Chrome-plated steel keg [barrel.keg]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a round keg: domed chrome-plated steel top inside a ring of hand-holes, a coupler at the centre trailing a short hose.",
+   "reviewed": true
+  },
+  "barrel.wooden": {
+   "template": "Aluminium wooden barrel [barrel.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoop": "aluminium",
+    "stave": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a round wooden barrel: circular light brown beech-effect laminate lid made of planks, two matt grey hoops visible at the rim, a bung near the edge.",
+   "reviewed": true
+  },
+  "basket.hamper": {
+   "template": "Microfibre hamper [basket.hamper]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "microfibre",
+    "weave": "spider plant"
+   },
+   "physical": "Top-down view of a rectangular hamper: closed variegated spider plant lid with a fastening loop at the front and a handle at each short end.",
+   "reviewed": true
+  },
+  "basket.laundry": {
+   "template": "Vinyl laundry basket [basket.laundry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "vinyl"
+   },
+   "physical": "Top-down view of an oval laundry basket: perforated cream vinyl sides, crumpled shirts and socks piled above the rim.",
+   "reviewed": true
+  },
+  "basket.wicker": {
+   "template": "Bamboo wicker basket [basket.wicker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "bamboo"
+   },
+   "physical": "Top-down view of a round wicker basket: tightly woven honey bamboo rim, the open top heaped with produce, a bent handle arching across.",
+   "reviewed": true
+  },
+  "bath.bathtub": {
+   "template": "Vitreous china bathtub [bath.bathtub]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "vitreous china"
+   },
+   "physical": "Top-down view of a built-in bathtub against the top wall: a long rectangular white vitreous china tub, taps and drain at one end, a shower curtain bunched along one side.",
+   "reviewed": true
+  },
+  "bath.clawfoot": {
+   "template": "Anodised aluminium roll-top bath [bath.clawfoot]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "feet": "anodised aluminium",
+    "tub": "porcelain"
+   },
+   "physical": "Top-down view of a free-standing roll-top bath: a long rounded white porcelain tub with a rolled rim, taps at the end nearest the top edge, four small bronze anodised aluminium claw feet peeking out at the corners.",
+   "reviewed": true
+  },
+  "bath.plunge_pool": {
+   "template": "Lucite hot tub [bath.plunge_pool]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "basin": "lucite"
+   },
+   "physical": "Top-down view of a square hot tub: a smoky lucite rim around a pool of clear blue-green water, steps down at one corner, towels folded on one edge.",
+   "reviewed": true
+  },
+  "bath.shower": {
+   "template": "Frosted glass shower [bath.shower]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stall": "frosted glass",
+    "tray": "vitreous china"
+   },
+   "physical": "Top-down view of a square shower stall: a white vitreous china tray with a drain in the middle, a shower head on the top wall, a white frosted glass screen along the bottom edge.",
+   "reviewed": true
+  },
+  "bed.bunk": {
+   "template": "Cotton bunk bed [bed.bunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "cotton",
+    "frame": "aluminium"
+   },
+   "physical": "Top-down view of a two-tier bunk bed: the upper navy blue cotton mattress fills a thick dark grey aluminium frame, a ladder on one long side, a grey pillow at the top.",
+   "reviewed": true
+  },
+  "bed.capsule": {
+   "template": "Cotton capsule bunk [bed.capsule]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "cotton",
+    "shell": "vinyl"
+   },
+   "physical": "Top-down view of a boxed capsule bunk: black vinyl walls on three sides, open along the bottom edge, a white cotton mattress and pillow at the top.",
+   "reviewed": true
+  },
+  "bed.cot": {
+   "template": "Microfibre folding cot [bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "microfibre",
+    "frame": "aluminium"
+   },
+   "physical": "Top-down view of a narrow folding cot: matt grey aluminium side rails, a stretched charcoal microfibre bed, a flat pillow at the top.",
+   "reviewed": true
+  },
+  "bed.double": {
+   "template": "Microfibre double bed [bed.double]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "microfibre",
+    "frame": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a double bed: light brown beech-effect laminate frame, a charcoal microfibre quilt, two pillows side by side against the headboard at the top.",
+   "reviewed": true
+  },
+  "bed.double_pallet": {
+   "template": "Vinyl floor mattress [bed.double_pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "vinyl",
+    "cover": "cheap acrylic"
+   },
+   "physical": "Top-down view of a broad floor mattress lying flat on the floor: a beige cheap acrylic cover with two dents side by side, two flat pillows at the top.",
+   "reviewed": true
+  },
+  "bed.fine_single": {
+   "template": "Egyptian cotton platform bed [bed.fine_single]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "egyptian cotton",
+    "frame": "walnut veneer"
+   },
+   "physical": "Top-down view of a narrow platform bed: a dark brown walnut veneer frame with a tall headboard at the top, a white egyptian cotton coverlet, three stacked pillows.",
+   "reviewed": true
+  },
+  "bed.hammock": {
+   "template": "Polycotton hammock [bed.hammock]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "net": "polycotton"
+   },
+   "physical": "Top-down view of a slung hammock: a long grey polycotton sling pinched at both ends, ropes running to hooks at the top and bottom.",
+   "reviewed": true
+  },
+  "bed.king": {
+   "template": "Velvet king-size bed [bed.king]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "velvet",
+    "frame": "walnut veneer"
+   },
+   "physical": "Top-down view of a very wide king-size bed: dark brown walnut veneer headboard at the top, mustard velvet duvet, four pillows in a row, a folded throw across the foot.",
+   "reviewed": true
+  },
+  "bed.roll": {
+   "template": "Vinyl sleeping bag [bed.roll]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "vinyl"
+   },
+   "physical": "Top-down view of a black vinyl sleeping bag laid flat on the floor, the top corner turned back like a blanket.",
+   "reviewed": true
+  },
+  "bed.single": {
+   "template": "Polycotton single bed [bed.single]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "polycotton",
+    "frame": "painted mdf"
+   },
+   "physical": "Top-down view of a single bed: sage painted mdf frame, grey polycotton blanket folded back, a pale pillow against the headboard at the top.",
+   "reviewed": true
+  },
+  "bench.long": {
+   "template": "Pine veneer long bench [bench.long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "pine veneer"
+   },
+   "physical": "Top-down view of a long backless long bench: a pale pine veneer plank three times as long as it is wide, on sturdy legs.",
+   "reviewed": true
+  },
+  "bench.pew": {
+   "template": "Pine veneer pew [bench.pew]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "pine veneer"
+   },
+   "physical": "Top-down view of a long pew: a pale pine veneer seat with its tall back along the top edge, a narrow ledge behind it, shaped ends at left and right.",
+   "reviewed": true
+  },
+  "bench.plank": {
+   "template": "Painted mdf wooden bench [bench.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "painted mdf"
+   },
+   "physical": "Top-down view of a backless wooden bench: one long white painted mdf board, the leg ends showing at each short edge.",
+   "reviewed": true
+  },
+  "bench.stone": {
+   "template": "Quartz composite stone bench [bench.stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "seat": "quartz composite"
+   },
+   "physical": "Top-down view of a solid stone bench: a smooth white quartz composite slab with scrolled ends at left and right.",
+   "reviewed": true
+  },
+  "bin.dumpster": {
+   "template": "Galvanised steel dumpster [bin.dumpster]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "galvanised steel",
+    "lid": "polystyrene"
+   },
+   "physical": "Top-down view of a dumpster two cells wide: heavy dull grey galvanised steel box, a hinged white polystyrene lid along the top edge propped half open, bags poking out.",
+   "reviewed": true
+  },
+  "bin.recycle": {
+   "template": "Vinyl recycling bin [bin.recycle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "vinyl"
+   },
+   "physical": "Top-down view of a square recycling bin: cream vinyl lid divided into three openings, each marked with a symbol.",
+   "reviewed": true
+  },
+  "bin.scrap": {
+   "template": "Powder-coated steel scrap bin [bin.scrap]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "powder-coated steel"
+   },
+   "physical": "Top-down view of a square scrap bin: thick grey powder-coated steel walls around a jumble of metal offcuts and wire.",
+   "reviewed": true
+  },
+  "bin.waste": {
+   "template": "Chrome-plated steel trash can [bin.waste]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a round trash can: chrome-plated steel rim with scraps and crumpled rubbish inside, a lid lying askew.",
+   "reviewed": true
+  },
+  "board.black": {
+   "template": "Painted mdf blackboard [board.black]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "painted mdf",
+    "panel": "vinyl"
+   },
+   "physical": "Top-down view of the blackboard: a long grey painted mdf stand along the top edge, the dark vinyl surface facing the bottom, a chalk ledge below it.",
+   "reviewed": true
+  },
+  "board.map": {
+   "template": "Polycotton map board [board.map]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "map": "polycotton",
+    "panel": "beech-effect laminate"
+   },
+   "physical": "Top-down view of the map board: a wide light brown beech-effect laminate rail along the top edge, joined below it by a thick dark laminate frame holding a colourful printed polycotton map of blue sea and green land, filling the bottom half.",
+   "reviewed": true
+  },
+  "board.notice": {
+   "template": "Beech-effect laminate notice board [board.notice]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "beech-effect laminate",
+    "frame": "pine veneer"
+   },
+   "physical": "Top-down view of the notice board: a pale pine veneer stand along the top edge, the board face toward the bottom with paper scraps poking past its edge.",
+   "reviewed": true
+  },
+  "board.white": {
+   "template": "Chrome-plated steel whiteboard [board.white]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "panel": "melamine"
+   },
+   "physical": "Top-down view of the whiteboard on a wheeled chrome-plated steel stand: a thin white panel along the top edge, a marker tray below it.",
+   "reviewed": true
+  },
+  "bookcase.library": {
+   "template": "Nubuck library bookcase [bookcase.library]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "binding": "nubuck",
+    "frame": "walnut veneer"
+   },
+   "physical": "Top-down view of a tall library bookcase two cells wide: heavy dark brown walnut veneer cornice, a ladder rail along the bottom edge with a ladder hooked at one end, rows of grey spines.",
+   "reviewed": true
+  },
+  "bookcase.small": {
+   "template": "Beech-effect laminate small bookshelf [bookcase.small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a narrow small bookshelf: light brown beech-effect laminate top, a short row of book spines along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "bookcase.standard": {
+   "template": "Microfibre bookcase [bookcase.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "binding": "microfibre",
+    "frame": "pine veneer"
+   },
+   "physical": "Top-down view of a bookcase two cells wide: pale pine veneer top, the spines of cream books visible along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "butcher.block": {
+   "template": "Pine veneer butcher's block [butcher.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "block": "pine veneer",
+    "cleaver": "aluminium"
+   },
+   "physical": "Top-down view of a butcher's block: a thick square honey pine veneer end-grain block with a dark stained hollow in the middle, an aluminium cleaver stuck in one corner.",
+   "reviewed": true
+  },
+  "butcher.hook_rail": {
+   "template": "Aluminium meat hook rail [butcher.hook_rail]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "posts": "aluminium",
+    "rail": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a meat hook rail: a long chrome-plated steel bar along the top edge on two aluminium posts, hanging carcasses shown as pale shapes below it, a drip tray underneath.",
+   "reviewed": true
+  },
+  "butcher.steel_table": {
+   "template": "Vinyl stainless cutting table [butcher.steel_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "vinyl",
+    "top": "aluminium"
+   },
+   "physical": "Top-down view of a stainless cutting table: a long matt grey aluminium table with a raised lip and a drain hole at one end, a black vinyl cutting board and knives in the middle.",
+   "reviewed": true
+  },
+  "cabinet.cupboard": {
+   "template": "Beech-effect laminate cupboard [cabinet.cupboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech-effect laminate",
+    "handle": "powder-coated steel"
+   },
+   "physical": "Top-down view of a cupboard: square light brown beech-effect laminate top, a pair of doors along the bottom edge with small powder-coated steel handles, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.dresser": {
+   "template": "Painted mdf dresser [cabinet.dresser]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "painted mdf",
+    "knob": "aluminium"
+   },
+   "physical": "Top-down view of a dresser two cells wide: sage painted mdf top with a small mirror stand and a dish, drawer fronts with aluminium knobs along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.filing": {
+   "template": "Chrome-plated steel filing cabinet [cabinet.filing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a filing cabinet: plain chrome-plated steel top with a wire tray of papers, drawer handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.medicine": {
+   "template": "Powder-coated steel medicine cabinet [cabinet.medicine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel",
+    "pane": "frosted glass"
+   },
+   "physical": "Top-down view of a narrow medicine cabinet: grey powder-coated steel top, a frosted glass door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.safe": {
+   "template": "Brushed steel safe [cabinet.safe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "brushed steel"
+   },
+   "physical": "Top-down view of a squat safe: heavy silver-grey brushed steel box with rounded corners, the door and lock along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.sideboard": {
+   "template": "Birch plywood credenza [cabinet.sideboard]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "birch plywood",
+    "plate": "anodised aluminium"
+   },
+   "physical": "Top-down view of a long credenza two cells wide: pale birch plywood top with a row of bronze dishes and a tall jug, cupboard doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cell_bed.bolted": {
+   "template": "Chrome-plated steel steel bunk [cell_bed.bolted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "mattress": "moulded plastic"
+   },
+   "physical": "Top-down view of a bare steel bunk: a chrome-plated steel tray with bolt heads along its edges, a thin white moulded plastic pad, no pillow, head end at the top.",
+   "reviewed": true
+  },
+  "cell_bed.privileged": {
+   "template": "Egyptian cotton detention bed [cell_bed.privileged]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "egyptian cotton",
+    "frame": "brushed steel"
+   },
+   "physical": "Top-down view of a narrow detention bed: a silver-grey brushed steel frame fixed to the floor, an ivory egyptian cotton blanket, a real pillow at the top.",
+   "reviewed": true
+  },
+  "cell_bed.slab": {
+   "template": "Bare concrete concrete bed plinth [cell_bed.slab]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "base": "bare concrete"
+   },
+   "physical": "Top-down view of a solid concrete bed plinth: one grey bare concrete block running from the wall at the top, smooth along its length.",
+   "reviewed": true
+  },
+  "chair.armchair": {
+   "template": "Cotton armchair [chair.armchair]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "cotton",
+    "frame": "painted mdf"
+   },
+   "physical": "Top-down view of a roomy armchair: wide sage painted mdf arms either side, a blue cotton seat cushion, a padded back along the top edge.",
+   "reviewed": true
+  },
+  "chair.high_back": {
+   "template": "Birch plywood designer chair [chair.high_back]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "birch plywood",
+    "seat": "full-grain leather"
+   },
+   "physical": "Top-down view of a tall designer chair: a brown full-grain leather seat in a pale birch plywood frame, a shaped backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.office": {
+   "template": "Powder-coated steel office chair [chair.office]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "powder-coated steel",
+    "seat": "melamine"
+   },
+   "physical": "Top-down view of a swivelling office chair: a beige melamine seat and curved back at the top, a five-spoke white powder-coated steel base peeking out beneath.",
+   "reviewed": true
+  },
+  "chair.pilot": {
+   "template": "Powder-coated steel flight seat [chair.pilot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel",
+    "seat": "melamine"
+   },
+   "physical": "Top-down view of a bucket-shaped flight seat: beige melamine padding, black powder-coated steel armrests with control pads, harness straps over the headrest at the top.",
+   "reviewed": true
+  },
+  "chair.plain": {
+   "template": "Moulded plastic plastic chair [chair.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "moulded plastic"
+   },
+   "physical": "Top-down view of a simple plastic chair: a square red moulded plastic seat with the backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.rocking": {
+   "template": "Microfibre rocking chair [chair.rocking]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "microfibre",
+    "frame": "pine veneer"
+   },
+   "physical": "Top-down view of a slatted rocking chair: honey pine veneer seat and back at the top, curved runners showing past the top and bottom edges, a cream cushion on the seat.",
+   "reviewed": true
+  },
+  "chest.case": {
+   "template": "Chrome-plated steel equipment case [chest.case]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "latch": "chrome-plated steel",
+    "shell": "moulded plastic"
+   },
+   "physical": "Top-down view of a hard-shell equipment case: ribbed grey moulded plastic lid, two chrome-plated steel latches along one long edge, a moulded handle in the middle.",
+   "reviewed": true
+  },
+  "chest.strongbox": {
+   "template": "Stainless steel strongbox [chest.strongbox]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "stainless steel"
+   },
+   "physical": "Top-down view of a compact strongbox: silver stainless steel lid with riveted edges, a keyhole plate on one long side, a bolt head at each corner fixing it down.",
+   "reviewed": true
+  },
+  "chest.trunk": {
+   "template": "Leather travel trunk [chest.trunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "leather",
+    "trim": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a travel trunk: brown leather lid with chrome-plated steel corners and two slats running across, a carrying handle at each short end.",
+   "reviewed": true
+  },
+  "chest.wooden": {
+   "template": "Aluminium storage chest [chest.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "band": "aluminium",
+    "case": "painted mdf"
+   },
+   "physical": "Top-down view of a storage chest: plank white painted mdf lid with two aluminium straps across it, a simple hasp on one long edge.",
+   "reviewed": true
+  },
+  "coffin.casket": {
+   "template": "Birch plywood casket [coffin.casket]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "box": "birch plywood",
+    "lining": "velvet"
+   },
+   "physical": "Top-down view of an open casket: a long rectangular honey-stained birch plywood casket with square corners and dark brass rails on the left, its lid swung open on side hinges and lying flat on the right, mustard velvet lining inside and a pillow at the top.",
+   "reviewed": true
+  },
+  "coffin.plain": {
+   "template": "Painted mdf coffin [coffin.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "painted mdf",
+    "handles": "aluminium"
+   },
+   "physical": "Top-down view of a coffin: a six-sided sage painted mdf box wider at the shoulders near the top, aluminium handles along the sides, a lid with a simple plate.",
+   "reviewed": true
+  },
+  "computer.desktop": {
+   "template": "Powder-coated steel computer workstation [computer.desktop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "powder-coated steel",
+    "desk": "vinyl"
+   },
+   "physical": "Top-down view of the computer workstation: a black vinyl desk with a monitor at the top edge, keyboard and mouse in front, a white powder-coated steel tower beside it.",
+   "reviewed": true
+  },
+  "computer.terminal": {
+   "template": "Aluminium computer terminal [computer.terminal]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "aluminium"
+   },
+   "physical": "Top-down view of the computer terminal: a squat matt grey aluminium pedestal with its back along the top edge, an angled screen and keypad toward the bottom.",
+   "reviewed": true
+  },
+  "console.ops": {
+   "template": "Powder-coated steel control desk [console.ops]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "powder-coated steel",
+    "screen": "float glass"
+   },
+   "physical": "Top-down view of the control desk: a long grey powder-coated steel desk with a row of float glass screens along the top edge, switches and a keyboard toward the bottom.",
+   "reviewed": true
+  },
+  "console.security": {
+   "template": "Aluminium CCTV monitor bank [console.security]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "aluminium",
+    "screen": "frosted glass"
+   },
+   "physical": "Top-down view of the CCTV monitor bank: a silver aluminium desk with a block of small frosted glass screens along the top edge, a joystick and phone toward the bottom.",
+   "reviewed": true
+  },
+  "counter.bar": {
+   "template": "Chrome-plated steel bar counter [counter.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "chrome-plated steel",
+    "top": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a bar counter three cells wide: long light brown beech-effect laminate top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge.",
+   "reviewed": true
+  },
+  "counter.bar_grand": {
+   "template": "Walnut veneer cocktail bar [counter.bar_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "front": "walnut veneer",
+    "top": "quartz composite"
+   },
+   "physical": "Top-down view of a cocktail bar three cells wide: glossy grey quartz composite top, a thin foot rail along the bottom edge, ranks of bottles and glasses on a back shelf along the top edge.",
+   "reviewed": true
+  },
+  "counter.kitchen": {
+   "template": "Pine veneer kitchen counter [counter.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "pine veneer",
+    "top": "moulded plastic"
+   },
+   "physical": "Top-down view of a kitchen counter two cells wide: white moulded plastic work surface, a chopping board and a crock of utensils near the top edge against the wall.",
+   "reviewed": true
+  },
+  "counter.kitchen_stone": {
+   "template": "Walnut veneer stone countertop [counter.kitchen_stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "walnut veneer",
+    "top": "granite"
+   },
+   "physical": "Top-down view of a stone countertop two cells wide: a single smooth black granite slab with a faint vein pattern, a row of jars along the top edge, a folded cloth at one end.",
+   "reviewed": true
+  },
+  "counter.plank": {
+   "template": "Galvanised steel makeshift counter [counter.plank]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "galvanised steel",
+    "top": "cheap laminate"
+   },
+   "physical": "Top-down view of a makeshift counter two cells wide: two or three white cheap laminate boards side by side with uneven ends, trestle legs showing at either end.",
+   "reviewed": true
+  },
+  "counter.reception": {
+   "template": "Moulded plastic reception counter [counter.reception]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "moulded plastic",
+    "top": "terrazzo"
+   },
+   "physical": "Top-down view of a reception counter three cells wide: a raised speckled grey-green terrazzo ledge along the bottom edge joined directly to a dark wood desk surface behind it toward the top, with a bell, a ledger and a lamp on the desk.",
+   "reviewed": true
+  },
+  "counter.serving": {
+   "template": "Powder-coated steel steam-table counter [counter.serving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "powder-coated steel"
+   },
+   "physical": "Top-down view of a steam-table counter three cells wide: black powder-coated steel surface with a row of four sunken food trays, a stack of plates at the left end, a tray slide along the bottom edge.",
+   "reviewed": true
+  },
+  "counter.shop": {
+   "template": "Pine veneer shop counter [counter.shop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "pine veneer",
+    "top": "melamine"
+   },
+   "physical": "Top-down view of a shop counter two cells wide: beige melamine top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there.",
+   "reviewed": true
+  },
+  "counter.shop_long": {
+   "template": "Float glass long counter [counter.shop_long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "float glass",
+    "top": "terrazzo"
+   },
+   "physical": "Top-down view of a long counter three cells wide: one unbroken speckled white terrazzo top, a hinged flap at the right end, scales and a ledger along the top edge on the keeper's side.",
+   "reviewed": true
+  },
+  "crate.cardboard": {
+   "template": "Melamine cardboard box [crate.cardboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tape": "melamine"
+   },
+   "physical": "Top-down view of a cardboard box: brown card flaps sealed with a strip of white tape, a smaller box sitting crooked on top.",
+   "reviewed": true
+  },
+  "crate.container": {
+   "template": "Powder-coated steel shipping container [crate.container]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "shell": "powder-coated steel"
+   },
+   "physical": "Top-down view of a long shipping container two cells wide and four tall: corrugated grey powder-coated steel roof with ribs running across, corner castings at all four corners, the door end at the bottom edge.",
+   "reviewed": true
+  },
+  "crate.stack": {
+   "template": "Painted mdf crate stack [crate.stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "painted mdf",
+    "strap": "cotton"
+   },
+   "physical": "Top-down view of a crate stack two by two cells: four sage painted mdf crate lids in a square, the top layer slightly offset, blue straps crossing them.",
+   "reviewed": true
+  },
+  "crate.wooden": {
+   "template": "Painted mdf crate [crate.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "painted mdf"
+   },
+   "physical": "Top-down view of a square crate: grey painted mdf lid with reinforced edges and a stencilled mark in one corner.",
+   "reviewed": true
+  },
+  "crib.cot": {
+   "template": "Microfibre crib [crib.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "microfibre",
+    "frame": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a small crib: a light brown beech-effect laminate rectangle of bars around a charcoal microfibre mattress, a tiny pillow at the top.",
+   "reviewed": true
+  },
+  "crib.fine": {
+   "template": "Velvet designer crib [crib.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "drape": "velvet",
+    "frame": "birch plywood"
+   },
+   "physical": "Top-down view of a small designer crib: a pale birch plywood basket with a mustard velvet canopy drawn over the top end, a tiny pillow beneath it.",
+   "reviewed": true
+  },
+  "decor.aquarium": {
+   "template": "Solid oak aquarium [decor.aquarium]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "solid oak",
+    "tank": "smoked glass"
+   },
+   "physical": "Top-down view of an oblong aquarium: a honey solid oak rim around clear water, green weed and small bright fish, filter box at the top edge.",
+   "reviewed": true
+  },
+  "decor.armour": {
+   "template": "Anodised aluminium suit of armour [decor.armour]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "plate": "anodised aluminium",
+    "stand": "walnut veneer"
+   },
+   "physical": "Top-down view of the suit of armour: broad champagne anodised aluminium shoulders and helm seen from above, on a small dark brown walnut veneer base, front toward the bottom.",
+   "reviewed": true
+  },
+  "decor.banner": {
+   "template": "Microfibre flag stand [decor.banner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "microfibre",
+    "pole": "powder-coated steel"
+   },
+   "physical": "Top-down view of the flag stand: a weighted round grey powder-coated steel foot with a pole, a charcoal microfibre banner hanging in folds along the top edge.",
+   "reviewed": true
+  },
+  "decor.clock": {
+   "template": "Painted mdf grandfather clock [decor.clock]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "painted mdf",
+    "face": "powder-coated steel"
+   },
+   "physical": "Top-down view of the grandfather clock: a narrow white painted mdf cabinet top with a carved crest, back flat against the top edge.",
+   "reviewed": true
+  },
+  "decor.fountain": {
+   "template": "Travertine fountain [decor.fountain]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "travertine",
+    "spout": "stainless steel"
+   },
+   "physical": "Top-down view of a round fountain: a cream travertine rim around rippled water, a silver stainless steel spout at the centre.",
+   "reviewed": true
+  },
+  "decor.globe": {
+   "template": "Walnut veneer floor globe [decor.globe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "sphere": "walnut veneer",
+    "stand": "solid oak"
+   },
+   "physical": "Top-down view of the floor globe: a large dark brown walnut veneer sphere in a ring mount, centred on a round golden-brown solid oak stand.",
+   "reviewed": true
+  },
+  "decor.mirror": {
+   "template": "Beech-effect laminate standing mirror [decor.mirror]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech-effect laminate",
+    "glass": "frosted glass"
+   },
+   "physical": "Top-down view of the standing mirror: a thick light brown beech-effect laminate frame tilted back between two splayed feet along the top edge, its glass a dark smoky blue-grey reflective plate toward the bottom.",
+   "reviewed": true
+  },
+  "decor.painting": {
+   "template": "Linen painting on an easel [decor.painting]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "canvas": "linen",
+    "easel": "walnut veneer"
+   },
+   "physical": "Top-down view of the painting on an easel: a three-legged dark brown walnut veneer easel, the framed linen canvas a thin line along the top, its face toward the bottom.",
+   "reviewed": true
+  },
+  "decor.screen": {
+   "template": "Microfibre folding screen [decor.screen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "microfibre",
+    "panel": "beech-effect laminate"
+   },
+   "physical": "Top-down view of the folding screen: three light brown beech-effect laminate panels in a shallow zigzag line from left to right, charcoal microfibre between the hinges.",
+   "reviewed": true
+  },
+  "desk.executive": {
+   "template": "Birch plywood executive desk [desk.executive]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "birch plywood"
+   },
+   "physical": "Top-down view of a broad executive desk: a deep blonde birch plywood top with drawer pedestals at both ends, a nameplate near the bottom edge.",
+   "reviewed": true
+  },
+  "desk.office": {
+   "template": "Aluminium office desk [desk.office]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium",
+    "top": "moulded plastic"
+   },
+   "physical": "Top-down view of a tidy office desk: a red moulded plastic top on matt grey aluminium legs, a drawer pedestal at the right, a keyboard space near the bottom edge.",
+   "reviewed": true
+  },
+  "desk.plain": {
+   "template": "Pine veneer student desk [desk.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "pine veneer"
+   },
+   "physical": "Top-down view of a plain student desk: a honey pine veneer top with a few papers and a pen, the back edge at the top.",
+   "reviewed": true
+  },
+  "desk.school": {
+   "template": "Powder-coated steel school desk [desk.school]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel",
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a small school desk: a sage painted mdf top sloping toward the bottom edge, a pencil groove along the top, black powder-coated steel legs.",
+   "reviewed": true
+  },
+  "display.case": {
+   "template": "Chrome-plated steel display case [display.case]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "pane": "frosted glass"
+   },
+   "physical": "Top-down view of a display case two cells wide: thin chrome-plated steel border around a clear frosted glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.mannequin": {
+   "template": "Vinyl mannequin [display.mannequin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "vinyl",
+    "stand": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a mannequin: the head and shoulders of a black vinyl figure in a draped garment, on a round chrome-plated steel base, the figure facing the bottom edge.",
+   "reviewed": true
+  },
+  "display.pedestal": {
+   "template": "Granite display plinth [display.pedestal]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "granite",
+    "cushion": "egyptian cotton"
+   },
+   "physical": "Top-down view of a square display plinth: speckled grey granite top with a narrow moulded rim, an ivory cushion in the centre holding a single small object.",
+   "reviewed": true
+  },
+  "display.table": {
+   "template": "Cotton display table [display.table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "cotton",
+    "top": "pine veneer"
+   },
+   "physical": "Top-down view of a display table two cells wide: white cotton cloth over the pine veneer top, small goods arranged in rows, a price slate at the top edge.",
+   "reviewed": true
+  },
+  "feed.hay_bale": {
+   "template": "Bamboo hay bale [feed.hay_bale]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hay": "bamboo",
+    "twine": "bamboo"
+   },
+   "physical": "Top-down view of a hay bale: a rectangular block of pale gold bamboo with two twine bands across it, loose stalks around the edges.",
+   "reviewed": true
+  },
+  "feed.stall": {
+   "template": "Spider plant horse stall [feed.stall]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "spider plant",
+    "walls": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a horse stall: three light brown beech-effect laminate partition walls open at the bottom edge, a manger at the top, variegated spider plant covering the floor.",
+   "reviewed": true
+  },
+  "feed.trough": {
+   "template": "Spider plant trough [feed.trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "feed": "spider plant",
+    "trough": "powder-coated steel"
+   },
+   "physical": "Top-down view of a trough: a long narrow white powder-coated steel trough holding green spider plant or water.",
+   "reviewed": true
+  },
+  "firewood.coal_scuttle": {
+   "template": "Chrome-plated steel coal scuttle [firewood.coal_scuttle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a coal scuttle: a tilted chrome-plated steel bucket with a wide lip, black lumps of coal inside, a short shovel handle across it.",
+   "reviewed": true
+  },
+  "firewood.fuel_cans": {
+   "template": "Chrome-plated steel fuel cans [firewood.fuel_cans]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cans": "chrome-plated steel"
+   },
+   "physical": "Top-down view of fuel cans: three or four squat chrome-plated steel containers packed together with handles and caps on top, warning labels on their sides.",
+   "reviewed": true
+  },
+  "firewood.kindling_basket": {
+   "template": "Bamboo log basket [firewood.kindling_basket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basket": "bamboo",
+    "sticks": "painted mdf"
+   },
+   "physical": "Top-down view of a round log basket: a woven pale gold bamboo rim, a jumble of thin white painted mdf sticks and split logs inside.",
+   "reviewed": true
+  },
+  "firewood.log_stack": {
+   "template": "Beech-effect laminate log store [firewood.log_stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "logs": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a log store against the top wall: rows of round light brown beech-effect laminate log ends stacked neatly, bark curls and wood chips scattered at the bottom edge.",
+   "reviewed": true
+  },
+  "forge.hearth": {
+   "template": "Vitreous china gas forge [forge.hearth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hearth": "vitreous china",
+    "hood": "aluminium"
+   },
+   "physical": "Top-down view of a gas forge: a raised white vitreous china hearth with a bright orange firepot in the middle, a matt grey aluminium hood over the top edge, a bellows or blower at one end and tongs hung on the side.",
+   "reviewed": true
+  },
+  "forge.smelter": {
+   "template": "Vitreous china induction furnace [forge.smelter]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "vitreous china",
+    "shell": "aluminium"
+   },
+   "physical": "Top-down view of an induction furnace: a round silver aluminium furnace body with a glowing crucible mouth, a pouring spout toward the bottom, controls and feed pipes along the top edge.",
+   "reviewed": true
+  },
+  "fridge.fridge": {
+   "template": "Chrome-plated steel fridge [fridge.fridge]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a fridge: a square chrome-plated steel top, the door edge and handle along the bottom, a faint vent grille on the back edge.",
+   "reviewed": true
+  },
+  "fridge.fridge_freezer": {
+   "template": "Stainless steel fridge-freezer [fridge.fridge_freezer]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "stainless steel",
+    "panel": "tempered glass"
+   },
+   "physical": "Top-down view of a wide fridge-freezer: a long brushed grey stainless steel top, two doors meeting in the middle of the bottom edge with long bar handles, a small clear tempered glass panel by one handle.",
+   "reviewed": true
+  },
+  "game.arcade": {
+   "template": "Moulded plastic arcade cabinet [game.arcade]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "moulded plastic"
+   },
+   "physical": "Top-down view of the arcade cabinet: a tall white moulded plastic cabinet, back along the top edge, a joystick and buttons on the control deck toward the bottom.",
+   "reviewed": true
+  },
+  "game.billiards": {
+   "template": "Microfibre pool table [game.billiards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "microfibre",
+    "frame": "painted mdf"
+   },
+   "physical": "Top-down view of an oblong pool table: charcoal microfibre playing bed, white painted mdf rails, a pocket at each corner and both long sides, balls racked in a triangle.",
+   "reviewed": true
+  },
+  "game.cards": {
+   "template": "Pine veneer card table [game.cards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "pine veneer",
+    "top": "microfibre"
+   },
+   "physical": "Top-down view of a square card table: a charcoal microfibre playing surface edged in pale pine veneer, a scatter of cards and coins at the centre.",
+   "reviewed": true
+  },
+  "game.chess": {
+   "template": "Painted mdf chess table [game.chess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a small square chess table: an inlaid checkered sage painted mdf board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "gym.dummy": {
+   "template": "Painted mdf wooden dummy [gym.dummy]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "painted mdf",
+    "pad": "suede"
+   },
+   "physical": "Top-down view of a wooden dummy: a round white painted mdf trunk on a stand with short arms sticking out, suede padding on the front facing the bottom edge.",
+   "reviewed": true
+  },
+  "gym.punch_bag": {
+   "template": "Suede punching bag [gym.punch_bag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "suede",
+    "chain": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a punching bag: a round tan suede cylinder seen from above, a chrome-plated steel chain and swivel in the middle, scuffed floor around it.",
+   "reviewed": true
+  },
+  "gym.treadmill": {
+   "template": "Moulded plastic treadmill [gym.treadmill]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "belt": "moulded plastic",
+    "frame": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a treadmill: a long dark moulded plastic running belt between chrome-plated steel side rails, a console and handlebars at the top end.",
+   "reviewed": true
+  },
+  "gym.weight_bench": {
+   "template": "Powder-coated steel weight bench [gym.weight_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel",
+    "pad": "melamine"
+   },
+   "physical": "Top-down view of a weight bench: a narrow white melamine padded bench, a powder-coated steel rack at the top with a barbell laid across it, weight plates at both ends of the bar.",
+   "reviewed": true
+  },
+  "hearth.fire_barrel": {
+   "template": "Galvanised steel fire barrel [hearth.fire_barrel]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "drum": "galvanised steel"
+   },
+   "physical": "Top-down view of a fire barrel: a round dull grey galvanised steel drum rim, flames and burning splinters inside, rust-orange scorch marks down the sides and scattered ash around the base.",
+   "reviewed": true
+  },
+  "hearth.fireplace": {
+   "template": "Aluminium fireplace [hearth.fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "grate": "aluminium",
+    "surround": "cultured stone"
+   },
+   "physical": "Top-down view of a wall fireplace: a beige cultured stone hearth slab jutting from the top edge, a dark firebox against the back wall with a matt grey aluminium grate of burning logs, a raised hearthstone along the bottom.",
+   "reviewed": true
+  },
+  "hearth.great_fireplace": {
+   "template": "Stainless steel feature fireplace [hearth.great_fireplace]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "mantel": "stainless steel",
+    "surround": "granite"
+   },
+   "physical": "Top-down view of a wide feature fireplace against the top wall: a long black granite surround, a deep firebox roaring with flame, a brushed grey stainless steel mantel shelf along the back edge, a broad hearthstone in front.",
+   "reviewed": true
+  },
+  "hearth.woodstove": {
+   "template": "Chrome-plated steel wood burner [hearth.woodstove]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a squat wood burner: a round chrome-plated steel top with a kettle ring, a flue pipe rising from the back near the top edge, a small glowing door on the bottom side.",
+   "reviewed": true
+  },
+  "hospital_bed.cot": {
+   "template": "Cotton field cot [hospital_bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "cotton",
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of a plain field cot: black powder-coated steel frame, a blue cotton sheet pulled straight, a small pillow at the top.",
+   "reviewed": true
+  },
+  "hospital_bed.intensive": {
+   "template": "Stainless steel intensive-care bed [hospital_bed.intensive]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "stainless steel",
+    "panel": "tempered glass"
+   },
+   "physical": "Top-down view of a wired intensive-care bed: brushed grey stainless steel frame, a pale sheet, a smoked grey tempered glass monitor arm curving over the head at the top, cables trailing down one side.",
+   "reviewed": true
+  },
+  "hospital_bed.ward": {
+   "template": "Polycotton hospital bed [hospital_bed.ward]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "polycotton",
+    "frame": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a wheeled hospital bed: chrome-plated steel side rails, a white polycotton sheet, the head section raised at the top, castors at the corners.",
+   "reviewed": true
+  },
+  "hydroponics.potting_table": {
+   "template": "Terracotta potting bench [hydroponics.potting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pots": "terracotta",
+    "top": "pine veneer"
+   },
+   "physical": "Top-down view of a potting bench: a honey-stained pine veneer table with a darker rim, heaps of dark soil, small orange terracotta pots of green seedlings, a green watering can and a trowel, more terracotta pots stacked along the top edge.",
+   "reviewed": true
+  },
+  "hydroponics.tray_rack": {
+   "template": "Powder-coated steel grow rack [hydroponics.tray_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel",
+    "trays": "vinyl"
+   },
+   "physical": "Top-down view of a grow rack: a long powder-coated steel rack of cream vinyl trays packed with bright green leafy plants, a strip of purple grow lights over them, pipes along the top edge.",
+   "reviewed": true
+  },
+  "instrument.drum_kit": {
+   "template": "Powder-coated steel drum kit [instrument.drum_kit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hardware": "powder-coated steel",
+    "shells": "pine veneer"
+   },
+   "physical": "Top-down view of the drum kit: a large bass drum at the top, smaller pale drums and grey powder-coated steel cymbals in an arc, a stool at the bottom.",
+   "reviewed": true
+  },
+  "instrument.harp": {
+   "template": "Painted mdf concert harp [instrument.harp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "painted mdf",
+    "strings": "chrome-plated steel"
+   },
+   "physical": "Top-down view of the concert harp: a curved white painted mdf neck and sound box forming a narrow triangle, a fan of strings between them.",
+   "reviewed": true
+  },
+  "instrument.organ": {
+   "template": "Solid oak church organ [instrument.organ]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "solid oak",
+    "pipes": "stainless steel"
+   },
+   "physical": "Top-down view of the church organ: a row of silver stainless steel pipe tops along the top edge, a honey solid oak console with stepped keyboards and a bench toward the bottom.",
+   "reviewed": true
+  },
+  "instrument.piano_grand": {
+   "template": "Birch plywood grand piano [instrument.piano_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "birch plywood",
+    "lid": "birch plywood"
+   },
+   "physical": "Top-down view of the grand piano: a curved wing-shaped blonde birch plywood body, lid raised, keyboard along the bottom edge with a padded bench.",
+   "reviewed": true
+  },
+  "instrument.piano_upright": {
+   "template": "Pine veneer upright piano [instrument.piano_upright]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "pine veneer",
+    "keys": "vitreous china"
+   },
+   "physical": "Top-down view of the upright piano: a honey pine veneer cabinet with its back along the top edge, a strip of keys toward the bottom and a bench in front.",
+   "reviewed": true
+  },
+  "instrument.synth": {
+   "template": "Moulded plastic synthesiser rig [instrument.synth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "moulded plastic",
+    "stand": "aluminium"
+   },
+   "physical": "Top-down view of the synthesiser rig: two white moulded plastic keyboards stacked on an aluminium stand, cables trailing to the top edge, a stool toward the bottom.",
+   "reviewed": true
+  },
+  "kiln.electric": {
+   "template": "Glazed tile electric kiln [kiln.electric]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "glazed tile",
+    "shell": "aluminium"
+   },
+   "physical": "Top-down view of an electric kiln: a round matt grey aluminium kiln with a hinged grey glazed tile lid, a control box and cable on one side.",
+   "reviewed": true
+  },
+  "lab.analyzer": {
+   "template": "High-gloss lacquer spectrometer station [lab.analyzer]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "housing": "high-gloss lacquer",
+    "screen": "smoked glass"
+   },
+   "physical": "Top-down view of a spectrometer station: a white high-gloss lacquer instrument housing with a sample tray at the bottom edge, a small smoked glass display and cable bundles along the top edge.",
+   "reviewed": true
+  },
+  "lab.bench": {
+   "template": "Chrome-plated steel lab bench [lab.bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "top": "moulded plastic"
+   },
+   "physical": "Top-down view of a lab bench: a dark grey moulded plastic worktop on chrome-plated steel cabinets, a small sink at one end, racks of test tubes and glassware along the top edge.",
+   "reviewed": true
+  },
+  "lab.fume_hood": {
+   "template": "Anodised aluminium fume hood [lab.fume_hood]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "anodised aluminium",
+    "sash": "tempered glass"
+   },
+   "physical": "Top-down view of a fume hood: a deep champagne anodised aluminium cabinet against the top edge with a tempered glass sliding front at the bottom edge, flasks and a burner inside, a duct leaving through the top.",
+   "reviewed": true
+  },
+  "lathe.drill_press": {
+   "template": "Aluminium drill press [lathe.drill_press]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "column": "aluminium",
+    "table": "powder-coated steel"
+   },
+   "physical": "Top-down view of a drill press: a round white powder-coated steel table under a drill head, a motor housing and column at the top edge, a feed handle sticking out to the right.",
+   "reviewed": true
+  },
+  "lathe.fabricator": {
+   "template": "Chrome-plated steel 3D printer [lathe.fabricator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "housing": "melamine"
+   },
+   "physical": "Top-down view of a 3D printer: a square charcoal grey melamine cabinet on a dark steel frame, a smoky tinted window over a build plate with a small orange part on it, spools or feed lines along the top edge.",
+   "reviewed": true
+  },
+  "lathe.metal": {
+   "template": "Powder-coated steel metal lathe [lathe.metal]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bed": "powder-coated steel",
+    "guard": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a metal lathe: a long white powder-coated steel bed with a chuck at the left end and a tailstock at the right, a tool carriage in the middle, a chrome-plated steel motor guard or drive belt along the top edge.",
+   "reviewed": true
+  },
+  "lathe.potters_wheel": {
+   "template": "Melamine pottery wheel [lathe.potters_wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "melamine",
+    "wheel": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a pottery wheel: a round chrome-plated steel wheel head with a wet clay pot in the middle, a melamine seat at the bottom edge, a water bowl beside it.",
+   "reviewed": true
+  },
+  "lathe.saw_bench": {
+   "template": "Powder-coated steel table saw [lathe.saw_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "blade": "powder-coated steel",
+    "table": "powder-coated steel"
+   },
+   "physical": "Top-down view of a table saw: a rectangular black powder-coated steel table with a powder-coated steel blade slot along the middle, a fence along one side, sawdust heaped below.",
+   "reviewed": true
+  },
+  "lectern.pulpit": {
+   "template": "Solid oak pulpit [lectern.pulpit]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "solid oak",
+    "cloth": "egyptian cotton"
+   },
+   "physical": "Top-down view of the pulpit: a six-sided honey solid oak box on a raised base, a short stair at one side, an ivory egyptian cotton cloth draped over the front edge toward the bottom.",
+   "reviewed": true
+  },
+  "lectern.reading": {
+   "template": "Beech-effect laminate podium [lectern.reading]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "beech-effect laminate"
+   },
+   "physical": "Top-down view of the podium: a light brown beech-effect laminate column with a slanted reading top, the high edge at the top, the speaker's side toward the bottom.",
+   "reviewed": true
+  },
+  "light.candelabrum": {
+   "template": "Anodised aluminium candelabrum [light.candelabrum]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "anodised aluminium"
+   },
+   "physical": "Top-down view of a standing candelabrum: five or seven lit candles arranged in a ring and centre on champagne anodised aluminium arms, a warm bright glow, a heavy round foot under it.",
+   "reviewed": true
+  },
+  "light.floor_lamp": {
+   "template": "Cotton floor lamp [light.floor_lamp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "shade": "cotton",
+    "stem": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a floor lamp: a round grey cotton shade seen from above with a bright ring at its rim, a chrome-plated steel base just showing beyond it, a cable trailing to the wall.",
+   "reviewed": true
+  },
+  "light.lantern": {
+   "template": "Melamine battery lantern [light.lantern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "melamine",
+    "panel": "float glass"
+   },
+   "physical": "Top-down view of a battery lantern: a square or round beige melamine cap with a carrying handle, light spilling through clear float glass sides onto the floor around it.",
+   "reviewed": true
+  },
+  "locker.bank": {
+   "template": "Aluminium locker bank [locker.bank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "aluminium"
+   },
+   "physical": "Top-down view of a locker bank two cells wide: matt grey aluminium top divided into four narrow compartments, numbered doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "locker.footlocker": {
+   "template": "Chrome-plated steel footlocker [locker.footlocker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "chrome-plated steel",
+    "strap": "leather"
+   },
+   "physical": "Top-down view of a low footlocker: rectangular chrome-plated steel lid with a stencilled number, two tan straps across it, a handle at either end.",
+   "reviewed": true
+  },
+  "locker.standard": {
+   "template": "Aluminium locker [locker.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "aluminium"
+   },
+   "physical": "Top-down view of a single locker: plain matt grey aluminium top, the vented door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "loom.sewing_machine": {
+   "template": "Chrome-plated steel sewing machine [loom.sewing_machine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "machine": "chrome-plated steel",
+    "table": "painted mdf"
+   },
+   "physical": "Top-down view of a sewing machine: a chrome-plated steel sewing head on a small grey painted mdf table, a spool on top, fabric under the needle toward the bottom.",
+   "reviewed": true
+  },
+  "medical.autoclave": {
+   "template": "Stainless steel autoclave [medical.autoclave]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "stainless steel",
+    "door": "anodised aluminium"
+   },
+   "physical": "Top-down view of an autoclave: a boxy silver stainless steel unit with a round anodised aluminium pressure door facing the bottom edge, a gauge and pipes along the top edge.",
+   "reviewed": true
+  },
+  "medical.exam_table": {
+   "template": "Aluminium examination table [medical.exam_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium",
+    "pad": "melamine"
+   },
+   "physical": "Top-down view of an examination table: a narrow padded white melamine couch on an aluminium base, the raised head end at the top, a strip of paper covering it, a step at one side.",
+   "reviewed": true
+  },
+  "medical.iv_stand": {
+   "template": "Moulded plastic IV stand [medical.iv_stand]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "moulded plastic",
+    "pole": "chrome-plated steel"
+   },
+   "physical": "Top-down view of an IV stand: a small five-spoked wheeled base with a thin chrome-plated steel pole, a clear moulded plastic bag hanging from a hook at the top.",
+   "reviewed": true
+  },
+  "medical.operating_table": {
+   "template": "Chrome-plated steel operating table [medical.operating_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "chrome-plated steel",
+    "top": "chrome-plated steel"
+   },
+   "physical": "Top-down view of an operating table: a narrow chrome-plated steel table on a chrome-plated steel base, a head rest at the top, arm boards to each side, a tray of instruments beside it.",
+   "reviewed": true
+  },
+  "medical.privacy_curtain": {
+   "template": "Microfibre privacy curtain [medical.privacy_curtain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "curtain": "microfibre",
+    "frame": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a privacy curtain: a long thin line of charcoal microfibre folds on a chrome-plated steel rail, small wheeled feet at each end.",
+   "reviewed": true
+  },
+  "mill.grindstone": {
+   "template": "Chrome-plated steel bench grinder [mill.grindstone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "wheel": "polished concrete"
+   },
+   "physical": "Top-down view of a bench grinder: a round pale grey polished concrete wheel seen edge-on as a thick bar, mounted in a chrome-plated steel frame with a crank or motor on one side, a water trough or tray below.",
+   "reviewed": true
+  },
+  "nightstand.crate": {
+   "template": "Polystyrene milk crate [nightstand.crate]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "polystyrene"
+   },
+   "physical": "Top-down view of a small milk crate: a square white polystyrene box turned on end, a few small objects on its top.",
+   "reviewed": true
+  },
+  "nightstand.fine": {
+   "template": "Birch plywood lacquered nightstand [nightstand.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "birch plywood",
+    "top": "travertine"
+   },
+   "physical": "Top-down view of a fine lacquered nightstand: a beige travertine top over a blonde birch plywood cabinet, a small keyhole on the bottom edge.",
+   "reviewed": true
+  },
+  "nightstand.plain": {
+   "template": "Beech-effect laminate nightstand [nightstand.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a small nightstand: a square light brown beech-effect laminate top, a drawer pull showing on the bottom edge.",
+   "reviewed": true
+  },
+  "oven.bakehouse": {
+   "template": "Aluminium deck oven [oven.bakehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "chamber": "aluminium",
+    "door": "toughened glass"
+   },
+   "physical": "Top-down view of a large deck oven: a broad silver aluminium block against the top wall with a vaulted roof, a wide smoked toughened glass oven mouth on the bottom edge, a stone apron and a long peel in front.",
+   "reviewed": true
+  },
+  "oven.wall_oven": {
+   "template": "Chrome-plated steel wall oven [oven.wall_oven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "chrome-plated steel",
+    "door": "frosted glass"
+   },
+   "physical": "Top-down view of a tall wall oven unit: a chrome-plated steel cabinet front, a dim warm glow through a white frosted glass window on the bottom edge, controls along the top.",
+   "reviewed": true
+  },
+  "pallet.bulk": {
+   "template": "Painted mdf pallet block [pallet.bulk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "painted mdf",
+    "wrap": "vinyl"
+   },
+   "physical": "Top-down view of a pallet block two by two cells: four square pallet loads under cream vinyl wrap with thin gaps between them, painted mdf slats showing at the outer edges.",
+   "reviewed": true
+  },
+  "pallet.goods": {
+   "template": "Beech-effect laminate loaded pallet [pallet.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "beech-effect laminate",
+    "wrap": "moulded plastic"
+   },
+   "physical": "Top-down view of a square loaded pallet: boxes stacked in a tight block under red moulded plastic wrapping, the beech-effect laminate slats showing at the edges.",
+   "reviewed": true
+  },
+  "plant.herb_pot": {
+   "template": "Bamboo pot of herbs [plant.herb_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "bamboo",
+    "pot": "vitreous china"
+   },
+   "physical": "Top-down view of a round white vitreous china pot of herbs seen from above: a tight clump of honey leaves filling the rim.",
+   "reviewed": true
+  },
+  "plant.potted": {
+   "template": "Rattan houseplant [plant.potted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "rattan",
+    "pot": "vitreous china"
+   },
+   "physical": "Top-down view of the houseplant: a round white vitreous china pot almost hidden under a spray of honey rattan fronds.",
+   "reviewed": true
+  },
+  "plant.tree": {
+   "template": "Rattan planter tree [plant.tree]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "foliage": "rattan",
+    "planter": "glazed tile"
+   },
+   "physical": "Top-down view of the planter tree: a square blue glazed tile planter under a wide round crown of honey leaves that spills past its edges.",
+   "reviewed": true
+  },
+  "press.hydraulic": {
+   "template": "Chrome-plated steel hydraulic press [press.hydraulic]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "ram": "powder-coated steel"
+   },
+   "physical": "Top-down view of a hydraulic press: a tall chrome-plated steel H-shaped frame seen from above, a round powder-coated steel ram in the middle, a pump and gauge at the top edge.",
+   "reviewed": true
+  },
+  "press.printing": {
+   "template": "Aluminium letterpress [press.printing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium",
+    "platen": "powder-coated steel"
+   },
+   "physical": "Top-down view of a letterpress: a silver aluminium frame with a flat powder-coated steel bed sliding out toward the bottom, a long lever arm to one side, stacked paper and an ink slab along the top edge.",
+   "reviewed": true
+  },
+  "rack.clothing": {
+   "template": "Chrome-plated steel clothing rack [rack.clothing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel",
+    "garment": "polycotton"
+   },
+   "physical": "Top-down view of a clothing rack two cells wide: a straight chrome-plated steel bar across the middle with a crowded row of hanging beige clothes seen from above, feet at either end.",
+   "reviewed": true
+  },
+  "rack.coat": {
+   "template": "Chrome-plated steel coat rack [rack.coat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a coat rack: small round chrome-plated steel base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "reviewed": true
+  },
+  "rack.drying": {
+   "template": "Cotton drying rack [rack.drying]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "cotton",
+    "frame": "painted mdf"
+   },
+   "physical": "Top-down view of a folding drying rack: parallel grey painted mdf rails with grey sheets and shirts draped over them.",
+   "reviewed": true
+  },
+  "rack.tool": {
+   "template": "Painted mdf tool rack [rack.tool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "painted mdf",
+    "tool": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a tool rack: sage painted mdf board against the top edge with chrome-plated steel hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "reviewed": true
+  },
+  "rack.weapon": {
+   "template": "Aluminium gun rack [rack.weapon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fitting": "aluminium",
+    "frame": "painted mdf"
+   },
+   "physical": "Top-down view of a gun rack: a thick sage painted mdf rack lying along the top edge with a row of notches, three dark rifles lying in it side by side with barrels toward the top edge and stocks toward the bottom, a dark aluminium bar across them.",
+   "reviewed": true
+  },
+  "rack.wine": {
+   "template": "Frosted glass wine rack [rack.wine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bottle": "frosted glass",
+    "frame": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a wine rack: light brown beech-effect laminate lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows.",
+   "reviewed": true
+  },
+  "radio.jukebox": {
+   "template": "Aluminium jukebox [radio.jukebox]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "aluminium",
+    "panel": "frosted glass"
+   },
+   "physical": "Top-down view of the jukebox: a rounded matt grey aluminium cabinet, back along the top edge, a curved frosted glass dome and glowing trim toward the bottom.",
+   "reviewed": true
+  },
+  "radio.set": {
+   "template": "Melamine radio set [radio.set]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "melamine"
+   },
+   "physical": "Top-down view of the radio set on a small table: a beige melamine cabinet with its back along the top edge, a dial and speaker grille toward the bottom.",
+   "reviewed": true
+  },
+  "religious.candle_rack": {
+   "template": "Aluminium votive candle stand [religious.candle_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rack": "aluminium"
+   },
+   "physical": "Top-down view of the votive candle stand: a stepped matt grey aluminium tray filled with rows of small lit candles, a sand tray at the front toward the bottom.",
+   "reviewed": true
+  },
+  "religious.font": {
+   "template": "Cultured stone baptismal font [religious.font]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "cultured stone",
+    "cover": "painted mdf"
+   },
+   "physical": "Top-down view of the baptismal font: a round beige cultured stone basin on an eight-sided base, a grey painted mdf lid with a knob at its centre.",
+   "reviewed": true
+  },
+  "religious.prayer_mat": {
+   "template": "Polycotton prayer mat [religious.prayer_mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "polycotton"
+   },
+   "physical": "Top-down view of the prayer mat: a small oblong of beige polycotton with a pointed arch motif at the top end and a fringe at the bottom.",
+   "reviewed": true
+  },
+  "rug.carpet": {
+   "template": "Linen area rug [rug.carpet]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "border": "linen",
+    "pile": "velvet"
+   },
+   "physical": "Top-down view of a large oblong area rug: emerald velvet centre with a central medallion, a wide sage border, fringe along the short sides.",
+   "reviewed": true
+  },
+  "rug.mat": {
+   "template": "Cotton rag rug [rug.mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "cotton"
+   },
+   "physical": "Top-down view of a small oblong rag rug: white cotton in rough bands, frayed ends at left and right.",
+   "reviewed": true
+  },
+  "rug.runner": {
+   "template": "Polycotton runner [rug.runner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "polycotton"
+   },
+   "physical": "Top-down view of a long narrow runner running from top to bottom: flat woven charcoal-grey polycotton with a mustard stripe down each long edge and a charcoal border at each end.",
+   "reviewed": true
+  },
+  "rug.woven": {
+   "template": "Microfibre rug [rug.woven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "microfibre"
+   },
+   "physical": "Top-down view of a square rug: charcoal microfibre field, a plain contrasting border, short fringe at the top and bottom edges.",
+   "reviewed": true
+  },
+  "sack.grain": {
+   "template": "Microfibre feed sack [sack.grain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "sack": "microfibre"
+   },
+   "physical": "Top-down view of a slumped feed sack: lumpy cream microfibre bag with its tied neck flopped to one side, a little spilled grain beside it.",
+   "reviewed": true
+  },
+  "sack.kitbag": {
+   "template": "Melamine duffel bag [sack.kitbag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "melamine",
+    "strap": "moulded plastic"
+   },
+   "physical": "Top-down view of a long duffel bag: cylindrical white melamine bag lying on its side, a moulded plastic carry strap looped over the top.",
+   "reviewed": true
+  },
+  "screen.projector": {
+   "template": "Aluminium projector [screen.projector]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "aluminium"
+   },
+   "physical": "Top-down view of the projector on a three-legged stand: a boxy silver aluminium body with a lens pointing to the bottom.",
+   "reviewed": true
+  },
+  "screen.tv": {
+   "template": "Moulded plastic television [screen.tv]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "moulded plastic"
+   },
+   "physical": "Top-down view of the television on a low grey moulded plastic stand: a thin screen along the top edge facing the bottom, a remote beside it.",
+   "reviewed": true
+  },
+  "security.detector": {
+   "template": "Vinyl metal detector [security.detector]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "arch": "vinyl",
+    "trim": "powder-coated steel"
+   },
+   "physical": "Top-down view of a metal detector: two parallel cream vinyl side panels with powder-coated steel trim and a gap between them running top to bottom, a small light on each panel.",
+   "reviewed": true
+  },
+  "security.gun_locker": {
+   "template": "Powder-coated steel gun locker [security.gun_locker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "powder-coated steel",
+    "lock": "powder-coated steel"
+   },
+   "physical": "Top-down view of a gun locker: a deep black powder-coated steel cabinet against the top edge, a locked door at the bottom edge with a handle and a keypad or padlock.",
+   "reviewed": true
+  },
+  "security.turnstile": {
+   "template": "Aluminium turnstile [security.turnstile]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "arms": "aluminium",
+    "post": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a turnstile: a round chrome-plated steel post with a dark grey top and a card reader, exactly three thick dark aluminium arms fanning out from it at even angles.",
+   "reviewed": true
+  },
+  "server.rack": {
+   "template": "Aluminium server rack [server.rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium"
+   },
+   "physical": "Top-down view of the server rack: a square matt grey aluminium cabinet with vents along the top edge, a mesh door with small lights toward the bottom, cables trailing to the side.",
+   "reviewed": true
+  },
+  "server.switchboard": {
+   "template": "Painted mdf telephone switchboard [server.switchboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "painted mdf",
+    "jacks": "aluminium"
+   },
+   "physical": "Top-down view of the telephone switchboard: a tall grey painted mdf cabinet along the top edge, a shelf of plugs and cords toward the bottom, an operator's stool in front.",
+   "reviewed": true
+  },
+  "shelf.boutique": {
+   "template": "Birch plywood boutique shelf [shelf.boutique]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "birch plywood",
+    "shelf": "tempered glass"
+   },
+   "physical": "Top-down view of a boutique shelf two cells wide: slim blonde birch plywood frame, a tempered glass shelf with a few widely spaced objects, decorative moulding along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.goods": {
+   "template": "Powder-coated steel store shelving unit [shelf.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of a shallow store shelving unit two cells wide: black powder-coated steel shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "reviewed": true
+  },
+  "shelf.pantry": {
+   "template": "Pine veneer pantry shelf [shelf.pantry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "pine veneer",
+    "jar": "toughened glass"
+   },
+   "physical": "Top-down view of a pantry shelf two cells wide: pale pine veneer shelf edge along the bottom, rows of smoked toughened glass jars and tied bundles, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.utility": {
+   "template": "Powder-coated steel wire shelving unit [shelf.utility]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of a small wire shelving unit: white powder-coated steel uprights at the four corners, a slatted top shelf with boxes and coiled cable, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.warehouse": {
+   "template": "Powder-coated steel heavy shelving unit [shelf.warehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of a heavy shelving unit two cells wide: heavy white powder-coated steel uprights at each corner and the middle, the top deck covered with cartons, labels facing the bottom edge.",
+   "reviewed": true
+  },
+  "sink.bathroom": {
+   "template": "Glazed tile bathroom sink [sink.bathroom]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "glazed tile"
+   },
+   "physical": "Top-down view of a bathroom sink: a rounded white glazed tile basin with a tap at the top edge, a soap dish and toothbrush cup on the rim.",
+   "reviewed": true
+  },
+  "sink.kitchen": {
+   "template": "Powder-coated steel kitchen sink [sink.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "powder-coated steel"
+   },
+   "physical": "Top-down view of a kitchen sink in a worktop: a square grey powder-coated steel bowl with a drain at its centre, a tap at the top edge, a draining rack to one side.",
+   "reviewed": true
+  },
+  "sink.vanity": {
+   "template": "Stoneware double vanity [sink.vanity]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "stoneware",
+    "top": "travertine"
+   },
+   "physical": "Top-down view of a long double vanity against the top wall: a warm tan-brown travertine counter with a darker edge, two oval sage stoneware basins, taps at the back edge, folded navy towels and amber bottles between them.",
+   "reviewed": true
+  },
+  "sofa.booth": {
+   "template": "Beech-effect laminate diner booth [sofa.booth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech-effect laminate",
+    "seat": "leather"
+   },
+   "physical": "Top-down view of a fixed diner booth: a long tan leather bench seat with a tall padded back along the top edge, light brown beech-effect laminate end panels at left and right.",
+   "reviewed": true
+  },
+  "sofa.couch": {
+   "template": "Microfibre sofa [sofa.couch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "microfibre",
+    "frame": "pine veneer"
+   },
+   "physical": "Top-down view of a two-seat sofa: cream microfibre cushions, a padded back along the top edge, rolled pale pine veneer arms at left and right.",
+   "reviewed": true
+  },
+  "sofa.grand": {
+   "template": "Nubuck leather sofa [sofa.grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "nubuck",
+    "frame": "solid oak"
+   },
+   "physical": "Top-down view of a long three-seat leather sofa: grey nubuck cushions in a row, a deep back along the top edge, broad honey solid oak arms at each end.",
+   "reviewed": true
+  },
+  "statue.abstract": {
+   "template": "Granite abstract sculpture [statue.abstract]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "granite",
+    "form": "brushed steel"
+   },
+   "physical": "Top-down view of the abstract sculpture: interlocking silver-grey brushed steel loops rising from a round speckled grey granite base.",
+   "reviewed": true
+  },
+  "statue.bust": {
+   "template": "Powder-coated steel bust on a pedestal [statue.bust]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bust": "powder-coated steel",
+    "pedestal": "polished concrete"
+   },
+   "physical": "Top-down view of the bust on a pedestal: a square grey polished concrete pedestal topped by a grey powder-coated steel head and shoulders, face toward the bottom.",
+   "reviewed": true
+  },
+  "statue.carving": {
+   "template": "Vitreous china plaster statuette [statue.carving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "vitreous china"
+   },
+   "physical": "Top-down view of a small white vitreous china plaster statuette on a squat base: a rough human shape, head at the top.",
+   "reviewed": true
+  },
+  "statue.figure": {
+   "template": "Granite statue [statue.figure]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "granite",
+    "plinth": "quartz composite"
+   },
+   "physical": "Top-down view of the statue: a square white quartz composite plinth with a speckled grey granite standing figure, head and shoulders central, raised arm reaching to one side.",
+   "reviewed": true
+  },
+  "still.brew_kettle": {
+   "template": "Chrome-plated steel brewhouse kettle [still.brew_kettle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "chrome-plated steel",
+    "kettle": "aluminium"
+   },
+   "physical": "Top-down view of a brewhouse kettle: a large round matt grey aluminium kettle with a steaming open top, set into a chrome-plated steel firebox, a ladle hooked on the rim.",
+   "reviewed": true
+  },
+  "still.pot": {
+   "template": "Chrome-plated steel moonshine still [still.pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "coil": "chrome-plated steel",
+    "pot": "aluminium"
+   },
+   "physical": "Top-down view of a moonshine still: a round silver aluminium pot with a domed top, a chrome-plated steel pipe coiling into a cooling bucket beside it, a jug under the spout.",
+   "reviewed": true
+  },
+  "still.vat": {
+   "template": "Powder-coated steel fermenter [still.vat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "powder-coated steel",
+    "vat": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a fermenter: a wide round chrome-plated steel vat bound with powder-coated steel hoops, a loose lid and a paddle laid across the top.",
+   "reviewed": true
+  },
+  "stool.bar": {
+   "template": "Aluminium bar stool [stool.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium",
+    "seat": "leather"
+   },
+   "physical": "Top-down view of a tall bar stool: a round brown leather seat over a silver aluminium footrest ring.",
+   "reviewed": true
+  },
+  "stool.ottoman": {
+   "template": "Egyptian cotton ottoman [stool.ottoman]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "egyptian cotton",
+    "frame": "birch plywood"
+   },
+   "physical": "Top-down view of a padded ottoman: a square white egyptian cotton top with buttoned tufts and short pale birch plywood feet at the corners.",
+   "reviewed": true
+  },
+  "stool.plain": {
+   "template": "Melamine plastic stool [stool.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "melamine"
+   },
+   "physical": "Top-down view of a small plastic stool: a round white melamine seat, the tips of its legs just showing.",
+   "reviewed": true
+  },
+  "stove.cooker": {
+   "template": "Powder-coated steel cooker [stove.cooker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "powder-coated steel"
+   },
+   "physical": "Top-down view of a cooker: a square black powder-coated steel top with four rings in a two-by-two grid, a strip of control knobs along the top edge, one burner lit blue.",
+   "reviewed": true
+  },
+  "stove.range": {
+   "template": "Aluminium range cooker [stove.range]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "aluminium",
+    "rail": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a wide range cooker against the top wall: a matt grey aluminium cooktop with four to six round plates or burners, a chrome-plated steel towel rail along the bottom edge, a flue or hood along the back.",
+   "reviewed": true
+  },
+  "table.coffee": {
+   "template": "Beech-effect laminate coffee table [table.coffee]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a low coffee table: a long light brown beech-effect laminate top with a lower shelf showing beneath.",
+   "reviewed": true
+  },
+  "table.dining": {
+   "template": "Painted mdf dining table [table.dining]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a square dining table: a sage painted mdf top with a runner down the middle, one leg at each corner.",
+   "reviewed": true
+  },
+  "table.long": {
+   "template": "Walnut veneer banquet table [table.long]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "walnut veneer"
+   },
+   "physical": "Top-down view of a very long banquet table: a dark brown walnut veneer top twice as long as it is wide, a line of serving dishes down the middle.",
+   "reviewed": true
+  },
+  "table.mess": {
+   "template": "Chrome-plated steel canteen table [table.mess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a long canteen table: a chrome-plated steel top with a raised rim, bolted feet showing at the corners.",
+   "reviewed": true
+  },
+  "table.plank": {
+   "template": "Pine veneer kitchen table [table.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "pine veneer"
+   },
+   "physical": "Top-down view of a plain kitchen table: a rectangular honey pine veneer top, twice as wide as it is deep, legs at the corners.",
+   "reviewed": true
+  },
+  "table.round_small": {
+   "template": "Beech-effect laminate café table [table.round_small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "beech-effect laminate"
+   },
+   "physical": "Top-down view of a small café table: a round light brown beech-effect laminate top on a single central post.",
+   "reviewed": true
+  },
+  "table.side": {
+   "template": "Birch plywood side table [table.side]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "birch plywood",
+    "top": "quartz composite"
+   },
+   "physical": "Top-down view of a small square side table: a white quartz composite top with a bevelled edge, slim pale birch plywood legs at the corners.",
+   "reviewed": true
+  },
+  "throne.gilded": {
+   "template": "Merino gilded throne [throne.gilded]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "cushion": "merino",
+    "frame": "rose-gold plate"
+   },
+   "physical": "Top-down view of a richly ornate gilded throne: rose-gold plate frame with flared arms, a cream merino seat, a fan-shaped back along the top edge.",
+   "reviewed": true
+  },
+  "throne.state": {
+   "template": "Linen ceremonial chair [throne.state]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cushion": "linen",
+    "frame": "walnut veneer"
+   },
+   "physical": "Top-down view of a grand ceremonial chair: a sage linen seat between heavy dark brown walnut veneer arms, a tall crested back along the top edge.",
+   "reviewed": true
+  },
+  "toilet.sanitation": {
+   "template": "Raku-fired clay smart toilet [toilet.sanitation]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "bowl": "raku-fired clay",
+    "panel": "carbon fibre"
+   },
+   "physical": "Top-down view of a sleek smart toilet: a smooth wall-hung copper raku-fired clay bowl with no visible cistern, a charcoal carbon fibre control panel glowing softly on the top wall.",
+   "reviewed": true
+  },
+  "toilet.standard": {
+   "template": "Glazed tile toilet [toilet.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "glazed tile"
+   },
+   "physical": "Top-down view of a toilet: an oval grey glazed tile bowl with the seat up, a rectangular cistern against the top wall, a paper roll beside it.",
+   "reviewed": true
+  },
+  "utility.boiler": {
+   "template": "Aluminium boiler [utility.boiler]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "aluminium"
+   },
+   "physical": "Top-down view of a boiler against the top wall: a round silver aluminium drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge.",
+   "reviewed": true
+  },
+  "utility.generator": {
+   "template": "Aluminium generator [utility.generator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "housing": "aluminium"
+   },
+   "physical": "Top-down view of a boxy generator: a silver aluminium casing with vents along the top, a fuel cap and pull handle on one side, cables snaking off the top edge.",
+   "reviewed": true
+  },
+  "utility.ladder": {
+   "template": "Powder-coated steel stepladder [utility.ladder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of a folded stepladder: two long white powder-coated steel rails with rungs between them, a paint-spattered top step.",
+   "reviewed": true
+  },
+  "utility.mop_bucket": {
+   "template": "Melamine mop bucket [utility.mop_bucket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "melamine",
+    "handle": "aluminium"
+   },
+   "physical": "Top-down view of a mop bucket: a round tan melamine bucket with a dark rim, murky water inside, a wringer at one side, a short dark grey aluminium handle laid across the bucket, kept inside the square.",
+   "reviewed": true
+  },
+  "wardrobe.armoire": {
+   "template": "Solid oak armoire [wardrobe.armoire]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "solid oak",
+    "inlay": "anodised aluminium"
+   },
+   "physical": "Top-down view of a massive armoire two cells wide: honey solid oak top edged with carved moulding and bronze anodised aluminium inlay, doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.narrow": {
+   "template": "Pine veneer flat-pack wardrobe [wardrobe.narrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "pine veneer"
+   },
+   "physical": "Top-down view of a slim flat-pack wardrobe: square honey pine veneer top, a single door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.standard": {
+   "template": "Painted mdf wardrobe [wardrobe.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "painted mdf",
+    "handle": "aluminium"
+   },
+   "physical": "Top-down view of a wardrobe two cells wide: flat sage painted mdf top with a hatbox at one end, double doors with aluminium handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.cutting_table": {
+   "template": "Microfibre cutting table [workbench.cutting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "microfibre",
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a cutting table: a smooth grey painted mdf top with a length of cream microfibre spread across it, shears, chalk and pins, a rack of bolts along the top edge.",
+   "reviewed": true
+  },
+  "workbench.rough": {
+   "template": "Cheap laminate sawhorse work table [workbench.rough]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "cheap laminate",
+    "top": "particleboard"
+   },
+   "physical": "Top-down view of a sawhorse work table: a long beige particleboard plank top resting on two cheap laminate supports, a few loose tools and shavings on it, a strip of nails along the top edge.",
+   "reviewed": true
+  },
+  "workbench.steel": {
+   "template": "Aluminium steel workbench [workbench.steel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "aluminium",
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a steel workbench: a white painted mdf work surface on a silver aluminium frame, a bench vise at one corner, a pegboard of tools along the top edge.",
+   "reviewed": true
+  },
+  "workbench.welding": {
+   "template": "Polycotton welding bench [workbench.welding]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "screen": "polycotton",
+    "top": "powder-coated steel"
+   },
+   "physical": "Top-down view of a welding bench: a thick black powder-coated steel slab top with clamps and scorch marks, a gas bottle and coiled hose at the top-right corner, a beige polycotton spark curtain along the top edge.",
+   "reviewed": true
+  }
+ }
+}

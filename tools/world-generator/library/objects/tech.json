@@ -228,16 +228,40 @@
       "bands": ["industrial"],
       "onlyGenres": [],
       "names": {"*": "ship's wheel"},
-      "parts": {"wheel": "wood", "binnacle": "metal"},
+      "parts": {"wheel": "wood", "stand": "metal"},
       "partsByBand": {},
       "tags": ["console", "ship"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {wheel} {noun} beside a {binnacle} compass binnacle, its spokes polished by many hands.",
-        "physical": "Top-down view of the {noun}: a spoked {wheel.color} {wheel} wheel seen edge-on along the top, a round {binnacle.color} {binnacle} compass housing toward the bottom."
+        "description": "{A:condition} {wheel} {noun} on {A:stand} helm stand, its spokes polished by many hands.",
+        "physical": "Top-down view of the {noun}: a squat {stand.color} {stand} helm stand with its back along the top edge, a large round spoked {wheel.color} {wheel} wheel mounted on it and tilted back so its face shows."
       },
       "aliases": ["helm", "steering wheel"],
+      "sources": ["claude-authored"]
+    },
+    {
+      "id": "console.instruments",
+      "category": "console",
+      "size": [2, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["modest", "wealthy"],
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "names": {"*": "chart table"},
+      "parts": {"table": "wood", "tools": "metal"},
+      "partsByBand": {},
+      "tags": ["console", "ship", "navigation"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {table} {noun} laid with charts and {tools} instruments: a compass, a barometer and a sextant for reading the way and the weather.",
+        "physical": "Top-down view of the {noun}: a {table.color} {table} table with a spread sea chart, a round {tools.color} {tools} compass, a round barometer dial and a sextant laid on it, back along the top edge."
+      },
+      "aliases": ["navigation table", "instrument table", "barometer"],
       "sources": ["claude-authored"]
     },
     {

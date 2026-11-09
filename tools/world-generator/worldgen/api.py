@@ -221,6 +221,11 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
             os.path.join(built, "scenario.json"), spec["arpgMods"])
         for issue in mods_issues:
             _emit(emit, "ERROR " + issue)
+    if rc_build == 0 and os.path.isdir(built):
+        from worldgen import library_art
+        n_art = library_art.attach_sprites(built, plan_data)
+        if n_art:
+            _emit(emit, f"{n_art} shipped library sprite(s) attached to {built} (re-zipped)")
     rc_val, val_out = 0, ""
     if rc_build == 0 and os.path.exists(zip_path):
         rc_val, val_out = _run([sys.executable, validator, zip_path], emit)

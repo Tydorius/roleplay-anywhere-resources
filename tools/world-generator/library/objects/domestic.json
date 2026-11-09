@@ -2429,7 +2429,7 @@
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {bucket} {noun} with grey water in the bottom and a {handle} handle leaning out of it.",
+        "description": "{A:condition} {bucket} {noun} with murky grey water in the bottom and a {handle} wringer clamped to the rim.",
         "physical": "Top-down view of a {noun}: a round {bucket.color} {bucket} bucket of murky water with a wringer at one side, a long {handle.color} {handle} handle angled across the square."
       },
       "aliases": [
