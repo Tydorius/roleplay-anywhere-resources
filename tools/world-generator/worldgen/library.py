@@ -602,11 +602,18 @@ def _article(word):
     return "an" if w[:1] in "aeiou" else "a"
 
 
-def fill_text(lib, obj, band, tier, condition, rng):
+def fill_text(lib, obj, band, tier, condition, rng, fixed=None):
     """{"description", "physical", "materials"} for an object in a setting.
-    ``rng`` is a random.Random seeded by the caller, so a re-roll repeats it."""
+    ``rng`` is a random.Random seeded by the caller, so a re-roll repeats it.
+    ``fixed`` ({part: material name}) pins the materials, as a shipped sprite's
+    metadata does, so the words match the art."""
     parts = _object_parts(obj, band)
     picks = {p: _material(lib, cls, band, tier, rng) for p, cls in sorted(parts.items())}
+    for p, name in (fixed or {}).items():
+        if p in picks:
+            colours = [c for by_tier in ((lib.materials.get(parts[p]) or {}).get(band) or {}).values()
+                       for m in by_tier if m.get("name") == name for c in m.get("colors", [])]
+            picks[p] = (name, colours[0] if colours else "")
     main = next(iter(parts.values()), "*")
     cond = _condition_word(lib, main, condition)
     noun = (obj.get("names") or {}).get(band) or (obj.get("names") or {}).get("*") or obj.get("id")

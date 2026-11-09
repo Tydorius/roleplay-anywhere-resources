@@ -10,6 +10,7 @@ calls this yet; step 4 (P3 with the library) will.
                       "kept", rng, singles=2)
   room.layout_id, room.furniture, registry.templates()
 """
+import os
 import random
 from dataclasses import dataclass, field
 
@@ -103,13 +104,25 @@ class Templates:
         self.seed = seed
         self.by_key = {}           # (object id, band, tier, condition) -> template dict
         self.names = set(taken)    # names already used (P2's own templates included)
+        self.sprites = {}          # band -> shipped sprite index
 
     def get(self, obj, band, tier, condition):
-        key = (obj["id"], band, tier, condition)
+        from .library_art import load_index, sprite_path
+        if band not in self.sprites:
+            self.sprites[band] = load_index(band)
+        art = self.sprites[band].get(obj["id"])
+        if art and not os.path.exists(sprite_path(band, obj["id"])):
+            art = None
+        # one sprite per object per band: with shipped art every tier shares
+        # it, and the words take the materials it was drawn with
+        key = (obj["id"], band, "art" if art else tier, condition)
         if key in self.by_key:
             return self.by_key[key]
         rng = random.Random(f"{self.seed}|{'|'.join(key)}")
-        text = fill_text(self.lib, obj, band, tier, condition, rng)
+        text = fill_text(self.lib, obj, band, tier, condition, rng,
+                         fixed=(art or {}).get("materials"))
+        if art and art.get("physical"):
+            text["physical"] = art["physical"]
         noun = (obj.get("names") or {}).get(band) or obj["names"]["*"]
         main = next(iter(text["materials"].values()), "")
         base = f"{main} {noun}" if main and main.lower() not in noun.lower() else noun
@@ -125,6 +138,8 @@ class Templates:
              "libraryId": obj["id"]}
         if obj.get("back"):
             t["back"] = obj["back"]
+        if art:
+            t["sprite"] = f"library/sprites/{band}/{obj['id']}.webp"
         self.by_key[key] = t
         return t
 

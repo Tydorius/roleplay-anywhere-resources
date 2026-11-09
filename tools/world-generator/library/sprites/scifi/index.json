@@ -1,0 +1,2166 @@
+{
+ "band": "scifi",
+ "objects": {
+  "altar.meditation": {
+   "template": "Aluminium glass meditation shrine [altar.meditation]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "focus": "aluminium glass",
+    "plinth": "plasteel"
+   },
+   "physical": "Top-down view of the meditation shrine: a low curved grey plasteel plinth, a glowing clear aluminium glass orb at the centre, a cushion before it toward the bottom.",
+   "reviewed": true
+  },
+  "altar.offering": {
+   "template": "Anodised alloy memorial niche [altar.offering]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dish": "anodised alloy",
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a small memorial niche: a grey polycarbonate top with a tiny figure at the top edge, a black anodised alloy offering dish and a stub of candle in front.",
+   "reviewed": true
+  },
+  "appliance.climate_unit": {
+   "template": "Plasteel climate unit [appliance.climate_unit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "grille": "plasteel",
+    "housing": "duralloy"
+   },
+   "physical": "Top-down view of a climate unit against the top wall: a gunmetal duralloy box with a white plasteel intake grille, a small green status light, a faint shimmer of warm air at the bottom edge.",
+   "reviewed": true
+  },
+  "appliance.coffee_machine": {
+   "template": "Titanium caf dispenser [appliance.coffee_machine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "titanium",
+    "pot": "transparisteel"
+   },
+   "physical": "Top-down view of a small stand with a caf dispenser: a grey titanium machine against the top edge, a clear transparisteel jug on its plate, a stack of cups and a scatter of sugar sachets in front.",
+   "reviewed": true
+  },
+  "appliance.dishwasher": {
+   "template": "Polished chromalloy dish sanitiser [appliance.dishwasher]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "polished chromalloy"
+   },
+   "physical": "Top-down view of a dish sanitiser under a worktop: a square chrome polished chromalloy top flush with the counter, a narrow control strip along the bottom edge.",
+   "reviewed": true
+  },
+  "appliance.dryer": {
+   "template": "Duralloy dry cycler [appliance.dryer]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "duralloy"
+   },
+   "physical": "Top-down view of a square dry cycler: a plain grey duralloy top, a control strip on the back edge, a vent hose curling off the top edge to the wall.",
+   "reviewed": true
+  },
+  "appliance.washer": {
+   "template": "Anodised alloy laundry unit [appliance.washer]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "anodised alloy",
+    "door": "transparisteel"
+   },
+   "physical": "Top-down view of a square laundry unit: a black anodised alloy top with a detergent drawer and dials along the back edge, the round clear transparisteel porthole door showing at the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.cask_rack": {
+   "template": "Duralloy spirit cask rack [barrel.cask_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cradle": "duralloy",
+    "stave": "resin-bonded wood"
+   },
+   "physical": "Top-down view of a spirit cask rack two cells wide: two honey resin-bonded wood casks lying side by side on a duralloy cradle, their round ends with taps facing the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.drum": {
+   "template": "Titanium fluid drum [barrel.drum]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "titanium"
+   },
+   "physical": "Top-down view of a round fluid drum: flat grey titanium lid with a rolled rim and two small screw caps, one near the edge.",
+   "reviewed": true
+  },
+  "barrel.keg": {
+   "template": "Titanium pressure keg [barrel.keg]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "titanium"
+   },
+   "physical": "Top-down view of a round pressure keg: domed grey titanium top inside a ring of hand-holes, a coupler at the centre trailing a short hose.",
+   "reviewed": true
+  },
+  "basket.laundry": {
+   "template": "Plasteel laundry tote [basket.laundry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "plasteel"
+   },
+   "physical": "Top-down view of an oval laundry tote: perforated white plasteel sides, crumpled shirts and socks piled above the rim.",
+   "reviewed": true
+  },
+  "bath.plunge_pool": {
+   "template": "Nanocarbon immersion pool [bath.plunge_pool]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "basin": "nanocarbon"
+   },
+   "physical": "Top-down view of a square immersion pool: a deep violet nanocarbon rim around a pool of clear blue-green water, steps down at one corner, towels folded on one edge.",
+   "reviewed": true
+  },
+  "bath.shower": {
+   "template": "Aluminium glass sonic shower [bath.shower]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stall": "aluminium glass",
+    "tray": "polycarbonate"
+   },
+   "physical": "Top-down view of a square sonic shower stall: a grey polycarbonate tray with a drain in the middle, a shower head on the top wall, a clear aluminium glass screen along the bottom edge.",
+   "reviewed": true
+  },
+  "bed.bunk": {
+   "template": "Plasteel bunk rack [bed.bunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "plasteel",
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of a two-tier bunk rack: the upper dark blue-grey plasteel mattress fills a thick dark grey duralloy frame, a ladder on one long side, a grey pillow at the top.",
+   "reviewed": true
+  },
+  "bed.capsule": {
+   "template": "Spacer mesh crew capsule [bed.capsule]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "spacer mesh",
+    "shell": "moulded polymer"
+   },
+   "physical": "Top-down view of a boxed crew capsule: grey moulded polymer walls on three sides, open along the bottom edge, a grey spacer mesh mattress and pillow at the top.",
+   "reviewed": true
+  },
+  "bed.cot": {
+   "template": "Moulded polymer fold-down rack [bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "moulded polymer",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a narrow fold-down rack: grey titanium side rails, a stretched orange moulded polymer bed, a flat pillow at the top.",
+   "reviewed": true
+  },
+  "bed.double": {
+   "template": "Plasteel double berth [bed.double]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "plasteel",
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a double berth: blue-grey anodised alloy frame, a white plasteel quilt, two pillows side by side against the headboard at the top.",
+   "reviewed": true
+  },
+  "bed.double_pallet": {
+   "template": "Printed plastic double foam mat [bed.double_pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "printed plastic",
+    "cover": "recycled polymer"
+   },
+   "physical": "Top-down view of a broad double foam mat lying flat on the floor: a mottled recycled polymer cover with two dents side by side, two flat pillows at the top.",
+   "reviewed": true
+  },
+  "bed.pod_double": {
+   "template": "Smart-fabric luxury sleep pod [bed.pod_double]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "smart-fabric",
+    "shell": "aerogel"
+   },
+   "physical": "Top-down view of a wide oval luxury sleep pod: pale blue aerogel rim, a white smart-fabric mattress with two pillows, a curved hood over the top edge.",
+   "reviewed": true
+  },
+  "bed.single": {
+   "template": "Moulded polymer berth [bed.single]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "moulded polymer",
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a single berth: orange anodised alloy frame, grey moulded polymer blanket folded back, a pale pillow against the headboard at the top.",
+   "reviewed": true
+  },
+  "bed.sleep_pod": {
+   "template": "Electrochromic glass sleep pod [bed.sleep_pod]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "lid": "electrochromic glass",
+    "shell": "carbon-weave"
+   },
+   "physical": "Top-down view of a rounded capsule sleep pod: black carbon-weave shell, a clear electrochromic glass lid over a pale contoured mattress, a glowing control strip at the top.",
+   "reviewed": true
+  },
+  "bench.long": {
+   "template": "Duralloy mess bench [bench.long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "duralloy"
+   },
+   "physical": "Top-down view of a long backless mess bench: a grey duralloy plank three times as long as it is wide, on sturdy legs.",
+   "reviewed": true
+  },
+  "bench.pew": {
+   "template": "Moulded polymer contemplation bench [bench.pew]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "moulded polymer"
+   },
+   "physical": "Top-down view of a long contemplation bench: a grey moulded polymer seat with its tall back along the top edge, a narrow ledge behind it, shaped ends at left and right.",
+   "reviewed": true
+  },
+  "bench.stone": {
+   "template": "Cultured granite sculpted plinth bench [bench.stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "seat": "cultured granite"
+   },
+   "physical": "Top-down view of a solid sculpted plinth bench: a smooth speckled cultured granite slab with scrolled ends at left and right.",
+   "reviewed": true
+  },
+  "bin.dumpster": {
+   "template": "Stamped duralloy waste hopper [bin.dumpster]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "stamped duralloy",
+    "lid": "recycled polymer"
+   },
+   "physical": "Top-down view of a waste hopper two cells wide: heavy grey stamped duralloy box, a hinged grey recycled polymer lid along the top edge propped half open, bags poking out.",
+   "reviewed": true
+  },
+  "bin.recycle": {
+   "template": "Plasteel reclamation bin [bin.recycle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "plasteel"
+   },
+   "physical": "Top-down view of a square reclamation bin: white plasteel lid divided into three openings, each marked with a symbol.",
+   "reviewed": true
+  },
+  "bin.scrap": {
+   "template": "Anodised alloy salvage bin [bin.scrap]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "anodised alloy"
+   },
+   "physical": "Top-down view of a square salvage bin: thick black anodised alloy walls around a jumble of metal offcuts and wire.",
+   "reviewed": true
+  },
+  "bin.waste": {
+   "template": "Plasteel waste receptacle [bin.waste]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "plasteel"
+   },
+   "physical": "Top-down view of a round waste receptacle: white plasteel rim with scraps and crumpled rubbish inside, a lid lying askew.",
+   "reviewed": true
+  },
+  "board.map": {
+   "template": "Aluminium glass tactical display board [board.map]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "map": "aluminium glass",
+    "panel": "polycarbonate"
+   },
+   "physical": "Top-down view of the tactical display board: a wide dark grey polycarbonate rail along the top edge, joined below it by a thick dark grey frame holding a glowing blue-green holographic tactical map screen, filling the bottom half.",
+   "reviewed": true
+  },
+  "board.notice": {
+   "template": "Moulded polymer bulletin display [board.notice]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "moulded polymer",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of the bulletin display: a grey titanium stand along the top edge, the board face toward the bottom with paper scraps poking past its edge.",
+   "reviewed": true
+  },
+  "board.white": {
+   "template": "Anodised alloy smart board [board.white]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "panel": "polycarbonate"
+   },
+   "physical": "Top-down view of the smart board on a wheeled black anodised alloy stand: a thin white panel along the top edge, a marker tray below it.",
+   "reviewed": true
+  },
+  "bookcase.library": {
+   "template": "Carbon-weave archive stack [bookcase.library]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "binding": "carbon-weave",
+    "frame": "ceramet alloy"
+   },
+   "physical": "Top-down view of a tall archive stack two cells wide: heavy graphite ceramet alloy cornice, a ladder rail along the bottom edge with a ladder hooked at one end, rows of black spines.",
+   "reviewed": true
+  },
+  "bookcase.small": {
+   "template": "Titanium slate rack [bookcase.small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a narrow slate rack: grey titanium top, a short row of book spines along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "bookcase.standard": {
+   "template": "Plasteel data-slate shelf [bookcase.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "binding": "plasteel",
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of a data-slate shelf two cells wide: gunmetal duralloy top, the spines of grey books visible along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "butcher.block": {
+   "template": "Plasteel carving slab [butcher.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "block": "plasteel",
+    "cleaver": "titanium"
+   },
+   "physical": "Top-down view of a carving slab: a thick solid square dark blue-grey plasteel block with a flat top, a shallow dark red-brown stain worn into the middle of the top, a titanium cleaver stuck in one corner.",
+   "reviewed": true
+  },
+  "butcher.steel_table": {
+   "template": "Polycarbonate processing table [butcher.steel_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "polycarbonate",
+    "top": "anodised alloy"
+   },
+   "physical": "Top-down view of a processing table: a long blue-grey anodised alloy table with a raised lip and a drain hole at one end, a clear polycarbonate cutting board and knives in the middle.",
+   "reviewed": true
+  },
+  "cabinet.cupboard": {
+   "template": "Duralloy storage cabinet [cabinet.cupboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "handle": "moulded polymer"
+   },
+   "physical": "Top-down view of a storage cabinet: square gunmetal duralloy top, a pair of doors along the bottom edge with small moulded polymer handles, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.dresser": {
+   "template": "Plasteel drawer unit [cabinet.dresser]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "plasteel",
+    "knob": "titanium"
+   },
+   "physical": "Top-down view of a drawer unit two cells wide: grey plasteel top with a small mirror stand and a dish, drawer fronts with titanium knobs along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.filing": {
+   "template": "Anodised alloy records cabinet [cabinet.filing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a records cabinet: plain orange anodised alloy top with a wire tray of papers, drawer handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.medicine": {
+   "template": "Titanium med cabinet [cabinet.medicine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "pane": "transparisteel"
+   },
+   "physical": "Top-down view of a narrow med cabinet: grey titanium top, a transparisteel door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.safe": {
+   "template": "Polished chromalloy vault box [cabinet.safe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "polished chromalloy"
+   },
+   "physical": "Top-down view of a squat vault box: heavy chrome polished chromalloy box with rounded corners, the door and lock along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.sideboard": {
+   "template": "Carbon-weave service credenza [cabinet.sideboard]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "carbon-weave",
+    "plate": "brushed titanium"
+   },
+   "physical": "Top-down view of a long service credenza two cells wide: black carbon-weave top with a row of gunmetal dishes and a tall jug, cupboard doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cell_bed.bolted": {
+   "template": "Duralloy fold-down cell bunk [cell_bed.bolted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "mattress": "moulded polymer"
+   },
+   "physical": "Top-down view of a bare fold-down cell bunk: a grey duralloy tray with bolt heads along its edges, a thin orange moulded polymer pad, no pillow, head end at the top.",
+   "reviewed": true
+  },
+  "cell_bed.privileged": {
+   "template": "Carbon-weave detention berth [cell_bed.privileged]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "carbon-weave",
+    "frame": "brushed titanium"
+   },
+   "physical": "Top-down view of a narrow detention berth: a gunmetal brushed titanium frame fixed to the floor, a black carbon-weave blanket, a real pillow at the top.",
+   "reviewed": true
+  },
+  "cell_bed.slab": {
+   "template": "Aggregate block poured slab bunk [cell_bed.slab]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "base": "aggregate block"
+   },
+   "physical": "Top-down view of a solid poured slab bunk: one grey aggregate block running from the wall at the top, smooth along its length.",
+   "reviewed": true
+  },
+  "chair.armchair": {
+   "template": "Plasteel lounge seat [chair.armchair]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "plasteel",
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of a roomy lounge seat: wide grey duralloy arms either side, a white plasteel seat cushion, a padded back along the top edge.",
+   "reviewed": true
+  },
+  "chair.high_back": {
+   "template": "Brushed titanium contour chair [chair.high_back]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "brushed titanium",
+    "seat": "memory polymer"
+   },
+   "physical": "Top-down view of a tall contour chair: a pearl memory polymer seat in a gunmetal brushed titanium frame, a shaped backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.office": {
+   "template": "Anodised alloy task chair [chair.office]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "anodised alloy",
+    "seat": "polycarbonate"
+   },
+   "physical": "Top-down view of a swivelling task chair: a smoke-tinted blue polycarbonate seat and curved back at the top, seen from above so the seat hides the base, only the five black alloy spoke tips with castors peeking out around it.",
+   "reviewed": true
+  },
+  "chair.pilot": {
+   "template": "Anodised alloy pilot seat [chair.pilot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "seat": "moulded polymer"
+   },
+   "physical": "Top-down view of a bucket-shaped pilot seat: white moulded polymer padding, blue-grey anodised alloy armrests with control pads, harness straps over the headrest at the top.",
+   "reviewed": true
+  },
+  "chair.plain": {
+   "template": "Polycarbonate moulded chair [chair.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "polycarbonate"
+   },
+   "physical": "Top-down view of a simple moulded chair: a square clear polycarbonate seat with the backrest along the top edge.",
+   "reviewed": true
+  },
+  "chest.case": {
+   "template": "Duralloy gear case [chest.case]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "latch": "duralloy",
+    "shell": "moulded polymer"
+   },
+   "physical": "Top-down view of a hard-shell gear case: ribbed white moulded polymer lid, two duralloy latches along one long edge, a moulded handle in the middle.",
+   "reviewed": true
+  },
+  "chest.strongbox": {
+   "template": "Brushed titanium lockbox [chest.strongbox]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "brushed titanium"
+   },
+   "physical": "Top-down view of a compact lockbox: gunmetal brushed titanium lid with riveted edges, a keyhole plate on one long side, a bolt head at each corner fixing it down.",
+   "reviewed": true
+  },
+  "coffin.plain": {
+   "template": "Moulded polymer burial pod [coffin.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "moulded polymer",
+    "handles": "titanium"
+   },
+   "physical": "Top-down view of a burial pod: a six-sided orange moulded polymer box wider at the shoulders near the top, titanium handles along the sides, a lid with a simple plate.",
+   "reviewed": true
+  },
+  "computer.desktop": {
+   "template": "Duralloy workstation [computer.desktop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "duralloy",
+    "desk": "polycarbonate"
+   },
+   "physical": "Top-down view of the workstation: a grey polycarbonate desk with a monitor at the top edge, keyboard and mouse in front, a grey duralloy tower beside it.",
+   "reviewed": true
+  },
+  "computer.terminal": {
+   "template": "Anodised alloy access terminal [computer.terminal]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "anodised alloy"
+   },
+   "physical": "Top-down view of the access terminal: a squat orange anodised alloy pedestal with its back along the top edge, an angled screen and keypad toward the bottom.",
+   "reviewed": true
+  },
+  "console.helm": {
+   "template": "Anodised alloy helm console [console.helm]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "anodised alloy",
+    "seat": "plasteel"
+   },
+   "physical": "Top-down view of the helm console: a curved blue-grey anodised alloy console along the top edge with a glowing nav display, a grey plasteel pilot seat toward the bottom.",
+   "reviewed": true
+  },
+  "console.ops": {
+   "template": "Anodised alloy ops console [console.ops]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "anodised alloy",
+    "screen": "transparisteel"
+   },
+   "physical": "Top-down view of the ops console: a long blue-grey anodised alloy desk with a row of dark screens glowing blue-green along the top edge, amber and green switches and a keyboard toward the bottom.",
+   "reviewed": true
+  },
+  "console.security": {
+   "template": "Titanium security console [console.security]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "titanium",
+    "screen": "aluminium glass"
+   },
+   "physical": "Top-down view of the security console: a grey titanium desk with a block of small aluminium glass screens along the top edge, a joystick and phone toward the bottom.",
+   "reviewed": true
+  },
+  "counter.bar": {
+   "template": "Duralloy drinks bar [counter.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "duralloy",
+    "top": "plasteel"
+   },
+   "physical": "Top-down view of a drinks bar three cells wide: long white plasteel top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge.",
+   "reviewed": true
+  },
+  "counter.bar_grand": {
+   "template": "Brushed titanium lit cocktail bar [counter.bar_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "front": "brushed titanium",
+    "top": "electrochromic glass"
+   },
+   "physical": "Top-down view of a lit cocktail bar three cells wide: glossy blue-tinted electrochromic glass top, a thin foot rail along the bottom edge, ranks of bottles and glasses on a back shelf along the top edge.",
+   "reviewed": true
+  },
+  "counter.kitchen": {
+   "template": "Anodised alloy galley counter [counter.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "anodised alloy",
+    "top": "duralloy"
+   },
+   "physical": "Top-down view of a galley counter two cells wide: gunmetal duralloy work surface, a chopping board and a crock of utensils near the top edge against the wall.",
+   "reviewed": true
+  },
+  "counter.kitchen_stone": {
+   "template": "Ceramet alloy composite galley counter [counter.kitchen_stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "ceramet alloy",
+    "top": "memory polymer"
+   },
+   "physical": "Top-down view of a composite galley counter two cells wide: a single smooth pearl memory polymer slab with a faint vein pattern, a row of jars along the top edge, a folded cloth at one end.",
+   "reviewed": true
+  },
+  "counter.reception": {
+   "template": "Anodised alloy reception desk [counter.reception]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "anodised alloy",
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a reception desk three cells wide: a raised grey polycarbonate ledge along the bottom edge, a lower desk surface behind it toward the top with a bell, a ledger and a lamp.",
+   "reviewed": true
+  },
+  "counter.serving": {
+   "template": "Duralloy ration line [counter.serving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "duralloy"
+   },
+   "physical": "Top-down view of a ration line three cells wide: gunmetal duralloy surface with a row of four sunken food trays, a stack of plates at the left end, a tray slide along the bottom edge.",
+   "reviewed": true
+  },
+  "counter.shop": {
+   "template": "Duralloy service counter [counter.shop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "duralloy",
+    "top": "plasteel"
+   },
+   "physical": "Top-down view of a service counter two cells wide: grey plasteel top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there.",
+   "reviewed": true
+  },
+  "counter.shop_long": {
+   "template": "Aluminium glass long service counter [counter.shop_long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "aluminium glass",
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a long service counter three cells wide: one unbroken grey polycarbonate top, a hinged flap at the right end, scales and a ledger along the top edge on the keeper's side.",
+   "reviewed": true
+  },
+  "crate.container": {
+   "template": "Duralloy cargo container [crate.container]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "shell": "duralloy"
+   },
+   "physical": "Top-down view of a long cargo container two cells wide and four tall: corrugated gunmetal duralloy roof with ribs running across, corner castings at all four corners, the door end at the bottom edge.",
+   "reviewed": true
+  },
+  "crate.stack": {
+   "template": "Anodised alloy cargo stack [crate.stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "anodised alloy",
+    "strap": "moulded polymer"
+   },
+   "physical": "Top-down view of a cargo stack two by two cells: four black anodised alloy crate lids in a square, the top layer slightly offset, white straps crossing them.",
+   "reviewed": true
+  },
+  "crate.wooden": {
+   "template": "Plasteel supply crate [crate.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "plasteel"
+   },
+   "physical": "Top-down view of a square supply crate: white plasteel lid with reinforced edges and a stencilled mark in one corner.",
+   "reviewed": true
+  },
+  "crib.cot": {
+   "template": "Spacer mesh infant cot [crib.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "spacer mesh",
+    "frame": "plasteel"
+   },
+   "physical": "Top-down view of a small infant cot: a grey plasteel rectangle of bars around a grey spacer mesh mattress, a tiny pillow at the top.",
+   "reviewed": true
+  },
+  "crib.fine": {
+   "template": "Memory weave nursery pod [crib.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "drape": "memory weave",
+    "frame": "carbon-weave"
+   },
+   "physical": "Top-down view of a small nursery pod: a charcoal carbon-weave basket with a silver-grey memory weave canopy drawn over the top end, a tiny pillow beneath it.",
+   "reviewed": true
+  },
+  "decor.aquarium": {
+   "template": "Polished chromalloy aquarium tank [decor.aquarium]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "polished chromalloy",
+    "tank": "smart glass"
+   },
+   "physical": "Top-down view of an oblong aquarium tank: a silver polished chromalloy rim around clear water, green weed and small bright fish, filter box at the top edge.",
+   "reviewed": true
+  },
+  "decor.banner": {
+   "template": "Polycarbonate colours stand [decor.banner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "polycarbonate",
+    "pole": "anodised alloy"
+   },
+   "physical": "Top-down view of the colours stand: a weighted round blue-grey anodised alloy foot with a pole, a clear polycarbonate banner hanging in folds along the top edge.",
+   "reviewed": true
+  },
+  "decor.fountain": {
+   "template": "Smart glass water feature [decor.fountain]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "smart glass",
+    "spout": "polished chromalloy"
+   },
+   "physical": "Top-down view of a round water feature: an opaque white smart glass rim around rippled water, a chrome polished chromalloy spout at the centre.",
+   "reviewed": true
+  },
+  "decor.globe": {
+   "template": "Smart glass star-chart orb [decor.globe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "sphere": "smart glass",
+    "stand": "brushed titanium"
+   },
+   "physical": "Top-down view of the star-chart orb: a large clear smart glass sphere in a ring mount, centred on a round silver-grey brushed titanium stand.",
+   "reviewed": true
+  },
+  "decor.mirror": {
+   "template": "Duralloy mirror panel [decor.mirror]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "glass": "aluminium glass"
+   },
+   "physical": "Top-down view of the mirror panel: a thin grey duralloy frame on two splayed feet along the top edge, the aluminium glass face toward the bottom.",
+   "reviewed": true
+  },
+  "decor.screen": {
+   "template": "Polycarbonate partition screen [decor.screen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "polycarbonate",
+    "panel": "duralloy"
+   },
+   "physical": "Top-down view of the partition screen: three grey duralloy panels in a shallow zigzag line from left to right, grey polycarbonate between the hinges.",
+   "reviewed": true
+  },
+  "desk.executive": {
+   "template": "Electrochromic glass command desk [desk.executive]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "electrochromic glass"
+   },
+   "physical": "Top-down view of a broad command desk: a deep clear electrochromic glass top with drawer pedestals at both ends, a nameplate near the bottom edge.",
+   "reviewed": true
+  },
+  "desk.office": {
+   "template": "Duralloy work desk [desk.office]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "top": "moulded polymer"
+   },
+   "physical": "Top-down view of a tidy work desk: a white moulded polymer top on grey duralloy legs, a drawer pedestal at the right, a keyboard space near the bottom edge.",
+   "reviewed": true
+  },
+  "desk.plain": {
+   "template": "Anodised alloy fold-out desk [desk.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "anodised alloy"
+   },
+   "physical": "Top-down view of a plain fold-out desk: a black anodised alloy top with a few papers and a pen, the back edge at the top.",
+   "reviewed": true
+  },
+  "desk.school": {
+   "template": "Titanium study desk [desk.school]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "top": "moulded polymer"
+   },
+   "physical": "Top-down view of a small study desk: a grey moulded polymer top sloping toward the bottom edge, a pencil groove along the top, grey titanium legs.",
+   "reviewed": true
+  },
+  "display.case": {
+   "template": "Anodised alloy sealed display case [display.case]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "pane": "aluminium glass"
+   },
+   "physical": "Top-down view of a sealed display case two cells wide: thin blue-grey anodised alloy border around a clear aluminium glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.mannequin": {
+   "template": "Polycarbonate fitting mannequin [display.mannequin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "polycarbonate",
+    "stand": "anodised alloy"
+   },
+   "physical": "Top-down view of a fitting mannequin: the head and shoulders of a grey polycarbonate figure in a draped garment, on a round black anodised alloy base, the figure facing the bottom edge.",
+   "reviewed": true
+  },
+  "display.pedestal": {
+   "template": "Polished chromalloy display pedestal [display.pedestal]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "polished chromalloy",
+    "cushion": "carbon-weave"
+   },
+   "physical": "Top-down view of a square display pedestal: silver polished chromalloy top with a narrow moulded rim, a black cushion in the centre holding a single small object.",
+   "reviewed": true
+  },
+  "display.table": {
+   "template": "Polycarbonate display bench [display.table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "polycarbonate",
+    "top": "moulded polymer"
+   },
+   "physical": "Top-down view of a display bench two cells wide: grey polycarbonate cloth over the moulded polymer top, small goods arranged in rows, a price slate at the top edge.",
+   "reviewed": true
+  },
+  "feed.trough": {
+   "template": "Grown bamboo feed dispenser [feed.trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "feed": "grown bamboo",
+    "trough": "moulded polymer"
+   },
+   "physical": "Top-down view of a feed dispenser: a long narrow orange moulded polymer trough holding pale green grown bamboo or water.",
+   "reviewed": true
+  },
+  "firewood.fuel_cans": {
+   "template": "Polycarbonate power cell rack [firewood.fuel_cans]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cans": "polycarbonate"
+   },
+   "physical": "Top-down view of power cell rack: three or four squat grey polycarbonate containers packed together with handles and caps on top, warning labels on their sides.",
+   "reviewed": true
+  },
+  "forge.smelter": {
+   "template": "Ceramic composite arc smelter [forge.smelter]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "ceramic composite",
+    "shell": "titanium"
+   },
+   "physical": "Top-down view of an arc smelter: a round grey titanium furnace body with a glowing crucible mouth, a pouring spout toward the bottom, controls and feed pipes along the top edge.",
+   "reviewed": true
+  },
+  "fridge.fridge": {
+   "template": "Polycarbonate cold locker [fridge.fridge]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "polycarbonate"
+   },
+   "physical": "Top-down view of a cold locker: a square grey polycarbonate top, the door edge and handle along the bottom, a faint vent grille on the back edge.",
+   "reviewed": true
+  },
+  "fridge.fridge_freezer": {
+   "template": "Carbon-weave stasis pantry [fridge.fridge_freezer]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "carbon-weave",
+    "panel": "smart glass"
+   },
+   "physical": "Top-down view of a wide stasis pantry: the flat top of a long black carbon-weave cabinet with a dark grey rim, two long bar handles sticking out along the bottom edge, a small glowing pale blue smart glass panel by one handle.",
+   "reviewed": true
+  },
+  "game.arcade": {
+   "template": "Plasteel sim cabinet [game.arcade]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "plasteel"
+   },
+   "physical": "Top-down view of the sim cabinet: a tall white plasteel cabinet, back along the top edge, a joystick and buttons on the control deck toward the bottom.",
+   "reviewed": true
+  },
+  "game.billiards": {
+   "template": "Moulded polymer low-grav pool table [game.billiards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "moulded polymer",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of an oblong low-grav pool table: grey moulded polymer playing bed, grey titanium rails, a pocket at each corner and both long sides, balls racked in a triangle.",
+   "reviewed": true
+  },
+  "game.cards": {
+   "template": "Titanium card table [game.cards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "top": "plasteel"
+   },
+   "physical": "Top-down view of a square card table: a white plasteel playing surface edged in grey titanium, a scatter of cards and coins at the centre.",
+   "reviewed": true
+  },
+  "game.chess": {
+   "template": "Transparisteel strategy table [game.chess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "transparisteel"
+   },
+   "physical": "Top-down view of a small square strategy table: an inlaid checkered clear transparisteel board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "game.holo_table": {
+   "template": "Electrochromic glass holo-game table [game.holo_table]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "plate": "electrochromic glass",
+    "rim": "polished chromalloy"
+   },
+   "physical": "Top-down view of a round holo-game table: a silver polished chromalloy rim around a dark electrochromic glass disc, small glowing figures and terrain projected across it.",
+   "reviewed": true
+  },
+  "gym.dummy": {
+   "template": "Anodised alloy sparring droid [gym.dummy]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "anodised alloy",
+    "pad": "plasteel"
+   },
+   "physical": "Top-down view of a sparring droid: a round black anodised alloy trunk on a stand with short arms sticking out, plasteel padding on the front facing the bottom edge.",
+   "reviewed": true
+  },
+  "gym.punch_bag": {
+   "template": "Polycarbonate impact bag [gym.punch_bag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "polycarbonate",
+    "chain": "titanium"
+   },
+   "physical": "Top-down view of an impact bag: a round clear polycarbonate cylinder seen from above, a titanium chain and swivel in the middle, scuffed floor around it.",
+   "reviewed": true
+  },
+  "gym.treadmill": {
+   "template": "Plasteel gravity treadmill [gym.treadmill]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "belt": "plasteel",
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a gravity treadmill: a long dark plasteel running belt between anodised alloy side rails, a console and handlebars at the top end.",
+   "reviewed": true
+  },
+  "gym.weight_bench": {
+   "template": "Titanium resistance bench [gym.weight_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "pad": "plasteel"
+   },
+   "physical": "Top-down view of a resistance bench: a narrow white plasteel padded bench, a titanium rack at the top with a barbell laid across it, weight plates at both ends of the bar.",
+   "reviewed": true
+  },
+  "hearth.holo_fire": {
+   "template": "Smart glass holo-hearth [hearth.holo_fire]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "emitter": "smart glass",
+    "housing": "carbon-weave"
+   },
+   "physical": "Top-down view of a low holo-hearth against the top wall: a sleek charcoal carbon-weave trough with an opaque white smart glass emitter strip, flickering amber holographic flames rising from it.",
+   "reviewed": true
+  },
+  "hospital_bed.cot": {
+   "template": "Plasteel triage cot [hospital_bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "plasteel",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a plain triage cot: grey titanium frame, a white plasteel sheet pulled straight, a small pillow at the top.",
+   "reviewed": true
+  },
+  "hospital_bed.intensive": {
+   "template": "Polished chromalloy regeneration bed [hospital_bed.intensive]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "polished chromalloy",
+    "panel": "smart glass"
+   },
+   "physical": "Top-down view of a wired regeneration bed: chrome polished chromalloy frame, a pale sheet, a smoked smart glass monitor arm curving over the head at the top, cables trailing down one side.",
+   "reviewed": true
+  },
+  "hospital_bed.ward": {
+   "template": "Polycarbonate med bed [hospital_bed.ward]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "polycarbonate",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a wheeled med bed: grey titanium side rails, a clear polycarbonate sheet, the head section raised at the top, castors at the corners.",
+   "reviewed": true
+  },
+  "hydroponics.basin": {
+   "template": "Moulded polymer hydroponics basin [hydroponics.basin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "moulded polymer",
+    "plants": "grown bamboo"
+   },
+   "physical": "Top-down view of a hydroponics basin: a long shallow grey moulded polymer tank of pale blue fluid, rows of pale green grown bamboo growing through a perforated lid.",
+   "reviewed": true
+  },
+  "hydroponics.tray_rack": {
+   "template": "Titanium hydroponic rack [hydroponics.tray_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "trays": "moulded polymer"
+   },
+   "physical": "Top-down view of a hydroponic rack: a long titanium rack of white moulded polymer trays packed with bright green leafy plants, a strip of purple grow lights over them, pipes along the top edge.",
+   "reviewed": true
+  },
+  "instrument.drum_kit": {
+   "template": "Titanium percussion rig [instrument.drum_kit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hardware": "titanium",
+    "shells": "moulded polymer"
+   },
+   "physical": "Top-down view of the percussion rig: a large bass drum at the top, smaller white drums and grey titanium cymbals in an arc, a stool at the bottom.",
+   "reviewed": true
+  },
+  "instrument.piano_grand": {
+   "template": "Aerogel concert grand [instrument.piano_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "aerogel",
+    "lid": "smart glass"
+   },
+   "physical": "Top-down view of the concert grand: a curved wing-shaped pale blue aerogel body, lid raised, keyboard along the bottom edge with a padded bench.",
+   "reviewed": true
+  },
+  "instrument.synth": {
+   "template": "Moulded polymer synth array [instrument.synth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "moulded polymer",
+    "stand": "duralloy"
+   },
+   "physical": "Top-down view of the synth array: two white moulded polymer keyboards stacked on a duralloy stand, cables trailing to the top edge, a stool toward the bottom.",
+   "reviewed": true
+  },
+  "kiln.electric": {
+   "template": "Ceramic composite sinter kiln [kiln.electric]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "ceramic composite",
+    "shell": "moulded polymer"
+   },
+   "physical": "Top-down view of a sinter kiln: a round grey moulded polymer kiln with a hinged white ceramic composite lid, a control box and cable on one side.",
+   "reviewed": true
+  },
+  "lab.analyzer": {
+   "template": "Memory polymer analysis station [lab.analyzer]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "housing": "memory polymer",
+    "screen": "smart glass"
+   },
+   "physical": "Top-down view of an analysis station: a pearl memory polymer instrument housing with a sample tray at the bottom edge, a small smart glass display and cable bundles along the top edge.",
+   "reviewed": true
+  },
+  "lab.bench": {
+   "template": "Duralloy research bench [lab.bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "top": "plasteel"
+   },
+   "physical": "Top-down view of a research bench: a dark grey plasteel worktop on duralloy cabinets, a small sink at one end, racks of test tubes and glassware along the top edge.",
+   "reviewed": true
+  },
+  "lab.fume_hood": {
+   "template": "Ceramet alloy containment hood [lab.fume_hood]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "ceramet alloy",
+    "sash": "smart glass"
+   },
+   "physical": "Top-down view of a containment hood: a deep graphite ceramet alloy cabinet against the top edge with a smart glass sliding front at the bottom edge, flasks and a burner inside, a duct leaving through the top.",
+   "reviewed": true
+  },
+  "lathe.fabricator": {
+   "template": "Anodised alloy fabricator [lathe.fabricator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "housing": "plasteel"
+   },
+   "physical": "Top-down view of a fabricator: a square white plasteel cabinet on an anodised alloy frame, a clear window over a build plate with a small part on it, spools or feed lines along the top edge.",
+   "reviewed": true
+  },
+  "lectern.reading": {
+   "template": "Duralloy speaker's podium [lectern.reading]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "duralloy"
+   },
+   "physical": "Top-down view of the speaker's podium: a gunmetal duralloy column with a slanted reading top, the high edge at the top, the speaker's side toward the bottom.",
+   "reviewed": true
+  },
+  "light.lantern": {
+   "template": "Polycarbonate glow lantern [light.lantern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "polycarbonate",
+    "panel": "aluminium glass"
+   },
+   "physical": "Top-down view of a glow lantern: a square or round grey polycarbonate cap with a carrying handle, light spilling through clear aluminium glass sides onto the floor around it.",
+   "reviewed": true
+  },
+  "light.light_panel": {
+   "template": "Anodised alloy light panel [light.light_panel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "panel": "plasteel"
+   },
+   "physical": "Top-down view of a light panel: a thin blue-grey anodised alloy frame standing against the top wall holding a glowing grey plasteel sheet, a wash of cool white light on the floor in front.",
+   "reviewed": true
+  },
+  "light.light_pillar": {
+   "template": "Polished chromalloy light pillar [light.light_pillar]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "polished chromalloy",
+    "column": "smart glass"
+   },
+   "physical": "Top-down view of a round light pillar: a glowing clear smart glass column seen end-on inside a ring of silver polished chromalloy, soft coloured light spreading out across the floor.",
+   "reviewed": true
+  },
+  "locker.bank": {
+   "template": "Duralloy locker row [locker.bank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "duralloy"
+   },
+   "physical": "Top-down view of a locker row two cells wide: grey duralloy top divided into four narrow compartments, numbered doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "locker.footlocker": {
+   "template": "Polycarbonate bunk locker [locker.footlocker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "polycarbonate",
+    "strap": "plasteel"
+   },
+   "physical": "Top-down view of a low bunk locker: rectangular clear polycarbonate lid with a stencilled number, two grey straps across it, a handle at either end.",
+   "reviewed": true
+  },
+  "locker.standard": {
+   "template": "Duralloy crew locker [locker.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "duralloy"
+   },
+   "physical": "Top-down view of a single crew locker: plain grey duralloy top, the vented door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "loom.textile_printer": {
+   "template": "Polycarbonate textile printer [loom.textile_printer]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fabric": "polycarbonate",
+    "housing": "polycarbonate"
+   },
+   "physical": "Top-down view of a textile printer: a boxy grey polycarbonate unit with a slot at the bottom edge feeding out a sheet of grey polycarbonate, cartridges along the top edge.",
+   "reviewed": true
+  },
+  "medical.autoclave": {
+   "template": "Brushed titanium autoclave [medical.autoclave]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "brushed titanium",
+    "door": "brushed titanium"
+   },
+   "physical": "Top-down view of an autoclave: a boxy gunmetal brushed titanium unit with a round brushed titanium pressure door facing the bottom edge, a gauge and pipes along the top edge.",
+   "reviewed": true
+  },
+  "medical.autodoc": {
+   "template": "Polished chromalloy autodoc [medical.autodoc]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "arms": "polished chromalloy",
+    "shell": "aerogel"
+   },
+   "physical": "Top-down view of an autodoc: a sleek pale blue aerogel capsule-shaped bed with a padded hollow, a ring of folded polished chromalloy surgical arms around the head end at the top, a status light on the side.",
+   "reviewed": true
+  },
+  "medical.exam_table": {
+   "template": "Anodised alloy diagnostic couch [medical.exam_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "pad": "polycarbonate"
+   },
+   "physical": "Top-down view of a diagnostic couch: a narrow padded grey polycarbonate couch on an anodised alloy base, the raised head end at the top, a strip of paper covering it, a step at one side.",
+   "reviewed": true
+  },
+  "medical.iv_stand": {
+   "template": "Plasteel infusion pole [medical.iv_stand]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "plasteel",
+    "pole": "duralloy"
+   },
+   "physical": "Top-down view of an infusion pole: a small five-spoked wheeled base with a thin duralloy pole, a clear plasteel bag hanging from a hook at the top.",
+   "reviewed": true
+  },
+  "medical.operating_table": {
+   "template": "Duralloy surgical bed [medical.operating_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "duralloy",
+    "top": "titanium"
+   },
+   "physical": "Top-down view of a surgical bed: a narrow grey titanium table on a duralloy base, a head rest at the top, arm boards to each side, a tray of instruments beside it.",
+   "reviewed": true
+  },
+  "medical.privacy_curtain": {
+   "template": "Plasteel privacy screen [medical.privacy_curtain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "curtain": "plasteel",
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of a privacy screen: a long thin line of white plasteel folds on a duralloy rail, small wheeled feet at each end.",
+   "reviewed": true
+  },
+  "mill.grindstone": {
+   "template": "Duralloy abrasion wheel [mill.grindstone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "wheel": "plasteel"
+   },
+   "physical": "Top-down view of an abrasion wheel: a round white plasteel wheel seen edge-on as a thick bar, mounted in a duralloy frame with a crank or motor on one side, a water trough or tray below.",
+   "reviewed": true
+  },
+  "nightstand.crate": {
+   "template": "Recycled polymer supply case [nightstand.crate]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "recycled polymer"
+   },
+   "physical": "Top-down view of a small supply case: a square khaki recycled polymer box turned on end, a few small objects on its top.",
+   "reviewed": true
+  },
+  "nightstand.fine": {
+   "template": "Aerogel smart nightstand [nightstand.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "aerogel",
+    "top": "smart glass"
+   },
+   "physical": "Top-down view of a fine smart nightstand: a smoked smart glass top over a pale blue aerogel cabinet, a small keyhole on the bottom edge.",
+   "reviewed": true
+  },
+  "nightstand.plain": {
+   "template": "Polycarbonate bedside unit [nightstand.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "polycarbonate"
+   },
+   "physical": "Top-down view of a small bedside unit: a square grey polycarbonate top, a drawer pull showing on the bottom edge.",
+   "reviewed": true
+  },
+  "oven.wall_oven": {
+   "template": "Titanium bake cell [oven.wall_oven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "titanium",
+    "door": "aluminium glass"
+   },
+   "physical": "Top-down view of a tall bake cell unit: a grey titanium cabinet front, a dim warm glow through a clear aluminium glass window on the bottom edge, controls along the top.",
+   "reviewed": true
+  },
+  "pallet.bulk": {
+   "template": "Titanium cargo skid block [pallet.bulk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "titanium",
+    "wrap": "moulded polymer"
+   },
+   "physical": "Top-down view of a cargo skid block two by two cells: four square pallet loads under grey moulded polymer wrap with thin gaps between them, titanium slats showing at the outer edges.",
+   "reviewed": true
+  },
+  "pallet.goods": {
+   "template": "Duralloy cargo skid [pallet.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "duralloy",
+    "wrap": "polycarbonate"
+   },
+   "physical": "Top-down view of a square cargo skid: boxes stacked in a tight block under clear polycarbonate wrapping, the duralloy slats showing at the edges.",
+   "reviewed": true
+  },
+  "plant.herb_pot": {
+   "template": "Mycelium weave herb tub [plant.herb_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "mycelium weave",
+    "pot": "polycarbonate"
+   },
+   "physical": "Top-down view of a round grey polycarbonate herb tub seen from above: a tight clump of cream leaves filling the rim.",
+   "reviewed": true
+  },
+  "plant.potted": {
+   "template": "Grown bamboo potted plant [plant.potted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "grown bamboo",
+    "pot": "polycarbonate"
+   },
+   "physical": "Top-down view of the potted plant: a round clear polycarbonate pot almost hidden under a spray of pale green grown bamboo fronds.",
+   "reviewed": true
+  },
+  "plant.tree": {
+   "template": "Hydro-moss planter tree [plant.tree]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "foliage": "hydro-moss",
+    "planter": "polycarbonate"
+   },
+   "physical": "Top-down view of the planter tree: a square grey polycarbonate planter under a wide round crown of lime leaves that spills past its edges.",
+   "reviewed": true
+  },
+  "press.hydraulic": {
+   "template": "Duralloy forming press [press.hydraulic]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "ram": "titanium"
+   },
+   "physical": "Top-down view of a forming press: a tall gunmetal duralloy H-shaped frame seen from above, a round titanium ram in the middle, a pump and gauge at the top edge.",
+   "reviewed": true
+  },
+  "rack.clothing": {
+   "template": "Titanium garment rail [rack.clothing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium",
+    "garment": "spacer mesh"
+   },
+   "physical": "Top-down view of a garment rail two cells wide: a straight grey titanium bar across the middle with a crowded row of hanging navy clothes seen from above, feet at either end.",
+   "reviewed": true
+  },
+  "rack.coat": {
+   "template": "Anodised alloy coat stand [rack.coat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a coat stand: small round black anodised alloy base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "reviewed": true
+  },
+  "rack.tool": {
+   "template": "Moulded polymer tool wall [rack.tool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "moulded polymer",
+    "tool": "anodised alloy"
+   },
+   "physical": "Top-down view of a tool wall: grey moulded polymer board against the top edge with anodised alloy hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "reviewed": true
+  },
+  "rack.weapon": {
+   "template": "Polycarbonate weapon rack [rack.weapon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fitting": "polycarbonate",
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a weapon rack: grey titanium frame against the top edge with a row of notches, the tips of three long weapons leaning back into it, a polycarbonate bar locking them in place.",
+   "reviewed": true
+  },
+  "rack.wine": {
+   "template": "Transparisteel bottle rack [rack.wine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bottle": "transparisteel",
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a bottle rack: black anodised alloy lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows.",
+   "reviewed": true
+  },
+  "radio.set": {
+   "template": "Plasteel audio unit [radio.set]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "plasteel"
+   },
+   "physical": "Top-down view of the audio unit on a small table: a grey plasteel cabinet with its back along the top edge, a dial and speaker grille toward the bottom.",
+   "reviewed": true
+  },
+  "religious.candle_rack": {
+   "template": "Moulded polymer memorial light rack [religious.candle_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rack": "moulded polymer"
+   },
+   "physical": "Top-down view of the memorial light rack: a stepped orange moulded polymer tray filled with rows of small lit candles, a sand tray at the front toward the bottom.",
+   "reviewed": true
+  },
+  "religious.prayer_mat": {
+   "template": "Polycarbonate prayer mat [religious.prayer_mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "polycarbonate"
+   },
+   "physical": "Top-down view of the prayer mat: a small oblong of grey polycarbonate with a pointed arch motif at the top end and a fringe at the bottom.",
+   "reviewed": true
+  },
+  "rug.carpet": {
+   "template": "Memory polymer deck carpet [rug.carpet]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "border": "memory polymer",
+    "pile": "aerogel"
+   },
+   "physical": "Top-down view of a large oblong deck carpet: pale blue aerogel centre with a central medallion, a wide pearl border, fringe along the short sides.",
+   "reviewed": true
+  },
+  "rug.mat": {
+   "template": "Plasteel deck mat [rug.mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "plasteel"
+   },
+   "physical": "Top-down view of a small oblong deck mat: grey plasteel in rough bands, frayed ends at left and right.",
+   "reviewed": true
+  },
+  "rug.runner": {
+   "template": "Polycarbonate corridor runner [rug.runner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "polycarbonate"
+   },
+   "physical": "Top-down view of a long narrow corridor runner running from top to bottom: clear polycarbonate with a stripe down each long edge.",
+   "reviewed": true
+  },
+  "rug.woven": {
+   "template": "Plasteel floor mat [rug.woven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "plasteel"
+   },
+   "physical": "Top-down view of a square floor mat: grey plasteel field, a plain contrasting border, short fringe at the top and bottom edges.",
+   "reviewed": true
+  },
+  "sack.grain": {
+   "template": "Moulded polymer bulk bag [sack.grain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "sack": "moulded polymer"
+   },
+   "physical": "Top-down view of a slumped bulk bag: lumpy white moulded polymer bag with its tied neck flopped to one side, a little spilled grain beside it.",
+   "reviewed": true
+  },
+  "sack.kitbag": {
+   "template": "Polycarbonate gear bag [sack.kitbag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "polycarbonate",
+    "strap": "moulded polymer"
+   },
+   "physical": "Top-down view of a long gear bag: cylindrical grey polycarbonate bag lying on its side, a moulded polymer carry strap looped over the top.",
+   "reviewed": true
+  },
+  "screen.holo": {
+   "template": "Titanium holo-projector [screen.holo]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "titanium"
+   },
+   "physical": "Top-down view of the holo-projector: a round grey titanium emitter disc, a faint blue cone of light spreading from its centre.",
+   "reviewed": true
+  },
+  "screen.tv": {
+   "template": "Polycarbonate vid-screen [screen.tv]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "polycarbonate"
+   },
+   "physical": "Top-down view of the vid-screen on a low grey polycarbonate stand: a thin screen along the top edge facing the bottom, a remote beside it.",
+   "reviewed": true
+  },
+  "security.detector": {
+   "template": "Moulded polymer body scanner [security.detector]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "arch": "moulded polymer",
+    "trim": "anodised alloy"
+   },
+   "physical": "Top-down view of a body scanner: two parallel white moulded polymer side panels with anodised alloy trim and a gap between them running top to bottom, a small light on each panel.",
+   "reviewed": true
+  },
+  "security.gun_locker": {
+   "template": "Duralloy weapons locker [security.gun_locker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "duralloy",
+    "lock": "anodised alloy"
+   },
+   "physical": "Top-down view of a weapons locker: a deep gunmetal duralloy cabinet against the top edge, a locked door at the bottom edge with a handle and a keypad or padlock.",
+   "reviewed": true
+  },
+  "security.turnstile": {
+   "template": "Anodised alloy access gate [security.turnstile]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "arms": "anodised alloy",
+    "post": "polycarbonate"
+   },
+   "physical": "Top-down view of an access gate: a round grey polycarbonate post with a dark rim and a card reader on top, exactly three thick dark anodised alloy arms fanning out from it at even angles.",
+   "reviewed": true
+  },
+  "server.core": {
+   "template": "Electrochromic glass data core [server.core]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "core": "electrochromic glass",
+    "housing": "polished chromalloy"
+   },
+   "physical": "Top-down view of the data core: a round chrome polished chromalloy housing with cooling fins, a glowing blue-tinted electrochromic glass cylinder at its centre, cable trunks running to the edges.",
+   "reviewed": true
+  },
+  "server.rack": {
+   "template": "Duralloy server stack [server.rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of the server stack: a square grey duralloy cabinet with vents along the top edge, a mesh door with small lights toward the bottom, cables trailing to the side.",
+   "reviewed": true
+  },
+  "shelf.boutique": {
+   "template": "Brushed titanium lit display shelf [shelf.boutique]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "brushed titanium",
+    "shelf": "electrochromic glass"
+   },
+   "physical": "Top-down view of a lit display shelf two cells wide: slim gunmetal brushed titanium frame, an electrochromic glass shelf with a few widely spaced objects, decorative moulding along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.goods": {
+   "template": "Titanium stock shelving unit [shelf.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a shallow stock shelving unit two cells wide: grey titanium shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "reviewed": true
+  },
+  "shelf.pantry": {
+   "template": "Anodised alloy provisions rack [shelf.pantry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "anodised alloy",
+    "jar": "polycarbonate"
+   },
+   "physical": "Top-down view of a provisions rack two cells wide: orange anodised alloy shelf edge along the bottom, rows of grey polycarbonate jars and tied bundles, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.utility": {
+   "template": "Titanium equipment shelf [shelf.utility]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a small equipment shelf: grey titanium uprights at the four corners, a slatted top shelf with boxes and coiled cable, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.warehouse": {
+   "template": "Titanium cargo rack unit [shelf.warehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "titanium"
+   },
+   "physical": "Top-down view of a cargo rack unit two cells wide: heavy grey titanium uprights at each corner and the middle, the top deck covered with cartons, labels facing the bottom edge.",
+   "reviewed": true
+  },
+  "sink.bathroom": {
+   "template": "Plasteel wash basin [sink.bathroom]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "plasteel"
+   },
+   "physical": "Top-down view of a wash basin: a rounded white plasteel basin with a tap at the top edge, a soap dish and toothbrush cup on the rim.",
+   "reviewed": true
+  },
+  "sink.kitchen": {
+   "template": "Duralloy galley sink [sink.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "duralloy"
+   },
+   "physical": "Top-down view of a galley sink in a worktop: a square gunmetal duralloy bowl with a drain at its centre, a tap at the top edge, a draining rack to one side.",
+   "reviewed": true
+  },
+  "sink.vanity": {
+   "template": "Smart glass grooming station [sink.vanity]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "smart glass",
+    "top": "aerogel"
+   },
+   "physical": "Top-down view of a long grooming station against the top wall: a pale blue aerogel counter with two oval clear smart glass basins, taps at the back edge, folded towels and bottles between them.",
+   "reviewed": true
+  },
+  "sofa.booth": {
+   "template": "Duralloy mess booth [sofa.booth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "seat": "polycarbonate"
+   },
+   "physical": "Top-down view of a fixed mess booth: a long grey polycarbonate bench seat with a tall padded back along the top edge, grey duralloy end panels at left and right.",
+   "reviewed": true
+  },
+  "sofa.couch": {
+   "template": "Plasteel lounge couch [sofa.couch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "plasteel",
+    "frame": "anodised alloy"
+   },
+   "physical": "Top-down view of a two-seat lounge couch: white plasteel cushions, a padded back along the top edge, rolled blue-grey anodised alloy arms at left and right.",
+   "reviewed": true
+  },
+  "sofa.grand": {
+   "template": "Carbon-weave curved lounge [sofa.grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "carbon-weave",
+    "frame": "brushed titanium"
+   },
+   "physical": "Top-down view of a long three-seat curved lounge: charcoal carbon-weave cushions in a row, a deep back along the top edge, broad gunmetal brushed titanium arms at each end.",
+   "reviewed": true
+  },
+  "statue.abstract": {
+   "template": "Polished chromalloy abstract sculpture [statue.abstract]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "polished chromalloy",
+    "form": "electrochromic glass"
+   },
+   "physical": "Top-down view of the abstract sculpture: thick interlocking deep blue tinted electrochromic glass loops on a solid round dark gunmetal chromalloy base disc.",
+   "reviewed": true
+  },
+  "statue.carving": {
+   "template": "Titanium scrap sculpture [statue.carving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "titanium"
+   },
+   "physical": "Top-down view of a small grey titanium scrap sculpture on a squat base: a rough human shape, head at the top.",
+   "reviewed": true
+  },
+  "statue.figure": {
+   "template": "Ceramet alloy statue [statue.figure]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "ceramet alloy",
+    "plinth": "carbon-weave"
+   },
+   "physical": "Top-down view of the statue: a square black carbon-weave plinth with a bronze ceramet alloy standing figure, head and shoulders central, raised arm reaching to one side.",
+   "reviewed": true
+  },
+  "statue.holo": {
+   "template": "Carbon-weave holo-sculpture [statue.holo]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "carbon-weave",
+    "emitter": "ceramet alloy"
+   },
+   "physical": "Top-down view of the holo-sculpture: a round black carbon-weave plinth with a ceramet alloy emitter ring, a pale glowing shape hovering above its centre.",
+   "reviewed": true
+  },
+  "still.vat": {
+   "template": "Anodised alloy fermentation tank [still.vat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "anodised alloy",
+    "vat": "moulded polymer"
+   },
+   "physical": "Top-down view of a fermentation tank: a wide round blue-grey moulded polymer vat bound with dark anodised alloy hoops, a closed lid and a single paddle laid across the top.",
+   "reviewed": true
+  },
+  "stool.bar": {
+   "template": "Duralloy counter stool [stool.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "seat": "moulded polymer"
+   },
+   "physical": "Top-down view of a tall counter stool: a round orange moulded polymer seat over a grey duralloy footrest ring.",
+   "reviewed": true
+  },
+  "stool.ottoman": {
+   "template": "Aerogel gel pouf [stool.ottoman]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "aerogel",
+    "frame": "ceramet alloy"
+   },
+   "physical": "Top-down view of a padded gel pouf: a square pale blue aerogel top with buttoned tufts and short graphite ceramet alloy feet at the corners.",
+   "reviewed": true
+  },
+  "stool.plain": {
+   "template": "Titanium pedestal stool [stool.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "titanium"
+   },
+   "physical": "Top-down view of a small pedestal stool: a round grey titanium seat, the tips of its legs just showing.",
+   "reviewed": true
+  },
+  "stove.food_synth": {
+   "template": "Transparisteel food synthesiser [stove.food_synth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "transparisteel",
+    "shell": "plasteel"
+   },
+   "physical": "Top-down view of a food synthesiser: a squat white plasteel box against the top edge, a transparisteel hatch and glowing menu panel facing the bottom.",
+   "reviewed": true
+  },
+  "stove.galley": {
+   "template": "Duralloy galley unit [stove.galley]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "housing": "duralloy",
+    "panel": "plasteel"
+   },
+   "physical": "Top-down view of a wide galley unit against the top wall: a gunmetal duralloy counter with two flush induction pads, a recessed food slot, and a glowing grey plasteel control strip along the back edge.",
+   "reviewed": true
+  },
+  "table.coffee": {
+   "template": "Aluminium glass low table [table.coffee]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "aluminium glass"
+   },
+   "physical": "Top-down view of a low table: a long clear aluminium glass top with a lower shelf showing beneath.",
+   "reviewed": true
+  },
+  "table.dining": {
+   "template": "Polycarbonate dining table [table.dining]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a square dining table: a grey polycarbonate top with a runner down the middle, one leg at each corner.",
+   "reviewed": true
+  },
+  "table.long": {
+   "template": "Aerogel wardroom table [table.long]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "aerogel"
+   },
+   "physical": "Top-down view of a very long wardroom table: a pale blue aerogel top twice as long as it is wide, a line of serving dishes down the middle.",
+   "reviewed": true
+  },
+  "table.mess": {
+   "template": "Anodised alloy mess table [table.mess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "anodised alloy"
+   },
+   "physical": "Top-down view of a long mess table: an orange anodised alloy top with a raised rim, bolted feet showing at the corners.",
+   "reviewed": true
+  },
+  "table.plank": {
+   "template": "Titanium fold-down table [table.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "titanium"
+   },
+   "physical": "Top-down view of a plain fold-down table: a rectangular grey titanium top, twice as wide as it is deep, legs at the corners.",
+   "reviewed": true
+  },
+  "table.round_small": {
+   "template": "Polycarbonate pedestal table [table.round_small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a small pedestal table: a round grey polycarbonate top on a single central post.",
+   "reviewed": true
+  },
+  "table.side": {
+   "template": "Polished chromalloy accent table [table.side]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "polished chromalloy",
+    "top": "smart glass"
+   },
+   "physical": "Top-down view of a small square accent table: an opaque white smart glass top with a bevelled edge, slim chrome polished chromalloy legs at the corners.",
+   "reviewed": true
+  },
+  "throne.gilded": {
+   "template": "Graphene composite crystal throne [throne.gilded]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "cushion": "graphene composite",
+    "frame": "diamond glass"
+   },
+   "physical": "Top-down view of a richly ornate crystal throne: crystal-clear diamond glass frame with flared arms, a pearl graphene composite seat, a fan-shaped back along the top edge.",
+   "reviewed": true
+  },
+  "throne.state": {
+   "template": "Memory polymer command throne [throne.state]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cushion": "memory polymer",
+    "frame": "polished chromalloy"
+   },
+   "physical": "Top-down view of a grand command throne: a white memory polymer seat between heavy silver polished chromalloy arms, a tall crested back along the top edge.",
+   "reviewed": true
+  },
+  "toilet.sanitation": {
+   "template": "Nanocarbon sanitation unit [toilet.sanitation]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "bowl": "nanocarbon",
+    "panel": "diamond glass"
+   },
+   "physical": "Top-down view of a sleek sanitation unit: a smooth wall-hung black nanocarbon bowl with no visible cistern, a crystal-clear diamond glass control panel glowing softly on the top wall.",
+   "reviewed": true
+  },
+  "toilet.standard": {
+   "template": "Duralloy waste unit [toilet.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "duralloy"
+   },
+   "physical": "Top-down view of a waste unit: an oval dark grey duralloy toilet bowl with a dark rim, the seat raised against a rectangular cistern on the top wall, a blue-grey paper roll on the cistern.",
+   "reviewed": true
+  },
+  "utility.generator": {
+   "template": "Duralloy power node [utility.generator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "housing": "duralloy"
+   },
+   "physical": "Top-down view of a boxy power node: a grey duralloy casing with vents along the top, a fuel cap and pull handle on one side, cables snaking off the top edge.",
+   "reviewed": true
+  },
+  "utility.ladder": {
+   "template": "Duralloy access ladder [utility.ladder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy"
+   },
+   "physical": "Top-down view of a folded access ladder: two long grey duralloy rails with rungs between them, a paint-spattered top step.",
+   "reviewed": true
+  },
+  "utility.mop_bucket": {
+   "template": "Plasteel mop bucket [utility.mop_bucket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "plasteel",
+    "handle": "titanium"
+   },
+   "physical": "Top-down view of a mop bucket: a round dark grey plasteel bucket of murky water with a wringer at one side, a short dark grey titanium handle laid across the bucket, kept inside the square.",
+   "reviewed": true
+  },
+  "wardrobe.armoire": {
+   "template": "Carbon-weave dressing unit [wardrobe.armoire]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "carbon-weave",
+    "inlay": "smart glass"
+   },
+   "physical": "Top-down view of a massive dressing unit two cells wide: charcoal carbon-weave top edged with carved moulding and clear smart glass inlay, doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.narrow": {
+   "template": "Moulded polymer fold-out closet [wardrobe.narrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "moulded polymer"
+   },
+   "physical": "Top-down view of a slim fold-out closet: square orange moulded polymer top, a single door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.standard": {
+   "template": "Polycarbonate clothes closet [wardrobe.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "polycarbonate",
+    "handle": "duralloy"
+   },
+   "physical": "Top-down view of a clothes closet two cells wide: flat grey polycarbonate top with a hatbox at one end, double doors with duralloy handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.cutting_table": {
+   "template": "Polycarbonate pattern table [workbench.cutting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "polycarbonate",
+    "top": "polycarbonate"
+   },
+   "physical": "Top-down view of a pattern table: a smooth clear polycarbonate top with a length of grey polycarbonate spread across it, shears, chalk and pins, a rack of bolts along the top edge.",
+   "reviewed": true
+  },
+  "workbench.fabrication": {
+   "template": "Polished chromalloy fabrication bench [workbench.fabrication]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "rig": "polished chromalloy",
+    "top": "memory polymer"
+   },
+   "physical": "Top-down view of a fabrication bench: a pearl memory polymer work surface with a glowing grid, a folded polished chromalloy manipulator arm at the top-left, tool cradles and a small display along the top edge.",
+   "reviewed": true
+  },
+  "workbench.rough": {
+   "template": "Scrap alloy scrap-plate bench [workbench.rough]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "scrap alloy",
+    "top": "stamped duralloy"
+   },
+   "physical": "Top-down view of a scrap-plate bench: a long grey stamped duralloy plank top resting on two scrap alloy supports, a few loose tools and shavings on it, a strip of nails along the top edge.",
+   "reviewed": true
+  },
+  "workbench.steel": {
+   "template": "Duralloy utility bench [workbench.steel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "duralloy",
+    "top": "moulded polymer"
+   },
+   "physical": "Top-down view of an utility bench: a white moulded polymer work surface on a grey duralloy frame, a bench vise at one corner, a pegboard of tools along the top edge.",
+   "reviewed": true
+  },
+  "workbench.welding": {
+   "template": "Plasteel bonding bench [workbench.welding]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "screen": "plasteel",
+    "top": "titanium"
+   },
+   "physical": "Top-down view of a bonding bench: a thick grey titanium slab top with clamps and scorch marks, a gas bottle and coiled hose at the top-right corner, a white plasteel spark curtain along the top edge.",
+   "reviewed": true
+  }
+ }
+}

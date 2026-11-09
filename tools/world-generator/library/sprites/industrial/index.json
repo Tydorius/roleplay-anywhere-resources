@@ -1,0 +1,2540 @@
+{
+ "band": "industrial",
+ "objects": {
+  "alchemy.apothecary": {
+   "template": "Stoneware dispensing bench [alchemy.apothecary]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "jars": "stoneware",
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a dispensing bench: a chestnut stained beech counter with a mortar and pestle and a pair of scales, rows of small drawers and brown stoneware jars along the top edge.",
+   "reviewed": true
+  },
+  "altar.chapel_table": {
+   "template": "Wool serge communion table [altar.chapel_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "wool serge",
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of the communion table: a rectangular chestnut stained beech table with a black wool serge runner down its length, an open book at the centre and a brass cross at the top edge.",
+   "reviewed": true
+  },
+  "altar.church": {
+   "template": "Stained beech marble altar [altar.church]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "stained beech",
+    "top": "slate"
+   },
+   "physical": "Top-down view of a modern marble altar: a long blue-grey slate slab on a mid-brown stained beech base, a white cloth runner, two candles and a book, a cross at the top edge.",
+   "reviewed": true
+  },
+  "altar.offering": {
+   "template": "Ironstone household shrine [altar.offering]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dish": "ironstone",
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a small household shrine: a chestnut stained beech top with a tiny figure at the top edge, a white ironstone offering dish and a stub of candle in front.",
+   "reviewed": true
+  },
+  "anvil.block": {
+   "template": "Sheet steel anvil [anvil.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "anvil": "sheet steel",
+    "stand": "varnished pine"
+   },
+   "physical": "Top-down view of an anvil: a grey sheet steel anvil with its horn pointing left, set on a round amber varnished pine stand, a hammer resting beside it.",
+   "reviewed": true
+  },
+  "anvil.quench_trough": {
+   "template": "Enamelled iron quench trough [anvil.quench_trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "enamelled iron",
+    "tub": "stained beech"
+   },
+   "physical": "Top-down view of a quench trough: a squat chestnut stained beech tub bound with cream enamelled iron hoops, filled with dark water with a rainbow sheen.",
+   "reviewed": true
+  },
+  "appliance.mangle": {
+   "template": "Enamelled iron mangle [appliance.mangle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "rollers": "stained beech"
+   },
+   "physical": "Top-down view of a mangle: a dark green enamelled iron frame holding two long chestnut stained beech rollers side by side, a large wheel crank at one side, a tub for catching water at the bottom edge.",
+   "reviewed": true
+  },
+  "appliance.radiator": {
+   "template": "Sheet steel radiator [appliance.radiator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "sheet steel"
+   },
+   "physical": "Top-down view of a radiator against the top wall: a narrow grey sheet steel block of ribbed fins, a valve knob at one end, pipes vanishing into the floor.",
+   "reviewed": true
+  },
+  "barrel.cask_rack": {
+   "template": "Stained beech cask stillage [barrel.cask_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cradle": "stained beech",
+    "stave": "varnished pine"
+   },
+   "physical": "Top-down view of a cask stillage two cells wide: two amber varnished pine casks lying side by side on a stained beech cradle, their round ends with taps facing the bottom edge.",
+   "reviewed": true
+  },
+  "barrel.drum": {
+   "template": "Enamelled iron steel drum [barrel.drum]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "enamelled iron"
+   },
+   "physical": "Top-down view of a round steel drum: flat cream enamelled iron lid with a rolled rim and two small screw caps, one near the edge.",
+   "reviewed": true
+  },
+  "barrel.keg": {
+   "template": "Sheet steel keg [barrel.keg]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "sheet steel"
+   },
+   "physical": "Top-down view of a round keg: domed grey sheet steel top inside a ring of hand-holes, a coupler at the centre trailing a short hose.",
+   "reviewed": true
+  },
+  "barrel.wooden": {
+   "template": "Sheet steel barrel [barrel.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoop": "sheet steel",
+    "stave": "stained beech"
+   },
+   "physical": "Top-down view of a round barrel: circular chestnut stained beech lid made of planks, two grey hoops visible at the rim, a bung near the edge.",
+   "reviewed": true
+  },
+  "basket.hamper": {
+   "template": "Flannel hamper [basket.hamper]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "flannel",
+    "weave": "wicker"
+   },
+   "physical": "Top-down view of a rectangular hamper: closed honey wicker lid with a fastening loop at the front and a handle at each short end.",
+   "reviewed": true
+  },
+  "basket.wicker": {
+   "template": "Cane basket [basket.wicker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "cane"
+   },
+   "physical": "Top-down view of a round basket: tightly woven honey cane rim, the open top heaped with produce, a bent handle arching across.",
+   "reviewed": true
+  },
+  "bath.clawfoot": {
+   "template": "Polished copper clawfoot bath [bath.clawfoot]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "feet": "polished copper",
+    "tub": "delftware"
+   },
+   "physical": "Top-down view of a free-standing clawfoot bath: a long rounded blue delftware tub with a rolled rim, taps at the end nearest the top edge, four small polished copper claw feet peeking out at the corners.",
+   "reviewed": true
+  },
+  "bath.wash_tub": {
+   "template": "Sheet steel tin bath [bath.wash_tub]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "sheet steel"
+   },
+   "physical": "Top-down view of a round tin bath: a grey sheet steel tub with grey soapy water, a scrubbing board leaning in it, wet splashes on the floor around.",
+   "reviewed": true
+  },
+  "bed.bunk": {
+   "template": "Calico iron bunk [bed.bunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "calico",
+    "frame": "enamelled iron"
+   },
+   "physical": "Top-down view of a two-tier iron bunk: the upper faded blue calico mattress fills the cream enamelled iron frame, a ladder on one long side, pillow at the top.",
+   "reviewed": true
+  },
+  "bed.cot": {
+   "template": "Calico camp cot [bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "calico",
+    "frame": "cast iron"
+   },
+   "physical": "Top-down view of a narrow camp cot: black cast iron side rails, a stretched cream calico bed, a flat pillow at the top.",
+   "reviewed": true
+  },
+  "bed.double": {
+   "template": "Calico double bedstead [bed.double]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "calico",
+    "frame": "sheet steel"
+   },
+   "physical": "Top-down view of a double bedstead: grey sheet steel frame, a cream calico quilt, two pillows side by side against the headboard at the top.",
+   "reviewed": true
+  },
+  "bed.double_pallet": {
+   "template": "Cornhusk double mattress [bed.double_pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "cornhusk",
+    "cover": "burlap"
+   },
+   "physical": "Top-down view of a broad double mattress lying flat on the floor: a dun burlap cover with two dents side by side, two flat pillows at the top.",
+   "reviewed": true
+  },
+  "bed.fine_single": {
+   "template": "Chintz brass bedstead [bed.fine_single]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "chintz",
+    "frame": "polished copper"
+   },
+   "physical": "Top-down view of a narrow brass bedstead: a polished copper frame with a tall headboard at the top, a green chintz coverlet, three stacked pillows.",
+   "reviewed": true
+  },
+  "bed.fourposter": {
+   "template": "Burr elm four-poster bed [bed.fourposter]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "burr elm",
+    "hangings": "chintz"
+   },
+   "physical": "Top-down view of a canopied four-poster bed: four tawny burr elm posts at the corners joined by a canopy rail, rose chintz drapes tied back, bolster and pillows at the top.",
+   "reviewed": true
+  },
+  "bed.hammock": {
+   "template": "Wool serge hammock [bed.hammock]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "net": "wool serge"
+   },
+   "physical": "Top-down view of a slung hammock: a long navy wool serge sling pinched at both ends, ropes running to hooks at the top and bottom.",
+   "reviewed": true
+  },
+  "bed.pallet": {
+   "template": "Coir straw pallet [bed.pallet]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bedding": "coir",
+    "cover": "shoddy wool"
+   },
+   "physical": "Top-down view of a flat straw pallet on the floor: a lumpy grey shoddy wool tick with brown coir poking from the seams, a rolled bundle for a pillow at the top.",
+   "reviewed": true
+  },
+  "bed.roll": {
+   "template": "Striped ticking bedroll [bed.roll]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "striped ticking"
+   },
+   "physical": "Top-down view of a grey-striped ticking bedroll laid flat on the floor, the top corner turned back like a blanket.",
+   "reviewed": true
+  },
+  "bed.single": {
+   "template": "Flannel iron bedstead [bed.single]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "flannel",
+    "frame": "sheet steel"
+   },
+   "physical": "Top-down view of a single iron bedstead: grey sheet steel frame, red flannel blanket folded back, a pale pillow against the headboard at the top.",
+   "reviewed": true
+  },
+  "bench.long": {
+   "template": "Stained beech refectory bench [bench.long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "stained beech"
+   },
+   "physical": "Top-down view of a long backless refectory bench: a mid-brown stained beech plank three times as long as it is wide, on sturdy legs.",
+   "reviewed": true
+  },
+  "bench.pew": {
+   "template": "Bentwood pew [bench.pew]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "bentwood"
+   },
+   "physical": "Top-down view of a long pew: a honey bentwood seat with its tall back along the top edge, a narrow ledge behind it, shaped ends at left and right.",
+   "reviewed": true
+  },
+  "bench.plank": {
+   "template": "Stained beech wooden bench [bench.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "stained beech"
+   },
+   "physical": "Top-down view of a backless wooden bench: one long mid-brown stained beech board, the leg ends showing at each short edge.",
+   "reviewed": true
+  },
+  "bench.settle": {
+   "template": "Varnished pine hall settle [bench.settle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a boxy hall settle: a honey varnished pine seat with a tall solid back along the top edge and high arms at each end.",
+   "reviewed": true
+  },
+  "bench.stone": {
+   "template": "Terrazzo marble bench [bench.stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "seat": "terrazzo"
+   },
+   "physical": "Top-down view of a solid marble bench: a smooth speckled terrazzo slab with scrolled ends at left and right.",
+   "reviewed": true
+  },
+  "bin.dumpster": {
+   "template": "Tin sheet refuse skip [bin.dumpster]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "tin sheet",
+    "lid": "scrap iron"
+   },
+   "physical": "Top-down view of a refuse skip two cells wide: heavy grey tin sheet box, a hinged rust-brown scrap iron lid along the top edge propped half open, bags poking out.",
+   "reviewed": true
+  },
+  "bin.scrap": {
+   "template": "Sheet steel scrap bin [bin.scrap]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "sheet steel"
+   },
+   "physical": "Top-down view of a square scrap bin: thick grey sheet steel walls around a jumble of metal offcuts and wire.",
+   "reviewed": true
+  },
+  "bin.waste": {
+   "template": "Sheet steel ash bin [bin.waste]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "vessel": "sheet steel"
+   },
+   "physical": "Top-down view of a round ash bin: grey sheet steel rim with scraps and crumpled rubbish inside, a lid lying askew.",
+   "reviewed": true
+  },
+  "board.black": {
+   "template": "Bentwood blackboard [board.black]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "panel": "york stone"
+   },
+   "physical": "Top-down view of the blackboard: a long honey bentwood stand along the top edge, the dark york stone surface facing the bottom, a chalk ledge below it.",
+   "reviewed": true
+  },
+  "board.map": {
+   "template": "Striped ticking map board [board.map]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "map": "striped ticking",
+    "panel": "varnished pine"
+   },
+   "physical": "Top-down view of the map board: a wide honey varnished pine rail along the top edge, joined below it by a thick dark pine frame holding a brown-striped ticking map inked with black routes, filling the bottom half.",
+   "reviewed": true
+  },
+  "board.notice": {
+   "template": "Stained beech notice board [board.notice]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "board": "stained beech",
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of the notice board: a mid-brown stained beech stand along the top edge, the board face toward the bottom with paper scraps poking past its edge.",
+   "reviewed": true
+  },
+  "bookcase.library": {
+   "template": "Patent leather glazed bookcase [bookcase.library]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "binding": "patent leather",
+    "frame": "varnished mahogany"
+   },
+   "physical": "Top-down view of a tall glazed bookcase two cells wide: heavy deep red varnished mahogany cornice, a ladder rail along the bottom edge with a ladder hooked at one end, rows of black spines.",
+   "reviewed": true
+  },
+  "bookcase.small": {
+   "template": "Varnished pine small bookshelf [bookcase.small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a narrow small bookshelf: honey varnished pine top, a short row of book spines along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "bookcase.standard": {
+   "template": "Harness leather bookcase [bookcase.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "binding": "harness leather",
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a bookcase two cells wide: honey varnished pine top, the spines of black books visible along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "butcher.block": {
+   "template": "Bentwood butcher's block [butcher.block]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "block": "bentwood",
+    "cleaver": "enamelled iron"
+   },
+   "physical": "Top-down view of a butcher's block: a thick square brown bentwood end-grain block with a dark stained hollow in the middle, an enamelled iron cleaver stuck in one corner.",
+   "reviewed": true
+  },
+  "butcher.hook_rail": {
+   "template": "Bentwood meat hook rail [butcher.hook_rail]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "posts": "bentwood",
+    "rail": "cast iron"
+   },
+   "physical": "Top-down view of a meat hook rail: a long dark grey cast iron bar along the top edge on two bentwood posts, hanging carcasses shown as pale shapes below it, a drip tray underneath.",
+   "reviewed": true
+  },
+  "cabinet.cupboard": {
+   "template": "Varnished pine cupboard [cabinet.cupboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "handle": "sheet steel"
+   },
+   "physical": "Top-down view of a cupboard: square amber varnished pine top, a pair of doors along the bottom edge with small sheet steel handles, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.dresser": {
+   "template": "Varnished pine dresser [cabinet.dresser]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "knob": "enamelled iron"
+   },
+   "physical": "Top-down view of a dresser two cells wide: amber varnished pine top with a small mirror stand and a dish, drawer fronts with enamelled iron knobs along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.filing": {
+   "template": "Bentwood filing cabinet [cabinet.filing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a filing cabinet: plain brown bentwood top with a wire tray of papers, drawer handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.medicine": {
+   "template": "Sheet steel medicine cabinet [cabinet.medicine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel",
+    "pane": "pressed glass"
+   },
+   "physical": "Top-down view of a narrow medicine cabinet: grey sheet steel top, a pressed glass door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.safe": {
+   "template": "Polished copper iron safe [cabinet.safe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "polished copper"
+   },
+   "physical": "Top-down view of a squat iron safe: heavy polished copper box with rounded corners, the door and lock along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cabinet.sideboard": {
+   "template": "Burr elm sideboard [cabinet.sideboard]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "burr elm",
+    "plate": "polished copper"
+   },
+   "physical": "Top-down view of a long sideboard two cells wide: tawny burr elm top with a row of dishes and a tall jug, cupboard doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "cell_bed.bolted": {
+   "template": "Sheet steel iron cell cot [cell_bed.bolted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel",
+    "mattress": "striped ticking"
+   },
+   "physical": "Top-down view of a bare iron cell cot: a grey sheet steel tray with bolt heads along its edges, a thin grey-striped ticking pad, no pillow, head end at the top.",
+   "reviewed": true
+  },
+  "cell_bed.plank": {
+   "template": "Aspidistra plank cot [cell_bed.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "aspidistra",
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a bare plank cot: solid honey bentwood boards laid edge to edge with no gaps and a darker rim, a thin flat dark green wool pad on them, a short thick chain at each top corner, head end at the top.",
+   "reviewed": true
+  },
+  "cell_bed.privileged": {
+   "template": "Plush velvet officer's cell bed [cell_bed.privileged]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "plush velvet",
+    "frame": "burr elm"
+   },
+   "physical": "Top-down view of a narrow officer's cell bed: a honey burr elm frame fixed to the floor, a maroon plush velvet blanket, a real pillow at the top.",
+   "reviewed": true
+  },
+  "cell_bed.slab": {
+   "template": "Grey slate stone ledge [cell_bed.slab]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "base": "grey slate"
+   },
+   "physical": "Top-down view of a solid stone ledge: one charcoal grey slate block running from the wall at the top, smooth along its length.",
+   "reviewed": true
+  },
+  "chair.armchair": {
+   "template": "Flannel wingback armchair [chair.armchair]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "flannel",
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of a roomy wingback armchair: wide chestnut stained beech arms either side, a red flannel seat cushion, a padded back along the top edge.",
+   "reviewed": true
+  },
+  "chair.high_back": {
+   "template": "Burr elm carved dining chair [chair.high_back]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "burr elm",
+    "seat": "buttoned leather"
+   },
+   "physical": "Top-down view of a tall carved dining chair: a bottle-green buttoned leather seat in a tawny burr elm frame, a shaped backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.plain": {
+   "template": "Bentwood kitchen chair [chair.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "bentwood"
+   },
+   "physical": "Top-down view of a simple kitchen chair: a square brown bentwood seat with the backrest along the top edge.",
+   "reviewed": true
+  },
+  "chair.rocking": {
+   "template": "Calico rocking chair [chair.rocking]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "calico",
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of a slatted rocking chair: mid-brown stained beech seat and back at the top, curved runners showing past the top and bottom edges, a cream cushion on the seat.",
+   "reviewed": true
+  },
+  "chest.ironbound": {
+   "template": "Sheet steel banded chest [chest.ironbound]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "band": "sheet steel",
+    "case": "bentwood"
+   },
+   "physical": "Top-down view of a heavy banded chest: domed honey bentwood lid crossed by three grey sheet steel bands, a large lock plate on one long edge, studded corners.",
+   "reviewed": true
+  },
+  "chest.strongbox": {
+   "template": "Nickel-plated steel strongbox [chest.strongbox]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "nickel-plated steel"
+   },
+   "physical": "Top-down view of a compact strongbox: silver nickel-plated steel lid with riveted edges, a keyhole plate on one long side, a bolt head at each corner fixing it down.",
+   "reviewed": true
+  },
+  "chest.trunk": {
+   "template": "Cowhide steamer trunk [chest.trunk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "cowhide",
+    "trim": "sheet steel"
+   },
+   "physical": "Top-down view of a steamer trunk: brown cowhide lid with sheet steel corners and two slats running across, a carrying handle at each short end.",
+   "reviewed": true
+  },
+  "chest.wooden": {
+   "template": "Enamelled iron chest [chest.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "band": "enamelled iron",
+    "case": "bentwood"
+   },
+   "physical": "Top-down view of a chest: plank honey bentwood lid with two enamelled iron straps across it, a simple hasp on one long edge.",
+   "reviewed": true
+  },
+  "coffin.bier": {
+   "template": "Stained beech bier [coffin.bier]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech",
+    "pall": "striped ticking"
+   },
+   "physical": "Top-down view of a bier: a long mid-brown stained beech stand with carrying poles at each end, draped with a grey-striped ticking cloth over a long shape, head at the top.",
+   "reviewed": true
+  },
+  "coffin.casket": {
+   "template": "Varnished mahogany casket [coffin.casket]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "box": "varnished mahogany",
+    "lining": "chintz"
+   },
+   "physical": "Top-down view of a casket: a long rounded deep red varnished mahogany casket with brass rails, the upper half of the lid open showing green chintz lining and a pillow at the top.",
+   "reviewed": true
+  },
+  "coffin.plain": {
+   "template": "Bentwood coffin [coffin.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "bentwood",
+    "handles": "cast iron"
+   },
+   "physical": "Top-down view of a coffin: a six-sided brown bentwood box wider at the shoulders near the top, cast iron handles along the sides, a lid with a simple plate.",
+   "reviewed": true
+  },
+  "computer.typewriter": {
+   "template": "Enamelled iron typewriter stand [computer.typewriter]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "machine": "enamelled iron",
+    "stand": "varnished pine"
+   },
+   "physical": "Top-down view of the typewriter stand: a small honey varnished pine table with a cream enamelled iron typewriter, paper roll at the top, keys toward the bottom.",
+   "reviewed": true
+  },
+  "console.instruments": {
+   "template": "Varnished pine chart table [console.instruments]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "table": "varnished pine",
+    "tools": "brass"
+   },
+   "physical": "Top-down view of the chart table: an amber varnished pine table with a spread sea chart, a round brass compass, a round barometer dial and a sextant laid on it, back along the top edge.",
+   "reviewed": true
+  },
+  "console.levers": {
+   "template": "Cast iron control panel [console.levers]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "cast iron",
+    "trim": "varnished pine"
+   },
+   "physical": "Top-down view of the control panel: a long black cast iron desk with round gauges along the top edge and a row of levers toward the bottom.",
+   "reviewed": true
+  },
+  "console.wheel": {
+   "template": "Cast iron ship's wheel [console.wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "wheel": "varnished pine",
+    "stand": "cast iron"
+   },
+   "physical": "Top-down view of the ship's wheel: a squat black cast iron helm stand with its back along the top edge, a large round spoked honey varnished pine wheel mounted on it and tilted back so its face and every spoke show, no compass.",
+   "reviewed": true
+  },
+  "counter.bar": {
+   "template": "Cast iron saloon bar [counter.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "cast iron",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a saloon bar three cells wide: long brown bentwood top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge.",
+   "reviewed": true
+  },
+  "counter.bar_grand": {
+   "template": "Burr elm grand bar [counter.bar_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "front": "burr elm",
+    "top": "polished granite"
+   },
+   "physical": "Top-down view of a grand bar three cells wide: glossy grey polished granite top, a thin foot rail along the bottom edge, ranks of bottles and glasses on a back shelf along the top edge.",
+   "reviewed": true
+  },
+  "counter.kitchen": {
+   "template": "Stained beech kitchen counter [counter.kitchen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "stained beech",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a kitchen counter two cells wide: brown bentwood work surface, a chopping board and a crock of utensils near the top edge against the wall.",
+   "reviewed": true
+  },
+  "counter.kitchen_stone": {
+   "template": "Polished walnut stone worktop [counter.kitchen_stone]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "polished walnut",
+    "top": "terrazzo"
+   },
+   "physical": "Top-down view of a stone worktop two cells wide: a single smooth cream terrazzo slab with a faint vein pattern, a row of jars along the top edge, a folded cloth at one end.",
+   "reviewed": true
+  },
+  "counter.plank": {
+   "template": "Crate pine plank counter [counter.plank]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "crate pine",
+    "top": "rough deal"
+   },
+   "physical": "Top-down view of a plank counter two cells wide: two or three pale rough deal boards side by side with uneven ends, trestle legs showing at either end.",
+   "reviewed": true
+  },
+  "counter.reception": {
+   "template": "Varnished pine front desk [counter.reception]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "varnished pine",
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a front desk three cells wide: a raised mid-brown stained beech ledge along the bottom edge, a lower desk surface behind it toward the top with a bell, a ledger and a lamp.",
+   "reviewed": true
+  },
+  "counter.serving": {
+   "template": "Sheet steel serving counter [counter.serving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "sheet steel"
+   },
+   "physical": "Top-down view of a serving counter three cells wide: grey sheet steel surface with a row of four sunken food trays, a stack of plates at the left end, a tray slide along the bottom edge.",
+   "reviewed": true
+  },
+  "counter.shop": {
+   "template": "Varnished pine shop counter [counter.shop]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "front": "varnished pine",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a shop counter two cells wide: honey bentwood top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there.",
+   "reviewed": true
+  },
+  "counter.shop_long": {
+   "template": "Plate glass long counter [counter.shop_long]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "plate glass",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a long counter three cells wide: one unbroken honey bentwood top, a hinged flap at the right end, scales and a ledger along the top edge on the keeper's side.",
+   "reviewed": true
+  },
+  "crate.stack": {
+   "template": "Stained beech crate stack [crate.stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "stained beech",
+    "strap": "striped ticking"
+   },
+   "physical": "Top-down view of a crate stack two by two cells: four mid-brown stained beech crate lids in a square, the top layer slightly offset, grey-striped straps crossing them.",
+   "reviewed": true
+  },
+  "crate.wooden": {
+   "template": "Stained beech crate [crate.wooden]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "stained beech"
+   },
+   "physical": "Top-down view of a square crate: mid-brown stained beech lid with reinforced edges and a stencilled mark in one corner.",
+   "reviewed": true
+  },
+  "crib.cot": {
+   "template": "Wool serge barred cot [crib.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "wool serge",
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a small barred cot: a honey varnished pine rectangle of bars around a black wool serge mattress, a tiny pillow at the top.",
+   "reviewed": true
+  },
+  "crib.cradle": {
+   "template": "Wool serge cradle [crib.cradle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "wool serge",
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a small cradle: honey bentwood sides around a navy wool serge blanket, the head end hooded at the top, rocker tips showing at the corners.",
+   "reviewed": true
+  },
+  "crib.fine": {
+   "template": "Damask lace bassinet [crib.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "drape": "damask",
+    "frame": "burr elm"
+   },
+   "physical": "Top-down view of a small lace bassinet: a tawny burr elm basket with a cream damask canopy drawn over the top end, a tiny pillow beneath it.",
+   "reviewed": true
+  },
+  "decor.aquarium": {
+   "template": "Varnished mahogany glass fish tank [decor.aquarium]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "varnished mahogany",
+    "tank": "cut glass"
+   },
+   "physical": "Top-down view of an oblong glass fish tank: a deep red varnished mahogany rim around clear water, green weed and small bright fish, filter box at the top edge.",
+   "reviewed": true
+  },
+  "decor.armour": {
+   "template": "Brass suit of armour [decor.armour]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "plate": "brass",
+    "stand": "burr elm"
+   },
+   "physical": "Top-down view of the suit of armour: broad brass shoulders and helm seen from above, on a small honey burr elm base, front toward the bottom.",
+   "reviewed": true
+  },
+  "decor.banner": {
+   "template": "Striped ticking banner stand [decor.banner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "striped ticking",
+    "pole": "bentwood"
+   },
+   "physical": "Top-down view of the banner stand: a weighted round brown bentwood foot with a pole, a grey-striped ticking banner hanging in folds along the top edge.",
+   "reviewed": true
+  },
+  "decor.clock": {
+   "template": "Bentwood longcase clock [decor.clock]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "bentwood",
+    "face": "sheet steel"
+   },
+   "physical": "Seen from above at a steep three-quarter angle: a tall narrow honey bentwood longcase clock standing on its own, a carved crest on top, a round pale steel clock face with bold black numerals and hands near the top of the case, a solid dark wooden door below.",
+   "reviewed": true
+  },
+  "decor.fountain": {
+   "template": "Terrazzo fountain [decor.fountain]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "terrazzo",
+    "spout": "nickel-plated steel"
+   },
+   "physical": "Top-down view of a round fountain: a speckled terrazzo rim around rippled water, a silver nickel-plated steel spout at the centre.",
+   "reviewed": true
+  },
+  "decor.globe": {
+   "template": "Varnished mahogany floor globe [decor.globe]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "sphere": "varnished mahogany",
+    "stand": "burr elm"
+   },
+   "physical": "Top-down view of the floor globe: a large red-brown varnished mahogany sphere in a ring mount, centred on a round honey burr elm stand.",
+   "reviewed": true
+  },
+  "decor.mirror": {
+   "template": "Varnished pine cheval glass [decor.mirror]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "glass": "plate glass"
+   },
+   "physical": "Top-down view of the cheval glass: a thick honey varnished pine frame tilted back between two splayed feet along the top edge, its glass a dark smoky blue-grey reflective plate toward the bottom.",
+   "reviewed": true
+  },
+  "decor.painting": {
+   "template": "Chintz painting on an easel [decor.painting]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "canvas": "chintz",
+    "easel": "varnished mahogany"
+   },
+   "physical": "Top-down view of the painting on an easel: a three-legged deep red varnished mahogany easel, the framed chintz canvas a thin line along the top, its face toward the bottom.",
+   "reviewed": true
+  },
+  "decor.screen": {
+   "template": "Wool serge folding screen [decor.screen]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "wool serge",
+    "panel": "varnished pine"
+   },
+   "physical": "Seen from above at a steep three-quarter angle: a free-standing folding screen of three tall panels standing in a zigzag, each a thick honey varnished pine frame filled with black wool serge, brass hinges between them, the zigzag of the panel tops clearly visible.",
+   "reviewed": true
+  },
+  "desk.plain": {
+   "template": "Stained beech clerk's desk [desk.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a plain clerk's desk: a chestnut stained beech top with a few papers and a pen, the back edge at the top.",
+   "reviewed": true
+  },
+  "desk.school": {
+   "template": "Enamelled iron school desk [desk.school]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "top": "varnished pine"
+   },
+   "physical": "Top-down view of a small school desk: a honey varnished pine top sloping toward the bottom edge, a pencil groove along the top, dark green enamelled iron legs.",
+   "reviewed": true
+  },
+  "desk.writing": {
+   "template": "Patent leather pedestal desk [desk.writing]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "inlay": "patent leather",
+    "top": "burr elm"
+   },
+   "physical": "Top-down view of a broad pedestal desk: a tawny burr elm top with an inset black patent leather panel, an inkwell and quill, a row of pigeonholes along the top edge.",
+   "reviewed": true
+  },
+  "display.case": {
+   "template": "Bentwood display case [display.case]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "pane": "pressed glass"
+   },
+   "physical": "Top-down view of a display case two cells wide: thin honey bentwood border around a clear pressed glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.mannequin": {
+   "template": "Calico dress form [display.mannequin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "calico",
+    "stand": "stained beech"
+   },
+   "physical": "Top-down view of a dress form: the head and shoulders of a cream calico figure in a draped garment, on a round mid-brown stained beech base, the figure facing the bottom edge.",
+   "reviewed": true
+  },
+  "display.pedestal": {
+   "template": "Marble display plinth [display.pedestal]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "base": "marble",
+    "cushion": "damask"
+   },
+   "physical": "Top-down view of a square display plinth: white marble top with a narrow moulded rim, a cream cushion in the centre holding a single small object.",
+   "reviewed": true
+  },
+  "display.table": {
+   "template": "Flannel display table [display.table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "flannel",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a display table two cells wide: red flannel cloth over the bentwood top, small goods arranged in rows, a price slate at the top edge.",
+   "reviewed": true
+  },
+  "display.vitrine": {
+   "template": "Varnished mahogany vitrine [display.vitrine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished mahogany",
+    "pane": "frosted glass"
+   },
+   "physical": "Top-down view of a tall vitrine: square red-brown varnished mahogany top with a carved cornice, the glazed door along the bottom edge, its back flat against the top edge.",
+   "reviewed": true
+  },
+  "feed.hay_bale": {
+   "template": "Aspidistra hay bale [feed.hay_bale]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hay": "aspidistra",
+    "twine": "cane"
+   },
+   "physical": "Top-down view of a hay bale: a rectangular block of dark green aspidistra with two twine bands across it, loose stalks around the edges.",
+   "reviewed": true
+  },
+  "feed.stall": {
+   "template": "Cane stall [feed.stall]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bedding": "cane",
+    "walls": "stained beech"
+   },
+   "physical": "Top-down view of a stall: three mid-brown stained beech partition walls open at the bottom edge, a manger at the top, pale cane covering the floor.",
+   "reviewed": true
+  },
+  "feed.trough": {
+   "template": "Aspidistra trough [feed.trough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "feed": "aspidistra",
+    "trough": "bentwood"
+   },
+   "physical": "Top-down view of a trough: a long narrow honey bentwood trough running from left to right, filled with murky dark green water.",
+   "reviewed": true
+  },
+  "firewood.coal_scuttle": {
+   "template": "Sheet steel coal scuttle [firewood.coal_scuttle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "sheet steel"
+   },
+   "physical": "Top-down view of a coal scuttle: a tilted grey sheet steel bucket with a wide lip, black lumps of coal inside, a short shovel handle across it.",
+   "reviewed": true
+  },
+  "firewood.kindling_basket": {
+   "template": "Wicker kindling basket [firewood.kindling_basket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basket": "wicker",
+    "sticks": "bentwood"
+   },
+   "physical": "Top-down view of a round kindling basket: a woven white wicker rim, a jumble of thin honey bentwood sticks and split logs inside.",
+   "reviewed": true
+  },
+  "firewood.log_stack": {
+   "template": "Bentwood log stack [firewood.log_stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "logs": "bentwood"
+   },
+   "physical": "Top-down view of a log stack against the top wall: rows of round brown bentwood log ends stacked neatly, bark curls and wood chips scattered at the bottom edge.",
+   "reviewed": true
+  },
+  "forge.hearth": {
+   "template": "Slate coal forge [forge.hearth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hearth": "slate",
+    "hood": "sheet steel"
+   },
+   "physical": "Top-down view of a coal forge: a raised charcoal slate hearth with a bright orange firepot in the middle, a grey sheet steel hood over the top edge, a bellows or blower at one end and tongs hung on the side.",
+   "reviewed": true
+  },
+  "forge.pit": {
+   "template": "Rubble stone field forge [forge.pit]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "bed": "rubble stone",
+    "bellows": "rough hide"
+   },
+   "physical": "Top-down view of a field forge: a low ring of sooty rubble stone around glowing orange coals, a small brown rough hide bellows pointing in from one side.",
+   "reviewed": true
+  },
+  "forge.smelter": {
+   "template": "Stoneware cupola furnace [forge.smelter]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lining": "stoneware",
+    "shell": "enamelled iron"
+   },
+   "physical": "Top-down view of a cupola furnace: a round dark green enamelled iron furnace body with a glowing crucible mouth, a pouring spout toward the bottom, controls and feed pipes along the top edge.",
+   "reviewed": true
+  },
+  "fridge.icebox": {
+   "template": "Stained beech icebox [fridge.icebox]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "stained beech",
+    "lining": "sheet steel"
+   },
+   "physical": "Top-down view of a square icebox: a chestnut stained beech top with brass hinges along the back edge, a hinged lid showing a grey sheet steel-lined ice compartment, a drip tray peeking out at the bottom.",
+   "reviewed": true
+  },
+  "game.billiards": {
+   "template": "Flannel billiard table [game.billiards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "flannel",
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of an oblong billiard table: grey flannel playing bed, amber varnished pine rails, a pocket at each corner and both long sides, balls racked in a triangle.",
+   "reviewed": true
+  },
+  "game.cards": {
+   "template": "Bentwood card table [game.cards]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "top": "striped ticking"
+   },
+   "physical": "Top-down view of a square card table: a grey-striped ticking playing surface edged in brown bentwood, a scatter of cards and coins at the centre.",
+   "reviewed": true
+  },
+  "game.chess": {
+   "template": "Stained beech chess table [game.chess]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a small square chess table: an inlaid checkered mid-brown stained beech board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "gym.dummy": {
+   "template": "Varnished pine training dummy [gym.dummy]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "varnished pine",
+    "pad": "cowhide"
+   },
+   "physical": "Top-down view of a training dummy: a round honey varnished pine trunk on a stand with short arms sticking out, cowhide padding on the front facing the bottom edge.",
+   "reviewed": true
+  },
+  "gym.punch_bag": {
+   "template": "Harness leather heavy bag [gym.punch_bag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "harness leather",
+    "chain": "cast iron"
+   },
+   "physical": "Top-down view of a heavy bag: the round flat top of a dark brown harness leather bag with a stitched rim, a thick cast iron ring and short chain at its centre.",
+   "reviewed": true
+  },
+  "gym.weight_bench": {
+   "template": "Enamelled iron strongman's bench [gym.weight_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "pad": "cowhide"
+   },
+   "physical": "Top-down view of a strongman's bench: a narrow brown cowhide padded bench, an enamelled iron rack at the top with a barbell laid across it, weight plates at both ends of the bar.",
+   "reviewed": true
+  },
+  "hearth.brazier": {
+   "template": "Cast iron brazier [hearth.brazier]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "cast iron"
+   },
+   "physical": "Top-down view of a round brazier: a dark grey cast iron bowl heaped with red-hot coals, three short legs just visible at the rim, a faint ring of ash on the floor around it.",
+   "reviewed": true
+  },
+  "hearth.fireplace": {
+   "template": "Sheet steel fireplace [hearth.fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "grate": "sheet steel",
+    "surround": "slate"
+   },
+   "physical": "Top-down view of a wall fireplace: a blue-grey slate hearth slab jutting from the top edge, a dark firebox against the back wall with a grey sheet steel grate of burning logs, a raised hearthstone along the bottom.",
+   "reviewed": true
+  },
+  "hearth.great_fireplace": {
+   "template": "Varnished mahogany marble fireplace [hearth.great_fireplace]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "mantel": "varnished mahogany",
+    "surround": "polished granite"
+   },
+   "physical": "Top-down view of a wide marble fireplace against the top wall: a long pink polished granite surround, a deep firebox roaring with flame, a red-brown varnished mahogany mantel shelf along the back edge, a broad hearthstone in front.",
+   "reviewed": true
+  },
+  "hearth.woodstove": {
+   "template": "Sheet steel pot-belly stove [hearth.woodstove]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "sheet steel"
+   },
+   "physical": "Top-down view of a squat pot-belly stove: a round grey sheet steel top with a kettle ring, a flue pipe rising from the back near the top edge, a small glowing door on the bottom side.",
+   "reviewed": true
+  },
+  "hospital_bed.cot": {
+   "template": "Striped ticking ward cot [hospital_bed.cot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "striped ticking",
+    "frame": "cast iron"
+   },
+   "physical": "Top-down view of a plain ward cot: dark grey cast iron frame, a blue-striped ticking sheet pulled straight, a small pillow at the top.",
+   "reviewed": true
+  },
+  "hospital_bed.curtained": {
+   "template": "Chintz private sickbed [hospital_bed.curtained]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "curtain": "chintz",
+    "frame": "varnished mahogany"
+   },
+   "physical": "Top-down view of a screened private sickbed: deep red varnished mahogany frame and bolster at the top, rose chintz curtains drawn round three sides on a rail.",
+   "reviewed": true
+  },
+  "hospital_bed.ward": {
+   "template": "Flannel iron ward bed [hospital_bed.ward]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cover": "flannel",
+    "frame": "cast iron"
+   },
+   "physical": "Top-down view of a wheeled iron ward bed: black cast iron side rails, a red flannel sheet, the head section raised at the top, castors at the corners.",
+   "reviewed": true
+  },
+  "hydroponics.potting_table": {
+   "template": "Glazed fireclay potting bench [hydroponics.potting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pots": "glazed fireclay",
+    "top": "varnished pine"
+   },
+   "physical": "Top-down view of a potting bench: a honey varnished pine table with heaps of dark soil, small white glazed fireclay pots of green seedlings, a trowel and watering can, stacked pots along the top edge.",
+   "reviewed": true
+  },
+  "instrument.great_drum": {
+   "template": "Cowhide bass drum on a stand [instrument.great_drum]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "head": "cowhide",
+    "shell": "stained beech"
+   },
+   "physical": "Top-down view of the bass drum on a stand: a round brown cowhide drumhead laced to a chestnut stained beech shell, a padded beater resting across it.",
+   "reviewed": true
+  },
+  "instrument.harp": {
+   "template": "Bentwood harp [instrument.harp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "strings": "enamelled iron"
+   },
+   "physical": "Top-down view of the harp: a curved honey bentwood neck and sound box forming a narrow triangle, a fan of dark green strings between them.",
+   "reviewed": true
+  },
+  "instrument.organ": {
+   "template": "Varnished mahogany pipe organ [instrument.organ]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "varnished mahogany",
+    "pipes": "polished copper"
+   },
+   "physical": "Top-down view of the pipe organ: a row of polished copper pipe tops along the top edge, a red-brown varnished mahogany console with stepped keyboards and a bench toward the bottom.",
+   "reviewed": true
+  },
+  "instrument.piano_grand": {
+   "template": "Polished walnut grand piano [instrument.piano_grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "polished walnut",
+    "lid": "varnished mahogany"
+   },
+   "physical": "Top-down view of the grand piano: a curved wing-shaped dark brown polished walnut body, lid raised, keyboard along the bottom edge with a padded bench.",
+   "reviewed": true
+  },
+  "instrument.piano_upright": {
+   "template": "Bentwood upright piano [instrument.piano_upright]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "bentwood",
+    "keys": "glazed fireclay"
+   },
+   "physical": "Top-down view of the upright piano: a brown bentwood cabinet with its back along the top edge, a strip of keys toward the bottom and a bench in front.",
+   "reviewed": true
+  },
+  "kiln.brick": {
+   "template": "Sheet steel firing kiln [kiln.brick]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "sheet steel",
+    "walls": "scrubbed sandstone"
+   },
+   "physical": "Top-down view of a firing kiln: a thick-walled square of buff scrubbed sandstone with a chimney at the top edge, an arched sheet steel door at the bottom edge and fire ports on both sides.",
+   "reviewed": true
+  },
+  "lab.bench": {
+   "template": "Varnished pine chemist's bench [lab.bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "top": "york stone"
+   },
+   "physical": "Top-down view of a chemist's bench: a dark buff york stone worktop on varnished pine cabinets, a small sink at one end, racks of test tubes and glassware along the top edge.",
+   "reviewed": true
+  },
+  "lab.fume_hood": {
+   "template": "Nickel-plated steel fume cupboard [lab.fume_hood]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "nickel-plated steel",
+    "sash": "frosted glass"
+   },
+   "physical": "Top-down view of a fume cupboard: a deep silver nickel-plated steel cabinet against the top edge with a frosted glass sliding front at the bottom edge, flasks and a burner inside, a duct leaving through the top.",
+   "reviewed": true
+  },
+  "lathe.drill_press": {
+   "template": "Cast iron pillar drill [lathe.drill_press]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "column": "cast iron",
+    "table": "sheet steel"
+   },
+   "physical": "Top-down view of a pillar drill: a round grey sheet steel table under a drill head, a motor housing and column at the top edge, a feed handle sticking out to the right.",
+   "reviewed": true
+  },
+  "lathe.metal": {
+   "template": "Enamelled iron belt-driven lathe [lathe.metal]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bed": "enamelled iron",
+    "guard": "cast iron"
+   },
+   "physical": "Top-down view of a belt-driven lathe: a long white enamelled iron bed with a chuck at the left end and a tailstock at the right, a tool carriage in the middle, a cast iron motor guard or drive belt along the top edge.",
+   "reviewed": true
+  },
+  "lathe.potters_wheel": {
+   "template": "Varnished pine potter's wheel [lathe.potters_wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "wheel": "york stone"
+   },
+   "physical": "Top-down view of a potter's wheel: a round buff york stone wheel head with a wet clay pot in the middle, a varnished pine seat at the bottom edge, a water bowl beside it.",
+   "reviewed": true
+  },
+  "lathe.saw_bench": {
+   "template": "Enamelled iron saw bench [lathe.saw_bench]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "blade": "enamelled iron",
+    "table": "stained beech"
+   },
+   "physical": "Top-down view of a saw bench: a rectangular mid-brown stained beech table with an enamelled iron blade slot along the middle, a fence along one side, a small heap of orange-brown sawdust on the table top at one end.",
+   "reviewed": true
+  },
+  "lectern.pulpit": {
+   "template": "Varnished mahogany pulpit [lectern.pulpit]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "varnished mahogany",
+    "cloth": "plush velvet"
+   },
+   "physical": "Top-down view of the pulpit: a six-sided deep red varnished mahogany box on a raised base, a short stair at one side, a bottle-green plush velvet cloth draped over the front edge toward the bottom.",
+   "reviewed": true
+  },
+  "lectern.reading": {
+   "template": "Bentwood lectern [lectern.reading]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "bentwood"
+   },
+   "physical": "Top-down view of the lectern: a honey bentwood column with a slanted reading top, the high edge at the top, the speaker's side toward the bottom.",
+   "reviewed": true
+  },
+  "light.candelabrum": {
+   "template": "Brass candelabrum [light.candelabrum]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "stand": "brass"
+   },
+   "physical": "Top-down view of a standing candelabrum: five or seven lit candles arranged in a ring and centre on brass arms, a warm bright glow, a heavy round foot under it.",
+   "reviewed": true
+  },
+  "light.candle": {
+   "template": "Enamelled iron candlestick stand [light.candle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stand": "enamelled iron"
+   },
+   "physical": "Top-down view of a candlestick stand: a small round cream enamelled iron drip pan with a single lit candle in the middle, a soft yellow halo around it.",
+   "reviewed": true
+  },
+  "light.gas_lamp": {
+   "template": "Plate glass gas lamp [light.gas_lamp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "globe": "plate glass",
+    "post": "cast iron"
+   },
+   "physical": "Top-down view of a standing gas lamp: a round clear plate glass globe glowing white-gold, a black cast iron post and base beneath, a thin gas pipe running to the wall.",
+   "reviewed": true
+  },
+  "light.lantern": {
+   "template": "Enamelled iron storm lantern [light.lantern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "enamelled iron",
+    "panel": "plate glass"
+   },
+   "physical": "Top-down view of a storm lantern: a round dark green enamelled iron cap with a carrying handle, glowing warm amber glass showing all round its rim, set in a dark iron frame.",
+   "reviewed": true
+  },
+  "light.oil_lamp": {
+   "template": "Pressed glass paraffin lamp [light.oil_lamp]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lamp": "pressed glass",
+    "stand": "bentwood"
+   },
+   "physical": "Top-down view of a small honey bentwood stand with a paraffin lamp: an amber pressed glass lamp seen from above, a single flame at its spout and a ring of warm light.",
+   "reviewed": true
+  },
+  "locker.bank": {
+   "template": "Enamelled iron locker bank [locker.bank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "enamelled iron"
+   },
+   "physical": "Top-down view of a locker bank two cells wide: white enamelled iron top divided into four narrow compartments, numbered doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "locker.footlocker": {
+   "template": "Cast iron footlocker [locker.footlocker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "cast iron",
+    "strap": "cowhide"
+   },
+   "physical": "Top-down view of a low footlocker: rectangular black cast iron lid with a stencilled number, two brown straps across it, a handle at either end.",
+   "reviewed": true
+  },
+  "locker.standard": {
+   "template": "Cast iron steel locker [locker.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "door": "cast iron"
+   },
+   "physical": "Top-down view of a single steel locker: plain black cast iron top, the vented door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "loom.floor": {
+   "template": "Varnished pine hand loom [loom.floor]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine",
+    "warp": "calico"
+   },
+   "physical": "Top-down view of a hand loom: a square amber varnished pine frame with cream warp threads running from top to bottom, treadles and a weaver's bench at the bottom edge, woven cloth rolled at the bottom.",
+   "reviewed": true
+  },
+  "loom.sewing_machine": {
+   "template": "Enamelled iron treadle sewing machine [loom.sewing_machine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "machine": "enamelled iron",
+    "table": "bentwood"
+   },
+   "physical": "Top-down view of a treadle sewing machine: a white enamelled iron sewing head on a small honey bentwood table, a spool on top, fabric under the needle toward the bottom.",
+   "reviewed": true
+  },
+  "loom.spinning_wheel": {
+   "template": "Wool serge spinning wheel [loom.spinning_wheel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fibre": "wool serge",
+    "wheel": "varnished pine"
+   },
+   "physical": "Top-down view of a spinning wheel: a large amber varnished pine wheel seen edge-on as a thin oval, a spindle with a black bobbin, a small stool beside it.",
+   "reviewed": true
+  },
+  "medical.autoclave": {
+   "template": "Nickel-plated steel steam steriliser [medical.autoclave]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "nickel-plated steel",
+    "door": "nickel-plated steel"
+   },
+   "physical": "Top-down view of a steam steriliser: a boxy silver nickel-plated steel unit with a round nickel-plated steel pressure door facing the bottom edge, a gauge and pipes along the top edge.",
+   "reviewed": true
+  },
+  "medical.exam_table": {
+   "template": "Enamelled iron examination table [medical.exam_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "pad": "waxed leather"
+   },
+   "physical": "Top-down view of an examination table: a narrow padded tan waxed leather couch on an enamelled iron base, the raised head end at the top, a strip of paper covering it, a step at one side.",
+   "reviewed": true
+  },
+  "medical.iv_stand": {
+   "template": "Pressed glass drip stand [medical.iv_stand]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "pressed glass",
+    "pole": "enamelled iron"
+   },
+   "physical": "Top-down view of a drip stand: a small five-spoked wheeled base with a thin enamelled iron pole, a clear pressed glass bag hanging from a hook at the top.",
+   "reviewed": true
+  },
+  "medical.operating_table": {
+   "template": "Sheet steel operating table [medical.operating_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "sheet steel",
+    "top": "sheet steel"
+   },
+   "physical": "Top-down view of an operating table: a narrow grey sheet steel table on a sheet steel base, a head rest at the top, arm boards to each side, a tray of instruments beside it.",
+   "reviewed": true
+  },
+  "medical.privacy_curtain": {
+   "template": "Flannel ward screen [medical.privacy_curtain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "curtain": "flannel",
+    "frame": "sheet steel"
+   },
+   "physical": "Top-down view of a ward screen: a long thin line of grey flannel folds on a sheet steel rail, small wheeled feet at each end.",
+   "reviewed": true
+  },
+  "mill.grindstone": {
+   "template": "Bentwood grindstone [mill.grindstone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "wheel": "slate"
+   },
+   "physical": "Top-down view of a grindstone: a round charcoal slate wheel seen edge-on as a thick bar, mounted in a bentwood frame with a crank or motor on one side, a water trough or tray below.",
+   "reviewed": true
+  },
+  "mill.millstones": {
+   "template": "Polished walnut grinding mill [mill.millstones]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "case": "polished walnut",
+    "stones": "marble"
+   },
+   "physical": "Top-down view of a grinding mill: a large round dark brown polished walnut casing around a broad grey-veined marble millstone, a grain hopper over the centre, a flour chute at the bottom edge.",
+   "reviewed": true
+  },
+  "nightstand.crate": {
+   "template": "Crate pine packing crate [nightstand.crate]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "body": "crate pine"
+   },
+   "physical": "Top-down view of a small packing crate: a square grey crate pine box turned on end, a few small objects on its top.",
+   "reviewed": true
+  },
+  "nightstand.fine": {
+   "template": "Burr elm marble-topped commode [nightstand.fine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "burr elm",
+    "top": "polished granite"
+   },
+   "physical": "Top-down view of a fine marble-topped commode: a grey polished granite top over a honey burr elm cabinet, a small keyhole on the bottom edge.",
+   "reviewed": true
+  },
+  "nightstand.plain": {
+   "template": "Bentwood night table [nightstand.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "bentwood"
+   },
+   "physical": "Top-down view of a small night table: a square brown bentwood top, a drawer pull showing on the bottom edge.",
+   "reviewed": true
+  },
+  "oven.bakehouse": {
+   "template": "Slate baker's oven [oven.bakehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "chamber": "slate",
+    "door": "cast iron"
+   },
+   "physical": "Top-down view of a large baker's oven: a broad charcoal slate block against the top wall with a vaulted roof, a wide black cast iron oven mouth on the bottom edge, a stone apron and a long peel in front.",
+   "reviewed": true
+  },
+  "oven.bread_oven": {
+   "template": "Stoneware brick oven [oven.bread_oven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dome": "stoneware",
+    "door": "sheet steel"
+   },
+   "physical": "Top-down view of a brick oven: a rounded cream stoneware dome filling the square, a flat front lip at the bottom with a small grey sheet steel door and a wooden peel leaning beside it.",
+   "reviewed": true
+  },
+  "pallet.bulk": {
+   "template": "Stained beech pallet block [pallet.bulk]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "stained beech",
+    "wrap": "wool serge"
+   },
+   "physical": "Top-down view of a pallet block two by two cells: four square pallet loads under black wool serge wrap with thin gaps between them, stained beech slats showing at the outer edges.",
+   "reviewed": true
+  },
+  "pallet.goods": {
+   "template": "Stained beech loaded pallet [pallet.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "stained beech",
+    "wrap": "wool serge"
+   },
+   "physical": "Top-down view of a square loaded pallet: boxes stacked in a tight block under black wool serge wrapping, the stained beech slats showing at the edges.",
+   "reviewed": true
+  },
+  "plant.herb_pot": {
+   "template": "Cane pot of herbs [plant.herb_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "cane",
+    "pot": "stoneware"
+   },
+   "physical": "Top-down view of a round cream stoneware pot of herbs seen from above: a tight clump of pale leaves filling the rim.",
+   "reviewed": true
+  },
+  "plant.potted": {
+   "template": "Wicker potted fern [plant.potted]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "leaves": "wicker",
+    "pot": "stoneware"
+   },
+   "physical": "Top-down view of the potted fern: a round cream stoneware pot almost hidden under a spray of white wicker fronds.",
+   "reviewed": true
+  },
+  "plant.tree": {
+   "template": "Wicker potted palm [plant.tree]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "foliage": "wicker",
+    "planter": "bentwood"
+   },
+   "physical": "Top-down view of the potted palm: a square honey bentwood planter under a wide round crown of honey leaves that spills past its edges.",
+   "reviewed": true
+  },
+  "press.fruit": {
+   "template": "Enamelled iron fruit press [press.fruit]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "screw": "enamelled iron",
+    "tub": "bentwood"
+   },
+   "physical": "Top-down view of a fruit press: a round slatted brown bentwood basket with a pressing plate and enamelled iron screw on top, a spout and bucket at the bottom edge.",
+   "reviewed": true
+  },
+  "press.printing": {
+   "template": "Sheet steel platen press [press.printing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel",
+    "platen": "sheet steel"
+   },
+   "physical": "Top-down view of a platen press: a grey sheet steel frame with a flat sheet steel bed sliding out toward the bottom, a long lever arm to one side, stacked paper and an ink slab along the top edge.",
+   "reviewed": true
+  },
+  "rack.clothing": {
+   "template": "Enamelled iron clothes rail [rack.clothing]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "garment": "calico"
+   },
+   "physical": "Top-down view of a clothes rail two cells wide: a straight dark green enamelled iron bar across the middle with a crowded row of hanging faded blue clothes seen from above, feet at either end.",
+   "reviewed": true
+  },
+  "rack.coat": {
+   "template": "Stained beech hatstand [rack.coat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of a hatstand: small round chestnut stained beech base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "reviewed": true
+  },
+  "rack.drying": {
+   "template": "Striped ticking clothes horse [rack.drying]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "striped ticking",
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a folding clothes horse: parallel honey varnished pine rails with blue-striped sheets and shirts draped over them.",
+   "reviewed": true
+  },
+  "rack.tool": {
+   "template": "Bentwood tool rack [rack.tool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "tool": "sheet steel"
+   },
+   "physical": "Top-down view of a tool rack: brown bentwood board against the top edge with sheet steel hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "reviewed": true
+  },
+  "rack.weapon": {
+   "template": "Cast iron rifle rack [rack.weapon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fitting": "cast iron",
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a rifle rack: a thick honey bentwood rack lying along the top edge with a row of notches, three dark rifles lying in it side by side with barrels toward the top edge and stocks toward the bottom, a cast iron bar across them.",
+   "reviewed": true
+  },
+  "rack.wine": {
+   "template": "Pressed glass wine rack [rack.wine]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bottle": "pressed glass",
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a wine rack: honey bentwood lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows.",
+   "reviewed": true
+  },
+  "radio.gramophone": {
+   "template": "Varnished pine gramophone [radio.gramophone]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "varnished pine",
+    "horn": "sheet steel"
+   },
+   "physical": "Top-down view of the gramophone: a square amber varnished pine cabinet with a turntable and record, a large grey sheet steel horn flaring toward the bottom.",
+   "reviewed": true
+  },
+  "radio.jukebox": {
+   "template": "Sheet steel jukebox [radio.jukebox]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "sheet steel",
+    "panel": "plate glass"
+   },
+   "physical": "Top-down view of the jukebox: a rounded grey sheet steel cabinet, back along the top edge, a curved plate glass dome and glowing trim toward the bottom.",
+   "reviewed": true
+  },
+  "radio.set": {
+   "template": "Bentwood valve radio [radio.set]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "case": "bentwood"
+   },
+   "physical": "Top-down view of the valve radio on a small table: a honey bentwood cabinet with its back along the top edge, a dial and speaker grille toward the bottom.",
+   "reviewed": true
+  },
+  "religious.candle_rack": {
+   "template": "Sheet steel votive candle stand [religious.candle_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rack": "sheet steel"
+   },
+   "physical": "Top-down view of the votive candle stand: a stepped grey sheet steel tray filled with rows of small lit candles, a sand tray at the front toward the bottom.",
+   "reviewed": true
+  },
+  "religious.font": {
+   "template": "York stone font [religious.font]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "york stone",
+    "cover": "stained beech"
+   },
+   "physical": "Top-down view of the font: a round buff york stone basin on an eight-sided base, a chestnut stained beech lid with a knob at its centre.",
+   "reviewed": true
+  },
+  "religious.prayer_mat": {
+   "template": "Calico prayer mat [religious.prayer_mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "calico"
+   },
+   "physical": "Top-down view of the prayer mat: a small oblong of deep madder-red calico with a dark gold pointed arch motif at the top end and a fringe at the bottom.",
+   "reviewed": true
+  },
+  "rug.carpet": {
+   "template": "Plush velvet patterned carpet [rug.carpet]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "border": "plush velvet",
+    "pile": "damask"
+   },
+   "physical": "Top-down view of a large oblong patterned carpet: cream damask centre with a central medallion, a wide maroon border, fringe along the short sides.",
+   "reviewed": true
+  },
+  "rug.hide": {
+   "template": "Cowhide bearskin rug [rug.hide]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hide": "cowhide"
+   },
+   "physical": "Top-down view of the bearskin rug: a brown animal pelt spread flat, four legs splayed to the corners, head at the top.",
+   "reviewed": true
+  },
+  "rug.mat": {
+   "template": "Wool serge rag rug [rug.mat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "weave": "wool serge"
+   },
+   "physical": "Top-down view of a small oblong rag rug: black wool serge in rough bands, frayed ends at left and right.",
+   "reviewed": true
+  },
+  "rug.runner": {
+   "template": "Wool serge runner [rug.runner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "wool serge"
+   },
+   "physical": "Top-down view of a long narrow runner running from top to bottom: navy wool serge with a stripe down each long edge.",
+   "reviewed": true
+  },
+  "rug.woven": {
+   "template": "Striped ticking rug [rug.woven]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pile": "striped ticking"
+   },
+   "physical": "Top-down view of a square rug: blue-striped ticking field, a plain contrasting border, short fringe at the top and bottom edges.",
+   "reviewed": true
+  },
+  "sack.grain": {
+   "template": "Wool serge grain sack [sack.grain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "sack": "wool serge"
+   },
+   "physical": "Top-down view of a slumped grain sack: lumpy black wool serge bag with its tied neck flopped to one side, a little spilled grain beside it.",
+   "reviewed": true
+  },
+  "sack.kitbag": {
+   "template": "Striped ticking kitbag [sack.kitbag]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bag": "striped ticking",
+    "strap": "waxed leather"
+   },
+   "physical": "Top-down view of a long kitbag: cylindrical blue-striped ticking bag lying on its side, a waxed leather carry strap looped over the top.",
+   "reviewed": true
+  },
+  "screen.projector": {
+   "template": "Enamelled iron cine projector [screen.projector]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "enamelled iron"
+   },
+   "physical": "Top-down view of the cine projector on a three-legged stand: a boxy cream enamelled iron body with a lens pointing to the bottom.",
+   "reviewed": true
+  },
+  "security.gun_locker": {
+   "template": "Bentwood rifle cabinet [security.gun_locker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "bentwood",
+    "lock": "enamelled iron"
+   },
+   "physical": "Top-down view of a rifle cabinet: the flat square top of a deep honey bentwood cabinet filling the square with a moulded rim, its back against the top edge, a heavy iron padlock and hasp showing along the bottom edge.",
+   "reviewed": true
+  },
+  "security.turnstile": {
+   "template": "Sheet steel turnstile [security.turnstile]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "arms": "sheet steel",
+    "post": "sheet steel"
+   },
+   "physical": "Top-down view of a turnstile: a round grey sheet steel post at one side with three sheet steel arms fanning out across a narrow lane, a card reader on top.",
+   "reviewed": true
+  },
+  "server.switchboard": {
+   "template": "Varnished pine telephone switchboard [server.switchboard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cabinet": "varnished pine",
+    "jacks": "sheet steel"
+   },
+   "physical": "Top-down view of the telephone switchboard: a tall honey varnished pine cabinet along the top edge, a shelf of plugs and cords toward the bottom, an operator's stool in front.",
+   "reviewed": true
+  },
+  "shelf.boutique": {
+   "template": "Burr elm mirrored shop shelf [shelf.boutique]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "burr elm",
+    "shelf": "cut glass"
+   },
+   "physical": "Top-down view of a mirrored shop shelf two cells wide: slim honey burr elm frame, a cut glass shelf with a few widely spaced objects, decorative moulding along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.goods": {
+   "template": "Varnished pine goods shelf [shelf.goods]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a shallow goods shelf two cells wide: amber varnished pine shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "reviewed": true
+  },
+  "shelf.pantry": {
+   "template": "Stained beech pantry shelf [shelf.pantry]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech",
+    "jar": "glazed fireclay"
+   },
+   "physical": "Top-down view of a pantry shelf two cells wide: chestnut stained beech shelf edge along the bottom, rows of white glazed fireclay jars and tied bundles, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.utility": {
+   "template": "Sheet steel iron shelf [shelf.utility]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel"
+   },
+   "physical": "Top-down view of a small iron shelf: grey sheet steel uprights at the four corners, a slatted top shelf with boxes and coiled cable, back against the top edge.",
+   "reviewed": true
+  },
+  "shelf.warehouse": {
+   "template": "Sheet steel heavy shelving unit [shelf.warehouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel"
+   },
+   "physical": "Top-down view of a heavy shelving unit two cells wide: heavy grey sheet steel uprights at each corner and the middle, the top deck covered with cartons, labels facing the bottom edge.",
+   "reviewed": true
+  },
+  "sink.scullery": {
+   "template": "Ironstone scullery sink [sink.scullery]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "basin": "ironstone"
+   },
+   "physical": "Top-down view of a long scullery sink against the top wall: a shallow rectangular white ironstone trough with a drain hole at one end, a bucket and scrubbing brush on the rim.",
+   "reviewed": true
+  },
+  "sink.wash_basin": {
+   "template": "Sheet steel wash basin [sink.wash_basin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bowl": "sheet steel",
+    "stool": "stained beech"
+   },
+   "physical": "Top-down view of a wash basin: a round grey sheet steel bowl of water on a square chestnut stained beech stool, a folded rag and a jug beside it.",
+   "reviewed": true
+  },
+  "sink.washstand": {
+   "template": "Delftware washstand [sink.washstand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "basin": "delftware",
+    "stand": "varnished mahogany",
+    "top": "polished granite"
+   },
+   "physical": "Top-down view of a washstand: a grey polished granite top with a round white delftware basin sunk in the middle, a tall ewer at the back edge, a folded towel hanging from the side rail.",
+   "reviewed": true
+  },
+  "sofa.booth": {
+   "template": "Bentwood tavern booth [sofa.booth]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "seat": "cowhide"
+   },
+   "physical": "Top-down view of a fixed tavern booth: a long brown cowhide bench seat with a tall padded back along the top edge, honey bentwood end panels at left and right.",
+   "reviewed": true
+  },
+  "sofa.couch": {
+   "template": "Striped ticking settee [sofa.couch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cushion": "striped ticking",
+    "frame": "bentwood"
+   },
+   "physical": "Top-down view of a two-seat settee: blue-striped ticking cushions, a padded back along the top edge, rolled honey bentwood arms at left and right.",
+   "reviewed": true
+  },
+  "sofa.daybed": {
+   "template": "Chintz chaise longue [sofa.daybed]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "chintz",
+    "frame": "polished walnut"
+   },
+   "physical": "Top-down view of a long chaise longue: a rose chintz seat with a curved raised end at the left, a short back rail along the top edge, dark brown polished walnut feet.",
+   "reviewed": true
+  },
+  "sofa.grand": {
+   "template": "Patent leather chesterfield [sofa.grand]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "patent leather",
+    "frame": "burr elm"
+   },
+   "physical": "Top-down view of a long three-seat chesterfield: black patent leather cushions in a row, a deep back along the top edge, broad tawny burr elm arms at each end.",
+   "reviewed": true
+  },
+  "statue.bust": {
+   "template": "York stone bust on a pedestal [statue.bust]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bust": "york stone",
+    "pedestal": "bentwood"
+   },
+   "physical": "Top-down view of the bust on a pedestal: a square brown bentwood pedestal topped by a buff york stone head and shoulders, face toward the bottom.",
+   "reviewed": true
+  },
+  "statue.carving": {
+   "template": "Bentwood carved figure [statue.carving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "bentwood"
+   },
+   "physical": "Top-down view of a small honey bentwood carved figure on a squat base: a rough human shape, head at the top.",
+   "reviewed": true
+  },
+  "statue.figure": {
+   "template": "Marble statue [statue.figure]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "marble",
+    "plinth": "terrazzo"
+   },
+   "physical": "Top-down view of the statue: a square speckled terrazzo plinth with a grey-veined marble standing figure, head and shoulders central, raised arm reaching to one side.",
+   "reviewed": true
+  },
+  "still.brew_kettle": {
+   "template": "Scrubbed sandstone brew kettle [still.brew_kettle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "base": "scrubbed sandstone",
+    "kettle": "enamelled iron"
+   },
+   "physical": "Top-down view of a brew kettle: a large round dark green enamelled iron kettle with a steaming open top, set into a buff scrubbed sandstone firebox, a ladle hooked on the rim.",
+   "reviewed": true
+  },
+  "still.pot": {
+   "template": "Cast iron pot still [still.pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "coil": "cast iron",
+    "pot": "sheet steel"
+   },
+   "physical": "Top-down view of a pot still: a round grey sheet steel pot with a domed top, a cast iron pipe coiling into a cooling bucket beside it, a jug under the spout.",
+   "reviewed": true
+  },
+  "still.vat": {
+   "template": "Enamelled iron fermenting vat [still.vat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "enamelled iron",
+    "vat": "bentwood"
+   },
+   "physical": "Top-down view of a fermenting vat: a wide round honey bentwood vat bound with enamelled iron hoops, a loose lid and a paddle laid across the top.",
+   "reviewed": true
+  },
+  "stool.bar": {
+   "template": "Enamelled iron bar stool [stool.bar]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "enamelled iron",
+    "seat": "waxed leather"
+   },
+   "physical": "Top-down view of a tall bar stool: a round tan waxed leather seat over a white enamelled iron footrest ring.",
+   "reviewed": true
+  },
+  "stool.ottoman": {
+   "template": "Plush velvet ottoman [stool.ottoman]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cover": "plush velvet",
+    "frame": "burr elm"
+   },
+   "physical": "Top-down view of a padded ottoman: a square maroon plush velvet top with buttoned tufts and short honey burr elm feet at the corners.",
+   "reviewed": true
+  },
+  "stool.plain": {
+   "template": "Bentwood wooden stool [stool.plain]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "seat": "bentwood"
+   },
+   "physical": "Top-down view of a small wooden stool: a round honey bentwood seat, the tips of its legs just showing.",
+   "reviewed": true
+  },
+  "stove.cookfire": {
+   "template": "Sheet steel cooking fire [stove.cookfire]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pot": "sheet steel",
+    "stones": "york stone"
+   },
+   "physical": "Top-down view of a cooking fire: a ring of grey york stone stones around glowing coals, a round grey sheet steel cauldron in the middle seen from above with a ladle in it, the tripod's three legs reaching out to the corners.",
+   "reviewed": true
+  },
+  "stove.cookstove": {
+   "template": "Cast iron cookstove [stove.cookstove]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "cast iron"
+   },
+   "physical": "Top-down view of a small cookstove: a square dark grey cast iron top with two round hot plates, a stovepipe at the top edge, a firebox door glowing at the bottom.",
+   "reviewed": true
+  },
+  "stove.range": {
+   "template": "Cast iron cast-iron range [stove.range]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "cast iron",
+    "rail": "cast iron"
+   },
+   "physical": "Top-down view of a wide cast-iron range against the top wall: a dark grey cast iron cooktop with four to six round plates or burners, a black cast iron towel rail along the bottom edge, a flue or hood along the back.",
+   "reviewed": true
+  },
+  "table.coffee": {
+   "template": "Stained beech low tea table [table.coffee]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a low tea table: a long chestnut stained beech top with a lower shelf showing beneath.",
+   "reviewed": true
+  },
+  "table.dining": {
+   "template": "Bentwood dining table [table.dining]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a square dining table: a honey bentwood top with a runner down the middle, one leg at each corner.",
+   "reviewed": true
+  },
+  "table.long": {
+   "template": "Polished walnut banqueting table [table.long]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "top": "polished walnut"
+   },
+   "physical": "Top-down view of a very long banqueting table: a dark brown polished walnut top twice as long as it is wide, a line of serving dishes down the middle.",
+   "reviewed": true
+  },
+  "table.plank": {
+   "template": "Bentwood deal table [table.plank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a plain deal table: a rectangular brown bentwood top, twice as wide as it is deep, legs at the corners.",
+   "reviewed": true
+  },
+  "table.round_small": {
+   "template": "Varnished pine small round table [table.round_small]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "varnished pine"
+   },
+   "physical": "Top-down view of a small round table: a round amber varnished pine top on a single central post.",
+   "reviewed": true
+  },
+  "table.side": {
+   "template": "Polished walnut occasional table [table.side]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "polished walnut",
+    "top": "polished granite"
+   },
+   "physical": "Top-down view of a small square occasional table: a grey polished granite top with a bevelled edge, slim dark brown polished walnut legs at the corners.",
+   "reviewed": true
+  },
+  "table.trestle": {
+   "template": "Stained beech trestle table [table.trestle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "stained beech"
+   },
+   "physical": "Top-down view of a long trestle table: three chestnut stained beech boards side by side, resting on X-shaped trestles at each end.",
+   "reviewed": true
+  },
+  "throne.gilded": {
+   "template": "Embroidered velvet gilded throne [throne.gilded]",
+   "tier": "elite",
+   "condition": "kept",
+   "materials": {
+    "cushion": "embroidered velvet",
+    "frame": "chased bronze"
+   },
+   "physical": "Top-down view of a richly ornate gilded throne: chased bronze frame with flared arms, a deep purple embroidered velvet seat, a fan-shaped back along the top edge.",
+   "reviewed": true
+  },
+  "throne.state": {
+   "template": "Damask chair of state [throne.state]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "cushion": "damask",
+    "frame": "varnished mahogany"
+   },
+   "physical": "Top-down view of a grand chair of state: a burgundy damask seat between heavy red-brown varnished mahogany arms, a tall crested back along the top edge.",
+   "reviewed": true
+  },
+  "toilet.chamber_pot": {
+   "template": "Ironstone chamber pot [toilet.chamber_pot]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pot": "ironstone"
+   },
+   "physical": "Top-down view of a small round chamber pot: a white ironstone pot with a curled handle on one side, a wooden lid half over it, on bare floor.",
+   "reviewed": true
+  },
+  "toilet.close_stool": {
+   "template": "Stained beech commode [toilet.close_stool]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "stained beech",
+    "seat": "flannel"
+   },
+   "physical": "Top-down view of a boxy commode: a square mid-brown stained beech chest with a hinged lid along the back edge, a grey flannel cushion on top, a carrying handle on each side.",
+   "reviewed": true
+  },
+  "toilet.water_closet": {
+   "template": "Majolica water closet [toilet.water_closet]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "bowl": "majolica",
+    "seat": "varnished mahogany"
+   },
+   "physical": "Top-down view of a water closet: a rounded green majolica bowl with its lid closed, the closed lid a solid deep red varnished mahogany oval filling the bowl, a cistern box on the top wall, a short thick pull chain beside it.",
+   "reviewed": true
+  },
+  "utility.boiler": {
+   "template": "Sheet steel coal boiler [utility.boiler]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "sheet steel"
+   },
+   "physical": "Top-down view of a coal boiler against the top wall: a round grey sheet steel drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge.",
+   "reviewed": true
+  },
+  "utility.ladder": {
+   "template": "Stained beech stepladder [utility.ladder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of a folded stepladder: two long mid-brown stained beech rails with rungs between them, a paint-spattered top step.",
+   "reviewed": true
+  },
+  "utility.mop_bucket": {
+   "template": "Cast iron mop bucket [utility.mop_bucket]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bucket": "cast iron",
+    "handle": "stained beech"
+   },
+   "physical": "Top-down view of a metal bucket: a round dark grey cast iron bucket full of murky grey-brown water, a thick rim with a small mid-brown stained beech roller wringer clamped to one side, no mop and no handle.",
+   "reviewed": true
+  },
+  "wardrobe.armoire": {
+   "template": "Polished walnut armoire [wardrobe.armoire]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "polished walnut",
+    "inlay": "polished copper"
+   },
+   "physical": "Top-down view of a massive armoire two cells wide: dark brown polished walnut top edged with carved moulding and rose-gold polished copper inlay, doors along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.narrow": {
+   "template": "Stained beech narrow wardrobe [wardrobe.narrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech"
+   },
+   "physical": "Top-down view of a slim narrow wardrobe: square mid-brown stained beech top, a single door along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "wardrobe.standard": {
+   "template": "Bentwood wardrobe [wardrobe.standard]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "handle": "enamelled iron"
+   },
+   "physical": "Top-down view of a wardrobe two cells wide: flat honey bentwood top with a hatbox at one end, double doors with enamelled iron handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.cutting_table": {
+   "template": "Wool serge tailor's bench [workbench.cutting_table]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cloth": "wool serge",
+    "top": "varnished pine"
+   },
+   "physical": "Top-down view of a tailor's bench: a smooth honey varnished pine top with a length of navy wool serge spread across it, shears, chalk and pins, a rack of bolts along the top edge.",
+   "reviewed": true
+  },
+  "workbench.joiner": {
+   "template": "Varnished pine cabinetmaker's bench [workbench.joiner]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "top": "varnished pine",
+    "vise": "cast iron"
+   },
+   "physical": "Top-down view of a cabinetmaker's bench: a heavy honey varnished pine top with a row of bench-dog holes, a cast iron screw vise at the right end, a shelf of planes and chisels along the top edge.",
+   "reviewed": true
+  },
+  "workbench.master": {
+   "template": "Nickel-plated steel guild workbench [workbench.master]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "fittings": "nickel-plated steel",
+    "top": "varnished mahogany"
+   },
+   "physical": "Top-down view of a long guild workbench: a broad red-brown varnished mahogany top with two vises, a brass rule set into the near edge, rows of small drawers and hung tools along the top edge.",
+   "reviewed": true
+  },
+  "workbench.rough": {
+   "template": "Crate pine packing-crate bench [workbench.rough]",
+   "tier": "poor",
+   "condition": "kept",
+   "materials": {
+    "legs": "crate pine",
+    "top": "crate pine"
+   },
+   "physical": "Top-down view of a packing-crate bench: a long pale crate pine plank top resting on two crate pine supports, a few loose tools and shavings on it, a strip of nails along the top edge.",
+   "reviewed": true
+  },
+  "workbench.welding": {
+   "template": "Striped ticking welding bench [workbench.welding]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "screen": "striped ticking",
+    "top": "cast iron"
+   },
+   "physical": "Top-down view of a welding bench: a thick dark grey cast iron slab top with clamps and scorch marks, a gas bottle and coiled hose at the top-right corner, a grey-striped ticking spark curtain along the top edge.",
+   "reviewed": true
+  }
+ }
+}

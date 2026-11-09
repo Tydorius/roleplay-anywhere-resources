@@ -603,7 +603,7 @@
     {
       "id": "coffin.casket",
       "category": "coffin",
-      "size": [1, 2],
+      "size": [2, 2],
       "walkability": 0,
       "forSleep": false,
       "light": 0,
@@ -619,7 +619,7 @@
       "lootPool": null,
       "text": {
         "description": "{A:condition} {box} {noun} lined with {lining.color} {lining}, its lid propped open for the mourners.",
-        "physical": "Top-down view of {A:noun}: a long rounded {box.color} {box} casket with brass rails, the upper half of the lid open showing {lining.color} {lining} lining and a pillow at the top."
+        "physical": "Top-down view of {A:noun}: a long {box.color} {box} casket with brass rails on the left, its lid swung open on side hinges and lying flat on the right, {lining.color} {lining} lining inside and a pillow at the top."
       },
       "aliases": ["burial casket"],
       "sources": ["claude-authored"]
