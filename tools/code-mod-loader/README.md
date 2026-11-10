@@ -1,4 +1,4 @@
-# Code-mod loader 2.0.0
+# Code-mod loader 2.1.0
 
 Adds JavaScript mods to Anywhere RPG, beyond what config packs can do: for example new GM API
 calls, or changes to the prompts the game builds. It works like BepInEx does for Unity games,
@@ -14,6 +14,7 @@ changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 
 | Version | Date | Changes |
 |---|---|---|
+| 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors and take 1.0's doors off the joints between pieces. Both mods are ported to 1.0. |
 | 2.0.0 | 2026-11-10 | For Anywhere RPG 1.0 only. Reads 1.0's version; fixes the `world-create` and `gm-prompt` patches for 1.0; `onPrompt` hooks now get the context limits; drops the `prompt-budgets`, `nav-cache-get/put`, `edge-memo` and `nav-grid` patches with the `promptBudgets`, `setNavCache` and `onNav` APIs; retires the portals, floors and performance mods (1.0 does them natively); `memory-add` writes 1.0's prose memory. |
 | 1.0.0 | 2026-11-01 | First release, for Anywhere RPG 0.18: the loader, seven mods (lorebooks, portals, wall-aware perception, floors, performance, region groups, lights) and one-step install. |
 
@@ -77,17 +78,17 @@ game, so **re-run install after adding, changing or removing a mod**.
   throw embers, bulbs hold steady, arcane crystals pulse blue. It also stops lamp light reaching
   objects and characters through walls, or from another floor. It works on existing scenarios
   as they are. **Works on 1.0.** See [its README](examples/lights/README.md).
-
-**Being ported to 1.0.** These three still install and load, but they were written and
-play-tested on 0.18. Each gets its own port session; until then they may not work as described:
-- `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
-  `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
-- `examples/wall-aware-perception` stops the player and NPCs noticing each other through walls.
-  The game only measures straight-line distance for its general notice range. See
-  [its README](examples/wall-aware-perception/README.md).
+- `examples/wall-aware-perception` stops the player and NPCs noticing each other through walls,
+  answering with 1.0 stealth's own line of sight. See
+  [its README](examples/wall-aware-perception/README.md). **Works on 1.0.**
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
-  [its README](examples/region-groups/README.md).
+  [its README](examples/region-groups/README.md). **Works on 1.0.**
+
+**Being ported to 1.0.** This one still installs and loads, but it was written and
+play-tested on 0.18. Until its port lands it may not work as described:
+- `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
+  `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
 
 Tests: `node --test tests/*.test.mjs` in this folder. One test patches the real 1.0 bundle when it
 finds a copy (set `ARPG_BUNDLE_10` to its path); otherwise it's skipped.
@@ -111,7 +112,7 @@ All the original files are kept as `*.arpg-orig` beside the patched ones.
 
 | File | Change |
 |---|---|
-| `resources/app/dist/assets/index-*.js` | Ten small patches, each found by its content (see the next table). |
+| `resources/app/dist/assets/index-*.js` | Twelve small patches, each found by its content (see the next table). |
 | `resources/app/dist/index.html` | `<script>` tags for `arpg-mods/loader.js` and each mod, placed before the game bundle. |
 | `resources/app/dist/arpg-mods/` | The loader and the copied mods. |
 
@@ -128,6 +129,8 @@ The bundle patches. Each must match exactly once, or install stops and changes n
 | `region-same-room` | The GM prompt's "same walled room as the player" test | `__arpg.sameRegion`. |
 | `sim-tick` | The start of each unpaused simulation step | `onTick`. |
 | `perception` | The straight-line "within notice range" test (14 cells) | `onPerceive`. |
+| `line-of-sight` | 1.0 stealth's line-of-sight test through walls and shut doors | `__arpg.lineOfSight`. |
+| `sight-blockers` | The walls and shut doors that test takes | `__arpg.sightBlockers`. |
 | `gm-prompt` | Where the GM prompt's head, sections and tail are built from the world and the context limits | `onPrompt`. |
 
 ## Writing a mod
@@ -145,6 +148,9 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `onTick(world => void)` | Runs at the start of every unpaused simulation step, so keep it cheap. |
 | `onPath((world, from, dest, entity, opts, next) => cells \| null)` | Wraps the game's grid pathfinder, which every walk uses. `next(...)` runs the plain search. Return the cells to walk, excluding the start cell. `entity` is unset for queries that aren't walks. In 1.0 this search stays inside one plane (the main map or one floor); walks between floors go through 1.0's portals, which are routed above it. |
 | `onPerceive((world, a, b, range, search, answer) => boolean \| undefined, {order})` | Runs whenever the game asks whether `a` and `b` are within notice range. `answer` is the answer so far, starting from the game's straight-line test. Return a boolean to replace it, or nothing to leave it. Hooks with a higher `order` run later and have the last word. `search` is the game's path search. |
+| `sightBlockers(world)` | The walls and shut doors 1.0's own sight test takes (the world's wall regions, plus the door edges nobody holds open). Building it scans every entity, so hold on to the result when testing many lines. |
+| `lineOfSight(world, from, to, blockers?)` | 1.0 stealth's line-of-sight test: walls and shut doors block, bars, gates and open doorways don't. Points are continuous (an entity's centre is `[pos[0]+size[0]/2, pos[1]+size[1]/2]`); pass `blockers` when testing many lines. |
+| `planeOf(world, point)` | The plane a point is on: the pocket region (a floor or cellar) containing it, or `null` on the main map. |
 | `api` | The live registry, once the game has built it. |
 
 Removed in 2.0.0: `promptBudgets` (1.0 has no per-kind budget table), and `onNav` and

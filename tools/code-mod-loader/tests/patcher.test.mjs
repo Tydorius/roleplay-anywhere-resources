@@ -8,6 +8,7 @@ import vm from 'node:vm';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { parseArgs, libraryPaths, gameVersion, bundledMods, resolveMods, defaultModsDir, PATCHES, patchBundle } from '../patch.mjs';
+import { loadWithSight } from './game-1.0-sight.mjs';
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -78,7 +79,8 @@ test('the code-mods folder follows each system\'s conventions', () => {
 test('the 0.18-only patches are gone', () => {
   const names = PATCHES.map(p => p.name);
   assert.deepEqual(names, ['api-registry', 'config-reader', 'world-create', 'pathfinder', 'region-arrival',
-    'region-destination', 'region-same-room', 'sim-tick', 'perception', 'gm-prompt']);
+    'region-destination', 'region-same-room', 'sim-tick', 'perception', 'line-of-sight', 'sight-blockers',
+    'gm-prompt']);
 });
 
 // Shapes copied from the 1.0 bundle (index-BrLojUrw.js), cut down to what each anchor needs.
@@ -145,6 +147,26 @@ test('perception still reports the game\'s answer to onPerceive (no clash with 1
   assert.equal(Yw(world, { x: 10 }), true);
   assert.equal(Yw(world, { x: 20 }), true);
   assert.deepEqual(seen, [[3, 14, true], [10, 14, true], [20, 14, false]]);
+});
+
+test('line-of-sight and sight-blockers hand mods 1.0\'s own sight test', () => {
+  const ctx = loadWithSight([]);
+  assert.equal(ctx.__arpg.game.lineClear, ctx.yN);
+  assert.equal(ctx.__arpg.game.sightBlockers, ctx.Ob);
+  const world = {
+    regions: [{ position: [0, 0], size: [10, 10], wall: 'stone', openings: [[9, 5, 'e']] }],
+    entities: [],
+  };
+  assert.equal(ctx.__arpg.lineOfSight(world, [5.5, 5.5], [12.5, 5.5]), true, 'through the doorway');
+  assert.equal(ctx.__arpg.lineOfSight(world, [5.5, 2.5], [12.5, 2.5]), false);
+  const door = { type: 'object', pos: [10, 5], size: [0, 1], objectTemplate: { door: 'door' } };
+  world.entities = [door];
+  assert.equal(ctx.__arpg.lineOfSight(world, [5.5, 5.5], [12.5, 5.5]), false, 'a shut door blocks');
+  door.heldOpen = true;
+  assert.equal(ctx.__arpg.lineOfSight(world, [5.5, 5.5], [12.5, 5.5]), true, 'held open');
+  door.heldOpen = false;
+  door.objectTemplate = { door: 'bars' };
+  assert.equal(ctx.__arpg.lineOfSight(world, [5.5, 5.5], [12.5, 5.5]), true, 'bars are see-through');
 });
 
 // The pristine 1.0 snapshot, where it exists on this machine (it isn't in the repo).

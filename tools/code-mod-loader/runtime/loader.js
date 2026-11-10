@@ -36,6 +36,8 @@
     mods: [],
     calls: [],
     cfgSeen: new Set(),
+    // Filled in by the patched bundle with 1.0's own sight helpers (`lineClear`, `sightBlockers`).
+    game: {},
     get api() { return api; },
     set api(v) {
       api = v;
@@ -143,10 +145,37 @@
         return JSON.stringify(list);
       });
     },
+    // The walls and shut doors 1.0's own sight test takes (the world's wall regions, plus the
+    // door edges nobody holds open). Building it scans every entity, so hold on to the result
+    // when testing many lines. undefined when the patched bundle hasn't supplied the builder.
+    sightBlockers(world) {
+      return typeof arpg.game.sightBlockers === 'function' ? arpg.game.sightBlockers(world) : undefined;
+    },
+    // 1.0 stealth's line-of-sight test: walls and shut doors block, bars, gates and open
+    // doorways don't. Points are continuous (an entity's centre is
+    // [pos[0]+size[0]/2, pos[1]+size[1]/2]); pass `blockers` when testing many lines, since
+    // building them scans every entity. undefined when the test or the blockers can't be had.
+    lineOfSight(world, from, to, blockers) {
+      if (typeof arpg.game.lineClear !== 'function') return undefined;
+      const list = blockers ?? arpg.sightBlockers(world);
+      return list === undefined ? undefined : !!arpg.game.lineClear(from, to, list);
+    },
+    // The plane a point is on: 1.0's floors and cellars are pocket regions off the main map,
+    // and two points on different planes are never near each other. null = the main map.
+    planeOf(world, point) {
+      if (!world || !point) return null;
+      for (const r of world.regions ?? []) {
+        if (!r.pocket) continue;
+        const [x, y] = r.position, [w, h] = r.size;
+        if (point[0] >= x && point[1] >= y && point[0] < x + w && point[1] < y + h) return r;
+      }
+      return null;
+    },
   };
 
   const prior = globalThis.__arpg;
   globalThis.__arpg = arpg;
   if (prior && prior.api) arpg.api = prior.api;
+  if (prior && prior.game) Object.assign(arpg.game, prior.game);
   console.info('[arpg] code-mod loader ready');
 })();
