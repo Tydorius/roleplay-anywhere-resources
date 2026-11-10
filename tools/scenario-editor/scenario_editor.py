@@ -147,6 +147,11 @@ class Handler(ig.Handler):
                     wg.delete_draft(draft_id)
                     return self.send(200, {"ok": True})
                 return self.send(200, {"draft": wg.save_draft(draft_id, req)})
+            if u.path == "/api/worldgen/settings/export":
+                return self.send(200, {"settings": wg.export_settings(req_json(self.body()))})
+            if u.path == "/api/worldgen/settings/import":
+                return self.send(200, {"draft": wg.import_settings(
+                    req_json(self.body()).get("settings"))})
             if u.path == "/api/worldgen/cancel":
                 return self.send(200, {"ok": True, "job": wg.cancel()})
             if u.path == "/api/worldgen/reroll":

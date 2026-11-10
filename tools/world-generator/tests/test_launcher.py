@@ -14,6 +14,7 @@ from unittest import mock
 
 import launcher
 from worldgen import api, llm
+from worldgen import settings as settings_mod
 from tests.test_013_frame import a_frame
 from tests.test_model import ScriptedClient, canned_replies
 
@@ -57,7 +58,7 @@ class TestProviderSetup(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def test_first_run_writes_providers_json_from_a_preset(self):
-        s = Session(["1", "", "", "", KEY, "n", "6"], self.tmp)   # zai, defaults, key, no test, quit
+        s = Session(["1", "", "", "", KEY, "n", "7"], self.tmp)   # zai, defaults, key, no test, quit
         self.assertEqual(s.launcher.main(), 0)
         entry = s.providers()["zai"]
         self.assertEqual((entry["base_url"], entry["model"], entry["api_key"]),
@@ -251,6 +252,38 @@ class TestWorlds(unittest.TestCase):
             plan = json.load(f)
         self.assertEqual(plan["questionnaire"]["mode"], "long")
         self.assertEqual(plan["questionnaire"]["mode"], "long")
+
+    def test_a_run_saves_its_settings_and_a_settings_file_runs_again(self):
+        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "n", "4", ""],
+                    self.tmp,
+                    client=ScriptedClient([_dump(a_frame())] + canned_replies()))
+        first = s.launcher.new_world()
+        path = os.path.join(first["out"], settings_mod.FILE_NAME)
+        self.assertIn("Your choices for this world", s.text())
+        saved = settings_mod.read(path)
+        self.assertEqual((saved["idea"], saved["seed"], saved["library"]),
+                         ("a mill village", 4, False))
+        self.assertEqual(saved["frame"]["genre"]["primary"], "Fantasy")
+        with open(path, encoding="utf-8") as f:
+            self.assertNotIn(KEY, f.read())
+        # the saved frame is used: no P0 call this time, so the replies start at P1
+        s2 = Session([f'"{path}"', "", "", ""], self.tmp,
+                     client=ScriptedClient(canned_replies()))
+        again = s2.launcher.world_from_settings()
+        self.assertTrue(again["ok"], again)
+        self.assertEqual(again["seed"], 4)
+        self.assertIn("Idea: a mill village", s2.text())
+        with open(os.path.join(again["out"], "plan.json"), encoding="utf-8") as f:
+            plan = json.load(f)
+        self.assertEqual(plan["frame"]["genre"]["primary"], "Fantasy")
+
+    def test_a_bad_settings_file_says_why(self):
+        bad = os.path.join(self.tmp, "bad.json")
+        with open(bad, "w", encoding="utf-8") as f:
+            f.write('{"idea": "no kind"}')
+        s = Session([bad], self.tmp)
+        self.assertIsNone(s.launcher.world_from_settings())
+        self.assertIn("Can't use that file: this isn't a world settings file", s.text())
 
     def test_floors_turns_portals_on_without_asking(self):
         s = Session(["y", "n", "n"], self.tmp)       # floors yes; region groups, lights no

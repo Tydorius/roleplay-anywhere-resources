@@ -103,8 +103,30 @@ python -m unittest          # the test suite
   [ROOM_LIBRARY_DESIGN.md](ROOM_LIBRARY_DESIGN.md).
 - `layout` re-places a saved plan with a new seed and **no model calls** —
   re-roll the map, keep the world.
-- Each run writes `plan.json`, `spec.json`, `metrics.json`, the llm call logs,
-  `<Name>.scenario.zip` and (with Pillow) `preview.png`.
+- Each run writes `settings.json`, `plan.json`, `spec.json`, `metrics.json`, the llm call
+  logs, `<Name>.scenario.zip` and (with Pillow) `preview.png`.
+
+### Settings files: sharing a world's choices
+
+Every run saves `settings.json` in its folder under `out/`, before the first model call, so
+a failed run has one too. It holds the choices: the idea, the questionnaire mode and
+answers, other instructions, residents, seed, extensions, the room-library choice and the
+approved World Frame. It never holds a provider, URL or API key, only the model's name as
+a note. Send it to someone, or ask for theirs, to run the same world:
+
+```
+python -m worldgen generate --settings out/<run>/settings.json --provider zai --out out/again
+```
+
+`--idea`, `--seed`, `--ext` and `--no-library` still override the file. With a frame in the
+file there is no framing call. In the launcher, **Make a new world from a settings file**
+does the same; in the Scenario Editor, **Export settings…** and **Import settings…** in the
+New world dialog write and read the same format.
+
+To look into a world that came out wrong (too few buildings, say), the whole run folder is
+more use than the settings alone: `llm/01-p1.json` is the world plan's prompt and reply,
+where the building count is decided. Zip the folder (the `.scenario.zip` can stay out); no
+key is in any of it.
 
 Programs (like the Scenario Editor) drive the same thing through
 `worldgen/api.py`: `generate()`, `relayout()`, `estimate()`, `frame()` and the

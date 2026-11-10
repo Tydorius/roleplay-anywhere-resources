@@ -230,6 +230,8 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .wg-frame-view .facts dd { margin: 0; word-break: break-word; }
 .wg-drafts { display: flex; gap: 6px; align-items: center; margin: 0 0 10px; }
 .wg-drafts select { flex: 1; min-width: 0; }
+.wg-settings-file { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 0 0 10px; }
+.wg-settings-file .note { flex: 1 1 220px; }
 .wg-framebar .note.warn { color: var(--warn, #c77700); font-weight: 600; }
 .dlg-buttons .primary.wg-wait { opacity: .45; }
 .wg-clarity .wg-framebar { margin: 8px 0 2px; }

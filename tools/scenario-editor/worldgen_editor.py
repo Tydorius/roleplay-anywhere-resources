@@ -30,6 +30,7 @@ import image_gallery as ig  # noqa: E402  (the editor's workspaces and zip impor
 from worldgen import api as wgapi  # noqa: E402
 from worldgen import llm as wgllm  # noqa: E402
 from worldgen import questions as wgquestions  # noqa: E402
+from worldgen import settings as wgsettings  # noqa: E402
 from worldgen.extensions import registry as extension_registry  # noqa: E402
 
 PROVIDERS_JSON = Path(wgllm.PROVIDERS_PATH)   # tools/world-generator/providers.json
@@ -458,6 +459,48 @@ def list_drafts():
                     "running": bool(run) and not run.get("source")})
     out.sort(key=lambda d: d["saved"], reverse=True)
     return out
+
+
+# ---------------------------------------------------------------- settings files
+def export_settings(form):
+    """The dialog's form as a world settings file (worldgen/settings.py): what
+    someone else loads to run the same world. ``form`` is the dialog state,
+    with the approved frame when there is one. Only the provider's model name
+    goes in, as a note; never the provider, its URL or its key."""
+    if not isinstance(form, dict):
+        raise ValueError("the form must be an object")
+    frame = form.get("frame")
+    if isinstance(frame, dict) and isinstance(form.get("summary"), str) and form["summary"].strip():
+        frame = dict(frame, summary=form["summary"].strip())
+    model = None
+    entry = (_read_providers() or {}).get(str(form.get("provider") or ""))
+    if isinstance(entry, dict) and isinstance(entry.get("model"), str):
+        model = entry["model"]
+    return wgsettings.make(
+        mode=form.get("mode") or "quick", idea=form.get("idea") or "",
+        answers=form.get("answers"), population=form.get("population"),
+        notes=form.get("notes") or "", seed=form.get("seed", 1),
+        extensions=form.get("extensions") or [], library=form.get("library", True),
+        frame=frame if isinstance(frame, dict) else None,
+        clarify=form.get("clarifyAnswers"), model=model)
+
+
+def import_settings(data):
+    """A settings file loaded into a new dialog draft; returns the draft. The
+    frame comes along, so the world can be generated without framing again."""
+    s = wgsettings.check(data)
+    stamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    draft_id, i = f"d-{stamp}-import", 2
+    while (_drafts_dir() / f"{draft_id}.json").exists():
+        draft_id, i = f"d-{stamp}-import-{i}", i + 1
+    fields = {k: s[k] for k in ("mode", "idea", "answers", "notes", "population", "seed",
+                                "extensions", "library")}
+    if s.get("frame"):
+        fields.update(frame=s["frame"], framedMode=s["mode"], summary=s["frame"]["summary"])
+    if s.get("clarify"):
+        fields["clarifyAnswers"] = s["clarify"]
+    fields["imported"] = {"model": s.get("model"), "saved": s.get("saved")}
+    return _merge_draft(draft_id, fields)
 
 
 def _workspace_dir(source_id):
