@@ -1,4 +1,4 @@
-// region-groups: shapes other than rectangles, made of same-name rectangles.
+// region-groups: shapes other than rectangles, made of same-name rectangles (Anywhere RPG 1.0).
 //
 // The game's regions are rectangles only. Give several rectangles the same name and let them
 // touch or overlap (a forest wrapped round a village as four strips, an L-shaped house as two
@@ -12,10 +12,18 @@
 // - The GM's region list shows the name once.
 //
 // Pieces only join when they touch or overlap, directly or through other pieces, so separate
-// rooms that merely share a name ("Bedroom" in two houses) stay separate. No settings.
+// rooms that merely share a name ("Bedroom" in two houses) stay separate. A group never spans
+// two planes: 1.0's floors and cellars are pocket regions off the main map, so same-name
+// pieces on different floors never join, and a mover on another floor goes to the region the
+// game picked (1.0 walks it there through its stairs), not to a "nearest" piece measured
+// across planes. A natural-shaped piece ("organic") joins by its rectangle like any piece —
+// blobs are inset from their rectangles, so joining by blob would split a forest wrapped round
+// a village — while arriving still follows the blob, the game's own contains test answering
+// with it. No settings.
 //
 // Walls between two walled pieces: list the shared edge's cells as openings on both pieces,
-// or the game draws a wall down the middle of the room.
+// each with its side ("n", "s", "e" or "w"), or the game draws a wall down the middle of the
+// room.
 (() => {
   const arpg = globalThis.__arpg;
   arpg.registerMod('region-groups');
@@ -26,6 +34,14 @@
   function touching(a, b) {
     const [ax, ay] = a.position, [aw, ah] = a.size, [bx, by] = b.position, [bw, bh] = b.size;
     return ax <= bx + bw && bx <= ax + aw && ay <= by + bh && by <= ay + ah;
+  }
+
+  // The plane a region lives on: the pocket region itself when it is a floor or cellar, the
+  // pocket holding its centre when it's a piece on one, null on the main map.
+  function planeOfRegion(world, r) {
+    if (!r) return null;
+    if (r.pocket) return r;
+    return arpg.planeOf(world, [r.position[0] + r.size[0] / 2, r.position[1] + r.size[1] / 2]);
   }
 
   // region → its group (an array of pieces, shared by them all); only multi-piece groups.
@@ -45,7 +61,8 @@
     }
     for (const pieces of byName.values()) {
       if (pieces.length < 2) continue;
-      // Connected components of touching pieces.
+      // Each piece's plane, once per rebuild; connected components of touching pieces on one plane.
+      const plane = new Map(pieces.map(p => [p, planeOfRegion(world, p)]));
       const seen = new Set();
       for (const start of pieces) {
         if (seen.has(start)) continue;
@@ -53,7 +70,7 @@
         seen.add(start);
         for (let i = 0; i < group.length; i++) {
           for (const p of pieces) {
-            if (!seen.has(p) && touching(group[i], p)) {
+            if (!seen.has(p) && plane.get(p) === plane.get(group[i]) && touching(group[i], p)) {
               seen.add(p);
               group.push(p);
             }
@@ -79,6 +96,10 @@
   arpg.pieceFor = (world, region, mover) => {
     const g = region && groupsOf(world).get(region);
     if (!g || !mover?.pos) return region;
+    // A mover on another plane goes to the region the game picked: 1.0 walks it there through
+    // its stairs, and "nearest" measured across planes would be wrong.
+    const c = [mover.pos[0] + (mover.size?.[0] ?? 1) / 2, mover.pos[1] + (mover.size?.[1] ?? 1) / 2];
+    if (arpg.planeOf(world, c) !== planeOfRegion(world, region)) return region;
     const [mx, my] = mover.pos;
     let best = region, bestD = Infinity;
     for (const p of g) {
@@ -135,5 +156,5 @@
     }
   });
 
-  arpg.regionGroups = { groupsOf, mergeRegionLines, touching };
+  arpg.regionGroups = { groupsOf, mergeRegionLines, touching, planeOfRegion };
 })();

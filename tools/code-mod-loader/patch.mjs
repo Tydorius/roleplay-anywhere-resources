@@ -24,7 +24,7 @@ const MARKER = '/*arpg-modloader*/';
 const ORIG = '.arpg-orig';
 // This loader's release (README's version table), and the game version its patches were built
 // against. main supports Anywhere RPG 1.0 only; the 0.18 loader stays on the 0.18 branch.
-const LOADER_VERSION = '2.0.0';
+const LOADER_VERSION = '2.1.0';
 const TESTED = '1.0';
 // memory-add only shows how to add a GM call, so "add" with no names leaves it out.
 const SAMPLES = new Set(['memory-add']);

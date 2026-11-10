@@ -1,57 +1,55 @@
 # Wall-aware perception
 
-Stops the player and NPCs from noticing each other through walls.
+Stops the player and NPCs from noticing each other through walls. For Anywhere RPG 1.0.
 
-## The problem
+## What 1.0 already does
 
-The game decides "within notice range" by **straight-line distance alone**: 14 cells to come
-into range, 16 to drop out. There's no line-of-sight check anywhere in the game. That one test
-drives several things:
+1.0's own stealth handles much of seeing already. Its line-of-sight test walks a line that
+walls and shut doors stop, while open doorways, bars and gates don't; vision cones, light
+level and a sneaking state decide who spots whom. Floors and cellars are separate planes,
+reached by stairs, ladders and hatches. And the GM prompt's "Characters in same space as
+player" list already needs both to be in the same walled room.
 
-- **"X is now in player vicinity" events.** For a hostile they're marked urgent and wake the GM
-  at once. That's how a skeleton five cells away behind a long wall "noticed" you: the GM was
-  told it was in your vicinity, and nothing mentioned the wall.
-- **Which NPC actions, speech and item hand-overs reach the GM** as events.
-- **The GM prompt's lists** of nearby busy characters and nearby objects.
+## The problem that remains
 
-The game's other perception checks already handle walls:
-- **Hostile lock-on**, a monster starting to chase you on its own, needs a walking path of 8
-  steps or less.
-- **The GM's full detail on a character** needs the same walled room.
+Several things still measure **straight-line distance alone**, with no walls in between:
+
+- **"X is now in player vicinity" events** (the 14-cell notice range). For a hostile that has
+  noticed the player they're urgent, and they wake the GM at once.
+- **Which NPC actions and item hand-overs reach the GM** as events.
+- **The objects listed in the GM prompt**: in the same space, elsewhere nearby, and the
+  "Strewn about" scenery.
+- **Who counts as in the same space as the player when both are outdoors.**
+
+So a skeleton five cells away behind a long wall still "noticed" you: the GM was told it was
+in your vicinity, and nothing mentioned the wall.
 
 ## The rule with this mod
 
-When the player is one of the two, they notice each other only if they're within that same
-straight-line range **and** at least one of these holds:
+Two characters within that same range notice each other only if they're on the same floor
+**and** one of these holds:
 
-- **They're in the same walled room**, or both are outdoors. Unwalled areas, such as a camp
-  inside a forest, don't block anything.
-- **One could walk to the other within the range,** counting walls and doorways but not
-  furniture. That's the same kind of walking test as the game's hostile lock-on. An open
-  doorway nearby still lets people notice each other; a long wall doesn't.
+- **They're in the same walled room**, or in pieces of one region-groups room. Then they're
+  noticed, with no line to walk.
+- **Otherwise 1.0 stealth's own line-of-sight test decides.** Walls, shut doors and drawn
+  curtains block; open doorways, bars and gates don't. Both outdoors is no exception: a house
+  between them blocks.
 
-Checks between two NPCs, or between NPCs and objects, are left as the game does them.
+A floor or cellar away is out of range entirely, since nobody notices anyone across planes.
+The rule holds for every pair, not just ones involving the player.
 
-## Checked in the game
+## Sneaking
 
-From the Inn Common Room in the Thornbury test save:
-- **Still noticed:**
-  - Alys and Hal, in the same room.
-  - Margery in the kitchen, through the doorway.
-  - Tobias, Gareth and Linnet, just outside the front door.
-- **No longer noticed:**
-  - Nell, in the Farmhouse Byre 13 cells away behind walls.
-  - Rosamund, while inside the walled Market Hall Stalls.
-  - A few objects in walled-off rooms.
-
-Once Rosamund walked outside, 12 steps away through the front door, she came back into range,
-as she should.
+Sneaking isn't involved: this answers "can the player perceive X", and 1.0's stealth already
+decides who has noticed whom.
 
 ## Cost
 
-Each answer is one capped walking search (at most 15 steps). Answers are cached by cell pair
-until the map's regions change (the game's `regionsRev`), so after the first few seconds the
-checks are close to free. A cold check of every entity on the 96×96 Thornbury map took 5 ms,
-and 1.6 ms warm.
+One line-of-sight test per pair per simulation step; answers are reused within the step and
+across the game's prompt rebuilds.
 
-Needs the loader's `perception` patch, which also hands mods the game's own path search.
+## Checked in the game
+
+Not yet checked on 1.0.
+
+Needs the loader's `perception`, `line-of-sight` and `sight-blockers` patches.
