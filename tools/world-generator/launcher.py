@@ -32,6 +32,8 @@ from worldgen.extensions import REGISTRY, expand  # noqa: E402
 EXAMPLE_PATH = os.path.join(HERE, "providers.example.json")
 OUT_ROOT = os.path.join(HERE, "out")
 GAME_VERSION = "0.18"
+# provider settings kept when the launcher saves a provider
+OPTIONAL_FIELDS = ("timeout", "rate_limit_wait", "max_output", "extra_body")
 
 
 class Launcher:
@@ -129,8 +131,15 @@ class Launcher:
         if not (base_url and model and key):
             self.out("Not saved: the base URL, model and key are all needed.")
             return None
-        self.save_provider(name, {"base_url": base_url.rstrip("/"), "api_key": key, "model": model,
-                                  "max_tokens": old.get("max_tokens") or preset.get("max_tokens") or 16000})
+        entry = {"base_url": base_url.rstrip("/"), "api_key": key, "model": model,
+                 "max_tokens": old.get("max_tokens") or preset.get("max_tokens") or 16000}
+        # the preset's (or the saved entry's) optional settings come along:
+        # a provider's output cap and extra request fields, its waits
+        for k in OPTIONAL_FIELDS:
+            v = old.get(k) if k in old else preset.get(k)
+            if v is not None:
+                entry[k] = v
+        self.save_provider(name, entry)
         self.out(f"Saved \"{name}\" to {self.providers_path}")
         if self.yes("Send it one tiny test request now?", True):
             self.test_provider(name)

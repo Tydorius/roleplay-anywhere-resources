@@ -96,6 +96,11 @@ def save_provider(name, base_url, api_key, model, max_tokens):
              "api_key": str(api_key or "").strip() or str(old.get("api_key") or ""),
              "model": str(model or "").strip(),
              "max_tokens": _int_or(max_tokens, old.get("max_tokens", 16000))}
+    # settings this form doesn't show (an output cap, extra request fields,
+    # waits) stay as they were in providers.json
+    for k in ("timeout", "rate_limit_wait", "max_output", "extra_body"):
+        if k in old:
+            entry[k] = old[k]
     for k, what in (("base_url", "the base URL"), ("model", "the model"),
                     ("api_key", "the API key (the first time you add the provider)")):
         if not entry[k]:
