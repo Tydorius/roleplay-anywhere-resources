@@ -27,6 +27,7 @@ if HERE not in sys.path:
     sys.path.insert(0, HERE)
 
 from worldgen import api, llm, phases  # noqa: E402
+from worldgen import settings as settings_mod  # noqa: E402
 from worldgen.extensions import REGISTRY, expand  # noqa: E402
 
 EXAMPLE_PATH = os.path.join(HERE, "providers.example.json")
@@ -248,26 +249,26 @@ class Launcher:
             ([int(one.group(1)), int(one.group(1))] if one else None)
         return questions_mod.sanitize_population(pair)
 
-    def _frame_call(self, mode, idea, answers, population, out_dir, clarify=None):
+    def _frame_call(self, mode, idea, answers, population, out_dir, clarify=None, notes=""):
         return api.frame(mode, idea=idea, answers=answers, population=population,
-                         clarify=clarify,
+                         clarify=clarify, notes=notes,
                          provider=None if self.client else self._provider,
                          providers_path=self.providers_path, client=self.client,
                          log_dir=os.path.join(out_dir, "llm"))
 
-    def frame_flow(self, mode, idea, answers, population, out_dir):
+    def frame_flow(self, mode, idea, answers, population, out_dir, notes=""):
         """P0 and the use / edit / redo choice. Returns the frame or None."""
         from worldgen.phases import frame_brief
         clarify = None
         if mode == "long":
-            first = self._frame_call(mode, idea, answers, population, out_dir)
+            first = self._frame_call(mode, idea, answers, population, out_dir, notes=notes)
             if first["questions"]:
                 self.out("")
                 self.out("The model has questions of its own (Enter skips one).")
                 clarify = self.ask_clarifications(first["questions"])
         try:
             frame = self._frame_call(mode, idea, answers, population, out_dir,
-                                     clarify=clarify)["frame"]
+                                     clarify=clarify, notes=notes)["frame"]
         except (llm.LLMError, phases.PhaseError) as e:
             self.out(f"Framing the world failed: {e}")
             return None
@@ -288,7 +289,7 @@ class Launcher:
             else:
                 try:
                     frame = self._frame_call(mode, idea, answers, population,
-                                             out_dir, clarify=clarify)["frame"]
+                                             out_dir, clarify=clarify, notes=notes)["frame"]
                 except (llm.LLMError, phases.PhaseError) as e:
                     self.out(f"Framing the world failed: {e}")
                     return None
@@ -354,6 +355,14 @@ class Launcher:
         self.out("Scenario Editor to look it over first.")
         if not summary["ok"]:
             self.out(f"  Build log: {log_path}")
+        self.settings_note(summary["out"])
+
+    def settings_note(self, out_dir):
+        path = os.path.join(out_dir, settings_mod.FILE_NAME)
+        if os.path.isfile(path):
+            self.out(f"Your choices for this world: {path}")
+            self.out("  Send that file to share them (no API key is in it); "
+                     "\"Make a new world from a settings file\" runs it again.")
 
     def new_world(self):
         ready = self.ready_providers()
@@ -397,12 +406,76 @@ class Launcher:
                  f"{est['minutes_range'][0]}-{est['minutes_range'][1]} minutes, on your key.")
         if not self.yes("Start?", True):
             return None
+        return self._start_world(idea, provider, exts, seed, out_dir, frame, library,
+                                 {"mode": mode, "answers": answers, "population": population})
+
+    def _start_world(self, idea, provider, exts, seed, out_dir, frame, library, questionnaire):
         return self._run(lambda progress, emit: api.generate(
             idea, provider=provider, extensions=exts, seed=seed, out_dir=out_dir,
             progress=progress, providers_path=self.providers_path, client=self.client,
-            emit=emit, frame=frame, library=library,
-            questionnaire={"mode": mode, "answers": answers,
-                           "population": population}), out_dir)
+            emit=emit, frame=frame, library=library, questionnaire=questionnaire), out_dir)
+
+    def _pick_provider(self):
+        """The provider for a run (setting one up when none is), or False."""
+        ready = self.ready_providers()
+        if self.client is None and not ready:
+            self.out("No provider is set up yet.")
+            if not self.setup_provider():
+                return False
+            ready = self.ready_providers()
+        if self.client is not None:
+            return None
+        return ready[self.choose("Which provider?", ready)] if len(ready) > 1 else ready[0]
+
+    def world_from_settings(self):
+        """A new world from a settings file someone saved or sent: the same
+        idea, answers and choices, and their World Frame when the file has one."""
+        self.out("")
+        self.out("A settings file is the settings.json in a world's folder under")
+        self.out(f"{self.out_root}, or one exported from the Scenario Editor.")
+        path = self.ask("Path to the settings file (you can drag the file here)").strip().strip('"\'')
+        if not path:
+            return None
+        try:
+            s = settings_mod.read(os.path.expanduser(path))
+        except settings_mod.SettingsError as e:
+            self.out(f"Can't use that file: {e}")
+            return None
+        self.out("")
+        self.out(f"  Form: {s['mode']}" + (f", {len(s['answers'])} answer(s)" if s["answers"] else ""))
+        if s["idea"]:
+            self.out(f"  Idea: {s['idea'][:200]}")
+        if s["notes"]:
+            self.out(f"  Other instructions: {s['notes'][:200]}" + ("..." if len(s["notes"]) > 200 else ""))
+        pop = s["population"]
+        self.out(f"  Residents: {'the map decides' if pop == 'map' else f'{pop[0]}-{pop[1]}'}")
+        self.out(f"  Seed {s['seed']}; extensions: {', '.join(s['extensions']) or 'none'}; "
+                 f"room library: {'on' if s['library'] else 'off'}")
+        if s.get("model"):
+            self.out(f"  Made with the model {s['model']}")
+        provider = self._pick_provider()
+        if provider is False:
+            return None
+        self._provider = provider
+        out_dir = self._out_dir(settings_mod.label(s))
+        self.out(f"Working in {out_dir}  (Ctrl+C stops it)")
+        frame = s.get("frame")
+        if frame and not self.yes("Use the World Frame saved in the file? (No: frame the "
+                                  "world again, one more model call)", True):
+            frame = None
+        if frame is None:
+            frame = self.frame_flow(s["mode"], s["idea"], s["answers"], s["population"],
+                                    out_dir, notes=s["notes"])
+            if frame is None:
+                return None
+        seed = self.ask("Seed (the same idea and seed give the same layout)", str(s["seed"]))
+        seed = int(seed) if seed.isdigit() else s["seed"]
+        if not self.yes("Start?", True):
+            return None
+        return self._start_world(s["idea"], provider, tuple(s["extensions"]), seed, out_dir,
+                                 frame, s["library"], settings_mod.questionnaire(s)
+                                 or {"mode": s["mode"], "answers": {},
+                                     "population": s["population"]})
 
     def saved_worlds(self):
         """(label, plan path) for worlds in out/, newest first."""
@@ -438,6 +511,7 @@ class Launcher:
                 return 1
         actions = [("Make a new world from an idea", self.new_world),
                    ("Re-roll the layout of a world made earlier (no model calls)", self.reroll),
+                   ("Make a new world from a settings file", self.world_from_settings),
                    ("Set up a provider (add or change one)", self.setup_provider),
                    ("Test a provider", self.test_provider),
                    ("Open the output folder", self.open_out),

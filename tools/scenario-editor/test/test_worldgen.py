@@ -318,6 +318,39 @@ class TestWorldgenEndpoints(unittest.TestCase):
         code, _ = self.request("POST", "/api/worldgen/draft?id=../evil", {"idea": "x"})
         self.assertEqual(code, 400)
 
+    def test_settings_export_and_import_roundtrip(self):
+        form = {"mode": "short", "idea": "a mill town", "notes": "keep it cozy",
+                "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
+                "population": [25, 35], "provider": "mockp", "seed": 6,
+                "extensions": ["floors"], "library": False,
+                "frame": A_FRAME, "summary": "An edited summary."}
+        s = self.post("/api/worldgen/settings/export", form)["settings"]
+        self.assertEqual(s["kind"], wg.wgsettings.KIND)
+        self.assertEqual(s["frame"]["summary"], "An edited summary.")
+        self.assertEqual(s["model"], "mock-model")
+        self.assertEqual(s["extensions"], ["floors", "portals"])
+        text = json.dumps(s)
+        self.assertNotIn(FULL_KEY, text)
+        self.assertNotIn("mockp", text, "the provider name stays on this machine")
+        d = self.post("/api/worldgen/settings/import", {"settings": s})["draft"]
+        try:
+            self.assertTrue(d["id"].startswith("d-") and d["id"].endswith("import"))
+            self.assertEqual((d["mode"], d["idea"], d["notes"], d["seed"], d["library"]),
+                             ("short", "a mill town", "keep it cozy", 6, False))
+            self.assertEqual((d["frame"]["summary"], d["framedMode"]),
+                             ("An edited summary.", "short"))
+            self.assertEqual(d["imported"]["model"], "mock-model")
+            listed = {x["id"]: x for x in self.get("/api/worldgen/drafts")["drafts"]}
+            self.assertTrue(listed[d["id"]]["framed"])
+        finally:
+            self.post(f"/api/worldgen/draft?id={d['id']}", {"delete": True})
+        # a file that isn't settings, and an empty form, say why
+        code, raw = self.request("POST", "/api/worldgen/settings/import", {"settings": {"idea": "x"}})
+        self.assertEqual(code, 400)
+        self.assertIn("isn't a world settings file", raw.decode() if isinstance(raw, bytes) else str(raw))
+        code, _ = self.request("POST", "/api/worldgen/settings/export", {"mode": "quick", "idea": ""})
+        self.assertEqual(code, 400)
+
     def test_frame_validates_before_starting(self):
         code, raw = self.request("POST", "/api/worldgen/frame",
                                  {"mode": "huge", "idea": "x", "provider": "mockp"})

@@ -115,6 +115,12 @@ function wgFormHtml(drafts) {
       <button type="button" id="wgDraftLoad">Resume draft</button>
       <button type="button" id="wgDraftDel" title="Delete the chosen draft">Delete</button>
     </div>` : ""}
+    <div class="wg-settings-file">
+      <button type="button" id="wgExport" title="Download this form, and its frame once framed, as a small JSON file">Export settings…</button>
+      <button type="button" id="wgImport" title="Fill this form from a settings file someone sent you">Import settings…</button>
+      <input type="file" id="wgImportFile" accept=".json,application/json" hidden>
+      <span class="note">A small file of these choices to send someone (no API key in it). The generator also saves one as settings.json in every run's folder.</span>
+    </div>
     <div class="wg-modes">${wgBank.modes.map(m =>
       `<button type="button" class="wg-mode${m === "quick" ? " on" : ""}" data-mode="${esc(m)}">${esc(WG_MODE_LABEL[m] || m)}</button>`).join("")}</div>
     ${field("The idea, in one line",
@@ -487,10 +493,44 @@ function wgClarifyAnswers(dlg) {
   return out;
 }
 
+/** Download the dialog's choices (and the frame, once framed) as a world settings file. */
+async function wgExportSettings(dlg) {
+  const form = wgDraftState(dlg);
+  if (wgFrame) form.frame = wgFrame;
+  const s = (await api("/api/worldgen/settings/export", {method: "POST", body: JSON.stringify(form)})).settings;
+  const words = (s.idea || s.frame?.premise || s.mode).toLowerCase().replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "").slice(0, 40) || "world";
+  const url = URL.createObjectURL(new Blob([JSON.stringify(s, null, 1) + "\n"], {type: "application/json"}));
+  const a = Object.assign(document.createElement("a"), {href: url, download: `world-settings-${words}.json`});
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  toast(s.frame ? "Settings exported, with the frame" : "Settings exported");
+}
+
+/** Fill the dialog from a settings file: it becomes a new draft, resumed like any other. */
+async function wgImportSettings(dlg, file) {
+  let data;
+  try { data = JSON.parse(await file.text()); }
+  catch { throw new Error(`${file.name} isn't a JSON file`); }
+  const d = (await api("/api/worldgen/settings/import", {method: "POST", body: JSON.stringify({settings: data})})).draft;
+  await wgResumeDraft(dlg, d.id);
+  const from = d.imported?.model ? ` (made with ${d.imported.model})` : "";
+  toast(`Settings imported${from}${d.frame ? ", with its frame" : ""}`);
+}
+
 function wgBindForm(dlg) {
   wgDialog = dlg;
   wgRenderQuestions(dlg, "quick");
   wgUpdateGo();
+  $("wgExport").onclick = () => wgExportSettings(dlg).catch(e => toast(e.message));
+  $("wgImport").onclick = () => $("wgImportFile").click();
+  $("wgImportFile").onchange = ev => {
+    const file = ev.target.files[0];
+    ev.target.value = "";
+    if (file) wgImportSettings(dlg, file).catch(e => toast(e.message));
+  };
   // every edit lands in the draft a moment later
   dlg.addEventListener("input", wgSaveDraftSoon);
   dlg.addEventListener("change", wgSaveDraftSoon);

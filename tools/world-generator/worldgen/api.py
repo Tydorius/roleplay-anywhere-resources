@@ -3,8 +3,9 @@
 Three calls cover the editor's needs:
 
 - ``generate(idea, provider, ...)`` runs the model phases P1-P5 and builds
-  the scenario, writing plan.json, spec.json/spec.py, metrics.json, the
-  llm/ call logs, the scenario zip and (with Pillow) preview.png;
+  the scenario, writing settings.json (the choices, see settings.py),
+  plan.json, spec.json/spec.py, metrics.json, the llm/ call logs, the
+  scenario zip and (with Pillow) preview.png;
 - ``relayout(plan_path, ...)`` lays a saved plan out again with no model
   calls — the "Re-roll layout" button;
 - ``estimate(idea_or_plan)`` reports the calls, tokens and minutes a
@@ -66,6 +67,8 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         from . import llm
         kwargs = {"providers_path": providers_path} if providers_path else {}
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
+    _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire,
+                    getattr(client, "model", None), emit)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
                                     progress=progress, cancel=cancel,
@@ -79,6 +82,23 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
                              extra_exts=extensions,
                              gen=(client, stats, minutes, idea),
                              progress=progress, cancel=cancel, emit=emit)
+
+
+def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
+                    emit=None):
+    """settings.json in the run folder, before the first model call, so even a
+    run that fails leaves the choices behind for someone to look at. Never
+    fails the run."""
+    from . import settings
+    try:
+        os.makedirs(out_dir, exist_ok=True)
+        data = settings.from_run(idea, seed, extensions, library, frame=frame,
+                                 questionnaire=questionnaire,
+                                 model=model if isinstance(model, str) else None)
+        settings.write(os.path.join(out_dir, settings.FILE_NAME), data)
+    except (OSError, ValueError) as e:
+        if emit:
+            emit(f"WARN  settings.json not written: {e}")
 
 
 def frame(mode, idea="", answers=None, population=None, clarify=None,

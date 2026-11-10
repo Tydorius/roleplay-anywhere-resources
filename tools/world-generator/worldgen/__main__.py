@@ -23,6 +23,26 @@ def _print_event(e):
     print(f"[{e.get('phase')}] {e.get('label')}{tail}")
 
 
+def _generate_args(args):
+    """generate()'s world arguments from --idea and the rest, or from a
+    --settings file with any flags given on top. ValueError when unusable."""
+    if args.settings:
+        from worldgen import settings as settings_mod
+        s = settings_mod.read(args.settings)
+        print(f"settings: {args.settings} ({s['mode']} form"
+              f"{', with its World Frame' if s.get('frame') else ''})")
+        return {"idea": args.idea if args.idea is not None else s["idea"],
+                "seed": args.seed if args.seed is not None else s["seed"],
+                "extensions": tuple(sorted(set(s["extensions"]) | set(args.ext))),
+                "library": s["library"] if args.library is None else args.library,
+                "frame": s.get("frame"),
+                "questionnaire": settings_mod.questionnaire(s)}
+    if not args.idea:
+        raise ValueError("give --idea, or --settings with a world settings file")
+    return {"idea": args.idea, "seed": 1 if args.seed is None else args.seed,
+            "extensions": args.ext, "library": args.library is not False}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="worldgen")
     sub = ap.add_subparsers(dest="command", required=True)
@@ -34,12 +54,18 @@ def main(argv=None):
                      help="enable a mod extension, off by default (repeatable; "
                           "floors implies portals; also read from plan.json)")
     gen = sub.add_parser("generate", help="run the model phases on an idea and build the scenario")
-    gen.add_argument("--idea", required=True)
+    gen.add_argument("--idea", default=None,
+                     help="the world in one line (or give --settings)")
+    gen.add_argument("--settings", default=None,
+                     help="a world settings file (settings.json from a run folder, or one "
+                          "exported from the Scenario Editor): its idea, answers, frame, seed, "
+                          "extensions and room-library choice; --idea, --seed, --ext and "
+                          "--no-library still override it")
     gen.add_argument("--provider", required=True)
     gen.add_argument("--out", required=True)
-    gen.add_argument("--seed", type=int, default=1)
+    gen.add_argument("--seed", type=int, default=None, help="layout seed (default 1)")
     gen.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
-    gen.add_argument("--no-library", dest="library", action="store_false",
+    gen.add_argument("--no-library", dest="library", action="store_false", default=None,
                      help="furnish every room with the model (the old method) instead of "
                           "the room library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
@@ -86,15 +112,21 @@ def main(argv=None):
         print(f"FAILED: {report['error']}")
         return 1
 
+    if args.command == "generate":
+        try:
+            run = _generate_args(args)
+        except ValueError as e:
+            print(f"FAILED: {e}")
+            return 2
+
     try:
         if args.command == "layout":
             summary = api.relayout(args.plan, seed=args.seed, extensions=args.ext,
                                    out_dir=args.out, progress=_print_event, emit=print)
         else:
-            summary = api.generate(args.idea, provider=args.provider,
-                                   extensions=args.ext, seed=args.seed, library=args.library,
-                                   out_dir=args.out, progress=_print_event,
-                                   providers_path=args.providers, emit=print)
+            summary = api.generate(provider=args.provider, out_dir=args.out,
+                                   progress=_print_event, providers_path=args.providers,
+                                   emit=print, **run)
     except api.Cancelled:
         print("CANCELLED")
         return 1

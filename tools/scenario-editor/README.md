@@ -78,6 +78,14 @@ The dialog's steps:
   is written into the draft when it finishes, and a running generation gets its progress
   window back when you reload the page.
 
+- **Settings files.** **Export settings…** at the top of the dialog downloads the form as a
+  small JSON file: the idea, mode, answers, other instructions, residents, seed, extensions,
+  the room-library choice and, once framed, the frame. Send it to someone and they press
+  **Import settings…** to get the same form back (as a new draft), frame included, so they can
+  generate the same world. No provider or API key goes in it, only the model's name as a note.
+  The launcher and `python -m worldgen generate --settings` read the same file, and every run
+  saves one as `settings.json` in its folder under `../world-generator/out/`.
+
 - **Your own key.** The model calls go through your own OpenAI-compatible provider (z.ai,
   OpenRouter, OpenAI, or a local Ollama / LM Studio / llama-swap), never the game's built-in
   subscription. Add one in the dialog under **Provider settings**: it is stored in the generator's
