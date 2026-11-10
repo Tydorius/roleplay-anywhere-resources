@@ -22,7 +22,32 @@ Double-click the launcher for your system in this folder. It opens the editor in
 
 It needs Python 3.8 or newer, and nothing else. From a terminal: `python scenario_editor.py`.
 
-Built for Anywhere RPG 0.18. Its checks follow the 0.18 scenario format and map rules.
+Built for **Anywhere RPG 1.0** (Steam build 26557354). Its checks follow 1.0's scenario format and map
+rules, read from the game's own import code. 0.18 scenarios still open and check: 1.0 reads them, and
+the checks note what it changes on import. The 0.18 version of the editor is on the `0.18` branch.
+
+### What 1.0 changed in a scenario
+
+The editor keeps every one of these as it is when you open, edit, save and download. **Editing them is
+not built yet;** for now they show in the inspector and on the map, and the game's god mode edits them in a
+live game.
+
+| What | In `scenario.json` |
+|---|---|
+| Floors (storeys, cellars, tunnels) | A region with `pocket: {anchor: <building's region id>, level: 1 \| -1 …}`, placed **outside** the map in the same grid. The game lays them out east of the map, 24 cells apart. Each floor is a plane of its own. |
+| Stairs, ladders, hatches | An object with `portal: {to: <id of the object at the other end>}`, normally on both ends. |
+| Doorways | `openings` entries `[x, y]` or `[x, y, side]`, where side is `n`, `e`, `s` or `w` (the wall it opens). The import drops a door that isn't on the region's edge. |
+| Door kinds | Region `door`: `door`, `bars`, `gate`, `curtain` or `none`, and `doorColor`. Each doorway also gets a zero-wide door object whose template has `door: <kind>`. |
+| Locks and keys | A locked effect on a door object. A key is an item template with `opens: <region id>`, carried by someone. |
+| Theft | `takingIsTheft` on regions (rooms inherit it) and object templates. |
+| Shapes and liquids | `shape: "organic"` rounds an open region of at least 5 × 5. `surface` names a liquid from `unbounded.profile.media`; an unknown name becomes one nobody can walk through. |
+| Vehicles | Object template `vehicle: drive \| ride`, and `sheet: bicycle \| dune-buggy` for the built-in art. |
+| NPC types | 1.0 writes `npcTemplates` with `homes: [{regionId, count}]` and `stance` (`neutral`, `skittish`, `hostile`). The import renames 0.18's `hostileNpcTemplates`, and drops it if both lists exist. Their images are under `media/htpl_…` (or `ntpl_…`). |
+| Sprites | 330 character sprites. `giant-rat`, `giant-lizard`, `giant-crab`, `giant-scorpion` and `bounty-hunter-*` were renamed; the import switches the old names. |
+| Open world | `unbounded`: `seed`, `profile` (liquids and low edges) and `areas` (ground, roads, places, populations). The editor leaves it untouched. |
+
+`keyHolders`, `floors` and `populations` belong to the game's own world generation, not to a scenario:
+the import ignores them, and the checks say so.
 
 ## Works with the Image Gallery
 
@@ -174,8 +199,10 @@ The dialog's steps:
   - a schedule block at a deleted region is removed, and the block before takes over its time. The
     person stays; you can choose to move those blocks to another region instead.
   - calendar events there become "anywhere";
-  - hostile types that live there move to the replacement region (its parent, unless you pick
-    another);
+  - hostile and NPC types that live there move to the replacement region (its parent, unless you
+    pick another). An NPC type with other homes just loses that one;
+  - with no replacement, people's home region, a floor's building and a key's lock are cleared;
+  - deleting one end of a portal unlinks the other end;
   - deleting an object type deletes its placed copies, which can't exist without it, and only the
     effect entries that spawn it;
   - deleting an item removes only the stacks, equipment, loot entries and effect entries that hold
@@ -196,7 +223,7 @@ The dialog's steps:
   every turn. A room that only sleeps that many gets a note.
 - **Inspector:** the right-hand panel edits whatever you selected. Every field change is one undo
   step.
-  - **Nothing selected:** browse object types, hostile types, people and regions by name. You can
+  - **Nothing selected:** browse object types, NPC types, people and regions by name. You can
     also make a new object type here.
   - **Region:**
     - name, description, walls (or none), hostile, ground, texture, tints and day and night
@@ -221,7 +248,9 @@ The dialog's steps:
       doing, split it or remove it.
 
     ![The person inspector with a schedule bar](media/scenario_editor_npc-editor.png)
-  - **Hostile type:** where they spawn, how many, sprite, level and loot.
+  - **Hostile type:** where they spawn, how many, sprite, level and loot. A 1.0 NPC type shows its
+    homes and stance.
+  - **Region** also lists 1.0's floor level and building, shape, liquid, door kind and theft flag.
   - Every inspector lists what uses the selected thing, each item clickable.
 - **Rename a region:** every schedule and calendar event that names it is updated as well.
 - **Undo and redo** (Ctrl+Z, Ctrl+Y), with a whole drag as one step. **Save** (Ctrl+S) and
@@ -236,9 +265,12 @@ python -m unittest discover -s test -p "test_*.py"
 ```
 
 Run these from this folder. The node tests cover the map operations (`mapops.js`), schedules
-(`schedule.js`), references (`refs.js`) and the minimap's coordinate helpers (Node 18 or newer).
+(`schedule.js`), references (`refs.js`), the minimap's coordinate helpers, and 1.0 data through
+those edits (`test/format10.test.js`) (Node 18 or newer).
 The python tests cover the world generation endpoints against a mocked generator (no model calls),
-and the checks' handling of code-mod data (portals, floors) and bed capacity;
+the checks' handling of code-mod data (portals, floors) and bed capacity, the 1.0 rules
+(`test_scenario_1_0.py`), and a round trip of the three presets that ship with 1.0 through open, save
+and download (`test_roundtrip_1_0.py`, skipped without the 1.0 build snapshot);
 the generator's own suite runs from `../world-generator` with `python -m unittest`.
 
 ## Checks on their own
@@ -249,3 +281,7 @@ python scenario_checks.py My-Scenario.scenario.zip
 
 This checks a zip, a folder or a `scenario.json` against the rules the game actually uses. The exit
 code is 1 if there are errors.
+
+The world generator keeps an exact copy in `../world-generator/worldgen/vendor/scenario_checks.py`, and its
+validator takes its value lists and 1.0 rules from there. After changing this file, copy it there too; a
+test on each side fails while the two differ.
