@@ -69,6 +69,21 @@ The side matters: on import a two-element `[x, y]` opens every outer side of tha
 corner cell of the joint would open two walls, one of them to the outside. Give each joint
 cell its side.
 
+## Doors between pieces (1.0)
+
+1.0 hangs a door object on **every** doorway when it builds a world, so the joint between
+pieces would get a row of shut doors across the middle of the room — they also block 1.0's
+own stealth line of sight. The mod takes those doors off as the world is built (the pieces
+are one room) and keeps every other door: front doors, doors to rooms nested inside a piece,
+doors between pieces of different groups.
+
+Two known limits:
+
+- A save started before this mod was installed keeps its joint doors. Remove them in god
+  mode, or start a new game.
+- If the GM later changes a piece's walls (`wall_change`), 1.0 hangs doors on that piece's
+  doorways again.
+
 ## Patches
 
 Three small, content-anchored patches, each inert without this mod:

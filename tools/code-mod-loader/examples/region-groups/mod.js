@@ -156,5 +156,54 @@
     }
   });
 
-  arpg.regionGroups = { groupsOf, mergeRegionLines, touching, planeOfRegion };
+  // The innermost walled room at a cell: the walled region with the smallest area whose
+  // rectangle contains it. Walled regions are never natural-shaped in 1.0, so the rectangle
+  // test is exact.
+  function walledRoomAt(world, cell) {
+    let room = null;
+    for (const r of world.regions ?? []) {
+      const [x, y] = r.position, [w, h] = r.size;
+      if (r.wall && cell[0] >= x && cell[1] >= y && cell[0] < x + w && cell[1] < y + h &&
+          (!room || w * h < room.size[0] * room.size[1])) room = r;
+    }
+    return room;
+  }
+
+  // Take the door objects off the joints between pieces of one group: a door sits on one cell
+  // edge, so the two rooms it separates are the innermost walled rooms at the two cells
+  // either side of it. Everything else — a door to a room nested inside a piece, between
+  // pieces of different groups, or on a piece's outer wall — stays. Returns how many went.
+  function removeJointDoors(world) {
+    const entities = world.entities ?? [];
+    let removed = 0;
+    for (let i = entities.length - 1; i >= 0; i--) {
+      const e = entities[i];
+      if (e.type !== 'object' || !e.objectTemplate?.door || e.dead) continue;
+      const [x, y] = e.pos;
+      const cells = e.size[0] === 0 ? [[x - 1, y], [x, y]] : [[x, y - 1], [x, y]];
+      const ra = walledRoomAt(world, cells[0]), rb = walledRoomAt(world, cells[1]);
+      if (ra && rb && ra !== rb && arpg.sameRegion(world, ra, rb)) {
+        entities.splice(i, 1);
+        removed++;
+      }
+    }
+    return removed;
+  }
+
+  // 1.0 hangs a door object on every doorway of every walled region when it builds a world,
+  // including the openings an author lists along the joint between two pieces of one group —
+  // the pieces are one room, and a row of shut doors across their middle blocks 1.0's own
+  // stealth line of sight. This takes those doors off. It runs from onWorldCreate, at the very
+  // end of 1.0's scenario → world builder, after the game has hung its doors — for played
+  // worlds and for the editor's throwaway preview worlds alike (the preview should show the
+  // room as one). Known limits: if the GM later changes a piece's walls (`wall_change`), 1.0
+  // re-hangs doors on that piece's doorways and this does not run again; and saves made before
+  // this mod was installed keep their joint doors (remove them in god mode, or start a new
+  // game).
+  arpg.onWorldCreate(world => {
+    const n = removeJointDoors(world);
+    if (n) console.info(`[region-groups] took ${n} doors off the joints between region pieces`);
+  });
+
+  arpg.regionGroups = { groupsOf, mergeRegionLines, touching, planeOfRegion, removeJointDoors };
 })();

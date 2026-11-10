@@ -192,3 +192,52 @@ test('the real 1.0 arrival and same-room tests accept any piece', () => {
   assert.equal(hN(planes, planes.regions[2], [11, 11]), false, 'a floor away');
   assert.equal(hN(planes, planes.regions[0], [15, 11]), false, 'either way round');
 });
+
+// 1.0 hangs a door object on every doorway when it builds a world; the mod takes the ones on
+// a joint between two pieces of one group back off. A door: type 'object', objectTemplate.door
+// truthy, dead falsy, zero width or height, on the edge between its pos cell and the neighbour
+// its zero dimension points at.
+const door = (x, y) => ({ type: 'object', objectTemplate: { door: 'door' }, pos: [x, y], size: [1, 0] });
+
+test('doors 1.0 hangs across a joint are taken off when the world is built', () => {
+  const arpg = load();
+  const barn = (position, size) => ({ name: 'Tithe Barn', position, size, wall: 'timber' });
+  const w = {
+    regionsRev: 0,
+    regions: [barn([70, 34], [10, 4]), barn([70, 38], [4, 5]), r('Store', [76, 34], [2, 2], { wall: 'wood' })],
+    entities: [
+      door(70, 38), door(71, 38), door(72, 38), door(73, 38), // the joint
+      door(74, 34),                                            // the front door
+      door(76, 36),                                            // the closet's door
+      { type: 'object', objectTemplate: {}, pos: [71, 35], size: [1, 1] }, // not a door
+      { type: 'npc', name: 'Alys', pos: [72, 35], size: [1, 1] },
+    ],
+  };
+  arpg.worldCreated(w, {}, false);
+  assert.deepEqual(w.entities.map(e => e.pos), [[74, 34], [76, 36], [71, 35], [72, 35]],
+    'the front door, the closet door, the object and the NPC remain');
+  assert.equal(arpg.regionGroups.removeJointDoors(w), 0, 'nothing left to take off');
+});
+
+test('doors between same-name rooms that do not touch stay', () => {
+  const arpg = load();
+  const w = {
+    regionsRev: 0,
+    regions: [r('Bedroom', [10, 10], [2, 2], { wall: 'wood' }), r('Bedroom', [25, 25], [2, 2], { wall: 'wood' })],
+    entities: [door(10, 10), door(25, 25)],
+  };
+  arpg.worldCreated(w, {}, false);
+  assert.equal(w.entities.length, 2, 'both doors stay');
+});
+
+test('editing worlds are cleaned too', () => {
+  const arpg = load();
+  const barn = (position, size) => ({ name: 'Tithe Barn', position, size, wall: 'timber' });
+  const w = {
+    regionsRev: 0,
+    regions: [barn([70, 34], [10, 4]), barn([70, 38], [4, 5])],
+    entities: [door(70, 38)],
+  };
+  arpg.worldCreated(w, {}, true);
+  assert.deepEqual(w.entities, [], 'the joint door is gone from the editor preview too');
+});
