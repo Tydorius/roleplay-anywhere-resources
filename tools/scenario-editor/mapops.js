@@ -36,14 +36,59 @@
     return best;
   }
 
-  /** Doors moved onto the region's (new) edge, duplicates removed, as the game does after a resize. */
+  /** Doors moved onto the region's (new) edge, duplicates removed, as the game does after a resize. A door
+   *  still on the edge keeps its side (1.0's third value); one that had to move opens every side again. */
   function snapOpenings(region) {
     const r = rect(region), out = [];
     for (const o of region.openings || []) {
-      const c = onEdge(r, o) ? [o[0], o[1]] : nearestEdgeCell(r, o);
-      if (!out.some(d => eqCell(d, c))) out.push(c);
+      const c = onEdge(r, o) ? o.slice() : nearestEdgeCell(r, o);
+      if (!out.some(d => eqCell(d, c) && d[2] === c[2])) out.push(c);
     }
     return out;
+  }
+
+  /** Openings moved by (dx, dy), keeping anything after x and y (1.0's side: "n", "e", "s" or "w"). */
+  function shiftOpenings(list, dx, dy) {
+    return (list || []).map(c => [c[0] + dx, c[1] + dy, ...c.slice(2)]);
+  }
+
+  // ---------------------------------------------------------------- planes (Anywhere RPG 1.0 floors)
+  const FLOOR_GAP = 24;      // the game lays floors out east of the map, 24 cells apart
+
+  /** A floor: a region with `pocket: {anchor, level}`, laid out as its own plane beside the map. */
+  const isFloor = r => !!(r && r.pocket && typeof r.pocket === "object" && r.position && r.size);
+
+  /** Every plane as an inclusive rect: the map first, then each floor. */
+  function planes(scn) {
+    return [[0, 0, scn.gridSize[0] - 1, scn.gridSize[1] - 1], ...scn.regions.filter(isFloor).map(rect)];
+  }
+
+  /** The plane that holds rect r wholly, or null. */
+  function planeOf(scn, r) {
+    return planes(scn).find(p => containsRect(p, r)) || null;
+  }
+
+  /** The plane under cell (x, y), or null. */
+  function planeAt(scn, x, y) {
+    return planes(scn).find(p => inRect(p, x, y)) || null;
+  }
+
+  /** [width, height] from 0,0 that holds the map and every floor (the game's own extent). */
+  function extent(scn) {
+    let [w, h] = scn.gridSize;
+    for (const r of scn.regions.filter(isFloor)) { w = Math.max(w, r.position[0] + r.size[0]); h = Math.max(h, r.position[1] + r.size[1]); }
+    return [w, h];
+  }
+
+  /** (dx, dy) shortened so rect r stays inside plane p. */
+  function clampShift(p, r, dx, dy) {
+    return [Math.max(p[0] - r[0], Math.min(p[2] - r[2], dx)), Math.max(p[1] - r[1], Math.min(p[3] - r[3], dy))];
+  }
+
+  /** The bottom-left for a footprint of `size` at (x, y), kept on the plane under (x, y) (the map if none). */
+  function clampTo(scn, x, y, size) {
+    const p = planeAt(scn, x, y) || planes(scn)[0];
+    return [Math.max(p[0], Math.min(p[2] - size[0] + 1, x)), Math.max(p[1], Math.min(p[3] - size[1] + 1, y))];
   }
 
   /** Regions strictly inside `region` (not itself), and entities standing wholly inside it. */
@@ -85,8 +130,17 @@
     return null;
   }
 
+  /** Whether rect r lies wholly on the map or wholly on one floor. */
   function inGrid(scn, r) {
-    return r[0] >= 0 && r[1] >= 0 && r[2] < scn.gridSize[0] && r[3] < scn.gridSize[1];
+    return !!planeOf(scn, r);
+  }
+
+  /** null if floor rect q keeps clear of the map and of every other floor, else why not. */
+  function floorProblem(scn, region, q) {
+    if (q[0] < 0 || q[1] < 0) return `"${region.name}" would leave the map's coordinates`;
+    if (!disjoint(q, planes(scn)[0])) return `the floor "${region.name}" would cover the map`;
+    const other = scn.regions.find(o => o !== region && isFloor(o) && !disjoint(rect(o), q));
+    return other ? `the floor "${region.name}" would run into the floor "${other.name}"` : null;
   }
 
   // ---------------------------------------------------------------- ids and names
@@ -109,9 +163,14 @@
   /** Moves a region with everything inside it (rooms, doors, objects, people) by (dx, dy), shortened
    *  so it stays on the map. Returns {dx, dy} actually moved, or {error} without changing anything. */
   function moveRegion(scn, region, dx, dy, set) {
-    const r = rect(region), [gw, gh] = scn.gridSize;
-    dx = Math.max(-r[0], Math.min(gw - 1 - r[2], dx));
-    dy = Math.max(-r[1], Math.min(gh - 1 - r[3], dy));
+    const r = rect(region);
+    if (isFloor(region)) {           // a floor goes anywhere clear of the map and the other floors
+      dx = Math.max(-r[0], dx); dy = Math.max(-r[1], dy);
+      const err = (dx || dy) && floorProblem(scn, region, [r[0] + dx, r[1] + dy, r[2] + dx, r[3] + dy]);
+      if (err) return {error: err};
+    } else {                         // anything else stays on its plane
+      [dx, dy] = clampShift(planeOf(scn, r) || planes(scn)[0], r, dx, dy);
+    }
     if (!dx && !dy) return {dx: 0, dy: 0};
     const inside = contents(scn, region), moved = [region, ...inside.regions];
     const proposed = new Map(moved.map(o => { const q = rect(o); return [o, [q[0] + dx, q[1] + dy, q[2] + dx, q[3] + dy]]; }));
@@ -119,7 +178,7 @@
     if (err) return {error: err};
     for (const o of moved) {
       set(o, "position", [o.position[0] + dx, o.position[1] + dy]);
-      set(o, "openings", (o.openings || []).map(c => [c[0] + dx, c[1] + dy]));
+      set(o, "openings", shiftOpenings(o.openings, dx, dy));
     }
     for (const e of inside.entities) set(e, "pos", [e.pos[0] + dx, e.pos[1] + dy]);
     return {dx, dy};
@@ -127,11 +186,9 @@
 
   /** Moves entities together by (dx, dy), shortened so all stay on the map. Returns {dx, dy}. */
   function moveEntities(scn, ents, dx, dy, set) {
-    const [gw, gh] = scn.gridSize;
     for (const e of ents) {
       const r = rect(e);
-      dx = Math.max(-r[0], Math.min(gw - 1 - r[2], dx));
-      dy = Math.max(-r[1], Math.min(gh - 1 - r[3], dy));
+      [dx, dy] = clampShift(planeOf(scn, r) || planeAt(scn, e.pos[0], e.pos[1]) || planes(scn)[0], r, dx, dy);
     }
     if (dx || dy) for (const e of ents) set(e, "pos", [e.pos[0] + dx, e.pos[1] + dy]);
     return {dx, dy};
@@ -146,9 +203,10 @@
     const centre = [e.pos[0] + Math.floor((size[0] - 1) / 2), e.pos[1] + Math.floor((size[1] - 1) / 2)];
     const ns = p % 2 ? [size[1], size[0]] : [size[0], size[1]];
     const rot = ((e.rot || 0) + p) % 4;
+    const pl = planeAt(scn, centre[0], centre[1]) || planes(scn)[0];
     let x = centre[0] - Math.floor((ns[0] - 1) / 2), y = centre[1] - Math.floor((ns[1] - 1) / 2);
-    x = Math.max(0, Math.min(scn.gridSize[0] - ns[0], x));
-    y = Math.max(0, Math.min(scn.gridSize[1] - ns[1], y));
+    x = Math.max(pl[0], Math.min(pl[2] - ns[0] + 1, x));
+    y = Math.max(pl[1], Math.min(pl[3] - ns[1] + 1, y));
     set(e, "rot", rot || undefined);
     set(e, "size", ns);
     set(e, "pos", [x, y]);
@@ -196,7 +254,9 @@
     for (const [o, q] of proposed) {
       const minSize = o.wall ? 2 : 1;
       if (q[2] - q[0] + 1 < minSize || q[3] - q[1] + 1 < minSize) return {error: `"${o.name}" would be too small`};
-      if (!inGrid(scn, q)) return {error: `"${o.name}" would leave the map`};
+      if (isFloor(o)) { const err = floorProblem(scn, o, q); if (err) return {error: err}; continue; }
+      const home = planeOf(scn, rect(o));
+      if (!home || !containsRect(home, q)) return {error: `"${o.name}" would leave ${home && home !== planes(scn)[0] && !sameRect(home, planes(scn)[0]) ? "its floor" : "the map"}`};
     }
     const err = nestingProblem(scn, proposed);
     if (err) return {error: err};
@@ -231,7 +291,7 @@
     if (cell[1] === r[3]) dirs.push([0, 1]);
     for (const [dx, dy] of dirs) {
       const n = [cell[0] + dx, cell[1] + dy];
-      if (n[0] < 0 || n[1] < 0 || n[0] >= scn.gridSize[0] || n[1] >= scn.gridSize[1]) continue;
+      if (!planeAt(scn, n[0], n[1])) continue;
       for (const w of scn.regions) {
         if (!w.wall) continue;
         const q = rect(w), a = inRect(q, cell[0], cell[1]), b = inRect(q, n[0], n[1]);
@@ -255,9 +315,9 @@
     for (const {region: w, cell: c} of pairs) {
       const list = (touched.get(w) || w.openings || []).slice();
       const at = list.findIndex(d => eqCell(d, c));
-      if (has && at >= 0) list.splice(at, 1);
-      if (!has && at < 0) list.push([c[0], c[1]]);
-      touched.set(w, list);
+      const kept = has ? list.filter(d => !eqCell(d, c)) : list;     // every side of that cell
+      if (!has && at < 0) kept.push([c[0], c[1]]);
+      touched.set(w, kept);
     }
     for (const [w, list] of touched) set(w, "openings", list);
     return {added: !has, regions: [...touched.keys()].map(w => w.name)};
@@ -293,8 +353,7 @@
   /** Places a copy of an object template with its footprint's bottom-left at (x, y), kept on the map. */
   function placeObject(scn, tpl, x, y, set) {
     const size = (tpl.size || [1, 1]).slice();
-    x = Math.max(0, Math.min(scn.gridSize[0] - size[0], x));
-    y = Math.max(0, Math.min(scn.gridSize[1] - size[1], y));
+    [x, y] = clampTo(scn, x, y, size);
     const e = {id: newId("obj"), type: "object", name: nextName(tpl.name, scn.entities.map(o => o.name)),
       pos: [x, y], size, hp: tpl.maxHp ?? 50, maxHp: tpl.maxHp ?? 50, inventory: [],
       statusEffects: (tpl.startingEffects || []).map(def => ({id: newId("se"), def: clone(def), appliedAt: 28800, source: "template"})),
@@ -346,14 +405,17 @@
     if (!(w >= 8 && h >= 8 && w <= 1024 && h <= 1024)) return {error: "The map must be between 8 and 1024 cells on each side"};
     const {dx, dy} = anchorShift(scn, w, h, anchor);
     const fits = r => r[0] + dx >= 0 && r[1] + dy >= 0 && r[2] + dx < w && r[3] + dy < h;
-    const outside = [...scn.regions.filter(r => !fits(rect(r))), ...scn.entities.filter(e => !fits(rect(e)))].map(o => o.name);
+    const floors = scn.regions.filter(isFloor).map(rect), onFloor = o => floors.some(f => containsRect(f, rect(o)));
+    const outside = [...scn.regions.filter(r => !onFloor(r) && !fits(rect(r))),
+      ...scn.entities.filter(e => !onFloor(e) && !fits(rect(e)))].map(o => o.name);
     if (outside.length) return {error: `${outside.length} thing${outside.length === 1 ? "" : "s"} would end up off the map`, outside};
-    if (dx || dy) {
-      for (const r of scn.regions) {
-        set(r, "position", [r.position[0] + dx, r.position[1] + dy]);
-        set(r, "openings", (r.openings || []).map(c => [c[0] + dx, c[1] + dy]));
-      }
-      for (const e of scn.entities) set(e, "pos", [e.pos[0] + dx, e.pos[1] + dy]);
+    // Floors keep their places relative to each other, moving east (or north) only as far as the new map needs.
+    const fx = floors.length ? Math.max(0, w + FLOOR_GAP - Math.min(...floors.map(f => f[0]))) : 0;
+    for (const [list, key] of [[scn.regions, "position"], [scn.entities, "pos"]]) for (const o of list) {
+      const [ox, oy] = onFloor(o) ? [fx, 0] : [dx, dy];
+      if (!ox && !oy) continue;
+      set(o, key, [o[key][0] + ox, o[key][1] + oy]);
+      if (key === "position") set(o, "openings", shiftOpenings(o.openings, ox, oy));
     }
     set(scn, "gridSize", [w, h]);
     return {dx, dy};
@@ -361,7 +423,8 @@
 
   /** The smallest rectangle (inclusive [x0, y0, x1, y1]) holding every region and entity, or null. */
   function usedBounds(scn) {
-    const rs = [...scn.regions.map(rect), ...scn.entities.map(rect)];
+    const floors = scn.regions.filter(isFloor).map(rect), off = r => floors.some(f => containsRect(f, r));
+    const rs = [...scn.regions.map(rect), ...scn.entities.map(rect)].filter(r => !off(r) && r[2] >= r[0] && r[3] >= r[1]);
     if (!rs.length) return null;
     return [Math.min(...rs.map(r => r[0])), Math.min(...rs.map(r => r[1])), Math.max(...rs.map(r => r[2])), Math.max(...rs.map(r => r[3]))];
   }
@@ -384,7 +447,8 @@
       n.id = newId("rgn");
       n.name = nextName(r.name.replace(/ \d+$/, ""), names); names.push(n.name);
       n.position = [r.position[0] + dx, r.position[1] + dy];
-      n.openings = (r.openings || []).map(c => [c[0] + dx, c[1] + dy]);
+      n.openings = shiftOpenings(r.openings, dx, dy);
+      if (isFloor(n)) return {error: "Copy the rooms on a floor, not the floor itself"};
       if (!inGrid(scn, rect(n))) return {error: "The copy would leave the map"};
       regs.push(n);
     }
@@ -393,6 +457,7 @@
       const n = clone(e);
       n.id = newId("obj"); n.pos = [e.pos[0] + dx, e.pos[1] + dy];
       n.name = nextName(e.name.replace(/ \d+$/, ""), enames); enames.push(n.name);
+      delete n.portal;          // a link belongs to the pair it joins
       for (const s of n.statusEffects || []) s.id = newId("se");
       for (const s of n.inventory || []) s.id = newId("it");
       return n;
@@ -402,7 +467,8 @@
     return {region: regs[0]};
   }
 
-  return {rect, inRect, containsRect, disjoint, partial, onEdge, nearestEdgeCell, snapOpenings, contents, parentOf,
+  return {rect, inRect, containsRect, disjoint, partial, onEdge, nearestEdgeCell, snapOpenings, shiftOpenings,
+    FLOOR_GAP, isFloor, planes, planeOf, planeAt, extent, clampTo, contents, parentOf,
     regionAt, nestingProblem, newId, nextName, moveRegion, moveEntities, rotateObject, resizeRegion, edgeAt, doorSet,
     toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds};
 });
