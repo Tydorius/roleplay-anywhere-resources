@@ -341,6 +341,7 @@ function card(it) {
       <div class="name" title="${esc(it.name)}">${esc(it.name)}</div>
       <div class="desc" title="${esc(it.desc)}">${esc(it.editDesc ?? it.desc)}</div>
       ${error ? `<div class="err">${esc(error)}</div>` : ""}
+      ${it.note ? `<div class="meta">${esc(it.note)}</div>` : ""}
       ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}</div>` : ""}
       ${it.editing ? `<div class="edit">
           <textarea class="desc-edit" spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
