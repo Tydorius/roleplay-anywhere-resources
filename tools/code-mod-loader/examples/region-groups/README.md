@@ -1,8 +1,8 @@
 # Region groups (shapes beyond rectangles)
 
-The game's regions are **rectangles only**. A region is a `position` plus a `size`, and every
-"is this cell in it?" check is a rectangle test. This mod lets several rectangles that share a
-name act as **one region**, so you can build:
+The game's regions are **rectangles**. A region is a `position` plus a `size`; 1.0's natural
+shape only rounds the outline of one unwalled rectangle. This mod lets several rectangles that
+share a name act as **one region**, so you can build:
 
 - **A forest wrapped round a village,** as four strips all named "The Forest".
 - **An L-shaped house,** as two walled rectangles named "Manor".
@@ -83,6 +83,19 @@ Two known limits:
   mode, or start a new game.
 - If the GM later changes a piece's walls (`wall_change`), 1.0 hangs doors on that piece's
   doorways again.
+
+## Checked in the game
+
+On 1.0 (build 26557354), with the L-shaped Tithe Barn in the Thornbury mods test save:
+- **Walking:** sent to "Tithe Barn" from south of the wing, an NPC walked to the wing. Without
+  the mod he headed for the first piece, round the far side.
+- **Arriving:** an NPC already standing in the wing counted as arrived at once. Without the mod
+  he set off for the first piece.
+- **Same room:** with the player in the main piece, the GM prompt listed the NPC in the wing
+  under "Characters in same space as player", and the region list named the barn once.
+
+That save was started before this mod took doors off joints, so its barn still had four doors
+across the joint. Taking them off is covered by the tests only.
 
 ## Patches
 

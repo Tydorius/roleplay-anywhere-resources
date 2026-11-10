@@ -50,6 +50,16 @@ across the game's prompt rebuilds.
 
 ## Checked in the game
 
-Not yet checked on 1.0.
+On 1.0 (build 26557354), in the Thornbury mods test save:
+- **From the Inn Common Room:** Alys and Hal, in the same room, are noticed. Margery in the
+  kitchen and Tobias in the guest rooms, 10 cells away behind walls, are not. Of the objects
+  within 14 cells, the 38 in walled-off rooms dropped out and 13 stayed.
+- **In the GM prompt** (one GM turn, player in the L-shaped Tithe Barn): "Characters in same
+  space as player" listed Tobias, in the barn's other piece. It didn't list Hal, 13 cells away
+  outside the barn wall, or Margery, 4.5 cells away behind the Barrow's wall. Only Tobias got a
+  "now in player vicinity" event; without the mod Margery would have got one too.
+- **Outdoors:** with the player east of the barn, someone 14 cells to the west, also outdoors,
+  is no longer noticed. Someone on open ground with a clear line still is.
+- No hook errors. A check of every entity within range of the player took 3 ms.
 
 Needs the loader's `perception`, `line-of-sight` and `sight-blockers` patches.

@@ -14,7 +14,7 @@ changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 
 | Version | Date | Changes |
 |---|---|---|
-| 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors. Both mods are ported to 1.0. |
+| 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors and take 1.0's doors off the joints between pieces. Both mods are ported to 1.0. |
 | 2.0.0 | 2026-11-10 | For Anywhere RPG 1.0 only. Reads 1.0's version; fixes the `world-create` and `gm-prompt` patches for 1.0; `onPrompt` hooks now get the context limits; drops the `prompt-budgets`, `nav-cache-get/put`, `edge-memo` and `nav-grid` patches with the `promptBudgets`, `setNavCache` and `onNav` APIs; retires the portals, floors and performance mods (1.0 does them natively); `memory-add` writes 1.0's prose memory. |
 | 1.0.0 | 2026-11-01 | First release, for Anywhere RPG 0.18: the loader, seven mods (lorebooks, portals, wall-aware perception, floors, performance, region groups, lights) and one-step install. |
 
