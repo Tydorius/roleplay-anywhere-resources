@@ -12,8 +12,10 @@ It runs on Python 3.8+ with the standard library only (Pillow is optional,
 just for map previews), and the scenario builder, validator and preview
 renderer are vendored — nothing outside this folder is needed.
 
-**Game version:** built for Anywhere RPG 0.18. Its only contract with the game is the
-0.18 scenario format; the extensions also need the 0.18 code-mod loader mods.
+**Game version:** being ported to Anywhere RPG 1.0. Its only contract with the game is the
+scenario format. It still writes the 0.18 form, which 1.0 reads unchanged, and its validator already
+follows 1.0's rules (see `worldgen/vendor/README.md`). Writing 1.0's own floors, doors, locks, liquids
+and populations comes next. The extensions still need the 0.18 code-mod loader mods.
 
 > **Still in progress:** layout improvements are under way. Maps can come out long and wide,
 > with empty ground in places and squeezed furniture. A world's `plan.json` holds everything

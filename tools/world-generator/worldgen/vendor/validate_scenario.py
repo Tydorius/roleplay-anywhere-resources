@@ -11,36 +11,16 @@ import re
 import sys
 import zipfile
 
-ANIMATIONS = set("""adventurer-man adventurer-woman alien archer-man archer-woman arctic-explorer astronaut athlete-man
-athlete-woman barbarian-man barbarian-woman bard-man bard-woman bat bat-swarm blacksmith-man blacksmith-woman boar brown-bear
-butcher-man butcher-woman casual-man casual-woman cat caveperson-man caveperson-woman chef-man chef-woman chicken child cleric-man
-cleric-woman cow cowboy-man cowboy-woman crow cultist cyborg-man cyborg-woman deer demon detective-man detective-woman doctor-man
-doctor-woman dog dwarf-man dwarf-woman eagle egyptian-man egyptian-woman elemental elf-man elf-woman farmer-man farmer-woman
-firefighter-man firefighter-woman formal-man formal-woman ghost giant-lizard giant-rat goblin golem gray-wolf hacker-man
-hacker-woman hazmat hoplite horse insect-swarm insectoid-alien jester kimono-man kimono-woman knight-man knight-woman
-line-infantry-man line-infantry-woman mage-man mage-woman mimic monk-man monk-woman mummy mushroom-folk mutant necromancer-man
-necromancer-woman ninja-man ninja-woman nomad-man nomad-woman office-man office-woman officer-man officer-woman old-man old-woman
-orc peasant-man peasant-woman pig pirate-man pirate-woman plague-doctor police-man police-woman punk-man punk-woman raider-man
-raider-woman red-fox robot rogue-man rogue-woman royalty-man royalty-woman samurai-man samurai-woman serpent sheep skeleton slime
-soldier-man soldier-woman space-marine spider steampunk-man steampunk-woman superhero-man superhero-woman tentacle-horror
-tree-ent troll vampire-man vampire-woman viking-man viking-woman werewolf witch worker-man worker-woman wyvern zombie""".split())
-GROUND = {"grass", "dirt", "gravel", "wood", "stone"}
-TEXTURES = {"grass", "undergrowth", "dirt", "mud", "sand", "gravel", "rock", "snow", "cobblestone", "flagstone-light",
-            "flagstone-dark", "asphalt", "concrete", "floorboards", "parquet", "tile-marble", "tile-slate", "tile-ceramic",
-            "tile-ceramic-turquoise", "carpet-red", "carpet-blue", "carpet-green", "metal-deck", "tech-panel", "bio-mold",
-            "bio-slime-purple", "crystals-green", "crystals-purple", "crystals-red"}
-WALLS = {"wood", "brick", "stone", "steel"}
-AMBIENCE = {"bar_tavern", "beach", "cave", "computer", "crickets", "fireplace", "machine_shop", "medieval_battle",
-            "nature_outdoors", "outdoor_crowd", "quiet_indoor", "river_stream", "underwater", "urban_city", "warzone", "none"}
-ITEM_TYPES = {"wieldable", "head", "face", "necklace", "innerTorso", "torso", "gloves", "pants", "boots", "ring",
-              "consumable", "misc", "material"}
-SLOTS = {"head", "face", "necklace", "innerTorso", "torso", "wieldable1", "wieldable2", "gloves", "pants", "boots", "ring",
-         "wieldable"}  # "wieldable" accepted loosely; the engine's own slot keys are wieldable1/2
-QUALITY = {"common", "uncommon", "rare", "epic", "legendary"}
-WEATHER = {"clear", "fog", "rain", "thunderstorm", "snow", "blizzard", "wind", "dust_storm", "meteor_shower", "heat"}
-ATTRS = {"strength", "dexterity", "intellect", "perception", "charisma"}
-AGES = {"Child", "Teen", "Adult", "MiddleAged", "Senior"}
-PITCH = {"Deeper", "Average", "Brighter"}
+# The value lists and the Anywhere RPG 1.0 rules come from scenario_checks.py, vendored beside this file as an exact
+# copy of tools/scenario-editor/scenario_checks.py (a test fails when the two drift apart).
+try:
+    from . import scenario_checks as sc
+except ImportError:  # run as a script: python worldgen/vendor/validate_scenario.py
+    import scenario_checks as sc
+
+ANIMATIONS, ANIMATION_ALIASES, GROUND, TEXTURES, WALLS = sc.ANIMATIONS, sc.ANIMATION_ALIASES, sc.GROUND, sc.TEXTURES, sc.WALLS
+AMBIENCE, ITEM_TYPES, SLOTS, QUALITY, WEATHER = sc.AMBIENCE, sc.ITEM_TYPES, sc.SLOTS, sc.QUALITY, sc.WEATHER
+ATTRS, AGES, PITCH, STANCES = sc.ATTRS, sc.AGES, sc.PITCH, sc.STANCES
 HHMM = re.compile(r"^\d\d:\d\d$")
 
 
@@ -89,6 +69,7 @@ def validate(scn, media):
         for v in ([amb] if isinstance(amb, str) else (amb or {}).values()):
             if v not in AMBIENCE:
                 W.append(f"region {r.get('name')!r}: ambience {v!r} has no shipped sound folder")
+    floors = {r["id"]: sc.rect(r["position"], r["size"]) for r in scn.get("regions", []) if sc.is_floor(r)}
     for r in scn.get("regions", []):
         names.add(r["name"])
         if "openings" not in r:
@@ -97,18 +78,22 @@ def validate(scn, media):
             W.append(f"region {r['name']!r}: wall {r['wall']!r} becomes 'wood'")
         x, y = r["position"]
         w, h = r["size"]
-        if x < 0 or y < 0 or x + w > gw or y + h > gh:
+        on_map = not (x < 0 or y < 0 or x + w > gw or y + h > gh)
+        if r["id"] in floors:  # a 1.0 floor: its own plane, beside the map
+            if on_map or not sc.disjoint(floors[r["id"]], (0, 0, gw - 1, gh - 1)):
+                E.append(f"floor {r['name']!r} lies on the map; floors go beside it")
+        elif not on_map and sc.plane_of(floors, sc.rect(r["position"], r["size"])) is None:
             E.append(f"region {r['name']!r} out of bounds")
         if r.get("wall"):
             if not r.get("openings"):
                 W.append(f"walled region {r['name']!r} has no openings: it is sealed")
-            for ox, oy in r.get("openings", []):
-                if not (x <= ox < x + w and y <= oy < y + h and (ox in (x, x + w - 1) or oy in (y, y + h - 1))):
-                    E.append(f"region {r['name']!r}: opening {[ox, oy]} not on its perimeter")
+            for o in r.get("openings", []):  # [x, y] or 1.0's [x, y, side]
+                if not sc.is_opening(o) or not sc.opening_sides(r, o):
+                    E.append(f"region {r['name']!r}: opening {o} not on its perimeter")
 
     items = {t["id"]: t for t in scn.get("itemTemplates", [])}
     objs = {t["id"]: t for t in scn.get("objectTemplates", [])}
-    htpl = {t["id"]: t for t in scn.get("hostileNpcTemplates", [])}
+    htpl = {t["id"]: t for t in sc.npc_templates(scn)[0]}
     for t in items.values():
         if t.get("type") not in ITEM_TYPES:
             E.append(f"item {t['name']!r}: type {t.get('type')!r}")
@@ -125,9 +110,13 @@ def validate(scn, media):
             E.append(f"template {t['name']!r}: money is a tier 0-5, got {t['money']}")
     region_ids = {r["id"] for r in scn.get("regions", [])}
     for t in htpl.values():
-        if t.get("regionId") not in region_ids:
+        homes = sc.template_homes(t)
+        if not homes and "homes" not in t:
             E.append(f"hostile template {t['name']!r}: regionId does not resolve")
-        if t.get("animationId") not in ANIMATIONS:
+        for rid, _count in homes:
+            if rid not in region_ids:
+                E.append(f"hostile template {t['name']!r}: home region {rid!r} does not resolve")
+        if t.get("animationId") not in ANIMATIONS and t.get("animationId") not in ANIMATION_ALIASES:
             E.append(f"hostile template {t['name']!r}: animationId {t.get('animationId')!r}")
 
     ids = set()
@@ -152,11 +141,11 @@ def validate(scn, media):
             continue
         if e.get("templateId") and e["templateId"] not in htpl:
             E.append(f"npc {e['name']!r}: templateId does not resolve")
-        if e.get("animationId") not in ANIMATIONS:
+        if e.get("animationId") not in ANIMATIONS and e.get("animationId") not in ANIMATION_ALIASES:
             E.append(f"{e['type']} {e['name']!r}: animationId {e.get('animationId')!r} (falls back to casual-*)")
         if e.get("gender") not in ("male", "female"):
             E.append(f"{e['type']} {e['name']!r}: gender {e.get('gender')!r}")
-        if e.get("stance") not in (None, "hostile", "neutral", "fleeing"):
+        if e.get("stance") is not None and e["stance"] not in STANCES:
             E.append(f"npc {e['name']!r}: stance {e['stance']!r}")
         vp = e.get("voiceProfile") or {}
         if set(vp.get("age", [])) - AGES or set(vp.get("pitch", [])) - PITCH:

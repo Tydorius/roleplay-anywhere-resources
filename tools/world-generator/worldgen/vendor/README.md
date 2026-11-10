@@ -1,7 +1,13 @@
 # Vendored scenario tools
 
-The three tools in this folder are vendored so the generator is self-contained:
+The tools in this folder are vendored so the generator is self-contained:
 the pipeline never touches anything outside this repository.
+
+- `scenario_checks.py` is an **exact copy** of `tools/scenario-editor/scenario_checks.py` (Anywhere RPG
+  1.0's value lists and map rules). `validate_scenario.py` imports its lists and 1.0 rules from it:
+  floors beside the map (`pocket` regions), `[x, y, side]` openings, `npcTemplates` with homes and the
+  renamed sprites. Copy the editor's file here after changing it; `tests/test_vendor_checks.py` fails
+  while the two differ. `build_scenario.py` doesn't emit any 1.0 feature yet.
 
 - Source: the `_tools/` folder of the Roleplay Anywhere Scenarios workspace
   on Michael's machine (files `build_scenario.py`, `validate_scenario.py`,

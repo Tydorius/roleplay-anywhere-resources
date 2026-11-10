@@ -188,7 +188,8 @@ const regions = () => S.scn?.regions || [];
 const entities = () => S.scn?.entities || [];
 const byId = id => regions().find(r => r.id === id) || entities().find(e => e.id === id)
   || (S.scn?.objectTemplates || []).find(t => t.id === id) || (S.scn?.itemTemplates || []).find(t => t.id === id)
-  || (S.scn?.hostileNpcTemplates || []).find(t => t.id === id) || null;
+  || (S.scn?.npcTemplates || []).find(t => t.id === id) || (S.scn?.hostileNpcTemplates || []).find(t => t.id === id) || null;
+const npcTypes = () => (S.scn?.npcTemplates || []).concat(S.scn?.hostileNpcTemplates || []);
 const objTpl = id => (S.scn.objectTemplates || []).find(t => t.id === id);
 const area = r => r.size[0] * r.size[1];
 const inRect = (r, x, y) => x >= r.position[0] && y >= r.position[1] && x < r.position[0] + r.size[0] && y < r.position[1] + r.size[1];
@@ -201,7 +202,8 @@ const label = o => o ? (o.name || o.title || o.id) : "(missing)";
 
 // Everything that refers to a thing by id or by name: [{text, id (to jump to), detail}]
 const REF_WORD = {schedule: "", calendar: "calendar event", hostileHome: "hostile type, spawns here", placed: "placed",
-  effectSpawn: "effect spawns it", carried: "carries it", equipped: "wears it", stock: "sells it", loot: "loot", effectItem: "effect makes it"};
+  effectSpawn: "effect spawns it", carried: "carries it", equipped: "wears it", stock: "sells it", loot: "loot", effectItem: "effect makes it",
+  npcHome: "lives here", floorOf: "a floor of it", key: "key to it", portal: "portal leads here"};
 function usedBy(id) {
   return Refs.findRefs(S.scn, id).map(r => ({id: r.ownerId, kind: r.kind, text: r.ownerName || "",
     detail: [REF_WORD[r.kind], r.detail !== r.ownerName ? r.detail : null].filter(Boolean).join(" · ")}));

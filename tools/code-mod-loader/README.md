@@ -74,6 +74,10 @@ game, so **re-run install after adding, changing or removing a mod**.
 - `examples/memory-add` is a sample for mod writers, so it's only installed when you name it. It
   gives the GM a `memory_add` call that appends a sentence to a character's memory, shown in that
   character's panel under Memories. **Works on 1.0.**
+- `examples/lights` gives each light source a kind: candles flicker small and warm, hearths
+  throw embers, bulbs hold steady, arcane crystals pulse blue. It also stops lamp light reaching
+  objects and characters through walls, or from another floor. It works on existing scenarios
+  as they are. **Works on 1.0.** See [its README](examples/lights/README.md).
 - `examples/wall-aware-perception` stops the player and NPCs noticing each other through walls,
   answering with 1.0 stealth's own line of sight. See
   [its README](examples/wall-aware-perception/README.md). **Works on 1.0.**
@@ -81,14 +85,10 @@ game, so **re-run install after adding, changing or removing a mod**.
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md). **Works on 1.0.**
 
-**Being ported to 1.0.** These two still install and load, but they were written and
-play-tested on 0.18. Each gets its own port session; until then they may not work as described:
+**Being ported to 1.0.** This one still installs and loads, but it was written and
+play-tested on 0.18. Until its port lands it may not work as described:
 - `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
   `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
-- `examples/lights` gives each light source a kind: candles flicker small and warm, hearths
-  throw embers, bulbs hold steady, arcane crystals pulse blue. It also stops lamp light reaching
-  objects and characters through walls. It works on existing scenarios as they are. See
-  [its README](examples/lights/README.md).
 
 Tests: `node --test tests/*.test.mjs` in this folder. One test patches the real 1.0 bundle when it
 finds a copy (set `ARPG_BUNDLE_10` to its path); otherwise it's skipped.

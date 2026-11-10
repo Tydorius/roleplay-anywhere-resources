@@ -43,7 +43,7 @@
     }
 
     _jump(e) {
-      const [gw, gh] = this.scn.gridSize;
+      const [gw, gh] = Minimap.extent(this.scn);
       const t = Minimap.fit(gw, gh, this.canvas.clientWidth, this.canvas.clientHeight, 4);
       const [px, py] = this._pixel(e);
       const [x, y] = Minimap.toWorld(t, gh, px, py);
@@ -60,7 +60,7 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, w, h);
       if (!this.scn) return;
-      const [gw, gh] = this.scn.gridSize, t = Minimap.fit(gw, gh, w, h, 4);
+      const [gw, gh] = Minimap.extent(this.scn), t = Minimap.fit(gw, gh, w, h, 4);
       const key = `${bw}x${bh}`;
       if (this.dirty || !this.cache || this.key !== key) { this._build(t, w, h, dpr); this.key = key; this.dirty = false; }
       ctx.drawImage(this.cache, 0, 0, w, h);
@@ -76,9 +76,10 @@
       const off = this.cache || document.createElement("canvas");
       off.width = Math.round(w * dpr); off.height = Math.round(h * dpr);
       const g = off.getContext("2d"), scn = this.scn, col = this.colors, [gw, gh] = scn.gridSize, s = t.scale;
+      const eh = Minimap.extent(scn)[1];
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
       g.clearRect(0, 0, w, h);
-      const P = (x, y) => Minimap.toCanvas(t, gh, x, y);
+      const P = (x, y) => Minimap.toCanvas(t, eh, x, y);
       let [x, y] = P(0, gh);
       g.fillStyle = col.ground(scn.defaultTile || {}); g.fillRect(x, y, gw * s, gh * s);
       const regs = [...(scn.regions || [])].sort((a, b) => b.size[0] * b.size[1] - a.size[0] * a.size[1]);
@@ -100,6 +101,15 @@
         g.fillStyle = c; g.fillRect(x - 1, y - 1, 2, 2);
       }
       this.cache = off;
+    }
+
+    /** [width, height] from 0,0 that holds the map and any 1.0 floors (`pocket` regions) laid out beside it. */
+    static extent(scn) {
+      let [w, h] = scn.gridSize;
+      for (const r of scn.regions || []) if (r.pocket && r.position && r.size) {
+        w = Math.max(w, r.position[0] + r.size[0]); h = Math.max(h, r.position[1] + r.size[1]);
+      }
+      return [w, h];
     }
 
     /** The largest scale at which a gridW × gridH map fits the canvas less `pad` px a side, centred. */

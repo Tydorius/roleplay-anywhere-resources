@@ -24,9 +24,9 @@ Object.assign(S, {tool: "select", hover: null, hoverEdge: null, placeTpl: recall
 
 function fit() {
   if (!S.scn) return;
-  const r = cv.getBoundingClientRect(), [w, h] = S.scn.gridSize;
+  const r = cv.getBoundingClientRect(), [w, h] = MapOps.extent(S.scn);     // the map and any floors beside it
   S.view.s = Math.max(1, Math.min((r.width - 20) / w, (r.height - 20) / h));
-  S.view.ox = (r.width - w * S.view.s) / 2; S.view.oy = (r.height - h * S.view.s) / 2;
+  S.view.ox = (r.width - w * S.view.s) / 2; S.view.oy = (r.height - h * S.view.s) / 2 + (h - H()) * S.view.s;
 }
 function center(x, y, minScale = 14) {
   const r = cv.getBoundingClientRect();
@@ -49,6 +49,14 @@ function sprite(tid) {
 }
 
 const groundColor = g => g.groundColor || GROUND[g.groundTexture] || GROUND_BASE[g.ground] || "#8aa16f";
+/** A 1.0 liquid's colour: from the open world's media list, else the game's own default for a new one. */
+const liquidColor = g => ((S.scn.unbounded?.profile?.media || []).find(m => m && m.name === g.surface)?.color) || "#3a6d8a";
+const isOrganic = g => g.shape === "organic" && !g.wall && !g.pocket && Math.min(g.size[0], g.size[1]) >= 5;
+function regionPath(g, X, Y, w, h) {
+  ctx.beginPath();
+  if (isOrganic(g)) ctx.ellipse(X + w / 2, Y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);   // the game's blob, roughly
+  else ctx.rect(X, Y, w, h);
+}
 const wallColor = g => g.wallColor || WALL[g.wall] || WALL.wood;
 const personColor = e => { const k = entKind(e); return S.layers[k]?.hide ? null : LAYERS.find(l => l.key === k).color; };
 const selColor = () => getComputedStyle(document.documentElement).getPropertyValue("--sel").trim() || "#e0a100";
@@ -57,6 +65,13 @@ const selColor = () => getComputedStyle(document.documentElement).getPropertyVal
 function drawObject(e, X, Y, w, h, s, alpha = 1) {
   const img = s >= 4 && sprite(e.templateId), t = objTpl(e.templateId) || {};
   ctx.globalAlpha = alpha;
+  if (!w || !h) {                     // a 1.0 door object: zero-wide, on the doorway's wall line
+    ctx.fillStyle = (t.door === "curtain" ? "#b5654a" : t.door === "bars" ? "#7d8790" : "#8a5a2b");
+    if (!w) ctx.fillRect(X - Math.max(1.5, s * .12), Y, Math.max(3, s * .24), s);
+    else ctx.fillRect(X, Y - Math.max(1.5, s * .12), s, Math.max(3, s * .24));
+    ctx.globalAlpha = 1;
+    return;
+  }
   if (img) {
     const rot = e.rot || 0, cw = w * s, ch = h * s;
     ctx.save(); ctx.translate(X + cw / 2, Y + ch / 2); ctx.rotate(rot * Math.PI / 2);   // quarter turns, clockwise on screen
@@ -102,20 +117,29 @@ function draw() {
   const s = S.view.s, [gw, gh] = S.scn.gridSize, L = S.layers;
   ctx.fillStyle = groundColor(S.scn.defaultTile || {});
   ctx.fillRect(sx(0), sy(gh), gw * s, gh * s);
+  const floors = regions().filter(MapOps.isFloor);
+  for (const f of floors) {             // a floor is its own plane, beside the map
+    ctx.fillStyle = groundColor(S.scn.defaultTile || {});
+    ctx.fillRect(sx(f.position[0]), sy(f.position[1] + f.size[1]), f.size[0] * s, f.size[1] * s);
+  }
 
   const regs = [...regions()].sort((a, b) => area(b) - area(a));
   for (const g of regs) {
     if (L[regionLayer(g)].hide) continue;
     const X = sx(g.position[0]), Y = sy(g.position[1] + g.size[1]);
-    ctx.fillStyle = groundColor(g); ctx.fillRect(X, Y, g.size[0] * s, g.size[1] * s);
-    if (g.hostile) { ctx.fillStyle = "rgba(208,68,58,.16)"; ctx.fillRect(X, Y, g.size[0] * s, g.size[1] * s); }
+    regionPath(g, X, Y, g.size[0] * s, g.size[1] * s);
+    ctx.fillStyle = g.surface && !g.wall && !g.pocket ? liquidColor(g) : groundColor(g); ctx.fill();
+    if (g.hostile) { ctx.fillStyle = "rgba(208,68,58,.16)"; ctx.fill(); }
   }
   if (s >= 6) {
     ctx.strokeStyle = "rgba(0,0,0,.08)"; ctx.lineWidth = 1; ctx.beginPath();
-    const x0 = Math.max(0, Math.floor(wx(0))), x1 = Math.min(gw, Math.ceil(wx(R.width)));
-    const y0 = Math.max(0, Math.floor(wy(R.height))), y1 = Math.min(gh, Math.ceil(wy(0)));
-    for (let x = x0; x <= x1; x++) { ctx.moveTo(sx(x) + .5, sy(y0)); ctx.lineTo(sx(x) + .5, sy(y1)); }
-    for (let y = y0; y <= y1; y++) { ctx.moveTo(sx(x0), sy(y) + .5); ctx.lineTo(sx(x1), sy(y) + .5); }
+    for (const p of MapOps.planes(S.scn)) {
+      const x0 = Math.max(p[0], Math.floor(wx(0))), x1 = Math.min(p[2] + 1, Math.ceil(wx(R.width)));
+      const y0 = Math.max(p[1], Math.floor(wy(R.height))), y1 = Math.min(p[3] + 1, Math.ceil(wy(0)));
+      if (x1 < x0 || y1 < y0) continue;
+      for (let x = x0; x <= x1; x++) { ctx.moveTo(sx(x) + .5, sy(y0)); ctx.lineTo(sx(x) + .5, sy(y1)); }
+      for (let y = y0; y <= y1; y++) { ctx.moveTo(sx(x0), sy(y) + .5); ctx.lineTo(sx(x1), sy(y) + .5); }
+    }
     ctx.stroke();
   }
   if (!L.objects.hide) for (const e of entities()) {
@@ -124,6 +148,13 @@ function draw() {
     drawObject(e, sx(e.pos[0]), sy(e.pos[1] + h), w, h, s);
   }
   if (!L.walled.hide) for (const g of regs) if (g.wall) drawWalls(g, s);
+  for (const f of floors) {             // label each floor with its level and building
+    const X = sx(f.position[0]), Y = sy(f.position[1] + f.size[1]);
+    ctx.setLineDash([6, 4]); ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(0,0,0,.55)";
+    ctx.strokeRect(X - 3, Y - 3, f.size[0] * s + 6, f.size[1] * s + 6); ctx.setLineDash([]);
+    const lv = f.pocket.level, anchor = byId(f.pocket.anchor);
+    label2(`Floor ${lv > 0 ? "+" : ""}${lv}${anchor ? ` · ${anchor.name}` : ""}`, X - 3, Y - 24);
+  }
   for (const e of entities()) {
     const k = entKind(e);
     if (k === "objects" || L[k].hide) continue;
@@ -285,11 +316,11 @@ function moveSelection(dx, dy) {
   const top = regs.filter(r => !regs.some(o => o !== r && MapOps.containsRect(MapOps.rect(o), MapOps.rect(r))));
   const covered = e => top.some(r => MapOps.containsRect(MapOps.rect(r), MapOps.rect(e)));
   const ents = S.sels.filter(t => t.kind === "entity").map(t => byId(t.id)).filter(e => e && !covered(e));
-  // shorten the move so every region and entity stays on the map, then move them all by that
-  const [gw, gh] = S.scn.gridSize;
+  // shorten the move so every region and entity stays on its plane (the map or its floor), then move them all by that
   for (const o of [...top, ...ents]) {
-    const r = MapOps.rect(o);
-    dx = Math.max(-r[0], Math.min(gw - 1 - r[2], dx)); dy = Math.max(-r[1], Math.min(gh - 1 - r[3], dy));
+    if (MapOps.isFloor(o)) { dx = Math.max(-o.position[0], dx); dy = Math.max(-o.position[1], dy); continue; }
+    const r = MapOps.rect(o), p = MapOps.planeOf(S.scn, r) || MapOps.planes(S.scn)[0];
+    dx = Math.max(p[0] - r[0], Math.min(p[2] - r[2], dx)); dy = Math.max(p[1] - r[1], Math.min(p[3] - r[3], dy));
   }
   for (const r of top) { const res = MapOps.moveRegion(S.scn, r, dx, dy, set); if (res.error) return res; }
   if (ents.length) MapOps.moveEntities(S.scn, ents, dx, dy, set);
@@ -305,7 +336,7 @@ function placeHere(c) {
       placed = MapOps.placeObject(S.scn, t, c[0], c[1], set);
       if (S.placeRot) {      // turn it, then put its footprint back where the ghost showed it
         MapOps.rotateObject(S.scn, placed, S.placeRot, set);
-        set(placed, "pos", [Math.min(S.scn.gridSize[0] - placed.size[0], c[0]), Math.min(S.scn.gridSize[1] - placed.size[1], c[1])]);
+        set(placed, "pos", MapOps.clampTo(S.scn, c[0], c[1], placed.size));
       }
     });
     if (placed) { S.sels = [{kind: "entity", id: placed.id}]; inspect(); draw(); }
@@ -375,8 +406,8 @@ function paste() {
 let drag = null;
 function cellOf(e) { const r = cv.getBoundingClientRect(); return [Math.floor(wx(e.clientX - r.left)), Math.floor(wy(e.clientY - r.top))]; }
 function ptOf(e) { const r = cv.getBoundingClientRect(); return [wx(e.clientX - r.left), wy(e.clientY - r.top)]; }
-const onMap = c => c[0] >= 0 && c[1] >= 0 && c[0] < S.scn.gridSize[0] && c[1] < H();
-const clampCell = c => [Math.max(0, Math.min(S.scn.gridSize[0] - 1, c[0])), Math.max(0, Math.min(H() - 1, c[1]))];
+const onMap = c => !!MapOps.planeAt(S.scn, c[0], c[1]);          // the map or a floor
+const clampCell = c => MapOps.clampTo(S.scn, c[0], c[1], [1, 1]);
 
 cv.addEventListener("contextmenu", e => e.preventDefault());
 cv.addEventListener("pointerdown", e => {

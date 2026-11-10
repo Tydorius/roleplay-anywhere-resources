@@ -2,6 +2,8 @@
 
 Ships `tts/custom-tts-config.json`, the voice list for the **Custom** speech service. With it, each NPC gets the voice that best fits its `voiceProfile` (gender, then age), not a random one. See the [voices README](../../README.md) for how matching works and how to adapt the list to your own server.
 
+**Game version:** Anywhere RPG 1.0. The game's own `tts/custom-tts-config.json` and the voice matcher are unchanged from 0.18. Every voice is English (`en`). The list has male and female voices at every age, so 1.0's "no male / no female voices for this language" warning does not appear in English.
+
 ## Options → AI Speech
 
 | Setting | Value |
