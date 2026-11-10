@@ -9,11 +9,23 @@ The engine can do much more than that. This folder covers:
 | [`packs/voices-ears-drama3`](packs/voices-ears-drama3) | A voice list that matches each NPC to a voice by gender and age (Child to Senior), not at random. |
 | [`packs/voices-delivery-cues`](packs/voices-delivery-cues) | Lets the GM add delivery cues such as `(sighs)` to spoken lines. |
 | [`server/`](server) | A small OpenAI-compatible proxy with a named voice registry. It runs over [mlx-audio](https://github.com/Blaizzy/mlx-audio) with Fish Audio Drama 3 and Qwen3-TTS, and guards against runaway clips. |
+| [`tools/rebase_delivery_cues.py`](tools/rebase_delivery_cues.py) | Checks the cue pack against your game's default `scene_dsl.txt`, and rebuilds it after a game update. |
 
-**Game version:** built for Anywhere RPG 0.18. The voice-picking rules below were worked out from
-version 0.16's config files and code and tested against a live server. The pack files were
-re-checked against 0.18's defaults: `voices-delivery-cues` is 0.18's `overseer/scene_dsl.txt`
-plus its one paragraph, and the game still reads `tts/custom-tts-config.json` and `voiceProfile`.
+**Game version:** built for Anywhere RPG 1.0. The voice-picking rules below were worked out from
+version 0.16's config files and code and tested against a live server. They were re-checked on
+1.0, and these parts are unchanged: the voice matcher, the text filter, `tts/custom-tts-config.json`
+and `voiceProfile`. `voices-delivery-cues` was rebuilt on 1.0's `overseer/scene_dsl.txt`, plus its
+one paragraph. It was tested in the live 1.0 game. The 0.18 version is on the `0.18` branch.
+
+**After every game update, re-check the cue pack.** It replaces the game's whole `scene_dsl.txt`,
+so an old copy silently undoes whatever the update changed in that file. Run:
+
+```bash
+python mods/voices/tools/rebase_delivery_cues.py "C:/Program Files (x86)/Steam/steamapps/common/Anywhere RPG"
+```
+
+It says whether the pack is still the game's default plus the cue paragraph. If not, it shows the
+difference. Add `--write` to rebuild the pack, then copy the pack into your mods folder again.
 
 ## How the game picks a voice
 
@@ -40,6 +52,13 @@ To choose a speaker's voice, the game goes through these steps in order:
 3. **The Options lists**, but only when `custom-tts-config.json` has no voices. Voices are picked at random by gender.
 
 Once a voice is chosen, it is saved on the character, so each NPC keeps the same voice for the whole save. The exception is monsters spawned from enemy templates: they can't be pinned and always go through matching.
+
+**Language (1.0).** Matching only considers voices whose `language` equals the game's language
+code, for example `en` for English. If the list has no voice at all for that language, 1.0 turns
+speech off and shows a warning. If it has voices for the language but none of the speaker's gender,
+1.0 warns that the service has no male (or female) voices for the language. The
+`voices-ears-drama3` list has 26 male and 27 female voices, all `en`, so neither warning appears in
+English. To play in another language, add voices with that language code.
 
 ### Writing your own voice list
 
