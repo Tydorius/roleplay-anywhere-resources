@@ -68,8 +68,9 @@ survive. The section is never dropped while it has an entry.
   Games started before the mod was installed have no lorebooks.
 - A game without the mod ignores `arpgMods`. Check this with a real import before relying on it.
 - Debugging: `__arpg.lore.last` lists the entries injected last time and why (`key "…"`,
-  `sticky` or `constant`). The game's console (backtick key) has `dumpLastPrompt`, which shows
-  the "Lore" section as the GM received it.
+  `sticky` or `constant`). The game's console (backtick key) has `dumpctx`, which prints the
+  last GM prompt with its "Lore" section. Each GM request is also saved under the install's
+  `logs/overseer/` folder as `turnNNNN-aiNNNN-request-….txt`.
 
 Not yet checked: whether the in-game World editor keeps `arpgMods` when it saves or exports a
 scenario.
