@@ -7,8 +7,10 @@
 // none of them move. This mod gives each light a kind, a colour, a size and a motion.
 //
 // No bundle patch. Each frame the game sets every lamp's intensity and radius, then draws the
-// lamps' wall shadows (drawPointShadows). The mod wraps that method on the live scene, so its
-// changes land in between, and the shadows flicker along with the light.
+// lamps' wall shadows (drawPointShadows). The mod wraps that method on the live scene: the
+// shadow pass sees each lamp's steady look, so 1.0's shadow change detection (pointShadowSig)
+// stays quiet while radius and intensity hold still between frames, and the flicker is applied
+// after the shadows are drawn.
 //
 // Scenario data (`arpgMods.lights`, optional; `false` turns the mod off for that scenario):
 //   { auto: true,         // classify unlisted light sources by name and description
@@ -124,12 +126,13 @@
   }
 
   // The template that makes an entity glow: its own (objects), or its brightest equipped or
-  // carried item (as the game sums them).
+  // carried item, summed as 1.0 does it: inventory items count for NPCs only, so a player's
+  // pack does not glow.
   function sourceTemplate(entity) {
     let best = entity?.objectTemplate?.light > 0 ? entity.objectTemplate : null;
     const consider = t => { if (t?.light > 0 && (!best || t.light > best.light)) best = t; };
     for (const it of Object.values(entity?.equipment ?? {})) consider(it?.template);
-    for (const it of entity?.inventory ?? []) consider(it?.template);
+    if (entity?.type === 'npc') for (const it of entity?.inventory ?? []) consider(it?.template);
     return best;
   }
 
@@ -207,6 +210,10 @@
   }
 
   // --- The per-frame pass ---------------------------------------------------------------------
+  //
+  // Two phases around the game's drawPointShadows: the steady look first, so 1.0's shadow
+  // change detection (pointShadowSig) stays quiet while every lamp's radius and intensity
+  // hold still between frames; the flicker goes on after the shadows are drawn.
 
   const RESOLVE_MS = 1000; // re-read who carries what about once a second
   const VIEW_MARGIN = 200;
@@ -214,6 +221,16 @@
   let enabled = true;
   let lastResolve = -Infinity;
   let frames = 0;
+  let msTotal = 0; // time spent in the two phases, added by the wrapper in attach
+  let framesTimed = 0; // the frames that wrapper timed; applyFrame on its own is not timed
+  let frameSettings = null; // what beforeShadows worked out; null when the mod is off
+
+  function resetStats() { msTotal = 0; framesTimed = 0; }
+
+  // 1.0 leaves at least 24 cells (768 px) between planes, so a light the mod enlarges stops
+  // short of the next one; the game's own reach, if the player sets it higher, is left alone.
+  const MAX_MOD_RADIUS = 736;
+  const capRadius = (base, r) => Math.min(r, Math.max(base, MAX_MOD_RADIUS));
 
   function restore(st) {
     const L = st.light;
@@ -230,8 +247,12 @@
     lastResolve = -Infinity;
   }
 
-  // scene: the game's WorldScene (entityLights: id → {light, gx, gy}); nowMs: a clock.
-  function applyFrame(scene, nowMs) {
+  // Phase one, before the game's shadow pass. scene: the game's WorldScene (entityLights:
+  // id → {light, gx, gy}); nowMs: a clock. Sets every lamp's steady look — colour and size,
+  // no motion — so 1.0's shadow change detection (pointShadowSig) sees a lamp whose radius and
+  // intensity hold still and doesn't redraw the shadow fans every frame.
+  function beforeShadows(scene, nowMs) {
+    frameSettings = null;
     const lights = scene.entityLights;
     const settings = enabled ? settingsOf(scene.world) : null;
     if (!lights || !settings) return void (states.size && clear());
@@ -251,8 +272,6 @@
       byId = new Map((scene.world?.entities ?? []).map(e => [e.id, e]));
     }
 
-    const t = nowMs / 1000;
-    const cam = scene.cameras?.main?.worldView;
     for (const [id, rec] of lights) {
       const L = rec.light;
       let st = states.get(id);
@@ -280,14 +299,36 @@
       // the one written last frame is a fresh base from the game; never compound on our own.
       if (L.intensity !== st.outI) st.baseI = L.intensity;
       if (L.radius !== st.outR) st.baseR = L.radius;
-      const m = motion(p, t, st.seed);
-      L.setIntensity(st.baseI * p.intensity * m.i);
-      L.setRadius(st.baseR * p.radius * m.r);
+      L.setIntensity(st.baseI * p.intensity);
+      L.setRadius(capRadius(st.baseR, st.baseR * p.radius));
+      // Written back at once, so a frame whose second phase never runs can't compound on itself.
       st.outI = L.intensity;
       st.outR = L.radius;
       if (p.color != null) {
         st.origColor ??= [L.color.r, L.color.g, L.color.b];
         L.setColor(p.color);
+      }
+    }
+    frameSettings = settings;
+  }
+
+  // Phase two, once the shadows are drawn: the flicker, on lamps whose circle the camera sees
+  // (the rest keep the steady look — nothing flickers off screen), then particles and occlusion.
+  function afterShadows(scene, nowMs) {
+    if (!frameSettings) return;
+    const t = nowMs / 1000;
+    const cam = scene.cameras?.main?.worldView;
+    for (const st of states.values()) {
+      const p = st.profile;
+      if (!p) continue;
+      const L = st.light;
+      if (!cam || (L.x + L.radius > cam.x && L.x - L.radius < cam.right &&
+        L.y + L.radius > cam.y && L.y - L.radius < cam.bottom)) {
+        const m = motion(p, t, st.seed);
+        L.setIntensity(st.baseI * p.intensity * m.i);
+        L.setRadius(capRadius(st.baseR, st.baseR * p.radius * m.r));
+        st.outI = L.intensity;
+        st.outR = L.radius;
       }
 
       if (p.particles && scene.add?.particles && scene.textures) {
@@ -309,7 +350,13 @@
         }
       }
     }
-    if (settings.occlusion) occlude(scene, cam);
+    if (frameSettings.occlusion) occlude(scene, cam);
+  }
+
+  // Both phases in order, for scenes without a drawPointShadows to sit inside.
+  function applyFrame(scene, nowMs) {
+    beforeShadows(scene, nowMs);
+    afterShadows(scene, nowMs);
   }
 
   // --- Walls stop lamp light on objects and characters ----------------------------------------
@@ -340,6 +387,31 @@
     tinted.delete(sprite);
   }
 
+  // '' is the main map, a pocket region's id inside one of those, null when pos is missing.
+  // The pocket list is cached until world.regions (identity) or world.regionsRev changes.
+  // Light2D lights every sprite in reach, plane or not; this takes a lamp's light off sprites
+  // on other planes, in case the player's lamp reach spans the gap between planes.
+  let pocketList = [];
+  let pocketRegionsRef = null;
+  let pocketRevRef = null;
+
+  function planeOf(world, pos) {
+    if (!pos) return null;
+    const regions = world?.regions;
+    const rev = world?.regionsRev;
+    if (regions !== pocketRegionsRef || rev !== pocketRevRef) {
+      pocketRegionsRef = regions;
+      pocketRevRef = rev;
+      pocketList = Array.isArray(regions) ? regions.filter(r => r?.pocket) : [];
+    }
+    const [x, y] = pos;
+    for (const r of pocketList) {
+      if (x >= r.position[0] && y >= r.position[1] &&
+        x < r.position[0] + r.size[0] && y < r.position[1] + r.size[1]) return r.id;
+    }
+    return '';
+  }
+
   function occlude(scene, cam) {
     const views = scene.views;
     const lamps = scene.entityLights;
@@ -354,23 +426,35 @@
     const near = [...lamps.entries()].filter(([, r]) => !cam ||
       (r.light.x > cam.x - r.light.radius && r.light.x < cam.right + r.light.radius &&
        r.light.y > cam.y - r.light.radius && r.light.y < cam.bottom + r.light.radius));
+    // Each nearby lamp's plane, once per frame: its entity's view if it has one, else the
+    // entity the resolve found (some lamps have no view at all).
+    const world = scene.world;
+    const nearPlane = new Map(near.map(([id]) =>
+      [id, planeOf(world, views.get(id)?.entity?.pos ?? states.get(id)?.entity?.pos)]));
     const seen = new Set();
 
     for (const view of views.values()) {
       const e = view.entity;
       const box = view.container;
-      if (!e || !box || !near.length) continue;
+      if (!e || !box || box.visible === false || !near.length) continue; // culled, or inside another entity
       const x = box.x, y = box.y;
       if (cam && (x < cam.x - VIEW_MARGIN || x > cam.right + VIEW_MARGIN ||
         y < cam.y - VIEW_MARGIN || y > cam.bottom + VIEW_MARGIN)) continue;
+      const plane = planeOf(world, e.pos);
 
       let total = null, blocked = null;
       for (const [id, rec] of near) {
         const k = reach(rec.light, x, y);
         if (k <= 0.002 || id === e.id) continue;
-        const key = `${id}|${rec.gx},${rec.gy}|${x},${y}`;
-        let hidden = losCache.get(key);
-        if (hidden === undefined) losCache.set(key, (hidden = !!scene.losBlocked(rec.gx, rec.gy, x, y)));
+        const lp = nearPlane.get(id);
+        let hidden;
+        if (plane != null && lp != null && lp !== plane) {
+          hidden = true; // another plane: no wall test, nothing cached
+        } else {
+          const key = `${id}|${rec.gx},${rec.gy}|${x},${y}`;
+          hidden = losCache.get(key);
+          if (hidden === undefined) losCache.set(key, (hidden = !!scene.losBlocked(rec.gx, rec.gy, x, y)));
+        }
         if (!hidden) continue;
         const c = rec.light.color;
         blocked ??= [0, 0, 0];
@@ -400,6 +484,11 @@
   }
 
   // --- Attach to the live scene ---------------------------------------------------------------
+  //
+  // The wrapper brackets the game's drawPointShadows: the shadows are drawn from the steady
+  // look (beforeShadows), so 1.0's shadow change detection (pointShadowSig) stays quiet, and
+  // the flicker goes on after them (afterShadows). The time spent in the two phases — not in
+  // the game's own draw — is the mod's frame cost in the stats.
 
   const now = () => (globalThis.performance?.now ? globalThis.performance.now() : Date.now());
   let attached = null;
@@ -409,12 +498,25 @@
     scene.__arpgLights = true;
     const draw = scene.drawPointShadows;
     scene.drawPointShadows = function (...args) {
+      let mark = now();
+      let spent = 0;
       try {
-        applyFrame(this, now());
+        beforeShadows(this, mark);
       } catch (e) {
         console.error('[arpg lights] frame failed', e);
       }
-      return draw.apply(this, args);
+      spent += now() - mark;
+      const result = draw.apply(this, args);
+      mark = now();
+      try {
+        afterShadows(this, mark);
+      } catch (e) {
+        console.error('[arpg lights] frame failed', e);
+      }
+      spent += now() - mark;
+      msTotal += spent;
+      framesTimed++;
+      return result;
     };
     scene.events?.once?.('shutdown', () => { states.clear(); lastResolve = -Infinity; });
   }
@@ -435,6 +537,9 @@
     sourceTemplate,
     motion,
     applyFrame,
+    beforeShadows,
+    afterShadows,
+    planeOf,
     attach,
     setEnabled(on) { enabled = !!on; if (!on) clear(); },
     // What each lit entity on the map became, for checking the classifier in game.
@@ -445,6 +550,7 @@
         particles: !!st.emitter,
       }));
     },
-    stats: () => ({ frames, lights: states.size }),
+    stats: () => ({ frames, lights: states.size, msPerFrame: framesTimed ? msTotal / framesTimed : 0 }),
+    resetStats,
   };
 })();

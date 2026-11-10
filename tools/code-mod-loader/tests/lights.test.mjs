@@ -76,8 +76,9 @@ test('the glowing template is the object’s own, or the brightest thing carried
   assert.equal(sourceTemplate({ objectTemplate: hearth }), hearth);
   const torch = { id: 'itpl_t', name: 'Torch', light: 0.6 };
   const candle = { id: 'itpl_c', name: 'Candle', light: 0.2 };
-  const npc = { equipment: { hand: { template: candle } }, inventory: [{ template: torch }, { template: { light: 0 } }] };
+  const npc = { type: 'npc', equipment: { hand: { template: candle } }, inventory: [{ template: torch }, { template: { light: 0 } }] };
   assert.equal(sourceTemplate(npc), torch);
+  assert.equal(sourceTemplate({ type: 'player', equipment: { hand: { template: candle } }, inventory: [{ template: torch }] }), candle, 'a player’s pack does not glow');
   assert.equal(sourceTemplate({ equipment: {}, inventory: [] }), null);
 });
 
@@ -235,4 +236,92 @@ test('occlusion can be turned off per scenario, and turning the mod off restores
   assert.notEqual(bed.tintTopLeft, 0xcccccc);
   lights.setEnabled(false);
   assert.equal(bed.tintTopLeft, 0xcccccc);
+});
+
+test('the shadow pass sees the steady look, so flicker never forces a shadow redraw', () => {
+  const lights = load();
+  const scene = fakeScene([hearthEntity()]);
+  const L = scene.entityLights.get('obj_h').light;
+  const steady = [1 * lights.KINDS.fire.intensity, 180 * lights.KINDS.fire.radius];
+  const afterRadii = [];
+  for (const t of [1000, 1137, 1290, 1411, 2011]) {
+    L.setIntensity(1); // what syncEntityLight does every frame
+    L.setRadius(180);
+    lights.beforeShadows(scene, t);
+    assert.deepEqual([L.intensity, L.radius], steady, `t=${t}`);
+    lights.afterShadows(scene, t);
+    afterRadii.push(L.radius);
+  }
+  assert.ok(new Set(afterRadii).size > 1, 'the flicker moves the radius after the shadows');
+});
+
+test('the wrapper hands the shadow pass steady values and passes its result through', () => {
+  const lights = load();
+  const scene = fakeScene([hearthEntity()]);
+  const L = scene.entityLights.get('obj_h').light;
+  const seen = [];
+  scene.drawPointShadows = () => { seen.push([L.intensity, L.radius]); return 'drawn'; };
+  lights.attach(scene);
+  const steady = [1 * lights.KINDS.fire.intensity, 180 * lights.KINDS.fire.radius];
+  for (let i = 0; i < 3; i++) {
+    L.setIntensity(1);
+    L.setRadius(180);
+    assert.equal(scene.drawPointShadows(), 'drawn');
+  }
+  assert.deepEqual(seen, [steady, steady, steady]);
+  assert.ok(lights.stats().frames >= 3);
+  assert.ok(lights.stats().msPerFrame >= 0);
+});
+
+test('a lamp the mod enlarges stops short of the next plane', () => {
+  const lights = load();
+  const scene = fakeScene([hearthEntity()]);
+  scene.world.arpgMods = { lights: { templates: { Hearth: { kind: 'fire', radius: 10, flicker: 0 } } } };
+  const L = scene.entityLights.get('obj_h').light;
+  lights.applyFrame(scene, 1000);
+  assert.equal(L.radius, 736);
+  L.setRadius(900); // the player's own reach, above the cap
+  lights.applyFrame(scene, 1000);
+  assert.equal(L.radius, 900, 'the game’s own reach is left alone');
+});
+
+test('a lamp on another plane never lights a sprite there', () => {
+  const lights = load();
+  const { scene, bed, chair } = wallScene();
+  scene.losBlocked = () => false;
+  scene.world.regions = [{ id: 'rgn_up', position: [40, 0], size: [10, 10], pocket: { anchor: 'rgn_x', level: 1 } }];
+  scene.world.regionsRev = 1;
+  scene.world.entities.find(e => e.id === 'obj_bed').pos = [41, 2]; // its view stays at (100, 260)
+  assert.equal(lights.planeOf(scene.world, [41, 2]), 'rgn_up');
+  assert.equal(lights.planeOf(scene.world, [3, 4]), '');
+  assert.equal(lights.planeOf(scene.world, undefined), null);
+  lights.applyFrame(scene, 1000);
+  assert.ok(bed.tintTopLeft < 0xcccccc, `another plane: darker (${bed.tintTopLeft.toString(16)})`);
+  assert.equal(chair.tintTopLeft, 0xcccccc, 'same plane, no wall: untouched');
+  const plain = wallScene();
+  plain.scene.losBlocked = () => false;
+  lights.applyFrame(plain.scene, 1000);
+  assert.equal(plain.bed.tintTopLeft, 0xcccccc, 'without regions the bed is untouched');
+});
+
+test('culled sprites are skipped', () => {
+  const lights = load();
+  const { scene, bed } = wallScene();
+  scene.views.get('obj_bed').container.visible = false; // off screen, or inside another entity
+  const calls = [];
+  const los = scene.losBlocked;
+  scene.losBlocked = (...args) => { calls.push(args); return los(...args); };
+  lights.applyFrame(scene, 1000);
+  assert.equal(bed.tintTopLeft, 0xcccccc);
+  assert.ok(!calls.some(args => args[4] === 260), 'no wall test for the bed’s position');
+});
+
+test('lamps off screen keep the steady look', () => {
+  const lights = load();
+  const scene = fakeScene([hearthEntity()]);
+  scene.cameras = { main: { worldView: { x: 5000, y: 5000, right: 5800, bottom: 5600 } } };
+  lights.applyFrame(scene, 1234);
+  const L = scene.entityLights.get('obj_h').light;
+  assert.equal(L.radius, 180 * lights.KINDS.fire.radius);
+  assert.equal(L.intensity, lights.KINDS.fire.intensity);
 });
