@@ -10,7 +10,10 @@ These mod packs replace the workflow and prompts for each image type.
 **Game version:** Anywhere RPG 1.0. The packs replace the game's `prompts/img_*.txt` and
 `comfyui/comfyui-workflow*.json`; 1.0's copies of those files are byte-identical to 0.18's, so the
 same packs work on both (0.18 users can also take them from the `0.18` branch). If an update
-changes those defaults, compare them with the pack's copies.
+changes those defaults, compare them with the pack's copies. Checked in the 1.0 game (Steam build
+26557354): each pack made a map object, an item, a perk and portraits through ComfyUI, with map
+objects and items cut out. The SD1.5 pack was run with an SDXL checkpoint standing in, so its
+image quality on a real SD1.5 model is not checked yet.
 
 | Pack | Image types | Models | Speed |
 |---|---|---|---|
@@ -44,6 +47,11 @@ Each pack's `PACK-NOTES.md` lists the exact files it expects and where they go.
    - A pick the workflow's loader can't take (a checkpoint for a Flux workflow) is ignored, and the
      pack's own file is used. That is why the `sdxl-portraits` add-on still works when the
      portrait menu shows a Flux file.
+   - **When you switch packs, check the menus again.** A pick left from the old pack stays, and if
+     the new pack's loader lists it too, it is used. Flux, Qwen and Flux.2 klein files are all
+     diffusion models, so after switching from Flux.2 klein to Qwen-Image every portrait, item and
+     perk fails until the menus show the Qwen file. (Tested on 1.0: the sprite, whose menu was
+     never set, worked.)
    - A world can pick its own models in **New Game**, or in game under **Options → Scenario**;
      the same advice applies there.
 4. Sprites and items need a background-removal node. The packs use **WAS Node Suite**'s

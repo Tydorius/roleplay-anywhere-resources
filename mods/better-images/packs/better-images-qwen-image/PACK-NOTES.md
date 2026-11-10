@@ -14,7 +14,7 @@ Uses the `Image Rembg (Remove Background)` node from **WAS Node Suite (was-node-
 
 ## Model menus (Anywhere RPG 1.0)
 
-Options -> AI Images has a menu for portraits, icons (items and perks) and object sprites (map objects; new in 1.0). Each starts on the file this pack names: leave it, or pick another Qwen-Image model. A model of another family fails or comes out as noise.
+Options -> AI Images has a menu for portraits, icons (items and perks) and object sprites (map objects; new in 1.0). Each starts on the file this pack names: leave it, or pick another Qwen-Image model. A model of another family fails or comes out as noise. After switching from another pack, check them again: a pick left from that pack stays, and if this pack's loader lists it too, it is used.
 
 ## Different filenames?
 
