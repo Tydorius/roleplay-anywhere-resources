@@ -8,8 +8,6 @@
   const tickHooks = [];
   const pathHooks = [];
   const perceiveHooks = [];
-  const navHooks = [];
-  let navCache = null;
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -34,7 +32,7 @@
   }
 
   const arpg = {
-    version: 1,
+    version: 2,
     mods: [],
     calls: [],
     cfgSeen: new Set(),
@@ -83,28 +81,6 @@
       }
       return current;
     },
-    // Called whenever the game builds its movement grid.
-    nav(world, grid) { runHooks('nav', navHooks, [world, grid]); },
-    // The movement grid's constructor asks navGet for a cached grid before building one, and
-    // offers each new grid to navPut. Arguments: (world, entity to leave out, walls only).
-    navGet(world, entity, wallsOnly) {
-      try {
-        return navCache?.get(world, entity, !!wallsOnly) ?? null;
-      } catch (e) {
-        console.error('[arpg] nav cache failed', e);
-        return null;
-      }
-    },
-    navPut(world, entity, wallsOnly, grid) {
-      try {
-        navCache?.put(world, entity, !!wallsOnly, grid);
-      } catch (e) {
-        console.error('[arpg] nav cache failed', e);
-      }
-    },
-    // One mod may provide a movement-grid cache: {get(world, entity, wallsOnly) → grid|null,
-    // put(world, entity, wallsOnly, grid)}. Grids are read-only after they're built.
-    setNavCache(cache) { navCache = cache; },
     // Called for every path search. Hooks are chained; the last `next` is the game's A*.
     path(world, from, dest, entity, opts, original) {
       arpg.pathOriginal = original; // for debugging: the game's own search
@@ -122,9 +98,11 @@
       }
       return next(world, from, dest, entity, opts);
     },
-    // Called by the game with the GM prompt's {head, sections, tail} before rendering.
-    prompt(parts, world) {
-      runHooks('prompt', promptHooks, [parts, world]);
+    // Called by the game with the GM prompt's {head, sections, tail} before rendering, and the
+    // context limits it was built with. While the prompt is over the character budget, the game
+    // rebuilds it with lower limits, so this can run several times for one GM turn.
+    prompt(parts, world, limits) {
+      runHooks('prompt', promptHooks, [parts, world, limits ?? null]);
       return parts;
     },
     // The mod-facing API.
@@ -133,8 +111,9 @@
     onConfig(hook) { cfgHooks.push(hook); },
     // hook(world, scenario, editing): copy scenario data onto the world. World fields are saved.
     onWorldCreate(hook) { worldHooks.push(hook); },
-    // hook({head, sections, tail}, world): each part is a list of {kind, title, content}.
-    // The game trims known kinds to a budget; a new kind is not trimmed, so keep it short.
+    // hook({head, sections, tail}, world, limits): each part is a list of {kind, title, content}.
+    // `limits` are the context limits this build uses (historyTurns, worldChars, …); scale your
+    // section with them so it shrinks when the game does. See the README's prompt-section rules.
     onPrompt(hook) { promptHooks.push(hook); },
     // hook(world): runs every simulation step, so keep it cheap.
     onTick(hook) { tickHooks.push(hook); },
@@ -144,10 +123,6 @@
     // hook(world, a, b, range, search, answer) → true or false to replace `answer` (whether
     // a and b notice each other so far), anything else to leave it. `search` is the game's
     // own path search, as `next` is for onPath. Runs very often: keep it cheap.
-    // hook(world, grid): the game's movement grid as it's built. grid.w, grid.h, and
-    // grid.blocked / grid.speed indexed [y * w + x]; set blocked to 1 to make a cell impassable.
-    // It's rebuilt for every search, so keep it cheap.
-    onNav(hook) { navHooks.push(hook); },
     // `order` (default 0) sorts hooks: higher runs later and has the last word.
     onPerceive(hook, { order = 0 } = {}) {
       hook.arpgOrder = order;

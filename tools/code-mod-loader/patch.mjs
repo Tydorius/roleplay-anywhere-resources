@@ -22,12 +22,15 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const EXAMPLES = path.join(HERE, 'examples');
 const MARKER = '/*arpg-modloader*/';
 const ORIG = '.arpg-orig';
-// This loader's release (README's version table), and the game version its patches and mods
-// were built and play-tested against.
-const LOADER_VERSION = '1.0.0';
-const TESTED = '0.18';
+// This loader's release (README's version table), and the game version its patches were built
+// against. main supports Anywhere RPG 1.0 only; the 0.18 loader stays on the 0.18 branch.
+const LOADER_VERSION = '2.0.0';
+const TESTED = '1.0';
 // memory-add only shows how to add a GM call, so "add" with no names leaves it out.
 const SAMPLES = new Set(['memory-add']);
+// Retired on main because Anywhere RPG 1.0 does them natively; they stay on the 0.18 branch.
+// A copy left in the code-mods folder from 0.18 is skipped (it calls APIs that 2.0 removed).
+export const RETIRED = new Set(['portals', 'floors', 'performance']);
 
 // Where your code mods live; install copies them into the game. On Windows it sits beside the
 // game's own mods folder, elsewhere in the usual per-user config folder.
@@ -39,7 +42,7 @@ export function defaultModsDir(platform = process.platform, env = process.env, h
 const MODS_DIR = defaultModsDir();
 
 // Each patch: a regex that must match exactly once in the bundle, and its replacement.
-const PATCHES = [
+export const PATCHES = [
   {
     name: 'api-registry',
     // The GM's api-call registry is the object literal whose first key is flavor_text.
@@ -52,18 +55,19 @@ const PATCHES = [
     // wrapped so mods can add or rewrite prompt/config files.
     find: /function ([\w$]+)\(([\w$]+)\)\{([\w$]+)\|\|([\w$]+)\.warn\("config",`getConfigFile before loadConfig/g,
     replace: (_m, fn, arg, flag, log) =>
-      `function ${fn}(${arg}){const h=globalThis.__arpg&&globalThis.__arpg.cfg;` +
-      `return h?h(${arg},()=>__arpgCfgOrig(${arg})):__arpgCfgOrig(${arg})}` +
+      `function ${fn}(${arg}){const __arpgH=globalThis.__arpg&&globalThis.__arpg.cfg;` +
+      `return __arpgH?__arpgH(${arg},()=>__arpgCfgOrig(${arg})):__arpgCfgOrig(${arg})}` +
       `function __arpgCfgOrig(${arg}){${flag}||${log}.warn("config",\`getConfigFile before loadConfig`,
   },
   {
     name: 'world-create',
-    // The scenario → world builder copies fields one by one, so extra scenario keys
-    // would be lost. Hand mods the new world and its scenario just before it returns.
-    find: /imageSettings:([\w$]+)\.imageSettings\};return ([\w$]+)\|\|\(([\w$]+)\.player&&/g,
-    replace: (_m, scn, flag, world) =>
-      `imageSettings:${scn}.imageSettings};globalThis.__arpg&&globalThis.__arpg.worldCreated&&` +
-      `globalThis.__arpg.worldCreated(${world},${scn},${flag});return ${flag}||(${world}.player&&`,
+    // The scenario → world builder copies fields one by one, so extra scenario keys would be
+    // lost. Its tail is `imageSettings:n.imageSettings};if(…,!editing){…new-game setup…}return world}`.
+    // Hand mods the finished world and its scenario just before it returns.
+    find: /imageSettings:([\w$]+)\.imageSettings\};(if\([^{}]{0,200},!([\w$]+)\)\{[^{}]{0,400}\})return ([\w$]+)\}/g,
+    replace: (_m, scn, setup, flag, world) =>
+      `imageSettings:${scn}.imageSettings};${setup}globalThis.__arpg&&globalThis.__arpg.worldCreated&&` +
+      `globalThis.__arpg.worldCreated(${world},${scn},${flag});return ${world}}`,
   },
   {
     name: 'pathfinder',
@@ -71,8 +75,8 @@ const PATCHES = [
     // wrapped so mods can route through places the grid doesn't connect.
     find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+),([\w$]+),([\w$]+)=\{\}\)\{(?=const [\w$]+=\5\?\[Math\.round\(\3\[0\]\),Math\.round\(\3\[1\]\)\])/g,
     replace: (_m, fn, t, from, dest, ent, opts) =>
-      `function ${fn}(${t},${from},${dest},${ent},${opts}={}){const h=globalThis.__arpg&&globalThis.__arpg.path;` +
-      `return h?h(${t},${from},${dest},${ent},${opts},__arpgPathOrig):__arpgPathOrig(${t},${from},${dest},${ent},${opts})}` +
+      `function ${fn}(${t},${from},${dest},${ent},${opts}={}){const __arpgH=globalThis.__arpg&&globalThis.__arpg.path;` +
+      `return __arpgH?__arpgH(${t},${from},${dest},${ent},${opts},__arpgPathOrig):__arpgPathOrig(${t},${from},${dest},${ent},${opts})}` +
       `function __arpgPathOrig(${t},${from},${dest},${ent},${opts}={}){`,
   },
   {
@@ -81,8 +85,8 @@ const PATCHES = [
     // at the cell must be that very region. Mods may also accept another piece of the same region.
     find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+)\)\{return ([\w$]+)\(\2,\4\)===\3\}/g,
     replace: (_m, fn, t, region, cell, innermost) =>
-      `function ${fn}(${t},${region},${cell}){const r=${innermost}(${t},${cell});` +
-      `return r===${region}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},r,${region}))}`,
+      `function ${fn}(${t},${region},${cell}){const __arpgR=${innermost}(${t},${cell});` +
+      `return __arpgR===${region}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},__arpgR,${region}))}`,
   },
   {
     name: 'region-destination',
@@ -98,46 +102,8 @@ const PATCHES = [
     // The GM prompt's "in the same space as the player" test compares walled rooms by identity.
     find: /const ([\w$]+)=([\w$]+)\(([\w$]+),([\w$]+)\(([\w$]+)\)\),([\w$]+)=([\w$]+)=>\2\(\3,\4\(\7\)\)===\1/g,
     replace: (_m, room, walled, t, cellOf, player, test, other) =>
-      `const ${room}=${walled}(${t},${cellOf}(${player})),${test}=${other}=>{const g=${walled}(${t},${cellOf}(${other}));` +
-      `return g===${room}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},g,${room}))}`,
-  },
-  {
-    name: 'nav-cache-get',
-    // Start of the movement grid's constructor: a mod may hand back a recent, equal grid
-    // instead of building a new one (a constructor may return an existing object).
-    find: /;this\.world=([\w$]+),this\.w=\1\.gridSize\[0\],this\.h=\1\.gridSize\[1\],this\.walls=/g,
-    replace: (_m, world) =>
-      `;{const c=globalThis.__arpg&&globalThis.__arpg.navGet&&globalThis.__arpg.navGet(arguments[0],arguments[1],arguments[2]);if(c)return c}` +
-      `this.world=${world},this.w=${world}.gridSize[0],this.h=${world}.gridSize[1],this.walls=`,
-  },
-  {
-    name: 'nav-cache-put',
-    // End of the same constructor: offer the finished grid to the cache.
-    find: /(&&\(this\.speed\[[\w$]+\]=[\w$]+\)\}\})\}speedAt\(/g,
-    replace: (_m, tail) =>
-      `${tail};globalThis.__arpg&&globalThis.__arpg.navPut&&globalThis.__arpg.navPut(arguments[0],arguments[1],arguments[2],this)}speedAt(`,
-  },
-  {
-    name: 'edge-memo',
-    // The grid's wall test between two cells loops over every walled region on the map, and
-    // path searches call it for each step considered. When a mod sets __arpg.memoEdges, each
-    // grid remembers its answers (its walls are fixed when it's built).
-    find: /edgeBlocked\(([\w$]+),([\w$]+)\)\{for\(const ([\w$]+) of this\.walls\)\{/g,
-    replace: (_m, a, b, r) =>
-      `edgeBlocked(${a},${b}){if(!(globalThis.__arpg&&globalThis.__arpg.memoEdges))return this.__arpgEdge(${a},${b});` +
-      `const k=(((${a}[0]+1)*4096+(${a}[1]+1))*4096+(${b}[0]+1))*4096+(${b}[1]+1);` +
-      `const m=this.__arpgEdges??(this.__arpgEdges=new Map());let v=m.get(k);` +
-      `if(v===void 0){v=this.__arpgEdge(${a},${b});m.set(k,v)}return v}` +
-      `__arpgEdge(${a},${b}){for(const ${r} of this.walls){`,
-  },
-  {
-    name: 'nav-grid',
-    // The movement grid every walk, path search and collision uses. Mods may mark extra
-    // cells blocked (blocked[y*w+x] = 1) before the game adds its objects.
-    find: /this\.occupied=new Uint8Array\(this\.w\*this\.h\);for\(const ([\w$]+) of ([\w$]+)\.entities\)\{/g,
-    replace: (_m, ent, world) =>
-      `this.occupied=new Uint8Array(this.w*this.h);globalThis.__arpg&&globalThis.__arpg.nav&&globalThis.__arpg.nav(${world},this);` +
-      `for(const ${ent} of ${world}.entities){`,
+      `const ${room}=${walled}(${t},${cellOf}(${player})),${test}=${other}=>{const __arpgG=${walled}(${t},${cellOf}(${other}));` +
+      `return __arpgG===${room}||!!(globalThis.__arpg&&globalThis.__arpg.sameRegion&&globalThis.__arpg.sameRegion(${t},__arpgG,${room}))}`,
   },
   {
     name: 'sim-tick',
@@ -155,23 +121,18 @@ const PATCHES = [
     // Mods see the game's answer and may change it either way. Hands them the game's own
     // path search too (__arpgPathOrig, from the pathfinder patch).
     replace: (_m, fn, t, a, b, range, def, dist) =>
-      `function ${fn}(${t},${a},${b},${range}=${def}){const n=${dist}(${a},${b})<=${range};` +
-      `return globalThis.__arpg&&globalThis.__arpg.perceive?globalThis.__arpg.perceive(${t},${a},${b},${range},__arpgPathOrig,n):n}`,
-  },
-  {
-    name: 'prompt-budgets',
-    // Per-kind character budgets for GM prompt sections. A kind missing from the table
-    // is kept whole but tagged "(0 more lines omitted)", so mods add their own kinds here.
-    find: /const ([\w$]+)=\{world:(\d+),rules:/g,
-    replace: (_m, name, world) => `const ${name}=(globalThis.__arpg??={}).promptBudgets={world:${world},rules:`,
+      `function ${fn}(${t},${a},${b},${range}=${def}){const __arpgN=${dist}(${a},${b})<=${range};` +
+      `return globalThis.__arpg&&globalThis.__arpg.perceive?globalThis.__arpg.perceive(${t},${a},${b},${range},__arpgPathOrig,__arpgN):__arpgN}`,
   },
   {
     name: 'gm-prompt',
-    // Where the GM prompt's head/sections/tail are taken for rendering; mods may add sections.
-    find: /const\{head:([\w$]+),sections:([\w$]+),tail:([\w$]+)\}=([\w$]+)\(([\w$]+)\)/g,
-    replace: (_m, head, sections, tail, build, world) =>
+    // Where the GM prompt's head/sections/tail are built, from the world and the context limits
+    // in force. Mods may add sections. The game rebuilds the prompt with lower limits while it is
+    // over the character budget, so this runs once per attempt.
+    find: /const\{head:([\w$]+),sections:([\w$]+),tail:([\w$]+)\}=([\w$]+)\(([\w$]+),([\w$]+)\)/g,
+    replace: (_m, head, sections, tail, build, world, limits) =>
       `const{head:${head},sections:${sections},tail:${tail}}=` +
-      `(globalThis.__arpg&&globalThis.__arpg.prompt?globalThis.__arpg.prompt(${build}(${world}),${world}):${build}(${world}))`,
+      `(globalThis.__arpg&&globalThis.__arpg.prompt?globalThis.__arpg.prompt(${build}(${world},${limits}),${world},${limits}):${build}(${world},${limits}))`,
   },
 ];
 
@@ -247,15 +208,19 @@ function locate(game) {
   const dist = distOf(game);
   if (!dist) throw new Error(`not an Anywhere RPG install (no resources/app/dist/index.html under ${game})`);
   const html = path.join(dist, 'index.html');
-  const source = fs.existsSync(html + ORIG) ? fs.readFileSync(html + ORIG, 'utf8') : fs.readFileSync(html, 'utf8');
-  const m = source.match(/<script type="module" crossorigin src="\.\/assets\/(index-[\w-]+\.js)"><\/script>/);
+  // The live page, never the backup: the patched page keeps the bundle's tag, and after a game
+  // update the backup still names the old build's bundle.
+  const m = fs.readFileSync(html, 'utf8').match(/<script type="module" crossorigin src="\.\/assets\/(index-[\w-]+\.js)"><\/script>/);
   if (!m) throw new Error('could not find the main bundle in index.html');
   return { game, dist, html, bundle: path.join(dist, 'assets', m[1]), modsOut: path.join(dist, 'arpg-mods') };
 }
 
-// The game's version, a constant the bundle keeps just before its log levels: KI="0.18",Bg={},KC={error:0,…
+// The game's version, a string constant. 1.0 keeps it among the build flags that follow the
+// release/demo table ({release:"release",demo:"demo"},…,tb="1.0",hs="en"); 0.18 kept it just
+// before the log levels (KI="0.18",Bg={},KC={error:0,…).
 export function gameVersion(src) {
-  const m = src.match(/[\w$]+="(\d+\.\d+(?:\.\d+)?)",[\w$]+=\{\},[\w$]+=\{error:0,warn:1/);
+  const m = src.match(/\{release:"release",demo:"demo"\}[^"]{0,400}?[,;][\w$]+="(\d+\.\d+(?:\.\d+)?)"/) ??
+    src.match(/[\w$]+="(\d+\.\d+(?:\.\d+)?)",[\w$]+=\{\},[\w$]+=\{error:0,warn:1/);
   return m ? m[1] : null;
 }
 
@@ -291,7 +256,7 @@ function originalOf(file) {
   return fs.readFileSync(file + ORIG, 'utf8');
 }
 
-function patchBundle(src) {
+export function patchBundle(src) {
   let out = src;
   for (const p of PATCHES) {
     const hits = [...out.matchAll(p.find)].length;
@@ -309,7 +274,24 @@ function listMods() {
     .sort();
 }
 
+// Splits the mods in the code-mods folder into the ones to load and the retired ones to skip.
+export function splitRetired(mods) {
+  return { load: mods.filter(m => !RETIRED.has(m)), retired: mods.filter(m => RETIRED.has(m)) };
+}
+
+// Backups of bundles a game update has since replaced (index-<old hash>.js.arpg-orig).
+function dropStaleBackups(loc) {
+  const dir = path.dirname(loc.bundle);
+  for (const f of fs.readdirSync(dir)) {
+    if (f.endsWith('.js' + ORIG) && !fs.existsSync(path.join(dir, f.slice(0, -ORIG.length)))) {
+      fs.rmSync(path.join(dir, f));
+      console.log(`removed a stale backup from an older game build: ${f}`);
+    }
+  }
+}
+
 function install(loc) {
+  dropStaleBackups(loc);
   const bundleSrc = originalOf(loc.bundle);
   const patched = patchBundle(bundleSrc);
 
@@ -320,7 +302,7 @@ function install(loc) {
   fs.rmSync(loc.modsOut, { recursive: true, force: true });
   fs.mkdirSync(loc.modsOut, { recursive: true });
   fs.copyFileSync(path.join(HERE, 'runtime', 'loader.js'), path.join(loc.modsOut, 'loader.js'));
-  const mods = listMods();
+  const { load: mods, retired } = splitRetired(listMods());
   for (const m of mods) fs.copyFileSync(path.join(MODS_DIR, m, 'mod.js'), path.join(loc.modsOut, `${m}.js`));
 
   // Classic scripts run before the module bundle, so the loader and every mod
@@ -332,15 +314,22 @@ function install(loc) {
   fs.writeFileSync(loc.html, html);
   console.log(`installed: ${path.basename(loc.bundle)} patched (${PATCHES.map(p => p.name).join(', ')})`);
   console.log(`mods (${MODS_DIR}): ${mods.length ? mods.join(', ') : '(none)'}`);
+  if (retired.length) {
+    console.log(`skipped: ${retired.join(', ')}. Anywhere RPG 1.0 does these natively, so they're retired ` +
+      `(they stay on the 0.18 branch). Delete them with: node patch.mjs remove ${retired.join(' ')}`);
+  }
 }
 
 function uninstall(loc) {
-  for (const f of [loc.bundle, loc.html]) {
-    if (fs.existsSync(f + ORIG)) {
-      fs.copyFileSync(f + ORIG, f);
-      fs.rmSync(f + ORIG);
-    }
+  // A backup goes back only over a file this patcher changed. After a game update the file is
+  // already the game's own, and the backup belongs to the older build, so it's just deleted.
+  const patched = [[loc.bundle, t => t.includes(MARKER)], [loc.html, t => t.includes('arpg-mods/')]];
+  for (const [f, isPatched] of patched) {
+    if (!fs.existsSync(f + ORIG)) continue;
+    if (isPatched(fs.readFileSync(f, 'utf8'))) fs.copyFileSync(f + ORIG, f);
+    fs.rmSync(f + ORIG);
   }
+  dropStaleBackups(loc);
   fs.rmSync(loc.modsOut, { recursive: true, force: true });
   console.log('uninstalled: original files restored');
 }
@@ -350,6 +339,8 @@ function status(loc) {
   console.log(`bundle: ${path.basename(loc.bundle)} — ${patched ? 'patched' : 'original'}`);
   console.log(`mods folder: ${MODS_DIR}`);
   console.log(`mods found: ${listMods().join(', ') || '(none)'}`);
+  const { retired } = splitRetired(listMods());
+  if (retired.length) console.log(`retired on 1.0, skipped by install: ${retired.join(', ')} (node patch.mjs remove ${retired.join(' ')})`);
   const missing = bundledMods().filter(m => !listMods().includes(m));
   if (missing.length) console.log(`bundled but not installed: ${missing.join(', ')} (node patch.mjs add <name>)`);
   if (!patched) {
@@ -400,8 +391,9 @@ function main() {
   console.log(`code-mod loader ${LOADER_VERSION}`);
   console.log(`game: ${loc.game} (Anywhere RPG ${version ?? 'version unknown'})`);
   if (version !== TESTED) {
-    console.log(`note: these mods were built and tested against Anywhere RPG ${TESTED}. ` +
-      'They install only if every patch anchor still matches; play-test before relying on them.');
+    console.log(`warning: this loader and its mods are for Anywhere RPG ${TESTED}, not ${version ?? 'this version'}. ` +
+      'For 0.18, use the 0.18 branch or the v0.18-final release. Install goes ahead only if every patch ' +
+      'anchor still matches; play-test before relying on it.');
   }
   run(loc, args.names);
 }
