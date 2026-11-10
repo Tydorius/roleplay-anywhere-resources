@@ -34,6 +34,18 @@
     return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
+  // NPC templates: 1.0 writes npcTemplates (homes: [{regionId, count}]); 0.18 and the presets write
+  // hostileNpcTemplates (regionId, count). Both are handled wherever they appear.
+  function npcTypes(scn) {
+    return (scn.npcTemplates || []).concat(scn.hostileNpcTemplates || []);
+  }
+  function listKeyOf(scn, t) {
+    return (scn.npcTemplates || []).indexOf(t) !== -1 ? "npcTemplates" : "hostileNpcTemplates";
+  }
+  function homeIds(t) {
+    return Array.isArray(t.homes) ? t.homes.map(h => h && h.regionId) : t.regionId ? [t.regionId] : [];
+  }
+
   function plainSet(o, k, v) {
     if (v === undefined) delete o[k];
     else o[k] = v;
@@ -59,9 +71,19 @@
         if (ev.location === region.name)
           out.push({kind: "calendar", ownerId: ev.id, ownerName: ev.name, detail: ev.name});
       }
-      for (const t of scn.hostileNpcTemplates || []) {
-        if (t.regionId === id)
+      for (const t of npcTypes(scn)) {
+        if (homeIds(t).indexOf(id) !== -1)
           out.push({kind: "hostileHome", ownerId: t.id, ownerName: t.name, detail: t.name});
+      }
+      for (const ent of scn.entities || []) {
+        if (ent.npcHome === id) out.push({kind: "npcHome", ownerId: ent.id, ownerName: ent.name, detail: ent.name});
+      }
+      for (const r of scn.regions || []) {
+        if (r.pocket && r.pocket.anchor === id)
+          out.push({kind: "floorOf", ownerId: r.id, ownerName: r.name, detail: "level " + r.pocket.level});
+      }
+      for (const t of scn.itemTemplates || []) {
+        if (t.opens === id) out.push({kind: "key", ownerId: t.id, ownerName: t.name, detail: t.name});
       }
       return out;
     }
@@ -102,7 +124,7 @@
             out.push({kind: "stock", ownerId: ent.id, ownerName: ent.name, detail: "x" + st.count});
         }
       }
-      for (const t of (scn.objectTemplates || []).concat(scn.hostileNpcTemplates || [])) {
+      for (const t of (scn.objectTemplates || []).concat(npcTypes(scn))) {
         if (Array.isArray(t.lootPoolIds) && t.lootPoolIds.indexOf(id) !== -1)
           out.push({kind: "loot", ownerId: t.id, ownerName: t.name, detail: "lootPoolIds"});
       }
@@ -117,7 +139,7 @@
       }
       return out;
     }
-    const hostileType = (scn.hostileNpcTemplates || []).find(t => t.id === id);
+    const hostileType = npcTypes(scn).find(t => t.id === id);
     if (hostileType) {
       for (const ent of scn.entities || []) {
         if (ent.type === "npc" && ent.templateId === id)
@@ -125,7 +147,12 @@
       }
       return out;
     }
-    return [];
+    // an object at the other end of a portal (1.0: portal: {to: id})
+    for (const ent of scn.entities || []) {
+      if (ent.portal && ent.portal.to === id && ent.id !== id)
+        out.push({kind: "portal", ownerId: ent.id, ownerName: ent.name, detail: ent.name});
+    }
+    return out;
   }
 
   function forceDelete(scn, ids, opts, set) {
@@ -242,7 +269,7 @@
           }
         }
       }
-      for (const t of scn.objectTemplates.concat(scn.hostileNpcTemplates)) {
+      for (const t of scn.objectTemplates.concat(npcTypes(scn))) {
         if (!Array.isArray(t.lootPoolIds)) continue;
         const next = t.lootPoolIds.filter(x => x !== it.id);
         if (next.length !== t.lootPoolIds.length) {
@@ -258,7 +285,8 @@
     }
 
     function deleteHostileType(ht) {
-      set(scn, "hostileNpcTemplates", scn.hostileNpcTemplates.filter(t => t.id !== ht.id));
+      const key = listKeyOf(scn, ht);
+      set(scn, key, scn[key].filter(t => t.id !== ht.id));
       report.removed.push({id: ht.id, name: ht.name, kind: "hostileType"});
       for (const ent of scn.entities) {
         if (ent.type === "npc" && ent.templateId === ht.id) {
@@ -289,10 +317,17 @@
       // Hostile types homed here: rehome onto the replacement, or delete the type outright.
       // People whose schedule was moved by a rehome are excluded from the general pass below.
       const handled = new Set();
-      for (const t of scn.hostileNpcTemplates.slice()) {
-        if (t.regionId !== region.id) continue;
+      for (const t of npcTypes(scn)) {
+        if (homeIds(t).indexOf(region.id) === -1) continue;
+        const others = Array.isArray(t.homes) ? t.homes.filter(h => !h || h.regionId !== region.id) : [];
+        if (!repl && others.length) {      // 1.0: drop this home, keep the type for its other homes
+          set(t, "homes", others);
+          noteChanged(t, "no longer spawns in " + name);
+          continue;
+        }
         if (repl) {
-          set(t, "regionId", repl.id);
+          if (Array.isArray(t.homes)) set(t, "homes", t.homes.map(h => h && h.regionId === region.id ? Object.assign({}, h, {regionId: repl.id}) : h));
+          else set(t, "regionId", repl.id);
           noteChanged(t, "home region moved to " + repl.name);
           for (const ent of scn.entities) {
             if (ent.type !== "npc" || ent.templateId !== t.id || !Array.isArray(ent.schedule)) continue;
@@ -328,6 +363,25 @@
         }
       }
 
+      // 1.0 links by region id: a person's home, a floor's building, a key's lock
+      for (const ent of scn.entities || []) {
+        if (ent.npcHome !== region.id) continue;
+        set(ent, "npcHome", repl ? repl.id : undefined);
+        noteChanged(ent, repl ? "home moved to " + repl.name : "home region removed");
+      }
+      for (const r of scn.regions || []) {
+        if (!r.pocket || r.pocket.anchor !== region.id) continue;
+        const pocket = Object.assign({}, r.pocket);
+        if (repl) pocket.anchor = repl.id; else delete pocket.anchor;
+        set(r, "pocket", pocket);
+        noteChanged(r, repl ? "now a floor of " + repl.name : "a floor of no building now");
+      }
+      for (const t of scn.itemTemplates || []) {
+        if (t.opens !== region.id) continue;
+        set(t, "opens", repl ? repl.id : undefined);
+        noteChanged(t, repl ? "now opens " + repl.name : "no longer opens anything");
+      }
+
       if (deleteContents) {
         for (const child of innerRegions) {
           if ((scn.regions || []).some(r => r.id === child.id)) deleteRegion(child);
@@ -348,13 +402,19 @@
           return true;
         }
         removeEntity(ent, ent.type === "object" ? "object" : "npc");
+        for (const o of scn.entities) {          // the other end of its portal leads nowhere now
+          if (o.portal && o.portal.to === ent.id) {
+            set(o, "portal", undefined);
+            noteChanged(o, "portal to " + ent.name + " removed");
+          }
+        }
         return true;
       }
       const ot = (scn.objectTemplates || []).find(x => x.id === id);
       if (ot) { deleteObjectType(ot); return true; }
       const it = (scn.itemTemplates || []).find(x => x.id === id);
       if (it) { deleteItemType(it); return true; }
-      const ht = (scn.hostileNpcTemplates || []).find(x => x.id === id);
+      const ht = npcTypes(scn).find(x => x.id === id);
       if (ht) { deleteHostileType(ht); return true; }
       if (warnMissing) report.warnings.push("nothing in the scenario has id " + id);
       return false;
@@ -422,7 +482,7 @@
     if (ent) { set(ent, "name", trimmed); return {count: 0}; }
     const ot = (scn.objectTemplates || []).find(t => t.id === id);
     if (ot) { set(ot, "name", trimmed); return {count: 0}; }
-    const ht = (scn.hostileNpcTemplates || []).find(t => t.id === id);
+    const ht = npcTypes(scn).find(t => t.id === id);
     if (ht) { set(ht, "name", trimmed); return {count: 0}; }
     return {error: "nothing in the scenario has id " + id};
   }
@@ -461,7 +521,7 @@
       if (Array.isArray(mem))
         for (let i = 0; i < mem.length; i++) scan(mem[i], "text", e.id, e.name, "memories[" + i + "].text");
     }
-    const types = (scn.objectTemplates || []).concat(scn.itemTemplates || [], scn.hostileNpcTemplates || []);
+    const types = (scn.objectTemplates || []).concat(scn.itemTemplates || [], npcTypes(scn));
     for (const t of types) {
       scan(t, "description", t.id, t.name, "description");
       scan(t, "physicalDescription", t.id, t.name, "physicalDescription");
@@ -517,5 +577,5 @@
     return count;
   }
 
-  return {findRefs, forceDelete, previewDelete, renameEverywhere, findMentions, replaceMentions};
+  return {findRefs, forceDelete, previewDelete, renameEverywhere, findMentions, replaceMentions, npcTypes, homeIds};
 });

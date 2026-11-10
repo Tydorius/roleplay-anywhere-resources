@@ -115,7 +115,7 @@ function inspectBody() {
   if (p.kind === "template") {
     const kind = o.id.split("_")[0];
     if (kind === "otpl") return inspectObjectType(box, o);
-    if (kind === "htpl") return inspectHostileType(box, o);
+    if (kind === "htpl" || npcTypes().includes(o)) return inspectHostileType(box, o);
     return inspectTemplate(box, o);
   }
   if (o.type === "object") return inspectObject(box, o);
@@ -128,8 +128,9 @@ function inspectBrowse(box) {
   const lists = {
     types: ["Object types", (S.scn.objectTemplates || []).map(t => ({id: t.id, name: t.name,
       detail: `${entities().filter(e => e.templateId === t.id).length} placed`}))],
-    hostile: ["Hostile types", (S.scn.hostileNpcTemplates || []).map(t => ({id: t.id, name: t.name,
-      detail: `${byId(t.regionId)?.name || "no region"} · ${t.count || 1}`}))],
+    hostile: ["NPC types", npcTypes().map(t => ({id: t.id, name: t.name,
+      detail: Array.isArray(t.homes) ? t.homes.map(h => `${byId(h.regionId)?.name || "no region"} · ${h.count ?? 0}`).join(", ") || "no home"
+        : `${byId(t.regionId)?.name || "no region"} · ${t.count || 1}`}))],
     people: ["People", entities().filter(e => e.type !== "object" && !e.templateId).map(e => ({id: e.id, name: e.name,
       detail: e.type === "player" ? "player" : e.hostile ? "hostile" : ""}))],
     regions: ["Regions", regions().map(r => ({id: r.id, name: r.name, detail: `${r.wall ? "walled" : "open"}${r.hostile ? " · hostile" : ""}`}))],
@@ -191,6 +192,11 @@ function inspectRegion(box, r) {
       ["Inside", parent ? linkTo(parent) : "the open map"],
       ["Position", r.position.join(", ")], ["Size", r.size.join(" × ")],
       ["Contains", `${inside.length} regions · ${objs.length} objects · ${people} people`],
+      r.pocket ? ["Floor", `level ${esc(r.pocket.level)}${byId(r.pocket.anchor) ? ` of ${linkTo(byId(r.pocket.anchor))}` : ""}`] : null,
+      r.shape ? ["Shape", esc(r.shape)] : null,
+      r.surface ? ["Liquid", esc(r.surface)] : null,
+      r.wall && (r.door || r.doorColor) ? ["Doors", `${esc(r.door || "door")}${r.doorColor ? ` · ${esc(r.doorColor)}` : ""}`] : null,
+      r.takingIsTheft !== undefined ? ["Taking is theft", r.takingIsTheft ? "yes" : "no"] : null,
       sleepers.size || beds ? ["Beds", `<span class="${beds < sleepers.size ? "bad" : ""}">${beds} for ${sleepers.size} sleeper${sleepers.size === 1 ? "" : "s"}</span>`] : null,
     ])}
     ${r.wall ? section(`Doors (${(r.openings || []).length})`, (r.openings || []).length
@@ -255,7 +261,7 @@ function swapType(objs, tid) {
       set(o, "size", (o.rot || 0) % 2 ? [t.size[1], t.size[0]] : t.size.slice());
       set(o, "maxHp", t.maxHp ?? o.maxHp); set(o, "hp", t.maxHp ?? o.hp);
       set(o, "statusEffects", (t.startingEffects || []).map(def => ({id: MapOps.newId("se"), def: JSON.parse(JSON.stringify(def)), appliedAt: 28800, source: "template"})));
-      set(o, "pos", [Math.min(o.pos[0], S.scn.gridSize[0] - o.size[0]), Math.min(o.pos[1], S.scn.gridSize[1] - o.size[1])]);
+      set(o, "pos", MapOps.clampTo(S.scn, o.pos[0], o.pos[1], o.size));
     }
   });
 }
@@ -328,7 +334,7 @@ function inspectObjectType(box, t) {
       for (const o of placed) {
         const sz = (o.rot || 0) % 2 ? [h, w] : [w, h];
         set(o, "size", sz);
-        set(o, "pos", [Math.min(o.pos[0], S.scn.gridSize[0] - sz[0]), Math.min(o.pos[1], S.scn.gridSize[1] - sz[1])]);
+        set(o, "pos", MapOps.clampTo(S.scn, o.pos[0], o.pos[1], sz));
       }
     });
   };
@@ -536,8 +542,12 @@ function inspectHostileType(box, t) {
     {key: "name", label: "Name", required: true, rename: true},
     {key: "description", label: "Description (the GM sees this)", type: "textarea", rows: 3},
     {key: "physicalDescription", label: "Looks (for the portrait)", type: "textarea", rows: 2},
-    {key: "regionId", label: "Lives in (spawns and respawns here)", type: "select", options: regs.map(r => [r.id, `${r.name}${r.hostile ? " ☠" : ""}`])},
-    {key: "count", label: "How many", type: "number", min: 1, max: 6},
+    ...(Array.isArray(t.homes) ? [
+      {key: "stance", label: "Stance", type: "select", optional: true, options: S.meta.templateStances || ["neutral", "skittish", "hostile"]},
+    ] : [
+      {key: "regionId", label: "Lives in (spawns and respawns here)", type: "select", options: regs.map(r => [r.id, `${r.name}${r.hostile ? " ☠" : ""}`])},
+      {key: "count", label: "How many", type: "number", min: 1, max: 6},
+    ]),
     {key: "gender", label: "Gender", type: "select", options: ["female", "male"]},
     {key: "animationId", label: "Sprite", type: "select", options: M.animations},
     {key: "spriteColor", label: "Sprite colour", type: "color", optional: true},
@@ -546,11 +556,14 @@ function inspectHostileType(box, t) {
     {key: "attacksOnSight", label: "Attacks on sight", type: "check"},
     {key: "lootPoolIds", label: "Loot", type: "multi", options: itemOptions()},
   ];
-  box.innerHTML = `<div class="kind">Hostile type</div><h3>${esc(t.name)}</h3>
+  const homes = Array.isArray(t.homes) ? t.homes : null;
+  box.innerHTML = `<div class="kind">${homes ? "NPC type" : "Hostile type"}</div><h3>${esc(t.name)}</h3>
     <p class="note">The game spawns this many in its region at the start and respawns them. The ones already placed are listed below.</p>
+    ${homes ? facts([["Homes", homes.length ? homes.map(h => `${byId(h.regionId) ? linkTo(byId(h.regionId)) : esc(h.regionId)} × ${esc(h.count ?? 0)}`).join(", ") : "none (placed copies only)"]]) +
+      `<p class="note">Homes are edited in the game's template editor (god mode).</p>` : ""}
     ${formHtml("ht", t, defs)}
     ${section(`Placed (${placed.length})`, refsHtml(placed.map(e => ({id: e.id, text: e.name, detail: e.pos.join(", ")})), "None placed."), true)}`;
-  bindRefs(box, placed.map(e => ({id: e.id})));
+  bindRefs(box, placed.map(e => ({id: e.id}))); bindJumps(box);
   wireForm(box, "ht", t, defs, () => t.name);
 }
 
