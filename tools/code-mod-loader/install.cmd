@@ -1,7 +1,7 @@
 @echo off
 rem Install the code-mod loader and its mods in one step. Close the game first.
 rem   install.cmd                   every bundled mod except the memory-add sample
-rem   install.cmd portals floors    only the mods you name
+rem   install.cmd lorebooks lights  only the mods you name
 rem   install.cmd --game "E:\Games\Anywhere RPG"   if the game isn't in a Steam library
 setlocal
 where node >nul 2>nul || (
