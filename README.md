@@ -6,6 +6,13 @@ Community resources for Anywhere RPG (Roleplay Anywhere).
 > change the config files and code these resources depend on, so check each folder's README for
 > what to re-check after an update.
 
+> **Last update for 0.18.** The world settings files (save, export and import a world's choices)
+> are the final update to these mods and tools for Anywhere RPG 0.18. The 0.18 versions stay on the
+> [`0.18` branch](https://github.com/Tydorius/roleplay-anywhere-resources/tree/0.18) and in the
+> final 0.18 release, [`v0.18-final`](https://github.com/Tydorius/roleplay-anywhere-resources/releases/tag/v0.18-final).
+> From here on, `main` is updated for **Anywhere RPG 1.0**, currently on Steam's alpha track. If you
+> play 0.18, use the `0.18` branch or that release.
+
 | Folder | What it is |
 |---|---|
 | [`mods/better-images`](mods/better-images) | ComfyUI image-generation mods for Anywhere RPG: better workflows and prompts per image type, background removal for map objects and items, a setup script that adapts them to your ComfyUI's model files, and an **Image Gallery** page for viewing and regenerating any scenario image. |
