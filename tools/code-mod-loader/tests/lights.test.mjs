@@ -313,7 +313,7 @@ test('culled sprites are skipped', () => {
   scene.losBlocked = (...args) => { calls.push(args); return los(...args); };
   lights.applyFrame(scene, 1000);
   assert.equal(bed.tintTopLeft, 0xcccccc);
-  assert.ok(!calls.some(args => args[4] === 260), 'no wall test for the bed’s position');
+  assert.ok(!calls.some(args => args[3] === 260), 'no wall test for the bed’s position');
 });
 
 test('lamps off screen keep the steady look', () => {
