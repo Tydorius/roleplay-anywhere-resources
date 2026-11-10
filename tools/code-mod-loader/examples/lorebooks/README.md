@@ -1,5 +1,7 @@
 # Lorebooks
 
+For Anywhere RPG 1.0 (code-mod loader 2.0.0). The 0.18 version is on the `0.18` branch.
+
 Keyword-triggered lore for the GM, carried inside the scenario itself, so players install one
 zip. Each turn the mod looks at what's happening near the player and adds the matching entries
 to the GM prompt, under "Lore". It adds nothing else, so a large lorebook costs only what's
@@ -27,7 +29,7 @@ Add an `arpgMods` key at the top level of `scenario.json`:
 
 | Field | Meaning |
 |---|---|
-| `lorebookBudget` | Most characters of lore added per turn. Default 2000. Entries that don't fit are skipped. |
+| `lorebookBudget` | Most characters of lore added per turn. Default 2000, and never more than the game's world background limit for the player's tier (Options → Context limits): 650 Free, 900 Silver, 1800 Sapphire, 3600 Obsidian and Custom service. Entries that don't fit are skipped. |
 | `lorebooks.<name>` | One book. `"enabled": false` turns off the whole book. |
 | `keys` | Words or names that trigger the entry. Case-insensitive, whole words only, so `Vel` won't match `Vellan`. |
 | `secondaryKeys` | Optional. When set, at least one of these must also appear. |
@@ -50,7 +52,15 @@ The mod scans the parts of the GM prompt that describe the present:
 - the GM's own last response.
 
 It skips the full list of regions and the far-away characters, because otherwise every entry
-would trigger all the time.
+would trigger all the time. It also skips what is in other rooms or on other floors, and the
+player's own description.
+
+## Context limits
+
+When the GM prompt is too long, the game rebuilds it with smaller limits, and the Lore section
+shrinks with the world background. If it is still too long, the game cuts every long section to
+an equal share, keeping its first lines. So constants and high-priority entries, which go first,
+survive. The section is never dropped while it has an entry.
 
 ## Behaviour
 
