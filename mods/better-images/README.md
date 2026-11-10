@@ -7,9 +7,10 @@ image service removes it on its server, but the ComfyUI path never does.
 
 These mod packs replace the workflow and prompts for each image type.
 
-**Game version:** built for Anywhere RPG 0.18. The packs replace the game's `prompts/img_*.txt` and
-`comfyui/comfyui-workflow*.json`. If an update changes those defaults, compare them with the
-pack's copies.
+**Game version:** Anywhere RPG 1.0. The packs replace the game's `prompts/img_*.txt` and
+`comfyui/comfyui-workflow*.json`; 1.0's copies of those files are byte-identical to 0.18's, so the
+same packs work on both (0.18 users can also take them from the `0.18` branch). If an update
+changes those defaults, compare them with the pack's copies.
 
 | Pack | Image types | Models | Speed |
 |---|---|---|---|
@@ -28,12 +29,35 @@ Each pack's `PACK-NOTES.md` lists the exact files it expects and where they go.
    - **Windows:** `%APPDATA%\Anywhere RPG\mods`
    - **Other systems:** open it from **Options → Mods → Open mods folder** in the game.
 2. In **Options → Mods**, enable **one** main pack. To keep anime-style portraits with Flux or Qwen
-   props, also enable `sdxl-portraits` **after** it.
-3. In **Options → AI Images**, set the image service to ComfyUI and check the model menus:
+   props, also enable `sdxl-portraits` **after** it. If a pack shows "⚠ 1 file isn't in a folder
+   the game reads", that file is its `PACK-NOTES.md`: the game ignores it, so the warning is
+   harmless (or delete the file from the copy in your mods folder). `setup_image_mod.py --install`
+   leaves it out.
+3. In **Options → AI Images**, set the image service to ComfyUI and check the model menus
+   (*Default portrait model*, *Default icon model* for items and perks, and, new in 1.0,
+   *Default object sprite model* for map objects):
    - With the Flux or Qwen pack they list your *diffusion models* instead of checkpoints.
-   - Choose the model each image type should use.
+   - Each menu starts on the file the pack names. Leave it there, or pick another model **of the
+     same family** (another SDXL checkpoint with the SDXL pack, say). A Qwen file picked for the
+     Flux.2 klein pack, or a video model, is loaded into the pack's workflow and fails or comes out
+     as noise.
+   - A pick the workflow's loader can't take (a checkpoint for a Flux workflow) is ignored, and the
+     pack's own file is used. That is why the `sdxl-portraits` add-on still works when the
+     portrait menu shows a Flux file.
+   - A world can pick its own models in **New Game**, or in game under **Options → Scenario**;
+     the same advice applies there.
 4. Sprites and items need a background-removal node. The packs use **WAS Node Suite**'s
-   `Image Rembg (Remove Background)`; install it with ComfyUI Manager.
+   `Image Rembg (Remove Background)`; install it with ComfyUI Manager. 1.0's own ComfyUI notes now
+   recommend the same thing (they name ComfyUI-RMBG, which the `--remover ben2` option below uses).
+
+**Image prompt format (1.0).** New Game → *generate a world* now asks for an optional "Image prompt
+format", as the world settings (**Options → Scenario**) have since 0.18
+(`${prompt}, watercolor, muted colors`). The game puts it around the description inside the
+pack's prompt, and since 1.0 it does that for **map objects too**. Keep it to style words. Scene words (landscape, background, room) fight the packs' "single
+object, isolated" sprite prompts and leave the background remover more to cut.
+
+**Vehicles (1.0)** can be drawn with one of the game's built-in animation sheets (bicycle, dune
+buggy…) instead of their sprite. The packs still make the sprite; the map just doesn't show it.
 
 ## Your files are named differently?
 
@@ -51,9 +75,10 @@ lists; it does not queue any work.
 - `--remover ben2|rembg|none` picks the background remover (`ben2` needs ComfyUI-RMBG).
 - `--out DIR` writes the packs elsewhere.
 
-**Why the names matter:** the game has no model menu for map objects. It uses the file named in
-the sprite workflow, and if that file is missing, the first model on ComfyUI's list, which may not
-even be an image model.
+**Why the names matter:** unless a model menu says otherwise, the game uses the file named in the
+workflow, and if that file is missing, the first model on ComfyUI's list, which may not even be an
+image model. In 0.18 map objects had no menu at all, so this was the only way to set their model;
+in 1.0 the object sprite menu can also fix it, but a pack whose names match needs no picking.
 
 ## Image Gallery: see and redo every image
 
@@ -61,6 +86,12 @@ even be an image model.
 map objects, items, perks and portraits, on a checkerboard so you can see which cutouts kept
 their background. Each one has **Regenerate**. The new image appears next to the old one, and you
 choose **Keep**, **Retry** or **Discard**. You can also tick several and regenerate them in one go.
+
+In 1.0 scenarios, **NPC templates** have their own portrait card: hostile templates from 0.18
+(now stored under `htpl_…` ids) and templates made in 1.0's template editor (`ntpl_…`). NPCs
+spawned from a template show the template's portrait in game, so they get no card of their own.
+Doors get no card either (the game draws them itself), and a vehicle drawn with a built-in
+animation sheet says so on its card.
 
 ![New portraits ready to keep, retry or discard, each with the old image in the corner](media/image-gallery-2.png)
 
@@ -155,8 +186,9 @@ All of this is standard Anywhere RPG modding; nothing in the game's own files is
   sprite, item, perk).
 - **Slots:** node titles containing `<input>=PROMPT|WIDTH|HEIGHT|SEED|MODEL` mark what the game
   fills in. A `UNETLoader` titled `unet_name=MODEL` makes the model menu list diffusion models.
-- **Prompts:** `prompts/img_<kind>.txt` is the prompt, with `${DESC}` replaced by the description.
-  **Sprites receive only the object's description, not its name.**
+- **Prompts:** `prompts/img_<kind>.txt` is the prompt, with `${DESC}` replaced by the description
+  (wrapped in the world's image prompt format, if it has one). **Sprites receive only the object's
+  description, not its name.** The gallery builds its prompts the same way.
 
 ## Writing good descriptions for scenario authors
 

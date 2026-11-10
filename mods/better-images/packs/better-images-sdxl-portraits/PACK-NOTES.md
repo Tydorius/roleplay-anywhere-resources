@@ -14,6 +14,8 @@ Uses the `Image Rembg (Remove Background)` node from **WAS Node Suite (was-node-
 
 Add-on: in Options -> Mods put it **after** the main pack.
 
+The portrait menu lists the main pack's models. A pick this workflow can't load is ignored and the checkpoint named here is used; pick an SDXL checkpoint only when the main pack is SDXL too.
+
 ## Different filenames?
 
-Run `python setup_image_mod.py --detect http://<comfyui>:8188` from the bundle folder, or edit the `*_name` values in `comfyui/*.json`. A missing name makes the game fall back to the first model on ComfyUI's list for sprites.
+Run `python setup_image_mod.py --detect http://<comfyui>:8188` from the bundle folder, or edit the `*_name` values in `comfyui/*.json`. A missing name, with no model picked in the menus, makes the game fall back to the first model on ComfyUI's list.

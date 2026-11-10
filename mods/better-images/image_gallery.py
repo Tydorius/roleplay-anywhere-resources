@@ -34,7 +34,11 @@ CLIENT_PREFIX = "anywhere-rpg-gallery-"
 
 # id prefix -> image kind, for things the game draws an image for
 PREFIX_KIND = {"otpl": "sprite", "itpl": "item", "npc": "portrait", "player": "portrait",
-               "perk": "perk", "ipk": "perk"}
+               "perk": "perk", "ipk": "perk",
+               # 1.0 NPC templates: htpl_ (hostile templates from 0.18, migrated) and ntpl_ (new ones).
+               # NPCs spawned from a template (templateId) use the template's portrait.
+               "htpl": "portrait", "ntpl": "portrait"}
+NPC_TEMPLATE_PREFIXES = ("htpl_", "ntpl_")
 IMAGE_RE = re.compile(r"^(?P<id>[A-Za-z0-9_]+)-(?P<kind>sprite|item|portrait|perk)\.(webp|png)$")
 ID_RE = re.compile(r"^[A-Za-z0-9_]+$")
 NATURAL_FAMILIES = {"flux1", "flux2-klein", "qwen-image"}
@@ -279,6 +283,12 @@ def list_items(src):
                         on_disk[d.name] = (m["kind"], f)
     sizes = {t["id"]: t.get("size") for t in data.get("objectTemplates", []) if isinstance(t, dict)}
     fmt = ((data.get("imageSettings") or {}).get("promptFormat") or "").strip()
+    for i, o in list(things.items()):
+        # Drawn without an image of their own: NPCs spawned from a template (the template's portrait
+        # is used) and doors. Listed only if an old image is still on disk.
+        if i not in on_disk and (str(o.get("templateId") or "").startswith(NPC_TEMPLATE_PREFIXES)
+                                 or (i.startswith("otpl_") and o.get("door"))):
+            del things[i]
     items = []
     for i in sorted(set(things) | set(on_disk)):
         o = things.get(i, {})
@@ -291,6 +301,8 @@ def list_items(src):
             "subject": subject_noun(o) if kind == "portrait" else None,
             "file": f.name if f else None, "mtime": int(f.stat().st_mtime) if f else 0,
             "known": i in things,
+            "note": ("Drawn on the map with a built-in vehicle sheet, not this image."
+                     if kind == "sprite" and o.get("vehicle") and o.get("sheet") else None),
         })
     return {"items": items, "promptFormat": fmt}
 
@@ -356,6 +368,15 @@ def subject_prompt(family, files, kind, noun):
     return f"{words['pos'][noun]}{' ' if family in NATURAL_FAMILIES else ', '}{template}", words["neg"][noun]
 
 
+def format_desc(desc, fmt):
+    """The world's image prompt format, applied as Anywhere RPG 1.0 does: to the description that
+    fills ${DESC}, for every image type (0.18 skipped map objects)."""
+    fmt = (fmt or "").strip()
+    if not fmt:
+        return desc
+    return desc.join(fmt.split("${prompt}")) if "${prompt}" in fmt else f"{fmt} {desc}"
+
+
 def resolve_files(info, family, wanted):
     fam = sim.FAMILIES[family]
     detected, _ = sim.detect(info, fam)
@@ -382,10 +403,7 @@ def build(req, settings, url):
             raise ValueError("the custom prompt is empty")
     else:
         template, negative_extra = subject_prompt(family, files, kind, noun)
-    prompt = template.replace("${DESC}", req["desc"])
-    fmt = (req.get("promptFormat") or "").strip()
-    if fmt and kind != "sprite":  # the world's prompt format, applied as the game does
-        prompt = prompt.join(fmt.split("${prompt}")) if "${prompt}" in fmt else f"{fmt} {prompt}"
+    prompt = template.replace("${DESC}", format_desc(req["desc"], req.get("promptFormat")))
 
     base = max(v for n in wf.values() for k, v in n["inputs"].items() if k in ("width", "height"))
     w, h = snap_size(base, float(req.get("aspect") or 1))

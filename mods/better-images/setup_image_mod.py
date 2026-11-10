@@ -8,15 +8,18 @@
 
 Standard library only. --detect only reads from ComfyUI (GET /object_info); it never queues work.
 
-How the game uses a pack (Anywhere RPG, ComfyUI image service):
+How the game uses a pack (Anywhere RPG 1.0, and 0.18, ComfyUI image service):
   * comfyui/comfyui-workflow-<kind>.json is used for kind = portrait | sprite | item | perk,
     else comfyui/comfyui-workflow.json.
   * Node titles containing <input>=PROMPT|WIDTH|HEIGHT|SEED|MODEL mark the inputs the game fills.
     WIDTH/HEIGHT scale from the largest value in the file by the requested aspect.
-  * MODEL drives the per-kind model menu (Options -> AI Images): portrait and icon (items, perks).
-    Sprites have no menu: they use the file named here, or the FIRST model on the list if it is
-    missing. Run --detect so that name exists.
-  * prompts/img_<kind>.txt is the prompt, with ${DESC} = the thing's physicalDescription.
+  * MODEL drives the per-kind model menus (Options -> AI Images, and per world): portrait, icon
+    (items, perks) and, since 1.0, object sprite. The menus list the loader's choices from
+    comfyui-workflow.json. A pick the kind's own workflow can't load is ignored; with no usable
+    pick the game uses the file named here, else the FIRST model on the list. 0.18 had no sprite
+    menu, so there the name here was the only way. Run --detect so that name exists.
+  * prompts/img_<kind>.txt is the prompt, with ${DESC} = the thing's physicalDescription, wrapped
+    in the world's image prompt format if it has one (1.0: for every kind; 0.18: not sprites).
 """
 import argparse, json, os, re, shutil, sys, urllib.request
 from pathlib import Path
@@ -359,11 +362,19 @@ def notes(key, fam, files, remover, detected_from=None):
     else:
         lines.append("None: sprites and items keep their white background.")
     if "portrait" not in fam["kinds"] or len(fam["kinds"]) < 4:
-        lines += ["", "## Load order", "", "Add-on: in Options -> Mods put it **after** the main pack."]
+        lines += ["", "## Load order", "", "Add-on: in Options -> Mods put it **after** the main pack.",
+                  "", "The portrait menu lists the main pack's models. A pick this workflow can't load is "
+                  "ignored and the checkpoint named here is used; pick an SDXL checkpoint only when the main "
+                  "pack is SDXL too."]
+    else:
+        lines += ["", "## Model menus (Anywhere RPG 1.0)", "",
+                  "Options -> AI Images has a menu for portraits, icons (items and perks) and object sprites "
+                  "(map objects; new in 1.0). Each starts on the file this pack names: leave it, or pick another "
+                  f"{fam['title'].split(': ', 1)[-1]} model. A model of another family fails or comes out as noise."]
     lines += ["", "## Different filenames?", "",
               "Run `python setup_image_mod.py --detect http://<comfyui>:8188` from the bundle folder, or edit the "
-              "`*_name` values in `comfyui/*.json`. A missing name makes the game fall back to the first model "
-              "on ComfyUI's list for sprites.", ""]
+              "`*_name` values in `comfyui/*.json`. A missing name, with no model picked in the menus, makes the "
+              "game fall back to the first model on ComfyUI's list.", ""]
     return "\n".join(lines)
 
 
@@ -427,7 +438,9 @@ def main():
             dst = mods / out.name
             if dst.exists():
                 shutil.rmtree(dst)
-            shutil.copytree(out, dst)
+            # PACK-NOTES.md stays here: 1.0 flags any file outside the folders it reads
+            # ("1 file isn't in a folder the game reads") in Options -> Mods.
+            shutil.copytree(out, dst, ignore=shutil.ignore_patterns("PACK-NOTES.md"))
             print("installed", dst)
         print("Enable the pack(s) in Options -> Mods, then check Options -> AI Images.")
 
