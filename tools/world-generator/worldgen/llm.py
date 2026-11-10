@@ -2,9 +2,11 @@
 
 Providers come from ``providers.json`` at the repository root (gitignored):
 each entry has ``base_url``, ``api_key``, ``model`` and ``max_tokens``, and may
-set ``timeout`` (seconds to wait for one reply) and ``rate_limit_wait`` (seconds
-to wait out a busy provider per request). Keys are never logged, printed or
-written to a call record.
+set ``timeout`` (seconds to wait for one reply), ``rate_limit_wait`` (seconds
+to wait out a busy provider per request), ``max_output`` (the most output tokens
+the provider accepts: every request's budget is held at or under it) and
+``extra_body`` (more request fields, such as DeepSeek's ``thinking``, merged
+into every request). Keys are never logged, printed or written to a call record.
 
 Every phase call goes through :func:`Client.call`, which extracts one JSON
 object from the reply, checks it against a contract, and on bad JSON or a
@@ -93,6 +95,44 @@ def _scrub(value):
     return value
 
 PLACEHOLDER_KEY = "YOUR_API_KEY"   # the example file's stand-in for a real key
+
+
+CORE_FIELDS = ("model", "messages", "max_tokens")
+
+
+def _max_output(cfg):
+    """The provider's output-token cap, or None when it sets none."""
+    v = cfg.get("max_output")
+    if v in (None, ""):
+        return None
+    try:
+        v = int(v)
+    except (TypeError, ValueError):
+        raise LLMError(f"\"max_output\" must be a whole number of tokens, not {v!r}")
+    if v < 1:
+        raise LLMError("\"max_output\" must be at least 1")
+    return v
+
+
+def _extra_body(cfg):
+    """The provider's extra request fields. Keys starting with "_" are notes,
+    and the fields the client sets itself can't be overridden."""
+    v = cfg.get("extra_body")
+    if v in (None, ""):
+        return {}
+    if not isinstance(v, dict):
+        raise LLMError("\"extra_body\" must be an object of request fields, "
+                       "like {\"thinking\": {\"type\": \"disabled\"}}")
+    return {k: x for k, x in v.items() if not k.startswith("_") and k not in CORE_FIELDS}
+
+
+def request_body(cfg, messages, max_tokens):
+    """The JSON body for one /chat/completions request."""
+    cap = _max_output(cfg)
+    body = dict(_extra_body(cfg))
+    body.update({"model": cfg["model"], "messages": messages,
+                 "max_tokens": min(max_tokens, cap) if cap else max_tokens})
+    return body
 
 
 def load_provider(name, path=PROVIDERS_PATH):
@@ -200,6 +240,8 @@ class Client:
     timeout = None           # seconds for one reply; None is REQUEST_TIMEOUT
     rate_limit_wait = None   # seconds to wait out a busy provider; None is RATE_LIMIT_WAIT
     on_wait = None     # called about once a second during a wait; may raise to stop it
+    max_output = None  # the provider's output-token cap; None is no cap
+    extra_body = {}    # more request fields merged into every request
 
     def __init__(self, provider, providers_path=PROVIDERS_PATH, log_dir=None):
         cfg = load_provider(provider, providers_path)
@@ -209,6 +251,8 @@ class Client:
         self.max_tokens = int(cfg.get("max_tokens", 16000))
         self.timeout = _seconds(cfg, "timeout")
         self.rate_limit_wait = _seconds(cfg, "rate_limit_wait")
+        self.max_output = _max_output(cfg)
+        self.extra_body = _extra_body(cfg)
         self._api_key = cfg["api_key"]
         self.log_dir = log_dir
         self.calls = 0
@@ -231,7 +275,7 @@ class Client:
                   "tokens": {"prompt": 0, "completion": 0, "total": 0}}
         t0 = time.time()
         result, last_parsed, ok = None, None, False
-        budget = max(self.max_tokens, PHASE_BUDGETS.get(phase, 0))
+        budget = self._capped(max(self.max_tokens, PHASE_BUDGETS.get(phase, 0)))
         cut = False
         self.last_error = None
         for attempt in range(1, max_retries + 2):
@@ -287,7 +331,7 @@ class Client:
                 result, ok = parsed, True
                 break
             if attempt <= max_retries and cut:
-                budget = min(budget * 2, MAX_TOKENS_CEILING)
+                budget = self._capped(min(budget * 2, MAX_TOKENS_CEILING))
             elif attempt <= max_retries:
                 messages = messages + [
                     {"role": "assistant", "content": raw or "(no reply)"},
@@ -304,6 +348,10 @@ class Client:
             self.tokens[k] += record["tokens"][k]
         self._write_log(phase, record)
         return record["result"]
+
+    def _capped(self, tokens):
+        """A token budget held to the provider's ``max_output``."""
+        return min(tokens, self.max_output) if self.max_output else tokens
 
     def _request(self, messages, max_tokens=None):
         """One reply, waiting out a busy provider: a 429 or 5xx is tried again
@@ -344,8 +392,10 @@ class Client:
 
     def _post(self, messages, max_tokens=None):
         """POST /chat/completions. Returns (content, usage); raises LLMError."""
-        body = json.dumps({"model": self.model, "messages": messages,
-                           "max_tokens": max_tokens or self.max_tokens}).encode("utf-8")
+        body = dict(self.extra_body)
+        body.update({"model": self.model, "messages": messages,
+                     "max_tokens": self._capped(max_tokens or self.max_tokens)})
+        body = json.dumps(body).encode("utf-8")
         req = urllib.request.Request(
             self.base_url + "/chat/completions", data=body, method="POST",
             headers={"Content-Type": "application/json",
@@ -410,10 +460,12 @@ def check_provider(name, providers_path=PROVIDERS_PATH):
     of the report."""
     cfg = load_provider(name, providers_path)
     base_url = cfg["base_url"].rstrip("/")
-    body = json.dumps({"model": cfg["model"],
-                       "messages": [{"role": "user",
-                                     "content": "Reply with exactly: ok"}],
-                       "max_tokens": CHECK_MAX_TOKENS}).encode("utf-8")
+    try:
+        body = request_body(cfg, [{"role": "user", "content": "Reply with exactly: ok"}],
+                            CHECK_MAX_TOKENS)
+    except LLMError as e:
+        return {"ok": False, "provider": name, "model": cfg["model"], "error": str(e)}
+    body = json.dumps(body).encode("utf-8")
     req = urllib.request.Request(
         base_url + "/chat/completions", data=body, method="POST",
         headers={"Content-Type": "application/json",

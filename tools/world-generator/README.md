@@ -59,7 +59,7 @@ by hand:
 1. Copy `providers.example.json` to `providers.json` (same folder).
 2. Fill in your key for the preset you want (or add your own entry — any
    `/chat/completions` endpoint works). Presets: z.ai (api and coding plan),
-   OpenRouter, OpenAI, Ollama, LM Studio, llama-swap.
+   OpenRouter, OpenAI, DeepSeek, Ollama, LM Studio, llama-swap.
 3. Set the `model` to one your endpoint serves.
 4. Check it: `python -m worldgen check-provider zai` — one tiny request,
    reports the model and latency.
@@ -67,6 +67,16 @@ by hand:
 `providers.json` is gitignored. Keys are never printed or logged. Local
 servers (Ollama, LM Studio, llama-swap) ignore the key but the field must
 exist — leave `"none"`.
+
+Two optional settings handle providers with their own rules:
+
+- `"max_output"`: the most output tokens the provider accepts. The catalogue
+  phase asks for 32000 and doubles a cut-off reply up to 65536, so a provider
+  with a smaller limit answers HTTP 400 without this. The OpenAI preset sets
+  16384 for gpt-4o.
+- `"extra_body"`: extra request fields sent with every call. The DeepSeek
+  preset uses it for thinking: `{"thinking": {"type": "enabled"}}`, or
+  `"disabled"` for faster, cheaper replies.
 
 ## Commands
 

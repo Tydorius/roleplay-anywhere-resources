@@ -69,7 +69,7 @@ class TestProviderSetup(unittest.TestCase):
     def test_enter_keeps_the_saved_key_and_other_providers_survive(self):
         s = Session(["1", "", "", "", KEY, "n"], self.tmp)
         s.launcher.setup_provider()
-        s2 = Session(["5", "", "", "", "", "n"], self.tmp)         # ollama: Enter = "none"
+        s2 = Session(["6", "", "", "", "", "n"], self.tmp)         # ollama: Enter = "none"
         s2.launcher.setup_provider()
         s3 = Session(["1", "", "", "glm-5.3", "", "n"], self.tmp)  # change zai's model, keep its key
         s3.launcher.setup_provider()
@@ -77,6 +77,16 @@ class TestProviderSetup(unittest.TestCase):
         self.assertEqual(data["ollama"]["api_key"], "none")
         self.assertEqual((data["zai"]["model"], data["zai"]["api_key"]), ("glm-5.3", KEY))
         self.assertEqual(sorted(s3.launcher.ready_providers()), ["ollama", "zai"])
+
+    def test_a_preset_keeps_its_optional_settings(self):
+        s = Session(["5", "", "", "", KEY, "n"], self.tmp)        # deepseek
+        s.launcher.setup_provider()
+        entry = s.providers()["deepseek"]
+        self.assertEqual(entry["base_url"], "https://api.deepseek.com")
+        self.assertEqual(entry["extra_body"], {"thinking": {"type": "enabled"}})
+        s2 = Session(["4", "", "", "", KEY, "n"], self.tmp)       # openai
+        s2.launcher.setup_provider()
+        self.assertEqual(s2.providers()["openai"]["max_output"], 16384)
 
     def test_a_remote_provider_needs_a_key(self):
         s = Session(["3", "", "", "", ""], self.tmp)                # openrouter, no key
@@ -130,7 +140,7 @@ class TestProviderCheck(unittest.TestCase):
 
     def setup_stub(self, server, answers_after):
         # another server, its name, URL, model, key, then the test request
-        return Session(["8", "stub", server.url, "stub-model", "abc", *answers_after], self.tmp)
+        return Session(["9", "stub", server.url, "stub-model", "abc", *answers_after], self.tmp)
 
     def test_a_working_provider_passes_its_test(self):
         server = StubServer()

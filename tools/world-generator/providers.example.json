@@ -8,6 +8,10 @@
     "reasoning-heavy calls and a small cap truncates the JSON replies.",
     "Optional: \"timeout\" is the seconds allowed for one reply (default 1800),",
     "\"rate_limit_wait\" the seconds to wait out a busy provider (default 900).",
+    "\"max_output\" is the most output tokens the provider accepts; set it when the",
+    "provider rejects big budgets (the catalogue phase asks for 32000 and doubles a",
+    "cut-off reply up to 65536). \"extra_body\" holds extra request fields sent with",
+    "every request, such as DeepSeek's \"thinking\".",
     "Test one with:  python -m worldgen check-provider <name>"
   ],
   "zai": {
@@ -36,7 +40,16 @@
     "base_url": "https://api.openai.com/v1",
     "api_key": "YOUR_API_KEY",
     "model": "gpt-4o",
-    "max_tokens": 16000
+    "max_tokens": 16000,
+    "max_output": 16384
+  },
+  "deepseek": {
+    "_comment": "DeepSeek's own API (https://api-docs.deepseek.com). Models: deepseek-flash (cheap) and deepseek-v4-pro. Thinking is on by default; set \"type\": \"disabled\" for faster, cheaper replies.",
+    "base_url": "https://api.deepseek.com",
+    "api_key": "YOUR_API_KEY",
+    "model": "deepseek-flash",
+    "max_tokens": 16000,
+    "extra_body": {"thinking": {"type": "enabled"}}
   },
   "ollama": {
     "_comment": "Ollama local server (https://ollama.com); run: OLLAMA_HOST=0.0.0.0 ollama serve. Key unused.",

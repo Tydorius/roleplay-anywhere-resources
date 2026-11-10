@@ -183,6 +183,24 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertTrue(second["ready"])
         self.assertNotIn("sk-other-00001111", json.dumps(r))
 
+    def test_provider_settings_the_form_lacks_survive_a_save(self):
+        # an output cap and extra request fields set in providers.json by hand
+        wg.save_provider("third", "https://api.deepseek.com", "sk-third-22223333", "deepseek-flash", 16000)
+        data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+        data["third"].update(max_output=8192, extra_body={"thinking": {"type": "disabled"}})
+        wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+        try:
+            self.post("/api/worldgen/providers", {"name": "third", "base_url": "https://api.deepseek.com",
+                                                  "api_key": "", "model": "deepseek-v4-pro"})
+            saved = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))["third"]
+            self.assertEqual(saved["model"], "deepseek-v4-pro")
+            self.assertEqual(saved["max_output"], 8192)
+            self.assertEqual(saved["extra_body"], {"thinking": {"type": "disabled"}})
+        finally:
+            data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+            data.pop("third", None)
+            wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+
     def test_estimate_endpoint(self):
         e = self.get("/api/worldgen/estimate?idea=" + urllib.parse.quote("a fogbound harbour town"))["estimate"]
         self.assertTrue(25 <= e["calls"] <= 35, e)
