@@ -125,6 +125,26 @@ export const PATCHES = [
       `return globalThis.__arpg&&globalThis.__arpg.perceive?globalThis.__arpg.perceive(${t},${a},${b},${range},__arpgPathOrig,__arpgN):__arpgN}`,
   },
   {
+    name: 'line-of-sight',
+    // 1.0 stealth's line-of-sight test: a grid walk from one continuous point to another that
+    // walls and shut doors stop (open doorways, bars and gates don't). Identified as the
+    // boolean wrapper over the walk function it names.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+)\)\{return ([\w$]+)\(\2,\3,\4\)>=1\}(?=function \5\([\w$]+,[\w$]+,\{walls:[\w$]+,shut:[\w$]+\}\))/g,
+    // Mods get the test itself, as __arpg.game.lineClear (see the loader's lineOfSight).
+    replace: (_m, fn) =>
+      `globalThis.__arpg&&globalThis.__arpg.game&&(globalThis.__arpg.game.lineClear=${fn});${_m}`,
+  },
+  {
+    name: 'sight-blockers',
+    // The blockers that test takes: the world's wall regions plus the door edges nobody is
+    // holding open. Identified by its scan of the world's entities for shut, sight-blocking
+    // doors (bars and gates are see-through).
+    find: /function ([\w$]+)\(([\w$]+)\)\{const ([\w$]+)=new Set;for\(const ([\w$]+) of \2\.entities\)\{if\(![\w$]+\(\4\)\|\|\4\.dead\|\|![\w$]+\[\4\.objectTemplate\.door\]\|\|[\w$]+\(\2,\4\)\)continue;(?=[^]{0,120}?return\{walls:[\w$]+\(\2\),shut:\3\}\})/g,
+    // Mods get the builder, as __arpg.game.sightBlockers (see the loader's sightBlockers).
+    replace: (_m, fn) =>
+      `globalThis.__arpg&&globalThis.__arpg.game&&(globalThis.__arpg.game.sightBlockers=${fn});${_m}`,
+  },
+  {
     name: 'gm-prompt',
     // Where the GM prompt's head/sections/tail are built, from the world and the context limits
     // in force. Mods may add sections. The game rebuilds the prompt with lower limits while it is
