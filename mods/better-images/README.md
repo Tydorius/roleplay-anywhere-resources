@@ -12,8 +12,8 @@ These mod packs replace the workflow and prompts for each image type.
 same packs work on both (0.18 users can also take them from the `0.18` branch). If an update
 changes those defaults, compare them with the pack's copies. Checked in the 1.0 game (Steam build
 26557354): each pack made a map object, an item, a perk and portraits through ComfyUI, with map
-objects and items cut out. The SD1.5 pack was run with an SDXL checkpoint standing in, so its
-image quality on a real SD1.5 model is not checked yet.
+objects and items cut out. On SD1.5 (tested with DreamShaper 8 and Realistic Vision 6) map
+objects come out as front or perspective views rather than top-down; its PACK-NOTES has details.
 
 | Pack | Image types | Models | Speed |
 |---|---|---|---|

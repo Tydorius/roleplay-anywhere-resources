@@ -149,13 +149,69 @@ test('worlds without lorebooks are left alone', () => {
   assert.equal(lore(p), '');
 });
 
-test('registers a budget for the lore section kind with the game', () => {
+test('the lore section is never longer than the world background limit', () => {
   const arpg = load();
-  arpg.promptBudgets = { world: 650 };
   const w = world();
   arpg.worldCreated(w, scenario, false);
-  arpg.prompt(parts('Vellan'), w);
-  assert.ok(arpg.promptBudgets.lore >= 1e6);
+  const tight = lore(arpg.prompt(parts('Vellan at the Rusty Flagon'), w, { worldChars: 80 }));
+  assert.match(tight, /illegal outside/);
+  assert.match(tight, /Vellan founded/);
+  assert.doesNotMatch(tight, /waters its ale/);
+  assert.match(lore(arpg.prompt(parts('Vellan at the Rusty Flagon'), w, null)), /waters its ale/);
+});
+
+test('each rebuild with lower limits builds the section afresh', () => {
+  const arpg = load();
+  const w = world();
+  arpg.worldCreated(w, scenario, false);
+  const roomy = arpg.prompt(parts('Vellan at the Rusty Flagon'), w, { worldChars: 3600 });
+  const tight = arpg.prompt(parts('Vellan at the Rusty Flagon'), w, { worldChars: 40 });
+  assert.match(lore(roomy), /illegal outside/);
+  assert.match(lore(roomy), /Vellan founded/);
+  assert.match(lore(roomy), /waters its ale/);
+  assert.match(lore(tight), /illegal outside/);
+  assert.doesNotMatch(lore(tight), /Vellan founded/);
+  assert.doesNotMatch(lore(tight), /waters its ale/);
+  assert.equal(roomy.sections.filter(s => s.kind === 'lore').length, 1);
+  assert.equal(tight.sections.filter(s => s.kind === 'lore').length, 1);
+});
+
+test('sections about other rooms and floors are not scanned', () => {
+  const arpg = load();
+  const w = world();
+  arpg.worldCreated(w, scenario, false);
+  const base = parts('nobody');
+  const farKinds = ['player', 'objects_elsewhere', 'characters_elsewhere', 'doorways',
+    'regions', 'places', 'calendar'];
+  const p = {
+    head: base.head,
+    sections: farKinds.map(kind => ({ kind, title: kind, content: 'Archmage Vellan is here' })),
+    tail: base.tail,
+  };
+  const elsewhere = lore(arpg.prompt(p, w));
+  assert.match(elsewhere, /illegal outside/);
+  assert.doesNotMatch(elsewhere, /Vellan founded/);
+  const here = {
+    head: base.head,
+    sections: [{ kind: 'objects', title: 'objects', content: 'Archmage Vellan is here' }],
+    tail: base.tail,
+  };
+  assert.match(lore(arpg.prompt(here, w)), /Vellan founded/);
+});
+
+test('the player\'s last action in a 1.0 turn record is scanned', () => {
+  const arpg = load();
+  const w = world({ overseerHistory: [{ t: 0, playerAction: 'I ask about the Rusty Flagon', events: [], response: {} }] });
+  arpg.worldCreated(w, scenario, false);
+  assert.match(lore(arpg.prompt(parts('nobody'), w)), /waters its ale/);
+});
+
+test('loreBudget takes the smaller of the scenario budget and worldChars', () => {
+  const { loreBudget } = load().lore;
+  assert.equal(loreBudget({ lorebookBudget: 400 }, { worldChars: 80 }), 80);
+  assert.equal(loreBudget({ lorebookBudget: 400 }, null), 400);
+  assert.equal(loreBudget({}, { worldChars: 3600 }), 2000);
+  assert.equal(loreBudget({}, { worldChars: 0 }), 2000);
 });
 
 test('a failing mod hook does not break the prompt', () => {

@@ -122,7 +122,8 @@ function inspectBody() {
   return inspectPerson(box, o);
 }
 
-// Nothing selected: lists to find things by name.
+// Nothing selected: lists to find things by name, and the scenario's liquids.
+const BROWSE_TABS = [["types", "Object types"], ["hostile", "NPC types"], ["people", "People"], ["regions", "Regions"], ["liquids", "Liquids"]];
 function inspectBrowse(box) {
   const tab = S.browse || "types";
   const lists = {
@@ -135,17 +136,98 @@ function inspectBrowse(box) {
       detail: e.type === "player" ? "player" : e.hostile ? "hostile" : ""}))],
     regions: ["Regions", regions().map(r => ({id: r.id, name: r.name, detail: `${r.wall ? "walled" : "open"}${r.hostile ? " · hostile" : ""}`}))],
   };
+  const counts = Object.fromEntries([...Object.entries(lists).map(([k, [, l]]) => [k, l.length]),
+    ["liquids", (Liquids.mediaList(S.scn).list || []).length]]);
+  const strip = `<div class="tabs small">${BROWSE_TABS.map(([k, lbl]) =>
+    `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${esc(lbl)} <small>${counts[k]}</small></button>`).join("")}</div>`;
+  if (tab === "liquids") return inspectLiquids(box, strip);
   const [, items] = lists[tab], f = (S.browseFilter || "").toLowerCase();
   const shown = items.filter(i => !f || i.name.toLowerCase().includes(f)).sort((a, b) => a.name.localeCompare(b.name));
   box.innerHTML = `<div class="kind">Browse</div>
-    <div class="tabs small">${Object.entries(lists).map(([k, [lbl, l]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${esc(lbl)} <small>${l.length}</small></button>`).join("")}</div>
+    ${strip}
     <input type="search" id="bFilter" placeholder="Filter" value="${esc(S.browseFilter || "")}" style="width:100%;margin:8px 0">
     ${tab === "types" && S.editable ? `<button id="bNewType" style="margin-bottom:8px">New object type…</button>` : ""}
+    ${tab === "hostile" && S.editable ? `<button id="bNewNpc" style="margin-bottom:8px">New NPC type…</button>` : ""}
     <div class="refs">${shown.map(i => `<button class="ref" data-id="${esc(i.id)}">${esc(i.name)} <small>${esc(i.detail)}</small></button>`).join("") || `<p class="note">Nothing here.</p>`}</div>`;
   box.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { S.browse = b.dataset.tab; inspect(); });
   box.querySelectorAll("[data-id]").forEach(b => b.onclick = () => jump(b.dataset.id));
   $("bFilter").oninput = () => { S.browseFilter = $("bFilter").value; const pos = $("bFilter").selectionStart; inspect(); $("bFilter").focus(); $("bFilter").setSelectionRange(pos, pos); };
   if ($("bNewType")) $("bNewType").onclick = newObjectType;
+  if ($("bNewNpc")) $("bNewNpc").onclick = newNpcType;
+}
+
+// The Liquids tab: the scenario's liquid list (unbounded.profile.media) as the game reads it, or the
+// game's two default waters while the scenario has no `unbounded`. Every change is one undo step,
+// and renaming a liquid renames every region that uses it (Liquids.renameMedium).
+function inspectLiquids(box, strip) {
+  const {list, defaults} = Liquids.mediaList(S.scn);
+  const used = new Map();      // medium -> how many regions the game resolves to it
+  for (const got of Liquids.resolveAll(S.scn).byRegion.values()) if (got) used.set(got.medium, (used.get(got.medium) || 0) + 1);
+  const regions = n => n === 1 ? "1 region" : `${n} regions`;
+  const WALK = [["yes", "yes"], ["slow", "wade slowly"], ["no", "can't cross"]];
+  const color = c => /^#[0-9a-f]{6}$/i.test(c || "") ? c : "#888888";
+  const flags = m => m.glow ? "glow" : m.flows ? "flows" : "";
+  const rows = (defaults ? Liquids.DEFAULT_MEDIA : list || []).map((m, i) => defaults ? `<div class="lq">
+      <span class="swatch" style="background:${esc(color(m.color))}"></span><span class="lq-name">${esc(m.name)}</span>
+      <small class="note">${esc([m.walk === "no" ? "can't cross" : m.walk === "slow" ? "wade slowly" : "yes", flags(m), regions(used.get(m) || 0)].filter(Boolean).join(" · "))}</small>
+    </div>` : `<div class="lq">
+      <input type="text" data-lq-name="${i}" value="${esc(m.name || "")}" ${dis()}>
+      <select data-lq-walk="${i}" ${dis()}>${WALK.map(([v, l]) => `<option value="${v}" ${m.walk === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
+      <input type="color" data-lq-color="${i}" value="${esc(color(m.color))}" ${dis()}>
+      <label class="check"><input type="checkbox" data-lq-flows="${i}" ${m.flows ? "checked" : ""} ${dis()}> flows</label>
+      <label class="check"><input type="checkbox" data-lq-glow="${i}" ${m.glow ? "checked" : ""} ${dis()}> glow</label>
+      <button class="mini" data-lq-del="${i}" ${dis()}>Remove</button>
+      <small class="note">${esc(regions(used.get(m) || 0))}</small>
+    </div>`).join("");
+  const full = list && list.length >= Liquids.MAX_MEDIA;
+  const note = defaults ? `<p class="note">The game's default waters. Add a liquid to make your own list.</p>`
+    : list ? (full ? `<p class="note">The game allows 8.</p>` : "")
+    : `<p class="note warn">unbounded has no liquid list (profile.media): the game fails to load this scenario as soon as a region has a surface.</p>`;
+  box.innerHTML = `<div class="kind">Browse</div>${strip}
+    ${rows}
+    ${note}
+    ${S.editable ? `<div class="row" style="margin:8px 0"><button id="lqAdd" ${full ? "disabled" : ""}>Add liquid</button>
+      ${full ? `<small class="note">The game allows 8</small>` : ""}</div>` : ""}`;
+  box.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { S.browse = b.dataset.tab; inspect(); });
+  if (list && !defaults) {
+    box.querySelectorAll("[data-lq-name]").forEach(inp => inp.onchange = () => {
+      const i = +inp.dataset.lqName, m = list[i], v = Liquids.normSurface(inp.value);
+      if (!v) { toast("A liquid needs a name"); inspect(); return; }
+      if (v === Liquids.normSurface(m.name)) return;
+      if (list.some((o, j) => j !== i && o && Liquids.normSurface(o.name) === v)) { toast(`Another liquid is already called "${v}"`); inspect(); return; }
+      edit(`Rename liquid ${m.name} to ${v}`, () => Liquids.renameMedium(S.scn, m.name, v, set));
+    });
+    box.querySelectorAll("[data-lq-walk]").forEach(sel => sel.onchange = () => {
+      const m = list[+sel.dataset.lqWalk];
+      edit(`Walking on ${m.name}`, () => set(m, "walk", sel.value));
+    });
+    box.querySelectorAll("[data-lq-color]").forEach(c => c.onchange = () => {
+      const m = list[+c.dataset.lqColor];
+      edit(`Colour of ${m.name}`, () => set(m, "color", c.value));
+    });
+    for (const attr of ["flows", "glow"]) box.querySelectorAll(`[data-lq-${attr}]`).forEach(cb => cb.onchange = () => {
+      const m = list[+cb.dataset[`lq${attr[0].toUpperCase()}${attr.slice(1)}`]];
+      edit(`${attr[0].toUpperCase()}${attr.slice(1)} of ${m.name}`, () => set(m, attr, cb.checked ? true : undefined));
+    });
+    box.querySelectorAll("[data-lq-del]").forEach(b => b.onclick = () => {
+      const i = +b.dataset.lqDel, m = list[i], n = used.get(m) || 0;
+      if (n && !confirm(`${regions(n)} ${n === 1 ? "uses" : "use"} "${m.name}". Remove the liquid anyway? ${n === 1 ? "Its" : "Their"} surface stays as it is.`)) return;
+      edit(`Remove liquid ${m.name}`, () => set(S.scn.unbounded.profile, "media", list.filter((_, j) => j !== i)));
+    });
+  }
+  const add = $("lqAdd");
+  if (add) add.onclick = () => {
+    const fresh = () => [...Liquids.DEFAULT_MEDIA.map(m => ({...m}))];   // a list of one's own starts from the game's waters
+    const nm = Liquids.newMedium((list || fresh()).map(m => m && m.name));
+    if (defaults) return edit(`Add liquid ${nm.name}`, () => set(S.scn, "unbounded",
+      {seed: Math.floor(Math.random() * 2 ** 31), profile: {media: [...fresh(), nm], lowEdges: []}}));
+    const u = S.scn.unbounded, prof = u.profile && typeof u.profile === "object" ? u.profile : null;
+    edit(`Add liquid ${nm.name}`, () => {
+      if (!prof) return set(u, "profile", {media: [...fresh(), nm], lowEdges: []});
+      set(prof, "media", Array.isArray(prof.media) ? [...prof.media, nm] : [...fresh(), nm]);
+      if (prof.lowEdges === undefined) set(prof, "lowEdges", []);
+    });
+  };
 }
 
 function inspectMany(box) {
@@ -170,6 +252,8 @@ function inspectRegion(box, r) {
   const objs = entities().filter(e => e.type === "object" && inRect(r, e.pos[0], e.pos[1]));
   const parent = MapOps.parentOf(S.scn, r);
   const amb = typeof r.ambience === "string" ? {day: r.ambience} : (r.ambience || {});
+  const open = !r.wall && !r.pocket;               // the game reads shape and surface on open areas only
+  const res = Liquids.resolveAll(S.scn), got = res.byRegion.get(r.id);
   const defs = [
     {key: "description", label: "Description", type: "textarea", hint: "Shown to the player in the region panel. The GM only sees region names."},
     {key: "hostile", label: "Hostile: dangerous territory where hostile types spawn", type: "check", dropFalse: true},
@@ -178,6 +262,12 @@ function inspectRegion(box, r) {
     {key: "groundTexture", label: "Ground texture", type: "select", optional: true, options: M.textures},
     {key: "groundColor", label: "Ground tint", type: "color", optional: true},
     ...(r.wall ? [{key: "wallColor", label: "Wall tint", type: "color", optional: true}] : []),
+    {key: "takingIsTheft", label: "Taking things here is theft", type: "select", optional: true, none: "inherit",
+      options: [["true", "yes"], ["false", "no"]], hint: "Rooms inside inherit this unless they set their own.",
+      apply: v => setPath(r, "takingIsTheft", v === undefined ? undefined : v === "true")},
+    ...(open ? [{key: "shape", label: "Shape", type: "select", optional: true, none: "rectangle",
+      options: [["organic", "natural (rounded blob)"]],
+      hint: Math.min(r.size[0], r.size[1]) < Liquids.ORGANIC_MIN ? "Needs at least 5 × 5; drawn as a rectangle until then." : undefined}] : []),
   ];
   const sleepers = new Set(), beds = objs.filter(o => objTpl(o.templateId)?.forSleep).length;
   for (const e of entities()) for (const b of e.schedule || []) if (b.location === r.name && b.role === "sleep" && !e.templateId) sleepers.add(e.id);
@@ -185,27 +275,34 @@ function inspectRegion(box, r) {
     <h3>${esc(r.name)}</h3>
     ${field("Name", `<div class="row"><input type="text" id="fName" value="${esc(r.name)}" ${dis()} style="flex:1"><button id="fRename" ${dis()}>Rename</button></div>`,
       "Renaming also updates every schedule and calendar event that names this region.")}
-    ${formHtml("rg", r, defs)}
+    ${formHtml("rg", open ? {...r, shape: Liquids.normShape(r.shape) || ""} : r, defs)}
+    ${open ? field("Liquid", `<input type="text" id="fSurface" list="surfaceList" value="${esc(r.surface || "")}" ${dis()} placeholder="e.g. shallow water">`,
+      "Empty is dry ground. A name the list doesn't have, the game adds itself (as one nobody can cross).") : ""}
+    ${open && res.media ? `<datalist id="surfaceList">${res.media.map(m => `<option value="${esc(m.name)}">`).join("")}</datalist>` : ""}
     <div class="row2">${field("Ambience by day", `<select id="fAmbDay" ${dis()}><option value="">—</option>${M.ambience.map(a => `<option ${amb.day === a ? "selected" : ""}>${a}</option>`).join("")}</select>`)}
     ${field("At night", `<select id="fAmbNight" ${dis()}><option value="">same</option>${M.ambience.map(a => `<option ${amb.night === a ? "selected" : ""}>${a}</option>`).join("")}</select>`)}</div>
     ${facts([
       ["Inside", parent ? linkTo(parent) : "the open map"],
       ["Position", r.position.join(", ")], ["Size", r.size.join(" × ")],
       ["Contains", `${inside.length} regions · ${objs.length} objects · ${people} people`],
-      r.pocket ? ["Floor", `level ${esc(r.pocket.level)}${byId(r.pocket.anchor) ? ` of ${linkTo(byId(r.pocket.anchor))}` : ""}`] : null,
-      r.shape ? ["Shape", esc(r.shape)] : null,
-      r.surface ? ["Liquid", esc(r.surface)] : null,
-      r.wall && (r.door || r.doorColor) ? ["Doors", `${esc(r.door || "door")}${r.doorColor ? ` · ${esc(r.doorColor)}` : ""}`] : null,
-      r.takingIsTheft !== undefined ? ["Taking is theft", r.takingIsTheft ? "yes" : "no"] : null,
+      r.shape && !open ? ["Shape", `${esc(r.shape)} · ignored: the game rounds open areas only`] : null,
+      got ? ["Liquid", got.added ? "new liquid (added by the game, can't walk)"
+        : `${esc(got.medium.name)} · ${got.medium.walk === "no" ? "can't walk" : got.medium.walk === "slow" ? "wade slowly" : "can walk"} · ${got.kind === "river" ? `river ${Math.min(r.size[0], r.size[1])} cells wide` : "pool"}`]
+        : got === null ? ["Liquid", "ignored: the liquid list is full"] : null,
       sleepers.size || beds ? ["Beds", `<span class="${beds < sleepers.size ? "bad" : ""}">${beds} for ${sleepers.size} sleeper${sleepers.size === 1 ? "" : "s"}</span>`] : null,
     ])}
-    ${r.wall ? section(`Doors (${(r.openings || []).length})`, (r.openings || []).length
-      ? `<div class="refs">${r.openings.map((c, i) => `<div class="door"><span>[${c.join(", ")}]</span>${S.editable ? `<button class="mini" data-door="${i}" title="Remove this door and its other side">Remove</button>` : ""}</div>`).join("")}</div>`
-      : `<p class="note warn">No doors: nobody can get in. Use the Door tool (D) to add one.</p>`) : ""}
+    ${MapOps.isFloor(r) ? section("Floor", floorHtml(r)) : ""}
+    ${r.wall ? section(`Doors (${(r.openings || []).length})`, doorsHtml(r)) : ""}
+    ${r.wall ? section("Lock", lockHtml(r)) : ""}
+    ${r.wall && !MapOps.isFloor(r) ? section(`Floors (${World10.floorsOf(S.scn, r).length})`, floorsHtml(r)) : ""}
     ${section("Who is here when", occupancyHtml(r))}
     ${section(`Used by (${refs.length})`, refsHtml(refs, "Nothing names this region."), refs.length > 0 && refs.length < 12)}`;
   bindRefs(box, refs); bindJumps(box);
   wireForm(box, "rg", r, defs, () => r.name);
+  if ($("fSurface")) $("fSurface").onchange = () => {
+    const v = Liquids.normSurface($("fSurface").value);   // empty removes the surface
+    edit(`Liquid of ${r.name}`, () => set(r, "surface", v));
+  };
   $("fRename").onclick = () => renameThing(r, $("fName").value);
   $("fName").onkeydown = e => { if (e.key === "Enter") renameThing(r, $("fName").value); };
   const setAmb = () => {
@@ -213,11 +310,176 @@ function inspectRegion(box, r) {
     edit(`Ambience of ${r.name}`, () => set(r, "ambience", day ? (night ? {day, night} : {day}) : undefined));
   };
   $("fAmbDay").onchange = $("fAmbNight").onchange = setAmb;
+  if (r.wall) { wireDoors(box, r); wireLock(box, r); }
+  if ($("fAddFloor")) $("fAddFloor").onclick = () => addFloorDialog(r);
+  if ($("fLevel")) $("fLevel").onchange = () => {
+    const lv = Math.round(+$("fLevel").value);
+    const ok = edit(`Level of ${r.name}`, () => {
+      const res = World10.setFloorLevel(S.scn, r, lv, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the input back
+    });
+    if (!ok) inspect();
+  };
+  wireOccupancy(box);
+}
+
+// ---------------------------------------------------------------- floors
+/** The "Floors" section of a walled region: its floors by level, a way to add one, and a note. */
+function floorsHtml(r) {
+  const floors = World10.floorsOf(S.scn, r);
+  return (floors.length ? `<div class="refs">${floors.map(f =>
+      `<div class="door"><span>${linkTo(f)} · level ${esc(f.pocket.level)}</span></div>`).join("")}</div>`
+    : `<p class="note">No floors yet.</p>`)
+    + `<div class="row" style="margin-bottom:8px"><button id="fAddFloor" ${dis()}>Add floor…</button></div>`
+    + `<p class="note">A floor is its own small map beside the main one. Link a portal (stairs, a ladder, a hatch) from the building to the floor so people can reach it.</p>`;
+}
+
+/** The "Floor" section of a floor region: its building, its level, and the portals that reach it. */
+function floorHtml(r) {
+  const anchor = byId(r.pocket.anchor);
+  const portals = entities().filter(e => e.type === "object" && e.portal && inRect(r, e.pos[0], e.pos[1]));
+  return facts([["Floor of", anchor ? linkTo(anchor) : "no building"]])
+    + field("Level", `<input type="number" id="fLevel" step="1" value="${esc(r.pocket.level)}" ${dis()}>`)
+    + (portals.length ? `<div class="refs">${portals.map(e =>
+        `<div class="door"><span>${linkTo(e)} → ${linkTo(World10.portalPartner(S.scn, e))}</span></div>`).join("")}</div>`
+      : `<p class="note warn">Nothing leads here yet: link a portal.</p>`);
+}
+
+/** The "Add floor…" dialog of a walled region; on OK the new floor is selected and centred on. */
+async function addFloorDialog(r) {
+  const taken = new Set(World10.floorsOf(S.scn, r).map(f => f.pocket.level));
+  let level = 1; while (taken.has(level)) level++;          // the lowest level not taken yet
+  const props = {name: `${r.name} upstairs`, level, size: [Math.min(r.size[0], 32), Math.min(r.size[1], 32)]};
+  const body = `<div class="row2">
+      ${field("Name", `<input type="text" id="afName" value="${esc(props.name)}">`)}
+      ${field("Level", `<input type="number" id="afLevel" step="1" value="${props.level}">`)}
+    </div>
+    <div class="row2">
+      ${field("Width", `<input type="number" id="afW" min="2" max="32" value="${props.size[0]}">`)}
+      ${field("Height", `<input type="number" id="afH" min="2" max="32" value="${props.size[1]}">`)}
+    </div>`;
+  const go = await openDialog("Add floor", body, [{label: "Cancel", value: null}, {label: "Add floor", value: "go", primary: true}],
+    dlg => dlg.querySelectorAll("input").forEach(el => el.oninput = () => {
+      props.name = $("afName").value;
+      props.level = Math.round(+$("afLevel").value);
+      props.size = [Math.round(+$("afW").value), Math.round(+$("afH").value)];
+    }));
+  if (go !== "go") return;
+  let res;
+  edit(`Add floor ${props.name.trim() || "(unnamed)"}`, () => {
+    res = World10.addFloor(S.scn, r, props, set);
+    if (res.error) throw new Error(res.error);
+  });
+  if (res?.region) showFloor(res.region.id);
+}
+
+// ---------------------------------------------------------------- doors, locks and keys
+/** The five kinds a doorway's door can be. "none" is labelled by where it is used: "open gaps" on a
+ *  region or a doorway, "none (remove it)" on a door object. */
+const DOOR_KIND_OPTS = [["door", "door"], ["bars", "barred door"], ["gate", "gate"], ["curtain", "curtain"], ["none", ""]];
+const doorKindOpts = (v, noneLabel = "open gaps") => DOOR_KIND_OPTS.map(([k, lbl]) =>
+  `<option value="${k}" ${k === v ? "selected" : ""}>${esc(k === "none" ? noneLabel : lbl)}</option>`).join("");
+const DOOR_COLOR_DEF = [{key: "doorColor", label: "Door colour", type: "color", optional: true}];
+
+/** The "Doors" section of a walled region: its own door kind and colour, the door on each of its
+ *  doorways, notes about doorways with no door and doors on no doorway, and its openings. */
+function doorsHtml(r) {
+  const dws = World10.regionDoorways(S.scn, r), doorsBy = World10.doorsByKey(S.scn);
+  const kindOf = dw => { const d = (doorsBy.get(dw.key) || [])[0]; return d ? objTpl(d.templateId)?.door : "none"; };
+  const bare = World10.doorways(S.scn).filter(dw => !(doorsBy.get(dw.key) || []).length && (dw.room.door ?? "door") !== "none");
+  const strays = World10.strayDoors(S.scn);
+  return field("Door kind", `<select id="fDoorKind" ${dis()}>${doorKindOpts(r.door || "door")}</select>`,
+      "The kind this region's own doorways get; each one can differ below.")
+    + formHtml("rd", r, DOOR_COLOR_DEF)
+    + `<div class="field"><span>Doorways</span>${dws.length ? `<div class="refs">${dws.map(dw =>
+        `<div class="door"><span>[${dw.cell.join(", ")}] → [${dw.out.join(", ")}]</span><select data-dw="${esc(dw.key)}" ${dis()}>${doorKindOpts(kindOf(dw))}</select></div>`).join("")}</div>`
+      : `<p class="note">No doorways: an opening needs a matching one across the wall.</p>`}</div>`
+    + (bare.length ? `<p class="note warn">${bare.length} doorway${bare.length === 1 ? " has" : "s have"} no door, so the game shows open gaps there.</p>
+        <div class="row" style="margin-bottom:8px"><button id="fHangAll" class="mini" ${dis()}>Hang doors on all of them</button></div>` : "")
+    + (strays.length ? `<p class="note warn">${strays.length} door object${strays.length === 1 ? " isn't" : "s aren't"} on a doorway; the game removes them.</p>
+        <div class="row" style="margin-bottom:8px"><button id="fRmStrays" class="mini" ${dis()}>Remove them</button></div>` : "")
+    + ((r.openings || []).length
+      ? `<div class="refs">${r.openings.map((c, i) => `<div class="door"><span>[${c.join(", ")}]</span>${S.editable ? `<button class="mini" data-door="${i}" title="Remove this door and its other side">Remove</button>` : ""}</div>`).join("")}</div>`
+      : `<p class="note warn">No doors: nobody can get in. Use the Door tool (D) to add one.</p>`);
+}
+
+/** Wires the "Doors" section: the region's kind, each doorway's kind, the colour, and the two fix-it
+ *  buttons. */
+function wireDoors(box, r) {
+  if ($("fDoorKind")) $("fDoorKind").onchange = () =>
+    edit(`Door kind of ${r.name}`, () => World10.setRegionDoorKind(S.scn, r, $("fDoorKind").value, set));
+  wireForm(box, "rd", r, DOOR_COLOR_DEF, () => r.name);
+  box.querySelectorAll("[data-dw]").forEach(sel => sel.onchange = () => {
+    const dw = World10.doorways(S.scn).find(d => d.key === sel.dataset.dw);
+    if (dw) edit(`Door at [${dw.cell.join(", ")}]`, () => World10.setDoorwayKind(S.scn, dw, sel.value, set));
+  });
+  if ($("fHangAll")) $("fHangAll").onclick = () => {
+    let hung = 0;
+    edit("Hang doors on the doorways without one", () => { hung = World10.hangAllDoors(S.scn, set); });
+    if (hung) toast(`Hung ${hung} door${hung === 1 ? "" : "s"}`);
+  };
+  if ($("fRmStrays")) $("fRmStrays").onclick = () => {
+    const gone = new Set(World10.strayDoors(S.scn).map(d => d.id));
+    edit(`Remove ${gone.size} stray door${gone.size === 1 ? "" : "s"}`, () =>
+      set(S.scn, "entities", S.scn.entities.filter(e => !gone.has(e.id))));
+  };
   box.querySelectorAll("[data-door]").forEach(b => b.onclick = () => {
     const c = r.openings[+b.dataset.door];
     edit(`Remove door at [${c}]`, () => MapOps.toggleDoor(S.scn, r, c, set));
   });
-  wireOccupancy(box);
+}
+
+/** The "Lock" section of a walled region: whether its doors are locked, and who can open them. */
+function lockHtml(r) {
+  const holders = World10.keyHolders(S.scn, r), locked = World10.regionLocked(S.scn, r);
+  const people = entities().filter(e => (e.type === "npc" || e.type === "player") && !holders.includes(e))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return `<label class="check"><input type="checkbox" id="fLocked" ${locked ? "checked" : ""} ${dis()}> Locked</label>`
+    + `<div class="field"><span>Key holders</span>${holders.length ? `<div class="refs">${holders.map(p =>
+        `<div class="door"><span>${linkTo(p)}</span><button class="mini" data-takekey="${esc(p.id)}" ${dis()}>Take key</button></div>`).join("")}</div>`
+      : `<p class="note">Nobody yet.</p>`}</div>`
+    + field("Give a key to…", `<select id="fGiveKey" ${dis()}><option value="">—</option>${people.map(p =>
+        `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")}</select>`)
+    + (locked && !holders.length ? `<p class="note warn">Nobody can open it.</p>` : "");
+}
+
+/** Wires the "Lock" section: the checkbox, taking keys and giving one. */
+function wireLock(box, r) {
+  if ($("fLocked")) $("fLocked").onchange = () => {
+    const want = $("fLocked").checked;
+    const ok = edit(`${want ? "Lock" : "Unlock"} ${r.name}`, () => {
+      const res = World10.setLocked(S.scn, r, want, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the box back
+    });
+    if (!ok) inspect();
+  };
+  box.querySelectorAll("[data-takekey]").forEach(b => b.onclick = () => {
+    const p = byId(b.dataset.takekey);
+    if (p) edit(`Take ${p.name}'s key to ${r.name}`, () => World10.takeKey(S.scn, r, p, set));
+  });
+  if ($("fGiveKey")) $("fGiveKey").onchange = () => {
+    const p = byId($("fGiveKey").value);
+    if (p) edit(`Give ${p.name} a key to ${r.name}`, () => World10.giveKey(S.scn, r, p, set));
+  };
+}
+
+/** Locks or unlocks one door object with the same "locked" effect World10.setLocked puts on a
+ *  region's doors. */
+function setDoorLocked(e, locked) {
+  const isLock = fx => !!(fx && fx.def && Array.isArray(fx.def.mechanics) && fx.def.mechanics.some(m => m && m.type === "locked"));
+  const has = (e.statusEffects || []).some(isLock);
+  if (locked === has) return;
+  set(e, "statusEffects", locked ? [...(e.statusEffects || []), {id: MapOps.newId("se"),
+    def: {desc: "locked", emoji: "🔒", type: "constant", mechanics: [{type: "locked"}]}, appliedAt: 28800}]
+    : (e.statusEffects || []).filter(fx => !isLock(fx)));
+}
+
+/** The door fields of a door object: its kind (every door on its doorway follows) and its own lock. */
+function doorObjHtml(e, t, dw) {
+  return (dw ? field("Door", `<select id="oDoorKind" ${dis()}>${doorKindOpts(t?.door || "door", "none (remove it)")}</select>`,
+      "Every door on this doorway changes with it.")
+    : `<p class="note warn">Not on a doorway; the game removes it.</p>`)
+    + `<label class="check"><input type="checkbox" id="oDoorLocked" ${World10.isLocked(e) ? "checked" : ""} ${dis()}> Locked</label>`;
 }
 
 // A strip of 24 hours: how many people are in the region in each hour, by role.
@@ -270,7 +532,10 @@ function inspectObject(box, e) {
   const t = objTpl(e.templateId);
   const placed = entities().filter(o => o.templateId === e.templateId).length;
   const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
+  const partner = World10.portalPartner(S.scn, e);
   const pic = t && picUrl(t.id, "sprite");
+  const door = World10.isDoor(S.scn, e);            // a door object: its kind and lock, and no turning
+  const dw = door ? World10.doorways(S.scn).find(d => d.key === World10.doorKeyOf(e)) || null : null;
   const defs = [
     {key: "name", label: "Name", required: true, rename: true},
     {key: "hp", label: "HP", type: "number", min: 0, max: e.maxHp ?? 9999},
@@ -281,18 +546,30 @@ function inspectObject(box, e) {
     ${formHtml("ob", e, defs)}
     ${field("Type", `<div class="row"><select id="oType" ${dis()} style="flex:1">${typeOptions(e.templateId)}</select>${t ? `<button id="oEditType" class="mini">Edit type</button>` : ""}</div>`,
       t ? `${placed} placed. Changing the type swaps this one only; editing the type changes all ${placed}.` : "Its type is missing.")}
-    <div class="row" style="margin-bottom:10px"><button id="fRotL" ${dis()} title="Shift+R">Turn left</button><button id="fRotR" ${dis()} title="R">Turn right</button></div>
+    ${door ? doorObjHtml(e, t, dw) : ""}
+    ${door ? "" : `<div class="row" style="margin-bottom:10px"><button id="fRotL" ${dis()} title="Shift+R">Turn left</button><button id="fRotR" ${dis()} title="R">Turn right</button></div>`}
+    <div class="row" style="margin-bottom:10px"><button id="oLink" ${dis()}>Link to…</button>${partner ? `<button id="oUnlink" ${dis()}>Unlink</button>` : ""}</div>
     ${facts([
       ["Position", e.pos.join(", ") + (where ? ` in ${linkTo(where)}` : "")],
       ["Size", entSize(e).join(" × ") + (e.rot ? ` · turned ${e.rot * 90}°` : "")],
       (e.statusEffects || []).length && ["Effects", esc(e.statusEffects.map(s => `${s.def?.emoji || ""} ${s.def?.desc || "effect"}`).join(", "))],
+      ["Leads to", partner ? linkTo(partner) : "nowhere"],
     ])}
     ${section(`Holds (${(e.inventory || []).length})`, stacksHtml("inv", e.inventory || []), (e.inventory || []).length > 0)}`;
   bindJumps(box);
   wireForm(box, "ob", e, defs, () => e.name);
   $("oType").onchange = () => swapType([e], $("oType").value);
   if ($("oEditType")) $("oEditType").onclick = () => select({kind: "template", id: t.id});
-  $("fRotL").onclick = () => rotateSelection(3); $("fRotR").onclick = () => rotateSelection(1);
+  if ($("fRotL")) $("fRotL").onclick = () => rotateSelection(3);
+  if ($("fRotR")) $("fRotR").onclick = () => rotateSelection(1);
+  if ($("oDoorKind")) $("oDoorKind").onchange = () =>
+    edit(`Door kind of ${e.name}`, () => World10.setDoorwayKind(S.scn, dw, $("oDoorKind").value, set));
+  if ($("oDoorLocked")) $("oDoorLocked").onchange = () => {
+    const want = $("oDoorLocked").checked;
+    edit(`${want ? "Lock" : "Unlock"} ${e.name}`, () => setDoorLocked(e, want));
+  };
+  $("oLink").onclick = () => { S.linkFrom = e.id; toast("Click the object at the other end (Esc cancels)"); draw(); };
+  if ($("oUnlink")) $("oUnlink").onclick = () => edit(`Unlink ${e.name}`, () => { World10.unlinkPortal(S.scn, e, set); });
   wireStacks(box, "inv", e, "inventory");
 }
 
@@ -307,6 +584,9 @@ function inspectObjectType(box, t) {
     {key: "walkability", label: "Movement", type: "number", min: 0, max: 1, step: .1, hint: "0 blocks the cell, 1 can be walked over, between slows."},
     {key: "forSleep", label: "Can be slept on", type: "check"},
     {key: "craftStation", label: "Crafting station", type: "check"},
+    {key: "vehicle", label: "Vehicle", type: "select", optional: true, none: "none", options: ["drive", "ride"],
+      hint: "Something to drive, like a cart or boat, or to ride, like a horse. Taking it for good is theft if that's ticked below."},
+    {key: "takingIsTheft", label: "Taking it is theft", type: "check", dropFalse: true},
     {key: "light", label: "Light", type: "number", min: 0, max: 1, step: .1, optional: true},
     {key: "heightM", label: "Height (m)", type: "number", min: 0, max: 50, step: .1, optional: true},
     {key: "maxHp", label: "Max HP", type: "number", min: 1, max: 100000},
@@ -534,37 +814,131 @@ function renderSchedule(e) {
   });
 }
 
-// ---------------------------------------------------------------- hostile types and other templates
+// ---------------------------------------------------------------- NPC types and other templates
+const STANCE_OPTS = [["neutral", "neutral: minds its own business"],
+  ["skittish", "skittish: flees when approached"], ["hostile", "hostile: attacks on sight"]];
+
+/** Every region as a home option, hostile ones first and marked ☠. A home on a region that is gone
+ *  keeps its id as an option, so changing another home doesn't silently move it. */
+function homeRegionOptions(regs, sel) {
+  return regs.map(r => `<option value="${esc(r.id)}" ${r.id === sel ? "selected" : ""}>${esc(r.name)}${r.hostile ? " ☠" : ""}</option>`).join("")
+    + (sel && !regs.some(r => r.id === sel) ? `<option value="${esc(sel)}" selected>${esc(sel)} (missing)</option>` : "");
+}
+
+/** The "Homes" section of an NPC type: one row per home (region, count, Remove) and a select that
+ *  adds a home in a region not used yet. */
+function homesHtml(homes, regs) {
+  const rows = homes.length ? homes.map((h, i) => `<div class="home">
+      <select data-home-region="${i}" ${dis()}>${homeRegionOptions(regs, h.regionId)}</select>
+      <input type="number" min="1" max="12" value="${esc(h.count ?? 0)}" data-home-count="${i}" ${dis()}>
+      ${S.editable ? `<button class="mini" data-home-del="${i}">Remove</button>` : ""}
+    </div>`).join("") : `<p class="note">No homes: only the copies placed by hand appear.</p>`;
+  const spare = regs.filter(r => !homes.some(h => h.regionId === r.id));
+  return rows + (S.editable && spare.length ? `<div class="row" style="margin-top:6px"><select id="htAddHome" style="flex:1">
+      <option value="">Add a home…</option>${homeRegionOptions(spare)}</select></div>` : "");
+}
+
+/** Wires the "Homes" section: every change is one edit through World10.setHomes. When that converts
+ *  the scenario's 0.18 hostile types, say so and select the template it returns. */
+function wireHomes(box, t, homes) {
+  const apply = next => {
+    const hadLegacy = !!(S.scn.hostileNpcTemplates || []).length;
+    let ret = t;
+    edit(`Homes of ${t.name}`, () => { ret = World10.setHomes(S.scn, t, next, set); });
+    if (ret !== t || (hadLegacy && !(S.scn.hostileNpcTemplates || []).length)) {
+      toast("Converted the 0.18 hostile types to 1.0 NPC types");
+      select({kind: "template", id: ret.id});
+    }
+  };
+  box.querySelectorAll("[data-home-region]").forEach(sel => sel.onchange = () => {
+    const i = +sel.dataset.homeRegion;
+    apply(homes.map((h, j) => j === i ? {...h, regionId: sel.value} : h));
+  });
+  box.querySelectorAll("[data-home-count]").forEach(inp => inp.onchange = () => {
+    const i = +inp.dataset.homeCount, count = Math.max(1, Math.min(12, Math.round(+inp.value || 1)));
+    apply(homes.map((h, j) => j === i ? {...h, count} : h));
+  });
+  box.querySelectorAll("[data-home-del]").forEach(b => b.onclick = () =>
+    apply(homes.filter((_, j) => j !== +b.dataset.homeDel)));
+  const add = box.querySelector("#htAddHome");
+  if (add) add.onchange = () => { if (add.value) apply([...homes, {regionId: add.value, count: 1}]); };
+}
+
 function inspectHostileType(box, t) {
   const M = S.meta, placed = entities().filter(e => e.templateId === t.id);
   const regs = [...regions()].sort((a, b) => (b.hostile ? 1 : 0) - (a.hostile ? 1 : 0) || a.name.localeCompare(b.name));
-  const defs = [
+  const homes = World10.homesOf(t), stance = World10.stanceOf(S.scn, t);
+  const top = [
     {key: "name", label: "Name", required: true, rename: true},
     {key: "description", label: "Description (the GM sees this)", type: "textarea", rows: 3},
     {key: "physicalDescription", label: "Looks (for the portrait)", type: "textarea", rows: 2},
-    ...(Array.isArray(t.homes) ? [
-      {key: "stance", label: "Stance", type: "select", optional: true, options: S.meta.templateStances || ["neutral", "skittish", "hostile"]},
-    ] : [
-      {key: "regionId", label: "Lives in (spawns and respawns here)", type: "select", options: regs.map(r => [r.id, `${r.name}${r.hostile ? " ☠" : ""}`])},
-      {key: "count", label: "How many", type: "number", min: 1, max: 6},
-    ]),
+  ];
+  const rest = [
     {key: "gender", label: "Gender", type: "select", options: ["female", "male"]},
     {key: "animationId", label: "Sprite", type: "select", options: M.animations},
     {key: "spriteColor", label: "Sprite colour", type: "color", optional: true},
     {key: "level", label: "Level", type: "number", min: 1, max: 20},
     {key: "money", label: "Money tier (0–5)", type: "number", min: 0, max: 5},
-    {key: "attacksOnSight", label: "Attacks on sight", type: "check"},
     {key: "lootPoolIds", label: "Loot", type: "multi", options: itemOptions()},
   ];
-  const homes = Array.isArray(t.homes) ? t.homes : null;
-  box.innerHTML = `<div class="kind">${homes ? "NPC type" : "Hostile type"}</div><h3>${esc(t.name)}</h3>
-    <p class="note">The game spawns this many in its region at the start and respawns them. The ones already placed are listed below.</p>
-    ${homes ? facts([["Homes", homes.length ? homes.map(h => `${byId(h.regionId) ? linkTo(byId(h.regionId)) : esc(h.regionId)} × ${esc(h.count ?? 0)}`).join(", ") : "none (placed copies only)"]]) +
-      `<p class="note">Homes are edited in the game's template editor (god mode).</p>` : ""}
-    ${formHtml("ht", t, defs)}
+  const soft = homes.map(h => byId(h.regionId)).filter(r => r && !r.hostile);
+  box.innerHTML = `<div class="kind">NPC type${stance === "hostile" ? " · hostile" : ""}</div><h3>${esc(t.name)}</h3>
+    <p class="note">The game spawns this many in each home at the start and respawns them. The ones already placed are listed below.</p>
+    ${formHtml("ht", t, top)}
+    ${field("Stance", `<select id="htStance" ${dis()}>${STANCE_OPTS.map(([v, l]) =>
+      `<option value="${esc(v)}" ${v === stance ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`)}
+    ${formHtml("ht", t, rest)}
+    ${section(`Homes (${homes.length})`, homesHtml(homes, regs)
+      + (stance === "hostile" && soft.length ? `<p class="note warn">Hostile types usually live in hostile regions; this one spawns in ${esc(soft.map(r => r.name).join(", "))}.</p>` : ""))}
     ${section(`Placed (${placed.length})`, refsHtml(placed.map(e => ({id: e.id, text: e.name, detail: e.pos.join(", ")})), "None placed."), true)}`;
   bindRefs(box, placed.map(e => ({id: e.id}))); bindJumps(box);
-  wireForm(box, "ht", t, defs, () => t.name);
+  wireForm(box, "ht", t, top, () => t.name); wireForm(box, "ht", t, rest, () => t.name);
+  $("htStance").onchange = () => {
+    const v = $("htStance").value;
+    edit(`Stance of ${t.name}`, () => {
+      const res = World10.setStance(S.scn, t, v, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the input back
+    });
+  };
+  wireHomes(box, t, homes);
+}
+
+/** The "New NPC type…" dialog: a name, a sprite, a gender, a stance (skittish by default), a home
+ *  region and how many. On OK World10.addNpcType makes the type, and it is selected. */
+async function newNpcType() {
+  const regs = [...regions()].sort((a, b) => (b.hostile ? 1 : 0) - (a.hostile ? 1 : 0) || a.name.localeCompare(b.name));
+  const props = {name: "", animationId: S.meta.animations[0], gender: "female",
+    stance: "skittish", regionId: regs[0]?.id, count: 3};
+  const body = `${field("Name", `<input type="text" id="nnName">`)}
+    ${field("Sprite", `<select id="nnSprite">${S.meta.animations.map(a =>
+      `<option value="${esc(a)}" ${a === props.animationId ? "selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
+    <div class="row2">
+      ${field("Gender", `<select id="nnGender"><option value="female">female</option><option value="male">male</option></select>`)}
+      ${field("Stance", `<select id="nnStance">${STANCE_OPTS.map(([v, l]) =>
+        `<option value="${esc(v)}" ${v === props.stance ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`)}
+    </div>
+    <div class="row2">
+      ${field("Home region", `<select id="nnRegion">${homeRegionOptions(regs, props.regionId)}</select>`)}
+      ${field("How many", `<input type="number" id="nnCount" min="1" max="12" value="${props.count}">`)}
+    </div>`;
+  const read = () => {
+    props.name = $("nnName").value.trim();
+    props.animationId = $("nnSprite").value;
+    props.gender = $("nnGender").value;
+    props.stance = $("nnStance").value;
+    props.regionId = $("nnRegion").value;
+    props.count = Math.max(1, Math.min(12, Math.round(+$("nnCount").value || 3)));
+  };
+  const go = await openDialog("New NPC type", body,
+    [{label: "Cancel", value: null}, {label: "Add NPC type", value: "go", primary: true}],
+    dlg => dlg.querySelectorAll("input, select").forEach(el => { el.oninput = read; el.onchange = read; }));
+  if (go !== "go") return;
+  let res;
+  edit(`Add NPC type ${props.name || "(unnamed)"}`, () => {
+    res = World10.addNpcType(S.scn, props, set);
+    if (res.error) throw new Error(res.error);
+  });
+  if (res?.template) select({kind: "template", id: res.template.id});
 }
 
 function inspectTemplate(box, t) {

@@ -176,14 +176,23 @@ FAMILIES = {
         "prompts": TAGS,
         "files": {
             "ckpt": ("v1-5-pruned-emaonly-fp16.safetensors", "CheckpointLoaderSimple", "ckpt_name",
-                     [r"v1-5", r"sd_?1\.?5", r"sd15"]),
+                     # SD1.5 files rarely say so: also well-known SD1.5 checkpoints, never an XL,
+                     # Illustrious or Pony one (those are SDXL). Painterly ones first: photo models
+                     # (Realistic Vision and the like) draw modern photographs from the game's prompts.
+                     [r"v1-5", r"sd_?1\.?5", r"sd15"] +
+                     [r"^(?!.*(xl|illustrious|pony))" + n for n in (
+                         r".*dreamshaper_?\d", r".*rev_?animated", r".*anything_?v?[345]", r".*counterfeit",
+                         r".*deliberate", r".*majicmix", r".*absolute_?reality", r".*epic_?realism",
+                         r".*cyber_?realistic", r".*realistic_?vision")]),
         },
         "folders": {"ckpt": "models/checkpoints"},
         "graph": "sdxl",
         "base": 512,
-        "status": "Not yet checked on Anywhere RPG 1.0 with a real SD1.5 checkpoint. The 1.0 test ran this pack's "
-                  "workflows with an SDXL checkpoint standing in: that shows the game takes and runs them, not how "
-                  "the images look on SD1.5.",
+        "status": "Checked in Anywhere RPG 1.0 with `dreamshaper_8` and `realisticVisionV60B1_v60B1VAE`: all four "
+                  "image types generate at 512 px, with map objects and items cut out. Limits: on both, map objects "
+                  "come out as front or perspective views, not top-down (SD1.5 doesn't follow the overhead framing), "
+                  "and a photo model such as Realistic Vision draws modern photographs. A painterly checkpoint "
+                  "(DreamShaper 8) suits the game; for top-down map objects, use another pack if your GPU allows.",
         "ksampler": {"steps": 25, "cfg": 7.0},
     },
 }
