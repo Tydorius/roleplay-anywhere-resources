@@ -132,9 +132,9 @@ def apply(world, plan_data, rng):
         for (b, uppers) in bs:
             _build_storeys(world, b, uppers, rects[id(b)], stairs[id(b)], rng)
     for (comp, corridor, r) in walks:
-        # a walk whose ends both lost their storey (no stair cell) would be
-        # a floor nobody can reach; its spot stays empty ground instead
-        if any(any(f.storey == 2 for f in getattr(b, "floors", []) or [])
+        # a walk with an end that lost its storey (no stair cell) would
+        # dead-end upstairs; its spot stays empty ground instead
+        if all(any(f.storey == 2 for f in getattr(b, "floors", []) or [])
                for b in _walk_ends(comp, corridor)):
             _build_wall_walk(world, comp, corridor, r)
     _link_walks(world, plan_data)
@@ -145,9 +145,12 @@ def _walk_ends(comp, corridor, storey=2):
     """The parts a wall corridor joins that rise to `storey` by design: the
     wall walk above it runs tower to tower between them."""
     by_name = {b.layout.design.name: b for b in comp.parts}
-    return [by_name[b.layout.design.name] for b in comp.parts
-            if shared_wall_cells(b.layout.rect, corridor.rect)
-            and by_name[b.layout.design.name].layout.design.storeys >= storey]
+    ends = [by_name[b.layout.design.name] for b in comp.parts
+            if shared_wall_cells(b.layout.rect, corridor.rect)]
+    # every part it joins must rise that high, or the walk dead-ends upstairs
+    if not ends or any(b.layout.design.storeys < storey for b in ends):
+        return []
+    return ends
 
 
 def _stair_templates(world, plan_data, building):
