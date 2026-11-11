@@ -157,3 +157,43 @@ test("newMedium: water, water 2, water 3...", () => {
   assert.equal(L.newMedium(["water", "water 2"]).name, "water 3");
   assert.equal(L.newMedium(["water 2"]).name, "water");
 });
+
+test("renameMedium: renames the medium and every region surface that names it, as one undo step", () => {
+  const creek = {name: "creek", walk: "slow", color: "#3f7f90", flows: true};
+  const a = {id: "a", position: [0, 0], size: [4, 12], surface: "Creek"};   // trimmed, any case
+  const b = {id: "b", position: [0, 0], size: [5, 5], surface: "creek"};
+  const c = {id: "c", position: [0, 0], size: [5, 5], surface: "ink"};
+  const w = scn([a, b, c], {seed: 1, profile: {media: [creek], lowEdges: []}});
+  const ops = [];
+  const set = (o, k, v) => { ops.push([o, k]); if (v === undefined) delete o[k]; else o[k] = v; };
+  const renamed = L.renameMedium(w, "creek", "Brook", set);
+  assert.equal(creek.name, "brook");                                     // stored lowercase
+  assert.equal(a.surface, "brook");
+  assert.equal(b.surface, "brook");
+  assert.equal(c.surface, "ink");                                        // only the old name moves
+  assert.deepEqual(ops, [[creek, "name"], [a, "surface"], [b, "surface"]]);   // one undo step's ops
+  assert.deepEqual(renamed, [a, b]);
+});
+
+test("renameMedium: without unbounded only the region surfaces move, never the built-in waters", () => {
+  const a = {id: "a", position: [0, 0], size: [5, 5], surface: "deep water"};
+  const w = scn([a]);
+  const touched = [];
+  L.renameMedium(w, "deep water", "the sea", (o, k, v) => { touched.push(o); if (v === undefined) delete o[k]; else o[k] = v; });
+  assert.deepEqual(touched, [a]);                       // the frozen default is never written
+  assert.equal(a.surface, "the sea");
+  assert.equal(L.DEFAULT_MEDIA[0].name, "deep water");
+});
+
+test("renameMedium: nothing changes when the names match or are empty", () => {
+  const creek = {name: "creek", walk: "slow"};
+  const a = {id: "a", position: [0, 0], size: [4, 12], surface: "creek"};
+  const w = scn([a], {seed: 1, profile: {media: [creek]}});
+  let n = 0;
+  const set = () => { n++; };
+  assert.deepEqual(L.renameMedium(w, "creek", "creek", set), []);
+  assert.deepEqual(L.renameMedium(w, "creek", " Creek ", set), []);   // the same name once normalised
+  assert.deepEqual(L.renameMedium(w, "", "x", set), []);
+  assert.deepEqual(L.renameMedium(w, "creek", "   ", set), []);
+  assert.equal(n, 0);
+});

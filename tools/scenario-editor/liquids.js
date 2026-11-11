@@ -217,6 +217,21 @@
     return {name, walk: "slow", color: "#3f7f90", flows: true};
   }
 
+  /** Renames a medium of the scenario's own list and every region `surface` that names it (trimmed,
+   *  any case), all through `set` so it is one undo step. Returns the regions renamed. The built-in
+   *  waters are never written: a scenario without `unbounded` keeps them, so only surfaces move. */
+  function renameMedium(scn, oldName, newName, set) {
+    const from = normSurface(oldName), to = normSurface(newName);
+    if (!from || !to || from === to) return [];
+    const {list, defaults} = mediaList(scn);
+    if (list && !defaults) for (const m of list)
+      if (m && typeof m.name === "string" && normSurface(m.name) === from) set(m, "name", to);
+    const out = [];
+    for (const r of Array.isArray(scn && scn.regions) ? scn.regions : [])
+      if (r && normSurface(r.surface) === from) { set(r, "surface", to); out.push(r); }
+    return out;
+  }
+
   return {DEFAULT_MEDIA, MAX_MEDIA, ORGANIC_MIN, NEW_COLOR, normShape, normSurface, isOrganic, isRiver,
-    blobMask, cellRuns, mediaList, resolveAll, liquidKind, newMedium};
+    blobMask, cellRuns, mediaList, resolveAll, liquidKind, newMedium, renameMedium};
 });
