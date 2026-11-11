@@ -49,6 +49,8 @@ class TestFormat(unittest.TestCase):
                   "unknown mode"),
                  ('{"kind": "%s", "version": 1, "idea": "x", "extensions": "floors"}'
                   % settings.KIND, "list of extension ids"),
+                 ('{"kind": "%s", "version": 1, "idea": "x", "extensions": ["jetpacks"]}'
+                  % settings.KIND, "unknown extension"),
                  ('{"kind": "%s", "version": 1}' % settings.KIND, "nothing to build"),
                  ("{not json", "isn't valid JSON")]
         for text, why in cases:

@@ -19,6 +19,10 @@ from datetime import datetime
 from . import questions as questions_mod
 from .extensions import BY_ID, expand
 
+# extension ids an older world may name that this generator has retired:
+# dropped quietly, while any other unknown id is still an error
+RETIRED_EXTENSIONS = {"portals"}
+
 KIND = "anywhere-rpg-world-settings"
 VERSION = 1
 FILE_NAME = "settings.json"
@@ -58,8 +62,8 @@ def from_run(idea, seed, extensions, library, frame=None, questionnaire=None, mo
 def check(data):
     """A clean copy of a settings dict, or SettingsError saying what is wrong.
     Unknown questions and options are dropped the way the forms drop them, and
-    so is an unknown extension id (an older world may name one this generator
-    has retired, like portals); a wrong type is an error."""
+    so is a retired extension id (an older world may name portals); any other
+    unknown extension or a wrong type is an error."""
     if not isinstance(data, dict):
         raise SettingsError("a settings file holds one JSON object")
     if data.get("kind") != KIND:
@@ -90,7 +94,12 @@ def check(data):
     exts = data.get("extensions") or []
     if not isinstance(exts, list) or not all(isinstance(e, str) for e in exts):
         raise SettingsError("\"extensions\" must be a list of extension ids")
-    exts = sorted(expand([e for e in exts if e in BY_ID]))
+    exts = [e for e in exts if e not in RETIRED_EXTENSIONS]
+    unknown = sorted(set(exts) - set(BY_ID))
+    if unknown:
+        raise SettingsError(f"unknown extension(s) {unknown}; this generator has "
+                            f"{sorted(BY_ID)}")
+    exts = sorted(expand(exts))
     frame = data.get("frame")
     if frame is not None and not (isinstance(frame, dict)
                                   and isinstance(frame.get("summary"), str)):
