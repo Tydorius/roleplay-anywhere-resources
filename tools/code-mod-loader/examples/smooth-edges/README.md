@@ -19,6 +19,17 @@ No bundle patch: it repaints through the loader's two render hooks.
 
 Walking never changes: the game decides walkability per cell, and this mod only redraws.
 
+![A pond's shore in 1.0, left without the mod, right with it](before-after.jpg)
+
+The same pond shore on Anywhere RPG 1.0, at the same moment, without and with the mod. The
+effect is modest: 1.0 already blurs the water, so the mod tidies the outline more than it reshapes it.
+
+**Measured live** (build 26557354, a Thornbury pond):
+- **Frame time:** no change. 10 s of frames: about 31 ms mean and 33.5 ms p95 with the mod off; 30 ms and
+  33.4 ms with it on.
+- **The cost:** comes when a water chunk is built, at about 17–29 ms per chunk once, and about 3 ms per region
+  fade once.
+
 ## What the mod does
 
 **Shores** (the liquid-canvas hook): one read of the chunk's cell grid — a single
