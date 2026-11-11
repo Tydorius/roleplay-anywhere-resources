@@ -54,6 +54,11 @@ def main():
         x, y = e["pos"]
         w, h = e["size"]
         if e["type"] == "object":
+            if w == 0 or h == 0:
+                # a 1.0 door object sits zero-wide on its wall line: a bar
+                d.line([(x * cell, (H - y - h) * cell), ((x + w) * cell, (H - y) * cell)],
+                       fill=(160, 100, 40), width=max(2, cell // 3))
+                continue
             plant = "plant" in tags.get(e.get("templateId"), ())
             d.rectangle(box(x, y, w, h), fill=(30, 55, 30) if plant else (85, 85, 85), outline=(40, 40, 40))
     for e in s["entities"]:
