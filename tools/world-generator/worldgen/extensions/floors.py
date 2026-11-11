@@ -316,13 +316,40 @@ def _ring(rect):
     return {c for c in rect.cells() if c[0] in (rect.x, rect.x1) or c[1] in (rect.y, rect.y1)}
 
 
+def _door_reachable(world, room):
+    """The interior cells of a room someone coming through one of its doors
+    can walk to, around its solid furniture. A stair outside them would be
+    boxed in: a lamp across a one-cell corridor cuts its tail off, harmless
+    until the stair lands there. A room with no doors keeps every cell."""
+    inside = set(room.rect.interior().cells())
+    solid = set()
+    for (t, pos) in room.furniture.placements:
+        if world.templates[t].walkability <= 0:
+            tw, th = room.furniture.size_of(t, pos, world.templates)
+            solid |= {(x, y) for x in range(pos[0], pos[0] + tw)
+                      for y in range(pos[1], pos[1] + th)}
+    open_cells = inside - solid
+    starts = {(x + dx, y + dy) for (x, y) in room.doors
+              for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))} & open_cells
+    if not room.doors:
+        return open_cells
+    seen, todo = set(starts), list(starts)
+    while todo:
+        x, y = todo.pop()
+        for c in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if c in open_cells and c not in seen:
+                seen.add(c)
+                todo.append(c)
+    return seen
+
+
 def _free_stair_cells(world, rooms, avoid=(), relax=False):
-    """Cells a 1x1 stair may take in `rooms`: inside the walls, never on
-    furniture, off the reserved walkways unless `relax`, minus the `avoid`
-    cells."""
+    """Cells a 1x1 stair may take in `rooms`: inside the walls, reachable
+    from the room's doors, never on furniture, off the reserved walkways
+    unless `relax`, minus the `avoid` cells."""
     free = set()
     for room in rooms:
-        cells = set(room.rect.interior().cells())
+        cells = set(room.rect.interior().cells()) & _door_reachable(world, room)
         for (t, pos) in room.furniture.placements:
             tw, th = room.furniture.size_of(t, pos, world.templates)
             cells -= {(x, y) for x in range(pos[0], pos[0] + tw)

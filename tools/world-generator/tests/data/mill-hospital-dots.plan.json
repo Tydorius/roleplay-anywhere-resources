@@ -1,0 +1,5991 @@
+{
+ "name": "Mill Hospital",
+ "worldBackground": "A 1950s cottage hospital in a grimy mill town, where the clang of machinery never quite fades. The long corridor smells of antiseptic and boiled vegetables, echoing with hurried footsteps. Tension: nurses are overworked, and the town's industrial accidents are rising, straining resources.",
+ "setting": {
+  "era": "1950s",
+  "technology": "industrial",
+  "density": "normal",
+  "climate": "temperate",
+  "band": "industrial",
+  "genre": "historical"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Hospital Grounds",
+   "kind": "medical campus",
+   "sizeClass": "medium",
+   "description": "A cluster of white-painted buildings serving the town's medical needs, set amidst manicured lawns and gravel paths.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Mill Town"
+   ],
+   "outdoor": [
+    "ambulance parking",
+    "patient garden",
+    "walkway"
+   ],
+   "buildings": [
+    {
+     "name": "Reception",
+     "kind": "lobby",
+     "sizeClass": "small",
+     "purpose": "patient admission and waiting",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Patient Ward",
+     "kind": "ward",
+     "sizeClass": "medium",
+     "purpose": "six-bed patient care",
+     "units": {
+      "name": "Room",
+      "count": 6,
+      "residents": 1
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Ward East",
+     "kind": "ward",
+     "sizeClass": "medium",
+     "purpose": "six-bed patient care",
+     "units": {
+      "name": "Room",
+      "count": 6,
+      "residents": 1
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Ward West",
+     "kind": "ward",
+     "sizeClass": "medium",
+     "purpose": "six-bed patient care",
+     "units": {
+      "name": "Room",
+      "count": 6,
+      "residents": 1
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Operating Theatre",
+     "kind": "surgery",
+     "sizeClass": "small",
+     "purpose": "surgical operations",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Dispensary",
+     "kind": "pharmacy",
+     "sizeClass": "small",
+     "purpose": "medication dispensing",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Nurses' Home",
+     "kind": "dormitory",
+     "sizeClass": "medium",
+     "purpose": "housing for nursing staff",
+     "storeys": 2,
+     "units": {
+      "name": "Bedroom",
+      "count": 8,
+      "residents": 1
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home"
+    },
+    {
+     "name": "Mortuary",
+     "kind": "mortuary",
+     "sizeClass": "small",
+     "purpose": "storage of the deceased",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Garden Bench",
+      "count": 3,
+      "hint": "along_path"
+     },
+     {
+      "template": "Streetlight",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Tree",
+      "count": 2,
+      "hint": "scatter+edge"
+     },
+     {
+      "template": "Bush",
+      "count": 3,
+      "hint": "cluster"
+     },
+     {
+      "template": "Trash Can",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Ambulance",
+      "count": 1,
+      "hint": "behind:Reception"
+     }
+    ],
+    "filler": []
+   }
+  },
+  {
+   "name": "Mill Town",
+   "kind": "industrial village",
+   "sizeClass": "medium",
+   "description": "A dense cluster of terraced houses and the dominant textile mill, perpetually dirty with soot.",
+   "ground": "cobble",
+   "adjacentTo": [
+    "Hospital Grounds"
+   ],
+   "outdoor": [
+    "mill chimney",
+    "cobble street",
+    "market cross"
+   ],
+   "arrangement": "along_street",
+   "buildings": [
+    {
+     "name": "Textile Mill",
+     "kind": "factory",
+     "sizeClass": "large",
+     "purpose": "cloth production",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed"
+    },
+    {
+     "name": "Workers' Cottages",
+     "kind": "housing",
+     "sizeClass": "medium",
+     "purpose": "housing for mill workers",
+     "units": {
+      "name": "Home",
+      "count": 14,
+      "residents": 5
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home"
+    },
+    {
+     "name": "Corner Shop",
+     "kind": "shop",
+     "sizeClass": "small",
+     "purpose": "general store and post office",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "staffed",
+     "residents": 2,
+     "couples": 1
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "Streetlight",
+      "count": 4,
+      "hint": "along_path"
+     },
+     {
+      "template": "Market Cross",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Mill Chimney",
+      "count": 1,
+      "hint": "behind:Textile Mill"
+     },
+     {
+      "template": "Garden Bench",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Trash Can",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Rubble",
+      "count": 5,
+      "hint": "scatter"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Tree",
+      "density": "low"
+     },
+     {
+      "template": "Bush",
+      "density": "low"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Hospital Grounds",
+   "to": "Mill Town",
+   "kind": "paved"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Single Bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A narrow metal frame bed with a thin mattress, typical of hospital wards.",
+   "physicalDescription": "A 1x2 rectangle with a slightly darker area at one end for the pillow.",
+   "tags": [
+    "bed",
+    "sleep",
+    "medical"
+   ],
+   "rule": "Place in patient wards along the walls, one bed per patient space, with a small gap between beds for access."
+  },
+  {
+   "name": "Double Bed",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A wooden double bed with a simple headboard, found in workers' cottages and the corner shop.",
+   "physicalDescription": "A 2x2 square with a raised headboard on one side.",
+   "tags": [
+    "bed",
+    "sleep",
+    "home"
+   ],
+   "rule": "Place in the sleeping area of workers' cottages and the corner shop, against a wall with space for movement."
+  },
+  {
+   "name": "Wooden Chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A simple wooden chair with a straight back, common in offices and homes.",
+   "physicalDescription": "A 1x1 square with four small legs and a backrest indicated by a line.",
+   "tags": [
+    "chair",
+    "seat",
+    "home"
+   ],
+   "rule": "Place around tables in wards, offices, and cottages, or against walls in waiting areas."
+  },
+  {
+   "name": "Stool",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A backless wooden stool, used in operating theatre and dispensary.",
+   "physicalDescription": "A 1x1 square representing a simple stool with four legs.",
+   "tags": [
+    "stool",
+    "seat",
+    "work"
+   ],
+   "rule": "Place in the operating theatre beside the surgical table, or in the dispensary by the counter."
+  },
+  {
+   "name": "Table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A rectangular wooden table for dining or work, found in wards and cottages.",
+   "physicalDescription": "A 2x1 rectangle with four legs at the corners.",
+   "tags": [
+    "table",
+    "work",
+    "home"
+   ],
+   "rule": "Place in the center of wards for nurses' stations, or in cottages for dining, with chairs around."
+  },
+  {
+   "name": "Reception Desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden desk with a drawer, serving as the admission counter in the reception lobby.",
+   "physicalDescription": "A 2x1 rectangle with a raised counter top and a drawer indicated on one side.",
+   "tags": [
+    "desk",
+    "counter",
+    "reception"
+   ],
+   "rule": "Place against the wall in the reception lobby, facing the entrance, with chairs behind it.",
+   "lootPool": "Reception desk drawer"
+  },
+  {
+   "name": "Shop Counter",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A long wooden counter for serving customers, used in the corner shop and dispensary.",
+   "physicalDescription": "A 2x1 rectangle with a flat top and a slight overhang on one side.",
+   "tags": [
+    "counter",
+    "shop",
+    "sales"
+   ],
+   "rule": "Place against the wall in the corner shop and dispensary, with shelves behind it."
+  },
+  {
+   "name": "Locker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal locker with a small lock, for storing personal belongings in wards and nurses' home.",
+   "physicalDescription": "A 1x1 square with a vertical line indicating the door and a small handle.",
+   "tags": [
+    "storage",
+    "locker",
+    "metal"
+   ],
+   "rule": "Place in patient wards beside each bed, or in rows in the nurses' dormitory."
+  },
+  {
+   "name": "Shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden shelf unit for storing medications and supplies in the dispensary.",
+   "physicalDescription": "A 2x1 rectangle with horizontal lines representing shelves.",
+   "tags": [
+    "storage",
+    "shelf",
+    "medical"
+   ],
+   "rule": "Place against the wall in the dispensary and corner shop, with items on top.",
+   "lootPool": "Dispensary shelf"
+  },
+  {
+   "name": "Cupboard",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden cupboard with doors, for storing food and household items in workers' cottages.",
+   "physicalDescription": "A 1x1 square with two doors indicated by vertical lines.",
+   "tags": [
+    "storage",
+    "cupboard",
+    "home"
+   ],
+   "rule": "Place in the kitchen area of workers' cottages, against a wall near the table.",
+   "lootPool": "Workers' Cottage cupboard"
+  },
+  {
+   "name": "Cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal medical cabinet for storing supplies in the mortuary and operating theatre.",
+   "physicalDescription": "A 1x1 square with a glass door indicated by a cross pattern.",
+   "tags": [
+    "storage",
+    "cabinet",
+    "medical"
+   ],
+   "rule": "Place against the wall in the mortuary and operating theatre, near the entrance.",
+   "lootPool": "Mortuary cabinet"
+  },
+  {
+   "name": "Toolbox",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal toolbox for keeping tools in the textile mill.",
+   "physicalDescription": "A 1x1 square with a handle on top.",
+   "tags": [
+    "storage",
+    "tool",
+    "industrial"
+   ],
+   "rule": "Place on the worktable or beside machinery in the textile mill.",
+   "lootPool": "Textile Mill toolbox"
+  },
+  {
+   "name": "Tray",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal tray for surgical instruments in the operating theatre.",
+   "physicalDescription": "A 1x1 square with a raised edge.",
+   "tags": [
+    "container",
+    "medical",
+    "surgery"
+   ],
+   "rule": "Place on the surgical table or a nearby counter in the operating theatre.",
+   "lootPool": "Operating Theatre tray"
+  },
+  {
+   "name": "Surgical Table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal table with straps for performing surgical operations.",
+   "physicalDescription": "A 2x1 rectangle with a flat top and supports at each end.",
+   "tags": [
+    "table",
+    "medical",
+    "surgery"
+   ],
+   "rule": "Place in the center of the operating theatre, with the stool beside it."
+  },
+  {
+   "name": "Mortuary Table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stainless steel table for storing the deceased in the mortuary.",
+   "physicalDescription": "A 2x1 rectangle with a slightly raised edge and drainage holes indicated.",
+   "tags": [
+    "table",
+    "medical",
+    "mortuary"
+   ],
+   "rule": "Place in the center of the mortuary, against a wall for access."
+  },
+  {
+   "name": "Surgical Lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.8,
+   "description": "A bright overhead lamp for illuminating the surgical area.",
+   "physicalDescription": "A 1x1 circle with rays indicating light.",
+   "tags": [
+    "light",
+    "lamp",
+    "medical"
+   ],
+   "rule": "Place above the surgical table in the operating theatre."
+  },
+  {
+   "name": "Lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "A small oil lamp or early electric lamp for general lighting.",
+   "physicalDescription": "A 1x1 square with a small flame or bulb indicated.",
+   "tags": [
+    "light",
+    "lamp",
+    "home"
+   ],
+   "rule": "Place on tables or bedside stands in wards, cottages, and offices."
+  },
+  {
+   "name": "Industrial Lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.7,
+   "description": "A hanging industrial lamp for lighting the mill floor.",
+   "physicalDescription": "A 1x1 circle with a chain and a bright light.",
+   "tags": [
+    "light",
+    "lamp",
+    "industrial"
+   ],
+   "rule": "Place hanging from the ceiling or on a post in the textile mill."
+  },
+  {
+   "name": "Textile Machine",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A large loom or spinning machine for cloth production in the mill.",
+   "physicalDescription": "A 2x2 square with complex internal lines representing machinery.",
+   "tags": [
+    "machine",
+    "industrial",
+    "work"
+   ],
+   "rule": "Place in rows along the mill floor, with space for workers to operate."
+  },
+  {
+   "name": "Ambulance",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A vintage ambulance for transporting patients, parked at the hospital.",
+   "physicalDescription": "A 2x2 rectangle with a cross symbol on the side.",
+   "tags": [
+    "vehicle",
+    "medical",
+    "emergency"
+   ],
+   "rule": "Place in the ambulance parking area behind the hospital, facing the entrance.",
+   "lootPool": "Ambulance storage"
+  },
+  {
+   "name": "Garden Bench",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden bench for sitting in the patient garden.",
+   "physicalDescription": "A 1x2 rectangle with a backrest and armrests.",
+   "tags": [
+    "bench",
+    "seat",
+    "garden"
+   ],
+   "rule": "Place along the paths in the patient garden, facing the lawn."
+  },
+  {
+   "name": "Streetlight",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.6,
+   "description": "A gas or electric streetlight for illuminating the cobble streets.",
+   "physicalDescription": "A 1x1 square with a pole and a light on top.",
+   "tags": [
+    "light",
+    "street",
+    "outdoor"
+   ],
+   "rule": "Place along the cobble street and hospital walkways, at intersections and near buildings."
+  },
+  {
+   "name": "Market Cross",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stone cross marking the market area in the town center.",
+   "physicalDescription": "A 2x2 square with a cross shape in the center.",
+   "tags": [
+    "landmark",
+    "market",
+    "stone"
+   ],
+   "rule": "Place in the center of the market area, on the cobble street."
+  },
+  {
+   "name": "Mill Chimney",
+   "size": [
+    3,
+    3
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tall brick chimney for the textile mill, a dominant landmark.",
+   "physicalDescription": "A 3x3 square with a vertical line indicating the chimney stack.",
+   "tags": [
+    "landmark",
+    "industrial",
+    "chimney"
+   ],
+   "rule": "Place behind the textile mill, connected to the building."
+  },
+  {
+   "name": "Tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A deciduous tree for shading the hospital grounds and town edges.",
+   "physicalDescription": "A 2x2 circle with a trunk in the center.",
+   "tags": [
+    "plant",
+    "tree",
+    "nature"
+   ],
+   "rule": "Scatter in the patient garden and along the edges of the hospital grounds."
+  },
+  {
+   "name": "Bush",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A small bush for decoration in gardens and along paths.",
+   "physicalDescription": "A 1x1 irregular shape representing foliage.",
+   "tags": [
+    "plant",
+    "bush",
+    "green"
+   ],
+   "rule": "Cluster in the patient garden or scatter along the hospital walkways."
+  },
+  {
+   "name": "Rubble",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A pile of rubble or debris from industrial activity.",
+   "physicalDescription": "A 1x1 irregular shape with jagged edges.",
+   "tags": [
+    "rubble",
+    "debris",
+    "industrial"
+   ],
+   "rule": "Place in alleys and abandoned areas of the mill town, near the mill."
+  },
+  {
+   "name": "Trash Can",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A metal trash can for waste on the streets.",
+   "physicalDescription": "A 1x1 cylinder with a lid.",
+   "tags": [
+    "container",
+    "street",
+    "urban"
+   ],
+   "rule": "Place along the cobble street, near the corner shop and market cross."
+  },
+  {
+   "name": "Staircase",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 1.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden staircase for moving between storeys in the nurses' home.",
+   "physicalDescription": "A 1x1 square with steps indicated by parallel lines.",
+   "tags": [
+    "stairs",
+    "passage",
+    "home"
+   ],
+   "rule": "Place in the center of the nurses' home, connecting the two storeys."
+  },
+  {
+   "name": "Enamelled iron school desk",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A varnished pine school desk for a single pupil, with a lift-up lid and a groove for pencils.",
+   "physicalDescription": "Top-down view of a small school desk: a honey varnished pine top sloping toward the bottom edge, a pencil groove along the top, dark green enamelled iron legs.",
+   "tags": [
+    "desk",
+    "furniture"
+   ],
+   "libraryId": "desk.school",
+   "back": "north",
+   "sprite": "library/sprites/industrial/desk.school.webp"
+  },
+  {
+   "name": "Flannel wingback armchair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A deep wingback armchair with broad arms and a plump red flannel cushion.",
+   "physicalDescription": "Top-down view of a roomy wingback armchair: wide chestnut stained beech arms either side, a red flannel seat cushion, a padded back along the top edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "chair.armchair",
+   "back": "north",
+   "sprite": "library/sprites/industrial/chair.armchair.webp"
+  },
+  {
+   "name": "Stained beech wooden bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech wooden bench on splayed legs, long enough for two to sit shoulder to shoulder.",
+   "physicalDescription": "Top-down view of a backless wooden bench: one long mid-brown stained beech board, the leg ends showing at each short edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "bench.plank",
+   "sprite": "library/sprites/industrial/bench.plank.webp"
+  },
+  {
+   "name": "Stained beech narrow wardrobe",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech narrow wardrobe barely wider than its door, a single change of clothes hanging inside.",
+   "physicalDescription": "Top-down view of a slim narrow wardrobe: square mid-brown stained beech top, a single door along the bottom edge, back against the top edge.",
+   "tags": [
+    "wardrobe",
+    "furniture",
+    "bedroom"
+   ],
+   "libraryId": "wardrobe.narrow",
+   "back": "north",
+   "sprite": "library/sprites/industrial/wardrobe.narrow.webp"
+  },
+  {
+   "name": "Enamelled iron storm lantern",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "An enamelled iron storm lantern set down on the floor, throwing a ring of light big enough to work by.",
+   "physicalDescription": "Top-down view of a storm lantern: a round dark green enamelled iron cap with a carrying handle, glowing warm amber glass showing all round its rim, set in a dark iron frame.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.lantern",
+   "sprite": "library/sprites/industrial/light.lantern.webp"
+  },
+  {
+   "name": "Varnished pine shop counter",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood shop counter, its edge rubbed smooth where coins and goods change hands.",
+   "physicalDescription": "Top-down view of a shop counter two cells wide: honey bentwood top, a small till box at one end, the keeper's side along the top edge with a few wrapped parcels waiting there.",
+   "tags": [
+    "counter",
+    "furniture",
+    "shop"
+   ],
+   "libraryId": "counter.shop",
+   "back": "north",
+   "sprite": "library/sprites/industrial/counter.shop.webp"
+  },
+  {
+   "name": "Stained beech hatstand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech hatstand with a coat or two hanging from its hooks and a hat on top.",
+   "physicalDescription": "Top-down view of a hatstand: small round chestnut stained beech base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "tags": [
+    "rack",
+    "furniture"
+   ],
+   "libraryId": "rack.coat",
+   "sprite": "library/sprites/industrial/rack.coat.webp"
+  },
+  {
+   "name": "Stained beech clerk's desk",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech clerk's desk with one shallow drawer and just enough room for papers and a light.",
+   "physicalDescription": "Top-down view of a plain clerk's desk: a chestnut stained beech top with a few papers and a pen, the back edge at the top.",
+   "tags": [
+    "desk",
+    "furniture"
+   ],
+   "libraryId": "desk.plain",
+   "back": "north",
+   "sprite": "library/sprites/industrial/desk.plain.webp"
+  },
+  {
+   "name": "Bentwood filing cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood filing cabinet with four labelled drawers, the bottom one jammed shut.",
+   "physicalDescription": "Top-down view of a filing cabinet: plain brown bentwood top with a wire tray of papers, drawer handles along the bottom edge, back against the top edge.",
+   "tags": [
+    "cabinet",
+    "furniture",
+    "office"
+   ],
+   "libraryId": "cabinet.filing",
+   "back": "north",
+   "sprite": "library/sprites/industrial/cabinet.filing.webp"
+  },
+  {
+   "name": "Sheet steel iron shelf",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sheet steel iron shelf holding tins, coils of cable, spare parts and odds and ends that needed somewhere to go.",
+   "physicalDescription": "Top-down view of a small iron shelf: grey sheet steel uprights at the four corners, a slatted top shelf with boxes and coiled cable, back against the top edge.",
+   "tags": [
+    "shelf",
+    "furniture",
+    "storage"
+   ],
+   "libraryId": "shelf.utility",
+   "back": "north",
+   "sprite": "library/sprites/industrial/shelf.utility.webp"
+  },
+  {
+   "name": "Bentwood tavern booth",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tavern booth with a padded brown cowhide seat and a high back that hides its sitters from the room.",
+   "physicalDescription": "Top-down view of a fixed tavern booth: a long brown cowhide bench seat with a tall padded back along the top edge, honey bentwood end panels at left and right.",
+   "tags": [
+    "seat",
+    "upholstered",
+    "furniture"
+   ],
+   "libraryId": "sofa.booth",
+   "back": "north",
+   "sprite": "library/sprites/industrial/sofa.booth.webp"
+  },
+  {
+   "name": "Varnished pine small round table",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A varnished pine small round table just big enough for two cups and a game of cards.",
+   "physicalDescription": "Top-down view of a small round table: a round amber varnished pine top on a single central post.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.round_small",
+   "sprite": "library/sprites/industrial/table.round_small.webp"
+  },
+  {
+   "name": "Sheet steel fireplace",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.8,
+   "description": "A slate fireplace set into the wall, its sheet steel firedogs holding a fire that warms the whole room.",
+   "physicalDescription": "Top-down view of a wall fireplace: a blue-grey slate hearth slab jutting from the top edge, a dark firebox against the back wall with a grey sheet steel grate of burning logs, a raised hearthstone along the bottom.",
+   "tags": [
+    "hearth",
+    "heat",
+    "light"
+   ],
+   "libraryId": "hearth.fireplace",
+   "back": "north",
+   "sprite": "library/sprites/industrial/hearth.fireplace.webp"
+  },
+  {
+   "name": "Bentwood wardrobe",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood wardrobe with two tall doors that never quite meet, coats and shirts crowded inside.",
+   "physicalDescription": "Top-down view of a wardrobe two cells wide: flat honey bentwood top with a hatbox at one end, double doors with enamelled iron handles along the bottom edge, back against the top edge.",
+   "tags": [
+    "wardrobe",
+    "furniture",
+    "bedroom"
+   ],
+   "libraryId": "wardrobe.standard",
+   "back": "north",
+   "sprite": "library/sprites/industrial/wardrobe.standard.webp"
+  },
+  {
+   "name": "Stained beech commode",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech commode with a padded flannel lid, a respectable box with a pot hidden inside.",
+   "physicalDescription": "Top-down view of a boxy commode: a square mid-brown stained beech chest with a hinged lid along the back edge, a grey flannel cushion on top, a carrying handle on each side.",
+   "tags": [
+    "toilet",
+    "washroom",
+    "bedroom"
+   ],
+   "libraryId": "toilet.close_stool",
+   "back": "north",
+   "sprite": "library/sprites/industrial/toilet.close_stool.webp"
+  },
+  {
+   "name": "Sheet steel wash basin",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sheet steel bowl of cold water set on a stool, with a scrap of cloth and a sliver of soap beside it.",
+   "physicalDescription": "Top-down view of a wash basin: a round grey sheet steel bowl of water on a square chestnut stained beech stool, a folded rag and a jug beside it.",
+   "tags": [
+    "sink",
+    "washroom"
+   ],
+   "libraryId": "sink.wash_basin",
+   "sprite": "library/sprites/industrial/sink.wash_basin.webp"
+  },
+  {
+   "name": "Sheet steel tin bath",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sheet steel tin bath dragged out on bath night, for laundry the rest of the week.",
+   "physicalDescription": "Top-down view of a round tin bath: a grey sheet steel tub with grey soapy water, a scrubbing board leaning in it, wet splashes on the floor around.",
+   "tags": [
+    "bath",
+    "washroom",
+    "laundry"
+   ],
+   "libraryId": "bath.wash_tub",
+   "sprite": "library/sprites/industrial/bath.wash_tub.webp"
+  },
+  {
+   "name": "Flannel iron ward bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A cast iron ward bed on castors, its side rails raised and the patient's record hung at the foot.",
+   "physicalDescription": "Top-down view of a wheeled iron ward bed: black cast iron side rails, a red flannel sheet, the head section raised at the top, castors at the corners.",
+   "tags": [
+    "bed",
+    "medical",
+    "furniture"
+   ],
+   "libraryId": "hospital_bed.ward",
+   "back": "north",
+   "sprite": "library/sprites/industrial/hospital_bed.ward.webp"
+  },
+  {
+   "name": "Pressed glass drip stand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.7,
+   "forSleep": false,
+   "light": 0,
+   "description": "An enamelled iron drip stand on wheels, a pressed glass bag dripping slowly into a tube.",
+   "physicalDescription": "Top-down view of a drip stand: a small five-spoked wheeled base with a thin enamelled iron pole, a clear pressed glass bag hanging from a hook at the top.",
+   "tags": [
+    "medical",
+    "furniture"
+   ],
+   "libraryId": "medical.iv_stand",
+   "sprite": "library/sprites/industrial/medical.iv_stand.webp"
+  },
+  {
+   "name": "Sheet steel medicine cabinet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A medicine cabinet with a pressed glass-fronted door, its shelves crowded with bottles, salves and rolled bandages.",
+   "physicalDescription": "Top-down view of a narrow medicine cabinet: grey sheet steel top, a pressed glass door along the bottom edge, back against the top edge.",
+   "tags": [
+    "cabinet",
+    "furniture",
+    "medical"
+   ],
+   "libraryId": "cabinet.medicine",
+   "back": "north",
+   "sprite": "library/sprites/industrial/cabinet.medicine.webp"
+  },
+  {
+   "name": "Wool serge hammock",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A navy wool serge hammock slung between two hooks, swaying at a touch.",
+   "physicalDescription": "Top-down view of a slung hammock: a long navy wool serge sling pinched at both ends, ropes running to hooks at the top and bottom.",
+   "tags": [
+    "bed",
+    "furniture"
+   ],
+   "libraryId": "bed.hammock",
+   "sprite": "library/sprites/industrial/bed.hammock.webp"
+  },
+  {
+   "name": "Enamelled iron chest",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood chest with a flat lid and a hasp but no lock, the kind every household keeps.",
+   "physicalDescription": "Top-down view of a chest: plank honey bentwood lid with two enamelled iron straps across it, a simple hasp on one long edge.",
+   "tags": [
+    "chest",
+    "furniture",
+    "storage"
+   ],
+   "libraryId": "chest.wooden",
+   "sprite": "library/sprites/industrial/chest.wooden.webp"
+  },
+  {
+   "name": "Enamelled iron candlestick stand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.2,
+   "description": "An enamelled iron candlestick stand holding one fat candle, its wax run down in long tears.",
+   "physicalDescription": "Top-down view of a candlestick stand: a small round cream enamelled iron drip pan with a single lit candle in the middle, a soft yellow halo around it.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.candle",
+   "sprite": "library/sprites/industrial/light.candle.webp"
+  },
+  {
+   "name": "Sheet steel turnstile",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sheet steel turnstile that lets one person through at a time and clanks about it.",
+   "physicalDescription": "Top-down view of a turnstile: a round grey sheet steel post at one side with three sheet steel arms fanning out across a narrow lane, a card reader on top.",
+   "tags": [
+    "security",
+    "fixture"
+   ],
+   "libraryId": "security.turnstile",
+   "sprite": "library/sprites/industrial/security.turnstile.webp"
+  },
+  {
+   "name": "Sheet steel coal boiler",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.2,
+   "description": "A sheet steel coal boiler in the back room, its little window glowing as it heats water for the whole house.",
+   "physicalDescription": "Top-down view of a coal boiler against the top wall: a round grey sheet steel drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge.",
+   "tags": [
+    "utility",
+    "heat",
+    "light"
+   ],
+   "libraryId": "utility.boiler",
+   "back": "north",
+   "sprite": "library/sprites/industrial/utility.boiler.webp"
+  },
+  {
+   "name": "Bentwood kitchen chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood kitchen chair, plain and straight-backed, with one leg a touch shorter than the rest.",
+   "physicalDescription": "Top-down view of a simple kitchen chair: a square brown bentwood seat with the backrest along the top edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "chair.plain",
+   "back": "north",
+   "sprite": "library/sprites/industrial/chair.plain.webp"
+  },
+  {
+   "name": "Plate glass gas lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.5,
+   "description": "A cast iron gas lamp with a plate glass globe, hissing faintly as it burns.",
+   "physicalDescription": "Top-down view of a standing gas lamp: a round clear plate glass globe glowing white-gold, a black cast iron post and base beneath, a thin gas pipe running to the wall.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.gas_lamp",
+   "sprite": "library/sprites/industrial/light.gas_lamp.webp"
+  },
+  {
+   "name": "Bentwood night table",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood night table with one drawer for keepsakes and a top for a light.",
+   "physicalDescription": "Top-down view of a small night table: a square brown bentwood top, a drawer pull showing on the bottom edge.",
+   "tags": [
+    "table",
+    "bedside",
+    "furniture"
+   ],
+   "libraryId": "nightstand.plain",
+   "back": "north",
+   "sprite": "library/sprites/industrial/nightstand.plain.webp"
+  },
+  {
+   "name": "Wicker potted palm",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A potted palm in a bentwood planter, tall enough to brush the ceiling beams.",
+   "physicalDescription": "Top-down view of the potted palm: a square honey bentwood planter under a wide round crown of honey leaves that spills past its edges.",
+   "tags": [
+    "plant",
+    "decor"
+   ],
+   "libraryId": "plant.tree",
+   "sprite": "library/sprites/industrial/plant.tree.webp"
+  },
+  {
+   "name": "Sheet steel keg",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sheet steel keg, cold to the touch, with a coupler and hose still clamped to its neck.",
+   "physicalDescription": "Top-down view of a round keg: domed grey sheet steel top inside a ring of hand-holes, a coupler at the centre trailing a short hose.",
+   "tags": [
+    "barrel",
+    "storage",
+    "bar"
+   ],
+   "libraryId": "barrel.keg",
+   "sprite": "library/sprites/industrial/barrel.keg.webp"
+  },
+  {
+   "name": "Striped ticking settee",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A blue-striped settee with two deep cushions and a scatter of pillows.",
+   "physicalDescription": "Top-down view of a two-seat settee: blue-striped ticking cushions, a padded back along the top edge, rolled honey bentwood arms at left and right.",
+   "tags": [
+    "seat",
+    "upholstered",
+    "furniture"
+   ],
+   "libraryId": "sofa.couch",
+   "back": "north",
+   "sprite": "library/sprites/industrial/sofa.couch.webp"
+  },
+  {
+   "name": "Wool serge tailor's bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tailor's bench where a bolt of navy wool serge waits half-chalked for the shears.",
+   "physicalDescription": "Top-down view of a tailor's bench: a smooth honey varnished pine top with a length of navy wool serge spread across it, shears, chalk and pins, a rack of bolts along the top edge.",
+   "tags": [
+    "workstation",
+    "furniture"
+   ],
+   "libraryId": "workbench.cutting_table",
+   "back": "north",
+   "sprite": "library/sprites/industrial/workbench.cutting_table.webp"
+  },
+  {
+   "name": "Bentwood tool rack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tool rack with an outline painted round each hanging tool, so a missing one shows at once.",
+   "physicalDescription": "Top-down view of a tool rack: brown bentwood board against the top edge with sheet steel hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "tags": [
+    "rack",
+    "furniture",
+    "workshop"
+   ],
+   "libraryId": "rack.tool",
+   "back": "north",
+   "sprite": "library/sprites/industrial/rack.tool.webp"
+  },
+  {
+   "name": "Stained beech crate",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech crate sealed tight, a shipper's mark stamped on its side.",
+   "physicalDescription": "Top-down view of a square crate: mid-brown stained beech lid with reinforced edges and a stencilled mark in one corner.",
+   "tags": [
+    "crate",
+    "furniture",
+    "storage",
+    "warehouse"
+   ],
+   "libraryId": "crate.wooden",
+   "sprite": "library/sprites/industrial/crate.wooden.webp"
+  },
+  {
+   "name": "Bentwood deal table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A bentwood deal table, big enough for a meal for two or a pile of chores.",
+   "physicalDescription": "Top-down view of a plain deal table: a rectangular brown bentwood top, twice as wide as it is deep, legs at the corners.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.plank",
+   "sprite": "library/sprites/industrial/table.plank.webp"
+  },
+  {
+   "name": "Striped ticking welding bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A welding bench with a slag-spattered cast iron top and a striped ticking spark curtain hung behind it.",
+   "physicalDescription": "Top-down view of a welding bench: a thick dark grey cast iron slab top with clamps and scorch marks, a gas bottle and coiled hose at the top-right corner, a grey-striped ticking spark curtain along the top edge.",
+   "tags": [
+    "workstation",
+    "furniture"
+   ],
+   "libraryId": "workbench.welding",
+   "back": "north",
+   "sprite": "library/sprites/industrial/workbench.welding.webp"
+  },
+  {
+   "name": "Stained beech icebox",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stained beech icebox lined with sheet steel, a block of ice sweating in the top and a drip pan that someone forgot to empty.",
+   "physicalDescription": "Top-down view of a square icebox: a chestnut stained beech top with brass hinges along the back edge, a hinged lid showing a grey sheet steel-lined ice compartment, a drip tray peeking out at the bottom.",
+   "tags": [
+    "fridge",
+    "kitchen",
+    "storage"
+   ],
+   "libraryId": "fridge.icebox",
+   "back": "north",
+   "sprite": "library/sprites/industrial/fridge.icebox.webp"
+  },
+  {
+   "name": "Stained beech loaded pallet",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A loaded pallet stacked chest-high with sacks and cartons and bound in wool serge.",
+   "physicalDescription": "Top-down view of a square loaded pallet: boxes stacked in a tight block under black wool serge wrapping, the stained beech slats showing at the edges.",
+   "tags": [
+    "pallet",
+    "storage",
+    "warehouse"
+   ],
+   "libraryId": "pallet.goods",
+   "sprite": "library/sprites/industrial/pallet.goods.webp"
+  },
+  {
+   "name": "York stone bust on a pedestal",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A york stone bust on a pedestal, some stern ancestor or patron gazing over the room.",
+   "physicalDescription": "Top-down view of the bust on a pedestal: a square brown bentwood pedestal topped by a buff york stone head and shoulders, face toward the bottom.",
+   "tags": [
+    "statue",
+    "decor"
+   ],
+   "libraryId": "statue.bust",
+   "sprite": "library/sprites/industrial/statue.bust.webp"
+  },
+  {
+   "name": "Pressed glass paraffin lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "A pressed glass paraffin lamp on a bentwood stand, its little flame steady as long as no one opens the door.",
+   "physicalDescription": "Top-down view of a small honey bentwood stand with a paraffin lamp: an amber pressed glass lamp seen from above, a single flame at its spout and a ring of warm light.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.oil_lamp",
+   "sprite": "library/sprites/industrial/light.oil_lamp.webp"
+  },
+  {
+   "name": "Stained beech low tea table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A low stained beech low tea table at knee height, set out in front of the seats.",
+   "physicalDescription": "Top-down view of a low tea table: a long chestnut stained beech top with a lower shelf showing beneath.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.coffee",
+   "sprite": "library/sprites/industrial/table.coffee.webp"
+  },
+  {
+   "name": "Sheet steel pot-belly stove",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "A sheet steel pot-belly stove that ticks as it heats, a kettle never far from its top.",
+   "physicalDescription": "Top-down view of a squat pot-belly stove: a round grey sheet steel top with a kettle ring, a flue pipe rising from the back near the top edge, a small glowing door on the bottom side.",
+   "tags": [
+    "hearth",
+    "heat",
+    "light"
+   ],
+   "libraryId": "hearth.woodstove",
+   "back": "north",
+   "sprite": "library/sprites/industrial/hearth.woodstove.webp"
+  },
+  {
+   "name": "Cast iron cookstove",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.3,
+   "description": "A little cast iron cookstove with two plates on top and an oven no bigger than a loaf.",
+   "physicalDescription": "Top-down view of a small cookstove: a square dark grey cast iron top with two round hot plates, a stovepipe at the top edge, a firebox door glowing at the bottom.",
+   "tags": [
+    "stove",
+    "cooking",
+    "heat",
+    "light"
+   ],
+   "libraryId": "stove.cookstove",
+   "back": "north",
+   "sprite": "library/sprites/industrial/stove.cookstove.webp"
+  },
+  {
+   "name": "Cast iron footlocker",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A cast iron footlocker meant for the foot of a bunk, stencilled with a number and held shut by cowhide straps.",
+   "physicalDescription": "Top-down view of a low footlocker: rectangular black cast iron lid with a stencilled number, two brown straps across it, a handle at either end.",
+   "tags": [
+    "locker",
+    "furniture",
+    "storage",
+    "dormitory"
+   ],
+   "libraryId": "locker.footlocker",
+   "sprite": "library/sprites/industrial/locker.footlocker.webp"
+  },
+  {
+   "name": "Enamelled iron steel drum",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An enamelled iron steel drum with ribbed sides and a hazard mark half scraped away.",
+   "physicalDescription": "Top-down view of a round steel drum: flat cream enamelled iron lid with a rolled rim and two small screw caps, one near the edge.",
+   "tags": [
+    "barrel",
+    "storage",
+    "warehouse"
+   ],
+   "libraryId": "barrel.drum",
+   "sprite": "library/sprites/industrial/barrel.drum.webp"
+  },
+  {
+   "name": "Varnished pine goods shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A varnished pine goods shelf crowded with wares, the cheap goods low down and the dear ones within the keeper's reach.",
+   "physicalDescription": "Top-down view of a shallow goods shelf two cells wide: amber varnished pine shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "tags": [
+    "shelf",
+    "furniture",
+    "shop"
+   ],
+   "libraryId": "shelf.goods",
+   "back": "north",
+   "sprite": "library/sprites/industrial/shelf.goods.webp"
+  },
+  {
+   "name": "Calico double bedstead",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A sheet steel double bedstead wide enough for two, under a cream calico quilt.",
+   "physicalDescription": "Top-down view of a double bedstead: grey sheet steel frame, a cream calico quilt, two pillows side by side against the headboard at the top.",
+   "tags": [
+    "bed",
+    "furniture"
+   ],
+   "libraryId": "bed.double",
+   "back": "north",
+   "sprite": "library/sprites/industrial/bed.double.webp"
+  }
+ ],
+ "items": [
+  {
+   "name": "Bandage",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A sterile bandage for dressing wounds.",
+   "physicalDescription": "A rolled-up white bandage with a red cross symbol, white background"
+  },
+  {
+   "name": "Syringe",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 5,
+   "description": "A glass syringe for injections.",
+   "physicalDescription": "A glass syringe with a metal needle, white background"
+  },
+  {
+   "name": "Thermometer",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 3,
+   "description": "A mercury thermometer for checking temperature.",
+   "physicalDescription": "A glass thermometer with a silver bulb, white background"
+  },
+  {
+   "name": "Stethoscope",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A classic stethoscope for listening to heartbeats.",
+   "physicalDescription": "A black stethoscope with silver earpieces, white background"
+  },
+  {
+   "name": "Scalpel",
+   "type": "wieldable",
+   "quality": "rare",
+   "value": 40,
+   "description": "A sharp surgical blade for precise cuts.",
+   "physicalDescription": "A small metal scalpel with a white handle, white background"
+  },
+  {
+   "name": "Surgical Gloves",
+   "type": "gloves",
+   "quality": "common",
+   "value": 4,
+   "description": "Disposable gloves for sterile procedures.",
+   "physicalDescription": "A pair of white latex gloves, white background"
+  },
+  {
+   "name": "Doctor's Coat",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A white lab coat with pockets.",
+   "physicalDescription": "A long white coat with a stethoscope around the neck, white background"
+  },
+  {
+   "name": "Nurse's Cap",
+   "type": "head",
+   "quality": "common",
+   "value": 3,
+   "description": "A traditional white nurse's cap.",
+   "physicalDescription": "A small white cap with a red cross, white background"
+  },
+  {
+   "name": "Patient Gown",
+   "type": "torso",
+   "quality": "common",
+   "value": 5,
+   "description": "A loose-fitting gown for patients.",
+   "physicalDescription": "A light blue hospital gown, white background"
+  },
+  {
+   "name": "Crutches",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 10,
+   "description": "Wooden crutches for mobility support.",
+   "physicalDescription": "A pair of wooden crutches with black tips, white background"
+  },
+  {
+   "name": "Wheelchair",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 30,
+   "description": "A wheeled chair for transporting patients.",
+   "physicalDescription": "A metal wheelchair with black seat, white background"
+  },
+  {
+   "name": "Bedpan",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A metal pan for bedridden patients.",
+   "physicalDescription": "A silver metal bedpan, white background"
+  },
+  {
+   "name": "Thermos Flask",
+   "type": "misc",
+   "quality": "common",
+   "value": 6,
+   "description": "An insulated flask for hot drinks.",
+   "physicalDescription": "A silver thermos with a black cap, white background"
+  },
+  {
+   "name": "Lunch Box",
+   "type": "misc",
+   "quality": "common",
+   "value": 6,
+   "description": "A metal box for carrying food.",
+   "physicalDescription": "A red metal lunch box with a handle, white background"
+  },
+  {
+   "name": "Sandwich",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A simple cheese sandwich.",
+   "physicalDescription": "A sandwich with bread and cheese, white background"
+  },
+  {
+   "name": "Apple",
+   "type": "consumable",
+   "quality": "common",
+   "value": 1,
+   "description": "A fresh red apple.",
+   "physicalDescription": "A shiny red apple, white background"
+  },
+  {
+   "name": "Bottle of Water",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A clear glass bottle of drinking water.",
+   "physicalDescription": "A glass bottle of water with a white label, white background"
+  },
+  {
+   "name": "Coffee Mug",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A ceramic mug for hot drinks.",
+   "physicalDescription": "A white mug with 'Hospital' written on it, white background"
+  },
+  {
+   "name": "Pen",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "A ballpoint pen for writing notes.",
+   "physicalDescription": "A blue ballpoint pen, white background"
+  },
+  {
+   "name": "Notepad",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A small notepad for memos.",
+   "physicalDescription": "A white notepad with lines, white background"
+  },
+  {
+   "name": "Key",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A metal key for locking doors.",
+   "physicalDescription": "A brass key with a ring, white background"
+  },
+  {
+   "name": "Wristwatch",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 10,
+   "description": "A silver wristwatch for keeping time.",
+   "physicalDescription": "A silver wristwatch with a leather strap, white background"
+  },
+  {
+   "name": "Wallet",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A leather wallet for money and cards.",
+   "physicalDescription": "A brown leather wallet, white background"
+  },
+  {
+   "name": "Cash",
+   "type": "misc",
+   "quality": "common",
+   "value": 10,
+   "description": "A few dollar bills for small purchases.",
+   "physicalDescription": "A stack of green dollar bills, white background"
+  },
+  {
+   "name": "Medicine Bottle",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "A bottle of painkillers.",
+   "physicalDescription": "A small brown medicine bottle with a label, white background"
+  },
+  {
+   "name": "Antiseptic Cream",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A tube of antiseptic ointment.",
+   "physicalDescription": "A white tube of cream, white background"
+  },
+  {
+   "name": "Blood Pressure Cuff",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 12,
+   "description": "A cuff for measuring blood pressure.",
+   "physicalDescription": "A black blood pressure cuff with a gauge, white background"
+  },
+  {
+   "name": "Oxygen Tank",
+   "type": "misc",
+   "quality": "rare",
+   "value": 50,
+   "description": "A tank of oxygen for respiratory support.",
+   "physicalDescription": "A green oxygen tank with a valve, white background"
+  },
+  {
+   "name": "Blanket",
+   "type": "misc",
+   "quality": "common",
+   "value": 6,
+   "description": "A warm wool blanket for patients.",
+   "physicalDescription": "A folded blue blanket, white background"
+  },
+  {
+   "name": "Pillow",
+   "type": "misc",
+   "quality": "common",
+   "value": 4,
+   "description": "A soft pillow for sleeping.",
+   "physicalDescription": "A white pillow with a case, white background"
+  },
+  {
+   "name": "Bed Sheet",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A clean sheet for the bed.",
+   "physicalDescription": "A white bed sheet, white background"
+  },
+  {
+   "name": "Wrench",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 50,
+   "description": "A sturdy wrench for industrial repairs.",
+   "physicalDescription": "A metal wrench with a black handle, white background"
+  },
+  {
+   "name": "Screwdriver",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 20,
+   "description": "A screwdriver for fixing equipment.",
+   "physicalDescription": "A red-handled screwdriver, white background"
+  },
+  {
+   "name": "Hammer",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 30,
+   "description": "A hammer for construction work.",
+   "physicalDescription": "A metal hammer with a wooden handle, white background"
+  },
+  {
+   "name": "Cloth Scrap",
+   "type": "material",
+   "quality": "common",
+   "value": 1,
+   "description": "A piece of cloth from the mill.",
+   "physicalDescription": "A small piece of grey cloth, white background"
+  },
+  {
+   "name": "Thread",
+   "type": "material",
+   "quality": "common",
+   "value": 2,
+   "description": "A spool of thread for sewing.",
+   "physicalDescription": "A spool of red thread, white background"
+  },
+  {
+   "name": "Needle",
+   "type": "material",
+   "quality": "common",
+   "value": 1,
+   "description": "A sewing needle for repairs.",
+   "physicalDescription": "A small metal needle, white background"
+  },
+  {
+   "name": "Soap",
+   "type": "consumable",
+   "quality": "common",
+   "value": 2,
+   "description": "A bar of soap for hygiene.",
+   "physicalDescription": "A white bar of soap, white background"
+  },
+  {
+   "name": "Toothbrush",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A toothbrush for dental care.",
+   "physicalDescription": "A blue toothbrush with bristles, white background"
+  },
+  {
+   "name": "Toothpaste",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A tube of toothpaste.",
+   "physicalDescription": "A white tube of toothpaste, white background"
+  },
+  {
+   "name": "Handkerchief",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A cloth handkerchief for blowing nose.",
+   "physicalDescription": "A white handkerchief, white background"
+  },
+  {
+   "name": "Umbrella",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A black umbrella for rain.",
+   "physicalDescription": "A closed black umbrella, white background"
+  },
+  {
+   "name": "Raincoat",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "A waterproof raincoat for wet weather.",
+   "physicalDescription": "A yellow raincoat with a hood, white background"
+  },
+  {
+   "name": "Boots",
+   "type": "boots",
+   "quality": "common",
+   "value": 10,
+   "description": "Sturdy boots for work.",
+   "physicalDescription": "A pair of black work boots, white background"
+  },
+  {
+   "name": "Gloves",
+   "type": "gloves",
+   "quality": "common",
+   "value": 6,
+   "description": "Cotton gloves for protection.",
+   "physicalDescription": "A pair of white cotton gloves, white background"
+  },
+  {
+   "name": "Hat",
+   "type": "head",
+   "quality": "common",
+   "value": 4,
+   "description": "A simple hat for sun protection.",
+   "physicalDescription": "A brown fedora hat, white background"
+  },
+  {
+   "name": "Scarf",
+   "type": "necklace",
+   "quality": "common",
+   "value": 5,
+   "description": "A wool scarf for warmth.",
+   "physicalDescription": "A red wool scarf, white background"
+  },
+  {
+   "name": "Ring",
+   "type": "ring",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A gold ring, perhaps a wedding band.",
+   "physicalDescription": "A gold ring with a small gem, white background"
+  },
+  {
+   "name": "Necklace",
+   "type": "necklace",
+   "quality": "rare",
+   "value": 30,
+   "description": "A silver necklace with a pendant.",
+   "physicalDescription": "A silver necklace with a heart pendant, white background"
+  },
+  {
+   "name": "Earrings",
+   "type": "face",
+   "quality": "uncommon",
+   "value": 10,
+   "description": "A pair of silver earrings.",
+   "physicalDescription": "A pair of silver stud earrings, white background"
+  },
+  {
+   "name": "Glasses",
+   "type": "face",
+   "quality": "common",
+   "value": 8,
+   "description": "Spectacles for vision correction.",
+   "physicalDescription": "A pair of wire-rimmed glasses, white background"
+  },
+  {
+   "name": "Cigarettes",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A pack of cigarettes for stress relief.",
+   "physicalDescription": "A pack of cigarettes with a matchbook, white background"
+  },
+  {
+   "name": "Lighter",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 6,
+   "description": "A metal lighter for lighting cigarettes.",
+   "physicalDescription": "A silver Zippo lighter, white background"
+  },
+  {
+   "name": "Book",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A medical textbook for study.",
+   "physicalDescription": "A thick book with a red cover, white background"
+  },
+  {
+   "name": "Magazine",
+   "type": "misc",
+   "quality": "common",
+   "value": 2,
+   "description": "A popular magazine for entertainment.",
+   "physicalDescription": "A colorful magazine with pictures, white background"
+  },
+  {
+   "name": "Newspaper",
+   "type": "misc",
+   "quality": "common",
+   "value": 1,
+   "description": "A daily newspaper for news.",
+   "physicalDescription": "A folded newspaper with headlines, white background"
+  },
+  {
+   "name": "Photo",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 8,
+   "description": "A family photograph in a frame.",
+   "physicalDescription": "A small framed photo, white background"
+  },
+  {
+   "name": "Mirror",
+   "type": "misc",
+   "quality": "common",
+   "value": 4,
+   "description": "A hand mirror for grooming.",
+   "physicalDescription": "A small round mirror with a handle, white background"
+  },
+  {
+   "name": "Textile Sample",
+   "type": "material",
+   "quality": "common",
+   "value": 3,
+   "description": "A sample of cloth from the mill.",
+   "physicalDescription": "A piece of patterned cloth, white background"
+  },
+  {
+   "name": "Spindle",
+   "type": "material",
+   "quality": "common",
+   "value": 2,
+   "description": "A spindle for holding thread.",
+   "physicalDescription": "A wooden spindle with thread, white background"
+  }
+ ],
+ "lootPools": {
+  "Dispensary shelf": {
+   "items": [
+    "Bandage",
+    "Syringe",
+    "Thermometer",
+    "Medicine Bottle",
+    "Antiseptic Cream",
+    "Stethoscope",
+    "Scalpel",
+    "Surgical Gloves",
+    "Blood Pressure Cuff"
+   ],
+   "weights": {
+    "Bandage": 1.0,
+    "Syringe": 1.0,
+    "Thermometer": 1.0,
+    "Medicine Bottle": 1.0,
+    "Antiseptic Cream": 1.0,
+    "Stethoscope": 0.8,
+    "Scalpel": 0.3,
+    "Surgical Gloves": 1.0,
+    "Blood Pressure Cuff": 0.7
+   }
+  },
+  "Nurses' Home locker": {
+   "items": [
+    "Nurse's Cap",
+    "Doctor's Coat",
+    "Wristwatch",
+    "Wallet",
+    "Cash",
+    "Pen",
+    "Notepad",
+    "Key",
+    "Handkerchief",
+    "Umbrella",
+    "Raincoat",
+    "Boots",
+    "Gloves",
+    "Hat",
+    "Scarf"
+   ],
+   "weights": {
+    "Nurse's Cap": 1.0,
+    "Doctor's Coat": 0.8,
+    "Wristwatch": 0.6,
+    "Wallet": 1.0,
+    "Cash": 0.5,
+    "Pen": 1.0,
+    "Notepad": 1.0,
+    "Key": 1.0,
+    "Handkerchief": 1.0,
+    "Umbrella": 0.7,
+    "Raincoat": 0.6,
+    "Boots": 1.0,
+    "Gloves": 1.0,
+    "Hat": 0.8,
+    "Scarf": 0.7
+   }
+  },
+  "Patient Ward locker": {
+   "items": [
+    "Patient Gown",
+    "Blanket",
+    "Pillow",
+    "Bed Sheet",
+    "Crutches",
+    "Thermos Flask",
+    "Lunch Box",
+    "Sandwich",
+    "Apple",
+    "Bottle of Water",
+    "Coffee Mug",
+    "Wallet",
+    "Cash",
+    "Photo",
+    "Mirror"
+   ],
+   "weights": {
+    "Patient Gown": 1.0,
+    "Blanket": 1.0,
+    "Pillow": 1.0,
+    "Bed Sheet": 1.0,
+    "Crutches": 0.8,
+    "Thermos Flask": 0.7,
+    "Lunch Box": 0.6,
+    "Sandwich": 0.9,
+    "Apple": 1.0,
+    "Bottle of Water": 1.0,
+    "Coffee Mug": 0.8,
+    "Wallet": 0.5,
+    "Cash": 0.4,
+    "Photo": 0.3,
+    "Mirror": 0.6
+   }
+  },
+  "Reception desk drawer": {
+   "items": [
+    "Pen",
+    "Notepad",
+    "Key",
+    "Cash",
+    "Newspaper",
+    "Magazine",
+    "Book",
+    "Wristwatch",
+    "Wallet"
+   ],
+   "weights": {
+    "Pen": 1.0,
+    "Notepad": 1.0,
+    "Key": 1.0,
+    "Cash": 0.6,
+    "Newspaper": 0.8,
+    "Magazine": 0.7,
+    "Book": 0.5,
+    "Wristwatch": 0.4,
+    "Wallet": 0.6
+   }
+  },
+  "Operating Theatre tray": {
+   "items": [
+    "Scalpel",
+    "Surgical Gloves",
+    "Stethoscope",
+    "Thermometer",
+    "Syringe",
+    "Medicine Bottle",
+    "Antiseptic Cream",
+    "Blood Pressure Cuff",
+    "Oxygen Tank"
+   ],
+   "weights": {
+    "Scalpel": 0.4,
+    "Surgical Gloves": 1.0,
+    "Stethoscope": 0.7,
+    "Thermometer": 0.9,
+    "Syringe": 1.0,
+    "Medicine Bottle": 0.8,
+    "Antiseptic Cream": 0.9,
+    "Blood Pressure Cuff": 0.6,
+    "Oxygen Tank": 0.3
+   }
+  },
+  "Mortuary cabinet": {
+   "items": [
+    "Bed Sheet",
+    "Blanket",
+    "Photo",
+    "Wallet",
+    "Cash",
+    "Ring",
+    "Necklace",
+    "Earrings",
+    "Glasses",
+    "Handkerchief"
+   ],
+   "weights": {
+    "Bed Sheet": 1.0,
+    "Blanket": 0.9,
+    "Photo": 0.7,
+    "Wallet": 0.6,
+    "Cash": 0.5,
+    "Ring": 0.4,
+    "Necklace": 0.3,
+    "Earrings": 0.4,
+    "Glasses": 0.5,
+    "Handkerchief": 0.6
+   }
+  },
+  "Corner Shop shelf": {
+   "items": [
+    "Soap",
+    "Toothbrush",
+    "Toothpaste",
+    "Handkerchief",
+    "Cigarettes",
+    "Lighter",
+    "Newspaper",
+    "Magazine",
+    "Book",
+    "Umbrella",
+    "Raincoat"
+   ],
+   "weights": {
+    "Soap": 1.0,
+    "Toothbrush": 1.0,
+    "Toothpaste": 1.0,
+    "Handkerchief": 1.0,
+    "Cigarettes": 0.8,
+    "Lighter": 0.6,
+    "Newspaper": 0.9,
+    "Magazine": 0.8,
+    "Book": 0.5,
+    "Umbrella": 0.7,
+    "Raincoat": 0.6
+   }
+  },
+  "Workers' Cottage cupboard": {
+   "items": [
+    "Sandwich",
+    "Apple",
+    "Bottle of Water",
+    "Coffee Mug",
+    "Lunch Box",
+    "Wrench",
+    "Screwdriver",
+    "Hammer",
+    "Cloth Scrap",
+    "Thread",
+    "Needle",
+    "Soap",
+    "Toothbrush",
+    "Toothpaste",
+    "Cash"
+   ],
+   "weights": {
+    "Sandwich": 0.9,
+    "Apple": 1.0,
+    "Bottle of Water": 1.0,
+    "Coffee Mug": 0.8,
+    "Lunch Box": 0.7,
+    "Wrench": 0.6,
+    "Screwdriver": 0.7,
+    "Hammer": 0.5,
+    "Cloth Scrap": 1.0,
+    "Thread": 1.0,
+    "Needle": 1.0,
+    "Soap": 0.9,
+    "Toothbrush": 0.8,
+    "Toothpaste": 0.7,
+    "Cash": 0.4
+   }
+  },
+  "Textile Mill toolbox": {
+   "items": [
+    "Wrench",
+    "Screwdriver",
+    "Hammer",
+    "Cloth Scrap",
+    "Thread",
+    "Needle",
+    "Spindle",
+    "Textile Sample"
+   ],
+   "weights": {
+    "Wrench": 1.0,
+    "Screwdriver": 1.0,
+    "Hammer": 0.9,
+    "Cloth Scrap": 1.0,
+    "Thread": 1.0,
+    "Needle": 1.0,
+    "Spindle": 0.8,
+    "Textile Sample": 0.7
+   }
+  },
+  "Ambulance storage": {
+   "items": [
+    "Bandage",
+    "Syringe",
+    "Thermometer",
+    "Medicine Bottle",
+    "Antiseptic Cream",
+    "Stethoscope",
+    "Blood Pressure Cuff",
+    "Oxygen Tank",
+    "Crutches",
+    "Wheelchair",
+    "Blanket",
+    "Pillow"
+   ],
+   "weights": {
+    "Bandage": 1.0,
+    "Syringe": 1.0,
+    "Thermometer": 1.0,
+    "Medicine Bottle": 1.0,
+    "Antiseptic Cream": 1.0,
+    "Stethoscope": 0.8,
+    "Blood Pressure Cuff": 0.7,
+    "Oxygen Tank": 0.5,
+    "Crutches": 0.9,
+    "Wheelchair": 0.4,
+    "Blanket": 1.0,
+    "Pillow": 0.8
+   }
+  }
+ },
+ "buildings": [
+  {
+   "name": "Reception",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Reception",
+     "share": "small",
+     "use": "reception",
+     "purpose": "Patient admission and waiting area"
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Reception",
+    "side": "north"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Enamelled iron school desk",
+     "room": "Reception",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Reception",
+     "count": 1,
+     "hint": "beside:Enamelled iron school desk"
+    },
+    {
+     "template": "Stained beech wooden bench",
+     "room": "Reception",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Stained beech narrow wardrobe",
+     "room": "Reception",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Reception",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Reception": "office.small.c"
+   }
+  },
+  {
+   "name": "Patient Ward",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Corridor",
+     "share": "medium",
+     "use": "hallway",
+     "purpose": "Main corridor linking patient rooms and nurse station"
+    },
+    {
+     "name": "Nurse Station",
+     "share": "small",
+     "use": "office",
+     "purpose": "Nurses' station with charting area"
+    },
+    {
+     "name": "Lounge",
+     "share": "medium",
+     "use": "lounge",
+     "purpose": "Visitor seating area"
+    },
+    {
+     "name": "Bathroom",
+     "share": "small",
+     "use": "washroom",
+     "purpose": "Shared toilet and shower facilities"
+    }
+   ],
+   "connections": [
+    [
+     "Corridor",
+     "Nurse Station"
+    ],
+    [
+     "Corridor",
+     "Lounge"
+    ],
+    [
+     "Corridor",
+     "Bathroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Corridor",
+    "side": "north"
+   },
+   "wealth": {},
+   "unit": {
+    "rooms": [
+     {
+      "name": "Patient Room",
+      "share": "small",
+      "use": "ward",
+      "purpose": "Single patient room with bed and monitoring equipment"
+     },
+     {
+      "name": "Bedroom",
+      "share": "medium",
+      "use": "bedroom",
+      "purpose": "sleeping"
+     }
+    ],
+    "connections": [
+     [
+      "Patient Room",
+      "Bedroom"
+     ]
+    ],
+    "entrance": {
+     "room": "Patient Room",
+     "side": "south"
+    },
+    "furniture": [
+     {
+      "template": "Flannel iron ward bed",
+      "room": "Patient Room",
+      "count": 2,
+      "hint": "row:far"
+     },
+     {
+      "template": "Pressed glass drip stand",
+      "room": "Patient Room",
+      "count": 2,
+      "hint": "beside:Flannel iron ward bed"
+     },
+     {
+      "template": "Enamelled iron school desk",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "near_door"
+     },
+     {
+      "template": "Flannel wingback armchair",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "beside:Enamelled iron school desk"
+     },
+     {
+      "template": "Sheet steel medicine cabinet",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Sheet steel wash basin",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "Wool serge hammock",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "row:far"
+     },
+     {
+      "template": "Enamelled iron chest",
+      "room": "Bedroom",
+      "count": 2,
+      "hint": "beside:Wool serge hammock"
+     },
+     {
+      "template": "Bentwood wardrobe",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Enamelled iron candlestick stand",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "corner"
+     }
+    ],
+    "libraryLayouts": {
+     "Patient Room": "ward.medium.c",
+     "Bedroom": "bedroom.medium.b"
+    }
+   },
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Varnished pine shop counter",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Stained beech wooden bench",
+     "room": "Corridor",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech clerk's desk",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "beside:Stained beech clerk's desk"
+    },
+    {
+     "template": "Bentwood filing cabinet",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "beside:Stained beech clerk's desk"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Nurse Station",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Bentwood tavern booth",
+     "room": "Lounge",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Lounge",
+     "count": 2,
+     "hint": "beside:Bentwood tavern booth+symmetric"
+    },
+    {
+     "template": "Varnished pine small round table",
+     "room": "Lounge",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Sheet steel fireplace",
+     "room": "Lounge",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Bentwood wardrobe",
+     "room": "Lounge",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Lounge",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech commode",
+     "room": "Bathroom",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Bathroom",
+     "count": 1,
+     "hint": "beside:Stained beech commode"
+    },
+    {
+     "template": "Sheet steel tin bath",
+     "room": "Bathroom",
+     "count": 1,
+     "hint": "wall:far+corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Corridor": "passage.medium.a",
+    "Nurse Station": "office.small.a",
+    "Lounge": "common_room.medium.a",
+    "Bathroom": "washroom.small.a"
+   }
+  },
+  {
+   "name": "Ward East",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Hallway",
+     "share": "medium",
+     "use": "hallway",
+     "purpose": "A narrow corridor with doors to patient rooms and the nurses' station, smelling of antiseptic."
+    },
+    {
+     "name": "Nurses' Station",
+     "share": "small",
+     "use": "office",
+     "purpose": "A small, busy office where nurses monitor patients and coordinate care."
+    }
+   ],
+   "connections": [
+    [
+     "Hallway",
+     "Nurses' Station"
+    ]
+   ],
+   "entrance": {
+    "room": "Hallway",
+    "side": "south"
+   },
+   "wealth": {},
+   "unit": {
+    "rooms": [
+     {
+      "name": "Patient Room",
+      "share": "small",
+      "use": "bedroom",
+      "purpose": "A small, stark room with a single bed for one patient, with a window overlooking the grounds."
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Patient Room",
+     "side": "south"
+    },
+    "furniture": [
+     {
+      "template": "Wool serge hammock",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "wall:far+corner"
+     },
+     {
+      "template": "Bentwood night table",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "beside:Wool serge hammock"
+     },
+     {
+      "template": "Bentwood wardrobe",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Enamelled iron storm lantern",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "corner"
+     }
+    ],
+    "libraryLayouts": {
+     "Patient Room": "bedroom.small.a"
+    }
+   },
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Stained beech narrow wardrobe",
+     "room": "Hallway",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Sheet steel turnstile",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Sheet steel coal boiler",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Enamelled iron candlestick stand",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Enamelled iron school desk",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Bentwood kitchen chair",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "beside:Enamelled iron school desk"
+    },
+    {
+     "template": "Stained beech wooden bench",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Bentwood filing cabinet",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Plate glass gas lamp",
+     "room": "Nurses' Station",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Hallway": "passage.medium.b",
+    "Nurses' Station": "office.small.c"
+   }
+  },
+  {
+   "name": "Ward West",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum floor",
+   "rooms": [
+    {
+     "name": "Hallway",
+     "share": "medium",
+     "use": "hallway",
+     "purpose": "A narrow corridor with doors leading to six patient rooms, lit by overhead fixtures."
+    }
+   ],
+   "connections": [],
+   "entrance": {
+    "room": "Hallway",
+    "side": "north"
+   },
+   "wealth": {},
+   "unit": {
+    "rooms": [
+     {
+      "name": "Patient Room",
+      "share": "small",
+      "use": "infirmary",
+      "purpose": "A small, stark room with a single bed, a small cabinet, and a window."
+     },
+     {
+      "name": "Bedroom",
+      "share": "medium",
+      "use": "bedroom",
+      "purpose": "sleeping"
+     }
+    ],
+    "connections": [
+     [
+      "Patient Room",
+      "Bedroom"
+     ]
+    ],
+    "entrance": {
+     "room": "Patient Room",
+     "side": "north"
+    },
+    "furniture": [
+     {
+      "template": "Flannel iron ward bed",
+      "room": "Patient Room",
+      "count": 3,
+      "hint": "row:far"
+     },
+     {
+      "template": "Pressed glass drip stand",
+      "room": "Patient Room",
+      "count": 2,
+      "hint": "beside:Flannel iron ward bed"
+     },
+     {
+      "template": "Enamelled iron school desk",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "near_door"
+     },
+     {
+      "template": "Flannel wingback armchair",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "beside:Enamelled iron school desk"
+     },
+     {
+      "template": "Sheet steel medicine cabinet",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Sheet steel wash basin",
+      "room": "Patient Room",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "Wool serge hammock",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "row:far"
+     },
+     {
+      "template": "Enamelled iron chest",
+      "room": "Bedroom",
+      "count": 2,
+      "hint": "beside:Wool serge hammock"
+     },
+     {
+      "template": "Bentwood wardrobe",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Enamelled iron storm lantern",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "corner"
+     }
+    ],
+    "libraryLayouts": {
+     "Patient Room": "ward.medium.c",
+     "Bedroom": "bedroom.medium.b"
+    }
+   },
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Varnished pine shop counter",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Stained beech wooden bench",
+     "room": "Hallway",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Plate glass gas lamp",
+     "room": "Hallway",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Hallway": "passage.medium.a"
+   }
+  },
+  {
+   "name": "Operating Theatre",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum floor",
+   "rooms": [
+    {
+     "name": "Prep Room",
+     "share": "small",
+     "use": "lobby",
+     "purpose": "a room for surgical preparation and sterilization of instruments"
+    },
+    {
+     "name": "Surgery Room",
+     "share": "large",
+     "use": "surgery",
+     "purpose": "the main sterile operating room equipped for surgical procedures"
+    },
+    {
+     "name": "Supply Room",
+     "share": "small",
+     "use": "storage",
+     "purpose": "a storage area for surgical supplies and equipment"
+    }
+   ],
+   "connections": [
+    [
+     "Prep Room",
+     "Surgery Room"
+    ],
+    [
+     "Surgery Room",
+     "Supply Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Prep Room",
+    "side": "south"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Bentwood tavern booth",
+     "room": "Prep Room",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Wicker potted palm",
+     "room": "Prep Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Enamelled iron candlestick stand",
+     "room": "Prep Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Prep Room",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Pressed glass drip stand",
+     "room": "Surgery Room",
+     "count": 2,
+     "hint": "row:far"
+    },
+    {
+     "template": "Pressed glass drip stand",
+     "room": "Surgery Room",
+     "count": 2,
+     "hint": "beside:Pressed glass drip stand"
+    },
+    {
+     "template": "Sheet steel medicine cabinet",
+     "room": "Surgery Room",
+     "count": 2,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Enamelled iron school desk",
+     "room": "Surgery Room",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Surgery Room",
+     "count": 1,
+     "hint": "beside:Enamelled iron school desk"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Surgery Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Sheet steel keg",
+     "room": "Supply Room",
+     "count": 3,
+     "hint": "corner"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Supply Room",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Enamelled iron chest",
+     "room": "Supply Room",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Supply Room",
+     "count": 1,
+     "hint": "near_door"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Prep Room": "passage.small.b",
+    "Surgery Room": "clinic.medium.b",
+    "Supply Room": "storage.small.b"
+   }
+  },
+  {
+   "name": "Dispensary",
+   "suite": null,
+   "wall": "brick",
+   "ground": "linoleum",
+   "rooms": [
+    {
+     "name": "Dispensing Room",
+     "share": "medium",
+     "use": "apothecary",
+     "purpose": "A counter service area for handing out prescriptions with shelves of medicines"
+    },
+    {
+     "name": "Medicine Storage",
+     "share": "small",
+     "use": "storage",
+     "purpose": "A secure room for storing pharmaceutical stock and supplies"
+    }
+   ],
+   "connections": [
+    [
+     "Dispensing Room",
+     "Medicine Storage"
+    ]
+   ],
+   "entrance": {
+    "room": "Dispensing Room",
+    "side": "north"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Varnished pine shop counter",
+     "room": "Dispensing Room",
+     "count": 1,
+     "hint": "center+away_from_door"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Dispensing Room",
+     "count": 2,
+     "hint": "row:far"
+    },
+    {
+     "template": "Sheet steel keg",
+     "room": "Dispensing Room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Dispensing Room",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Dispensing Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Medicine Storage",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Medicine Storage",
+     "count": 3,
+     "hint": "row:side"
+    },
+    {
+     "template": "Sheet steel keg",
+     "room": "Medicine Storage",
+     "count": 1,
+     "hint": "wall:far+corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Dispensing Room": "shop.medium.c",
+    "Medicine Storage": "storage.small.a"
+   }
+  },
+  {
+   "name": "Nurses' Home",
+   "wall": "brick",
+   "ground": "wooden floor",
+   "rooms": [
+    {
+     "name": "Lobby",
+     "share": "small",
+     "purpose": "entrance hall for the nurses' home",
+     "lootPool": null
+    },
+    {
+     "name": "Corridor",
+     "share": "medium",
+     "purpose": "hallway connecting the lobby, common room, and bedrooms",
+     "lootPool": null
+    },
+    {
+     "name": "Common Room",
+     "share": "medium",
+     "purpose": "sitting area for the nurses to rest and socialize",
+     "lootPool": null
+    }
+   ],
+   "connections": [
+    [
+     "Lobby",
+     "Corridor"
+    ],
+    [
+     "Corridor",
+     "Common Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Lobby",
+    "side": "north"
+   },
+   "furniture": [
+    {
+     "template": "Locker",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "wall:north",
+     "lootPool": "Nurses' Home locker"
+    },
+    {
+     "template": "Wooden Chair",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "wall:east",
+     "lootPool": null
+    },
+    {
+     "template": "Staircase",
+     "room": "Corridor",
+     "count": 1,
+     "hint": "center",
+     "lootPool": null
+    },
+    {
+     "template": "Lamp",
+     "room": "Corridor",
+     "count": 2,
+     "hint": "wall:east+wall:west",
+     "lootPool": null
+    },
+    {
+     "template": "Table",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "center",
+     "lootPool": null
+    },
+    {
+     "template": "Wooden Chair",
+     "room": "Common Room",
+     "count": 4,
+     "hint": "around:Table",
+     "lootPool": null
+    },
+    {
+     "template": "Lamp",
+     "room": "Common Room",
+     "count": 1,
+     "hint": "center",
+     "lootPool": null
+    }
+   ],
+   "unit": {
+    "rooms": [
+     {
+      "name": "Bedroom",
+      "share": "small",
+      "purpose": "private room for one nurse",
+      "lootPool": "Nurses' Home locker"
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Bedroom",
+     "side": "north"
+    },
+    "furniture": [
+     {
+      "template": "Single Bed",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:south",
+      "lootPool": null
+     },
+     {
+      "template": "Locker",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "wall:east",
+      "lootPool": "Nurses' Home locker"
+     },
+     {
+      "template": "Lamp",
+      "room": "Bedroom",
+      "count": 1,
+      "hint": "beside:Locker",
+      "lootPool": null
+     }
+    ]
+   },
+   "yard": null,
+   "stairs": {
+    "room": "Corridor"
+   },
+   "upper": [
+    {
+     "storey": 2,
+     "rooms": [
+      {
+       "name": "Upper Corridor",
+       "share": "medium",
+       "purpose": "hallway on the upper floor connecting the bedrooms and the stairs",
+       "lootPool": null
+      }
+     ],
+     "connections": [],
+     "furniture": [
+      {
+       "template": "Lamp",
+       "room": "Upper Corridor",
+       "count": 1,
+       "hint": "wall:east",
+       "lootPool": null
+      }
+     ],
+     "opening": null
+    }
+   ]
+  },
+  {
+   "name": "Mortuary",
+   "suite": null,
+   "wall": "brick",
+   "ground": "concrete floor",
+   "rooms": [
+    {
+     "name": "Lobby",
+     "share": "small",
+     "use": "lobby",
+     "purpose": "a small entrance area for visitors and staff"
+    },
+    {
+     "name": "Cold Storage",
+     "share": "medium",
+     "use": "storage",
+     "purpose": "a refrigerated room for storing the deceased"
+    },
+    {
+     "name": "Preparation Room",
+     "share": "small",
+     "use": "surgery",
+     "purpose": "a room for embalming and preparation of bodies"
+    }
+   ],
+   "connections": [
+    [
+     "Lobby",
+     "Cold Storage"
+    ],
+    [
+     "Lobby",
+     "Preparation Room"
+    ]
+   ],
+   "entrance": {
+    "room": "Lobby",
+    "side": "south"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Striped ticking settee",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Wicker potted palm",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Lobby",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Cold Storage",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Sheet steel keg",
+     "room": "Cold Storage",
+     "count": 4,
+     "hint": "corner"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Cold Storage",
+     "count": 1,
+     "hint": "row:far"
+    },
+    {
+     "template": "Pressed glass drip stand",
+     "room": "Preparation Room",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Sheet steel medicine cabinet",
+     "room": "Preparation Room",
+     "count": 2,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Preparation Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Preparation Room",
+     "count": 1,
+     "hint": "beside:Pressed glass drip stand"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Lobby": "passage.small.b",
+    "Cold Storage": "storage.medium.b",
+    "Preparation Room": "clinic.small.a"
+   }
+  },
+  {
+   "name": "Textile Mill",
+   "wall": "brick",
+   "ground": "floorboards",
+   "rooms": [
+    {
+     "name": "Factory floor",
+     "share": "large",
+     "use": "workshop",
+     "purpose": "workshop"
+    },
+    {
+     "name": "Machine shop",
+     "share": "medium",
+     "use": "workshop",
+     "purpose": "workshop"
+    },
+    {
+     "name": "Stores",
+     "share": "medium",
+     "use": "warehouse",
+     "purpose": "warehouse"
+    },
+    {
+     "name": "Foreman's office",
+     "share": "small",
+     "use": "office",
+     "purpose": "office"
+    },
+    {
+     "name": "Wash house",
+     "share": "small",
+     "use": "washroom",
+     "purpose": "washroom"
+    }
+   ],
+   "connections": [
+    [
+     "Factory floor",
+     "Machine shop"
+    ],
+    [
+     "Factory floor",
+     "Stores"
+    ],
+    [
+     "Factory floor",
+     "Foreman's office"
+    ],
+    [
+     "Factory floor",
+     "Wash house"
+    ]
+   ],
+   "entrance": {
+    "room": "Factory floor",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Wool serge tailor's bench",
+     "room": "Factory floor",
+     "count": 3,
+     "hint": "row:far"
+    },
+    {
+     "template": "Wool serge tailor's bench",
+     "room": "Factory floor",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Bentwood tool rack",
+     "room": "Factory floor",
+     "count": 1,
+     "hint": "beside:Wool serge tailor's bench"
+    },
+    {
+     "template": "Stained beech crate",
+     "room": "Factory floor",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Bentwood deal table",
+     "room": "Factory floor",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Factory floor",
+     "count": 2,
+     "hint": "around:Bentwood deal table"
+    },
+    {
+     "template": "Enamelled iron chest",
+     "room": "Factory floor",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Striped ticking welding bench",
+     "room": "Machine shop",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Striped ticking welding bench",
+     "room": "Machine shop",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Bentwood tool rack",
+     "room": "Machine shop",
+     "count": 3,
+     "hint": "row:far"
+    },
+    {
+     "template": "Stained beech crate",
+     "room": "Machine shop",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Bentwood kitchen chair",
+     "room": "Machine shop",
+     "count": 1,
+     "hint": "beside:Striped ticking welding bench"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Stores",
+     "count": 4,
+     "hint": "row:far"
+    },
+    {
+     "template": "Stained beech icebox",
+     "room": "Stores",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Stained beech loaded pallet",
+     "room": "Stores",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Enamelled iron chest",
+     "room": "Stores",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Bentwood deal table",
+     "room": "Stores",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Enamelled iron school desk",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Bentwood kitchen chair",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "beside:Enamelled iron school desk"
+    },
+    {
+     "template": "Bentwood filing cabinet",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "beside:Enamelled iron school desk"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Flannel wingback armchair",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Enamelled iron candlestick stand",
+     "room": "Foreman's office",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech commode",
+     "room": "Wash house",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Wash house",
+     "count": 1,
+     "hint": "beside:Stained beech commode"
+    },
+    {
+     "template": "Sheet steel tin bath",
+     "room": "Wash house",
+     "count": 1,
+     "hint": "wall:far+corner"
+    }
+   ],
+   "yard": null,
+   "suite": "factory.works",
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Factory floor": "workshop.large.c",
+    "Machine shop": "workshop.medium.c",
+    "Stores": "storage.medium.c",
+    "Foreman's office": "office.small.a",
+    "Wash house": "washroom.small.a"
+   }
+  },
+  {
+   "name": "Workers' Cottages",
+   "suite": null,
+   "wall": "brick",
+   "ground": "wood",
+   "rooms": [
+    {
+     "name": "Shared hallway",
+     "share": "large",
+     "use": "hallway",
+     "purpose": "A long hallway connecting the units, with doors to each cottage."
+    },
+    {
+     "name": "Shared washroom",
+     "share": "medium",
+     "use": "washroom",
+     "purpose": "A communal washing facility for the residents, with basins and toilets."
+    }
+   ],
+   "connections": [
+    [
+     "Shared hallway",
+     "Shared washroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Shared hallway",
+    "side": "north"
+   },
+   "wealth": {},
+   "unit": {
+    "rooms": [
+     {
+      "name": "Living room",
+      "share": "medium",
+      "use": "living_room",
+      "purpose": "A modest living area with basic furniture for gathering."
+     },
+     {
+      "name": "Kitchen",
+      "share": "small",
+      "use": "kitchen",
+      "purpose": "A small kitchen with a stove and storage for cooking."
+     },
+     {
+      "name": "Dormitory",
+      "share": "medium",
+      "use": "dormitory",
+      "purpose": "A shared sleeping area with multiple beds for the workers."
+     }
+    ],
+    "connections": [
+     [
+      "Living room",
+      "Kitchen"
+     ],
+     [
+      "Living room",
+      "Dormitory"
+     ]
+    ],
+    "entrance": {
+     "room": "Living room",
+     "side": "north"
+    },
+    "furniture": [
+     {
+      "template": "Bentwood tavern booth",
+      "room": "Living room",
+      "count": 1,
+      "hint": "wall:far"
+     },
+     {
+      "template": "Flannel wingback armchair",
+      "room": "Living room",
+      "count": 2,
+      "hint": "beside:Bentwood tavern booth+symmetric"
+     },
+     {
+      "template": "Stained beech low tea table",
+      "room": "Living room",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Sheet steel pot-belly stove",
+      "room": "Living room",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Bentwood wardrobe",
+      "room": "Living room",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Enamelled iron storm lantern",
+      "room": "Living room",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "Cast iron cookstove",
+      "room": "Kitchen",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Varnished pine small round table",
+      "room": "Kitchen",
+      "count": 2,
+      "hint": "beside:Cast iron cookstove"
+     },
+     {
+      "template": "Sheet steel wash basin",
+      "room": "Kitchen",
+      "count": 1,
+      "hint": "wall:side"
+     },
+     {
+      "template": "Stained beech icebox",
+      "room": "Kitchen",
+      "count": 1,
+      "hint": "wall:far"
+     },
+     {
+      "template": "Enamelled iron storm lantern",
+      "room": "Kitchen",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "Wool serge hammock",
+      "room": "Dormitory",
+      "count": 5,
+      "hint": "row:side"
+     },
+     {
+      "template": "Cast iron footlocker",
+      "room": "Dormitory",
+      "count": 2,
+      "hint": "beside:Wool serge hammock"
+     },
+     {
+      "template": "Bentwood deal table",
+      "room": "Dormitory",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Bentwood kitchen chair",
+      "room": "Dormitory",
+      "count": 2,
+      "hint": "around:Bentwood deal table"
+     }
+    ],
+    "libraryLayouts": {
+     "Living room": "common_room.medium.a",
+     "Kitchen": "kitchen.small.c",
+     "Dormitory": "dormitory.medium.b"
+    }
+   },
+   "yard": null,
+   "furniture": [
+    {
+     "template": "York stone bust on a pedestal",
+     "room": "Shared hallway",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Stained beech wooden bench",
+     "room": "Shared hallway",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Varnished pine shop counter",
+     "room": "Shared hallway",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Shared hallway",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Pressed glass paraffin lamp",
+     "room": "Shared hallway",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech commode",
+     "room": "Shared washroom",
+     "count": 2,
+     "hint": "row:side"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Shared washroom",
+     "count": 1,
+     "hint": "row:near"
+    },
+    {
+     "template": "Sheet steel tin bath",
+     "room": "Shared washroom",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Enamelled iron chest",
+     "room": "Shared washroom",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech hatstand",
+     "room": "Shared washroom",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Pressed glass paraffin lamp",
+     "room": "Shared washroom",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Shared hallway": "passage.large.a",
+    "Shared washroom": "washroom.medium.a"
+   }
+  },
+  {
+   "name": "Corner Shop",
+   "wall": "brick",
+   "ground": "floorboards",
+   "rooms": [
+    {
+     "name": "Shop floor",
+     "share": "large",
+     "use": "general_store",
+     "purpose": "general store"
+    },
+    {
+     "name": "Stock room",
+     "share": "small",
+     "use": "storage",
+     "purpose": "storage"
+    },
+    {
+     "name": "Back kitchen",
+     "share": "small",
+     "use": "kitchen",
+     "purpose": "kitchen"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "small",
+     "use": "master_bedroom",
+     "purpose": "master bedroom"
+    },
+    {
+     "name": "Children's room",
+     "share": "small",
+     "use": "bedroom",
+     "purpose": "bedroom"
+    }
+   ],
+   "connections": [
+    [
+     "Shop floor",
+     "Stock room"
+    ],
+    [
+     "Shop floor",
+     "Back kitchen"
+    ],
+    [
+     "Back kitchen",
+     "Bedchamber"
+    ],
+    [
+     "Back kitchen",
+     "Children's room"
+    ]
+   ],
+   "entrance": {
+    "room": "Shop floor",
+    "side": "south"
+   },
+   "furniture": [
+    {
+     "template": "Varnished pine shop counter",
+     "room": "Shop floor",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Sheet steel keg",
+     "room": "Shop floor",
+     "count": 3,
+     "hint": "beside:Varnished pine shop counter"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Shop floor",
+     "count": 6,
+     "hint": "row:far"
+    },
+    {
+     "template": "Sheet steel iron shelf",
+     "room": "Shop floor",
+     "count": 3,
+     "hint": "center"
+    },
+    {
+     "template": "Bentwood kitchen chair",
+     "room": "Shop floor",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Enamelled iron storm lantern",
+     "room": "Shop floor",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Stained beech narrow wardrobe",
+     "room": "Shop floor",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Enamelled iron steel drum",
+     "room": "Stock room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Varnished pine goods shelf",
+     "room": "Stock room",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Enamelled iron chest",
+     "room": "Stock room",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Pressed glass paraffin lamp",
+     "room": "Stock room",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Cast iron cookstove",
+     "room": "Back kitchen",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Varnished pine small round table",
+     "room": "Back kitchen",
+     "count": 1,
+     "hint": "beside:Cast iron cookstove"
+    },
+    {
+     "template": "Sheet steel wash basin",
+     "room": "Back kitchen",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Stained beech icebox",
+     "room": "Back kitchen",
+     "count": 1,
+     "hint": "wall:side+corner"
+    },
+    {
+     "template": "Plate glass gas lamp",
+     "room": "Back kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Calico double bedstead",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:side+away_from_door"
+    },
+    {
+     "template": "Bentwood night table",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "beside:Calico double bedstead+symmetric"
+    },
+    {
+     "template": "Stained beech narrow wardrobe",
+     "room": "Children's room",
+     "count": 1,
+     "hint": "wall:far"
+    }
+   ],
+   "yard": null,
+   "suite": "shop.general",
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Shop floor": "shop.large.b",
+    "Stock room": "storage.small.b",
+    "Back kitchen": "kitchen.small.a",
+    "Bedchamber": "bedroom.master.small.b",
+    "Children's room": "bedroom.small.b"
+   }
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Evelyn Hart",
+   "gender": "female",
+   "description": "Evelyn wants to finish her shift early to attend a union meeting, but she worries that the ward is understaffed and patients may suffer.",
+   "physicalDescription": "She is slight of build, wears a starched white uniform, and has her hair pinned in a tight bun; a small scar on her left cheek marks a childhood fall.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 1,
+   "role": "nurse",
+   "work": "Patient Ward",
+   "sells": false
+  },
+  {
+   "name": "Margaret O'Connell",
+   "gender": "female",
+   "description": "Margaret aims to save enough for a down payment on a house, yet she fears the rising rent will swallow her savings.",
+   "physicalDescription": "Sturdy and practical, she wears a cardigan over her uniform and sturdy boots; she always carries a rosary in her pocket.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 2,
+   "role": "nurse",
+   "work": "Patient Ward",
+   "sells": false
+  },
+  {
+   "name": "Alice Penrose",
+   "gender": "female",
+   "description": "Alice hopes to be promoted to head nurse, but she worries that favouritism will block her advancement.",
+   "physicalDescription": "Tall and sharp‑eyed, she wears round glasses and a silver locket; her hair is pulled back in a severe bun.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 3,
+   "role": "nurse",
+   "work": "Ward East",
+   "sells": false
+  },
+  {
+   "name": "Dorothy Whitaker",
+   "gender": "female",
+   "description": "Dorothy longs to learn the new surgical techniques, yet she dreads the endless hours that will keep her from her family.",
+   "physicalDescription": "Slender and quick, she wears a pale blue scarf around her neck; a small caduceus tattoo is visible on her left wrist.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 4,
+   "role": "nurse",
+   "work": "Ward East",
+   "sells": false
+  },
+  {
+   "name": "Ethel Brown",
+   "gender": "female",
+   "description": "Ethel wants to be home to care for her sick child, but she worries that the hospital will not grant her leave.",
+   "physicalDescription": "Plump and warm, she wears a wool coat over her uniform; a simple wedding ring glints on her finger.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 5,
+   "role": "nurse",
+   "work": "Ward West",
+   "sells": false
+  },
+  {
+   "name": "Mabel Carter",
+   "gender": "female",
+   "description": "Mabel dreams of opening a private clinic, though she fears the debt that would follow.",
+   "physicalDescription": "Average in height, she wears a floral apron over her dress; a small mole sits on her chin.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 6,
+   "role": "nurse",
+   "work": "Ward West",
+   "sells": false
+  },
+  {
+   "name": "Thomas Reed",
+   "gender": "male",
+   "description": "Thomas seeks acceptance among the nursing staff, but he worries that prejudice will keep him from being treated as an equal.",
+   "physicalDescription": "Broad‑shouldered and calm, he wears a dark navy uniform; the tip of his left little finger is missing from an old accident.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 7,
+   "role": "nurse",
+   "work": "Operating Theatre",
+   "sells": false
+  },
+  {
+   "name": "Ruth Lang",
+   "gender": "female",
+   "description": "Ruth longs to travel abroad, yet she worries that the hospital's limited vacation policy will keep her in the mill town.",
+   "physicalDescription": "Petite and quick, she wears a beret and a trench coat; a thin scar runs down her left knee.",
+   "home": "Nurses' Home",
+   "kind": "adult",
+   "flat": 8,
+   "role": "nurse",
+   "work": "Operating Theatre",
+   "sells": false
+  },
+  {
+   "name": "Harold Finch",
+   "gender": "male",
+   "role": "shopkeeper",
+   "home": "Corner Shop",
+   "work": "Corner Shop",
+   "description": "Harold runs the shop with his wife Agnes, worrying about the rising price of tea.",
+   "physicalDescription": "Short and stocky, wearing a worn tweed jacket, spectacles perched on his nose.",
+   "partner": "Agnes Finch",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Agnes Finch",
+   "gender": "female",
+   "role": "shopkeeper",
+   "home": "Corner Shop",
+   "work": "Corner Shop",
+   "description": "Agnes keeps the shop's ledger with her husband Harold, dreaming of a holiday by the sea.",
+   "physicalDescription": "Tall and wiry, with a floral apron and a silver locket.",
+   "partner": "Harold Finch",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Frank Evans",
+   "gender": "male",
+   "role": "admin",
+   "home": "Workers' Cottages",
+   "work": "Reception",
+   "description": "Frank works as a clerk at the hospital with his wife Lily, hoping to save enough for a better home.",
+   "physicalDescription": "Medium build, with a neat shirt and a pocket watch.",
+   "partner": "Lily Evans",
+   "kind": "adult",
+   "flat": 1,
+   "sells": false
+  },
+  {
+   "name": "Lily Evans",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Lily weaves cotton at the mill alongside her husband Frank's hospital job, fearing the mill's closures.",
+   "physicalDescription": "Slender, with a faded headscarf and tired eyes.",
+   "partner": "Frank Evans",
+   "kind": "adult",
+   "flat": 1,
+   "sells": false
+  },
+  {
+   "name": "Tommy Evans",
+   "gender": "male",
+   "role": "the hospital clerk's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Tommy spends his days playing in the alley, dreaming of becoming a doctor like his father.",
+   "physicalDescription": "Small, with a missing front tooth and a cap too big for his head.",
+   "kind": "child",
+   "flat": 1,
+   "sells": false
+  },
+  {
+   "name": "Nell Evans",
+   "gender": "female",
+   "role": "the textile worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Nell helps her mother Lily with chores, wishing she could go to school instead.",
+   "physicalDescription": "Frail, with a shawl and a quiet demeanor.",
+   "kind": "child",
+   "flat": 1,
+   "sells": false
+  },
+  {
+   "name": "George Harris",
+   "gender": "male",
+   "role": "admin",
+   "home": "Workers' Cottages",
+   "work": "Reception",
+   "description": "George manages the hospital's reception with his wife Martha, frustrated by the limited resources.",
+   "physicalDescription": "Tall and thin, with a stern expression and a clipboard.",
+   "partner": "Martha Harris",
+   "kind": "adult",
+   "flat": 2,
+   "sells": false
+  },
+  {
+   "name": "Martha Harris",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Martha works the loom at the mill while her husband George administers the hospital, resenting the long hours.",
+   "physicalDescription": "Broad-shouldered, with a kerchief on her head.",
+   "partner": "George Harris",
+   "kind": "adult",
+   "flat": 2,
+   "sells": false
+  },
+  {
+   "name": "Peter Harris",
+   "gender": "male",
+   "role": "the hospital administrator's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Peter skips school to read books, aspiring to be a writer like his hero Dickens.",
+   "physicalDescription": "Thin, with ink-stained fingers and a notebook in his pocket.",
+   "kind": "child",
+   "flat": 2,
+   "sells": false
+  },
+  {
+   "name": "Susan Harris",
+   "gender": "female",
+   "role": "the textile worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Susan helps her mother Martha with the household, dreaming of escaping the mill town.",
+   "physicalDescription": "Bright-eyed, with a ribbon in her hair.",
+   "kind": "child",
+   "flat": 2,
+   "sells": false
+  },
+  {
+   "name": "Hilda Grant",
+   "gender": "female",
+   "description": "Hilda Grant, the pharmacist and wife of Ernest, works diligently to manage the dispensary amidst the town's industrial chaos, wanting to improve public health, but she worries about the shortage of essential medicines.",
+   "physicalDescription": "medium build, wears a practical wool dress with a white pharmacist's coat, and her silver-rimmed glasses reflect her attentive nature.",
+   "partner": "Ernest Grant",
+   "home": "Workers' Cottages",
+   "kind": "adult",
+   "flat": 3,
+   "role": "pharmacist",
+   "work": "Dispensary",
+   "sells": false
+  },
+  {
+   "name": "Ernest Grant",
+   "gender": "male",
+   "description": "Ernest Grant, a mill worker and husband to Hilda, toils endlessly at the textile mill, seeking better wages for his family, but he fears the constant threat of accidents on the noisy floor.",
+   "physicalDescription": "sturdy build, dressed in worn overalls with a lunch pail, and his hands are calloused from years of handling machinery.",
+   "partner": "Hilda Grant",
+   "home": "Workers' Cottages",
+   "kind": "adult",
+   "flat": 3,
+   "role": "mill worker",
+   "work": "Textile Mill",
+   "sells": false
+  },
+  {
+   "name": "Linda Grant",
+   "gender": "female",
+   "role": "the pharmacist's daughter",
+   "description": "Linda Grant, the pharmacist's daughter, assists with household chores while dreaming of becoming a nurse, wanting to help others like her mother, but she worries about her mother's exhausting work hours.",
+   "physicalDescription": "slight build, wears a simple pinafore dress with ribbons in her hair, and she carries a small first-aid kit as a cherished gift.",
+   "home": "Workers' Cottages",
+   "kind": "child",
+   "flat": 3,
+   "work": "Workers' Cottages",
+   "sells": false
+  },
+  {
+   "name": "David Grant",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "description": "David Grant, the mill worker's son, plays energetically near the mill races, aspiring to work in the mill like his father, but he fears the dangerous machinery that dominates his world.",
+   "physicalDescription": "wiry build, dressed in short trousers with a cap, and he has a toy mill crafted from scrap metal.",
+   "home": "Workers' Cottages",
+   "kind": "child",
+   "flat": 3,
+   "work": "Workers' Cottages",
+   "sells": false
+  },
+  {
+   "name": "Anne Grant",
+   "gender": "female",
+   "role": "the mill worker's mother",
+   "description": "Anne Grant, the mill worker's mother, spends her days mending clothes and tending the garden, hoping for her family's safety, but she worries about the long-term health effects of mill dust on her son.",
+   "physicalDescription": "frail build, wears a dark shawl over a faded dress, and she keeps a worn Bible for comfort by her bedside.",
+   "home": "Workers' Cottages",
+   "kind": "elder",
+   "flat": 3,
+   "work": "Workers' Cottages",
+   "sells": false
+  },
+  {
+   "name": "Walter Parker",
+   "gender": "male",
+   "description": "Walter Parker, the mortician and husband to Clara, performs his duties with solemn precision, wanting to offer dignity to the deceased, but he feels like a misfit as the rising death toll from accidents weighs on his mind.",
+   "physicalDescription": "tall and thin, wears a black suit with a high collar, and he carries a silver pocket watch that symbolizes his obsession with time.",
+   "partner": "Clara Parker",
+   "home": "Workers' Cottages",
+   "kind": "adult",
+   "flat": 4,
+   "role": "mortician",
+   "work": "Mortuary",
+   "sells": false
+  },
+  {
+   "name": "Clara Parker",
+   "gender": "female",
+   "description": "Clara Parker, a mill worker and wife of Walter, finds solace in the rhythm of the looms, seeking independence through her work, but she feels isolated due to her husband's morbid profession and the town's gossip.",
+   "physicalDescription": "average build, dressed in a work shirt and trousers with a headscarf, and she keeps a small loom model as a reminder of her passion.",
+   "partner": "Walter Parker",
+   "home": "Workers' Cottages",
+   "kind": "adult",
+   "flat": 4,
+   "role": "mill worker",
+   "work": "Textile Mill",
+   "sells": false
+  },
+  {
+   "name": "Jane Parker",
+   "gender": "female",
+   "role": "the mortician's daughter",
+   "description": "Jane Parker, the mortician's daughter, withdraws into books and the cemetery, wanting to understand the cycle of life and death, but she worries about her father's emotional distance and her own sense of belonging.",
+   "physicalDescription": "pale build, wears a dark dress with white socks, and she carries a book of poetry that reflects her introspective nature.",
+   "home": "Workers' Cottages",
+   "kind": "child",
+   "flat": 4,
+   "work": "Workers' Cottages",
+   "sells": false
+  },
+  {
+   "name": "Robert Parker",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "description": "Robert Parker, the mill worker's son, climbs the mill chimneys during his free time, dreaming of escaping the soot-filled town, but he fears the industrial landscape that defines his childhood.",
+   "physicalDescription": "lean build, wears shorts with a sweater, and he has a piece of chalk for drawing adventures on the walls.",
+   "home": "Workers' Cottages",
+   "kind": "child",
+   "flat": 4,
+   "work": "Workers' Cottages",
+   "sells": false
+  },
+  {
+   "name": "Arthur Jones",
+   "gender": "male",
+   "role": "doctor",
+   "home": "Workers' Cottages",
+   "work": "Patient Ward",
+   "description": "Arthur Jones is a compassionate doctor who wants to reduce the industrial accidents in Mill Town, but worries about the hospital's limited resources.",
+   "physicalDescription": "Tall and lean, Arthur wears a white coat over a shirt and tie, with a stethoscope around his neck, and tired eyes from long shifts.",
+   "partner": "Elizabeth Jones",
+   "kind": "adult",
+   "flat": 5,
+   "sells": false
+  },
+  {
+   "name": "Elizabeth Jones",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Elizabeth Jones is a resilient mill worker who dreams of a better life for her children, but fears the dangers of the loom.",
+   "physicalDescription": "Short and sturdy, Elizabeth wears a floral dress with a shawl, her hands rough from work, and a determined expression.",
+   "partner": "Arthur Jones",
+   "kind": "adult",
+   "flat": 5,
+   "sells": false
+  },
+  {
+   "name": "Robert Jones",
+   "gender": "male",
+   "role": "the doctor's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Robert Jones is the doctor's son who wants to become a mechanic, but worries about the soot covering everything.",
+   "physicalDescription": "A boy of twelve, Robert wears shorts and a shirt, with messy hair, and always has grease under his fingernails from tinkering.",
+   "kind": "child",
+   "flat": 5,
+   "sells": false
+  },
+  {
+   "name": "Susan Jones",
+   "gender": "female",
+   "role": "the doctor's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Susan Jones is the doctor's daughter who aspires to be a nurse like her father's colleagues, but fears the long hours.",
+   "physicalDescription": "A girl of ten, Susan wears a pinafore dress, with braided hair, and carries a book about nursing under her arm.",
+   "kind": "child",
+   "flat": 5,
+   "sells": false
+  },
+  {
+   "name": "Emily Williams",
+   "gender": "female",
+   "role": "doctor",
+   "home": "Workers' Cottages",
+   "work": "Ward East",
+   "description": "Emily Williams is a pioneering female doctor who wants to prove herself in the hospital, but worries about the prejudice she faces.",
+   "physicalDescription": "Emily is of medium height, with sharp features, wears a doctor's coat over a skirt, and has a calm demeanor.",
+   "partner": "David Williams",
+   "kind": "adult",
+   "flat": 6,
+   "sells": false
+  },
+  {
+   "name": "David Williams",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "David Williams is a mill worker who supports his wife's career, but feels trapped by the mill's routine.",
+   "physicalDescription": "Broad-shouldered, David wears overalls and a cap, with a weary look from the factory noise.",
+   "partner": "Emily Williams",
+   "kind": "adult",
+   "flat": 6,
+   "sells": false
+  },
+  {
+   "name": "James Williams",
+   "gender": "male",
+   "role": "the doctor's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "James Williams is the doctor's son who wants to play football, but is concerned about the smog.",
+   "physicalDescription": "A boy of eight, James wears a simple shirt and shorts, with a ball tucked under his arm.",
+   "kind": "child",
+   "flat": 6,
+   "sells": false
+  },
+  {
+   "name": "Emma Williams",
+   "gender": "female",
+   "role": "the doctor's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Emma Williams is the doctor's daughter who enjoys drawing the mill town scenes, but worries about the lack of colors.",
+   "physicalDescription": "A girl of six, Emma wears a bright dress, with a sketchbook in hand, and a curious eye.",
+   "kind": "child",
+   "flat": 6,
+   "sells": false
+  },
+  {
+   "name": "John Green",
+   "gender": "male",
+   "role": "doctor",
+   "home": "Workers' Cottages",
+   "work": "Ward West",
+   "description": "John Green is a doctor at Ward West, working tirelessly to treat patients from the mill accidents, and he wants to provide a stable life for his wife Mary and their children.",
+   "physicalDescription": "Tall and sturdy, he wears a white doctor's coat with a pocket watch, always with a stethoscope around his neck.",
+   "partner": "Mary Green",
+   "kind": "adult",
+   "flat": 7,
+   "sells": false
+  },
+  {
+   "name": "Mary Green",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Mary Green works at the Textile Mill, enduring the soot and noise to support her husband John and their family, hoping for a day when the mill conditions improve.",
+   "physicalDescription": "Petite and weary, she wears a faded cotton dress with a headscarf, her hands rough from handling cloth.",
+   "partner": "John Green",
+   "kind": "adult",
+   "flat": 7,
+   "sells": false
+  },
+  {
+   "name": "Patricia Green",
+   "gender": "female",
+   "role": "the doctor's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Patricia Green is the daughter of John and Mary, helping with household chores and dreaming of becoming a nurse like her father's colleagues.",
+   "physicalDescription": "Slim and bright-eyed, she wears a pinafore dress with a book tucked under her arm, often found reading by the window.",
+   "kind": "child",
+   "flat": 7,
+   "sells": false
+  },
+  {
+   "name": "Edward Green",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Edward Green is the son of John and Mary, playing in the mill town streets and wanting to become an engineer to escape the sooty environment.",
+   "physicalDescription": "Short and energetic, he wears short trousers with a cap, his knees always dirty from outdoor play.",
+   "kind": "child",
+   "flat": 7,
+   "sells": false
+  },
+  {
+   "name": "Florence White",
+   "gender": "female",
+   "role": "doctor",
+   "home": "Workers' Cottages",
+   "work": "Operating Theatre",
+   "description": "Florence White is a doctor at the hospital's operating theatre, striving to save lives despite the limited resources, and she wants to partner with her husband Henry in building a better future.",
+   "physicalDescription": "Of medium height, she wears a lab coat with her hair pinned up, carrying a medical bag that is always by her side.",
+   "partner": "Henry White",
+   "kind": "adult",
+   "flat": 8,
+   "sells": false
+  },
+  {
+   "name": "Henry White",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Henry White works at the Textile Mill, feeling trapped by the relentless machinery and dreaming of escaping the soot-filled life with his wife Florence.",
+   "physicalDescription": "Broad-shouldered but slumped, he wears overalls with a lunch pail, his face often grimy from the mill dust.",
+   "partner": "Florence White",
+   "kind": "adult",
+   "flat": 8,
+   "sells": false
+  },
+  {
+   "name": "Marian White",
+   "gender": "female",
+   "role": "the doctor's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Marian White is the daughter of Florence and Henry, assisting her mother with medical books and aspiring to become a nurse to help in the community.",
+   "physicalDescription": "Delicate and thoughtful, she wears a cardigan with glasses, often reading by the window with a notebook in hand.",
+   "kind": "child",
+   "flat": 8,
+   "sells": false
+  },
+  {
+   "name": "William White",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "William White is the son of Florence and Henry, rejecting the mill life and wanting to follow his mother into medicine, despite expectations to work in the mill.",
+   "physicalDescription": "Lanky and intense, he wears a shirt with rolled sleeves, sketching medical diagrams in a notebook under his pillow.",
+   "kind": "child",
+   "flat": 8,
+   "sells": false
+  },
+  {
+   "name": "John Taylor",
+   "gender": "male",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "John is a loom operator who secretly studies anatomy texts, wanting to become a doctor, but fears the mill's soot will ruin his chances.",
+   "physicalDescription": "broad-shouldered, wearing a faded denim shirt, with ink-stained fingers from his hidden notes.",
+   "partner": "Mary Taylor",
+   "kind": "adult",
+   "flat": 9,
+   "role": "mill worker",
+   "sells": false
+  },
+  {
+   "name": "Mary Taylor",
+   "gender": "female",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Mary works the weaving frame, dreaming of opening a small shop, yet worries the rising accidents will close the mill.",
+   "physicalDescription": "slender, in a patched cotton dress, with a scar on her left cheek from a stray shuttle.",
+   "partner": "John Taylor",
+   "kind": "adult",
+   "flat": 9,
+   "role": "mill worker",
+   "sells": false
+  },
+  {
+   "name": "Elizabeth Taylor",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Elizabeth helps her mother with chores, hoping to learn reading, but is afraid of the dark corridor at night.",
+   "physicalDescription": "small, with curly brown hair, wearing a hand-me-down pinafore.",
+   "kind": "child",
+   "flat": 9,
+   "sells": false
+  },
+  {
+   "name": "Thomas Taylor",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Thomas runs errands for the mill, wanting to become an engineer, yet worries his small hands can't handle the heavy machines.",
+   "physicalDescription": "lanky, in a too-large cap, with a smudge of grease on his cheek.",
+   "kind": "child",
+   "flat": 9,
+   "sells": false
+  },
+  {
+   "name": "William Clark",
+   "gender": "male",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "William tends the dye vats, seeking a transfer to the hospital, but fears his lack of education will keep him stuck.",
+   "physicalDescription": "stocky, wearing a leather apron, with a tattoo of a ship on his forearm.",
+   "partner": "Margaret Clark",
+   "kind": "adult",
+   "flat": 10,
+   "role": "mill worker",
+   "sells": false
+  },
+  {
+   "name": "Margaret Clark",
+   "gender": "female",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Margaret works the spinning jenny, wanting to move to the city, but worries about leaving her aging mother.",
+   "physicalDescription": "tall, in a wool cardigan, with a locket containing a faded photo.",
+   "partner": "William Clark",
+   "kind": "adult",
+   "flat": 10,
+   "role": "mill worker",
+   "sells": false
+  },
+  {
+   "name": "Susan Clark",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Susan helps with cooking, dreaming of becoming a nurse, yet fears the hospital's long hours.",
+   "physicalDescription": "fair-haired, wearing a simple cotton dress, with a bandage on her knee.",
+   "kind": "child",
+   "flat": 10,
+   "sells": false
+  },
+  {
+   "name": "David Clark",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "David plays near the mill, wanting to learn the loom, but is scared of the loud clatter.",
+   "physicalDescription": "short, with messy blond hair, wearing a hand-me-down shirt.",
+   "kind": "child",
+   "flat": 10,
+   "sells": false
+  },
+  {
+   "name": "Albert Smith",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Albert Smith, husband of Beatrice, toils at the Textile Mill to provide for their family, but worries about the rising accidents in the grimy town.",
+   "physicalDescription": "a tall man with soot-streaked face, wearing a cap and overalls, his boots worn at the heels",
+   "partner": "Beatrice Smith",
+   "kind": "adult",
+   "flat": 11,
+   "sells": false
+  },
+  {
+   "name": "Beatrice Smith",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Beatrice Smith, wife of Albert, works alongside him at the mill, seeking safety for their children amid the constant noise.",
+   "physicalDescription": "a wiry woman in a simple cotton dress, her hands red from the hot water in the mill's dyeing room",
+   "partner": "Albert Smith",
+   "kind": "adult",
+   "flat": 11,
+   "sells": false
+  },
+  {
+   "name": "Charles Smith",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Charles Smith, the mill worker's son, helps with household chores while dreaming of leaving the mill town.",
+   "physicalDescription": "a boy of twelve with a gap-toothed grin, dressed in hand-me-down trousers",
+   "kind": "child",
+   "flat": 11,
+   "sells": false
+  },
+  {
+   "name": "Daisy Smith",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Daisy Smith, the mill worker's daughter, plays with other children in the cobblestone streets, her laughter echoing.",
+   "physicalDescription": "a small girl with curly hair, wearing a pinafore, clutching a homemade doll",
+   "kind": "child",
+   "flat": 11,
+   "sells": false
+  },
+  {
+   "name": "Frederick Moore",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Frederick Moore, husband of Gwendolyn, works the looms at the mill, but secretly wishes for a life beyond the factory walls.",
+   "physicalDescription": "a man of medium build with a thoughtful expression, often seen with a notebook tucked in his pocket",
+   "partner": "Gwendolyn Moore",
+   "kind": "adult",
+   "flat": 12,
+   "sells": false
+  },
+  {
+   "name": "Gwendolyn Moore",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Gwendolyn Moore, wife of Frederick, endures the long shifts at the mill, supporting her family despite the fatigue.",
+   "physicalDescription": "a woman with sharp features, in a woolen skirt and blouse, her hair in a tight bun",
+   "partner": "Frederick Moore",
+   "kind": "adult",
+   "flat": 12,
+   "sells": false
+  },
+  {
+   "name": "Edward Moore",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Edward Moore, the mill worker's son, assists his father at the mill during holidays, learning the trade.",
+   "physicalDescription": "a teenager with acne-prone skin, wearing a flat cap and jacket",
+   "kind": "child",
+   "flat": 12,
+   "sells": false
+  },
+  {
+   "name": "Rachel Moore",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Rachel Moore, the mill worker's daughter, is often ill and stays home, her health weakened by the town's pollution.",
+   "physicalDescription": "a frail girl with pale skin and dark hair, wrapped in a shawl, sitting by the window",
+   "kind": "child",
+   "flat": 12,
+   "sells": false
+  },
+  {
+   "name": "Alfred Anderson",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Alfred and Maud are partners; he wants to provide a stable home for their children but worries that the mill's relentless pace will lead to a serious injury.",
+   "physicalDescription": "Alfred is of medium height with a sturdy build, wearing a worn tweed jacket over a simple shirt, his hands calloused from years at the mill.",
+   "partner": "Maud Anderson",
+   "kind": "adult",
+   "flat": 13,
+   "sells": false
+  },
+  {
+   "name": "Maud Anderson",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Maud and Alfred are partners; she desires a quieter life away from the mill's noise but fears that their financial dependence on the factory will trap them forever.",
+   "physicalDescription": "Maud is petite with flour-dusted apron, her hair tied back in a bun, and tired eyes from long hours of work and household chores.",
+   "partner": "Alfred Anderson",
+   "kind": "adult",
+   "flat": 13,
+   "sells": false
+  },
+  {
+   "name": "Colin Anderson",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Colin wants to learn a skilled trade like carpentry to escape the mill, but he worries that his family's needs will force him into the factory at a young age.",
+   "physicalDescription": "Colin is a lanky boy with messy hair, always seen with a book under his arm, wearing shorts and a shirt that are slightly too big for him.",
+   "kind": "child",
+   "flat": 13,
+   "sells": false
+  },
+  {
+   "name": "Deirdre Anderson",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Deirdre dreams of becoming a teacher to leave the mill town behind, but she fears that her family's poverty and the lack of opportunities will crush her aspirations.",
+   "physicalDescription": "Deirdre is a slender girl with bright, curious eyes, often seen mending clothes in a faded dress, her hair loose and slightly untamed.",
+   "kind": "child",
+   "flat": 13,
+   "sells": false
+  },
+  {
+   "name": "Victor Baker",
+   "gender": "male",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Victor and Violet are partners; he wants to save enough money to move to a better neighborhood but worries that a downturn in the textile industry could cost him his job.",
+   "physicalDescription": "Victor is tall and broad-shouldered, with a scar on his left cheek from a past mill accident, wearing sturdy work boots and a cap tilted forward.",
+   "partner": "Violet Baker",
+   "kind": "adult",
+   "flat": 14,
+   "sells": false
+  },
+  {
+   "name": "Violet Baker",
+   "gender": "female",
+   "role": "mill worker",
+   "home": "Workers' Cottages",
+   "work": "Textile Mill",
+   "description": "Violet and Victor are partners; she seeks a safer environment for their children but is anxious about the long hours she spends working away from home.",
+   "physicalDescription": "Violet is a woman of average height with a kind face, wearing a faded floral dress and an apron, her hair neatly pinned under a hairnet.",
+   "partner": "Victor Baker",
+   "kind": "adult",
+   "flat": 14,
+   "sells": false
+  },
+  {
+   "name": "Donald Baker",
+   "gender": "male",
+   "role": "the mill worker's son",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Donald wants to play with his friends and explore the town, but he worries that he has to help with household chores instead of enjoying his childhood.",
+   "physicalDescription": "Donald is a cheerful boy with freckles, dressed in a cap and jacket, often seen playing with a small toy cart near the cottage.",
+   "kind": "child",
+   "flat": 14,
+   "sells": false
+  },
+  {
+   "name": "Gladys Baker",
+   "gender": "female",
+   "role": "the mill worker's daughter",
+   "home": "Workers' Cottages",
+   "work": "Workers' Cottages",
+   "description": "Gladys aspires to become a nurse at Mill Hospital to help others, but she fears that her limited education and the town's prejudice will hold her back.",
+   "physicalDescription": "Gladys is a quiet girl with neat braids, wearing a pinafore over her dress, always carrying a book about nursing or distant places.",
+   "kind": "child",
+   "flat": 14,
+   "sells": false
+  }
+ ],
+ "player": {
+  "name": "Eleanor Vance",
+  "gender": "female",
+  "role": "Public Health Inspector",
+  "home": "Ward East",
+  "work": "Patient Ward",
+  "description": "A dedicated public health inspector from the city, here to assess and improve the hospital's response to the rising tide of industrial accidents.",
+  "physicalDescription": "Of medium build with keen, observant eyes, dressed in a practical wool skirt and blouse, with a formal hat perched on her head and a leather satchel always at her side.",
+  "inventory": [
+   [
+    "Notepad",
+    1
+   ],
+   [
+    "Pen",
+    1
+   ],
+   [
+    "Thermometer",
+    1
+   ],
+   [
+    "Stethoscope",
+    1
+   ]
+  ],
+  "equipment": {
+   "head": "Hat"
+  }
+ },
+ "compounds": [
+  {
+   "name": "Hospital Main Building",
+   "zone": "Hospital Grounds",
+   "shape": "spine",
+   "axis": "ew",
+   "spineWidth": 3,
+   "hub": "start",
+   "parts": [
+    {
+     "building": "Reception",
+     "at": "spine:hub"
+    },
+    {
+     "building": "Ward East",
+     "at": "spine:left:0"
+    },
+    {
+     "building": "Ward West",
+     "at": "spine:right:0"
+    },
+    {
+     "building": "Operating Theatre",
+     "at": "spine:left:1"
+    },
+    {
+     "building": "Dispensary",
+     "at": "spine:right:1"
+    }
+   ]
+  }
+ ],
+ "narrativeRules": [
+  "Emphasize the relentless industrial noise and soot to underscore the town's grimy atmosphere.",
+  "Highlight the strain on nurses and doctors due to rising industrial accidents.",
+  "Introduce unexpected events like equipment failures or sudden patient influxes.",
+  "Use hourly updates to track changing conditions in the hospital and town.",
+  "Incorporate rumours and gossip to add depth to interactions and plot twists.",
+  "Maintain a tense tone, reflecting the high stakes of medical care in a resource-strapped setting."
+ ],
+ "narrativeFlavor": "intense",
+ "difficulty": "medium",
+ "currency": {
+  "name": "penny",
+  "description": "A small coin, worth a fraction of a day's wage in this mill town.",
+  "format": "5 pennies"
+ },
+ "startingCurrency": 150,
+ "attributes": {
+  "strength": 4,
+  "dexterity": 5,
+  "intellect": 6,
+  "perception": 6,
+  "charisma": 4
+ },
+ "skills": {
+  "Medicine": 2,
+  "Surgery": 1,
+  "Nursing": 1,
+  "Pharmacy": 1,
+  "Diagnosis": 2,
+  "First Aid": 1,
+  "Patient Care": 1,
+  "Emergency Response": 1,
+  "Investigation": 0,
+  "Perception": 1,
+  "Charisma": 1,
+  "Social Skills": 1,
+  "Strength": 0,
+  "Dexterity": 0,
+  "Intellect": 1,
+  "Endurance": 1,
+  "Observation": 1,
+  "Communication": 1
+ },
+ "weatherKinds": [
+  "clear",
+  "rain",
+  "fog"
+ ],
+ "variables": [
+  {
+   "name": "Rumours",
+   "emoji": "🔔",
+   "type": "text",
+   "value": "Whispers of unsafe mill conditions are spreading through the town.",
+   "initial": "Whispers of unsafe mill conditions are spreading through the town."
+  },
+  {
+   "name": "Supplies",
+   "emoji": "🧪",
+   "type": "number",
+   "value": 10,
+   "initial": 10,
+   "min": 0,
+   "max": 20,
+   "ratePerHour": -0.1,
+   "lowZone": {
+    "threshold": 3,
+    "effectDesc": "Supply shortage",
+    "emoji": "⚠️"
+   }
+  },
+  {
+   "name": "Patient Load",
+   "emoji": "🛏️",
+   "type": "number",
+   "value": 8,
+   "initial": 8,
+   "min": 0,
+   "max": 15,
+   "ratePerHour": 0.05,
+   "highZone": {
+    "threshold": 12,
+    "effectDesc": "Overcrowded wards",
+    "emoji": "🚨"
+   }
+  },
+  {
+   "name": "Staff Morale",
+   "emoji": "😟",
+   "type": "number",
+   "value": 7,
+   "initial": 7,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.05,
+   "lowZone": {
+    "threshold": 3,
+    "effectDesc": "Low morale",
+    "emoji": "憂"
+   }
+  }
+ ],
+ "perkTrees": [
+  {
+   "name": "Inspection Expertise",
+   "root": {
+    "name": "Keen Observation",
+    "type": "passive",
+    "description": "You automatically detect poor hygiene conditions in any area you visit.",
+    "physicalDescription": "A magnifying glass focusing on a dirty surface.",
+    "children": [
+     {
+      "name": "Environmental Scan",
+      "type": "active",
+      "description": "You conduct a thorough scan of an area, revealing all potential health risks.",
+      "physicalDescription": "A clipboard with a checklist and a glowing lens.",
+      "children": []
+     },
+     {
+      "name": "Hazard Identification",
+      "type": "active",
+      "description": "You identify specific hazards like chemical exposure or unsanitary conditions.",
+      "physicalDescription": "A warning sign with a magnifying glass.",
+      "children": [
+       {
+        "name": "Toxin Recognition",
+        "type": "passive",
+        "description": "You recognize common industrial toxins and their effects.",
+        "physicalDescription": "A skull and crossbones with chemical symbols.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Report Writing",
+      "type": "active",
+      "description": "You generate a detailed report that can be used to enforce changes.",
+      "physicalDescription": "A pen writing on a document with a stamp.",
+      "children": []
+     },
+     {
+      "name": "Documentation Mastery",
+      "type": "passive",
+      "description": "Your inspection reports are more convincing and lead to faster action.",
+      "physicalDescription": "A stack of papers with an official seal.",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Medical Proficiency",
+   "root": {
+    "name": "Basic Medical Training",
+    "type": "active",
+    "description": "You can administer first aid to reduce a patient's condition severity.",
+    "physicalDescription": "A bandage roll with a red cross.",
+    "children": [
+     {
+      "name": "Diagnosis Skill",
+      "type": "active",
+      "description": "You can diagnose common illnesses, providing clues for treatment.",
+      "physicalDescription": "A stethoscope with a question mark.",
+      "children": [
+       {
+        "name": "Symptom Analysis",
+        "type": "passive",
+        "description": "You quickly analyze symptoms to narrow down diagnoses.",
+        "physicalDescription": "A chart with symptoms and a magnifying glass.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Treatment Knowledge",
+      "type": "active",
+      "description": "You know basic treatments for injuries and diseases.",
+      "physicalDescription": "A medicine bottle with a syringe.",
+      "children": [
+       {
+        "name": "Pharmacy Basics",
+        "type": "active",
+        "description": "You can prepare simple medicines from available materials.",
+        "physicalDescription": "A mortar and pestle with herbs.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Emergency Response",
+      "type": "active",
+      "description": "You can stabilize patients in critical condition.",
+      "physicalDescription": "A heart monitor with a lightning bolt.",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Community Relations",
+   "root": {
+    "name": "Interpersonal Skills",
+    "type": "passive",
+    "description": "You build rapport with townspeople, making them more cooperative.",
+    "physicalDescription": "Two hands shaking with a smiley face.",
+    "children": [
+     {
+      "name": "Persuasion",
+      "type": "active",
+      "description": "You convince individuals to comply with health regulations.",
+      "physicalDescription": "A megaphone with a pointing finger.",
+      "children": [
+       {
+        "name": "Authority Figure",
+        "type": "passive",
+        "description": "Your words carry more weight with officials and workers.",
+        "physicalDescription": "A badge with a speaking gesture.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Negotiation",
+      "type": "active",
+      "description": "You negotiate with mill owners for better working conditions.",
+      "physicalDescription": "A scale balancing two sides.",
+      "children": [
+       {
+        "name": "Compromise Finding",
+        "type": "active",
+        "description": "You find middle ground in disputes, achieving partial goals.",
+        "physicalDescription": "A handshake with a scale.",
+        "children": []
+       }
+      ]
+     },
+     {
+      "name": "Public Speaking",
+      "type": "active",
+      "description": "You address community gatherings to educate on health matters.",
+      "physicalDescription": "A podium with a crowd listening.",
+      "children": []
+     }
+    ]
+   }
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Emergency Briefing",
+   "location": "Reception",
+   "day": 0,
+   "start": "10:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "The player misses critical briefing on hospital crisis, leading to initial confusion."
+  },
+  {
+   "name": "Mill Accident Response",
+   "location": "Textile Mill",
+   "day": 1,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "Injured worker receives delayed treatment, increasing risk of complications."
+  },
+  {
+   "name": "Hospital Rounds",
+   "location": "Patient Ward",
+   "day": 1,
+   "start": "08:00",
+   "hours": 1,
+   "recurrence": "daily",
+   "missedConsequence": "Patients are neglected, worsening health outcomes."
+  },
+  {
+   "name": "Nurse Shift Handover",
+   "location": "Nurses' Home",
+   "day": 3,
+   "start": "18:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "Nurses report confusion over shifts, leading to understaffing."
+  },
+  {
+   "name": "Pharmacy Inspection",
+   "location": "Dispensary",
+   "day": 5,
+   "start": "11:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "Medication errors increase due to unverified stocks."
+  },
+  {
+   "name": "Mill Safety Audit",
+   "location": "Textile Mill",
+   "day": 1,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "weekly",
+   "missedConsequence": "Safety standards deteriorate, raising accident rates."
+  }
+ ],
+ "quests": [
+  {
+   "title": "Investigation of Industrial Accidents",
+   "objectives": [
+    {
+     "text": "Speak with Frank Evans at Reception about recent accidents",
+     "prerequisites": []
+    },
+    {
+     "text": "Inspect the Textile Mill for safety hazards",
+     "prerequisites": [
+      {
+       "text": "Speak with Frank Evans at Reception about recent accidents",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Interview Lily Evans at the Textile Mill about accident details",
+     "prerequisites": [
+      {
+       "text": "Inspect the Textile Mill for safety hazards",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Review patient records at the Patient Ward for injury patterns",
+     "prerequisites": [
+      {
+       "text": "Interview Lily Evans at the Textile Mill about accident details",
+       "primary": true
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "title": "Addressing Nurse Burnout",
+   "objectives": [
+    {
+     "text": "Consult with Evelyn Hart at the Patient Ward about workload",
+     "prerequisites": []
+    },
+    {
+     "text": "Check conditions at the Nurses' Home for staffing issues",
+     "prerequisites": [
+      {
+       "text": "Consult with Evelyn Hart at the Patient Ward about workload",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Discuss with Emily Williams at the Ward East about nurse concerns",
+     "prerequisites": [
+      {
+       "text": "Check conditions at the Nurses' Home for staffing issues",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Submit report to George Harris at the Reception with recommendations",
+     "prerequisites": [
+      {
+       "text": "Discuss with Emily Williams at the Ward East about nurse concerns",
+       "primary": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "cast": {
+  "households": [
+   {
+    "home": "Corner Shop",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "shopkeeper",
+      "work": "Corner Shop",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "shopkeeper",
+      "work": "Corner Shop",
+      "sells": true
+     }
+    ]
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Patient Ward",
+      "sells": false
+     }
+    ],
+    "flat": 1
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Patient Ward",
+      "sells": false
+     }
+    ],
+    "flat": 2
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Ward East",
+      "sells": false
+     }
+    ],
+    "flat": 3
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Ward East",
+      "sells": false
+     }
+    ],
+    "flat": 4
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Ward West",
+      "sells": false
+     }
+    ],
+    "flat": 5
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Ward West",
+      "sells": false
+     }
+    ],
+    "flat": 6
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Operating Theatre",
+      "sells": false
+     }
+    ],
+    "flat": 7
+   },
+   {
+    "home": "Nurses' Home",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "nurse",
+      "work": "Operating Theatre",
+      "sells": false
+     }
+    ],
+    "flat": 8
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "admin",
+      "work": "Reception",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 1
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "admin",
+      "work": "Reception",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 2
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "pharmacist",
+      "work": "Dispensary",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "elder"
+     }
+    ],
+    "flat": 3
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mortician",
+      "work": "Mortuary",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 4
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "doctor",
+      "work": "Patient Ward",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 5
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "doctor",
+      "work": "Ward East",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 6
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "doctor",
+      "work": "Ward West",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 7
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "doctor",
+      "work": "Operating Theatre",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 8
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 9
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 10
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 11
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 12
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 13
+   },
+   {
+    "home": "Workers' Cottages",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "mill worker",
+      "work": "Textile Mill",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 14
+   }
+  ]
+ },
+ "library": {
+  "version": 1,
+  "band": "industrial",
+  "templates": 47
+ },
+ "extensions": [
+  "floors"
+ ]
+}
