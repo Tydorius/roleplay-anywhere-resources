@@ -192,16 +192,17 @@ function inspectRegion(box, r) {
       ["Inside", parent ? linkTo(parent) : "the open map"],
       ["Position", r.position.join(", ")], ["Size", r.size.join(" × ")],
       ["Contains", `${inside.length} regions · ${objs.length} objects · ${people} people`],
-      r.pocket ? ["Floor", `level ${esc(r.pocket.level)}${byId(r.pocket.anchor) ? ` of ${linkTo(byId(r.pocket.anchor))}` : ""}`] : null,
       r.shape ? ["Shape", esc(r.shape)] : null,
       r.surface ? ["Liquid", esc(r.surface)] : null,
       r.wall && (r.door || r.doorColor) ? ["Doors", `${esc(r.door || "door")}${r.doorColor ? ` · ${esc(r.doorColor)}` : ""}`] : null,
       r.takingIsTheft !== undefined ? ["Taking is theft", r.takingIsTheft ? "yes" : "no"] : null,
       sleepers.size || beds ? ["Beds", `<span class="${beds < sleepers.size ? "bad" : ""}">${beds} for ${sleepers.size} sleeper${sleepers.size === 1 ? "" : "s"}</span>`] : null,
     ])}
+    ${MapOps.isFloor(r) ? section("Floor", floorHtml(r)) : ""}
     ${r.wall ? section(`Doors (${(r.openings || []).length})`, (r.openings || []).length
       ? `<div class="refs">${r.openings.map((c, i) => `<div class="door"><span>[${c.join(", ")}]</span>${S.editable ? `<button class="mini" data-door="${i}" title="Remove this door and its other side">Remove</button>` : ""}</div>`).join("")}</div>`
       : `<p class="note warn">No doors: nobody can get in. Use the Door tool (D) to add one.</p>`) : ""}
+    ${r.wall && !MapOps.isFloor(r) ? section(`Floors (${World10.floorsOf(S.scn, r).length})`, floorsHtml(r)) : ""}
     ${section("Who is here when", occupancyHtml(r))}
     ${section(`Used by (${refs.length})`, refsHtml(refs, "Nothing names this region."), refs.length > 0 && refs.length < 12)}`;
   bindRefs(box, refs); bindJumps(box);
@@ -217,7 +218,66 @@ function inspectRegion(box, r) {
     const c = r.openings[+b.dataset.door];
     edit(`Remove door at [${c}]`, () => MapOps.toggleDoor(S.scn, r, c, set));
   });
+  if ($("fAddFloor")) $("fAddFloor").onclick = () => addFloorDialog(r);
+  if ($("fLevel")) $("fLevel").onchange = () => {
+    const lv = Math.round(+$("fLevel").value);
+    const ok = edit(`Level of ${r.name}`, () => {
+      const res = World10.setFloorLevel(S.scn, r, lv, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the input back
+    });
+    if (!ok) inspect();
+  };
   wireOccupancy(box);
+}
+
+// ---------------------------------------------------------------- floors
+/** The "Floors" section of a walled region: its floors by level, a way to add one, and a note. */
+function floorsHtml(r) {
+  const floors = World10.floorsOf(S.scn, r);
+  return (floors.length ? `<div class="refs">${floors.map(f =>
+      `<div class="door"><span>${linkTo(f)} · level ${esc(f.pocket.level)}</span></div>`).join("")}</div>`
+    : `<p class="note">No floors yet.</p>`)
+    + `<div class="row" style="margin-bottom:8px"><button id="fAddFloor" ${dis()}>Add floor…</button></div>`
+    + `<p class="note">A floor is its own small map beside the main one. Link a portal (stairs, a ladder, a hatch) from the building to the floor so people can reach it.</p>`;
+}
+
+/** The "Floor" section of a floor region: its building, its level, and the portals that reach it. */
+function floorHtml(r) {
+  const anchor = byId(r.pocket.anchor);
+  const portals = entities().filter(e => e.type === "object" && e.portal && inRect(r, e.pos[0], e.pos[1]));
+  return facts([["Floor of", anchor ? linkTo(anchor) : "no building"]])
+    + field("Level", `<input type="number" id="fLevel" step="1" value="${esc(r.pocket.level)}" ${dis()}>`)
+    + (portals.length ? `<div class="refs">${portals.map(e =>
+        `<div class="door"><span>${linkTo(e)} → ${linkTo(World10.portalPartner(S.scn, e))}</span></div>`).join("")}</div>`
+      : `<p class="note warn">Nothing leads here yet: link a portal.</p>`);
+}
+
+/** The "Add floor…" dialog of a walled region; on OK the new floor is selected and centred on. */
+async function addFloorDialog(r) {
+  const taken = new Set(World10.floorsOf(S.scn, r).map(f => f.pocket.level));
+  let level = 1; while (taken.has(level)) level++;          // the lowest level not taken yet
+  const props = {name: `${r.name} upstairs`, level, size: [Math.min(r.size[0], 32), Math.min(r.size[1], 32)]};
+  const body = `<div class="row2">
+      ${field("Name", `<input type="text" id="afName" value="${esc(props.name)}">`)}
+      ${field("Level", `<input type="number" id="afLevel" step="1" value="${props.level}">`)}
+    </div>
+    <div class="row2">
+      ${field("Width", `<input type="number" id="afW" min="2" max="32" value="${props.size[0]}">`)}
+      ${field("Height", `<input type="number" id="afH" min="2" max="32" value="${props.size[1]}">`)}
+    </div>`;
+  const go = await openDialog("Add floor", body, [{label: "Cancel", value: null}, {label: "Add floor", value: "go", primary: true}],
+    dlg => dlg.querySelectorAll("input").forEach(el => el.oninput = () => {
+      props.name = $("afName").value;
+      props.level = Math.round(+$("afLevel").value);
+      props.size = [Math.round(+$("afW").value), Math.round(+$("afH").value)];
+    }));
+  if (go !== "go") return;
+  let res;
+  edit(`Add floor ${props.name.trim() || "(unnamed)"}`, () => {
+    res = World10.addFloor(S.scn, r, props, set);
+    if (res.error) throw new Error(res.error);
+  });
+  if (res?.region) showFloor(res.region.id);
 }
 
 // A strip of 24 hours: how many people are in the region in each hour, by role.
@@ -270,6 +330,7 @@ function inspectObject(box, e) {
   const t = objTpl(e.templateId);
   const placed = entities().filter(o => o.templateId === e.templateId).length;
   const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
+  const partner = World10.portalPartner(S.scn, e);
   const pic = t && picUrl(t.id, "sprite");
   const defs = [
     {key: "name", label: "Name", required: true, rename: true},
@@ -282,10 +343,12 @@ function inspectObject(box, e) {
     ${field("Type", `<div class="row"><select id="oType" ${dis()} style="flex:1">${typeOptions(e.templateId)}</select>${t ? `<button id="oEditType" class="mini">Edit type</button>` : ""}</div>`,
       t ? `${placed} placed. Changing the type swaps this one only; editing the type changes all ${placed}.` : "Its type is missing.")}
     <div class="row" style="margin-bottom:10px"><button id="fRotL" ${dis()} title="Shift+R">Turn left</button><button id="fRotR" ${dis()} title="R">Turn right</button></div>
+    <div class="row" style="margin-bottom:10px"><button id="oLink" ${dis()}>Link to…</button>${partner ? `<button id="oUnlink" ${dis()}>Unlink</button>` : ""}</div>
     ${facts([
       ["Position", e.pos.join(", ") + (where ? ` in ${linkTo(where)}` : "")],
       ["Size", entSize(e).join(" × ") + (e.rot ? ` · turned ${e.rot * 90}°` : "")],
       (e.statusEffects || []).length && ["Effects", esc(e.statusEffects.map(s => `${s.def?.emoji || ""} ${s.def?.desc || "effect"}`).join(", "))],
+      ["Leads to", partner ? linkTo(partner) : "nowhere"],
     ])}
     ${section(`Holds (${(e.inventory || []).length})`, stacksHtml("inv", e.inventory || []), (e.inventory || []).length > 0)}`;
   bindJumps(box);
@@ -293,6 +356,8 @@ function inspectObject(box, e) {
   $("oType").onchange = () => swapType([e], $("oType").value);
   if ($("oEditType")) $("oEditType").onclick = () => select({kind: "template", id: t.id});
   $("fRotL").onclick = () => rotateSelection(3); $("fRotR").onclick = () => rotateSelection(1);
+  $("oLink").onclick = () => { S.linkFrom = e.id; toast("Click the object at the other end (Esc cancels)"); draw(); };
+  if ($("oUnlink")) $("oUnlink").onclick = () => edit(`Unlink ${e.name}`, () => { World10.unlinkPortal(S.scn, e, set); });
   wireStacks(box, "inv", e, "inventory");
 }
 

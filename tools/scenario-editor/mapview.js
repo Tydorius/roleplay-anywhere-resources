@@ -20,7 +20,7 @@ const TOOLS = [
   {id: "measure", key: "m", label: "Measure", icon: "⟷", hint: "Drag to measure. A selected hostile shows its 7-cell aggro and 14-cell give-up rings."},
 ];
 Object.assign(S, {tool: "select", hover: null, hoverEdge: null, placeTpl: recall("editor.placeTpl") || "", placeRot: 0,
-  measure: null, box: null, drawRect: null, clip: null, space: false, msg: ""});
+  measure: null, box: null, drawRect: null, clip: null, space: false, msg: "", linkFrom: null});
 
 function fit() {
   if (!S.scn) return;
@@ -34,6 +34,36 @@ function center(x, y, minScale = 14) {
   S.view.ox = r.width / 2 - (x + .5) * S.view.s;
   S.view.oy = r.height / 2 - (H() - y - .5) * S.view.s;
   draw();
+}
+
+// ---------------------------------------------------------------- level picker
+/** Fills the toolbar's level picker: the map, then each floor by building name and level. The options
+ *  are rebuilt only when the floors themselves changed, so the open choice stays put. */
+function refreshLevels() {
+  const sel = $("levelPick");
+  if (!sel) return;
+  const floors = regions().filter(MapOps.isFloor).map(f => {
+    const b = byId(f.pocket.anchor);
+    return {id: f.id, name: f.name, level: f.pocket.level, building: b ? b.name : "no building"};
+  }).sort((a, b) => a.building.localeCompare(b.building) || a.level - b.level);
+  const key = floors.map(f => `${f.id}\u0000${f.name}\u0000${f.level}\u0000${f.building}`).join("\u0001");
+  if (key !== refreshLevels.key) {
+    refreshLevels.key = key;
+    sel.innerHTML = `<option value="">Map</option>` + floors.map(f =>
+      `<option value="${esc(f.id)}">${esc(`${f.building} · floor ${f.level > 0 ? "+" : ""}${f.level} · ${f.name}`)}</option>`).join("");
+  }
+  sel.hidden = !floors.length;
+}
+
+/** Scales and centres the view on one floor (about 80% of the canvas) and selects it. */
+function showFloor(id) {
+  const f = byId(id);
+  if (!f || !MapOps.isFloor(f)) return;
+  const r = cv.getBoundingClientRect();
+  S.view.s = Math.max(1, Math.min(80, Math.min(r.width * .8 / f.size[0], r.height * .8 / f.size[1])));
+  S.view.ox = r.width / 2 - (f.position[0] + f.size[0] / 2) * S.view.s;
+  S.view.oy = r.height / 2 - (H() - (f.position[1] + f.size[1] / 2)) * S.view.s;
+  select({kind: "region", id});
 }
 
 function sprite(tid) {
@@ -114,6 +144,7 @@ function draw() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, R.width, R.height);
   if (!S.scn) { minimap.render(null); return; }
+  refreshLevels();
   const s = S.view.s, [gw, gh] = S.scn.gridSize, L = S.layers;
   ctx.fillStyle = groundColor(S.scn.defaultTile || {});
   ctx.fillRect(sx(0), sy(gh), gw * s, gh * s);
@@ -211,6 +242,26 @@ function drawSelection(s) {
       ctx.setLineDash(dash); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(208,68,58,.85)"; ctx.stroke();
     }
     ctx.setLineDash([]);
+  }
+  // a selected portal's two ends, joined across whatever lies between them (even another plane)
+  if (p?.kind === "entity" && o?.type === "object") {
+    const b = World10.portalPartner(S.scn, o);
+    if (b) {
+      const [w, h] = entSize(o), [bw, bh] = entSize(b);
+      const a = [sx(o.pos[0] + w / 2), sy(o.pos[1] + h / 2)], z = [sx(b.pos[0] + bw / 2), sy(b.pos[1] + bh / 2)];
+      ctx.setLineDash([6, 4]); ctx.lineWidth = 2; ctx.strokeStyle = col;
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(z[0], z[1]); ctx.stroke(); ctx.setLineDash([]);
+      label2("portal", (a[0] + z[0]) / 2 - 15, (a[1] + z[1]) / 2 - 9);
+    }
+  }
+  // the object a portal link is being drawn from
+  if (S.linkFrom) {
+    const src = byId(S.linkFrom);
+    if (src?.pos) {
+      const [w, h] = src.type === "object" ? entSize(src) : [1, 1];
+      ctx.lineWidth = 3; ctx.strokeStyle = col;
+      ctx.strokeRect(sx(src.pos[0]) - 2, sy(src.pos[1] + h) - 2, w * s + 4, h * s + 4);
+    }
   }
 }
 
@@ -502,6 +553,7 @@ cv.addEventListener("pointercancel", e => endDrag(e, true));
 cv.addEventListener("pointerleave", () => { if (!drag && S.hover) { S.hover = null; draw(); } });
 
 function clickSelect(c, add) {
+  if (S.linkFrom) return linkClick(c);          // choosing a portal's other end: never a selection
   const stack = stackAt(c[0], c[1]);
   if (!stack.length) { if (!add) select(null); return; }
   if (add) {                                     // Shift+click adds or removes the topmost thing
@@ -511,6 +563,24 @@ function clickSelect(c, add) {
   }
   const p = primary(), i = p ? stack.findIndex(t => t.id === p.id) : -1;
   select(stack[(i + 1) % stack.length]);         // click again for what's underneath
+}
+
+/** A click while a portal link is being drawn: the first object under it (other than the source)
+ *  becomes the other end, or the click asks for an object and linking carries on. */
+function linkClick(c) {
+  const src = byId(S.linkFrom);
+  if (!src) { S.linkFrom = null; draw(); return; }
+  const hit = stackAt(c[0], c[1]).map(t => t.kind === "entity" ? byId(t.id) : null)
+    .find(o => o?.type === "object" && o.id !== src.id);
+  if (!hit) return toast("Click an object (Esc cancels)");
+  const ok = edit("Link portal", () => {
+    const res = World10.linkPortal(S.scn, src, hit, set);
+    if (res.error) throw new Error(res.error);
+  });
+  if (!ok) return;                              // the refusal is toasted; another object can be picked
+  S.linkFrom = null;
+  select({kind: "entity", id: src.id});
+  toast(`Linked ${src.name} and ${hit.name}`);
 }
 
 function boxSelect(b) {
@@ -542,11 +612,23 @@ function setTool(id) {
 }
 function buildTools() {
   $("tools").innerHTML = TOOLS.map(t => `<button data-tool="${t.id}" title="${esc(t.label)} (${t.key.toUpperCase()})"><span aria-hidden="true">${t.icon}</span> ${esc(t.label)}</button>`).join("")
-    + `<span class="tsep"></span><button data-act="mapsize" title="Grow or shrink the map, choosing which sides change">⤢ Map size…</button>`;
+    + `<span class="tsep"></span><button data-act="mapsize" title="Grow or shrink the map, choosing which sides change">⤢ Map size…</button>`
+    + `<select id="levelPick" title="Jump to the map or a floor" hidden></select>`;
   $("tools").onclick = e => {
     const b = e.target.closest("button");
     if (!b) return;
     if (b.dataset.act === "mapsize") mapSizeDialog(); else setTool(b.dataset.tool);
+  };
+  $("levelPick").onchange = () => {
+    const id = $("levelPick").value;
+    if (id) showFloor(id);
+    else {          // the map alone: what fit() shows before any floor was added
+      const r = cv.getBoundingClientRect(), [w, h] = S.scn.gridSize;
+      S.view.s = Math.max(1, Math.min((r.width - 20) / w, (r.height - 20) / h));
+      S.view.ox = (r.width - w * S.view.s) / 2; S.view.oy = (r.height - h * S.view.s) / 2;
+      draw();
+    }
+    $("levelPick").value = id;
   };
   setTool("select");
 }
@@ -599,6 +681,7 @@ document.addEventListener("keydown", e => {
   if (mod) return;
   if (e.key === "Escape") {
     if (drag) { cancelLive(); drag = null; S.box = S.drawRect = null; draw(); return; }
+    if (S.linkFrom) { S.linkFrom = null; toast("Linking cancelled"); draw(); return; }
     if (S.tool !== "select") return setTool("select");
     return select(null);
   }

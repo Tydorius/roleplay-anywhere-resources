@@ -53,6 +53,7 @@ canvas#map.panning { cursor: grabbing; }
          border: 1px solid var(--line); border-radius: 8px; padding: 4px; max-width: calc(100% - 232px); }
 .tools button { padding: 3px 9px; font-size: 13px; border-color: transparent; background: transparent; }
 .tools button.on { background: var(--accent); color: var(--accent-ink); }
+.tools select { padding: 3px 6px; font-size: 13px; max-width: 230px; }
 #minimap { position: absolute; right: 8px; top: 8px; width: 200px; height: 150px; background: var(--panel);
            border: 1px solid var(--line); border-radius: 8px; cursor: crosshair; touch-action: none; }
 .row2 { display: flex; gap: 10px; align-items: end; }
