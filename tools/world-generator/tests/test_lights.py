@@ -115,9 +115,13 @@ class TestLightsBuilds(unittest.TestCase):
 
     def test_lights_sits_beside_floors(self):
         _summary, scn = self.build("floors-plan.json", ("floors", "lights"))
-        mods = scn["arpgMods"]
-        self.assertTrue(mods["floors"] and mods["portals"])
-        self.assertEqual(mods["lights"], {"templates": {"Clay hearth": "fire", "Oil lamp": "lantern"}})
+        # floors are 1.0-native now: arpgMods carries only the lights, and
+        # the storeys ship as pocket regions with linked stair portals
+        self.assertEqual(scn["arpgMods"],
+                         {"lights": {"templates": {"Clay hearth": "fire",
+                                                   "Oil lamp": "lantern"}}})
+        self.assertTrue([r for r in scn["regions"] if r.get("pocket")])
+        self.assertTrue([e for e in scn["entities"] if e.get("portal")])
         lamp = next(t for t in scn["objectTemplates"] if t["name"] == "Oil lamp")
         self.assertEqual(lamp["light"], 0.5)
 

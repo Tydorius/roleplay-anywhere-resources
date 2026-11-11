@@ -322,15 +322,18 @@ class TestFloorsChecks(unittest.TestCase):
         world.portals.pop()
         self.assertTrue(any("already the" in i for i in issues), issues)
 
-    def test_object_in_opening_is_caught(self):
+    def test_a_floor_dragged_too_close_is_caught(self):
+        from worldgen import checks as checks_mod
+        from worldgen.model import Rect
         world = self.world
         f = world.floors[0]
-        cell = sorted(f.opening_rect.cells())[0]
-        world.objects.append(worldgen.ObjectOut("Lamp", cell, f.region_name))
-        from worldgen import checks as checks_mod
-        issues = checks_mod._floors_checks(world, set())
-        world.objects.pop()
-        self.assertTrue(any("sits in the opening" in i for i in issues), issues)
+        old = f.rect
+        f.rect = Rect(old.x - 10, old.y, old.w, old.h)   # inside the 24-cell gap
+        try:
+            issues = checks_mod._floors_checks(world, set())
+        finally:
+            f.rect = old
+        self.assertTrue(any("less than 24 cells east" in i for i in issues), issues)
 
     def test_unreachable_upper_room_is_caught(self):
         from worldgen import checks as checks_mod
@@ -358,12 +361,11 @@ class TestScenarioModsRoundtrip(unittest.TestCase):
         self.addCleanup(_rmtree, tmp)
         return d
 
-    def test_inject_writes_json_and_rezips(self):
+    def test_finish_writes_json_and_rezips(self):
         from worldgen import mods
         d = self._scenario_dir()
-        arpg = {"floors": [{"name": "F", "area": "A", "above": "B", "openings": []}],
-                "portals": []}
-        zpath = mods.inject_arpg_mods(d, arpg)
+        arpg = {"lights": {"templates": {"Clay hearth": "fire"}}}
+        zpath = mods.finish_scenario(d, {"arpgMods": arpg})
         self.assertTrue(os.path.exists(zpath))
         with open(os.path.join(d, "scenario.json"), encoding="utf-8") as f:
             self.assertEqual(json.load(f)["arpgMods"], arpg)
@@ -378,68 +380,68 @@ class TestScenarioModsRoundtrip(unittest.TestCase):
     def test_check_scenario_mods(self):
         from worldgen import checks as checks_mod, mods
         d = self._scenario_dir()
-        arpg = {"floors": [], "portals": []}
-        mods.inject_arpg_mods(d, arpg)
+        mods.finish_scenario(d, {})
         self.assertEqual(checks_mod.check_scenario_mods(
-            os.path.join(d, "scenario.json"), arpg), [])
+            os.path.join(d, "scenario.json"), {}), [])
+        # a shipped scenario with the retired game-mod floors is flagged
+        with open(os.path.join(d, "scenario.json"), "w", encoding="utf-8") as f:
+            json.dump({"arpgMods": {"floors": [{"name": "x"}], "portals": []},
+                       "regions": []}, f)
         self.assertTrue(checks_mod.check_scenario_mods(
-            os.path.join(d, "scenario.json"), {"floors": [{"name": "x"}], "portals": []}))
+            os.path.join(d, "scenario.json"), {}))
 
-    def test_inject_hardens_the_boundary_slab(self):
+    def test_finish_hardens_the_void_slabs(self):
         from worldgen import mods
-        from worldgen.extensions.floors import SLAB_NAME
         d = self._scenario_dir()
         with open(os.path.join(d, "scenario.json"), "w", encoding="utf-8") as f:
             json.dump({"name": "Test", "gridSize": [40, 10],
-                       "objectTemplates": [{"id": "otpl_s", "name": SLAB_NAME,
-                                            "size": [24, 10], "walkability": 1.0}],
+                       "objectTemplates": [
+                           {"id": "otpl_v", "name": "The Void Void Slab 1",
+                            "size": [4, 4], "walkability": 1.0}],
                        "entities": []}, f)
-        mods.inject_arpg_mods(d, {"floors": [], "portals": []})
+        mods.finish_scenario(d, {})
         with open(os.path.join(d, "scenario.json"), encoding="utf-8") as f:
             scn = json.load(f)
         self.assertEqual(scn["objectTemplates"][0]["walkability"], 0.0)
-        sprite = os.path.join(d, "media", "otpl_s", "otpl_s-sprite.webp")
-        self.assertTrue(os.path.exists(sprite), "the slab's sprite must ship with it")
 
     def test_check_scenario_mods_flags_a_sealed_upper_room(self):
         from worldgen import checks as checks_mod
         d = self._scenario_dir()
-        arpg = {"floors": [{"name": "F", "area": "Storey", "above": "B", "openings": []}],
-                "portals": []}
+        native = {"grid": [40, 10],
+                  "floors": [{"region": "Storey", "anchor": "Ground",
+                              "level": 1}],
+                  "portals": [], "seal": ["Storey"]}
         # a storey whose inner room lost its door to the seal
         with open(os.path.join(d, "scenario.json"), "w", encoding="utf-8") as f:
-            json.dump({"arpgMods": arpg, "regions": [
-                {"name": "Storey", "position": [10, 10], "size": [10, 8],
-                 "wall": "wood", "openings": []},
-                {"name": "Storey Room", "position": [11, 11], "size": [8, 6],
+            json.dump({"regions": [
+                {"name": "Ground", "id": "rgn_g", "position": [0, 0], "size": [6, 6]},
+                {"name": "Storey", "id": "rgn_s", "position": [64, 0], "size": [10, 8],
+                 "wall": "wood", "openings": [],
+                 "pocket": {"anchor": "rgn_g", "level": 1}},
+                {"name": "Storey Room", "position": [65, 1], "size": [8, 6],
                  "wall": "wood", "openings": []}]}, f)
         issues = checks_mod.check_scenario_mods(
-            os.path.join(d, "scenario.json"), arpg)
+            os.path.join(d, "scenario.json"), {"nativeFloors": native})
         self.assertTrue(any("sealed inside" in i for i in issues), issues)
 
-    def test_check_scenario_mods_flags_a_leaky_boundary(self):
+    def test_check_scenario_mods_flags_a_leaky_storey(self):
+        """A storey that kept its build-time fiction door on its border is
+        not sealed: in play its stairs are its only way in."""
         from worldgen import checks as checks_mod
-        from worldgen.extensions.floors import SLAB_NAME
         d = self._scenario_dir()
-        arpg = {"floors": [{"name": "F", "area": "A", "above": "B", "openings": []}],
-                "portals": []}
-        # a slab that kept its build-time passability, has no sprite, and carries
-        # a stale first-pass size that no longer covers the region
+        native = {"grid": [40, 10],
+                  "floors": [{"region": "Storey", "anchor": "Ground",
+                              "level": 1}],
+                  "portals": [], "seal": ["Storey"]}
         with open(os.path.join(d, "scenario.json"), "w", encoding="utf-8") as f:
-            json.dump({"arpgMods": arpg,
-                       "regions": [{"name": "The Edge of the World", "position": [20, 0],
-                                    "size": [24, 10]}],
-                       "objectTemplates": [
-                           {"id": "otpl_s", "name": SLAB_NAME, "size": [24, 6],
-                            "walkability": 1.0}],
-                       "entities": [{"id": "obj_s", "type": "object",
-                                     "name": SLAB_NAME, "pos": [20, 0], "size": [24, 6],
-                                     "templateId": "otpl_s"}]}, f)
+            json.dump({"regions": [
+                {"name": "Ground", "id": "rgn_g", "position": [0, 0], "size": [6, 6]},
+                {"name": "Storey", "id": "rgn_s", "position": [64, 0], "size": [10, 8],
+                 "wall": "wood", "openings": [[64, 4]],
+                 "pocket": {"anchor": "rgn_g", "level": 1}}]}, f)
         issues = checks_mod.check_scenario_mods(
-            os.path.join(d, "scenario.json"), arpg)
-        self.assertTrue(any("must block" in i for i in issues), issues)
-        self.assertTrue(any("no sprite" in i for i in issues), issues)
-        self.assertTrue(any("cover it exactly" in i for i in issues), issues)
+            os.path.join(d, "scenario.json"), {"nativeFloors": native})
+        self.assertTrue(any("keeps an exterior opening" in i for i in issues), issues)
 
 
 def _rmtree(path):
@@ -497,61 +499,36 @@ class TestFloorsFixture(unittest.TestCase):
         self.assertIn("The Sickle & Sheaf (upper floor)", names)
         self.assertIn("Weaver's Rows (upper floor)", names)
         self.assertIn("Weaver's Rows (top floor)", names)
-        self.assertIn("The Sickle & Sheaf (upper floor) Gallery Well",
-                      {r.name for r in self.world.regions})
+        # 1.0 has no see-through openings: no gallery well region exists
+        self.assertNotIn("The Sickle & Sheaf (upper floor) Gallery Well",
+                         {r.name for r in self.world.regions})
 
     def test_each_floor_matches_its_above_region(self):
         for f in self.world.floors:
             above = self.world.regions_by_name[f.above]
             self.assertEqual((f.rect.w, f.rect.h), (above.rect.w, above.rect.h))
 
-    def test_boundary_separates_the_band_from_the_play_area(self):
-        from worldgen.extensions.floors import (BOUNDARY_COLOR, BOUNDARY_NAME,
-                                                SEPARATOR_WIDTH, SLAB_NAME)
-        b = self.world.regions_by_name[BOUNDARY_NAME]
-        # the region spans everything east of the play area: full height, to the
-        # map's east edge, unwalled, tinted the void's colour — the band's gaps
-        # show the tint, so the storeys read as the only lit things there
-        self.assertIsNone(b.wall)
-        self.assertEqual((b.rect.y, b.rect.h), (0, self.world.grid[1]))
-        self.assertEqual(b.rect.x1, self.world.grid[0] - 1)
-        self.assertEqual(b.ground_color, BOUNDARY_COLOR)
-        # the strip's first SEPARATOR_WIDTH cells are sealed by one slab exactly
-        slab = self.world.templates[SLAB_NAME]
-        self.assertEqual(slab.walkability, 0.0)
-        self.assertEqual(slab.size, (SEPARATOR_WIDTH, self.world.grid[1]))
-        placed = [o for o in self.world.objects if o.template == SLAB_NAME]
-        self.assertEqual([o.pos for o in placed], [(b.rect.x, 0)])
-        strip_cells = {(x, y) for x in range(b.rect.x, b.rect.x + SEPARATOR_WIDTH)
-                       for y in range(self.world.grid[1])}
-        # nothing else sits in the strip
-        for o in self.world.objects:
-            if o.template == SLAB_NAME:
-                continue
-            t = self.world.templates[o.template]
-            fp = {(x, y) for x in range(o.pos[0], o.pos[0] + t.size[0])
-                  for y in range(o.pos[1], o.pos[1] + t.size[1])}
-            self.assertFalse(fp & strip_cells, f"{o.template} sits inside the strip")
-        # every storey nests east of the slab, inside the region
-        for f in self.world.floors:
-            self.assertGreaterEqual(f.rect.x, b.rect.x + SEPARATOR_WIDTH,
-                                    f"{f.region_name} is not east of the slab")
-            self.assertLessEqual(f.rect.x1, b.rect.x1,
-                                 f"{f.region_name} leaves the boundary region")
+    def test_floors_sit_east_of_the_play_area_24_apart(self):
+        """1.0 lays floors out beside the map: the first at gridSize[0] + 24,
+        then 24 cells apart. gridSize stays the play area; the storeys are
+        planes of their own outside it."""
+        from worldgen.extensions.floors import FLOOR_GAP
+        world = self.world
+        for f in world.floors:
+            self.assertGreaterEqual(f.rect.x, world.grid[0] + FLOOR_GAP,
+                                    f"{f.region_name} is not east of the play area")
+            self.assertGreaterEqual(f.rect.y, 0)
+        rects = sorted((f.rect for f in world.floors), key=lambda r: r.x)
+        for i, r in enumerate(rects[:-1]):
+            nxt = rects[i + 1]
+            self.assertGreaterEqual(nxt.x - r.x1 - 1, FLOOR_GAP,
+                                    f"storeys at {r.x} and {nxt.x} are under 24 apart")
 
-    def test_openings_exist_and_stay_empty(self):
-        inn = next(f for f in self.world.floors if f.building == "The Sickle & Sheaf")
-        self.assertIsNotNone(inn.opening_rect, "the inn's gallery opening was dropped")
-        atrium = next(f for f in self.world.floors
-                      if f.building == "Weaver's Rows" and f.storey == 2)
-        self.assertIsNotNone(atrium.opening_rect, "the atrium was dropped")
-        for f in (inn, atrium):
-            cells = f.opening_rect.cells()
-            for o in self.world.objects:
-                t = self.world.templates[o.template]
-                fp = {(x, y) for x in range(o.pos[0], o.pos[0] + t.size[0])
-                      for y in range(o.pos[1], o.pos[1] + t.size[1])}
-                self.assertFalse(fp & cells, f"{o.template} sits in {f.opening_name}")
+    def test_no_opening_regions_or_wells(self):
+        """1.0 has no see-through openings: every storey is ordinary room
+        floor, with no opening region nested in it."""
+        self.assertFalse([r.name for r in self.world.regions if r.kind == "opening"])
+        self.assertFalse([r.name for r in self.world.regions if r.name.endswith("Well")])
 
     def test_separate_stairs_with_unique_ends(self):
         """On a storey with stairs both down and up, two stair objects in
@@ -611,16 +588,19 @@ class TestFloorsFixture(unittest.TestCase):
         self.assertFalse(any("Hedge Cottage (upper floor)" == r.name
                              for r in self.world.regions))
 
-    def test_spec_arpg_mods_match_the_world(self):
+    def test_spec_native_floors_match_the_world(self):
         spec = worldgen.build_spec(self.world, self.data)
-        mods = spec["arpgMods"]
-        self.assertEqual(len(mods["floors"]), len(self.world.floors))
-        self.assertEqual(len(mods["portals"]), len(self.world.portals))
+        native = spec["nativeFloors"]
+        self.assertEqual(native["grid"], list(self.world.grid))
+        self.assertEqual(len(native["floors"]), len(self.world.floors))
+        self.assertEqual(len(native["portals"]), len(self.world.portals))
+        self.assertEqual(sorted(native["seal"]),
+                         sorted(f.region_name for f in self.world.floors))
         for f in self.world.floors:
-            entry = next(e for e in mods["floors"] if e["area"] == f.region_name)
-            self.assertEqual(entry["above"], f.above)
-            self.assertEqual(entry["openings"],
-                             [f.opening_name] if f.opening_name else [])
+            entry = next(e for e in native["floors"] if e["region"] == f.region_name)
+            self.assertEqual(entry["anchor"], f.building)
+            self.assertEqual(entry["level"], f.storey - 1)
+        self.assertNotIn("arpgMods", spec)
 
 
 class TestGLMFloorsFixtures(unittest.TestCase):

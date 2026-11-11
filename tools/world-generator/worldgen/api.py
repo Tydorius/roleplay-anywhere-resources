@@ -233,12 +233,13 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     rc_build, _ = _run([sys.executable, builder, os.path.join(out_dir, "spec.py"),
                         "--out", out_dir], emit)
     mods_issues = []
-    if rc_build == 0 and spec.get("arpgMods") and os.path.isdir(built):
+    if rc_build == 0 and (spec.get("arpgMods") or spec.get("nativeFloors")) \
+            and os.path.isdir(built):
         from worldgen import mods as mods_mod
-        mods_mod.inject_arpg_mods(built, spec["arpgMods"])
-        _emit(emit, f"arpgMods injected into {built} (re-zipped)")
+        mods_mod.finish_scenario(built, spec)
+        _emit(emit, f"native floor data and mods written into {built} (re-zipped)")
         mods_issues = checks_mod.check_scenario_mods(
-            os.path.join(built, "scenario.json"), spec["arpgMods"])
+            os.path.join(built, "scenario.json"), spec)
         for issue in mods_issues:
             _emit(emit, "ERROR " + issue)
     if rc_build == 0 and os.path.isdir(built):
@@ -377,7 +378,7 @@ def _summary_text(world, spec, seed, emit):
                  f"region overlaps: {len(world.metrics.get('region_overlaps', []))}")
     fl = world.metrics.get("floors") or {}
     if fl.get("floors"):
-        lines.append(f"upper storeys {fl['floors']}  stair portals {fl['portals']}  "
+        lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "
                      f"floors checks: {'ok' if not fl.get('issues') else fl['issues']}")
     for w in world.metrics.get("map_warnings", []):
         lines.append(f"warning: {w}")

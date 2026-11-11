@@ -146,6 +146,19 @@ def _placements(world, plan):
     return out
 
 
+def _grid_size(world):
+    """The builder's grid: the play area and — when the floors extension
+    laid storeys east of it — the ground to hold them, padded one cell past
+    every edge a build-time door may open onto (the shipped scenario's
+    gridSize is the play area alone; nativeFloors carries it, and the floors
+    are planes outside it)."""
+    if not getattr(world, "floors", None):
+        return [world.grid[0], world.grid[1]]
+    w = max([world.grid[0]] + [r.rect.x1 + 2 for r in world.regions])
+    h = max([world.grid[1]] + [r.rect.y1 + 2 for r in world.regions])
+    return [w, h]
+
+
 def build_spec(world, plan):
     builder_doors = {f.region_name: list(f.builder_door)
                      for f in getattr(world, "floors", []) or []
@@ -167,7 +180,7 @@ def build_spec(world, plan):
             if not doors and r.name in builder_doors:
                 # the flat-map builder needs one way into every walled region;
                 # on a sealed upper storey that door is a build-time fiction —
-                # inject_arpg_mods strips it, and the stairs are the real way in
+                # finish_scenario strips it, and the stairs are the real way in
                 doors = [builder_doors[r.name]]
             out["doors"] = doors
         if getattr(r, "ground_color", None):
@@ -186,9 +199,9 @@ def build_spec(world, plan):
         spec_t = {
             "name": t.name,
             "size": list(t.size),
-            # passableAtBuild: the boundary slab must let the builder's reachability
-            # walk cross the strip; inject_arpg_mods hardens it back to 0 in the
-            # shipped scenario, where nothing may cross
+            # passableAtBuild: a void zone's slabs must let the builder's
+            # reachability walk cross them; finish_scenario hardens them back
+            # to 0 in the shipped scenario, where nothing may cross
             "walkability": 1.0 if t.extras.get("passableAtBuild") else t.walkability,
             "description": t.description or t.name,
             "physicalDescription": t.physicalDescription or t.name,
@@ -290,7 +303,7 @@ def build_spec(world, plan):
         "narrativeFlavor": extras.get("narrativeFlavor", "adaptive"),
         "difficulty": extras.get("difficulty", "medium"),
         "xpMultiplier": extras.get("xpMultiplier", 1),
-        "gridSize": [world.grid[0], world.grid[1]],
+        "gridSize": _grid_size(world),
         "defaultTile": default_tile,
         "weatherKinds": extras.get("weatherKinds", ["clear", "rain", "fog"]),
         # genre-neutral fallbacks: no copper pennies in a cyberpunk world, and
@@ -317,10 +330,13 @@ def build_spec(world, plan):
         "npcs": [character(c) for c in world.characters if not c.is_player],
         "player": character(world.player),
     }
-    arpg_mods = {}
     if getattr(world, "floors", None):
+        # the builder ignores keys it does not know: it never reads
+        # nativeFloors, and finish_scenario drives the pockets, the portal
+        # links and the seal from it once the build has assigned the ids
         from .extensions import floors
-        arpg_mods.update(floors.arpg_mods(world))
+        spec["nativeFloors"] = floors.native_floors(world)
+    arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights
         arpg_mods.update(lights.arpg_mods(world))
