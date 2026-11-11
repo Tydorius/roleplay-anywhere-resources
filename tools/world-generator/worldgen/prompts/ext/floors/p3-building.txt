@@ -15,5 +15,7 @@ When this building's plan entry has "storeys" above 1, also reply with:
 - People who live upstairs sleep there: their bedrooms move up a storey, one
   bed per sleeper. Furnish the upper rooms for their purpose — a landing has
   a lamp, a study has a desk.
-- Any stair-like furniture you list must be a template a person can stand on
-  (walkability above 0), or it would block its cell and close the passage.
+- Do not list stairs, staircases or a ladder up as furniture: the code
+  places the real stairs itself, and a stair of your own would lead nowhere.
+  A ruined building is the one exception — a stair rising to a collapsed
+  floor belongs in its furnishings.

@@ -1,6 +1,5 @@
 STAIRCASES (the floors extension)
-- When the plan's buildings have more than one storey, the catalogue needs a
-  staircase: a template named for stairs, size 1x1, walkability 1.0. A stair
-  is something a person stands on; walkability 0 would block its cell and the
-  passage would never work. The code places the stair objects on every
-  storey; one staircase template serves every building.
+- The code makes the stairs itself: for every multi-storey building it places
+  its own stair objects on each storey and links them storey to storey. The
+  catalogue must not include a staircase template of its own — a stair
+  template would only place stairs that lead nowhere.

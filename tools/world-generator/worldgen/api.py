@@ -348,6 +348,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
             "vehicles": len(nat.get("vehicles") or {}),
         },
         "populations": _populations_summary(spec),
+        "stairs": world.metrics.get("stairs") or {"dropped": 0, "ruined": 0},
     }
 
 
@@ -453,6 +454,10 @@ def _summary_text(world, spec, seed, emit):
     if fl.get("floors"):
         lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "
                      f"floors checks: {'ok' if not fl.get('issues') else fl['issues']}")
+    st = world.metrics.get("stairs") or {}
+    if st.get("dropped") or st.get("ruined"):
+        lines.append(f"stairs to nowhere dropped {st.get('dropped', 0)}  "
+                     f"ruined stairs kept {st.get('ruined', 0)}")
     for w in world.metrics.get("map_warnings", []):
         lines.append(f"warning: {w}")
     lines.append("=" * 64)

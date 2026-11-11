@@ -12,6 +12,7 @@ The walkability model mirrors build_scenario.py exactly: the outer ring of a
 walled region is wall except at door openings, and walkability-0 objects block.
 """
 from .model import Rect, shared_wall_cells
+from .phases import RUIN_WORDS, STAIR_WORDS, ruined_building, stair_furniture_name
 
 
 def _ring(rect):
@@ -276,6 +277,26 @@ def _compound_checks(world, from_player):
     return issues
 
 
+def _ruined_at(scn, pos):
+    """Whether `pos` sits inside a region the built scenario itself calls a
+    ruin (a ruin word in its name or description) — a stair there may rise
+    to a collapsed floor."""
+    px, py = pos if isinstance(pos, (list, tuple)) and len(pos) == 2 \
+        else (None, None)
+    if not isinstance(px, int) or not isinstance(py, int):
+        return False
+    for r in scn.get("regions", []):
+        x, y = r.get("position") or (None, None)
+        w, h = r.get("size") or (0, 0)
+        if not (isinstance(x, int) and isinstance(y, int)):
+            continue
+        if x <= px < x + w and y <= py < y + h and (
+                RUIN_WORDS.search(r.get("name") or "")
+                or RUIN_WORDS.search(r.get("description") or "")):
+            return True
+    return False
+
+
 def check_scenario_mods(scenario_path, spec):
     """Issues with the built scenario.json against what the generator laid
     out: the arpgMods the spec carries (lights) must match exactly; every
@@ -283,7 +304,8 @@ def check_scenario_mods(scenario_path, spec):
     must point at each other; no sealed storey may keep an opening on its
     outer border; the floors must sit outside gridSize, FLOOR_GAP cells
     apart; every doorway whose room is not "none" must carry a door object,
-    and no door object may sit anywhere but on a doorway. Locks: every key
+    and no door object may sit anywhere but on a doorway; no stair-named
+    object ships without a portal, unless it rises in a ruin. Locks: every key
     opens a region that exists, and every room the spec locked has doors.
     Nature: the natural shapes, water surfaces and vehicle fields landed on
     the built scenario, and nobody stands on deep water.
@@ -307,6 +329,20 @@ def check_scenario_mods(scenario_path, spec):
         if key not in doorway_keys:
             issues.append(f"door object {on_key[0].get('name')!r} at "
                           f"{on_key[0].get('pos')} sits on no doorway")
+    # no stairs to nowhere: a stair-named object linked to no portal leads
+    # nowhere (the code places the real, linked stairs), unless it rises in
+    # a region the scenario itself calls a ruin
+    stair_templates = {t.get("id") for t in scn.get("objectTemplates") or []
+                       if STAIR_WORDS.search(t.get("name") or "")}
+    if stair_templates:
+        for e in scn.get("entities") or []:
+            if e.get("type") != "object" \
+                    or e.get("templateId") not in stair_templates \
+                    or isinstance(e.get("portal"), dict):
+                continue
+            if not _ruined_at(scn, e.get("pos")):
+                issues.append(f"stair object {e.get('name')!r} at "
+                              f"{e.get('pos')} leads nowhere (no portal)")
     # 1.0 locks and keys: every key opens a region that exists, and every
     # room the spec locked carries doors to lock
     region_ids = {r.get("id") for r in scn.get("regions", [])}
@@ -567,8 +603,47 @@ def _cut_off_cells(world, openings, jumps):
     return sorted(cells - solid - seen)
 
 
+def _drop_dead_stairs(world):
+    """No stairs to nowhere: furniture named for a stair but linked to no
+    portal goes — the floors code places the real, linked stairs — and a
+    ruined building keeps its stair, which may rise to a collapsed floor.
+    Every later metric sees the final object set. Returns the counts for the
+    run summary."""
+    ends = set()
+    for p in getattr(world, "portals", None) or []:
+        ends.add((p.get("from") or {}).get("object"))
+        ends.add((p.get("to") or {}).get("object"))
+    names = object_entity_names(world)
+    building_of = {}
+    for b in world.buildings:
+        for layout in [b.layout] + [f.layout for f in getattr(b, "floors", []) or []]:
+            for r in layout.rooms:
+                building_of[r.full_name] = b
+            for uo in getattr(layout, "unit_outs", []) or []:
+                for r in uo.layout.rooms:
+                    building_of[r.full_name] = b
+    keep, dropped, ruined = [], 0, 0
+    for o in world.objects:
+        if not stair_furniture_name(o.template) or names[o] in ends:
+            keep.append(o)
+            continue
+        b = building_of.get(o.region)
+        if b is not None and ruined_building(b.layout.design):
+            ruined += 1
+            keep.append(o)
+        else:
+            dropped += 1
+            world.failures.append(
+                (f"stair {o.template} in {o.region}",
+                 "dropped: it leads nowhere (the code places the real stairs)"))
+    world.objects[:] = keep
+    return {"dropped": dropped, "ruined": ruined}
+
+
 def run_checks(world):
     from . import native
+    # no stairs to nowhere first, so every metric below sees the final set
+    stairs = _drop_dead_stairs(world)
     openings = compute_openings(world)
     # the water view is refreshed first, with the characters now placed: deep
     # water that would cut them off drops its surface before it blocks
@@ -726,6 +801,7 @@ def run_checks(world):
         "objects_out_of_bounds": out_of_bounds,
         "characters": {"total": len(world.characters), "issues": char_issues},
         "floors": floors_metrics,
+        "stairs": stairs,
         "water": native.water_metrics(world, water),
         "compounds": {"compounds": len(getattr(world, "compounds", []) or []),
                       "issues": [f"{w}: {r}" for (w, r) in compound_issues]},
