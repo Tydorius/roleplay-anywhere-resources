@@ -10,9 +10,11 @@ plays badly, "info" is worth knowing (an image the game will generate).
 """
 import io
 import json
+import math
 import re
 import sys
 import zipfile
+from functools import lru_cache
 from pathlib import Path
 
 # Character and creature sprites in Anywhere RPG 1.0 (build 26557354): the keys of the bundle's sprite table,
@@ -83,6 +85,10 @@ VEHICLES = {"drive", "ride"}                             # an object template's 
 WALKS = {"yes", "slow", "no"}                            # a liquid's `walk` in unbounded.profile.media
 SHAPES = {"organic"}                                     # region `shape`; rounds open regions at least 5 x 5
 ORGANIC_MIN = 5
+MAX_MEDIA = 8       # the game's own unbounded.profile.media lists have at most 8 entries, and it adds no more
+NEW_COLOR = "#3a6d8a"  # the medium the game appends for a surface no medium matches
+DEFAULT_MEDIA = ({"name": "deep water", "walk": "no", "color": "#24506e", "flows": True},
+                 {"name": "shallow water", "walk": "slow", "color": "#3f7f90", "flows": True})
 FLOOR_GAP = 24  # the game lays floors out east of the map, 24 cells apart (it reads any spot outside it)
 
 
@@ -223,39 +229,186 @@ def is_locked(e):
                for m in (s.get("def") or {}).get("mechanics") or [] if isinstance(m, dict))
 
 
-def liquid(scn, name, short_side):
-    """The unbounded.profile.media entry a region's `surface` turns into, the way the game picks it: the same name,
-    else one whose name holds it or is held in it (for a stream at most 3 cells wide one you wade through, else
-    one you can't). None means the game adds it as a new liquid nobody can walk through."""
-    media = (((scn.get("unbounded") or {}).get("profile") or {}).get("media")) or []
-    media = [m for m in media if isinstance(m, dict) and isinstance(m.get("name"), str)]
-    for m in media:
-        if m["name"] == name:
-            return m
-    near = [m for m in media if m["name"] in name or name in m["name"]]
-    if near:
-        want = "slow" if short_side <= 3 else "no"
-        return next((m for m in near if m.get("walk") == want), near[0])
+def norm_shape(v):
+    """'organic' as the game reads a region's `shape` (trimmed, any case, 'natural' the same word), or None
+    when it draws a rectangle."""
+    if isinstance(v, str):
+        v = v.strip().lower()
+        if v in ("organic", "natural"):
+            return "organic"
     return None
 
 
-def liquid_cells(scn, regions):
-    """Cells nobody can walk on because a region's surface is a liquid with walk 'no'. An organic region counts only
-    the middle of its blob, which is surely wet; a region without a surface inside it (a bridge, a jetty) is dry."""
-    out = set()
-    for r in regions:
-        surf = r.get("surface")
-        if not (isinstance(surf, str) and surf.strip()) or r.get("wall") or "pocket" in r or not _has_geometry(r):
+def norm_surface(v):
+    """The `surface` the game keeps: trimmed, lowercased, cut to 40 characters, or None (no surface)."""
+    if isinstance(v, str):
+        v = v.strip().lower()[:40]
+        return v or None
+    return None
+
+
+def media_list(scn):
+    """(list, defaults): the liquid list the game reads. A scenario with no `unbounded` key gets the two
+    built-in waters; `unbounded` without a profile.media list gives (None, False): the game fails to load it
+    as soon as any region has a surface."""
+    u = scn.get("unbounded")
+    if u is None:
+        return DEFAULT_MEDIA, True
+    prof = u.get("profile") if isinstance(u, dict) else None
+    media = prof.get("media") if isinstance(prof, dict) else None
+    return (media, False) if isinstance(media, list) else (None, False)
+
+
+def is_river(r):
+    """A liquid region at least three times as long as it is wide, and at most 12 wide: the game draws it as a
+    meandering band of its narrower size through the middle, not a pool filling the region."""
+    w, h = r.get("size", (0, 0))
+    return max(w, h) >= 3 * min(w, h) and min(w, h) <= 12
+
+
+def _surface_region(r):
+    """A region whose surface the game resolves: not a floor, not walled, with geometry and a non-empty surface."""
+    return (not r.get("wall") and "pocket" not in r and _has_geometry(r)
+            and isinstance(r.get("surface"), str) and r["surface"].strip())
+
+
+def resolve_surfaces(scn):
+    """Every surface the game resolves, regions in scenario order against a working copy of the media list
+    (later regions see what earlier ones made it add): {region id: {"medium": m, "kind": "pool"|"river",
+    "added": bool}}, or None for a region whose surface is ignored because the list is full. None as a whole
+    when the media list itself is broken: the game fails to load the scenario then."""
+    media, _defaults = media_list(scn)
+    if media is None:
+        return None
+    out = {}
+    media = list(media)
+    for r in scn.get("regions", []):
+        if not (isinstance(r, dict) and _surface_region(r)):
             continue
-        w, h = r["size"]
-        m = liquid(scn, surf, min(w, h))
-        if m is not None and m.get("walk") != "no":
+        surf = norm_surface(r["surface"])
+        m = next((e for e in media if isinstance(e, dict) and e.get("name") == surf), None)
+        added = False
+        if m is None:
+            near = [e for e in media if isinstance(e, dict) and isinstance(e.get("name"), str)
+                    and (surf in e["name"] or e["name"] in surf)]
+            if near:
+                want = "slow" if min(r["size"]) <= 3 else "no"  # a narrow stream is waded, a wide one isn't
+                m = next((e for e in near if e.get("walk") == want), near[0])
+            elif len(media) < MAX_MEDIA:
+                m = {"name": surf, "walk": "no", "color": NEW_COLOR, "flows": True}
+                media.append(m)
+                added = True
+            else:
+                out[r.get("id")] = None
+                continue
+        out[r.get("id")] = {"medium": m, "kind": "river" if is_river(r) else "pool", "added": added}
+    return out
+
+
+def _i32(x):
+    x &= 0xFFFFFFFF
+    return x - 0x100000000 if x & 0x80000000 else x
+
+
+def _imul(a, b):  # Math.imul: the low 32 bits of the product, as a signed integer
+    return _i32(a * b)
+
+
+def _hash32(s):
+    t = 0
+    for ch in s:
+        t = _i32(t * 31 + ord(ch))
+    return t & 0xFFFFFFFF
+
+
+def _rng(seed):
+    t = _i32(seed)
+
+    def nxt():
+        nonlocal t
+        t = _i32(t + 1831565813)
+        n = _imul(t ^ (t & 0xFFFFFFFF) >> 15, t | 1)
+        n = _i32(n + _imul(n ^ (n & 0xFFFFFFFF) >> 7, n | 61)) ^ n
+        return ((n ^ ((n & 0xFFFFFFFF) >> 14)) & 0xFFFFFFFF) / 4294967296
+
+    return nxt
+
+
+_FILL, _P, _U0 = .7, 3, .4
+
+
+def _keep_centre(p, w, h):
+    """The blob's centre cell forced on, then only the 1s the centre reaches across (4-connected) survive.
+    Returns how many cells were reached."""
+    c = (h // 2) * w + w // 2
+    p[c] = 1
+    seen = bytearray(w * h)
+    seen[c] = 1
+    todo, n = [c], 0
+    while todo:
+        i = todo.pop()
+        n += 1
+        x, y = i % w, i // w
+        for ok, j in ((x > 0, i - 1), (x < w - 1, i + 1), (y > 0, i - w), (y < h - 1, i + w)):
+            if ok and not seen[j] and p[j]:
+                seen[j] = 1
+                todo.append(j)
+    for k in range(w * h):
+        if p[k] and not seen[k]:
+            p[k] = 0
+    return n
+
+
+@lru_cache(maxsize=None)
+def blob_mask(rid, w, h):
+    """The blob a region with this id fills in a w x h rectangle: the game's own Hhe(id, w, h), bit for bit
+    (its 32-bit hash and rng, then the same float maths and centre-keeping fill). bytes of 0 and 1, [y * w + x],
+    row 0 the region's lowest y."""
+    i = _rng(_hash32("organic:" + rid))
+    o = [2 + math.floor(i() * 2), 4 + math.floor(i() * 2), 7]  # each harmonic's base radius, in cells
+    g = [i() * math.pi * 2 for _ in o]                         # its phase
+    r = [.5, .3, .2]                                           # its weight
+    m = lambda u: sum((r[l] * math.sin(o[l] * u + g[l]) for l in range(3)), 0)  # the wobble along angle u
+    lo, hi = math.inf, -math.inf
+    for u in range(360):
+        c = m(u / 360 * math.pi * 2)
+        lo, hi = min(lo, c), max(hi, c)
+    p = bytearray(w * h)
+    u = _U0
+    while True:  # shrink until the blob is at least 70% filled, keeping its centre
+        for k in range(w * h):
+            p[k] = 0
+        for y in range(h):
+            for x in range(w):
+                d = (x + .5) / w * 2 - 1
+                A = (y + .5) / h * 2 - 1
+                f = math.pow(math.pow(abs(d), _P) + math.pow(abs(A), _P), 1 / _P)
+                v = (m(math.atan2(A, d)) - lo) / ((hi - lo) or 1)
+                if f <= 1 - u * v:
+                    p[y * w + x] = 1
+        if _keep_centre(p, w, h) >= _FILL * w * h or u < .02:
+            return bytes(p)
+        u *= .8
+
+
+def liquid_cells(scn, regions):
+    """Cells nobody can walk on because a region's surface is a liquid with walk 'no', the way the game
+    resolves it. An organic region counts only the cells of its blob (blob_mask); a region without a surface
+    inside it (a bridge, a jetty) is dry."""
+    out = set()
+    resolved = resolve_surfaces(scn) or {}
+    for r in regions:
+        res = resolved.get(r.get("id"))
+        if not res or res["medium"].get("walk") != "no":
             continue
         rr = rect(r["position"], r["size"])
-        wet = set(cells(rr))
-        if r.get("shape") == "organic" and min(w, h) >= ORGANIC_MIN:
-            wet = {(x, y) for (x, y) in wet
-                   if (abs((x - rr[0] + .5) / w * 2 - 1) ** 3 + abs((y - rr[1] + .5) / h * 2 - 1) ** 3) ** (1 / 3) <= .6}
+        w, h = r["size"]
+        if norm_shape(r.get("shape")) and min(w, h) >= ORGANIC_MIN:
+            mask = blob_mask(r.get("id"), w, h)
+            wet = {(r["position"][0] + x, r["position"][1] + y)
+                   for y in range(h) for x in range(w) if mask[y * w + x]}
+        else:
+            wet = set(cells(rr))
         for d in regions:
             if d is not r and not d.get("surface") and _has_geometry(d) and contains(rr, rect(d["position"], d["size"])):
                 wet -= set(cells(rect(d["position"], d["size"])))
@@ -270,14 +423,15 @@ def check(scn, media=frozenset()):
     def add(level, msg, *refs):
         out.append({"level": level, "msg": msg, "refs": [r for r in refs if r]})
 
-    _top(scn, add)
     regions = [r for r in scn.get("regions", []) if isinstance(r, dict)]
+    resolved = resolve_surfaces(scn)
+    _top(scn, add, any(_surface_region(r) for r in regions))
     by_name = {}
     for r in regions:
         by_name.setdefault(r.get("name"), []).append(r)
     mods = _code_mods(scn, regions, add)
     _native_portals(scn, regions, add, mods)
-    _regions(scn, regions, by_name, add, mods)
+    _regions(scn, regions, by_name, add, mods, resolved)
     _templates(scn, regions, add)
     _entities(scn, by_name, media, add)
     if all(_has_geometry(r) for r in regions):
@@ -408,7 +562,7 @@ def _native_portals(scn, regions, add, mods):
                         mods["entered"].add(r["id"])
 
 
-def _top(scn, add):
+def _top(scn, add, any_surface=False):
     for k in ("name", "gridSize", "regions", "entities", "playerId"):
         if k not in scn:
             add("error", f"Missing required key {k!r}; the import refuses the file.")
@@ -431,26 +585,53 @@ def _top(scn, add):
     if isinstance(scn.get("npcTemplates"), list) and scn.get("hostileNpcTemplates"):
         add("warning", "The scenario has both npcTemplates and hostileNpcTemplates; the game keeps npcTemplates and "
                        "drops hostileNpcTemplates.")
-    _unbounded(scn.get("unbounded"), add)
+    _unbounded(scn.get("unbounded"), add, any_surface)
 
 
-def _unbounded(u, add):
-    """The open world around the map (1.0). The editor keeps it as it is; this only catches a broken shape."""
+def _unbounded(u, add, any_surface=False):
+    """The open world around the map (1.0): the seed and the liquid media the game draws surfaces with. The
+    editor keeps it as it is; this only catches a broken shape."""
     if u is None:
         return
     if not isinstance(u, dict):
         add("error", "unbounded must be an object {seed, profile, areas}.")
         return
-    if "seed" in u and not isinstance(u["seed"], (int, float)):
+    if not isinstance(u.get("seed"), (int, float)):
         add("warning", "unbounded.seed should be a number.")
     prof = u.get("profile")
-    media = (prof or {}).get("media") if isinstance(prof, dict) else None
+    media = prof.get("media") if isinstance(prof, dict) else None
     if prof is not None and not (isinstance(prof, dict) and isinstance(media or [], list)):
         add("warning", "unbounded.profile should be {media: [...], lowEdges: [...]}.")
         media = None
-    for m in media or []:
-        if not (isinstance(m, dict) and isinstance(m.get("name"), str)) or m.get("walk") not in WALKS:
+    if not isinstance(media, list):
+        if any_surface:
+            add("error", "unbounded.profile.media is not a list; the game fails to load the scenario as soon "
+                         "as a region has a surface.")
+        media = []
+    names = set()
+    for m in media:
+        if not isinstance(m, dict):
             add("warning", f"unbounded.profile.media entry {m!r} needs a name and walk yes, slow or no.")
+            continue
+        nm = m.get("name")
+        if not (isinstance(nm, str) and nm and nm == nm.lower() and len(nm) <= 40):
+            add("warning", f"unbounded.profile.media entry {nm!r}: name must be a lowercase string of 1-40 "
+                           "characters.")
+        if isinstance(nm, str):
+            if nm.lower() in names:
+                add("warning", f"unbounded.profile.media: two entries named {nm!r}; the game's own names are unique.")
+            names.add(nm.lower())
+        if m.get("walk") not in WALKS:
+            add("warning", f"unbounded.profile.media entry {nm!r}: walk {m.get('walk')!r} isn't yes, slow or no.")
+        if not (isinstance(m.get("color"), str) and HEX.match(m["color"])):
+            add("warning", f"unbounded.profile.media entry {nm!r}: color {m.get('color')!r} isn't a colour like "
+                           "#24506e.")
+        for key in ("flows", "glow"):
+            if key in m and not isinstance(m[key], bool):
+                add("warning", f"unbounded.profile.media entry {nm!r}: {key} must be true or false.")
+    if len(media) > MAX_MEDIA:
+        add("info", f"unbounded.profile.media has {len(media)} entries; the game's own lists have at most "
+                    f"{MAX_MEDIA}, and it adds no more.")
     areas = u.get("areas")
     if areas is not None and not isinstance(areas, list):
         add("warning", "unbounded.areas should be a list.")
@@ -460,7 +641,7 @@ def _unbounded(u, add):
             add("warning", "An unbounded area has no record with an id like \"-1,0\".")
 
 
-def _regions(scn, regions, by_name, add, mods):
+def _regions(scn, regions, by_name, add, mods, resolved=None):
     gw, gh = (scn.get("gridSize") or [0, 0])[:2]
     if not all(isinstance(v, (int, float)) for v in (gw, gh)):
         gw, gh = 0, 0
@@ -512,7 +693,7 @@ def _regions(scn, regions, by_name, add, mods):
         doors = [o for o in r.get("openings") or [] if is_opening(o) and opening_sides(r, o)]
         if r.get("wall") and not doors and rid not in mods["entered"] and rid not in mods["openings"]:
             add("warning", f"Walled region {r['name']!r} has no door, so it is sealed.", rid)
-        _region_1_0(scn, r, label, ids, people, add)
+        _region_1_0(scn, r, label, ids, people, add, resolved)
     _floors(regions, floor_rects, main, add)
     for i, a in enumerate(regions):
         if not _has_geometry(a):
@@ -530,20 +711,20 @@ def _regions(scn, regions, by_name, add, mods):
 HEX = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
-def _region_1_0(scn, r, label, ids, people, add):
+def _region_1_0(scn, r, label, ids, people, add, resolved=None):
     """A region's Anywhere RPG 1.0 fields: shape, liquid surface, door kind and colour, the theft flag, and the
     world generator's fields that a scenario can't use."""
     rid, walled = r.get("id"), bool(r.get("wall"))
     shp = r.get("shape")
     if shp is not None:
-        if shp == "natural":
-            add("warning", f"{label}: shape 'natural' is the world generator's word; a scenario needs 'organic', or "
-                           "the game draws a rectangle.", rid)
-        elif shp not in SHAPES:
+        word = shp.strip().lower() if isinstance(shp, str) else None
+        if word == "natural":
+            add("info", f"{label}: the game reads 'natural' as 'organic'.", rid)
+        elif word != "organic":
             add("warning", f"{label}: shape {shp!r} isn't 'organic'; the game draws a rectangle.", rid)
-        elif walled or "pocket" in r:
+        if word in ("natural", "organic") and (walled or "pocket" in r):
             add("info", f"{label}: walled regions and floors stay rectangular, so shape is ignored.", rid)
-        elif min(r["size"]) < ORGANIC_MIN:
+        elif word in ("natural", "organic") and min(r["size"]) < ORGANIC_MIN:
             add("info", f"{label} is too small to round off (it needs {ORGANIC_MIN} x {ORGANIC_MIN}); it stays a "
                         "rectangle.", rid)
     surf = r.get("surface")
@@ -553,12 +734,24 @@ def _region_1_0(scn, r, label, ids, people, add):
         elif walled or "pocket" in r:
             add("warning", f"{label}: walled regions and floors can't be a liquid; the game ignores surface here.", rid)
         else:
-            m = liquid(scn, surf, min(r["size"]))
-            if m is None:
-                add("info", f"{label}: liquid {surf!r} isn't in unbounded.profile.media, so the game adds it as one "
-                            "nobody can walk through.", rid)
-            elif m["name"] != surf:
-                add("info", f"{label}: the game reads liquid {surf!r} as {m['name']!r} (walk: {m.get('walk')}).", rid)
+            norm = norm_surface(surf)
+            if norm != surf:
+                add("info", f"{label}: the game reads surface {surf!r} as {norm!r}.", rid)
+            res = (resolved or {}).get(rid)
+            if resolved is not None and res is None:
+                add("warning", f"{label}: surface {norm!r} is ignored; unbounded.profile.media already has "
+                               f"{MAX_MEDIA} entries and the game adds no more.", rid)
+            elif res is not None:
+                m = res["medium"]
+                if res["added"]:
+                    add("info", f"{label}: liquid {norm!r} isn't in the media list, so the game adds it as a new "
+                                "deep liquid nobody can walk through.", rid)
+                elif m.get("name") != norm:
+                    add("info", f"{label}: the game reads liquid {norm!r} as {m.get('name')!r} (walk: {m.get('walk')}).",
+                        rid)
+                if res["kind"] == "river":
+                    add("info", f"{label} is long and thin, so the game draws it as a river {min(r['size'])} cells "
+                                "wide, not a pool.", rid)
     door = r.get("door")
     if door is not None:
         if not walled:
