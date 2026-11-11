@@ -291,6 +291,13 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
     else:
         client = None
         calls, retries, tokens, dropped_model, minutes, idea = 0, 0, 0, 0, layout_minutes, None
+    nat = spec.get("nativeNature") or {}
+    water = world.metrics.get("water") or {}
+    depths = {}
+    draws = {}
+    for reg in water.get("regions") or []:
+        depths[reg.get("depth")] = depths.get(reg.get("depth"), 0) + 1
+        draws[reg.get("draw")] = draws.get(reg.get("draw"), 0) + 1
     return {
         "ok": not failed and n_err == 0,
         "provider": client.provider if client else None,
@@ -315,6 +322,16 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
             "rooms": [{"room": e.get("room"), "keys": e.get("holders")}
                       for e in ((spec.get("nativeLocks") or {}).get("locks") or [])],
             "theft_buildings": len((spec.get("nativeLocks") or {}).get("theft") or []),
+        },
+        "nature": {
+            "natural_regions": len(nat.get("shape") or []),
+            "water_regions": len(nat.get("water") or []),
+            "water_deep": depths.get("deep", 0),
+            "water_shallow": depths.get("shallow", 0),
+            "water_rivers": draws.get("river", 0),
+            "water_pools": draws.get("pool", 0),
+            "water_surfaces_dropped": len(water.get("dropped") or []),
+            "vehicles": len(nat.get("vehicles") or {}),
         },
     }
 
@@ -395,6 +412,17 @@ def _summary_text(world, spec, seed, emit):
         for entry in locks.get("locks") or []:
             held = ", ".join(entry.get("holders") or []) or "nobody (a cell)"
             lines.append(f"  - {entry['room']}: {held}")
+    nat = spec.get("nativeNature") or {}
+    if nat.get("shape") or nat.get("water") or nat.get("vehicles"):
+        water = world.metrics.get("water") or {}
+        deep = sum(1 for x in water.get("regions") or [] if x.get("depth") == "deep")
+        rivers = sum(1 for x in water.get("regions") or [] if x.get("draw") == "river")
+        lines.append(f"natural regions {len(nat.get('shape') or [])}  "
+                     f"water {len(nat.get('water') or [])} "
+                     f"({deep} deep, {rivers} river)  "
+                     f"vehicles {len(nat.get('vehicles') or {})}")
+        for gone in water.get("dropped") or []:
+            lines.append(f"  - {gone['name']}: {gone['reason']}")
     fl = world.metrics.get("floors") or {}
     if fl.get("floors"):
         lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "

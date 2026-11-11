@@ -39,9 +39,9 @@ def compute_openings(world):
     return openings
 
 
-def walkability_grid(world, openings):
-    """(blocked_cells, door_cells) over the whole map."""
-    W, H = world.grid
+def _base_grid(world, openings):
+    """(blocked_cells, door_cells) of the built shapes alone: the walls of
+    walled regions (minus their doorways) and walkability-0 objects."""
     blocked = set()
     doors = set()
     for r in world.regions:
@@ -55,6 +55,16 @@ def walkability_grid(world, openings):
             w, h = t.size
             blocked |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
                         for y in range(o.pos[1], o.pos[1] + h)}
+    return blocked, doors
+
+
+def walkability_grid(world, openings):
+    """(blocked_cells, door_cells) over the whole map: walls, solid objects
+    and deep water. Shallow water is waded — walk "slow" — so it stays
+    walkable; deep water has walk "no" and blocks like a wall."""
+    from . import native
+    blocked, doors = _base_grid(world, openings)
+    blocked |= native.deep_cells(world)
     return blocked, doors
 
 
@@ -274,7 +284,9 @@ def check_scenario_mods(scenario_path, spec):
     outer border; the floors must sit outside gridSize, FLOOR_GAP cells
     apart; every doorway whose room is not "none" must carry a door object,
     and no door object may sit anywhere but on a doorway. Locks: every key
-    opens a region that exists, and every room the spec locked has doors."""
+    opens a region that exists, and every room the spec locked has doors.
+    Nature: the natural shapes, water surfaces and vehicle fields landed on
+    the built scenario, and nobody stands on deep water."""
     import json
     from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
@@ -308,6 +320,51 @@ def check_scenario_mods(scenario_path, spec):
                           f"of the built scenario")
         elif not native.region_doors(scn, room):
             issues.append(f"locked room {entry.get('room')!r} has no doors")
+    # 1.0 nature: the natural shapes, water surfaces and vehicle fields the
+    # spec chose landed on the built scenario, and nothing that cannot swim
+    # stands on deep water
+    nature = (spec or {}).get("nativeNature") or {}
+    if nature:
+        from .vendor import scenario_checks as vendor
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        for name in nature.get("shape") or []:
+            area = by_name.get(name)
+            if area is None:
+                issues.append(f"natural shape names region {name!r}, which "
+                              f"the built scenario does not have")
+            elif area.get("shape") not in ("natural", "organic"):
+                issues.append(f"region {name!r} ships without its natural shape")
+        for name in nature.get("water") or []:
+            area = by_name.get(name)
+            if area is None:
+                issues.append(f"water surface names region {name!r}, which "
+                              f"the built scenario does not have")
+            elif area.get("surface") != "water":
+                issues.append(f"region {name!r} ships without its water surface")
+        for name, fields in (nature.get("vehicles") or {}).items():
+            t = next((t for t in scn.get("objectTemplates") or []
+                      if t.get("name") == name), None)
+            if t is None:
+                issues.append(f"vehicle {name!r} is no object template "
+                              f"of the built scenario")
+                continue
+            for k, v in fields.items():
+                if t.get(k) != v:
+                    issues.append(f"vehicle {name!r} lost its {k} in the build")
+        tpl = {t.get("id"): t for t in scn.get("objectTemplates") or []}
+        wet = vendor.liquid_cells(scn, scn.get("regions") or [])
+        for e in scn.get("entities") or []:
+            if e.get("type") == "object":
+                t = tpl.get(e.get("templateId")) or {}
+                if t.get("vehicle"):
+                    continue  # a boat is meant to sit on water
+                hit = set(vendor.footprint(e, tpl)) & wet
+                if hit:
+                    issues.append(f"object {e.get('name')!r} stands on deep "
+                                  f"water at {sorted(hit)[:4]}")
+            elif e.get("type") in ("npc", "player") and \
+                    tuple(e.get("pos") or ()) in wet:
+                issues.append(f"{e.get('name')!r} starts on deep water")
     arpg_mods = (spec or {}).get("arpgMods")
     got = scn.get("arpgMods")
     if arpg_mods:
@@ -479,7 +536,11 @@ def _cut_off_cells(world, openings, jumps):
 
 
 def run_checks(world):
+    from . import native
     openings = compute_openings(world)
+    # the water view is refreshed first, with the characters now placed: deep
+    # water that would cut them off drops its surface before it blocks
+    water = native.final_water(world, refresh=True)
     blocked, doors = walkability_grid(world, openings)
 
     # ---- overlap and containment (the builder's nesting rule)
@@ -633,6 +694,7 @@ def run_checks(world):
         "objects_out_of_bounds": out_of_bounds,
         "characters": {"total": len(world.characters), "issues": char_issues},
         "floors": floors_metrics,
+        "water": native.water_metrics(world, water),
         "compounds": {"compounds": len(getattr(world, "compounds", []) or []),
                       "issues": [f"{w}: {r}" for (w, r) in compound_issues]},
     }

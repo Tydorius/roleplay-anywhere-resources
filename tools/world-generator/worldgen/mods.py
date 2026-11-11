@@ -11,7 +11,9 @@ sit outside), the ``nativeDoors`` door kinds written onto the walled regions
 and a door object hung on every doorway that has none (of the doorway's
 room's kind — a doorway with no door object is an open gap in 1.0, and the
 game adds no doors to imported scenarios), the ``nativeLocks`` rooms locked
-with their keys handed out and the theft buildings flagged, the spec's
+with their keys handed out and the theft buildings flagged, the
+``nativeNature`` shapes and surfaces on the regions and vehicle fields on
+the templates (the same by-name carry, for the same reason), the spec's
 ``arpgMods`` when
 another extension filled one (lights), and the void-zone slabs hardened to
 walkability 0 (the spec carried them as passable so the builder's flat walk
@@ -139,6 +141,25 @@ def finish_scenario(scenario_dir, spec):
             area = by_name.get(name)
             if area is not None:
                 area["takingIsTheft"] = True
+    # the same by-name trick for the nature pass: the shapes and surfaces on
+    # the regions, the vehicle fields on the object templates — surface only
+    # on unwalled regions, which is the only place the game keeps it
+    nature = spec.get("nativeNature") or {}
+    if nature.get("shape") or nature.get("water") or nature.get("vehicles"):
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        for name in nature.get("shape") or []:
+            area = by_name.get(name)
+            if area is not None:
+                area["shape"] = "natural"
+        for name in nature.get("water") or []:
+            area = by_name.get(name)
+            if area is not None and not area.get("wall"):
+                area["surface"] = "water"
+        templates = {t.get("name"): t for t in scn.get("objectTemplates", [])}
+        for name, fields in (nature.get("vehicles") or {}).items():
+            t = templates.get(name)
+            if t is not None:
+                t.update(fields)
     _harden_boundary(scn)
     with open(scn_path, "w", encoding="utf-8") as f:
         json.dump(scn, f, ensure_ascii=False, indent=1)

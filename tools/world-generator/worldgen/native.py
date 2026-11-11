@@ -1,7 +1,9 @@
 """Anywhere RPG 1.0 door objects on a built scenario: a Python port of the
 Scenario Editor's own doorway rules (world10.js), so the generator ships what
 the game plays — a doorway with no door object is an open gap, and the game
-adds no doors to imported scenarios.
+adds no doors to imported scenarios. The lower half adds the 1.0 nature of a
+laid-out world: which regions are water (and which of those deep), which get
+a natural shape, and which object templates are vehicles.
 
 Doorways come from openings on walled regions: an opening crossed from a cell
 inside a walled region to the cell outside is a doorway only when every walled
@@ -369,3 +371,298 @@ def give_key(scn, region, person, ids):
     tpl = key_template(scn, region, ids)
     person.setdefault("inventory", []).append(
         {"id": ids("it"), "templateId": tpl["id"], "count": 1})
+
+
+# --------------------------------------------- nature, water and vehicles
+
+# Open ground that reads as landscape rather than lots: whole words of the
+# region's name (or of its zone's kind) name a green, grove, wood, meadow,
+# field or garden. A shape "natural" region is drawn as an organic blob that
+# covers at least 70% of its rectangle, so its corners may fall outside the
+# drawn shape.
+NATURAL_WORDS = frozenset(
+    "green greens common commons grove groves copse copses wood woods woodland "
+    "woodlands meadow meadows clearing clearings glade glades field fields "
+    "pasture pastures paddock paddocks orchard orchards garden gardens pond "
+    "ponds lake lakes marsh marshes".split())
+# ... but never the paved or fenced shapes, which stay rectangles
+NOT_NATURAL_WORDS = frozenset(
+    "road roads street streets square squares plaza plazas yard yards".split())
+NATURAL_REGION_KINDS = ("zone", "square", "field", "compound")
+
+# carts and their kin the game should let the player drive; mounts are
+# characters and stay as they are
+CART_WORDS = re.compile(
+    r"\b(carts?|wagons?|waggons?|carriages?|cabs?|cars?|trucks?|vans?|buggy|"
+    r"buggies|bicycles?|bikes?|motorbikes?|motorcycles?)\b")
+BIKE_WORDS = re.compile(r"\b(bicycles?|bikes?)\b")
+# a boat drives only on water: beside a river or lake it is a vehicle,
+# nowhere near one it is scenery
+BOAT_WORDS = re.compile(
+    r"\b(boats?|rowboats?|skiffs?|canoes?|punts?|rafts?|barges?|ferries?|"
+    r"ferry)\b")
+
+
+def _words(text):
+    """The whole lowercase words of a name or kind."""
+    return set(re.findall(r"[a-z]+", (text or "").lower()))
+
+
+def is_water_region(world, region, zone_kinds=None):
+    """Whether an unwalled region ships as water: water by name, or a zone
+    whose class is water (a river, lake or shore zone — settlement and
+    farmland words win over water ones, as in zone_class). Roads and paths
+    are never water: a way across the water is a bridge, a region without a
+    surface that the liquid flows under."""
+    if region.wall or region.kind in ("road", "path"):
+        return False
+    from .model import (AGRICULTURAL_WORDS, SETTLEMENT_WORDS, WATER_WORDS)
+    if _words(region.name) & set(WATER_WORDS):
+        return True
+    if region.kind == "zone":
+        kind = _words((zone_kinds or {}).get(region.group or region.name, ""))
+        if kind & set(WATER_WORDS) and not kind & set(SETTLEMENT_WORDS) \
+                and not kind & set(AGRICULTURAL_WORDS):
+            return True
+    return False
+
+
+def water_depth(region):
+    """How the game's default media resolve a water region: a short side of
+    3 cells or less is shallow water, waded at walk "slow"; anything deeper
+    is deep water with walk "no", which nobody crosses."""
+    return "shallow" if min(region.rect.w, region.rect.h) <= 3 else "deep"
+
+
+def river_shape_p(region):
+    """Whether the game draws the region as a meandering river of its short
+    side's width: at least three times as long as wide, and at most 12 wide.
+    Everything else is a pool."""
+    w, h = region.rect.w, region.rect.h
+    return max(w, h) >= 3 * min(w, h) and min(w, h) <= 12
+
+
+def water_regions(world, zone_kinds=None):
+    """{region name: 'deep' | 'shallow'} for every region that ships with a
+    water surface, before any reachability drops."""
+    out = {}
+    for r in world.regions:
+        if is_water_region(world, r, zone_kinds):
+            out[r.name] = water_depth(r)
+    return out
+
+
+def wet_cells(world, water):
+    """{region name: its wet cells} the way the game paints liquid: the
+    region's rectangle minus the cells of regions nested inside it that carry
+    no surface of their own — a bridge, a jetty or a walled yard over the
+    water stays dry ground."""
+    names = set(water)
+    out = {}
+    for name, _depth in water.items():
+        r = world.regions_by_name.get(name)
+        if r is None:
+            continue
+        cells = r.rect.cells()
+        for d in world.regions:
+            if d.name in names or d.name == name:
+                continue
+            if r.rect.contains_rect(d.rect):
+                cells -= d.rect.cells()
+        out[name] = cells
+    return out
+
+
+def deep_cells(world, water=None):
+    """Every cell of deep water — blocked for reachability and for anything
+    the generator places. Shallow water is waded, not blocked."""
+    if water is None:
+        water = final_water(world)
+    out = set()
+    for name, cells in wet_cells(world, water).items():
+        if water[name] == "deep":
+            out |= cells
+    return out
+
+
+def _must_reach_cells(world):
+    """The cells the world's ways have to reach: room and building interiors,
+    the cells before every entrance, compound courtyards and their parts,
+    every character's cell and the player's start and bed."""
+    from .model import SIDE_DX_DY
+    need = set()
+    for r in world.regions:
+        if r.wall and r.is_room:
+            need |= r.rect.interior().cells()
+    for b in world.buildings:
+        dx, dy = SIDE_DX_DY[b.layout.entrance_side]
+        need.add((b.layout.entrance_door[0] + dx,
+                  b.layout.entrance_door[1] + dy))
+        need |= b.layout.rect.interior().cells()
+    for comp in getattr(world, "compounds", None) or []:
+        need |= comp.courtyard.interior().cells()
+        for part in comp.parts:
+            need |= part.layout.rect.interior().cells()
+    for c in world.characters:
+        need.add(tuple(c.pos))
+    player = world.player
+    if player is not None:
+        need.add(tuple(player.pos))
+        bed = (world.sleep_assign or {}).get(player.person.name)
+        if bed is not None:
+            need |= bed.rect.interior().cells()
+    return need
+
+
+def _unwalkable_drops(world, water):
+    """Deep water regions that would cut the world's ways: with the region's
+    cells blocked, some room interior, entrance approach, compound part,
+    standing character or the player's start or bed could no longer be
+    reached from the roads. Those regions keep no surface, the brief's own
+    remedy for a world water would break."""
+    from . import checks
+    deep = sorted(n for n, d in water.items() if d == "deep")
+    if not deep:
+        return []
+    wet = wet_cells(world, water)
+    openings = checks.compute_openings(world)
+    base, _doors = checks._base_grid(world, openings)
+    jumps = checks.portal_jumps(world)
+    starts = set(world.reserved)
+    for road in world.roads:
+        starts |= road.cells()
+    reach = checks.flood(world, starts, base, jumps)
+    need = _must_reach_cells(world)
+    return [name for name in deep
+            if (reach - checks.flood(world, starts, base | wet[name],
+                                     jumps)) & need]
+
+
+def final_water(world, zone_kinds=None, refresh=False):
+    """{region name: depth} for the water that actually ships: every water
+    region minus those whose deep cells would cut the world's ways. Cached on
+    the world — a lookup with zone kinds (the richer view) overrides one
+    without, so the spec writer, the checks and the placement walks all see
+    the same water."""
+    kinds = zone_kinds or {}
+    cache = getattr(world, "_water_final", None)
+    if cache is not None and not refresh and (kinds or not cache[0]):
+        return cache[1]
+    water = water_regions(world, zone_kinds)
+    drops = _unwalkable_drops(world, water)
+    for name in drops:
+        del water[name]
+    world._water_final = (bool(kinds), water, drops)
+    return water
+
+
+def water_drops(world):
+    """The water regions whose surface was dropped for reachability."""
+    cache = getattr(world, "_water_final", None)
+    return list(cache[2]) if cache else []
+
+
+def water_metrics(world, water):
+    """The water half of the run's metrics: each region's depth and how the
+    game draws it (a river or a pool), plus the surfaces dropped to keep the
+    world's ways walkable."""
+    out = {"regions": [], "dropped": []}
+    for name, depth in sorted(water.items()):
+        r = world.regions_by_name.get(name)
+        if r is None:
+            continue
+        out["regions"].append({"name": name, "depth": depth,
+                               "draw": "river" if river_shape_p(r) else "pool"})
+    for name in water_drops(world):
+        out["dropped"].append({
+            "name": name,
+            "reason": "deep water here would cut the world's only ways, "
+                      "so the region ships without its surface"})
+    return out
+
+
+def natural_regions(world, zone_kinds=None):
+    """Names of the regions that ship with shape "natural": unwalled open
+    ground named (or zoned) a green, grove, wood, meadow, field, garden or
+    the like, both sides at least 5 — the game keeps the rectangle for
+    anything smaller. Never roads, streets, squares, plazas, yards, anything
+    walled or the built shapes."""
+    kinds = _zone_word_kinds(zone_kinds)
+    out = []
+    for r in world.regions:
+        if r.wall or r.kind not in NATURAL_REGION_KINDS:
+            continue
+        words = _words(r.name)
+        natural = bool(words & NATURAL_WORDS)
+        if not natural and r.kind == "zone":
+            natural = bool(kinds.get(r.group or r.name, set()) & NATURAL_WORDS)
+        if not natural or words & NOT_NATURAL_WORDS:
+            continue
+        if r.kind == "zone" and kinds.get(r.group or r.name,
+                                          set()) & NOT_NATURAL_WORDS:
+            continue
+        if r.rect.w < 5 or r.rect.h < 5:
+            continue
+        out.append(r.name)
+    return out
+
+
+def _zone_word_kinds(zone_kinds):
+    return {name: _words(kind) for name, kind in (zone_kinds or {}).items()}
+
+
+def corner_cells(rect, reach=2):
+    """The cells within `reach` of a rect's corners — where an organic blob
+    that covers only part of its rectangle may leave ground outside the
+    drawn shape. Nothing the generator means to place may sit there."""
+    corners = ((rect.x, rect.y), (rect.x1, rect.y),
+               (rect.x, rect.y1), (rect.x1, rect.y1))
+    return {(x, y)
+            for x in range(rect.x, rect.x1 + 1)
+            for y in range(rect.y, rect.y1 + 1)
+            if any(max(abs(x - cx), abs(y - cy)) <= reach
+                   for cx, cy in corners)}
+
+
+def vehicle_fields(name):
+    """The 1.0 vehicle fields for a template the game should treat as a
+    vehicle: carts, wagons, carriages, cars and the like drive; a bicycle
+    also gets its built-in sheet. {} for everything else — mounts are
+    characters, and boats need water beside them (see boat_on_water)."""
+    text = name.lower()
+    if BIKE_WORDS.search(text):
+        return {"vehicle": "drive", "sheet": "bicycle", "takingIsTheft": True}
+    if CART_WORDS.search(text):
+        return {"vehicle": "drive", "takingIsTheft": True}
+    return {}
+
+
+def is_boat(name):
+    """Whether the template's name is a boat."""
+    return bool(BOAT_WORDS.search(name.lower()))
+
+
+def boat_on_water(world, template, water):
+    """Whether any placement of the boat template sits on or beside the
+    water: a boat nowhere near water is scenery."""
+    from .model import Rect
+    rects = [world.regions_by_name[n].rect for n in water
+             if n in world.regions_by_name]
+    if not rects:
+        return False
+    size = world.templates[template].size
+    for o in world.objects:
+        if o.template != template:
+            continue
+        r = Rect(o.pos[0], o.pos[1], size[0], size[1])
+        if any(r.gap(w) <= 1 for w in rects):
+            return True
+    return False
+
+
+def footprint(world, obj):
+    """The cells an object covers, at its template's size (the walkability
+    walk uses the same view)."""
+    w, h = world.templates[obj.template].size
+    return {(x, y) for x in range(obj.pos[0], obj.pos[0] + w)
+            for y in range(obj.pos[1], obj.pos[1] + h)}

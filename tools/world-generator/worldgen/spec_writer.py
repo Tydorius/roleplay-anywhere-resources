@@ -205,6 +205,130 @@ def _theft_buildings(world):
             out.append(design.name)
     return out
 
+
+def _vehicles(world, plan, water):
+    """{template name: 1.0 vehicle fields} for the catalogue's carts, wagons
+    and bikes (vehicles wherever they stand) and its boats (only when one
+    sits on or beside water — a boat high and dry is scenery). Every vehicle
+    is theft to drive off unless all its placements stand in the player's
+    own home."""
+    from . import native
+    home = world.player.person.home if world.player is not None else ""
+    out = {}
+    for t in plan.templates:
+        fields = native.vehicle_fields(t.name)
+        if not fields and native.is_boat(t.name) and \
+                native.boat_on_water(world, t.name, water):
+            fields = {"vehicle": "drive", "takingIsTheft": True}
+        if not fields:
+            continue
+        poses = [o for o in world.objects if o.template == t.name]
+        if home and poses and all(_in_building(world, o.region, home) for o in poses):
+            fields = {k: v for k, v in fields.items() if k != "takingIsTheft"}
+        out[t.name] = fields
+    return out
+
+
+def _in_building(world, region_name, home):
+    """Whether a region is the home building itself or one of its rooms."""
+    r = world.regions_by_name.get(region_name)
+    return region_name == home or (r is not None and r.parent == home)
+
+
+def _dry_spot(world, obj, region, deep, taken):
+    """The nearest origin for the object inside its own region where it
+    covers no deep water and no cell another object holds."""
+    from . import checks as checks_mod
+    from . import native
+    w, h = world.templates[obj.template].size
+    cells = region.rect.cells()
+    for (x, y) in sorted(cells, key=lambda c: (abs(c[0] - obj.pos[0])
+                                               + abs(c[1] - obj.pos[1]), c)):
+        foot = {(cx, cy) for cx in range(x, x + w) for cy in range(y, y + h)}
+        if not foot <= cells:
+            continue
+        if foot & deep or foot & taken:
+            continue
+        if not all(checks_mod.on_a_plane(world, c) for c in foot):
+            continue
+        return [x, y]
+    return None
+
+
+def _clear_deep_water(world, water, vehicles):
+    """Nothing the generator places on purpose may stand on deep water: a
+    prop on a pond moves to the nearest dry free cell of its own region.
+    Vehicles (boats) may sit on it; furniture inside walls is written
+    room-relative and rooms never ship water. What cannot move stays put
+    and fails the built scenario's check — the note says so."""
+    from . import native
+    deep = native.deep_cells(world, water)
+    if not deep:
+        return
+    floats = {name for name, fields in vehicles.items()
+              if fields.get("vehicle")}
+    taken = set()
+    for o in world.objects:
+        if o.template in world.templates:
+            taken |= native.footprint(world, o)
+    for o in world.objects:
+        if o.template not in world.templates or o.template in floats:
+            continue
+        region = world.regions_by_name.get(o.region)
+        if region is not None and region.wall:
+            continue
+        foot = native.footprint(world, o)
+        if not foot & deep:
+            continue
+        spot = _dry_spot(world, o, region, deep, taken) if region else None
+        if spot is None:
+            _note(world, f"{o.template} at {list(o.pos)}",
+                  "stands on deep water and no dry cell near it is free")
+            continue
+        taken -= foot
+        o.pos = tuple(spot)
+        taken |= native.footprint(world, o)
+
+
+def _nature(world, plan):
+    """The 1.0 nature of the laid-out world — natural shapes, water surfaces
+    and vehicles — as region names and template fields the builder cannot
+    carry (it drops unknown region and template keys), applied onto the built
+    scenario by finish_scenario. A natural region is drawn as a blob that
+    covers only part of its rectangle, so when anything the generator means
+    to place sits within 2 cells of its corners the region keeps its
+    rectangle instead, noted. Props on deep water move out of it first, so
+    the shapes are decided against where things end up."""
+    from . import native
+    zone_kinds = {z.name: z.kind for z in plan.zones}
+    water = native.final_water(world, zone_kinds)
+    vehicles = _vehicles(world, plan, water)
+    _clear_deep_water(world, water, vehicles)
+    placed = set()
+    for o in world.objects:
+        if o.template in world.templates:
+            placed |= native.footprint(world, o)
+    placed |= {tuple(c.pos) for c in world.characters}
+    if world.player is not None:
+        placed.add(tuple(world.player.pos))
+    posts = [r for r in world.regions if r.kind == "post"]
+    shapes = []
+    for name in native.natural_regions(world, zone_kinds):
+        region = world.regions_by_name.get(name)
+        danger = native.corner_cells(region.rect)
+        what = None
+        if placed & danger:
+            what = "something the generator placed"
+        elif any(p.rect.cells() & danger for p in posts):
+            what = "an NPC post"
+        if what is not None:
+            _note(world, f"region {name}",
+                  f"natural shape dropped: {what} sits within 2 cells of "
+                  f"its corner, where the drawn blob may leave no ground")
+            continue
+        shapes.append(name)
+    return {"shape": shapes, "water": sorted(water), "vehicles": vehicles}
+
 # Role keywords -> 1.0 sprite: `base` names a -man/-woman pair or one id both
 # genders share. Every id must exist in scenario_checks.ANIMATIONS; a base whose
 # id doesn't falls back to casual-*. More specific entries come first, so
@@ -352,6 +476,9 @@ def _grid_size(world):
 
 
 def build_spec(world, plan):
+    # the nature pass runs first: it moves props off deep water, and the
+    # placements below must be written from where they end up
+    nature = _nature(world, plan)
     builder_doors = {f.region_name: list(f.builder_door)
                      for f in getattr(world, "floors", []) or []
                      if f.builder_door is not None}
@@ -536,6 +663,8 @@ def build_spec(world, plan):
     # buildings where taking is theft: applied onto the built regions by name
     spec["nativeLocks"] = {"locks": _locks(world),
                            "theft": _theft_buildings(world)}
+    # ... and for the natural shapes, water surfaces and vehicle fields
+    spec["nativeNature"] = nature
     arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights
