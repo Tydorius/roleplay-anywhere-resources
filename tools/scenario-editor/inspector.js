@@ -141,11 +141,13 @@ function inspectBrowse(box) {
     <div class="tabs small">${Object.entries(lists).map(([k, [lbl, l]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${esc(lbl)} <small>${l.length}</small></button>`).join("")}</div>
     <input type="search" id="bFilter" placeholder="Filter" value="${esc(S.browseFilter || "")}" style="width:100%;margin:8px 0">
     ${tab === "types" && S.editable ? `<button id="bNewType" style="margin-bottom:8px">New object type…</button>` : ""}
+    ${tab === "hostile" && S.editable ? `<button id="bNewNpc" style="margin-bottom:8px">New NPC type…</button>` : ""}
     <div class="refs">${shown.map(i => `<button class="ref" data-id="${esc(i.id)}">${esc(i.name)} <small>${esc(i.detail)}</small></button>`).join("") || `<p class="note">Nothing here.</p>`}</div>`;
   box.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { S.browse = b.dataset.tab; inspect(); });
   box.querySelectorAll("[data-id]").forEach(b => b.onclick = () => jump(b.dataset.id));
   $("bFilter").oninput = () => { S.browseFilter = $("bFilter").value; const pos = $("bFilter").selectionStart; inspect(); $("bFilter").focus(); $("bFilter").setSelectionRange(pos, pos); };
   if ($("bNewType")) $("bNewType").onclick = newObjectType;
+  if ($("bNewNpc")) $("bNewNpc").onclick = newNpcType;
 }
 
 function inspectMany(box) {
@@ -718,37 +720,131 @@ function renderSchedule(e) {
   });
 }
 
-// ---------------------------------------------------------------- hostile types and other templates
+// ---------------------------------------------------------------- NPC types and other templates
+const STANCE_OPTS = [["neutral", "neutral: minds its own business"],
+  ["skittish", "skittish: flees when approached"], ["hostile", "hostile: attacks on sight"]];
+
+/** Every region as a home option, hostile ones first and marked ☠. A home on a region that is gone
+ *  keeps its id as an option, so changing another home doesn't silently move it. */
+function homeRegionOptions(regs, sel) {
+  return regs.map(r => `<option value="${esc(r.id)}" ${r.id === sel ? "selected" : ""}>${esc(r.name)}${r.hostile ? " ☠" : ""}</option>`).join("")
+    + (sel && !regs.some(r => r.id === sel) ? `<option value="${esc(sel)}" selected>${esc(sel)} (missing)</option>` : "");
+}
+
+/** The "Homes" section of an NPC type: one row per home (region, count, Remove) and a select that
+ *  adds a home in a region not used yet. */
+function homesHtml(homes, regs) {
+  const rows = homes.length ? homes.map((h, i) => `<div class="home">
+      <select data-home-region="${i}" ${dis()}>${homeRegionOptions(regs, h.regionId)}</select>
+      <input type="number" min="1" max="12" value="${esc(h.count ?? 0)}" data-home-count="${i}" ${dis()}>
+      ${S.editable ? `<button class="mini" data-home-del="${i}">Remove</button>` : ""}
+    </div>`).join("") : `<p class="note">No homes: only the copies placed by hand appear.</p>`;
+  const spare = regs.filter(r => !homes.some(h => h.regionId === r.id));
+  return rows + (S.editable && spare.length ? `<div class="row" style="margin-top:6px"><select id="htAddHome" style="flex:1">
+      <option value="">Add a home…</option>${homeRegionOptions(spare)}</select></div>` : "");
+}
+
+/** Wires the "Homes" section: every change is one edit through World10.setHomes. When that converts
+ *  the scenario's 0.18 hostile types, say so and select the template it returns. */
+function wireHomes(box, t, homes) {
+  const apply = next => {
+    const hadLegacy = !!(S.scn.hostileNpcTemplates || []).length;
+    let ret = t;
+    edit(`Homes of ${t.name}`, () => { ret = World10.setHomes(S.scn, t, next, set); });
+    if (ret !== t || (hadLegacy && !(S.scn.hostileNpcTemplates || []).length)) {
+      toast("Converted the 0.18 hostile types to 1.0 NPC types");
+      select({kind: "template", id: ret.id});
+    }
+  };
+  box.querySelectorAll("[data-home-region]").forEach(sel => sel.onchange = () => {
+    const i = +sel.dataset.homeRegion;
+    apply(homes.map((h, j) => j === i ? {...h, regionId: sel.value} : h));
+  });
+  box.querySelectorAll("[data-home-count]").forEach(inp => inp.onchange = () => {
+    const i = +inp.dataset.homeCount, count = Math.max(1, Math.min(12, Math.round(+inp.value || 1)));
+    apply(homes.map((h, j) => j === i ? {...h, count} : h));
+  });
+  box.querySelectorAll("[data-home-del]").forEach(b => b.onclick = () =>
+    apply(homes.filter((_, j) => j !== +b.dataset.homeDel)));
+  const add = box.querySelector("#htAddHome");
+  if (add) add.onchange = () => { if (add.value) apply([...homes, {regionId: add.value, count: 1}]); };
+}
+
 function inspectHostileType(box, t) {
   const M = S.meta, placed = entities().filter(e => e.templateId === t.id);
   const regs = [...regions()].sort((a, b) => (b.hostile ? 1 : 0) - (a.hostile ? 1 : 0) || a.name.localeCompare(b.name));
-  const defs = [
+  const homes = World10.homesOf(t), stance = World10.stanceOf(S.scn, t);
+  const top = [
     {key: "name", label: "Name", required: true, rename: true},
     {key: "description", label: "Description (the GM sees this)", type: "textarea", rows: 3},
     {key: "physicalDescription", label: "Looks (for the portrait)", type: "textarea", rows: 2},
-    ...(Array.isArray(t.homes) ? [
-      {key: "stance", label: "Stance", type: "select", optional: true, options: S.meta.templateStances || ["neutral", "skittish", "hostile"]},
-    ] : [
-      {key: "regionId", label: "Lives in (spawns and respawns here)", type: "select", options: regs.map(r => [r.id, `${r.name}${r.hostile ? " ☠" : ""}`])},
-      {key: "count", label: "How many", type: "number", min: 1, max: 6},
-    ]),
+  ];
+  const rest = [
     {key: "gender", label: "Gender", type: "select", options: ["female", "male"]},
     {key: "animationId", label: "Sprite", type: "select", options: M.animations},
     {key: "spriteColor", label: "Sprite colour", type: "color", optional: true},
     {key: "level", label: "Level", type: "number", min: 1, max: 20},
     {key: "money", label: "Money tier (0–5)", type: "number", min: 0, max: 5},
-    {key: "attacksOnSight", label: "Attacks on sight", type: "check"},
     {key: "lootPoolIds", label: "Loot", type: "multi", options: itemOptions()},
   ];
-  const homes = Array.isArray(t.homes) ? t.homes : null;
-  box.innerHTML = `<div class="kind">${homes ? "NPC type" : "Hostile type"}</div><h3>${esc(t.name)}</h3>
-    <p class="note">The game spawns this many in its region at the start and respawns them. The ones already placed are listed below.</p>
-    ${homes ? facts([["Homes", homes.length ? homes.map(h => `${byId(h.regionId) ? linkTo(byId(h.regionId)) : esc(h.regionId)} × ${esc(h.count ?? 0)}`).join(", ") : "none (placed copies only)"]]) +
-      `<p class="note">Homes are edited in the game's template editor (god mode).</p>` : ""}
-    ${formHtml("ht", t, defs)}
+  const soft = homes.map(h => byId(h.regionId)).filter(r => r && !r.hostile);
+  box.innerHTML = `<div class="kind">NPC type${stance === "hostile" ? " · hostile" : ""}</div><h3>${esc(t.name)}</h3>
+    <p class="note">The game spawns this many in each home at the start and respawns them. The ones already placed are listed below.</p>
+    ${formHtml("ht", t, top)}
+    ${field("Stance", `<select id="htStance" ${dis()}>${STANCE_OPTS.map(([v, l]) =>
+      `<option value="${esc(v)}" ${v === stance ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`)}
+    ${formHtml("ht", t, rest)}
+    ${section(`Homes (${homes.length})`, homesHtml(homes, regs)
+      + (stance === "hostile" && soft.length ? `<p class="note warn">Hostile types usually live in hostile regions; this one spawns in ${esc(soft.map(r => r.name).join(", "))}.</p>` : ""))}
     ${section(`Placed (${placed.length})`, refsHtml(placed.map(e => ({id: e.id, text: e.name, detail: e.pos.join(", ")})), "None placed."), true)}`;
   bindRefs(box, placed.map(e => ({id: e.id}))); bindJumps(box);
-  wireForm(box, "ht", t, defs, () => t.name);
+  wireForm(box, "ht", t, top, () => t.name); wireForm(box, "ht", t, rest, () => t.name);
+  $("htStance").onchange = () => {
+    const v = $("htStance").value;
+    edit(`Stance of ${t.name}`, () => {
+      const res = World10.setStance(S.scn, t, v, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the input back
+    });
+  };
+  wireHomes(box, t, homes);
+}
+
+/** The "New NPC type…" dialog: a name, a sprite, a gender, a stance (skittish by default), a home
+ *  region and how many. On OK World10.addNpcType makes the type, and it is selected. */
+async function newNpcType() {
+  const regs = [...regions()].sort((a, b) => (b.hostile ? 1 : 0) - (a.hostile ? 1 : 0) || a.name.localeCompare(b.name));
+  const props = {name: "", animationId: S.meta.animations[0], gender: "female",
+    stance: "skittish", regionId: regs[0]?.id, count: 3};
+  const body = `${field("Name", `<input type="text" id="nnName">`)}
+    ${field("Sprite", `<select id="nnSprite">${S.meta.animations.map(a =>
+      `<option value="${esc(a)}" ${a === props.animationId ? "selected" : ""}>${esc(a)}</option>`).join("")}</select>`)}
+    <div class="row2">
+      ${field("Gender", `<select id="nnGender"><option value="female">female</option><option value="male">male</option></select>`)}
+      ${field("Stance", `<select id="nnStance">${STANCE_OPTS.map(([v, l]) =>
+        `<option value="${esc(v)}" ${v === props.stance ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>`)}
+    </div>
+    <div class="row2">
+      ${field("Home region", `<select id="nnRegion">${homeRegionOptions(regs, props.regionId)}</select>`)}
+      ${field("How many", `<input type="number" id="nnCount" min="1" max="12" value="${props.count}">`)}
+    </div>`;
+  const read = () => {
+    props.name = $("nnName").value.trim();
+    props.animationId = $("nnSprite").value;
+    props.gender = $("nnGender").value;
+    props.stance = $("nnStance").value;
+    props.regionId = $("nnRegion").value;
+    props.count = Math.max(1, Math.min(12, Math.round(+$("nnCount").value || 3)));
+  };
+  const go = await openDialog("New NPC type", body,
+    [{label: "Cancel", value: null}, {label: "Add NPC type", value: "go", primary: true}],
+    dlg => dlg.querySelectorAll("input, select").forEach(el => { el.oninput = read; el.onchange = read; }));
+  if (go !== "go") return;
+  let res;
+  edit(`Add NPC type ${props.name || "(unnamed)"}`, () => {
+    res = World10.addNpcType(S.scn, props, set);
+    if (res.error) throw new Error(res.error);
+  });
+  if (res?.template) select({kind: "template", id: res.template.id});
 }
 
 function inspectTemplate(box, t) {
