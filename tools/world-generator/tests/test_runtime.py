@@ -41,7 +41,10 @@ class TestPython38StdlibOnly(unittest.TestCase):
                     seen.update(a.name.split(".")[0] for a in node.names)
                 elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
                     seen.add(node.module.split(".")[0])
-        outside = seen - ALLOWED
+        # a vendored script's fallback `import scenario_checks` (run as a
+        # script) names a sibling module of the package itself
+        own = {os.path.splitext(os.path.basename(p))[0] for p in package_files()}
+        outside = seen - ALLOWED - own
         self.assertEqual(outside, set(),
                          f"the package must depend on the standard library only "
                          f"(plus optional Pillow); found {sorted(outside)}")
