@@ -6,6 +6,7 @@ import json
 import re
 
 from . import populations
+from .layout_room import turned
 from .sellers import sellers as sellers_of
 from .vendor.scenario_checks import ANIMATIONS as KNOWN_ANIMATIONS
 
@@ -238,10 +239,11 @@ def _in_building(world, region_name, home):
 
 def _dry_spot(world, obj, region, deep, taken):
     """The nearest origin for the object inside its own region where it
-    covers no deep water and no cell another object holds."""
+    covers no deep water and no cell another object holds. A moved prop
+    keeps its rot, so it tries its turned size."""
     from . import checks as checks_mod
     from . import native
-    w, h = world.templates[obj.template].size
+    w, h = turned(world.templates[obj.template].size, getattr(obj, "rot", 0) or 0)
     cells = region.rect.cells()
     for (x, y) in sorted(cells, key=lambda c: (abs(c[0] - obj.pos[0])
                                                + abs(c[1] - obj.pos[1]), c)):

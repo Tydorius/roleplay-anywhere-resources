@@ -15,6 +15,7 @@ import random
 import re
 
 from .cast import UNPEOPLED
+from .layout_room import object_cells, object_rect
 from .model import Rect, bed_capacity, is_spare_room
 
 # who sleeps, works and relaxes when; the blocks of a shift cover the 24 hours
@@ -390,8 +391,7 @@ def _fits_region_tree(world, rect):
 
 
 def _footprint(world, obj):
-    w, h = world.templates[obj.template].size
-    return Rect(obj.pos[0], obj.pos[1], w, h)
+    return object_rect(world, obj)
 
 
 def _post_rect(world, zone, obj, stalls):
@@ -641,12 +641,10 @@ def free_cell(world, region_name, taken=(), connected=None):
     # every object on the region's floor, whatever region it was filed
     # under (a field's fence posts sit on the farm's ground too)
     for o in world.objects:
-        w, h = world.templates[o.template].size
-        if o.pos[0] + w <= rect.x or o.pos[0] > rect.x1 or \
-                o.pos[1] + h <= rect.y or o.pos[1] > rect.y1:
+        orect = object_rect(world, o)
+        if not orect.intersects(rect):
             continue
-        occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                     for y in range(o.pos[1], o.pos[1] + h)}
+        occupied |= orect.cells()
     # the wall rings of walled regions inside this one (a zone's buildings
     # and rooms): a doorway there can still be another room's wall
     rings = set()
@@ -696,9 +694,7 @@ def start_cell(world, region_name, taken=(), connected=None):
         return None, region_name
     occupied = set(taken)
     for o in world.objects:
-        w, h = world.templates[o.template].size
-        occupied |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                     for y in range(o.pos[1], o.pos[1] + h)}
+        occupied |= object_cells(world, o)
     cx, cy = region.rect.x + region.rect.w // 2, region.rect.y + region.rect.h // 2
     for c in sorted(connected - occupied,
                     key=lambda c: (abs(c[0] - cx) + abs(c[1] - cy), c[1], c[0])):

@@ -320,7 +320,7 @@ def _free_stair_cells(world, rooms, avoid=(), relax=False):
     for room in rooms:
         cells = set(room.rect.interior().cells())
         for (t, pos) in room.furniture.placements:
-            tw, th = world.templates[t].size
+            tw, th = room.furniture.size_of(t, pos, world.templates)
             cells -= {(x, y) for x in range(pos[0], pos[0] + tw)
                       for y in range(pos[1], pos[1] + th)}
         if not relax and room.furniture is not None:
@@ -362,7 +362,7 @@ def _storey_blocked(world, f):
         blocked |= (_ring(room.rect) - doors)
         for (t, pos) in room.furniture.placements:
             if world.templates[t].walkability <= 0:
-                tw, th = world.templates[t].size
+                tw, th = room.furniture.size_of(t, pos, world.templates)
                 blocked |= {(x, y) for x in range(pos[0], pos[0] + tw)
                             for y in range(pos[1], pos[1] + th)}
     return blocked

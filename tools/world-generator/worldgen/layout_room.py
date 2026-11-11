@@ -60,6 +60,19 @@ def _footprint(pos, size):
     return {(cx, cy) for cx in range(x, x + w) for cy in range(y, y + h)}
 
 
+def object_cells(world, obj):
+    """The cells a placed object covers: its template's size turned by its
+    rot — the cells the builder and the game give it."""
+    return _footprint(obj.pos, turned(world.templates[obj.template].size,
+                                      getattr(obj, "rot", 0) or 0))
+
+
+def object_rect(world, obj):
+    """The Rect a placed object covers, at its turned size."""
+    w, h = turned(world.templates[obj.template].size, getattr(obj, "rot", 0) or 0)
+    return Rect(obj.pos[0], obj.pos[1], w, h)
+
+
 def _ring(pos, size):
     x, y = pos
     w, h = size

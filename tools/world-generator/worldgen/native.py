@@ -20,6 +20,8 @@ import random
 import re
 import time
 
+from .layout_room import object_cells, object_rect
+
 DOOR_KINDS = ("door", "bars", "gate", "curtain")
 DOOR_NAMES = {"door": "Door", "bars": "Barred door",
               "gate": "Gate", "curtain": "Curtain"}
@@ -659,24 +661,20 @@ def is_boat(name):
 def boat_on_water(world, template, water):
     """Whether any placement of the boat template sits on or beside the
     water: a boat nowhere near water is scenery."""
-    from .model import Rect
     rects = [world.regions_by_name[n].rect for n in water
              if n in world.regions_by_name]
     if not rects:
         return False
-    size = world.templates[template].size
     for o in world.objects:
         if o.template != template:
             continue
-        r = Rect(o.pos[0], o.pos[1], size[0], size[1])
+        r = object_rect(world, o)
         if any(r.gap(w) <= 1 for w in rects):
             return True
     return False
 
 
 def footprint(world, obj):
-    """The cells an object covers, at its template's size (the walkability
+    """The cells an object covers, at its turned size (the walkability
     walk uses the same view)."""
-    w, h = world.templates[obj.template].size
-    return {(x, y) for x in range(obj.pos[0], obj.pos[0] + w)
-            for y in range(obj.pos[1], obj.pos[1] + h)}
+    return object_cells(world, obj)

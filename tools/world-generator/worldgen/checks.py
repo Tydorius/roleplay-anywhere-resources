@@ -11,6 +11,7 @@ the dict; run_checks returns it).
 The walkability model mirrors build_scenario.py exactly: the outer ring of a
 walled region is wall except at door openings, and walkability-0 objects block.
 """
+from .layout_room import object_cells
 from .model import Rect, shared_wall_cells
 from .phases import RUIN_WORDS, STAIR_WORDS, ruined_building, stair_furniture_name
 
@@ -53,9 +54,7 @@ def _base_grid(world, openings):
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            w, h = t.size
-            blocked |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                        for y in range(o.pos[1], o.pos[1] + h)}
+            blocked |= object_cells(world, o)
     return blocked, doors
 
 
@@ -569,8 +568,7 @@ def _cut_off_cells(world, openings, jumps):
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + t.size[0])
-                      for y in range(o.pos[1], o.pos[1] + t.size[1])}
+            solid |= object_cells(world, o)
     inside = {}
     for r in world.regions:
         if r.wall:
@@ -667,14 +665,11 @@ def run_checks(world):
     obj_overlaps = []
     claimed = {}
     for o in world.objects:
-        t = world.templates[o.template]
-        w, h = t.size
-        for cx in range(o.pos[0], o.pos[0] + w):
-            for cy in range(o.pos[1], o.pos[1] + h):
-                if (cx, cy) in claimed:
-                    obj_overlaps.append(f"{o.template} at {o.pos} overlaps {claimed[(cx, cy)]}")
-                else:
-                    claimed[(cx, cy)] = f"{o.template} at {o.pos}"
+        for cell in sorted(object_cells(world, o)):
+            if cell in claimed:
+                obj_overlaps.append(f"{o.template} at {o.pos} overlaps {claimed[cell]}")
+            else:
+                claimed[cell] = f"{o.template} at {o.pos}"
     out_of_bounds = [f"{o.template} at {o.pos}" for o in world.objects
                      if not on_a_plane(world, o.pos)]
 
@@ -723,9 +718,7 @@ def run_checks(world):
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            w, h = t.size
-            solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                      for y in range(o.pos[1], o.pos[1] + h)}
+            solid |= object_cells(world, o)
     blocked_doors = sorted(doors & solid)
     # a walkway is blocked only by accident: intentional wall objects (a
     # compound's solid walls) stand on their own ground, not on a path
