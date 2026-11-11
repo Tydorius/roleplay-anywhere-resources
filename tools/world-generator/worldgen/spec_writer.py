@@ -672,6 +672,9 @@ def build_spec(world, plan):
     # one template per kind with its home regions by name, applied onto the
     # built scenario as the game's own npcTemplates once the ids exist
     spec["nativePopulations"] = populations.choose(world, plan)
+    # the stairs kept in ruined buildings, by entity name: the shipped-scenario
+    # check accepts them though they link to no portal
+    spec["nativeStairs"] = {"ruined": list(getattr(world, "ruined_stairs", []) or [])}
     arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights

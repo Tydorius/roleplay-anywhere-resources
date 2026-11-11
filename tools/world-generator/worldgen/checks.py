@@ -335,12 +335,13 @@ def check_scenario_mods(scenario_path, spec):
     stair_templates = {t.get("id") for t in scn.get("objectTemplates") or []
                        if STAIR_WORDS.search(t.get("name") or "")}
     if stair_templates:
+        ruin_stairs = set(((spec or {}).get("nativeStairs") or {}).get("ruined") or [])
         for e in scn.get("entities") or []:
             if e.get("type") != "object" \
                     or e.get("templateId") not in stair_templates \
                     or isinstance(e.get("portal"), dict):
                 continue
-            if not _ruined_at(scn, e.get("pos")):
+            if e.get("name") not in ruin_stairs and not _ruined_at(scn, e.get("pos")):
                 issues.append(f"stair object {e.get('name')!r} at "
                               f"{e.get('pos')} leads nowhere (no portal)")
     # 1.0 locks and keys: every key opens a region that exists, and every
@@ -622,7 +623,7 @@ def _drop_dead_stairs(world):
             for uo in getattr(layout, "unit_outs", []) or []:
                 for r in uo.layout.rooms:
                     building_of[r.full_name] = b
-    keep, dropped, ruined = [], 0, 0
+    keep, dropped, ruined, ruin_kept = [], 0, 0, []
     for o in world.objects:
         if not stair_furniture_name(o.template) or names[o] in ends:
             keep.append(o)
@@ -631,12 +632,18 @@ def _drop_dead_stairs(world):
         if b is not None and ruined_building(b.layout.design):
             ruined += 1
             keep.append(o)
+            ruin_kept.append(o)
         else:
             dropped += 1
             world.failures.append(
                 (f"stair {o.template} in {o.region}",
                  "dropped: it leads nowhere (the code places the real stairs)"))
     world.objects[:] = keep
+    # the kept ruin stairs by the builder's entity name (numbered after the
+    # drops), so the shipped-scenario check knows them even when only the
+    # building's status, not any name, says it is a ruin
+    final = object_entity_names(world)
+    world.ruined_stairs = sorted(final[o] for o in ruin_kept)
     return {"dropped": dropped, "ruined": ruined}
 
 
