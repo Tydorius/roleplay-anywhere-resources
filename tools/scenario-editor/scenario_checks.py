@@ -404,7 +404,7 @@ def liquid_cells(scn, regions):
         rr = rect(r["position"], r["size"])
         w, h = r["size"]
         if norm_shape(r.get("shape")) and min(w, h) >= ORGANIC_MIN:
-            mask = blob_mask(r.get("id"), w, h)
+            mask = blob_mask(str(r.get("id")), w, h)
             wet = {(r["position"][0] + x, r["position"][1] + y)
                    for y in range(h) for x in range(w) if mask[y * w + x]}
         else:
