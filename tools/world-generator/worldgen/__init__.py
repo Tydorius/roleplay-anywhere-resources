@@ -910,6 +910,9 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     world.failures.extend(m.failures)
     world.zone_pieces = {z.name: m.zone_pieces[z.name] for z in plan.zones
                          if z.name in m.zone_pieces}
+    # every water lookup (placement walks, checks, the spec) reads the zone
+    # kinds from here, so a river zone is water to all of them alike
+    world.zone_kinds = {z.name: z.kind for z in plan.zones}
 
     # ---- regions: zones (one region per piece), roads, then each piece's
     # buildings, paths and props; only the primary piece carries buildings

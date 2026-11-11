@@ -401,6 +401,14 @@ BIKE_WORDS = re.compile(r"\b(bicycles?|bikes?)\b")
 BOAT_WORDS = re.compile(
     r"\b(boats?|rowboats?|skiffs?|canoes?|punts?|rafts?|barges?|ferries?|"
     r"ferry)\b")
+# ... but a vehicle word beside one of these names a part, a fixture or a
+# picture of one, not something to drive: a bike rack, a wagon wheel, a
+# carriage clock, a car park sign, a boat hook, a toy cart
+NOT_VEHICLE_WORDS = re.compile(
+    r"\b(racks?|wheels?|sheds?|parks?|parking|stands?|clocks?|signs?|"
+    r"shelters?|lifts?|jacks?|parts?|tyres?|tires?|horns?|seats?|lamps?|"
+    r"bells?|pumps?|hooks?|oars?|paddles?|models?|toys?|paintings?|"
+    r"posters?|pictures?|wrecks?|wrecked|tracks?|rails?|repairs?|benches?)\b")
 
 
 def _words(text):
@@ -540,19 +548,21 @@ def _unwalkable_drops(world, water):
 
 def final_water(world, zone_kinds=None, refresh=False):
     """{region name: depth} for the water that actually ships: every water
-    region minus those whose deep cells would cut the world's ways. Cached on
-    the world — a lookup with zone kinds (the richer view) overrides one
-    without, so the spec writer, the checks and the placement walks all see
-    the same water."""
-    kinds = zone_kinds or {}
+    region minus those whose deep cells would cut the world's ways. The zone
+    kinds come from the world (set when its map is laid out) unless given, so
+    the spec writer, the checks and the placement walks all see the same
+    water; the answer is cached on the world until a refresh or a lookup with
+    other zone kinds."""
+    if zone_kinds is None:
+        zone_kinds = getattr(world, "zone_kinds", None)
     cache = getattr(world, "_water_final", None)
-    if cache is not None and not refresh and (kinds or not cache[0]):
+    if cache is not None and not refresh and cache[0] == zone_kinds:
         return cache[1]
     water = water_regions(world, zone_kinds)
     drops = _unwalkable_drops(world, water)
     for name in drops:
         del water[name]
-    world._water_final = (bool(kinds), water, drops)
+    world._water_final = (zone_kinds, water, drops)
     return water
 
 
@@ -630,6 +640,8 @@ def vehicle_fields(name):
     also gets its built-in sheet. {} for everything else — mounts are
     characters, and boats need water beside them (see boat_on_water)."""
     text = name.lower()
+    if NOT_VEHICLE_WORDS.search(text):
+        return {}
     if BIKE_WORDS.search(text):
         return {"vehicle": "drive", "sheet": "bicycle", "takingIsTheft": True}
     if CART_WORDS.search(text):
@@ -638,8 +650,10 @@ def vehicle_fields(name):
 
 
 def is_boat(name):
-    """Whether the template's name is a boat."""
-    return bool(BOAT_WORDS.search(name.lower()))
+    """Whether the template's name is a boat (not a boat hook, an oar or a
+    model of one)."""
+    text = name.lower()
+    return bool(BOAT_WORDS.search(text)) and not NOT_VEHICLE_WORDS.search(text)
 
 
 def boat_on_water(world, template, water):
