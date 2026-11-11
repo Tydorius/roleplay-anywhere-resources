@@ -26,10 +26,17 @@ GRAZING_WORDS = frozenset(
     "pasture pastures paddock paddocks pen pens fold folds field fields".split())
 # a farmyard by name, or any yard of an agricultural zone (a farm)
 FARMYARD_WORDS = frozenset("farmyard farmyards".split())
-# where rats nest, by whole words of the region's name (a meal store, a cellar)
+# where rats nest, by whole words of the region's OWN name (a room's base name
+# without its building's, so a shop's bedrooms never match through the shop's
+# name): a meal store, a cellar
 RAT_WORDS = frozenset(
     "cellar cellars store stores storeroom storerooms storehouse storehouses "
     "warehouse warehouses granary granaries sewer sewers dock docks".split())
+# ... but on a building or zone "store" is a shop, not a storeroom
+SHOP_STORE_WORDS = frozenset("store stores".split())
+# rats nest in at most this many places, the biggest first, one per building,
+# so vermin never eat the whole creature cap
+RAT_HOMES = 3
 # the ground townsfolk cross, by whole words of the name or of the zone's kind
 CROWD_WORDS = frozenset(
     "market markets square squares plaza plazas".split())
@@ -133,6 +140,7 @@ def choose(world, plan, water=None):
 
     entries = []       # {"kind", "region", "count"} in world order
     taken = set()      # one population per region
+    rat_spots = []     # rat candidates, settled after the walk
 
     def add(kind, region, count):
         taken.add(region.name)
@@ -156,9 +164,13 @@ def choose(world, plan, water=None):
                     and _zone_class(zone) == "agricultural"):
                 add(rng.choice(YARD_KINDS), r, _by_area(r, 2, 5, 60))
                 continue
-        if r.kind in ("room", "building", "zone") and _words(r.name) & RAT_WORDS:
-            add("Rats", r, 2 + (1 if r.rect.w * r.rect.h >= 24 else 0))
-            continue
+        if r.kind in ("room", "building", "zone"):
+            own = _own_words(world, r)
+            if r.kind != "room":
+                own -= SHOP_STORE_WORDS
+            if own & RAT_WORDS:
+                rat_spots.append(r)
+                continue
         if r.kind == "field":     # the arable crop plots
             add("Crows", r, 2 + (1 if r.rect.w * r.rect.h >= 80 else 0))
             continue
@@ -166,6 +178,17 @@ def choose(world, plan, water=None):
                 (_words(r.name) & CROWD_WORDS or
                  (r.kind == "zone" and zone_words & CROWD_WORDS)):
             add("Townsfolk", r, _by_area(r, 3, 5, 200))
+
+    # rats: one nest per building (or zone), the biggest RAT_HOMES of them
+    nested = set()
+    for r in sorted(rat_spots, key=lambda r: -(r.rect.w * r.rect.h)):
+        if len(nested) >= RAT_HOMES:
+            break
+        key = _building_key(world, r)
+        if key in nested:
+            continue
+        nested.add(key)
+        add("Rats", r, 2 + (1 if r.rect.w * r.rect.h >= 24 else 0))
 
     # the town watch: two guards on the main street (or the square) of every
     # urban or town zone, only when the cast has no guard of its own
@@ -182,6 +205,27 @@ def choose(world, plan, water=None):
 
     _trim_to_cap(entries)
     return _templates(entries, rng, plan)
+
+
+def _own_words(world, r):
+    """The whole words of a region's own name: a room's name carries its
+    building's in front ("Harrow's Store Master Bedroom"), so that prefix is
+    cut off before the words are read."""
+    name = r.name
+    if r.parent and name.startswith(r.parent + " "):
+        name = name[len(r.parent) + 1:]
+    return _words(name)
+
+
+def _building_key(world, r):
+    """The building a region belongs to (its topmost building ancestor, an
+    upper storey counted as its ground building), or the region itself."""
+    key, cur = r.name, r
+    while cur is not None:
+        if cur.kind == "building":
+            key = cur.name
+        cur = world.regions_by_name.get(cur.parent) if cur.parent else None
+    return re.sub(r"\s*\([^)]*\)$", "", key)
 
 
 def _urban(zone):
@@ -220,8 +264,13 @@ def _templates(entries, rng, plan):
             continue
         gender = rng.choice(("male", "female"))
         if anim is None:      # a person sprite, period-fitting
-            base = "town-guard" if name == "Town watch" else \
-                ("peasant" if period else "casual")
+            if name == "Town watch":
+                base = "town-guard" if period else "police"
+                if not period:  # here-and-now: the watch is the police
+                    desc = "Police officers walking their beat."
+                    phys = "A police officer in uniform, keeping the peace."
+            else:
+                base = "peasant" if period else "casual"
             anim = _gender_id(base, gender)
         out.append({"name": name, "description": desc,
                     "physicalDescription": phys, "animationId": anim,
