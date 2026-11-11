@@ -33,7 +33,7 @@ them (see "Editing 1.0 features" below). Of `unbounded` it edits only the liquid
 
 | What | In `scenario.json` |
 |---|---|
-| Floors (storeys, cellars, tunnels) | A region with `pocket: {anchor: <building's region id>, level: 1 \| -1 …}`, placed **outside** the map in the same grid. The game lays them out east of the map, 24 cells apart. Each floor is a plane of its own. |
+| Floors (storeys, cellars, tunnels) | A region with `pocket: {anchor: <building's region id>, level: 1 \| -1 …}`, placed **outside** the map in the same grid. The editor lays them out east of the map, 24 cells apart. In an open world the game moves them to its own far-off floor space when the game starts, keeping their anchor and level. Each floor is a plane of its own. |
 | Stairs, ladders, hatches | An object with `portal: {to: <id of the object at the other end>}`, normally on both ends. |
 | Doorways | `openings` entries `[x, y]` or `[x, y, side]`, where side is `n`, `e`, `s` or `w` (the wall it opens). The import drops a door that isn't on the region's edge. |
 | Door kinds | Region `door`: `door`, `bars`, `gate`, `curtain` or `none`, and `doorColor`. Each doorway also gets a zero-wide door object whose template has `door: <kind>`. |
@@ -53,7 +53,7 @@ them (see "Editing 1.0 features" below). Of `unbounded` it edits only the liquid
   takes a pair apart.
 - **Doors:** the region panel sets the door kind and colour and each doorway's own door, and **Hang
   doors on all of them** fills the rest. 0.18 scenarios have no door objects, so their doorways are
-  open gaps in 1.0 until doors are hung.
+  open gaps in 1.0 until doors are hung (checked live: the game doesn't hang them on import).
 - **Locks and keys:** **Locked** on a region locks its doors, the key holders are listed, and **Give
   a key to…** hands one to someone.
 - **Theft:** regions choose inherit, yes or no; object types tick **Taking it is theft**; the vehicle
