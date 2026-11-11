@@ -24,7 +24,7 @@ const MARKER = '/*arpg-modloader*/';
 const ORIG = '.arpg-orig';
 // This loader's release (README's version table), and the game version its patches were built
 // against. main supports Anywhere RPG 1.0 only; the 0.18 loader stays on the 0.18 branch.
-const LOADER_VERSION = '2.1.0';
+const LOADER_VERSION = '2.2.0';
 const TESTED = '1.0';
 // memory-add only shows how to add a GM call, so "add" with no names leaves it out.
 const SAMPLES = new Set(['memory-add']);
@@ -153,6 +153,34 @@ export const PATCHES = [
     replace: (_m, head, sections, tail, build, world, limits) =>
       `const{head:${head},sections:${sections},tail:${tail}}=` +
       `(globalThis.__arpg&&globalThis.__arpg.prompt?globalThis.__arpg.prompt(${build}(${world},${limits}),${world},${limits}):${build}(${world},${limits}))`,
+  },
+  {
+    name: 'liquid-canvas',
+    // The liquid overlay painter (one 32×32-cell chunk of water and roads, plus a 2-cell margin).
+    // It paints two canvases — the colour layer and a flow map (R/G = flow, B = liquid kind) —
+    // then blurs a cropped copy of each into the tile. Right before that blur, mods get both
+    // canvases and may override the blur radius (the closure that crops is rewritten to read a
+    // local set from the hook's return instead of the game's constant).
+    find: /build\(([\w$]+),([\w$]+),([\w$]+)\)\{const ([\w$]+)=([\w$]+)\+([\w$]+)\*2,([\w$]+)=\(\)=>\{[^{}]*\},([\w$]+)=\7\(\),([\w$]+)=\7\(\);([^]{0,1500}?)const ([\w$]+)=([\w$]+)=>\{const ([\w$]+)=document\.createElement\("canvas"\);\13\.width=\13\.height=\5\*([\w$]+);const ([\w$]+)=\13\.getContext\("2d"\);return \15\.filter=`blur\(\$\{([\w$]+)\}px\)`,\15\.drawImage\(\12\.canvas,-\6\*\14,-\6\*\14\),\13\},([\w$]+)=`terrain-overlay:/g,
+    replace: (_m, t, n, i, o, cells, margin, mk, color, flow, mid, blurFn, src, f, px, v, blur, key) =>
+      `build(${t},${n},${i}){const ${o}=${cells}+${margin}*2,${mk}=()=>{const __arpgCv=document.createElement("canvas");` +
+      `return __arpgCv.width=__arpgCv.height=${o}*${px},__arpgCv.getContext("2d")},${color}=${mk}(),${flow}=${mk}();${mid}` +
+      `const __arpgB=globalThis.__arpg&&globalThis.__arpg.liquidCanvas` +
+      `?globalThis.__arpg.liquidCanvas({color:${color},flow:${flow},cellPx:${px},margin:${margin},chunkCells:${cells},chunk:${n},unbounded:${t},blur:${blur}})??${blur}:${blur};` +
+      `const ${blurFn}=${src}=>{const ${f}=document.createElement("canvas");${f}.width=${f}.height=${cells}*${px};` +
+      `const ${v}=${f}.getContext("2d");return ${v}.filter=\`blur(\${__arpgB}px)\`,` +
+      `${v}.drawImage(${src}.canvas,-${margin}*${px},-${margin}*${px}),${f}},${key}=\`terrain-overlay:`,
+  },
+  {
+    name: 'ground-fade',
+    // The region ground fade, in the scene's groundOwners(): each region's ground art is faded
+    // at its edges with a cached Float32Array of vertex alphas. Mods may replace that array
+    // (the same mask must always return the same array, or the ground is refilled every sync).
+    find: /fade:([\w$]+)\?([\w$]+)\(\1,([\w$]+)\.size\):null,alpha:/g,
+    replace: (_m, mask, fade, region) =>
+      `fade:${mask}?(globalThis.__arpg&&globalThis.__arpg.groundFade` +
+      `?globalThis.__arpg.groundFade(${region},${mask},${fade}(${mask},${region}.size))` +
+      `:${fade}(${mask},${region}.size)):null,alpha:`,
   },
 ];
 
