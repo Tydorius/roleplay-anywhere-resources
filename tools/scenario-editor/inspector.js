@@ -178,6 +178,9 @@ function inspectRegion(box, r) {
     {key: "groundTexture", label: "Ground texture", type: "select", optional: true, options: M.textures},
     {key: "groundColor", label: "Ground tint", type: "color", optional: true},
     ...(r.wall ? [{key: "wallColor", label: "Wall tint", type: "color", optional: true}] : []),
+    {key: "takingIsTheft", label: "Taking things here is theft", type: "select", optional: true, none: "inherit",
+      options: [["true", "yes"], ["false", "no"]], hint: "Rooms inside inherit this unless they set their own.",
+      apply: v => setPath(r, "takingIsTheft", v === undefined ? undefined : v === "true")},
   ];
   const sleepers = new Set(), beds = objs.filter(o => objTpl(o.templateId)?.forSleep).length;
   for (const e of entities()) for (const b of e.schedule || []) if (b.location === r.name && b.role === "sleep" && !e.templateId) sleepers.add(e.id);
@@ -194,14 +197,11 @@ function inspectRegion(box, r) {
       ["Contains", `${inside.length} regions · ${objs.length} objects · ${people} people`],
       r.shape ? ["Shape", esc(r.shape)] : null,
       r.surface ? ["Liquid", esc(r.surface)] : null,
-      r.wall && (r.door || r.doorColor) ? ["Doors", `${esc(r.door || "door")}${r.doorColor ? ` · ${esc(r.doorColor)}` : ""}`] : null,
-      r.takingIsTheft !== undefined ? ["Taking is theft", r.takingIsTheft ? "yes" : "no"] : null,
       sleepers.size || beds ? ["Beds", `<span class="${beds < sleepers.size ? "bad" : ""}">${beds} for ${sleepers.size} sleeper${sleepers.size === 1 ? "" : "s"}</span>`] : null,
     ])}
     ${MapOps.isFloor(r) ? section("Floor", floorHtml(r)) : ""}
-    ${r.wall ? section(`Doors (${(r.openings || []).length})`, (r.openings || []).length
-      ? `<div class="refs">${r.openings.map((c, i) => `<div class="door"><span>[${c.join(", ")}]</span>${S.editable ? `<button class="mini" data-door="${i}" title="Remove this door and its other side">Remove</button>` : ""}</div>`).join("")}</div>`
-      : `<p class="note warn">No doors: nobody can get in. Use the Door tool (D) to add one.</p>`) : ""}
+    ${r.wall ? section(`Doors (${(r.openings || []).length})`, doorsHtml(r)) : ""}
+    ${r.wall ? section("Lock", lockHtml(r)) : ""}
     ${r.wall && !MapOps.isFloor(r) ? section(`Floors (${World10.floorsOf(S.scn, r).length})`, floorsHtml(r)) : ""}
     ${section("Who is here when", occupancyHtml(r))}
     ${section(`Used by (${refs.length})`, refsHtml(refs, "Nothing names this region."), refs.length > 0 && refs.length < 12)}`;
@@ -214,10 +214,7 @@ function inspectRegion(box, r) {
     edit(`Ambience of ${r.name}`, () => set(r, "ambience", day ? (night ? {day, night} : {day}) : undefined));
   };
   $("fAmbDay").onchange = $("fAmbNight").onchange = setAmb;
-  box.querySelectorAll("[data-door]").forEach(b => b.onclick = () => {
-    const c = r.openings[+b.dataset.door];
-    edit(`Remove door at [${c}]`, () => MapOps.toggleDoor(S.scn, r, c, set));
-  });
+  if (r.wall) { wireDoors(box, r); wireLock(box, r); }
   if ($("fAddFloor")) $("fAddFloor").onclick = () => addFloorDialog(r);
   if ($("fLevel")) $("fLevel").onchange = () => {
     const lv = Math.round(+$("fLevel").value);
@@ -280,6 +277,115 @@ async function addFloorDialog(r) {
   if (res?.region) showFloor(res.region.id);
 }
 
+// ---------------------------------------------------------------- doors, locks and keys
+/** The five kinds a doorway's door can be. "none" is labelled by where it is used: "open gaps" on a
+ *  region or a doorway, "none (remove it)" on a door object. */
+const DOOR_KIND_OPTS = [["door", "door"], ["bars", "barred door"], ["gate", "gate"], ["curtain", "curtain"], ["none", ""]];
+const doorKindOpts = (v, noneLabel = "open gaps") => DOOR_KIND_OPTS.map(([k, lbl]) =>
+  `<option value="${k}" ${k === v ? "selected" : ""}>${esc(k === "none" ? noneLabel : lbl)}</option>`).join("");
+const DOOR_COLOR_DEF = [{key: "doorColor", label: "Door colour", type: "color", optional: true}];
+
+/** The "Doors" section of a walled region: its own door kind and colour, the door on each of its
+ *  doorways, notes about doorways with no door and doors on no doorway, and its openings. */
+function doorsHtml(r) {
+  const dws = World10.regionDoorways(S.scn, r), doorsBy = World10.doorsByKey(S.scn);
+  const kindOf = dw => { const d = (doorsBy.get(dw.key) || [])[0]; return d ? objTpl(d.templateId)?.door : "none"; };
+  const bare = World10.doorways(S.scn).filter(dw => !(doorsBy.get(dw.key) || []).length && (dw.room.door ?? "door") !== "none");
+  const strays = World10.strayDoors(S.scn);
+  return field("Door kind", `<select id="fDoorKind" ${dis()}>${doorKindOpts(r.door || "door")}</select>`,
+      "The kind this region's own doorways get; each one can differ below.")
+    + formHtml("rd", r, DOOR_COLOR_DEF)
+    + `<div class="field"><span>Doorways</span>${dws.length ? `<div class="refs">${dws.map(dw =>
+        `<div class="door"><span>[${dw.cell.join(", ")}] → [${dw.out.join(", ")}]</span><select data-dw="${esc(dw.key)}" ${dis()}>${doorKindOpts(kindOf(dw))}</select></div>`).join("")}</div>`
+      : `<p class="note">No doorways: an opening needs a matching one across the wall.</p>`}</div>`
+    + (bare.length ? `<p class="note warn">${bare.length} doorway${bare.length === 1 ? " has" : "s have"} no door, so the game shows open gaps there.</p>
+        <div class="row" style="margin-bottom:8px"><button id="fHangAll" class="mini" ${dis()}>Hang doors on all of them</button></div>` : "")
+    + (strays.length ? `<p class="note warn">${strays.length} door object${strays.length === 1 ? " isn't" : "s aren't"} on a doorway; the game removes them.</p>
+        <div class="row" style="margin-bottom:8px"><button id="fRmStrays" class="mini" ${dis()}>Remove them</button></div>` : "")
+    + ((r.openings || []).length
+      ? `<div class="refs">${r.openings.map((c, i) => `<div class="door"><span>[${c.join(", ")}]</span>${S.editable ? `<button class="mini" data-door="${i}" title="Remove this door and its other side">Remove</button>` : ""}</div>`).join("")}</div>`
+      : `<p class="note warn">No doors: nobody can get in. Use the Door tool (D) to add one.</p>`);
+}
+
+/** Wires the "Doors" section: the region's kind, each doorway's kind, the colour, and the two fix-it
+ *  buttons. */
+function wireDoors(box, r) {
+  if ($("fDoorKind")) $("fDoorKind").onchange = () =>
+    edit(`Door kind of ${r.name}`, () => World10.setRegionDoorKind(S.scn, r, $("fDoorKind").value, set));
+  wireForm(box, "rd", r, DOOR_COLOR_DEF, () => r.name);
+  box.querySelectorAll("[data-dw]").forEach(sel => sel.onchange = () => {
+    const dw = World10.doorways(S.scn).find(d => d.key === sel.dataset.dw);
+    if (dw) edit(`Door at [${dw.cell.join(", ")}]`, () => World10.setDoorwayKind(S.scn, dw, sel.value, set));
+  });
+  if ($("fHangAll")) $("fHangAll").onclick = () => {
+    let hung = 0;
+    edit("Hang doors on the doorways without one", () => { hung = World10.hangAllDoors(S.scn, set); });
+    if (hung) toast(`Hung ${hung} door${hung === 1 ? "" : "s"}`);
+  };
+  if ($("fRmStrays")) $("fRmStrays").onclick = () => {
+    const gone = new Set(World10.strayDoors(S.scn).map(d => d.id));
+    edit(`Remove ${gone.size} stray door${gone.size === 1 ? "" : "s"}`, () =>
+      set(S.scn, "entities", S.scn.entities.filter(e => !gone.has(e.id))));
+  };
+  box.querySelectorAll("[data-door]").forEach(b => b.onclick = () => {
+    const c = r.openings[+b.dataset.door];
+    edit(`Remove door at [${c}]`, () => MapOps.toggleDoor(S.scn, r, c, set));
+  });
+}
+
+/** The "Lock" section of a walled region: whether its doors are locked, and who can open them. */
+function lockHtml(r) {
+  const holders = World10.keyHolders(S.scn, r), locked = World10.regionLocked(S.scn, r);
+  const people = entities().filter(e => (e.type === "npc" || e.type === "player") && !holders.includes(e))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  return `<label class="check"><input type="checkbox" id="fLocked" ${locked ? "checked" : ""} ${dis()}> Locked</label>`
+    + `<div class="field"><span>Key holders</span>${holders.length ? `<div class="refs">${holders.map(p =>
+        `<div class="door"><span>${linkTo(p)}</span><button class="mini" data-takekey="${esc(p.id)}" ${dis()}>Take key</button></div>`).join("")}</div>`
+      : `<p class="note">Nobody yet.</p>`}</div>`
+    + field("Give a key to…", `<select id="fGiveKey" ${dis()}><option value="">—</option>${people.map(p =>
+        `<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("")}</select>`)
+    + (locked && !holders.length ? `<p class="note warn">Nobody can open it.</p>` : "");
+}
+
+/** Wires the "Lock" section: the checkbox, taking keys and giving one. */
+function wireLock(box, r) {
+  if ($("fLocked")) $("fLocked").onchange = () => {
+    const want = $("fLocked").checked;
+    const ok = edit(`${want ? "Lock" : "Unlock"} ${r.name}`, () => {
+      const res = World10.setLocked(S.scn, r, want, set);
+      if (res.error) throw new Error(res.error);          // edit() toasts it; put the box back
+    });
+    if (!ok) inspect();
+  };
+  box.querySelectorAll("[data-takekey]").forEach(b => b.onclick = () => {
+    const p = byId(b.dataset.takekey);
+    if (p) edit(`Take ${p.name}'s key to ${r.name}`, () => World10.takeKey(S.scn, r, p, set));
+  });
+  if ($("fGiveKey")) $("fGiveKey").onchange = () => {
+    const p = byId($("fGiveKey").value);
+    if (p) edit(`Give ${p.name} a key to ${r.name}`, () => World10.giveKey(S.scn, r, p, set));
+  };
+}
+
+/** Locks or unlocks one door object with the same "locked" effect World10.setLocked puts on a
+ *  region's doors. */
+function setDoorLocked(e, locked) {
+  const isLock = fx => !!(fx && fx.def && Array.isArray(fx.def.mechanics) && fx.def.mechanics.some(m => m && m.type === "locked"));
+  const has = (e.statusEffects || []).some(isLock);
+  if (locked === has) return;
+  set(e, "statusEffects", locked ? [...(e.statusEffects || []), {id: MapOps.newId("se"),
+    def: {desc: "locked", emoji: "🔒", type: "constant", mechanics: [{type: "locked"}]}, appliedAt: 28800}]
+    : (e.statusEffects || []).filter(fx => !isLock(fx)));
+}
+
+/** The door fields of a door object: its kind (every door on its doorway follows) and its own lock. */
+function doorObjHtml(e, t, dw) {
+  return (dw ? field("Door", `<select id="oDoorKind" ${dis()}>${doorKindOpts(t?.door || "door", "none (remove it)")}</select>`,
+      "Every door on this doorway changes with it.")
+    : `<p class="note warn">Not on a doorway; the game removes it.</p>`)
+    + `<label class="check"><input type="checkbox" id="oDoorLocked" ${World10.isLocked(e) ? "checked" : ""} ${dis()}> Locked</label>`;
+}
+
 // A strip of 24 hours: how many people are in the region in each hour, by role.
 const ROLE_COLOR = {work: "#3d7fd6", leisure: "#4fa37a", sleep: "#8661b3"};
 function occupancyHtml(r) {
@@ -332,6 +438,8 @@ function inspectObject(box, e) {
   const where = regions().filter(r => inRect(r, e.pos[0], e.pos[1])).sort((a, b) => area(a) - area(b))[0];
   const partner = World10.portalPartner(S.scn, e);
   const pic = t && picUrl(t.id, "sprite");
+  const door = World10.isDoor(S.scn, e);            // a door object: its kind and lock, and no turning
+  const dw = door ? World10.doorways(S.scn).find(d => d.key === World10.doorKeyOf(e)) || null : null;
   const defs = [
     {key: "name", label: "Name", required: true, rename: true},
     {key: "hp", label: "HP", type: "number", min: 0, max: e.maxHp ?? 9999},
@@ -342,7 +450,8 @@ function inspectObject(box, e) {
     ${formHtml("ob", e, defs)}
     ${field("Type", `<div class="row"><select id="oType" ${dis()} style="flex:1">${typeOptions(e.templateId)}</select>${t ? `<button id="oEditType" class="mini">Edit type</button>` : ""}</div>`,
       t ? `${placed} placed. Changing the type swaps this one only; editing the type changes all ${placed}.` : "Its type is missing.")}
-    <div class="row" style="margin-bottom:10px"><button id="fRotL" ${dis()} title="Shift+R">Turn left</button><button id="fRotR" ${dis()} title="R">Turn right</button></div>
+    ${door ? doorObjHtml(e, t, dw) : ""}
+    ${door ? "" : `<div class="row" style="margin-bottom:10px"><button id="fRotL" ${dis()} title="Shift+R">Turn left</button><button id="fRotR" ${dis()} title="R">Turn right</button></div>`}
     <div class="row" style="margin-bottom:10px"><button id="oLink" ${dis()}>Link to…</button>${partner ? `<button id="oUnlink" ${dis()}>Unlink</button>` : ""}</div>
     ${facts([
       ["Position", e.pos.join(", ") + (where ? ` in ${linkTo(where)}` : "")],
@@ -355,7 +464,14 @@ function inspectObject(box, e) {
   wireForm(box, "ob", e, defs, () => e.name);
   $("oType").onchange = () => swapType([e], $("oType").value);
   if ($("oEditType")) $("oEditType").onclick = () => select({kind: "template", id: t.id});
-  $("fRotL").onclick = () => rotateSelection(3); $("fRotR").onclick = () => rotateSelection(1);
+  if ($("fRotL")) $("fRotL").onclick = () => rotateSelection(3);
+  if ($("fRotR")) $("fRotR").onclick = () => rotateSelection(1);
+  if ($("oDoorKind")) $("oDoorKind").onchange = () =>
+    edit(`Door kind of ${e.name}`, () => World10.setDoorwayKind(S.scn, dw, $("oDoorKind").value, set));
+  if ($("oDoorLocked")) $("oDoorLocked").onchange = () => {
+    const want = $("oDoorLocked").checked;
+    edit(`${want ? "Lock" : "Unlock"} ${e.name}`, () => setDoorLocked(e, want));
+  };
   $("oLink").onclick = () => { S.linkFrom = e.id; toast("Click the object at the other end (Esc cancels)"); draw(); };
   if ($("oUnlink")) $("oUnlink").onclick = () => edit(`Unlink ${e.name}`, () => { World10.unlinkPortal(S.scn, e, set); });
   wireStacks(box, "inv", e, "inventory");
@@ -372,6 +488,9 @@ function inspectObjectType(box, t) {
     {key: "walkability", label: "Movement", type: "number", min: 0, max: 1, step: .1, hint: "0 blocks the cell, 1 can be walked over, between slows."},
     {key: "forSleep", label: "Can be slept on", type: "check"},
     {key: "craftStation", label: "Crafting station", type: "check"},
+    {key: "vehicle", label: "Vehicle", type: "select", optional: true, none: "none", options: ["drive", "ride"],
+      hint: "Something to drive, like a cart or boat, or to ride, like a horse. Taking it for good is theft if that's ticked below."},
+    {key: "takingIsTheft", label: "Taking it is theft", type: "check", dropFalse: true},
     {key: "light", label: "Light", type: "number", min: 0, max: 1, step: .1, optional: true},
     {key: "heightM", label: "Height (m)", type: "number", min: 0, max: 50, step: .1, optional: true},
     {key: "maxHp", label: "Max HP", type: "number", min: 1, max: 100000},
