@@ -2,7 +2,7 @@
 
 Any Stable Diffusion 1.5 checkpoint at 512 px for every image type: runs on small GPUs, but follows descriptions the least closely of these packs.
 
-**Status:** Not yet checked on Anywhere RPG 1.0 with a real SD1.5 checkpoint. The 1.0 test ran this pack's workflows with an SDXL checkpoint standing in: that shows the game takes and runs them, not how the images look on SD1.5.
+**Status:** Checked in Anywhere RPG 1.0 with `dreamshaper_8` and `realisticVisionV60B1_v60B1VAE`: all four image types generate at 512 px, with map objects and items cut out. Limits: on both, map objects come out as front or perspective views, not top-down (SD1.5 doesn't follow the overhead framing), and a photo model such as Realistic Vision draws modern photographs. A painterly checkpoint (DreamShaper 8) suits the game; for top-down map objects, use another pack if your GPU allows.
 
 ## Model files (standard Comfy-Org names)
 

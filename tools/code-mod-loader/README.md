@@ -84,11 +84,9 @@ game, so **re-run install after adding, changing or removing a mod**.
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md). **Works on 1.0.**
-
-**Being ported to 1.0.** This one still installs and loads, but it was written and
-play-tested on 0.18. Until its port lands it may not work as described:
 - `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
   `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
+  **Works on 1.0.**
 
 Tests: `node --test tests/*.test.mjs` in this folder. One test patches the real 1.0 bundle when it
 finds a copy (set `ARPG_BUNDLE_10` to its path); otherwise it's skipped.

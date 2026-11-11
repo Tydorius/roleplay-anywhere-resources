@@ -29,7 +29,7 @@ the checks note what it changes on import. The 0.18 version of the editor is on 
 ### What 1.0 changed in a scenario
 
 The editor keeps every one of these as it is when you open, edit, save and download, and edits most of
-them (see "Editing 1.0 features" below). It leaves `unbounded` as it is; god mode edits it in a live game.
+them (see "Editing 1.0 features" below). Of `unbounded` it edits only the liquids list; god mode edits the rest in a live game.
 
 | What | In `scenario.json` |
 |---|---|
@@ -39,11 +39,11 @@ them (see "Editing 1.0 features" below). It leaves `unbounded` as it is; god mod
 | Door kinds | Region `door`: `door`, `bars`, `gate`, `curtain` or `none`, and `doorColor`. Each doorway also gets a zero-wide door object whose template has `door: <kind>`. |
 | Locks and keys | A locked effect on a door object. A key is an item template with `opens: <region id>`, carried by someone. |
 | Theft | `takingIsTheft` on regions (rooms inherit it) and object templates. |
-| Shapes and liquids | `shape: "organic"` rounds an open region of at least 5 × 5. `surface` names a liquid from `unbounded.profile.media`; an unknown name becomes one nobody can walk through. |
+| Shapes and liquids | `shape: "organic"` (the generator writes `"natural"` — the same thing) rounds an open region of at least 5 × 5 into a blob. `surface` names a liquid from `unbounded.profile.media`, at most 8; a scenario without `unbounded` gets the game's two default waters, and an unknown name becomes one nobody can walk through. A region at least three times as long as wide (and at most 12 wide) plays as a river `min(size)` cells wide. |
 | Vehicles | Object template `vehicle: drive \| ride`, and `sheet: bicycle \| dune-buggy` for the built-in art. |
 | NPC types | 1.0 writes `npcTemplates` with `homes: [{regionId, count}]` and `stance` (`neutral`, `skittish`, `hostile`). The import renames 0.18's `hostileNpcTemplates`, and drops it if both lists exist. Their images are under `media/htpl_…` (or `ntpl_…`). |
 | Sprites | 330 character sprites. `giant-rat`, `giant-lizard`, `giant-crab`, `giant-scorpion` and `bounty-hunter-*` were renamed; the import switches the old names. |
-| Open world | `unbounded`: `seed`, `profile` (liquids and low edges) and `areas` (ground, roads, places, populations). The editor leaves it untouched. |
+| Open world | `unbounded`: `seed`, `profile` (liquids and low edges) and `areas` (ground, roads, places, populations). The editor edits only `profile.media`, the liquid list; the rest it leaves untouched. |
 
 ### Editing 1.0 features
 
@@ -174,6 +174,12 @@ The dialog's steps:
   turned the way they face) and people. Drag empty space to pan (or Space+drag anywhere), scroll to
   zoom, and click to select. Click again to pick the next thing underneath, and Shift+click to add
   to the selection. A minimap in the corner shows where you are; click or drag on it to go there.
+- **Liquids and natural shapes.** An open region can take a **natural** shape (the game rounds it
+  into a blob from 5 × 5 up) and a **liquid** surface; the map draws the blob's cells and the rivers
+  as the game does, and the region inspector says what the game will make of the surface. The
+  **Liquids** tab, with nothing selected, edits the scenario's liquid list — name, walk speed,
+  colour, flows and glow, up to the game's 8 — and renaming a liquid renames every region that uses
+  it. A scenario without `unbounded` shows the game's two default waters until you add one.
 - **Moving things only moves what's already selected.** Click first, then drag. A drag that starts
   on anything else pans the map, so a slip of the mouse never moves the furniture.
 - **Tools** (the strip at the top of the map, or the key in brackets):

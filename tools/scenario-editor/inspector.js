@@ -122,7 +122,8 @@ function inspectBody() {
   return inspectPerson(box, o);
 }
 
-// Nothing selected: lists to find things by name.
+// Nothing selected: lists to find things by name, and the scenario's liquids.
+const BROWSE_TABS = [["types", "Object types"], ["hostile", "NPC types"], ["people", "People"], ["regions", "Regions"], ["liquids", "Liquids"]];
 function inspectBrowse(box) {
   const tab = S.browse || "types";
   const lists = {
@@ -135,10 +136,15 @@ function inspectBrowse(box) {
       detail: e.type === "player" ? "player" : e.hostile ? "hostile" : ""}))],
     regions: ["Regions", regions().map(r => ({id: r.id, name: r.name, detail: `${r.wall ? "walled" : "open"}${r.hostile ? " · hostile" : ""}`}))],
   };
+  const counts = Object.fromEntries([...Object.entries(lists).map(([k, [, l]]) => [k, l.length]),
+    ["liquids", (Liquids.mediaList(S.scn).list || []).length]]);
+  const strip = `<div class="tabs small">${BROWSE_TABS.map(([k, lbl]) =>
+    `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${esc(lbl)} <small>${counts[k]}</small></button>`).join("")}</div>`;
+  if (tab === "liquids") return inspectLiquids(box, strip);
   const [, items] = lists[tab], f = (S.browseFilter || "").toLowerCase();
   const shown = items.filter(i => !f || i.name.toLowerCase().includes(f)).sort((a, b) => a.name.localeCompare(b.name));
   box.innerHTML = `<div class="kind">Browse</div>
-    <div class="tabs small">${Object.entries(lists).map(([k, [lbl, l]]) => `<button data-tab="${k}" class="${k === tab ? "on" : ""}">${esc(lbl)} <small>${l.length}</small></button>`).join("")}</div>
+    ${strip}
     <input type="search" id="bFilter" placeholder="Filter" value="${esc(S.browseFilter || "")}" style="width:100%;margin:8px 0">
     ${tab === "types" && S.editable ? `<button id="bNewType" style="margin-bottom:8px">New object type…</button>` : ""}
     ${tab === "hostile" && S.editable ? `<button id="bNewNpc" style="margin-bottom:8px">New NPC type…</button>` : ""}
@@ -148,6 +154,80 @@ function inspectBrowse(box) {
   $("bFilter").oninput = () => { S.browseFilter = $("bFilter").value; const pos = $("bFilter").selectionStart; inspect(); $("bFilter").focus(); $("bFilter").setSelectionRange(pos, pos); };
   if ($("bNewType")) $("bNewType").onclick = newObjectType;
   if ($("bNewNpc")) $("bNewNpc").onclick = newNpcType;
+}
+
+// The Liquids tab: the scenario's liquid list (unbounded.profile.media) as the game reads it, or the
+// game's two default waters while the scenario has no `unbounded`. Every change is one undo step,
+// and renaming a liquid renames every region that uses it (Liquids.renameMedium).
+function inspectLiquids(box, strip) {
+  const {list, defaults} = Liquids.mediaList(S.scn);
+  const used = new Map();      // medium -> how many regions the game resolves to it
+  for (const got of Liquids.resolveAll(S.scn).byRegion.values()) if (got) used.set(got.medium, (used.get(got.medium) || 0) + 1);
+  const regions = n => n === 1 ? "1 region" : `${n} regions`;
+  const WALK = [["yes", "yes"], ["slow", "wade slowly"], ["no", "can't cross"]];
+  const color = c => /^#[0-9a-f]{6}$/i.test(c || "") ? c : "#888888";
+  const flags = m => m.glow ? "glow" : m.flows ? "flows" : "";
+  const rows = (defaults ? Liquids.DEFAULT_MEDIA : list || []).map((m, i) => defaults ? `<div class="lq">
+      <span class="swatch" style="background:${esc(color(m.color))}"></span><span class="lq-name">${esc(m.name)}</span>
+      <small class="note">${esc([m.walk === "no" ? "can't cross" : m.walk === "slow" ? "wade slowly" : "yes", flags(m), regions(used.get(m) || 0)].filter(Boolean).join(" · "))}</small>
+    </div>` : `<div class="lq">
+      <input type="text" data-lq-name="${i}" value="${esc(m.name || "")}" ${dis()}>
+      <select data-lq-walk="${i}" ${dis()}>${WALK.map(([v, l]) => `<option value="${v}" ${m.walk === v ? "selected" : ""}>${esc(l)}</option>`).join("")}</select>
+      <input type="color" data-lq-color="${i}" value="${esc(color(m.color))}" ${dis()}>
+      <label class="check"><input type="checkbox" data-lq-flows="${i}" ${m.flows ? "checked" : ""} ${dis()}> flows</label>
+      <label class="check"><input type="checkbox" data-lq-glow="${i}" ${m.glow ? "checked" : ""} ${dis()}> glow</label>
+      <button class="mini" data-lq-del="${i}" ${dis()}>Remove</button>
+      <small class="note">${esc(regions(used.get(m) || 0))}</small>
+    </div>`).join("");
+  const full = list && list.length >= Liquids.MAX_MEDIA;
+  const note = defaults ? `<p class="note">The game's default waters. Add a liquid to make your own list.</p>`
+    : list ? (full ? `<p class="note">The game allows 8.</p>` : "")
+    : `<p class="note warn">unbounded has no liquid list (profile.media): the game fails to load this scenario as soon as a region has a surface.</p>`;
+  box.innerHTML = `<div class="kind">Browse</div>${strip}
+    ${rows}
+    ${note}
+    ${S.editable ? `<div class="row" style="margin:8px 0"><button id="lqAdd" ${full ? "disabled" : ""}>Add liquid</button>
+      ${full ? `<small class="note">The game allows 8</small>` : ""}</div>` : ""}`;
+  box.querySelectorAll("[data-tab]").forEach(b => b.onclick = () => { S.browse = b.dataset.tab; inspect(); });
+  if (list && !defaults) {
+    box.querySelectorAll("[data-lq-name]").forEach(inp => inp.onchange = () => {
+      const i = +inp.dataset.lqName, m = list[i], v = Liquids.normSurface(inp.value);
+      if (!v) { toast("A liquid needs a name"); inspect(); return; }
+      if (v === Liquids.normSurface(m.name)) return;
+      if (list.some((o, j) => j !== i && o && Liquids.normSurface(o.name) === v)) { toast(`Another liquid is already called "${v}"`); inspect(); return; }
+      edit(`Rename liquid ${m.name} to ${v}`, () => Liquids.renameMedium(S.scn, m.name, v, set));
+    });
+    box.querySelectorAll("[data-lq-walk]").forEach(sel => sel.onchange = () => {
+      const m = list[+sel.dataset.lqWalk];
+      edit(`Walking on ${m.name}`, () => set(m, "walk", sel.value));
+    });
+    box.querySelectorAll("[data-lq-color]").forEach(c => c.onchange = () => {
+      const m = list[+c.dataset.lqColor];
+      edit(`Colour of ${m.name}`, () => set(m, "color", c.value));
+    });
+    for (const attr of ["flows", "glow"]) box.querySelectorAll(`[data-lq-${attr}]`).forEach(cb => cb.onchange = () => {
+      const m = list[+cb.dataset[`lq${attr[0].toUpperCase()}${attr.slice(1)}`]];
+      edit(`${attr[0].toUpperCase()}${attr.slice(1)} of ${m.name}`, () => set(m, attr, cb.checked ? true : undefined));
+    });
+    box.querySelectorAll("[data-lq-del]").forEach(b => b.onclick = () => {
+      const i = +b.dataset.lqDel, m = list[i], n = used.get(m) || 0;
+      if (n && !confirm(`${regions(n)} ${n === 1 ? "uses" : "use"} "${m.name}". Remove the liquid anyway? ${n === 1 ? "Its" : "Their"} surface stays as it is.`)) return;
+      edit(`Remove liquid ${m.name}`, () => set(S.scn.unbounded.profile, "media", list.filter((_, j) => j !== i)));
+    });
+  }
+  const add = $("lqAdd");
+  if (add) add.onclick = () => {
+    const fresh = () => [...Liquids.DEFAULT_MEDIA.map(m => ({...m}))];   // a list of one's own starts from the game's waters
+    const nm = Liquids.newMedium((list || fresh()).map(m => m && m.name));
+    if (defaults) return edit(`Add liquid ${nm.name}`, () => set(S.scn, "unbounded",
+      {seed: Math.floor(Math.random() * 2 ** 31), profile: {media: [...fresh(), nm], lowEdges: []}}));
+    const u = S.scn.unbounded, prof = u.profile && typeof u.profile === "object" ? u.profile : null;
+    edit(`Add liquid ${nm.name}`, () => {
+      if (!prof) return set(u, "profile", {media: [...fresh(), nm], lowEdges: []});
+      set(prof, "media", Array.isArray(prof.media) ? [...prof.media, nm] : [...fresh(), nm]);
+      if (prof.lowEdges === undefined) set(prof, "lowEdges", []);
+    });
+  };
 }
 
 function inspectMany(box) {
@@ -172,6 +252,8 @@ function inspectRegion(box, r) {
   const objs = entities().filter(e => e.type === "object" && inRect(r, e.pos[0], e.pos[1]));
   const parent = MapOps.parentOf(S.scn, r);
   const amb = typeof r.ambience === "string" ? {day: r.ambience} : (r.ambience || {});
+  const open = !r.wall && !r.pocket;               // the game reads shape and surface on open areas only
+  const res = Liquids.resolveAll(S.scn), got = res.byRegion.get(r.id);
   const defs = [
     {key: "description", label: "Description", type: "textarea", hint: "Shown to the player in the region panel. The GM only sees region names."},
     {key: "hostile", label: "Hostile: dangerous territory where hostile types spawn", type: "check", dropFalse: true},
@@ -183,6 +265,9 @@ function inspectRegion(box, r) {
     {key: "takingIsTheft", label: "Taking things here is theft", type: "select", optional: true, none: "inherit",
       options: [["true", "yes"], ["false", "no"]], hint: "Rooms inside inherit this unless they set their own.",
       apply: v => setPath(r, "takingIsTheft", v === undefined ? undefined : v === "true")},
+    ...(open ? [{key: "shape", label: "Shape", type: "select", optional: true, none: "rectangle",
+      options: [["organic", "natural (rounded blob)"]],
+      hint: Math.min(r.size[0], r.size[1]) < Liquids.ORGANIC_MIN ? "Needs at least 5 × 5; drawn as a rectangle until then." : undefined}] : []),
   ];
   const sleepers = new Set(), beds = objs.filter(o => objTpl(o.templateId)?.forSleep).length;
   for (const e of entities()) for (const b of e.schedule || []) if (b.location === r.name && b.role === "sleep" && !e.templateId) sleepers.add(e.id);
@@ -190,15 +275,20 @@ function inspectRegion(box, r) {
     <h3>${esc(r.name)}</h3>
     ${field("Name", `<div class="row"><input type="text" id="fName" value="${esc(r.name)}" ${dis()} style="flex:1"><button id="fRename" ${dis()}>Rename</button></div>`,
       "Renaming also updates every schedule and calendar event that names this region.")}
-    ${formHtml("rg", r, defs)}
+    ${formHtml("rg", open ? {...r, shape: Liquids.normShape(r.shape) || ""} : r, defs)}
+    ${open ? field("Liquid", `<input type="text" id="fSurface" list="surfaceList" value="${esc(r.surface || "")}" ${dis()} placeholder="e.g. shallow water">`,
+      "Empty is dry ground. A name the list doesn't have, the game adds itself (as one nobody can cross).") : ""}
+    ${open && res.media ? `<datalist id="surfaceList">${res.media.map(m => `<option value="${esc(m.name)}">`).join("")}</datalist>` : ""}
     <div class="row2">${field("Ambience by day", `<select id="fAmbDay" ${dis()}><option value="">—</option>${M.ambience.map(a => `<option ${amb.day === a ? "selected" : ""}>${a}</option>`).join("")}</select>`)}
     ${field("At night", `<select id="fAmbNight" ${dis()}><option value="">same</option>${M.ambience.map(a => `<option ${amb.night === a ? "selected" : ""}>${a}</option>`).join("")}</select>`)}</div>
     ${facts([
       ["Inside", parent ? linkTo(parent) : "the open map"],
       ["Position", r.position.join(", ")], ["Size", r.size.join(" × ")],
       ["Contains", `${inside.length} regions · ${objs.length} objects · ${people} people`],
-      r.shape ? ["Shape", esc(r.shape)] : null,
-      r.surface ? ["Liquid", esc(r.surface)] : null,
+      r.shape && !open ? ["Shape", `${esc(r.shape)} · ignored: the game rounds open areas only`] : null,
+      got ? ["Liquid", got.added ? "new liquid (added by the game, can't walk)"
+        : `${esc(got.medium.name)} · ${got.medium.walk === "no" ? "can't walk" : got.medium.walk === "slow" ? "wade slowly" : "can walk"} · ${got.kind === "river" ? `river ${Math.min(r.size[0], r.size[1])} cells wide` : "pool"}`]
+        : got === null ? ["Liquid", "ignored: the liquid list is full"] : null,
       sleepers.size || beds ? ["Beds", `<span class="${beds < sleepers.size ? "bad" : ""}">${beds} for ${sleepers.size} sleeper${sleepers.size === 1 ? "" : "s"}</span>`] : null,
     ])}
     ${MapOps.isFloor(r) ? section("Floor", floorHtml(r)) : ""}
@@ -209,6 +299,10 @@ function inspectRegion(box, r) {
     ${section(`Used by (${refs.length})`, refsHtml(refs, "Nothing names this region."), refs.length > 0 && refs.length < 12)}`;
   bindRefs(box, refs); bindJumps(box);
   wireForm(box, "rg", r, defs, () => r.name);
+  if ($("fSurface")) $("fSurface").onchange = () => {
+    const v = Liquids.normSurface($("fSurface").value);   // empty removes the surface
+    edit(`Liquid of ${r.name}`, () => set(r, "surface", v));
+  };
   $("fRename").onclick = () => renameThing(r, $("fName").value);
   $("fName").onkeydown = e => { if (e.key === "Enter") renameThing(r, $("fName").value); };
   const setAmb = () => {

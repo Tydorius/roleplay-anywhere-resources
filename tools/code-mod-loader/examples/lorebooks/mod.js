@@ -23,7 +23,9 @@
   const DEFAULT_BUDGET = 2000;
   const DEFAULT_STICKY_MINUTES = 10;
   // Prompt sections that describe what is happening near the player right now.
-  // The full region list and far-away characters are left out, or everything would match.
+  // The *_elsewhere, doorways, regions, places and calendar sections are left out because
+  // they describe other rooms and floors, and player because its fixed description would
+  // match every turn.
   const SCAN_KINDS = new Set(['scene', 'characters', 'objects', 'party', 'quest', 'events', 'now']);
 
   const list = v => (Array.isArray(v) ? v : typeof v === 'string' && v.trim() ? [v] : []);
@@ -101,21 +103,26 @@
     return chosen;
   }
 
+  // On 1.0 the lore section is never larger than the world background limit, and it
+  // shrinks with it when the game rebuilds an over-budget prompt.
+  function loreBudget(mods, limits) {
+    const own = Number(mods.lorebookBudget) > 0 ? Number(mods.lorebookBudget) : DEFAULT_BUDGET;
+    const cap = Number(limits?.worldChars);
+    return cap > 0 ? Math.min(own, cap) : own;
+  }
+
   function scanText(parts, world) {
     const sections = [...parts.head, ...parts.sections, ...parts.tail].filter(s => SCAN_KINDS.has(s.kind));
     const lastTurn = world.overseerHistory?.length ? JSON.stringify(world.overseerHistory[world.overseerHistory.length - 1]) : '';
     return [...sections.map(s => s.content), lastTurn].join('\n');
   }
 
-  arpg.onPrompt((parts, world) => {
+  arpg.onPrompt((parts, world, limits) => {
     const mods = world.arpgMods;
     const entries = entriesOf(mods);
     if (!entries.length) return;
     const state = (mods.lorebookState ??= {});
-    const budget = Number(mods.lorebookBudget) > 0 ? Number(mods.lorebookBudget) : DEFAULT_BUDGET;
-    // The mod enforces its own budget; this only stops the game's trimmer from
-    // tagging an unknown section kind with "(0 more lines omitted)".
-    if (arpg.promptBudgets && !('lore' in arpg.promptBudgets)) arpg.promptBudgets.lore = 1e6;
+    const budget = loreBudget(mods, limits);
     const chosen = select(entries, scanText(parts, world), world.gameTimeSecs ?? 0, state, budget);
     arpg.lore.last = chosen.map(({ e, why }) => ({ book: e.book, id: e.id, why }));
     if (!chosen.length) return;
@@ -126,5 +133,5 @@
     });
   });
 
-  arpg.lore = { entriesOf, select, mentions, last: [] };
+  arpg.lore = { entriesOf, select, mentions, loreBudget, last: [] };
 })();
