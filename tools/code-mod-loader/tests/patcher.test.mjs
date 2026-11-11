@@ -53,7 +53,7 @@ test('gameVersion reads 1.0\'s build flags and 0.18\'s constant before the log l
 
 test('portals, floors and performance are retired; the rest stay bundled', () => {
   const avail = bundledMods();
-  assert.deepEqual(avail, ['lights', 'lorebooks', 'memory-add', 'region-groups', 'wall-aware-perception']);
+  assert.deepEqual(avail, ['lights', 'lorebooks', 'memory-add', 'region-groups', 'smooth-edges', 'wall-aware-perception']);
 });
 
 test('add with no names (or "all") takes every bundled mod but the samples', () => {
@@ -80,7 +80,7 @@ test('the 0.18-only patches are gone', () => {
   const names = PATCHES.map(p => p.name);
   assert.deepEqual(names, ['api-registry', 'config-reader', 'world-create', 'pathfinder', 'region-arrival',
     'region-destination', 'region-same-room', 'sim-tick', 'perception', 'line-of-sight', 'sight-blockers',
-    'gm-prompt']);
+    'gm-prompt', 'liquid-canvas', 'ground-fade']);
 });
 
 // Shapes copied from the 1.0 bundle (index-BrLojUrw.js), cut down to what each anchor needs.

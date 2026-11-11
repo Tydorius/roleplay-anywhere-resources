@@ -1,4 +1,4 @@
-# Code-mod loader 2.1.0
+# Code-mod loader 2.2.0
 
 Adds JavaScript mods to Anywhere RPG, beyond what config packs can do: for example new GM API
 calls, or changes to the prompts the game builds. It works like BepInEx does for Unity games,
@@ -14,6 +14,7 @@ changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 
 | Version | Date | Changes |
 |---|---|---|
+| 2.2.0 | 2026-11-10 | Two new render patches, liquid-canvas and ground-fade, add the `onLiquidCanvas` and `onGroundFade` hooks: mods can repaint a water/road chunk's colour and flow canvases (and override its blur radius) and reshape the fade at a region's ground edges. |
 | 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors and take 1.0's doors off the joints between pieces. Both mods are ported to 1.0. |
 | 2.0.0 | 2026-11-10 | For Anywhere RPG 1.0 only. Reads 1.0's version; fixes the `world-create` and `gm-prompt` patches for 1.0; `onPrompt` hooks now get the context limits; drops the `prompt-budgets`, `nav-cache-get/put`, `edge-memo` and `nav-grid` patches with the `promptBudgets`, `setNavCache` and `onNav` APIs; retires the portals, floors and performance mods (1.0 does them natively); `memory-add` writes 1.0's prose memory. |
 | 1.0.0 | 2026-11-01 | First release, for Anywhere RPG 0.18: the loader, seven mods (lorebooks, portals, wall-aware perception, floors, performance, region groups, lights) and one-step install. |
@@ -84,6 +85,9 @@ game, so **re-run install after adding, changing or removing a mod**.
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md). **Works on 1.0.**
+- `examples/smooth-edges` takes the cell-grid steps off water and road shores (diagonal corner
+  cuts, rounded ends) and fades natural region ground along its true outline. See
+  [its README](examples/smooth-edges/README.md). **Works on 1.0.**
 - `examples/lorebooks` adds keyword-triggered lore that a scenario carries in its own
   `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
   **Works on 1.0.**
@@ -110,7 +114,7 @@ All the original files are kept as `*.arpg-orig` beside the patched ones.
 
 | File | Change |
 |---|---|
-| `resources/app/dist/assets/index-*.js` | Twelve small patches, each found by its content (see the next table). |
+| `resources/app/dist/assets/index-*.js` | Fourteen small patches, each found by its content (see the next table). |
 | `resources/app/dist/index.html` | `<script>` tags for `arpg-mods/loader.js` and each mod, placed before the game bundle. |
 | `resources/app/dist/arpg-mods/` | The loader and the copied mods. |
 
@@ -130,6 +134,8 @@ The bundle patches. Each must match exactly once, or install stops and changes n
 | `line-of-sight` | 1.0 stealth's line-of-sight test through walls and shut doors | `__arpg.lineOfSight`. |
 | `sight-blockers` | The walls and shut doors that test takes | `__arpg.sightBlockers`. |
 | `gm-prompt` | Where the GM prompt's head, sections and tail are built from the world and the context limits | `onPrompt`. |
+| `liquid-canvas` | The liquid overlay painter, between painting a chunk's two canvases and blurring them into the tile | `onLiquidCanvas`. |
+| `ground-fade` | The region ground fade in the scene's groundOwners() | `onGroundFade`. |
 
 ## Writing a mod
 
@@ -146,6 +152,8 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `onTick(world => void)` | Runs at the start of every unpaused simulation step, so keep it cheap. |
 | `onPath((world, from, dest, entity, opts, next) => cells \| null)` | Wraps the game's grid pathfinder, which every walk uses. `next(...)` runs the plain search. Return the cells to walk, excluding the start cell. `entity` is unset for queries that aren't walks. In 1.0 this search stays inside one plane (the main map or one floor); walks between floors go through 1.0's portals, which are routed above it. |
 | `onPerceive((world, a, b, range, search, answer) => boolean \| undefined, {order})` | Runs whenever the game asks whether `a` and `b` are within notice range. `answer` is the answer so far, starting from the game's straight-line test. Return a boolean to replace it, or nothing to leave it. Hooks with a higher `order` run later and have the last word. `search` is the game's path search. |
+| `onLiquidCanvas(payload => number \| undefined, {order})` | Runs when a water/road chunk's two canvases are fully painted, before they are blurred into the tile. Repaint them, and return a finite number ≥ 0 to override this chunk's blur radius. See [Liquid canvases and ground fades](#liquid-canvases-and-ground-fades). |
+| `onGroundFade((region, mask, def) => Float32Array \| undefined, {order})` | Runs when the game fades a region's ground at its edges. Return a `Float32Array` of `def.length` to replace the fade — the same array for the same mask, or the ground is rebuilt every sync. See [Liquid canvases and ground fades](#liquid-canvases-and-ground-fades). |
 | `sightBlockers(world)` | The walls and shut doors 1.0's own sight test takes (the world's wall regions, plus the door edges nobody holds open). Building it scans every entity, so hold on to the result when testing many lines. |
 | `lineOfSight(world, from, to, blockers?)` | 1.0 stealth's line-of-sight test: walls and shut doors block, bars, gates and open doorways don't. Points are continuous (an entity's centre is `[pos[0]+size[0]/2, pos[1]+size[1]/2]`); pass `blockers` when testing many lines. |
 | `planeOf(world, point)` | The plane a point is on: the pocket region (a floor or cellar) containing it, or `null` on the main map. |
@@ -175,6 +183,43 @@ that used them stay on the `0.18` branch.
    one-time "context trimmed" notice (`sim.overseer.contextTrimmed`).
 
 So keep mod sections short, put the most important lines first, and scale them with `limits`.
+
+### Liquid canvases and ground fades
+
+Two hooks reshape how 1.0 draws water shores and the edges of region ground.
+
+**`onLiquidCanvas(payload => number | undefined, {order})`** — the game paints each 32×32-cell
+chunk of water and roads (with a 2-cell margin) on two canvases, then blurs and crops a copy of
+each into the tile. The hook runs between the painting and the blur, once per chunk, and
+`payload` holds:
+
+- `color` and `flow` — the two canvases as 2D contexts, `(chunkCells + margin*2) * cellPx`
+  square (432px on 1.0). `color` is the colour layer, transparent off the liquid and roads;
+  `flow` starts filled `rgb(128, 128, 0)`, and its R/G holds the flow vector (128, 128 = none)
+  and B the liquid kind.
+- `cellPx` (12), `margin` (2), `chunkCells` (32) — the grid the chunk was painted on.
+- `chunk` — the chunk's tile `[cx, cy]`; `unbounded` — the world's own flag; `blur` — the
+  game's blur radius (7).
+- **Coordinates:** cell `(v, y)` has v = x and **y up**, both counted from the chunk's own
+  corner and running from `-margin` to `chunkCells + margin - 1`. It is the `cellPx` square at
+  pixel `((v + margin) * cellPx, (chunkCells + margin - 1 - y) * cellPx)` — **canvas rows run
+  top-down while y runs up.**
+
+Return a finite number ≥ 0 to override this chunk's blur radius; the highest-`order` hook that
+returns one has the last word. Repainting costs nothing extra: whatever is on the two canvases
+is what gets blurred into the tile.
+
+**`onGroundFade((region, mask, def) => Float32Array | undefined, {order})`** — each region's
+ground art is faded at its edges with one alpha per vertex. `mask` is the region's `Uint8Array`
+cell mask (`[row*w + x]`, row 0 = the region's **lowest** y; null never reaches the hook), and
+`def` is the game's own fade. Return a `Float32Array` of `def.length` — `(w+1)*(h+1)` values —
+to replace it; the lowest-`order` hook that returns a valid one wins.
+
+- **Vertex orientation:** vertex `(sx, my)` at index `my*(w+1) + sx` is the point x = sx,
+  **y = h − my** in region-local cells, so vertex row 0 is the **top** edge.
+- **The identity rule:** the game compares the fade by identity and refills the ground tile
+  whenever it changes, so **return the same array for the same mask** (build it once, cache it
+  keyed by mask) or the ground is rebuilt on every sync.
 
 ## Debugging
 

@@ -8,6 +8,8 @@
   const tickHooks = [];
   const pathHooks = [];
   const perceiveHooks = [];
+  const liquidCanvasHooks = [];
+  const groundFadeHooks = [];
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -19,6 +21,14 @@
         console.error(`[arpg] ${kind} hook failed`, e);
       }
     }
+  }
+
+  // The render hooks run per chunk and per sync, so a failing one is logged once, not on
+  // every call.
+  function warnOnce(kind, hook, err) {
+    if (hook.arpgWarned) return;
+    hook.arpgWarned = true;
+    console.warn(`[arpg] ${kind} hook failed`, err);
   }
 
   function addCall(name, build) {
@@ -107,6 +117,38 @@
       runHooks('prompt', promptHooks, [parts, world, limits ?? null]);
       return parts;
     },
+    // Called by the game once a liquid/road chunk's two canvases (the colour layer and the
+    // flow map) are fully painted, before each is blurred and cropped into the tile. Hooks may
+    // repaint either canvas; one returning a finite number ≥ 0 overrides this chunk's blur
+    // radius, the last override winning. Returns that radius, or undefined to keep the game's.
+    liquidCanvas(payload) {
+      let blur;
+      for (const hook of liquidCanvasHooks) {
+        try {
+          const r = hook(payload);
+          if (typeof r === 'number' && Number.isFinite(r) && r >= 0) blur = r;
+        } catch (e) {
+          warnOnce('liquid-canvas', hook, e);
+        }
+      }
+      return blur;
+    },
+    // Called by the game when it fades a region's ground at its edges: `mask` is the region's
+    // Uint8Array cell mask (row 0 = the region's lowest y), `def` the game's own Float32Array
+    // of vertex alphas. The first hook returning a Float32Array of `def.length` replaces it;
+    // the game refills the ground whenever the array changes by identity, so a hook must
+    // return the same array for the same mask.
+    groundFade(region, mask, def) {
+      for (const hook of groundFadeHooks) {
+        try {
+          const r = hook(region, mask, def);
+          if (r instanceof Float32Array && def && r.length === def.length) return r;
+        } catch (e) {
+          warnOnce('ground-fade', hook, e);
+        }
+      }
+      return def;
+    },
     // The mod-facing API.
     registerMod(name) { arpg.mods.push(name); },
     addCall,
@@ -130,6 +172,31 @@
       hook.arpgOrder = order;
       perceiveHooks.push(hook);
       perceiveHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
+    // hook(payload): a liquid/road chunk's canvases, both fully painted, as 2D contexts —
+    // `color` and `flow` ((chunkCells+margin*2)*cellPx square; the flow map's R/G is the flow
+    // vector and B the liquid kind). The payload also carries `cellPx`, `margin`,
+    // `chunkCells`, `chunk` (the chunk's tile [cx, cy]), `unbounded` and `blur` (the game's own
+    // radius). Cell (v, y) — v = x, y up, both from the chunk's own corner, running from
+    // -margin to chunkCells+margin-1 — is the cellPx square at pixel
+    // ((v+margin)*cellPx, (chunkCells+margin-1-y)*cellPx): canvas rows run top-down while y
+    // runs up. Return a finite number ≥ 0 to override this chunk's blur radius; `order`
+    // (default 0) sorts hooks, higher running later and having the last word.
+    onLiquidCanvas(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      liquidCanvasHooks.push(hook);
+      liquidCanvasHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
+    // hook(region, mask, def) → Float32Array of def.length to replace a region's ground fade,
+    // or anything else to keep it. `mask` is the region's Uint8Array cell mask (row 0 = the
+    // region's lowest y); the fade holds one alpha per ground vertex, where vertex (sx, my) —
+    // index my*(w+1)+sx — is the point x = sx, y = h-my in region cells (row 0 is the top
+    // edge). Return the same array for the same mask or the ground is rebuilt every sync. The
+    // first valid result wins; `order` (default 0) sorts hooks, lower running first.
+    onGroundFade(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      groundFadeHooks.push(hook);
+      groundFadeHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
     },
     // Adds a header file to the GM's api-call list, after `after` (a header name) or at the end.
     addApiHeader(name, text, after) {
