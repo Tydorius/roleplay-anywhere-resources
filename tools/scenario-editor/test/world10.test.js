@@ -381,7 +381,7 @@ test("convertToNpcTemplates does the game's conversion", () => {
   assert.deepEqual(zombie, {id: "h1", name: "Zombie", animationId: "zombie", gender: "male",
     level: 2, money: 5, lootPoolIds: ["lp1"], stance: "hostile", homes: [{regionId: "crypt", count: 3}]});
   assert.deepEqual(deer, {id: "h2", name: "Deer", animationId: "deer", gender: "female",
-    stance: "neutral", homes: [{regionId: "field", count: 0}]});
+    homes: [{regionId: "field", count: 0}]}, "attacksOnSight: false leaves no stance, as the game's import does");
   assert.deepEqual(ghost, {id: "h3", name: "Ghost", stance: "skittish", homes: []});
   assert.equal(W.isLegacy(s, zombie), false);
   assert.equal(E(s, "z1").npcHome, "crypt");

@@ -353,7 +353,9 @@
   function convertToNpcTemplates(scn, set) {
     const conv = [];
     for (const t of scn.hostileNpcTemplates || []) {
-      const c = {...t, stance: stanceOf(scn, t), homes: homesOf(t)};
+      // as the game's import does: stance "hostile" unless it has its own or attacksOnSight is false
+      const c = {...t, stance: t.stance ?? (t.attacksOnSight === false ? undefined : "hostile"), homes: homesOf(t)};
+      if (c.stance === undefined) delete c.stance;
       delete c.regionId; delete c.count; delete c.attacksOnSight;
       conv.push(c);
       if (t.regionId != null) for (const e of scn.entities)
