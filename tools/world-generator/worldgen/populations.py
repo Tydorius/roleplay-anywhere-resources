@@ -1,10 +1,11 @@
 """Anywhere RPG 1.0 native populations: the nameless livestock, vermin, crowds
 and patrols of a laid-out world, written as the game's own ``npcTemplates``
-(``world10.js`` ``addNpcType``). The generator names no character for them: the
-game spawns ``count`` of a template in each of its home regions and respawns
-them, so a farm has sheep in its pasture, a cellar has rats and a town square
-has a few townsfolk. Each population costs the GM attention, so the whole world
-holds at most ``CAP`` creatures and the chooser trims the largest counts first.
+(``world10.js`` ``addNpcType``). The generator names no character for them: a
+home's members start in place as entities of their template, and the game adds
+one member a day to any home below its ``count``, so a farm has sheep in its
+pasture, a cellar has rats and a town square has a few townsfolk. Each
+population costs the GM attention, so the whole world holds at most ``CAP``
+creatures and the chooser trims the largest counts first.
 
 A population is chosen from the planned world — the regions' names and kinds,
 the zones' kinds, the cast's roles and the player's start — and is deterministic
@@ -284,4 +285,10 @@ def _templates(entries, rng, plan):
 def creature_count(populations):
     """How many creatures the populations spawn across their homes."""
     return sum(h.get("count", 0) for p in populations or []
+               for h in p.get("homes") or [])
+
+
+def placed_count(populations):
+    """How many members the populations start with, in place."""
+    return sum(len(h.get("members") or []) for p in populations or []
                for h in p.get("homes") or [])

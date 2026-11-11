@@ -201,12 +201,14 @@ def _mid(pair):
 
 def _populations_summary(spec):
     """The native populations by region: which template spawns how many of
-    what in which region, plus the totals."""
+    what in which region, plus the totals and how many members start in
+    place."""
     from worldgen import populations
     pops = spec.get("nativePopulations") or []
     return {
         "templates": len(pops),
         "creatures": populations.creature_count(pops),
+        "placed": populations.placed_count(pops),
         "regions": [{"template": p.get("name"), "region": h.get("region"),
                      "count": h.get("count")}
                     for p in pops for h in p.get("homes") or []],
@@ -445,7 +447,8 @@ def _summary_text(world, spec, seed, emit):
         n_regions = sum(len(p.get("homes") or []) for p in pops)
         lines.append(f"populations: {populations_mod.creature_count(pops)} "
                      f"creatures in {n_regions} regions "
-                     f"({len(pops)} templates)")
+                     f"({len(pops)} templates), "
+                     f"{populations_mod.placed_count(pops)} placed at the start")
         for p in pops:
             homes = ", ".join(f"{h['region']} x{h['count']}"
                               for h in p.get("homes") or [])

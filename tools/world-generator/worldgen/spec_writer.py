@@ -334,6 +334,47 @@ def _nature(world, plan):
         shapes.append(name)
     return {"shape": shapes, "water": sorted(water), "vehicles": vehicles}
 
+
+def _population_members(world, pops, natural):
+    """Each population member's start cell, as world cells of its home region:
+    free (no object's turned footprint, no character, no other member),
+    walkable and reachable from the roads, off the deep water (the
+    reachability grid blocks it) and off the corner cells of the regions that
+    ship a natural shape, where the drawn blob may leave no ground. A home
+    with too few such cells ships fewer members, noted — the game tops the
+    home up again one member a day. The cells ride each home as ``members``;
+    finish_scenario writes them into the entities once the ids exist."""
+    from . import checks as checks_mod
+    from . import native, schedule
+    openings = checks_mod.compute_openings(world)
+    blocked, _doors = checks_mod.walkability_grid(world, openings)
+    jumps = checks_mod.portal_jumps(world)
+    starts = set()
+    for road in world.roads:
+        starts |= road.cells()
+    connected = checks_mod.flood(world, starts, blocked, jumps)
+    taken = {tuple(c.pos) for c in world.characters}
+    if world.player is not None:
+        taken.add(tuple(world.player.pos))
+    for name in natural:
+        region = world.regions_by_name.get(name)
+        if region is not None:
+            taken |= native.corner_cells(region.rect)
+    for p in pops:
+        for h in p.get("homes") or []:
+            members = []
+            for _ in range(h.get("count") or 0):
+                cell = schedule.free_cell(world, h["region"], taken, connected)
+                if cell is None:
+                    _note(world, f"population {p.get('name')} in {h['region']}",
+                          f"only {len(members)} of {h.get('count')} members start "
+                          "in place: no free reachable cell was left; the game "
+                          "adds the rest one a day")
+                    break
+                taken.add(cell)
+                members.append([cell[0], cell[1]])
+            h["members"] = members
+
 # Role keywords -> 1.0 sprite: `base` names a -man/-woman pair or one id both
 # genders share. Every id must exist in scenario_checks.ANIMATIONS; a base whose
 # id doesn't falls back to casual-*. More specific entries come first, so
@@ -672,8 +713,11 @@ def build_spec(world, plan):
     spec["nativeNature"] = nature
     # ... and for the native populations (livestock, vermin, crowds, patrols):
     # one template per kind with its home regions by name, applied onto the
-    # built scenario as the game's own npcTemplates once the ids exist
-    spec["nativePopulations"] = populations.choose(world, plan)
+    # built scenario as the game's own npcTemplates once the ids exist — with
+    # each member's start cell picked here, so the homes open fully stocked
+    pops = populations.choose(world, plan)
+    _population_members(world, pops, nature.get("shape") or [])
+    spec["nativePopulations"] = pops
     # the stairs kept in ruined buildings, by entity name: the shipped-scenario
     # check accepts them though they link to no portal
     spec["nativeStairs"] = {"ruined": list(getattr(world, "ruined_stairs", []) or [])}

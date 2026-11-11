@@ -15,7 +15,8 @@ with their keys handed out and the theft buildings flagged, the
 ``nativeNature`` shapes and surfaces on the regions and vehicle fields on
 the templates, the ``nativePopulations`` written as the game's own
 ``npcTemplates`` (one per kind, their home regions resolved to the ids the
-build assigned — the same by-name carry, for the same reason), the spec's
+build assigned, and each home's members written in as npc entities at their
+chosen cells — the same by-name carry, for the same reason), the spec's
 ``arpgMods`` when
 another extension filled one (lights), and the void-zone slabs hardened to
 walkability 0 (the spec carried them as passable so the builder's flat walk
@@ -164,7 +165,11 @@ def finish_scenario(scenario_dir, spec):
                 t.update(fields)
     # the native populations become the game's own npcTemplates: one per kind
     # the generator chose, its homes resolved to the built regions' ids (a
-    # home whose region the build dropped goes with it; the checks report it)
+    # home whose region the build dropped goes with it; the checks report it).
+    # The members the spec placed start in the scenario too: one npc entity
+    # per member at its cell, numbered per template across the world — the
+    # game counts them toward their home's count and tops it up after deaths,
+    # so the world opens with its creatures already there
     if spec.get("nativePopulations"):
         by_name = {r.get("name"): r for r in scn.get("regions", [])}
         ids = native_mod.Ids(scn)
@@ -173,8 +178,9 @@ def finish_scenario(scenario_dir, spec):
                      for h in p.get("homes") or [] if h.get("region") in by_name]
             if not homes:
                 continue
+            tpl_id = ids("ntpl")
             scn.setdefault("npcTemplates", []).append({
-                "id": ids("ntpl"), "name": p.get("name"),
+                "id": tpl_id, "name": p.get("name"),
                 "description": p.get("description", ""),
                 "physicalDescription": p.get("physicalDescription", ""),
                 "animationId": p.get("animationId"), "gender": p.get("gender"),
@@ -182,6 +188,23 @@ def finish_scenario(scenario_dir, spec):
                 "money": p.get("money", 0),
                 "lootPoolIds": list(p.get("lootPoolIds") or []),
                 "homes": homes})
+            n = 0
+            for h in p.get("homes") or []:
+                area = by_name.get(h.get("region"))
+                for cell in h.get("members") or []:
+                    n += 1
+                    scn.setdefault("entities", []).append({
+                        "id": ids("npc"), "type": "npc",
+                        "name": f"{p.get('name')} {n}",
+                        "description": p.get("description", ""),
+                        "gender": p.get("gender"),
+                        "pos": list(cell), "size": [1, 1],
+                        "hp": 100, "maxHp": 100,
+                        "animationId": p.get("animationId"),
+                        "physicalDescription": p.get("physicalDescription", ""),
+                        "level": p.get("level", 1), "stance": p.get("stance"),
+                        "npcHome": area["id"], "inventory": [],
+                        "statusEffects": [], "templateId": tpl_id})
     _harden_boundary(scn)
     with open(scn_path, "w", encoding="utf-8") as f:
         json.dump(scn, f, ensure_ascii=False, indent=1)

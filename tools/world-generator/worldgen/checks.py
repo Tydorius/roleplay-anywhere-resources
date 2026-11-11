@@ -309,7 +309,10 @@ def check_scenario_mods(scenario_path, spec):
     Nature: the natural shapes, water surfaces and vehicle fields landed on
     the built scenario, and nobody stands on deep water.
     Populations: every native population's home region exists, its sprite is
-    one the game knows, and it landed on the built scenario."""
+    one the game knows, and it landed on the built scenario. Members: every
+    member entity's templateId names a built npcTemplate, its npcHome is one
+    of that template's homes, it stands inside that home region, no home holds
+    more members than its count, and every member the spec placed landed."""
     import json
     from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
@@ -433,6 +436,66 @@ def check_scenario_mods(scenario_path, spec):
                         homes.get(area.get("id")) != h.get("count"):
                     issues.append(f"{label} lost its home in "
                                   f"{h.get('region')!r} on the build")
+        # the members the homes start with: every member entity belongs to a
+        # built template, its npcHome is one of that template's homes, it
+        # stands inside that home region, no home holds more members than its
+        # count, and each member the spec placed landed on the build
+        tpl_by_id = {t.get("id"): t for t in scn.get("npcTemplates") or []}
+        region_by_id = {r.get("id"): r for r in scn.get("regions", [])}
+
+        def holds(area, pos):
+            x, y = (area or {}).get("position", (0, 0))
+            w, h = (area or {}).get("size", (0, 0))
+            return isinstance(pos, (list, tuple)) and len(pos) == 2 and \
+                x <= pos[0] < x + w and y <= pos[1] < y + h
+
+        landed = set()
+        per_home = {}
+        for e in scn.get("entities") or []:
+            if e.get("type") != "npc" or not e.get("templateId"):
+                continue
+            label = f"population member {e.get('name')!r}"
+            t = tpl_by_id.get(e.get("templateId"))
+            if t is None:
+                issues.append(f"{label} carries templateId "
+                              f"{e.get('templateId')!r}, which is no built "
+                              f"npcTemplate")
+                continue
+            rid = e.get("npcHome")
+            homes = {h.get("regionId"): h.get("count")
+                     for h in t.get("homes") or []}
+            if rid not in homes:
+                issues.append(f"{label} has npcHome {rid!r}, which is not a "
+                              f"home of {t.get('name')!r}")
+                continue
+            if not holds(region_by_id.get(rid), e.get("pos")):
+                issues.append(f"{label} stands at {e.get('pos')}, outside its "
+                              f"home region "
+                              f"{(region_by_id.get(rid) or {}).get('name')!r}")
+            landed.add((e.get("templateId"), rid, tuple(e.get("pos") or ())))
+            key = (e.get("templateId"), rid)
+            per_home[key] = per_home.get(key, 0) + 1
+        for (tid, rid), n in sorted(per_home.items(), key=lambda kv: str(kv[0])):
+            t = tpl_by_id.get(tid) or {}
+            count = next((h.get("count") for h in t.get("homes") or []
+                          if h.get("regionId") == rid), 0)
+            if n > count:
+                issues.append(f"home {(region_by_id.get(rid) or {}).get('name')!r} "
+                              f"holds {n} members of {t.get('name')!r}, more "
+                              f"than its count {count}")
+        for p in pops:
+            t = built.get(p.get("name"))
+            if t is None:
+                continue     # reported above: it did not land
+            for h in p.get("homes") or []:
+                area = by_name.get(h.get("region"))
+                if area is None:
+                    continue  # reported above: no such region
+                for cell in h.get("members") or []:
+                    if (t.get("id"), area.get("id"), tuple(cell)) not in landed:
+                        issues.append(f"population {p.get('name')!r} member at "
+                                      f"{list(cell)} in {h.get('region')!r} did "
+                                      f"not land on the built scenario")
     arpg_mods = (spec or {}).get("arpgMods")
     got = scn.get("arpgMods")
     if arpg_mods:
