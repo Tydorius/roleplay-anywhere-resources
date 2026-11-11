@@ -311,6 +311,11 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
         "entrances_from_road": f"{ents.get('reachable_from_road')}/{ents.get('total')}",
         "reachability": world.metrics.get("reachability"),
         "map_warnings": world.metrics.get("map_warnings", []),
+        "locks": {
+            "rooms": [{"room": e.get("room"), "keys": e.get("holders")}
+                      for e in ((spec.get("nativeLocks") or {}).get("locks") or [])],
+            "theft_buildings": len((spec.get("nativeLocks") or {}).get("theft") or []),
+        },
     }
 
 
@@ -383,6 +388,13 @@ def _summary_text(world, spec, seed, emit):
     lines.append(f"doors clear: {world.metrics.get('doors_clear')}  "
                  f"walkways clear: {world.metrics.get('walkways_clear')}  "
                  f"region overlaps: {len(world.metrics.get('region_overlaps', []))}")
+    locks = (spec.get("nativeLocks") or {})
+    if locks.get("locks") or locks.get("theft"):
+        lines.append(f"locked rooms {len(locks.get('locks') or [])}  "
+                     f"theft buildings {len(locks.get('theft') or [])}")
+        for entry in locks.get("locks") or []:
+            held = ", ".join(entry.get("holders") or []) or "nobody (a cell)"
+            lines.append(f"  - {entry['room']}: {held}")
     fl = world.metrics.get("floors") or {}
     if fl.get("floors"):
         lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "

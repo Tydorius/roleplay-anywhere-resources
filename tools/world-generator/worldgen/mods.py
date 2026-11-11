@@ -10,7 +10,9 @@ the sealed storeys' borders, and gridSize back to the play area the floors
 sit outside), the ``nativeDoors`` door kinds written onto the walled regions
 and a door object hung on every doorway that has none (of the doorway's
 room's kind — a doorway with no door object is an open gap in 1.0, and the
-game adds no doors to imported scenarios), the spec's ``arpgMods`` when
+game adds no doors to imported scenarios), the ``nativeLocks`` rooms locked
+with their keys handed out and the theft buildings flagged, the spec's
+``arpgMods`` when
 another extension filled one (lights), and the void-zone slabs hardened to
 walkability 0 (the spec carried them as passable so the builder's flat walk
 could cross them). Then it re-zips, so the shipped folder and zip both carry
@@ -114,6 +116,29 @@ def finish_scenario(scenario_dir, spec):
             if area is not None:
                 area["door"] = kind
     native_mod.hang_doors(scn)
+    # then the locks and keys, onto the hung doors: the rooms the generator
+    # locked get every door of theirs locked, their key handed to the chosen
+    # holders, and the theft buildings their flag — all by name, since the
+    # ids only exist now
+    locks = spec.get("nativeLocks") or {}
+    if locks.get("locks") or locks.get("theft"):
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        people = {e.get("name"): e for e in scn.get("entities", [])
+                  if e.get("type") in ("npc", "player")}
+        ids = native_mod.Ids(scn)
+        for entry in locks.get("locks") or []:
+            room = by_name.get(entry.get("room"))
+            if room is None or not native_mod.region_doors(scn, room):
+                continue
+            native_mod.set_locked(scn, room, True, ids)
+            for holder in entry.get("holders") or []:
+                person = people.get(holder)
+                if person is not None:
+                    native_mod.give_key(scn, room, person, ids)
+        for name in locks.get("theft") or []:
+            area = by_name.get(name)
+            if area is not None:
+                area["takingIsTheft"] = True
     _harden_boundary(scn)
     with open(scn_path, "w", encoding="utf-8") as f:
         json.dump(scn, f, ensure_ascii=False, indent=1)

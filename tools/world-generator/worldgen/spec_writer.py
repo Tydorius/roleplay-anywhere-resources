@@ -23,6 +23,28 @@ GATE_WORDS = re.compile(r"\b(yards?|pens?|paddocks?|gardens?|compounds?|gatehous
 DOOR_KINDS_BY_WORDS = (("bars", BARS_WORDS), ("curtain", CURTAIN_WORDS),
                        ("gate", GATE_WORDS))
 
+# Rooms that ship locked, by whole words of the room's own name and purpose:
+# strong rooms and holding cells only, so no ordinary home or shop door ever
+# locks (a cellar is not a cell; a plain store holds nothing worth a key)
+LOCKED_ROOM_WORDS = re.compile(
+    r"\b(vaults?|strong\s?rooms?|treasur(?:y|ies)|safe\s?rooms?|armou?r(?:y|ies)|"
+    r"cells?|jails?|gaols?|lock-?ups?|evidence\s+rooms?|cellar\s+stores?|"
+    r"wine\s+cellars?)\b")
+# Rooms that may stay locked with nobody holding a key: the key is meant to
+# stay outside (CELL_WORDS names the same holding places as the lock list)
+CELL_WORDS = re.compile(r"\b(cells?|jails?|gaols?|lock-?ups?)\b")
+# Who a locked room's key goes to first: the head of the place, by role words
+HEAD_ROLE_WORDS = re.compile(
+    r"\b(owners?|keepers?|captains?|wardens?|sheriffs?|jailers?|gaolers?|"
+    r"priests?|priestesses?|abbots?|abbesses?|masters?|mistresses?|stewards?|"
+    r"matrons?|reeves?|bailiffs?|constables?)\b")
+# Inns, temples, halls and other public buildings take nothing: their rooms
+# inherit takingIsTheft from the region above, which is no theft
+PUBLIC_WORDS = re.compile(
+    r"\b(inns?|taverns?|pubs?|bars?|alehouses?|saloons?|cantinas?|teahouses?|"
+    r"temples?|chapels?|churches?|cathedrals?|shrines?|abbeys?|monasteries?|"
+    r"halls?|guildhalls?)\b")
+
 
 def _door_kind(*texts):
     """The door kind whole words of the texts name, "door" when none does."""
@@ -60,6 +82,127 @@ def _door_kinds(world):
             out[r.name] = _door_kind(design.kind, design.purpose)
         else:
             out[r.name] = _door_kind(r.kind, r.name)
+    return out
+
+
+def _room_purpose(design, base_name):
+    """A room base name's purpose in its design."""
+    return next((r.purpose for r in design.rooms if r.name == base_name), "")
+
+
+def _building_of_room(world):
+    """{room full name: building} for every placed room — a building's own
+    rooms, its stamped unit copies and its designed upper storeys."""
+    out = {}
+    for b in world.buildings:
+        for layout in [b.layout] + [f.layout for f in getattr(b, "floors", []) or []]:
+            for r in layout.rooms:
+                out[r.full_name] = b
+            for uo in getattr(layout, "unit_outs", []) or []:
+                for r in uo.layout.rooms:
+                    out[r.full_name] = b
+    return out
+
+
+def _key_holders(world, building):
+    """The people a key to a room of this building goes to: whoever works
+    there, else its residents, the head of the place first, two at most.
+    The player only ever appears by their own work or home."""
+    from .schedule import home_building
+    name = building.layout.design.name
+    pool = [c for c in world.characters if c.person.work == name]
+    if not pool:
+        pool = [c for c in world.characters
+                if home_building(world, c.person.home) is building]
+    heads = sorted(pool, key=lambda c: (0 if HEAD_ROLE_WORDS.search(
+        (c.person.role or "").lower()) else 1, c.name))
+    return [c.name for c in heads[:2]]
+
+
+def _note(world, what, reason):
+    """A soft problem for the run's notes. run_checks has already been through
+    by the time the spec is written, so the note goes to the failures list and
+    the written metrics both."""
+    world.failures.append((what, reason))
+    world.metrics.setdefault("objects", {}).setdefault("unplaced", []).append(
+        {"what": what, "reason": reason})
+
+
+def _seals_off(world, room, openings, blocked, jumps, starts):
+    """Whether locking the room would cut the player off: with its doors
+    blocked, the player's start cell or bed is no longer on the ground
+    everyone walks. The player has no key coming, so the room must stay
+    open instead."""
+    from . import checks
+    seen = checks.flood(world, starts - room.rect.cells(),
+                        set(blocked) | set(openings.get(room.name) or ()), jumps)
+    player = world.player
+    if player is None:
+        return False
+    if tuple(player.pos) not in seen:
+        return True
+    bed = world.sleep_assign.get(player.person.name)
+    return bed is not None and not (bed.rect.interior().cells() & seen)
+
+
+def _locks(world):
+    """[{room, holders}] for the rooms that ship locked: strong rooms and
+    holding cells by their own name and purpose, their key with the people
+    of the building (workers first, the head of the place preferred, two at
+    most), never a room on the player's only way to their start cell or bed,
+    and nobody-less rooms stay unlocked unless they are cells."""
+    from . import checks
+    rooms = _loot_map(world)
+    buildings = _building_of_room(world)
+    openings = checks.compute_openings(world)
+    blocked, _doors = checks.walkability_grid(world, openings)
+    jumps = checks.portal_jumps(world)
+    starts = set(world.reserved)
+    for road in world.roads:
+        starts |= road.cells()
+    out = []
+    for name, (design, base) in sorted(rooms.items()):
+        room = world.regions_by_name.get(name)
+        building = buildings.get(name)
+        if room is None or building is None:
+            continue
+        text = f"{base} {_room_purpose(design, base)}".lower()
+        if not LOCKED_ROOM_WORDS.search(text):
+            continue
+        if not openings.get(name):
+            continue      # no doors to lock, and no way in either
+        if _seals_off(world, room, openings, blocked, jumps, starts):
+            _note(world, f"room {name}",
+                  "left unlocked: locking it would cut off the player's "
+                  "start cell or bed")
+            continue
+        holders = _key_holders(world, building)
+        if not holders and not CELL_WORDS.search(text):
+            continue      # nobody to hold the key: only a cell stays locked
+        out.append({"room": name, "holders": holders})
+    return out
+
+
+def _theft_buildings(world):
+    """The building regions where taking things is theft: every shop and
+    every seller's workplace, and every home — but never an inn, tavern,
+    temple, hall or other public building, whose rooms inherit instead."""
+    from .schedule import home_building, is_inn
+    from .sellers import is_shop, sellers
+
+    seller_names = sellers(world)
+    out = []
+    for b in world.buildings:
+        design = b.layout.design
+        if is_inn(b) or PUBLIC_WORDS.search(
+                f"{design.kind} {design.purpose}".lower()):
+            continue
+        if design.status == "home" or is_shop(b) or any(
+                c.person.name in seller_names and c.person.work == design.name
+                for c in world.characters) or any(
+                home_building(world, c.person.home) is b
+                for c in world.characters):
+            out.append(design.name)
     return out
 
 # Role keywords -> 1.0 sprite: `base` names a -man/-woman pair or one id both
@@ -389,6 +532,10 @@ def build_spec(world, plan):
     # drops unknown region keys, so finish_scenario writes the `door` fields
     # and hangs the door objects once the build has assigned the ids
     spec["nativeDoors"] = _door_kinds(world)
+    # the same goes for the locked rooms (with their key holders) and the
+    # buildings where taking is theft: applied onto the built regions by name
+    spec["nativeLocks"] = {"locks": _locks(world),
+                           "theft": _theft_buildings(world)}
     arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights

@@ -9,6 +9,9 @@ region whose wall the crossing splits opens its side of it. A door object is
 an object entity from one of the four door templates, sitting zero-wide on
 the wall line; the doorway's room (the smallest region the wall splits) picks
 the kind from its `door` field ("door" when missing, "none" leaves it open).
+A locked door is a door object carrying the "locked" status effect; a key is
+an item template whose `opens` names the region its doors belong to, held as
+an inventory stack by whoever should open them.
 Coordinates: [0,0] is the bottom-left cell, y grows north.
 """
 import random
@@ -281,3 +284,88 @@ def hang_doors(scn):
         hang_door(scn, dw, kind, ids)
         hung += 1
     return hung
+
+
+# ---------------------------------------------------------------- locks and keys
+
+def region_doors(scn, region):
+    """A region's doors: the door objects whose two cells its wall splits
+    (exactly one of them inside it)."""
+    r = _rect(region)
+    return [e for e in scn.get("entities") or []
+            if is_door(scn, e)
+            and sum(1 for c in door_cells(e) if _in_rect(r, *c)) == 1]
+
+
+def is_lock(fx):
+    """Whether a status effect is a lock: any whose mechanics hold a
+    "locked" entry."""
+    return bool(fx and isinstance(fx.get("def"), dict)
+                and isinstance(fx["def"].get("mechanics"), list)
+                and any(m and m.get("type") == "locked"
+                        for m in fx["def"]["mechanics"] if isinstance(m, dict)))
+
+
+def is_locked(e):
+    return any(is_lock(fx) for fx in e.get("statusEffects") or [])
+
+
+def region_locked(scn, region):
+    """True when a region has doors and every one of them is locked."""
+    doors = region_doors(scn, region)
+    return bool(doors) and all(is_locked(d) for d in doors)
+
+
+def set_locked(scn, region, locked, ids):
+    """Lock or unlock every door of a region; doors already in the wanted
+    state stay as they are. Returns ``{"count": doors changed}`` or
+    ``{"error"}`` when the region has no doors."""
+    doors = region_doors(scn, region)
+    if not doors:
+        return {"error": f'{region.get("name")} has no doors to lock; '
+                         "hang doors first"}
+    count = 0
+    for d in doors:
+        if locked and not is_locked(d):
+            d.setdefault("statusEffects", []).append({
+                "id": ids("se"),
+                "def": {"desc": "locked", "emoji": "🔒", "type": "constant",
+                        "mechanics": [{"type": "locked"}]},
+                "appliedAt": 28800})
+            count += 1
+        elif not locked and is_locked(d):
+            d["statusEffects"] = [fx for fx in d.get("statusEffects") or []
+                                  if not is_lock(fx)]
+            count += 1
+    return {"count": count}
+
+
+def keys_to(scn, region):
+    """Every item template that opens the region."""
+    return [t for t in scn.get("itemTemplates") or []
+            if t.get("opens") == region.get("id")]
+
+
+def key_template(scn, region, ids):
+    """The region's key item template, created on first use."""
+    t = next((t for t in scn.get("itemTemplates") or []
+              if t.get("opens") == region.get("id")), None)
+    if t is not None:
+        return t
+    t = {"id": ids("itpl"), "name": f'{region.get("name")} key',
+         "description": "", "type": "misc", "quality": "common",
+         "opens": region["id"]}
+    scn.setdefault("itemTemplates", []).append(t)
+    return t
+
+
+def give_key(scn, region, person, ids):
+    """Put the region's key in someone's inventory, unless they already hold
+    one."""
+    keys = {t["id"] for t in keys_to(scn, region)}
+    if any(isinstance(s, dict) and s.get("templateId") in keys
+           for s in person.get("inventory") or []):
+        return
+    tpl = key_template(scn, region, ids)
+    person.setdefault("inventory", []).append(
+        {"id": ids("it"), "templateId": tpl["id"], "count": 1})

@@ -273,7 +273,8 @@ def check_scenario_mods(scenario_path, spec):
     must point at each other; no sealed storey may keep an opening on its
     outer border; the floors must sit outside gridSize, FLOOR_GAP cells
     apart; every doorway whose room is not "none" must carry a door object,
-    and no door object may sit anywhere but on a doorway."""
+    and no door object may sit anywhere but on a doorway. Locks: every key
+    opens a region that exists, and every room the spec locked has doors."""
     import json
     from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
@@ -292,6 +293,21 @@ def check_scenario_mods(scenario_path, spec):
         if key not in doorway_keys:
             issues.append(f"door object {on_key[0].get('name')!r} at "
                           f"{on_key[0].get('pos')} sits on no doorway")
+    # 1.0 locks and keys: every key opens a region that exists, and every
+    # room the spec locked carries doors to lock
+    region_ids = {r.get("id") for r in scn.get("regions", [])}
+    for t in scn.get("itemTemplates") or []:
+        if t.get("opens") is not None and t.get("opens") not in region_ids:
+            issues.append(f"key {t.get('name')!r} opens {t.get('opens')!r}, "
+                          f"which is no region")
+    for entry in ((spec or {}).get("nativeLocks") or {}).get("locks") or []:
+        room = next((r for r in scn.get("regions", [])
+                     if r.get("name") == entry.get("room")), None)
+        if room is None:
+            issues.append(f"locked room {entry.get('room')!r} is no region "
+                          f"of the built scenario")
+        elif not native.region_doors(scn, room):
+            issues.append(f"locked room {entry.get('room')!r} has no doors")
     arpg_mods = (spec or {}).get("arpgMods")
     got = scn.get("arpgMods")
     if arpg_mods:
