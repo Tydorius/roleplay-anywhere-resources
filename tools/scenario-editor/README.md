@@ -28,13 +28,12 @@ the checks note what it changes on import. The 0.18 version of the editor is on 
 
 ### What 1.0 changed in a scenario
 
-The editor keeps every one of these as it is when you open, edit, save and download. **Editing them is
-not built yet;** for now they show in the inspector and on the map, and the game's god mode edits them in a
-live game.
+The editor keeps every one of these as it is when you open, edit, save and download, and edits most of
+them (see "Editing 1.0 features" below). Of `unbounded` it edits only the liquids list; god mode edits the rest in a live game.
 
 | What | In `scenario.json` |
 |---|---|
-| Floors (storeys, cellars, tunnels) | A region with `pocket: {anchor: <building's region id>, level: 1 \| -1 …}`, placed **outside** the map in the same grid. The game lays them out east of the map, 24 cells apart. Each floor is a plane of its own. |
+| Floors (storeys, cellars, tunnels) | A region with `pocket: {anchor: <building's region id>, level: 1 \| -1 …}`, placed **outside** the map in the same grid. The editor lays them out east of the map, 24 cells apart. In an open world the game moves them to its own far-off floor space when the game starts, keeping their anchor and level. Each floor is a plane of its own. |
 | Stairs, ladders, hatches | An object with `portal: {to: <id of the object at the other end>}`, normally on both ends. |
 | Doorways | `openings` entries `[x, y]` or `[x, y, side]`, where side is `n`, `e`, `s` or `w` (the wall it opens). The import drops a door that isn't on the region's edge. |
 | Door kinds | Region `door`: `door`, `bars`, `gate`, `curtain` or `none`, and `doorColor`. Each doorway also gets a zero-wide door object whose template has `door: <kind>`. |
@@ -45,6 +44,23 @@ live game.
 | NPC types | 1.0 writes `npcTemplates` with `homes: [{regionId, count}]` and `stance` (`neutral`, `skittish`, `hostile`). The import renames 0.18's `hostileNpcTemplates`, and drops it if both lists exist. Their images are under `media/htpl_…` (or `ntpl_…`). |
 | Sprites | 330 character sprites. `giant-rat`, `giant-lizard`, `giant-crab`, `giant-scorpion` and `bounty-hunter-*` were renamed; the import switches the old names. |
 | Open world | `unbounded`: `seed`, `profile` (liquids and low edges) and `areas` (ground, roads, places, populations). The editor edits only `profile.media`, the liquid list; the rest it leaves untouched. |
+
+### Editing 1.0 features
+
+- **Floors:** **Add floor…** on a walled region makes a new storey beside the map, the region panel
+  sets a floor's level, and the level picker in the toolbar chooses which level the map shows.
+- **Portals:** **Link to…** in the object panel, then click the object at the other end; **Unlink**
+  takes a pair apart.
+- **Doors:** the region panel sets the door kind and colour and each doorway's own door, and **Hang
+  doors on all of them** fills the rest. 0.18 scenarios have no door objects, so their doorways are
+  open gaps in 1.0 until doors are hung (checked live: the game doesn't hang them on import).
+- **Locks and keys:** **Locked** on a region locks its doors, the key holders are listed, and **Give
+  a key to…** hands one to someone.
+- **Theft:** regions choose inherit, yes or no; object types tick **Taking it is theft**; the vehicle
+  kind picks drive or ride.
+- **NPC types:** the panel sets the stance and the homes — which regions, how many in each — and
+  **New NPC type…** on the NPC types tab makes one. A 0.18 hostile type that gets a second home
+  converts the scenario's hostile types to 1.0 NPC types, one way.
 
 `keyHolders`, `floors` and `populations` belong to the game's own world generation, not to a scenario:
 the import ignores them, and the checks say so.
@@ -254,9 +270,10 @@ The dialog's steps:
       doing, split it or remove it.
 
     ![The person inspector with a schedule bar](media/scenario_editor_npc-editor.png)
-  - **Hostile type:** where they spawn, how many, sprite, level and loot. A 1.0 NPC type shows its
-    homes and stance.
-  - **Region** also lists 1.0's floor level and building, shape, liquid, door kind and theft flag.
+  - **NPC type:** stance, homes (which regions it spawns in and how many in each), sprite, level and
+    loot. **New NPC type…** on the NPC types tab makes one.
+  - **Region** also edits 1.0's floors, door kind and colour, each doorway's door, the lock and its key
+    holders, and the theft flag. A **floor** shows its building and level, and an **object** its portal link.
   - Every inspector lists what uses the selected thing, each item clickable.
 - **Rename a region:** every schedule and calendar event that names it is updated as well.
 - **Undo and redo** (Ctrl+Z, Ctrl+Y), with a whole drag as one step. **Save** (Ctrl+S) and
