@@ -51,8 +51,8 @@ def main(argv=None):
     lay.add_argument("--out", required=True)
     lay.add_argument("--seed", type=int, default=1)
     lay.add_argument("--ext", action="append", default=[], choices=list(IDS),
-                     help="enable a mod extension, off by default (repeatable; "
-                          "floors implies portals; also read from plan.json)")
+                     help="enable an extension, off by default (repeatable; "
+                          "also read from plan.json)")
     gen = sub.add_parser("generate", help="run the model phases on an idea and build the scenario")
     gen.add_argument("--idea", default=None,
                      help="the world in one line (or give --settings)")
@@ -69,8 +69,8 @@ def main(argv=None):
                      help="furnish every room with the model (the old method) instead of "
                           "the room library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
-                     help="enable a mod extension, off by default (repeatable; "
-                          "floors implies portals; recorded in plan.json)")
+                     help="enable an extension, off by default (repeatable; "
+                          "recorded in plan.json)")
     chk = sub.add_parser("check-provider",
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")

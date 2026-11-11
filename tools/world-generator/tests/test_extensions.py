@@ -1,6 +1,7 @@
-"""Mod extensions: prompt fragments are appended only when the extension is
+"""Extensions: prompt fragments are appended only when the extension is
 enabled, and a run without any extension produces exactly the base prompts —
-byte for byte, for every phase. ``floors`` implies ``portals``."""
+byte for byte, for every phase. ``floors`` needs no game mod and no other
+extension."""
 import os
 import unittest
 
@@ -37,20 +38,18 @@ def fragment_names(ext):
 
 
 class TestExtensionExpansion(unittest.TestCase):
-    def test_floors_implies_portals(self):
-        self.assertEqual(expand(["floors"]), {"floors", "portals"})
-        self.assertEqual(expand(["portals"]), {"portals"})
+    def test_expand(self):
+        self.assertEqual(expand(["floors"]), {"floors"})
         self.assertEqual(expand(["region-groups"]), {"region-groups"})
         self.assertEqual(expand([]), set())
         self.assertEqual(expand(None), set())
-        self.assertEqual(expand(["floors", "portals", "floors"]),
-                         {"floors", "portals"})
+        self.assertEqual(expand(["floors", "floors"]), {"floors"})
 
 
 class TestRegistry(unittest.TestCase):
     """The registry is what a UI lists as unchecked toggles: every extension
     declares id/title/mods/description and defaults to off, and floors
-    records that it needs portals."""
+    needs no game mod."""
 
     def test_every_extension_defaults_off(self):
         from worldgen.extensions import registry
@@ -62,7 +61,7 @@ class TestRegistry(unittest.TestCase):
                             "requires", "withoutMod", "default"):
                     self.assertIn(key, e)
                 self.assertIs(e["default"], False)
-                self.assertTrue(e["mods"], "an extension needs at least one game mod")
+                self.assertIsInstance(e["mods"], list)
                 self.assertTrue(e["title"].strip())
                 self.assertTrue(e["description"].strip())
 
@@ -71,23 +70,19 @@ class TestRegistry(unittest.TestCase):
         self.assertEqual(BY_ID["lights"].mods, ("lights",))
         by_id = {e["id"]: e for e in registry()}
         self.assertIn("look plain", by_id["lights"]["withoutMod"])
-        self.assertIn("won't work right", by_id["floors"]["withoutMod"])
+        self.assertIn("no game mod needed", by_id["floors"]["withoutMod"])
 
-    def test_floors_pulls_in_portals(self):
+    def test_floors_needs_no_mod_and_nothing_else(self):
         from worldgen.extensions import BY_ID, IDS
         self.assertIn("floors", IDS)
-        self.assertEqual(BY_ID["floors"].requires, ("portals",))
-        self.assertEqual(sorted(BY_ID["floors"].mods), ["floors", "portals"])
-        self.assertEqual(expand(["floors"]), {"floors", "portals"})
+        self.assertEqual(BY_ID["floors"].requires, ())
+        self.assertEqual(BY_ID["floors"].mods, ())
+        self.assertEqual(expand(["floors"]), {"floors"})
 
-    def test_expand_notes_says_so(self):
+    def test_expand_notes(self):
         from worldgen.extensions import expand_notes
         full, notes = expand_notes(["floors"])
-        self.assertEqual(full, {"floors", "portals"})
-        self.assertEqual(len(notes), 1)
-        self.assertIn("portals", notes[0])
-        # naming both leaves nothing to say
-        _full, notes = expand_notes(["floors", "portals"])
+        self.assertEqual(full, {"floors"})
         self.assertEqual(notes, [])
 
 
@@ -103,7 +98,7 @@ class TestPromptExtensions(unittest.TestCase):
     def test_known_extensions_do_not_touch_phases_they_do_not_extend(self):
         # every fragment that exists must be for a real phase template, and
         # the phases no enabled extension covers stay byte-identical
-        for ext in ("portals", "floors", "region-groups", "lights"):
+        for ext in ("floors", "region-groups", "lights"):
             frags = set()
             for implied in expand([ext]):
                 frags |= fragment_names(implied)
@@ -119,19 +114,24 @@ class TestPromptExtensions(unittest.TestCase):
                         expected,
                         f"{ext} must not change the {name} prompt")
 
-    def test_portals_appends_its_fragments(self):
+    def test_floors_appends_its_fragments(self):
         for name in ("p2-catalogue", "p3-building"):
             with self.subTest(name):
-                prompt = phases.assemble_prompt(name, ("portals",), **KW[name])
+                prompt = phases.assemble_prompt(name, ("floors",), **KW[name])
                 base = phases._template(name).substitute(
                     rules=phases._rules(), **KW[name])
                 self.assertTrue(prompt.startswith(base))
-                self.assertIn("portals extension", prompt)
+                self.assertIn("floors extension", prompt)
 
-    def test_floors_pulls_in_the_portals_fragments(self):
-        floors_prompt = phases.assemble_prompt("p2-catalogue", ("floors",), **KW["p2-catalogue"])
-        portals_prompt = phases.assemble_prompt("p2-catalogue", ("portals",), **KW["p2-catalogue"])
-        self.assertEqual(floors_prompt, portals_prompt)
+    def test_the_stair_guidance_is_worded_for_10_floors(self):
+        # the retired portals extension's guidance lives in the floors
+        # fragments now: stairs are walkable templates the code places, and
+        # 1.0 floors have no see-through openings
+        for name in ("p2-catalogue", "p3-building"):
+            prompt = phases.assemble_prompt(name, ("floors",), **KW[name])
+            self.assertNotIn("portals extension", prompt, name)
+            self.assertNotIn("portal pad", prompt, name)
+            self.assertNotIn("opening", prompt, name)
 
 
 if __name__ == "__main__":

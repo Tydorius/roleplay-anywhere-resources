@@ -1,5 +1,6 @@
-STAIRS ARE PORTAL PADS (the portals extension)
+STAIRCASES (the floors extension)
 - When the plan's buildings have more than one storey, the catalogue needs a
   staircase: a template named for stairs, size 1x1, walkability 1.0. A stair
   is something a person stands on; walkability 0 would block its cell and the
-  passage would never work. One staircase template serves every building.
+  passage would never work. The code places the stair objects on every
+  storey; one staircase template serves every building.

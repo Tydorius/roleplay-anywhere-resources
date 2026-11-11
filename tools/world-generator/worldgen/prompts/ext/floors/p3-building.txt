@@ -5,15 +5,15 @@ When this building's plan entry has "storeys" above 1, also reply with:
     {"storey": 2,
      "rooms": [{"name": "...", "share": "small|medium|large", "purpose": "..."}],
      "connections": [["Room A", "Room B"]],
-     "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}],
-     "opening": null or {"over_room": "<a ground room name>", "kind": "gallery|atrium|stairwell"}}
+     "furniture": [{"template": "catalogue name", "room": "room name", "count": 1, "hint": "..."}]}
   ]
 - The stair rises from the named ground room; every storey's stair sits at
-  the same spot, so the room you name must have floor to spare.
+  the same spot, so the room you name must have floor to spare. The code
+  places the stair objects and the game links them storey to storey as a
+  two-way passage people and NPCs walk through; you only name the room the
+  stair rises from.
 - People who live upstairs sleep there: their bedrooms move up a storey, one
-  bed per sleeper. Furnish the upper rooms for their purpose — a gallery over
-  a common room has seats at its rail, a landing has a lamp.
-- "opening" is the hole in that floor you look down through, directly over
-  the named ground room: a gallery over the common room, an atrium over a
-  workshop hall, a stairwell over the entrance hall. null when the floor is
-  solid.
+  bed per sleeper. Furnish the upper rooms for their purpose — a landing has
+  a lamp, a study has a desk.
+- Any stair-like furniture you list must be a template a person can stand on
+  (walkability above 0), or it would block its cell and close the passage.

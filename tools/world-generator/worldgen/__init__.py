@@ -744,10 +744,13 @@ def _piece_direction(primary, piece):
 
 def run(plan_data, seed=1, extensions=()):
     import copy
-    from .extensions import expand
+    from .extensions import BY_ID, expand
     plan = parse_plan(plan_data)
-    exts = expand(set(extensions)
-                  | {e for e in plan_data.get("extensions", []) if isinstance(e, str)})
+    given = set(extensions) | {e for e in plan_data.get("extensions", [])
+                               if isinstance(e, str)}
+    # a plan.json from an older generator may name a retired extension id
+    # (portals): drop the unknown ids and carry on
+    exts = expand({e for e in given if e in BY_ID})
 
     # every attempt mutates the plan data it is handed (added templates, the
     # boundary slab's height). Each build works on its own copy and the

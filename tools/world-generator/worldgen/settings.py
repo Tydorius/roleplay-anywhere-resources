@@ -17,7 +17,7 @@ import os
 from datetime import datetime
 
 from . import questions as questions_mod
-from .extensions import REGISTRY, expand
+from .extensions import BY_ID, expand
 
 KIND = "anywhere-rpg-world-settings"
 VERSION = 1
@@ -57,8 +57,9 @@ def from_run(idea, seed, extensions, library, frame=None, questionnaire=None, mo
 
 def check(data):
     """A clean copy of a settings dict, or SettingsError saying what is wrong.
-    Unknown questions and options are dropped the way the forms drop them;
-    an unknown extension or a wrong type is an error."""
+    Unknown questions and options are dropped the way the forms drop them, and
+    so is an unknown extension id (an older world may name one this generator
+    has retired, like portals); a wrong type is an error."""
     if not isinstance(data, dict):
         raise SettingsError("a settings file holds one JSON object")
     if data.get("kind") != KIND:
@@ -89,10 +90,7 @@ def check(data):
     exts = data.get("extensions") or []
     if not isinstance(exts, list) or not all(isinstance(e, str) for e in exts):
         raise SettingsError("\"extensions\" must be a list of extension ids")
-    unknown = sorted(set(exts) - {e.id for e in REGISTRY})
-    if unknown:
-        raise SettingsError(f"unknown extension(s) {unknown}; this generator has "
-                            f"{sorted(e.id for e in REGISTRY)}")
+    exts = sorted(expand([e for e in exts if e in BY_ID]))
     frame = data.get("frame")
     if frame is not None and not (isinstance(frame, dict)
                                   and isinstance(frame.get("summary"), str)):
@@ -107,7 +105,7 @@ def check(data):
            "answers": questions_mod.sanitize_answers(mode, answers),
            "population": questions_mod.sanitize_population(data.get("population")),
            "notes": questions_mod.sanitize_notes(data.get("notes")),
-           "seed": seed, "extensions": sorted(expand(exts)),
+           "seed": seed, "extensions": exts,
            "library": bool(data.get("library", True))}
     if not (out["idea"] or out["answers"] or frame):
         raise SettingsError("the settings have no idea, no answers and no frame: "
