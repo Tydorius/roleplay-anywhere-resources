@@ -3,25 +3,82 @@ name-based format of the vendored build_scenario.py (guide section 10), written
 out as both spec.json and spec.py (`SPEC = json.loads(...)`).
 """
 import json
+import re
 
 from .sellers import sellers as sellers_of
+from .vendor.scenario_checks import ANIMATIONS as KNOWN_ANIMATIONS
 
 GROUND_MAP = {"grass": ("grass", "grass"), "dirt": ("dirt", "dirt"),
               "gravel": ("gravel", "gravel"), "stone": ("stone", "rock"),
               "wood": ("wood", "floorboards")}
 OUT_AMBIENCE = {"day": "nature_outdoors", "night": "crickets"}
 
-ANIMATIONS = {  # role keyword -> (male, female); fallback casual-*
-    "innkeeper": ("chef-man", "chef-woman"),
-    "smith": ("blacksmith-man", "blacksmith-woman"),
-    "blacksmith": ("blacksmith-man", "blacksmith-woman"),
-    "weaver": ("casual-man", "casual-woman"),
-    "farmer": ("farmer-man", "farmer-woman"),
-    "traveler": ("adventurer-man", "adventurer-woman"),
-    "traveller": ("adventurer-man", "adventurer-woman"),
-    "child": ("child", "child"),
-    "old": ("old-man", "old-woman"),
-}
+# Role keywords -> 1.0 sprite: `base` names a -man/-woman pair or one id both
+# genders share. Every id must exist in scenario_checks.ANIMATIONS; a base whose
+# id doesn't falls back to casual-*. More specific entries come first, so
+# "town guard" wins over "guard" and tavern staff over "maid".
+ANIMATIONS = [
+    (("innkeeper", "tavern keeper", "barkeep"), "innkeeper"),
+    (("barmaid", "waiter", "waitress"), "waiter"),
+    (("cook", "chef", "baker"), "chef"),
+    (("butcher",), "butcher"),
+    (("smith", "blacksmith"), "blacksmith"),
+    (("farmer", "farmhand", "farm hand", "farm worker", "shepherd"), "farmer"),
+    (("fisher", "fisherman", "fisherwoman"), "fisher"),
+    (("hunter",), "hunter"),
+    (("miner",), "miner"),
+    (("pirate",), "pirate"),
+    (("merchant", "shopkeeper", "trader", "peddler"), "merchant"),
+    (("maid", "chambermaid", "servant", "butler"), "servant"),
+    (("noble", "lord", "lady"), "noble"),
+    (("king", "queen"), "royalty"),
+    (("security guard",), "security-guard"),
+    (("town guard", "watchman", "guard"), "town-guard"),
+    (("soldier",), "soldier"),
+    (("knight",), "knight"),
+    (("archer",), "archer"),
+    (("priest", "priestess", "clergyman", "clergywoman", "clergy"), "clergy"),
+    (("cleric",), "cleric"),
+    (("monk", "nun"), "monk"),
+    (("healer",), "healer"),
+    (("doctor",), "doctor"),
+    (("nurse",), "nurse"),
+    (("scholar",), "scholar"),
+    (("professor",), "professor"),
+    (("scientist",), "scientist"),
+    (("wizard student",), "wizard-student"),
+    (("student",), "student"),
+    (("mage", "wizard"), "mage"),
+    (("witch",), "witch"),
+    (("necromancer",), "necromancer"),
+    (("druid",), "druid"),
+    (("bard", "minstrel"), "bard"),
+    (("jester",), "jester"),
+    (("beggar",), "beggar"),
+    (("prisoner",), "prisoner"),
+    (("thief", "rogue"), "rogue"),
+    (("assassin",), "assassin"),
+    (("detective",), "detective"),
+    (("police", "policeman", "policewoman"), "police"),
+    (("officer",), "officer"),
+    (("sailor", "captain"), "sailor"),
+    (("mechanic",), "mechanic"),
+    (("janitor",), "janitor"),
+    (("office worker", "office"), "office"),
+    (("hacker",), "hacker"),
+    (("astronaut",), "astronaut"),
+    (("firefighter",), "firefighter"),
+    (("cowboy",), "cowboy"),
+    (("samurai",), "samurai"),
+    (("ninja",), "ninja"),
+    (("viking",), "viking"),
+    (("traveler", "traveller", "adventurer"), "adventurer"),
+    (("peasant", "villager"), "peasant"),
+    (("labourer", "laborer", "worker"), "worker"),
+    (("weaver",), "casual"),  # 1.0 has no weaver sheet; it stays on the casual pair
+    (("child",), "child"),
+    (("old",), "old"),
+]
 
 
 def _ground_pair(key):
@@ -287,16 +344,24 @@ def _kind(c):
     return (c.person.extras or {}).get("kind")
 
 
+def _gender_id(base, gender):
+    """The pair id for a gender; anything but male takes the -woman sheet."""
+    return f"{base}-man" if gender == "male" else f"{base}-woman"
+
+
 def animation_for(c):
     if _kind(c) == "child":
         return "child"
     if _kind(c) == "elder":
-        return "old-man" if c.gender == "male" else "old-woman"
+        return _gender_id("old", c.gender)
     role = (c.person.role or "").lower()
-    for key, (m, f) in ANIMATIONS.items():
-        if key in role:
-            return m if c.gender == "male" else f
-    return "casual-man" if c.gender == "male" else "casual-woman"
+    for keywords, base in ANIMATIONS:
+        if any(re.search(rf"\b{re.escape(kw)}s?\b", role) for kw in keywords):
+            animation = base if base in KNOWN_ANIMATIONS else _gender_id(base, c.gender)
+            if animation in KNOWN_ANIMATIONS:
+                return animation
+            break  # a base with no 1.0 sheet falls back to casual, not to a later entry
+    return _gender_id("casual", c.gender)
 
 
 def physical_for(c):

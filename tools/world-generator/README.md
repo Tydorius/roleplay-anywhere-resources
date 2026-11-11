@@ -190,6 +190,10 @@ person per slot, and code fills in the facts. The dialog's **Let the map decide*
 (population `"map"`) sizes the cast from each zone's kind; a range the user sets
 is firm. If P1b produces nothing, the run carries on without a cast.
 
+A person's role also picks their in-game sprite from Anywhere RPG 1.0's character
+sheets — an innkeeper, a town guard or a nurse gets that role's own sprites — and
+a role with no match keeps the plain casual one.
+
 ### Getting more buildings
 
 With **Let the map decide** ticked (the editor's default), P1 plans to the base cap
