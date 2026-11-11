@@ -13,6 +13,55 @@ GROUND_MAP = {"grass": ("grass", "grass"), "dirt": ("dirt", "dirt"),
               "wood": ("wood", "floorboards")}
 OUT_AMBIENCE = {"day": "nature_outdoors", "night": "crickets"}
 
+# A doorway's door kind from whole words of the design's kind/purpose and the
+# room's name/purpose (a room's own match beats its building's): cells and
+# cages take bars, cloth rooms a curtain, open-walled yards a gate. Whole
+# words only — a cellar is not a cell, a stockroom not the stocks.
+BARS_WORDS = re.compile(r"\b(cells?|jails?|cages?|kennels?|stocks|prisons?|gaols?)\b")
+CURTAIN_WORDS = re.compile(r"\b(tents?|yurts?|stalls?|booths?|baths?|changing|back rooms?)\b")
+GATE_WORDS = re.compile(r"\b(yards?|pens?|paddocks?|gardens?|compounds?|gatehouses?|gates?)\b")
+DOOR_KINDS_BY_WORDS = (("bars", BARS_WORDS), ("curtain", CURTAIN_WORDS),
+                       ("gate", GATE_WORDS))
+
+
+def _door_kind(*texts):
+    """The door kind whole words of the texts name, "door" when none does."""
+    text = " ".join(t or "" for t in texts).lower()
+    for kind, rx in DOOR_KINDS_BY_WORDS:
+        if rx.search(text):
+            return kind
+    return "door"
+
+
+def _door_kinds(world):
+    """{walled region name: door kind} for the shipped scenario: every room
+    from its own name and purpose first, then its design's kind and purpose;
+    every other walled region (a compound's walls, a yard) from its own kind
+    and name. The builder drops unknown region keys, so the kinds ride the
+    spec by name and finish_scenario writes them onto the regions."""
+    rooms = _loot_map(world)
+    designs = {b.layout.design.name: b.layout.design for b in world.buildings}
+    for b in world.buildings:
+        for f in getattr(b, "floors", []) or []:
+            designs[f.layout.design.name] = f.layout.design
+    out = {}
+    for r in world.regions:
+        if not r.wall:
+            continue
+        if r.name in rooms:
+            design, base = rooms[r.name]
+            spec = next((s for s in design.rooms if s.name == base), None)
+            own = _door_kind(base, getattr(spec, "purpose", "") if spec else "")
+            out[r.name] = own if own != "door" else _door_kind(design.kind,
+                                                               design.purpose)
+            continue
+        design = designs.get(r.name)
+        if design is not None:
+            out[r.name] = _door_kind(design.kind, design.purpose)
+        else:
+            out[r.name] = _door_kind(r.kind, r.name)
+    return out
+
 # Role keywords -> 1.0 sprite: `base` names a -man/-woman pair or one id both
 # genders share. Every id must exist in scenario_checks.ANIMATIONS; a base whose
 # id doesn't falls back to casual-*. More specific entries come first, so
@@ -336,6 +385,10 @@ def build_spec(world, plan):
         # links and the seal from it once the build has assigned the ids
         from .extensions import floors
         spec["nativeFloors"] = floors.native_floors(world)
+    # the walled regions' door kinds, by name for the same reason: the build
+    # drops unknown region keys, so finish_scenario writes the `door` fields
+    # and hangs the door objects once the build has assigned the ids
+    spec["nativeDoors"] = _door_kinds(world)
     arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights

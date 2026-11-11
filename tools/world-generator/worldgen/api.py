@@ -233,15 +233,21 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     rc_build, _ = _run([sys.executable, builder, os.path.join(out_dir, "spec.py"),
                         "--out", out_dir], emit)
     mods_issues = []
-    if rc_build == 0 and (spec.get("arpgMods") or spec.get("nativeFloors")) \
-            and os.path.isdir(built):
+    doors = {}
+    if rc_build == 0 and os.path.isdir(built):
+        # every world ships finished, extensions or not: the door kinds and
+        # door objects (and the native floor data when there are storeys)
         from worldgen import mods as mods_mod
         mods_mod.finish_scenario(built, spec)
-        _emit(emit, f"native floor data and mods written into {built} (re-zipped)")
+        _emit(emit, f"native doors, floor data and mods written into {built} "
+                    "(re-zipped)")
         mods_issues = checks_mod.check_scenario_mods(
             os.path.join(built, "scenario.json"), spec)
         for issue in mods_issues:
             _emit(emit, "ERROR " + issue)
+        from worldgen import native
+        with open(os.path.join(built, "scenario.json"), "r", encoding="utf-8") as f:
+            doors = native.door_counts(json.load(f))
     if rc_build == 0 and os.path.isdir(built):
         from worldgen import library_art
         n_art = library_art.attach_sprites(built, plan_data)
@@ -261,6 +267,7 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     summary = _summary_dict(world, spec, plan_data, seed, zip_path, out_dir,
                             failed, rc_val, val_out, gen,
                             round((time.time() - t0) / 60.0, 1))
+    summary["doors"] = doors          # the shipped door objects, by kind
     summary["extensions"] = sorted(exts)
     _progress(progress, "done",
               f"{'FAILED:' if failed else 'built'} {spec['name']}", gen)

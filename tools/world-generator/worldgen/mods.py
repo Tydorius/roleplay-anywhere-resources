@@ -1,5 +1,5 @@
-"""Finish a built scenario for shipping: the 1.0-native floor data and any
-game-mod data.
+"""Finish a built scenario for shipping: the 1.0-native floor data, the
+door objects on every doorway, and any game-mod data.
 
 The external builder writes its own flat-map scenario.json and zips the
 folder. After it runs, the pipeline finishes the shipped scenario from the
@@ -7,11 +7,14 @@ spec: the ``nativeFloors`` the floors extension laid out (each upper storey
 a region with ``pocket: {anchor, level}``, each stair or passage pair's
 objects pointing at each other, the build-time fiction doors stripped from
 the sealed storeys' borders, and gridSize back to the play area the floors
-sit outside), the spec's ``arpgMods`` when another extension filled one
-(lights), and the void-zone slabs hardened to walkability 0 (the spec
-carried them as passable so the builder's flat walk could cross them). Then
-it re-zips, so the shipped folder and zip both carry the finished scenario.
-(The builder is never edited.)
+sit outside), the ``nativeDoors`` door kinds written onto the walled regions
+and a door object hung on every doorway that has none (of the doorway's
+room's kind — a doorway with no door object is an open gap in 1.0, and the
+game adds no doors to imported scenarios), the spec's ``arpgMods`` when
+another extension filled one (lights), and the void-zone slabs hardened to
+walkability 0 (the spec carried them as passable so the builder's flat walk
+could cross them). Then it re-zips, so the shipped folder and zip both carry
+the finished scenario. (The builder is never edited.)
 """
 import json
 import os
@@ -99,6 +102,18 @@ def finish_scenario(scenario_dir, spec):
             b["portal"] = {"to": a["id"]}
         # gridSize is the play area; the floors sit outside it, 1.0-style
         scn["gridSize"] = list(native.get("grid") or scn.get("gridSize"))
+    # each walled region records the door kind the generator chose for it
+    # (the builder drops unknown region keys, so the kinds came by name),
+    # then every doorway left open gets its door object — after the seal, so
+    # no door lands on a fiction opening stripped from a storey's border
+    from . import native as native_mod
+    if spec.get("nativeDoors"):
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        for name, kind in spec["nativeDoors"].items():
+            area = by_name.get(name)
+            if area is not None:
+                area["door"] = kind
+    native_mod.hang_doors(scn)
     _harden_boundary(scn)
     with open(scn_path, "w", encoding="utf-8") as f:
         json.dump(scn, f, ensure_ascii=False, indent=1)

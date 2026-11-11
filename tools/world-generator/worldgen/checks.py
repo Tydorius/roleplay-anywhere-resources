@@ -272,11 +272,26 @@ def check_scenario_mods(scenario_path, spec):
     storey region must carry the right pocket; every linked pair's objects
     must point at each other; no sealed storey may keep an opening on its
     outer border; the floors must sit outside gridSize, FLOOR_GAP cells
-    apart."""
+    apart; every doorway whose room is not "none" must carry a door object,
+    and no door object may sit anywhere but on a doorway."""
     import json
+    from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
         scn = json.load(f)
     issues = []
+    # doors first, so the check runs for every world, floors or not
+    doorway_keys = {dw["key"] for dw in native.doorways(scn)}
+    doors = native.doors_by_key(scn)
+    for dw in native.doorways(scn):
+        if dw["room"].get("door", "door") == "none":
+            continue
+        if not doors.get(dw["key"]):
+            issues.append(f"doorway {dw['key']} into "
+                          f"{dw['room'].get('name')!r} has no door object")
+    for key, on_key in doors.items():
+        if key not in doorway_keys:
+            issues.append(f"door object {on_key[0].get('name')!r} at "
+                          f"{on_key[0].get('pos')} sits on no doorway")
     arpg_mods = (spec or {}).get("arpgMods")
     got = scn.get("arpgMods")
     if arpg_mods:
