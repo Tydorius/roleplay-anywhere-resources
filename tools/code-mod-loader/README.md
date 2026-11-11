@@ -85,6 +85,9 @@ game, so **re-run install after adding, changing or removing a mod**.
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md). **Works on 1.0.**
+- `examples/smooth-edges` takes the cell-grid steps off water and road shores (diagonal corner
+  cuts, rounded ends) and fades natural region ground along its true outline. See
+  [its README](examples/smooth-edges/README.md). **Works on 1.0.**
 
 **Being ported to 1.0.** This one still installs and loads, but it was written and
 play-tested on 0.18. Until its port lands it may not work as described:
