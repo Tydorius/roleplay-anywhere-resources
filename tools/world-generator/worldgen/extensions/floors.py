@@ -267,8 +267,12 @@ def _build_storeys(world, b, uppers, rects, stairs, rng):
                                 description=purposes.get(room.base_name, ""))
                 reg.entrance_door = None   # sealed: no exterior door upstairs
                 regions.append(reg)
+            # each piece keeps the quarter turn the room layout gave it, as on
+            # the ground floor: the layout checked the turned cells, so an
+            # unturned piece would ship on cells nobody checked
             for (tname, pos) in room.furniture.placements:
-                objects.append(ObjectOut(tname, pos, room.full_name))
+                objects.append(ObjectOut(tname, pos, room.full_name,
+                                         room.furniture.rot(tname, pos)))
         if getattr(design, "units", None):
             from .. import _emit_unit_regions
             from ..layout_room import layout_room as _lr
