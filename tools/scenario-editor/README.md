@@ -266,7 +266,8 @@ The dialog's steps:
     ![The person inspector with a schedule bar](media/scenario_editor_npc-editor.png)
   - **NPC type:** stance, homes (which regions it spawns in and how many in each), sprite, level and
     loot. **New NPC type…** on the NPC types tab makes one.
-  - **Region** also lists 1.0's floor level and building, shape, liquid, door kind and theft flag.
+  - **Region** also edits 1.0's floors, door kind and colour, each doorway's door, the lock and its key
+    holders, and the theft flag. A **floor** shows its building and level, and an **object** its portal link.
   - Every inspector lists what uses the selected thing, each item clickable.
 - **Rename a region:** every schedule and calendar event that names it is updated as well.
 - **Undo and redo** (Ctrl+Z, Ctrl+Y), with a whole drag as one step. **Save** (Ctrl+S) and
