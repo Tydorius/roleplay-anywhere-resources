@@ -393,7 +393,11 @@
     try {
       const layer = scene.terrainLayer, tiles = layer?.tiles;
       if (layer && tiles) {
-        try { if (typeof layer.drop === 'function') layer.drop(); } catch { }
+        // drop(tile) destroys one tile's image and removes its texture; every tile goes, then
+        // the map is emptied so sync builds them all again.
+        for (const tile of [...tiles.values()]) {
+          try { if (typeof layer.drop === 'function') layer.drop(tile); } catch { }
+        }
         try { tiles.clear?.(); } catch { }
         try { if (typeof layer.sync === 'function') layer.sync(scene.world); } catch { }
       }
