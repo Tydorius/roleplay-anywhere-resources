@@ -187,9 +187,10 @@ class Doors(unittest.TestCase):
 
 
 class NatureAndLiquids(unittest.TestCase):
-    def test_natural_is_the_generators_word(self):
+    def test_natural_reads_as_organic(self):
         scn = scenario([region("r_green", "Green", (4, 4), (8, 8), wall=None, shape="natural")])
-        self.assertTrue(any("needs 'organic'" in m for m in found(scn, "warning")))
+        self.assertTrue(any("the game reads 'natural' as 'organic'" in m for m in found(scn, "info")))
+        self.assertFalse([m for m in found(scn, "warning") if "Green" in m])
         scn["regions"][1]["shape"] = "organic"
         self.assertFalse([m for m in found(scn) if "Green" in m])
 
@@ -198,7 +199,7 @@ class NatureAndLiquids(unittest.TestCase):
         scn = scenario([lake], [person("n1", "Fisher", (25, 5))])
         out = found(scn)
         self.assertIn("'Fisher' can't be reached on foot from the player.", out)
-        self.assertTrue(any("adds it as one nobody can walk through" in m for m in out))
+        self.assertTrue(any("draws it as a river 6 cells wide" in m for m in out))  # 6x20: long and thin
         scn["unbounded"] = {"seed": 1, "profile": {"media": [{"name": "deep water", "walk": "slow"}], "lowEdges": []},
                             "areas": []}
         self.assertNotIn("'Fisher' can't be reached on foot from the player.", found(scn))

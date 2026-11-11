@@ -49,13 +49,31 @@ function sprite(tid) {
 }
 
 const groundColor = g => g.groundColor || GROUND[g.groundTexture] || GROUND_BASE[g.ground] || "#8aa16f";
-/** A 1.0 liquid's colour: from the open world's media list, else the game's own default for a new one. */
-const liquidColor = g => ((S.scn.unbounded?.profile?.media || []).find(m => m && m.name === g.surface)?.color) || "#3a6d8a";
-const isOrganic = g => g.shape === "organic" && !g.wall && !g.pocket && Math.min(g.size[0], g.size[1]) >= 5;
-function regionPath(g, X, Y, w, h) {
+/** A region's cells as one canvas path, the way the game's god view draws them: the blob's cell
+ *  staircase (Liquids.cellRuns) when organic, else its rectangle. */
+function regionPath(g, s) {
   ctx.beginPath();
-  if (isOrganic(g)) ctx.ellipse(X + w / 2, Y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);   // the game's blob, roughly
-  else ctx.rect(X, Y, w, h);
+  if (Liquids.isOrganic(g)) for (const q of Liquids.cellRuns(g)) ctx.rect(sx(q.x), sy(q.y + q.h), q.w * s, q.h * s);
+  else ctx.rect(sx(g.position[0]), sy(g.position[1] + g.size[1]), g.size[0] * s, g.size[1] * s);
+}
+/** The outline of an organic region: every face of a run cell with no run cell beyond it. */
+function organicOutline(g, s) {
+  const cells = new Set();
+  for (const q of Liquids.cellRuns(g)) for (let i = 0; i < q.w; i++) cells.add(`${q.x + i},${q.y}`);
+  ctx.beginPath();
+  for (const key of cells) {
+    const [x, y] = key.split(",").map(Number), X = sx(x), Y = sy(y + 1);   // the cell's top-left on screen
+    if (!cells.has(`${x},${y + 1}`)) { ctx.moveTo(X, Y); ctx.lineTo(X + s, Y); }
+    if (!cells.has(`${x},${y - 1}`)) { ctx.moveTo(X, Y + s); ctx.lineTo(X + s, Y + s); }
+    if (!cells.has(`${x - 1},${y}`)) { ctx.moveTo(X, Y); ctx.lineTo(X, Y + s); }
+    if (!cells.has(`${x + 1},${y}`)) { ctx.moveTo(X + s, Y); ctx.lineTo(X + s, Y + s); }
+  }
+}
+/** A river as the game plays it: the liquid as a band min(size) cells wide along the long axis, end
+ *  to end — which for the region's own rectangle is all of it (the game meanders the band inside). */
+function riverBand(g, color, s) {
+  ctx.fillStyle = color;
+  ctx.fillRect(sx(g.position[0]), sy(g.position[1] + g.size[1]), g.size[0] * s, g.size[1] * s);
 }
 const wallColor = g => g.wallColor || WALL[g.wall] || WALL.wood;
 const personColor = e => { const k = entKind(e); return S.layers[k]?.hide ? null : LAYERS.find(l => l.key === k).color; };
@@ -124,12 +142,16 @@ function draw() {
   }
 
   const regs = [...regions()].sort((a, b) => area(b) - area(a));
+  const liquidBy = Liquids.resolveAll(S.scn).byRegion;   // what the game makes of every surface, once per draw
   for (const g of regs) {
     if (L[regionLayer(g)].hide) continue;
-    const X = sx(g.position[0]), Y = sy(g.position[1] + g.size[1]);
-    regionPath(g, X, Y, g.size[0] * s, g.size[1] * s);
-    ctx.fillStyle = g.surface && !g.wall && !g.pocket ? liquidColor(g) : groundColor(g); ctx.fill();
+    const got = liquidBy.get(g.id), liquid = got ? got.medium.color || Liquids.NEW_COLOR : null;
+    regionPath(g, s);
+    ctx.fillStyle = liquid && got.kind !== "river" ? liquid : groundColor(g);   // a river is its ground plus a band
+    ctx.fill();
+    if (liquid && got.kind === "river") riverBand(g, liquid, s);
     if (g.hostile) { ctx.fillStyle = "rgba(208,68,58,.16)"; ctx.fill(); }
+    if (Liquids.isOrganic(g)) { organicOutline(g, s); ctx.lineWidth = Math.max(1, s * .12); ctx.strokeStyle = "rgba(0,0,0,.35)"; ctx.stroke(); }
   }
   if (s >= 6) {
     ctx.strokeStyle = "rgba(0,0,0,.08)"; ctx.lineWidth = 1; ctx.beginPath();
