@@ -147,16 +147,18 @@ class TestWater(unittest.TestCase):
         self.assertIn(tuple(stall.pos), meadow.rect.cells())
         self.assertEqual(len(world.failures), 0)
 
-    def test_a_prop_with_nowhere_dry_to_go_stays_and_is_noted(self):
+    def test_a_prop_with_nowhere_dry_to_go_is_dropped_and_noted(self):
         pond = worldgen.RegionOut("Duck Pond", Rect(9, 3, 6, 6), "zone")
         world = _world(pond)
         world.templates["Market Stall"] = _template("Market Stall")
         stall = worldgen.ObjectOut("Market Stall", (12, 6), "Duck Pond")
         world.objects.append(stall)
         spec_writer._clear_deep_water(world, native.water_regions(world), {})
-        self.assertEqual(tuple(stall.pos), (12, 6))
+        self.assertEqual(world.objects, [],
+                         "nothing placed stands on deep water")
         self.assertIn(("Market Stall at [12, 6]",
-                       "stands on deep water and no dry cell near it is free"),
+                       "dropped: it stands on deep water and no dry cell "
+                       "near it is free"),
                       world.failures)
 
 

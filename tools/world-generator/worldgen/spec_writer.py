@@ -257,10 +257,10 @@ def _dry_spot(world, obj, region, deep, taken):
 
 def _clear_deep_water(world, water, vehicles):
     """Nothing the generator places on purpose may stand on deep water: a
-    prop on a pond moves to the nearest dry free cell of its own region.
-    Vehicles (boats) may sit on it; furniture inside walls is written
-    room-relative and rooms never ship water. What cannot move stays put
-    and fails the built scenario's check — the note says so."""
+    prop on a pond moves to the nearest dry free cell of its own region, and
+    one with nowhere dry to go (filler scattered over a river zone) is
+    dropped, noted. Vehicles (boats) may sit on it; furniture inside walls
+    is written room-relative and rooms never ship water."""
     from . import native
     deep = native.deep_cells(world, water)
     if not deep:
@@ -271,23 +271,25 @@ def _clear_deep_water(world, water, vehicles):
     for o in world.objects:
         if o.template in world.templates:
             taken |= native.footprint(world, o)
+    keep = []
     for o in world.objects:
-        if o.template not in world.templates or o.template in floats:
-            continue
         region = world.regions_by_name.get(o.region)
-        if region is not None and region.wall:
-            continue
-        foot = native.footprint(world, o)
-        if not foot & deep:
+        if o.template not in world.templates or o.template in floats or \
+                (region is not None and region.wall) or \
+                not (native.footprint(world, o) & deep):
+            keep.append(o)
             continue
         spot = _dry_spot(world, o, region, deep, taken) if region else None
         if spot is None:
             _note(world, f"{o.template} at {list(o.pos)}",
-                  "stands on deep water and no dry cell near it is free")
+                  "dropped: it stands on deep water and no dry cell near it "
+                  "is free")
             continue
-        taken -= foot
+        taken -= native.footprint(world, o)
         o.pos = tuple(spot)
         taken |= native.footprint(world, o)
+        keep.append(o)
+    world.objects = keep
 
 
 def _nature(world, plan):
