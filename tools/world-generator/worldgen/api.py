@@ -199,6 +199,20 @@ def _mid(pair):
     return (pair[0] + pair[1]) // 2
 
 
+def _populations_summary(spec):
+    """The native populations by region: which template spawns how many of
+    what in which region, plus the totals."""
+    from worldgen import populations
+    pops = spec.get("nativePopulations") or []
+    return {
+        "templates": len(pops),
+        "creatures": populations.creature_count(pops),
+        "regions": [{"template": p.get("name"), "region": h.get("region"),
+                     "count": h.get("count")}
+                    for p in pops for h in p.get("homes") or []],
+    }
+
+
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
@@ -333,6 +347,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
             "water_surfaces_dropped": len(water.get("dropped") or []),
             "vehicles": len(nat.get("vehicles") or {}),
         },
+        "populations": _populations_summary(spec),
     }
 
 
@@ -423,6 +438,17 @@ def _summary_text(world, spec, seed, emit):
                      f"vehicles {len(nat.get('vehicles') or {})}")
         for gone in water.get("dropped") or []:
             lines.append(f"  - {gone['name']}: {gone['reason']}")
+    pops = spec.get("nativePopulations") or []
+    if pops:
+        from worldgen import populations as populations_mod
+        n_regions = sum(len(p.get("homes") or []) for p in pops)
+        lines.append(f"populations: {populations_mod.creature_count(pops)} "
+                     f"creatures in {n_regions} regions "
+                     f"({len(pops)} templates)")
+        for p in pops:
+            homes = ", ".join(f"{h['region']} x{h['count']}"
+                              for h in p.get("homes") or [])
+            lines.append(f"  - {p['name']}: {homes}")
     fl = world.metrics.get("floors") or {}
     if fl.get("floors"):
         lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "

@@ -14,9 +14,21 @@ renderer are vendored — nothing outside this folder is needed.
 
 **Game version:** being ported to Anywhere RPG 1.0. Its only contract with the game is the
 scenario format. It still writes the 0.18 form, which 1.0 reads unchanged, and its validator already
-follows 1.0's rules (see `worldgen/vendor/README.md`). Writing 1.0's own floors, doors, locks, liquids
-and populations comes next. The `floors` extension writes 1.0's own floors and needs no mod; the
-`region-groups` and `lights` extensions still need the code-mod loader mods.
+follows 1.0's rules (see `worldgen/vendor/README.md`). It now writes 1.0's own floors, doors,
+locks, liquids and populations. The `region-groups` and `lights` extensions still need the
+code-mod loader mods.
+
+**Native populations:** every world also ships the game's own nameless creatures as
+`npcTemplates` (chosen in `worldgen/populations.py`): livestock (sheep, cows, goats or pigs)
+graze regions whose names or zone kinds read as pasture, paddock, pen or fold; chickens and
+ducks keep the farmyards and the yards of farms; rats nest in cellars, stores, warehouses,
+granaries, sewers and docks; crows settle the crop plots; townsfolk cross a market, square or
+plaza of an urban or town zone in a period-fitting sprite (peasant in fantasy or history,
+casual in the present day); and two of the town watch patrol a town's main street unless the
+cast already has a guard, watch or police of its own. Counts grow with the region's area
+(livestock 2-5, vermin 2-3, crowds 3-5), no population spawns where the player starts, and the
+whole world holds at most 20 creatures — the largest counts trim first. The choice is
+deterministic given the run's seed.
 
 > **Still in progress:** layout improvements are under way. Maps can come out long and wide,
 > with empty ground in places and squeezed furniture. A world's `plan.json` holds everything

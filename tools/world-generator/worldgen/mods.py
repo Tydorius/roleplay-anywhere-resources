@@ -13,7 +13,9 @@ room's kind — a doorway with no door object is an open gap in 1.0, and the
 game adds no doors to imported scenarios), the ``nativeLocks`` rooms locked
 with their keys handed out and the theft buildings flagged, the
 ``nativeNature`` shapes and surfaces on the regions and vehicle fields on
-the templates (the same by-name carry, for the same reason), the spec's
+the templates, the ``nativePopulations`` written as the game's own
+``npcTemplates`` (one per kind, their home regions resolved to the ids the
+build assigned — the same by-name carry, for the same reason), the spec's
 ``arpgMods`` when
 another extension filled one (lights), and the void-zone slabs hardened to
 walkability 0 (the spec carried them as passable so the builder's flat walk
@@ -160,6 +162,26 @@ def finish_scenario(scenario_dir, spec):
             t = templates.get(name)
             if t is not None:
                 t.update(fields)
+    # the native populations become the game's own npcTemplates: one per kind
+    # the generator chose, its homes resolved to the built regions' ids (a
+    # home whose region the build dropped goes with it; the checks report it)
+    if spec.get("nativePopulations"):
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        ids = native_mod.Ids(scn)
+        for p in spec["nativePopulations"]:
+            homes = [{"regionId": by_name[h["region"]]["id"], "count": h["count"]}
+                     for h in p.get("homes") or [] if h.get("region") in by_name]
+            if not homes:
+                continue
+            scn.setdefault("npcTemplates", []).append({
+                "id": ids("ntpl"), "name": p.get("name"),
+                "description": p.get("description", ""),
+                "physicalDescription": p.get("physicalDescription", ""),
+                "animationId": p.get("animationId"), "gender": p.get("gender"),
+                "stance": p.get("stance"), "level": p.get("level", 1),
+                "money": p.get("money", 0),
+                "lootPoolIds": list(p.get("lootPoolIds") or []),
+                "homes": homes})
     _harden_boundary(scn)
     with open(scn_path, "w", encoding="utf-8") as f:
         json.dump(scn, f, ensure_ascii=False, indent=1)

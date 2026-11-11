@@ -1,6 +1,6 @@
 # Population: design
 
-Status: build step 1 done (schedules and the room cap), the rest is design only (2026-11-03).
+Status: build step 1 done (schedules and the room cap); the nameless crowds and livestock now ship as native 1.0 populations (`worldgen/populations.py`, 2026-11-11); the rest is design only.
 Target: the world generator in this folder, plus one small new code mod.
 
 ## Why

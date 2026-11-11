@@ -5,6 +5,7 @@ out as both spec.json and spec.py (`SPEC = json.loads(...)`).
 import json
 import re
 
+from . import populations
 from .sellers import sellers as sellers_of
 from .vendor.scenario_checks import ANIMATIONS as KNOWN_ANIMATIONS
 
@@ -667,6 +668,10 @@ def build_spec(world, plan):
                            "theft": _theft_buildings(world)}
     # ... and for the natural shapes, water surfaces and vehicle fields
     spec["nativeNature"] = nature
+    # ... and for the native populations (livestock, vermin, crowds, patrols):
+    # one template per kind with its home regions by name, applied onto the
+    # built scenario as the game's own npcTemplates once the ids exist
+    spec["nativePopulations"] = populations.choose(world, plan)
     arpg_mods = {}
     if "lights" in getattr(world, "extensions", ()):
         from .extensions import lights

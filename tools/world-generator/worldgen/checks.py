@@ -286,7 +286,9 @@ def check_scenario_mods(scenario_path, spec):
     and no door object may sit anywhere but on a doorway. Locks: every key
     opens a region that exists, and every room the spec locked has doors.
     Nature: the natural shapes, water surfaces and vehicle fields landed on
-    the built scenario, and nobody stands on deep water."""
+    the built scenario, and nobody stands on deep water.
+    Populations: every native population's home region exists, its sprite is
+    one the game knows, and it landed on the built scenario."""
     import json
     from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
@@ -365,6 +367,36 @@ def check_scenario_mods(scenario_path, spec):
             elif e.get("type") in ("npc", "player") and \
                     tuple(e.get("pos") or ()) in wet:
                 issues.append(f"{e.get('name')!r} starts on deep water")
+    # 1.0 populations: every home region the spec names exists in the built
+    # scenario, every sprite is one the game knows, and each template landed
+    # on the built scenario with its homes resolved to the region ids
+    pops = (spec or {}).get("nativePopulations") or []
+    if pops:
+        from .vendor import scenario_checks as vendor
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        built = {t.get("name"): t for t in scn.get("npcTemplates") or []}
+        for p in pops:
+            label = f"population {p.get('name')!r}"
+            for h in p.get("homes") or []:
+                if h.get("region") not in by_name:
+                    issues.append(f"{label} names home region "
+                                  f"{h.get('region')!r}, which the built "
+                                  f"scenario does not have")
+            if p.get("animationId") not in vendor.ANIMATIONS:
+                issues.append(f"{label} plays unknown sprite "
+                              f"{p.get('animationId')!r}")
+            t = built.get(p.get("name"))
+            if t is None:
+                issues.append(f"{label} did not land on the built scenario")
+                continue
+            homes = {h.get("regionId"): h.get("count")
+                     for h in t.get("homes") or []}
+            for h in p.get("homes") or []:
+                area = by_name.get(h.get("region"))
+                if area is not None and \
+                        homes.get(area.get("id")) != h.get("count"):
+                    issues.append(f"{label} lost its home in "
+                                  f"{h.get('region')!r} on the build")
     arpg_mods = (spec or {}).get("arpgMods")
     got = scn.get("arpgMods")
     if arpg_mods:
