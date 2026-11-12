@@ -1,0 +1,396 @@
+{
+  "_note": "Technology for modern and sci-fi bands. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "tech.smartphone",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "smartphone"},
+      "description": {"*": "A smartphone with a cracked screen and a dead battery, so just a brick."},
+      "looks": [
+        {"key": "black", "bands": ["*"], "physical": "A black smartphone with a cracked screen and scuffed corners"}
+      ],
+      "tags": ["tech", "electronics"],
+      "aliases": ["Dead smartphone"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.laptop",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "laptop"},
+      "description": {"*": "A battered laptop that boots when it feels like it."},
+      "looks": [
+        {"key": "grey", "bands": ["*"], "physical": "A dented grey laptop, open at an angle, with a scuffed lid"}
+      ],
+      "tags": ["tech", "electronics"],
+      "aliases": ["Gaming laptop", "MacBook Pro 2011", "Vintage laptop", "Digital Voice Recorder", "DJ controller"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.data_slate",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "data slate"},
+      "description": {"*": "A data slate with a cracked face, still glowing through the fault line."},
+      "looks": [
+        {"key": "slate", "bands": ["*"], "physical": "A cracked data slate with a glowing amber screen and corner strap"}
+      ],
+      "tags": ["tech", "electronics"],
+      "aliases": ["Cracked data-slate", "Log slate"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.usb_drive",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "USB drive"},
+      "description": {"*": "A USB drive, small enough to lose and important enough to hunt."},
+      "looks": [
+        {"key": "stick", "bands": ["*"], "physical": "A small USB drive in black plastic on a keyring loop"}
+      ],
+      "tags": ["tech", "data"],
+      "aliases": ["USB drive", "USB flash drive"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.data_chip",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "data chip"},
+      "description": {"*": "A data chip with a film on it that somebody would kill for."},
+      "looks": [
+        {"key": "amber", "bands": ["*"], "physical": "A translucent amber data chip with contact pins along one edge"}
+      ],
+      "tags": ["tech", "data"],
+      "aliases": ["Data chip", "Bootleg vid-chip", "Premiere vid-chip"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.cable",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "charging cable"},
+      "description": {"*": "A charging cable, frayed from being coiled the wrong way for years."},
+      "looks": [
+        {"key": "braided", "bands": ["*"], "physical": "A braided charging cable with a frayed end and connector"}
+      ],
+      "tags": ["tech"],
+      "aliases": ["Phone charger cable", "Phone charger", "Interface cable", "International adapter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.radio",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "hand-crank radio"},
+      "description": {"*": "A hand-crank radio, static with a voice inside it somewhere."},
+      "looks": [
+        {"key": "crank", "bands": ["*"], "physical": "A hand-crank radio with a folded aerial and dial face"}
+      ],
+      "tags": ["tech", "electronics"],
+      "aliases": ["Hand-crank radio"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.headphones",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "headphones"},
+      "description": {"*": "Headphones that turn a crowded room into a private one."},
+      "looks": [
+        {"key": "overear", "bands": ["*"], "physical": "Black over-ear headphones with a padded band and coiled cord"}
+      ],
+      "tags": ["tech"],
+      "aliases": ["Headphones"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.remote",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "remote control"},
+      "description": {"*": "A remote control with buttons worn blank and a battery hatch taped shut."},
+      "looks": [
+        {"key": "black", "bands": ["*"], "physical": "A black remote control with rubber buttons and taped battery hatch"}
+      ],
+      "tags": ["tech"],
+      "aliases": ["Remote control"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.battery",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "batteries"},
+      "description": {"*": "A pair of cells, one fresh and one that should have been thrown out."},
+      "looks": [
+        {"key": "cells", "bands": ["*"], "physical": "Two AA battery cells with copper tops and printed jackets"}
+      ],
+      "tags": ["tech", "power"],
+      "aliases": ["D-cell batteries", "AA batteries", "Scavenged AA cells", "Battery stick", "Battery pack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.power_cell",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "power cell"},
+      "description": {"*": "A sealed power cell, charge strips still green, worth its scramble."},
+      "looks": [
+        {"key": "cell", "bands": ["*"], "physical": "A sealed power cell with charge strips glowing green along its flank"}
+      ],
+      "tags": ["tech", "power"],
+      "aliases": ["Ion battery pack", "Fusion cell", "Drone battery pack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.servo",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "servo motor"},
+      "description": {"*": "A salvaged servo that still twitches when it gets current."},
+      "looks": [
+        {"key": "motor", "bands": ["*"], "physical": "A small servo motor with a spur gear, mounting flange and cable tail"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": ["Salvaged servo", "Servo knee joint", "Spare chrome finger"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.coolant",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "coolant can"},
+      "description": {"*": "A can of coolant for machines that run hot and complain louder."},
+      "looks": [
+        {"key": "can", "bands": ["*"], "physical": "A squat canister of green coolant with a spout and carry ring"}
+      ],
+      "tags": ["tech", "consumable"],
+      "aliases": ["Coolant can", "Coolant pouch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.component",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "electronic component"},
+      "description": {"*": "A component pulled from a dead board, tested and wrapped against static."},
+      "looks": [
+        {"key": "board", "bands": ["*"], "physical": "A circuit assembly with capacitor cylinders and heat sink fins"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": ["Capacitor bank", "Voltage regulator", "Breaker fuse cartridge", "Gasket set", "Spare seal"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.drone_shell",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "drone shell"},
+      "description": {"*": "A cracked drone shell with its rotors folded like a dead insect."},
+      "looks": [
+        {"key": "shell", "bands": ["*"], "physical": "A cracked grey drone shell with four folded rotors and lens housing"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": ["Cracked drone shell", "Drone rotor pair", "Salvaged LED strip"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.implant_calibrator",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 4,
+      "names": {"*": "implant calibrator"},
+      "description": {"*": "A calibrator that talks to implants in a language of clicks."},
+      "looks": [
+        {"key": "handheld", "bands": ["*"], "physical": "A handheld calibrator with probes and a dial face"}
+      ],
+      "tags": ["tech", "medical"],
+      "aliases": ["Implant calibrator"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.cyber_eye",
+      "category": "tech",
+      "type": "face",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "ocular implant"},
+      "description": {"*": "An ocular implant with an iris shutter, second-hand and unregistered."},
+      "looks": [
+        {"key": "eye", "bands": ["*"], "physical": "A polished ocular implant with an iris shutter and cable pigtail"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["Ocular iris graft", "Secondhand ocular shutter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.reflex_implant",
+      "category": "tech",
+      "type": "innerTorso",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "reflex implant"},
+      "description": {"*": "A spine implant that makes the body answer before the mind asks."},
+      "looks": [
+        {"key": "rail", "bands": ["*"], "physical": "A spine-length implant rail with connector studs and ribbon leads"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["Reflex tuner chip", "Spinal reflex shunt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.spinal_lattice",
+      "category": "tech",
+      "type": "innerTorso",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "legendary",
+      "price": 6,
+      "names": {"*": "spinal lattice"},
+      "description": {"*": "A first-generation lattice, pre-war work that nobody can build anymore."},
+      "looks": [
+        {"key": "lattice", "bands": ["*"], "physical": "A first-generation spinal lattice in a scratched case with etched plates"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["First-gen spinal lattice"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.actuator_gloves",
+      "category": "tech",
+      "type": "gloves",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "actuator gloves"},
+      "description": {"*": "Gloves with actuator bars that give a grip like a cargo clamp."},
+      "looks": [
+        {"key": "gloves", "bands": ["*"], "physical": "Gloves with articulated steel actuator bars along each finger"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["Grip-strength actuator"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.myomar_arm",
+      "category": "tech",
+      "type": "wieldable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "epic",
+      "price": 6,
+      "names": {"*": "myomar arm"},
+      "description": {"*": "A pre-war myomar forearm, fibre muscle bundled like rope, still alive."},
+      "looks": [
+        {"key": "forearm", "bands": ["*"], "physical": "A myomar forearm strut with bundled fibre muscle and quick-release clamp"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["Pre-war myomar forearm"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.cooling_collar",
+      "category": "tech",
+      "type": "necklace",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "cooling collar"},
+      "description": {"*": "A mesh collar that hums and takes the heat out of a long shift."},
+      "looks": [
+        {"key": "mesh", "bands": ["*"], "physical": "A mesh cooling collar with a slim pump pack and charge light"}
+      ],
+      "tags": ["tech", "implant"],
+      "aliases": ["Cooling shunt collar"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tech.comm_unit",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "comm unit"},
+      "description": {"*": "A handheld comm unit, scratchy, clamped to one channel."},
+      "looks": [
+        {"key": "handheld", "bands": ["*"], "physical": "A handheld comm unit with a stub antenna, clip and speaker grille"}
+      ],
+      "tags": ["tech", "comms"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

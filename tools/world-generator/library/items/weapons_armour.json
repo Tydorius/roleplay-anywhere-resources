@@ -1,0 +1,413 @@
+{
+  "_note": "Weapons and armour. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "weapon.dagger",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "dagger"},
+      "description": {"*": "A straight dagger, close work and quiet work."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A straight iron dagger with a wooden grip and ring pommel"}
+      ],
+      "tags": ["weapon", "knife"],
+      "aliases": ["Iron Dagger", "Dull Dagger"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.shortsword",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "short sword"},
+      "description": {"*": "A short arming sword, quick out of the scabbard and quick back in."},
+      "looks": [
+        {"key": "arming", "bands": ["*"], "physical": "A short arming sword with a battered leather scabbard and crossguard"}
+      ],
+      "tags": ["weapon", "sword"],
+      "aliases": ["Rusted shortsword"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.longsword",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 5,
+      "names": {"*": "longsword"},
+      "description": {"*": "A longsword with a full tang and a reach that ends arguments."},
+      "looks": [
+        {"key": "cruciform", "bands": ["*"], "physical": "A long straight sword with a cruciform hilt and wheel pommel"}
+      ],
+      "tags": ["weapon", "sword"],
+      "aliases": ["Iron longsword", "Guard-issue longsword", "Rusted claymore", "Hedge-cut Sword", "Curved desert blade"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.practice_sword",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "practice sword"},
+      "description": {"*": "A blunted practice sword, for drills and bruises."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A wooden practice sword worn smooth at the grip with a flared crossguard"}
+      ],
+      "tags": ["weapon", "training"],
+      "aliases": ["Practice sword", "Wooden practice sword", "Blunted Training Sword", "Iron Training Sword", "Steel Training Saber"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.spear",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "spear"},
+      "description": {"*": "A spear on an ash shaft, the weapon of formed men."},
+      "looks": [
+        {"key": "leaf", "bands": ["*"], "physical": "A spear with a leaf-shaped iron head socketed on an ash shaft"}
+      ],
+      "tags": ["weapon", "polearm"],
+      "aliases": ["Dull Spear", "Ash-hafted spear", "Garrison Spear", "Gate Spear", "Iron Spearhead", "Fishing Spear", "Fishing Harpoon", "Harpoon", "Ancestral Harpoon", "Fish gaff", "Gaff Hook"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.bow",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "hunting bow"},
+      "description": {"*": "A hunting bow, strung and ready for the long shot."},
+      "looks": [
+        {"key": "recurve", "bands": ["*"], "physical": "A recurved wooden hunting bow with a hemp string and leather grip"}
+      ],
+      "tags": ["weapon", "ranged"],
+      "aliases": ["Hunting bow", "Poacher's yew bow", "Huntsman's Bow", "Woodward's Bow"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.arrows",
+      "category": "weapon",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sheaf of arrows"},
+      "description": {"*": "A sheaf of arrows, fletched straight and points honed."},
+      "looks": [
+        {"key": "sheaf", "bands": ["*"], "physical": "A sheaf of bound arrows with grey goose fletching and bodkin points"}
+      ],
+      "tags": ["weapon", "ranged", "ammo"],
+      "aliases": ["Sheaf of arrows", "Bundle of Arrows", "Cane arrows"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.shield",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "shield"},
+      "description": {"*": "A shield of wood and iron that has turned blows before."},
+      "looks": [
+        {"key": "round", "bands": ["*"], "physical": "A round wooden shield painted red with a riveted iron boss"}
+      ],
+      "tags": ["weapon", "armour"],
+      "aliases": ["Worn Shield", "Kite shield"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.walking_stick",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "walking stick"},
+      "description": {"*": "A worn stick that leans on its owner as much as the reverse."},
+      "looks": [
+        {"key": "ferrule", "bands": ["*"], "physical": "A dark wooden walking stick with an iron ferrule and polished grip"}
+      ],
+      "tags": ["weapon"],
+      "aliases": ["Iron-shod walking stick", "Shepherd's crook", "Wooden Practice Staff", "Gate Watch Club", "Oni Guard Club"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.sabre",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "cutlass"},
+      "description": {"*": "A naval cutlass, short enough for a crowded deck."},
+      "looks": [
+        {"key": "guard", "bands": ["*"], "physical": "A naval cutlass with a brass bowl guard and curved blade"}
+      ],
+      "tags": ["weapon", "sword"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.pistol",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "pistol"},
+      "description": {"*": "A semi-automatic pistol, oiled and kept where hands can't reach."},
+      "looks": [
+        {"key": "slide", "bands": ["*"], "physical": "A black semi-automatic pistol with a blued slide and checkered grip"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.rifle",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "rifle"},
+      "description": {"*": "A lever-action rifle that has been in the family longer than the house."},
+      "looks": [
+        {"key": "lever", "bands": ["*"], "physical": "A lever-action rifle with a walnut stock and brass receiver"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": ["Lever-action rifle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.shotgun",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "shotgun"},
+      "description": {"*": "A pump-action shotgun, the last word in most disputes."},
+      "looks": [
+        {"key": "pump", "bands": ["*"], "physical": "A pump-action shotgun with a heat shield and worn walnut stock"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": ["Pump shotgun"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.shells",
+      "category": "weapon",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "shotgun shells"},
+      "description": {"*": "A box of cartridges, counted twice and locked up once."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "An open box of red plastic shotgun cartridges with brass heads"}
+      ],
+      "tags": ["weapon", "ammo"],
+      "aliases": ["Shotgun shells", "Rifle cartridges"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.baseball_bat",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "baseball bat"},
+      "description": {"*": "A baseball bat that hasn't seen a ballpark in years."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A wooden baseball bat with a taped grip and dented barrel"}
+      ],
+      "tags": ["weapon", "club"],
+      "aliases": ["Baseball bat", "Iron pipe", "Broken Glass Bottle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.brass_knuckles",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "brass knuckles"},
+      "description": {"*": "A knuckle-duster, small enough for a pocket and bad news anyway."},
+      "looks": [
+        {"key": "duster", "bands": ["*"], "physical": "A brass knuckle-duster with four finger rings polished by use"}
+      ],
+      "tags": ["weapon"],
+      "aliases": ["Brass Knuckles"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "weapon.combat_knife",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "combat knife"},
+      "description": {"*": "A combat knife, black and businesslike."},
+      "looks": [
+        {"key": "black", "bands": ["*"], "physical": "A black combat knife with a serrated spine and polymer grip"}
+      ],
+      "tags": ["weapon", "knife"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.stun_baton",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "stun baton"},
+      "description": {"*": "A stun baton, the crack of it clears a corridor."},
+      "looks": [
+        {"key": "baton", "bands": ["*"], "physical": "A black riot baton with a blue conductor tip and rubber grip"}
+      ],
+      "tags": ["weapon", "tech"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.pulse_pistol",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "pulse pistol"},
+      "description": {"*": "An energy sidearm that hums when it charges."},
+      "looks": [
+        {"key": "energy", "bands": ["*"], "physical": "A stubby energy pistol with copper cooling fins and a glowing cell window"}
+      ],
+      "tags": ["weapon", "tech", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "armour.padded_jack",
+      "category": "armour",
+      "type": "torso",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "padded jack"},
+      "description": {"*": "A quilted jack that turns a blow into a bruise."},
+      "looks": [
+        {"key": "quilted", "bands": ["*"], "physical": "A quilted padded jack with vertical stitching and leather ties"}
+      ],
+      "tags": ["armour"],
+      "aliases": ["Padded jack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "armour.mail_shirt",
+      "category": "armour",
+      "type": "torso",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 5,
+      "names": {"*": "mail shirt"},
+      "description": {"*": "A shirt of riveted rings, heavier than it looks and worth it."},
+      "looks": [
+        {"key": "rings", "bands": ["*"], "physical": "A chainmail shirt of riveted steel rings draped in heavy folds"}
+      ],
+      "tags": ["armour"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "armour.helmet",
+      "category": "armour",
+      "type": "head",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "iron helm"},
+      "description": {"*": "A dented helm that has already done its job once."},
+      "looks": [
+        {"key": "kettle", "bands": ["*"], "physical": "A dented iron kettle helm with a wide brim and chin strap"}
+      ],
+      "tags": ["armour"],
+      "aliases": ["Iron cap", "Dented Kettle Helm"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "armour.bulletproof_vest",
+      "category": "armour",
+      "type": "torso",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "ballistic vest"},
+      "description": {"*": "A ballistic vest with plates in the pockets, hope worn as clothing."},
+      "looks": [
+        {"key": "vest", "bands": ["*"], "physical": "A black ballistic vest with front plate pockets and velcro straps"}
+      ],
+      "tags": ["armour", "tech"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "armour.riot_helmet",
+      "category": "armour",
+      "type": "head",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "riot helmet"},
+      "description": {"*": "A riot helmet with the visor scarred from the last crowd."},
+      "looks": [
+        {"key": "visor", "bands": ["*"], "physical": "A black riot helmet with a tinted visor and neck flap"}
+      ],
+      "tags": ["armour", "tech"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

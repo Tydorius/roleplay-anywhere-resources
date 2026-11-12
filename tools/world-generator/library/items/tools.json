@@ -1,0 +1,688 @@
+{
+  "_note": "Hand tools and working gear. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "tool.hand_axe",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "hand axe"},
+      "description": {"*": "A small axe for kindling, stakes and stubborn knots."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A small steel axe head fitted on a curved wooden haft"}
+      ],
+      "tags": ["tool", "wood"],
+      "aliases": ["Small Hand-axe", "Hand Axe", "Hand Hatchet", "Hatchet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.felling_axe",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "felling axe"},
+      "description": {"*": "A long-handled axe that drops trees and splits the rounds."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A long-handled felling axe with a polished steel bit and worn ash haft"}
+      ],
+      "tags": ["tool", "wood"],
+      "aliases": ["Wood axe", "Iron Axe", "Woodcutter's Axe", "Woodsplitting Axe"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.hammer",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hammer"},
+      "description": {"*": "A workman's hammer, face worn smooth by years of blows."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A round iron hammer head on a worn ash handle"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Hammer", "Smith's Hammer", "Forge Hammer", "Farrier's Hammer", "Heavy Hammer"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.claw_hammer",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "claw hammer"},
+      "description": {"*": "A claw hammer for driving nails and regretting them."},
+      "looks": [
+        {"key": "claw", "bands": ["*"], "physical": "A steel claw hammer with a yellow hickory handle"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Claw hammer"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.hunting_knife",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "hunting knife"},
+      "description": {"*": "A fixed-blade knife for skinning, gutting and the rest of the messy work."},
+      "looks": [
+        {"key": "fixed", "bands": ["*"], "physical": "A fixed-blade knife with a wooden handle and brass rivets"}
+      ],
+      "tags": ["tool", "knife"],
+      "aliases": ["Hunting Knife", "Skinning knife", "Foraging knife", "Fletcher's knife", "Gutting knife", "Bait knife", "Fish Knife", "Handline Knife", "Fisher's knife", "Bone Knife", "Copper Knife"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.pocket_knife",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pocket knife"},
+      "description": {"*": "A folding knife, the tool that lives in every pocket."},
+      "looks": [
+        {"key": "folding", "bands": ["*"], "physical": "A folding pocket knife with horn scales and a brass bolster"}
+      ],
+      "tags": ["tool", "knife"],
+      "aliases": ["Penknife", "Rusty Pocket Knife", "Heavy Folding Knife"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.box_cutter",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "box cutter"},
+      "description": {"*": "A box cutter, half blade and half good intentions."},
+      "looks": [
+        {"key": "cutter", "bands": ["*"], "physical": "An orange box cutter with a segmented blade extended"}
+      ],
+      "tags": ["tool", "knife"],
+      "aliases": ["Box cutter", "Rusty utility knife"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.kitchen_knife",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "kitchen knife", "modern": "chef's knife", "scifi": "chef's knife"},
+      "description": {"*": "The kitchen knife that does all the real work."},
+      "looks": [
+        {"key": "plain", "bands": ["medieval", "industrial"], "physical": "A straight kitchen knife with a wooden handle and forged tang"},
+        {"key": "chef", "bands": ["modern", "scifi"], "physical": "A large stainless chef's knife with a black handle and rivets"}
+      ],
+      "tags": ["tool", "knife"],
+      "aliases": ["Kitchen knife", "Professional Chef's Knife", "Knife", "Eating knife", "Table knife"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.whetstone",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "whetstone"},
+      "description": {"*": "A whetstone, and a blade is only as good as the last time it touched one."},
+      "looks": [
+        {"key": "flat", "bands": ["*"], "physical": "A flat grey whetstone bevelled by long use and darkened with oil"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Whetstone", "Worn whetstone", "Sharpening Stone", "Whetting Stone"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.saw",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "hand saw"},
+      "description": {"*": "A hand saw that sings through board after board."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A long hand saw with an open wooden handle and rusted teeth"}
+      ],
+      "tags": ["tool", "wood"],
+      "aliases": ["Wooden Saw"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.spade",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "spade", "modern": "shovel", "scifi": "shovel"},
+      "description": {"*": "A spade for ground that will not dig itself."},
+      "looks": [
+        {"key": "iron", "bands": ["medieval", "industrial"], "physical": "A wooden spade with a cracked iron edge and a T-handle"},
+        {"key": "steel", "bands": ["modern", "scifi"], "physical": "A round-point steel shovel with a D-handle and worn grip"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Iron spade", "Hoe"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.scythe",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "scythe"},
+      "description": {"*": "A scythe with a curved blade, the harvest's oldest argument."},
+      "looks": [
+        {"key": "curved", "bands": ["*"], "physical": "A scythe with a long curved blade lashed to a bent wooden snath"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Scythe", "Threshing flail", "Field Sickle", "Sickle", "Bill hook", "Billhook", "Hedging Billhook"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.wrench",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "wrench"},
+      "description": {"*": "A wrench that fits the bolt, usually on the second try."},
+      "looks": [
+        {"key": "combo", "bands": ["*"], "physical": "A chrome combination wrench with an open jaw and ring end"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Wrench", "Heavy Wrench", "Wrench set", "Torque wrench", "Rusted Pipe Wrench", "Insulated spanner set"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.pliers",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pliers"},
+      "description": {"*": "A pair of pliers with a grip that never lets go."},
+      "looks": [
+        {"key": "grip", "bands": ["*"], "physical": "A pair of grip pliers with red rubber handles and serrated jaws"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Farrier's pincers"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.screwdriver",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "screwdriver"},
+      "description": {"*": "A screwdriver that turns the screw or buries the screw."},
+      "looks": [
+        {"key": "yellow", "bands": ["*"], "physical": "A screwdriver with a yellow handle and flattened tip"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Multi-driver"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.soldering_iron",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "soldering iron"},
+      "description": {"*": "A soldering iron and a coil of solder, the smell of every repair bench."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A pencil soldering iron with a coiled cable and safety guard"}
+      ],
+      "tags": ["tool", "tech"],
+      "aliases": ["Solder iron"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.tongs",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tongs"},
+      "description": {"*": "A pair of long tongs for holding what hands should not."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A pair of long blacksmith's tongs, blackened at the tips"}
+      ],
+      "tags": ["tool", "forge"],
+      "aliases": ["Iron tongs", "Smith's Tongs", "Forge Tongs"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.lockpicks",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "lockpicks"},
+      "description": {"*": "A roll of lockpicks, for locks whose owners misplaced the key."},
+      "looks": [
+        {"key": "roll", "bands": ["*"], "physical": "A roll of dark cloth holding slim steel lockpicks and a tension bar"}
+      ],
+      "tags": ["tool", "rogue"],
+      "aliases": ["Kobold Lockpick Set"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.crowbar",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "crowbar"},
+      "description": {"*": "A crowbar, the universal key."},
+      "looks": [
+        {"key": "flat", "bands": ["*"], "physical": "A flat steel crowbar with a hooked end and chipped paint"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Crowbar"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.bolt_cutters",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "bolt cutters"},
+      "description": {"*": "Long bolt cutters that end most arguments with a padlock."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "Long-handled bolt cutters with red grips and wide jaws"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Bolt cutters"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.sewing_kit",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sewing kit"},
+      "description": {"*": "A rolled sewing kit for clothes that must last another year."},
+      "looks": [
+        {"key": "roll", "bands": ["*"], "physical": "A rolled cloth sewing kit with needles and small spools of coloured thread"}
+      ],
+      "tags": ["tool", "craft"],
+      "aliases": ["Mending housewife", "Net Repair Kit", "Net Mending Kit", "Boat repair kit", "Sail Repair Patch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.sewing_needle",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "sewing needle"},
+      "description": {"*": "A steel needle, small enough to lose and sharp enough to matter."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A long steel sewing needle with a grey thread tail through its eye"}
+      ],
+      "tags": ["tool", "craft"],
+      "aliases": ["Iron Needle", "Bone needle", "Netting Needle", "Net Mending Needle", "Hook needle", "Iron needles", "Netting needles", "Serrated Bone Needle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.loom_shuttle",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "weaving shuttle"},
+      "description": {"*": "A weaver's shuttle, worn satin-smooth from the warp."},
+      "looks": [
+        {"key": "boat", "bands": ["*"], "physical": "A boat-shaped wooden weaving shuttle holding a pirn of thread"}
+      ],
+      "tags": ["tool", "craft"],
+      "aliases": ["Wooden Shuttle", "Loom shuttle", "Netting shuttle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.fish_hook",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "fish hook"},
+      "description": {"*": "A barbed hook, bait it and wait."},
+      "looks": [
+        {"key": "barbed", "bands": ["*"], "physical": "A barbed steel fish hook with a ringed eye"}
+      ],
+      "tags": ["tool", "fishing"],
+      "aliases": ["Fishing hook", "Herring hook", "Bone Fish Hook", "Golden Fish Hook", "Hand line"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.compass",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "compass"},
+      "description": {"*": "A compass, and north is wherever it says."},
+      "looks": [
+        {"key": "brass", "bands": ["medieval", "industrial"], "physical": "A brass compass with a glass lid and a blued needle"},
+        {"key": "baseplate", "bands": ["modern", "scifi"], "physical": "A translucent orange baseplate compass with a red needle and bezel ring"}
+      ],
+      "tags": ["tool", "travel"],
+      "aliases": ["Brass compass", "Old Compass", "Weathered Compass", "Compass"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.scales",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "balance scales"},
+      "description": {"*": "A set of balance scales for weighing honestly, in public anyway."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass balance scale with a set of stacked weights"}
+      ],
+      "tags": ["tool", "trade"],
+      "aliases": ["Brass scales"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.ladle",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "ladle"},
+      "description": {"*": "A long ladle for the pot that feeds the household."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A long wooden ladle with a deep bowl and hooked handle"}
+      ],
+      "tags": ["tool", "kitchen"],
+      "aliases": ["Wooden Ladle", "Iron ladle", "Stirring Spoon"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.spoon",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "wooden spoon"},
+      "description": {"*": "A wooden spoon worn smooth by a thousand meals."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A carved wooden spoon worn smooth and dark at the bowl"}
+      ],
+      "tags": ["tool", "kitchen"],
+      "aliases": ["Wooden spoon"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.quill_ink",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "quill and inkwell"},
+      "description": {"*": "A quill and inkwell, the start of every record and most trouble."},
+      "looks": [
+        {"key": "quill", "bands": ["*"], "physical": "A grey goose quill pen beside a corked glass inkwell"}
+      ],
+      "tags": ["tool", "writing"],
+      "aliases": ["Inkwell", "Quill and inkhorn", "Ink and quill", "Quill pen", "Quill and Inkpot", "Inkwell and quill", "Quill and Oak Gall Ink", "Harpy Feather Quill"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.pen",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pen"},
+      "description": {"*": "A pen that works until the form is half done."},
+      "looks": [
+        {"key": "ballpoint", "bands": ["*"], "physical": "A slim black ballpoint pen with a click cap"}
+      ],
+      "tags": ["tool", "writing"],
+      "aliases": ["Cheap pen", "Sharpie marker", "Lost highlighter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.fountain_pen",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "fountain pen"},
+      "description": {"*": "A fountain pen, the sort signed with and never lent."},
+      "looks": [
+        {"key": "gold", "bands": ["*"], "physical": "A black fountain pen with a gold nib and cap ring"}
+      ],
+      "tags": ["tool", "writing"],
+      "aliases": ["Fountain pen", "Antique ink pen"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.chalk",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "chalk"},
+      "description": {"*": "A stub of chalk for marks that wash away."},
+      "looks": [
+        {"key": "stub", "bands": ["*"], "physical": "A stub of pale blue chalk worn at one end"}
+      ],
+      "tags": ["tool", "writing"],
+      "aliases": ["Stick of chalk", "Chalk Piece"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.riding_crop",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "riding crop"},
+      "description": {"*": "A riding crop, kept more for looks than for the horse."},
+      "looks": [
+        {"key": "crop", "bands": ["*"], "physical": "A leather riding crop with a braided grip and keeper loop"}
+      ],
+      "tags": ["tool", "horse"],
+      "aliases": ["Riding crop", "Rider's Cruel Spur"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.curry_comb",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "curry comb"},
+      "description": {"*": "A curry comb for grooming, plus harness oil and patience."},
+      "looks": [
+        {"key": "comb", "bands": ["*"], "physical": "A wooden curry comb with a leather hand strap and worn teeth"}
+      ],
+      "tags": ["tool", "horse"],
+      "aliases": ["Curry comb", "Harness set"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.umbrella",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "umbrella"},
+      "description": {"*": "A folding umbrella, forgotten in every third doorway."},
+      "looks": [
+        {"key": "black", "bands": ["*"], "physical": "A black folding umbrella with a curved wooden handle"}
+      ],
+      "tags": ["tool", "weather"],
+      "aliases": ["Umbrella", "Folding umbrella", "Patched umbrella"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.rat_trap",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "rat trap"},
+      "description": {"*": "A spring trap, set and waiting."},
+      "looks": [
+        {"key": "spring", "bands": ["*"], "physical": "A wooden spring rat trap with a brass trigger bar"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Rat trap"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.multitool",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "multi-tool"},
+      "description": {"*": "A folding multi-tool, a whole toolbox in a pocket."},
+      "looks": [
+        {"key": "folding", "bands": ["*"], "physical": "A folding multi-tool with pliers, blade and file fanned open"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Bike multi-tool", "Small tool"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.snares",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "snare wire"},
+      "description": {"*": "Coiled wire and pegs, a poacher's quiet trade."},
+      "looks": [
+        {"key": "coil", "bands": ["*"], "physical": "A coil of brass snare wire with a carved wooden peg"}
+      ],
+      "tags": ["tool", "hunting", "rogue"],
+      "aliases": ["Snares", "Snare wire", "Snare Wire Coil", "Game Trail Snare"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.oar",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "oar"},
+      "description": {"*": "A spare oar, because the sea keeps the first one."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A wooden oar with a worn blade and leather collar"}
+      ],
+      "tags": ["tool", "boat"],
+      "aliases": ["Spare Oar", "Ash oar", "Fishing Oar", "Anchor pin"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "tool.bandolier",
+      "category": "tool",
+      "type": "torso",
+      "bands": ["industrial", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "tool bandolier"},
+      "description": {"*": "A bandolier of looped pockets, tools where the hands can find them."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A canvas tool bandolier with looped leather pockets and brass buckle"}
+      ],
+      "tags": ["tool"],
+      "aliases": ["Tool bandolier"],
+      "sources": ["harvest"]
+    }
+  ]
+}
