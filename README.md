@@ -8,7 +8,20 @@ Community resources for Anywhere RPG (Roleplay Anywhere).
 
 > **Playing 0.18?** The 0.18 versions stay on the
 > [`0.18` branch](https://github.com/Tydorius/roleplay-anywhere-resources/tree/0.18) and in the
-> final 0.18 release, [`v0.18-final`](https://github.com/Tydorius/roleplay-anywhere-resources/releases/tag/v0.18-final).
+> final 0.18 release, [`v0.18-final`](https://github.com/Tydorius/roleplay-anywhere-resources/releases/tag/v0.18-final)
+> ([download](https://github.com/Tydorius/roleplay-anywhere-resources/archive/refs/tags/v0.18-final.zip)).
+
+### Switching to the Anywhere RPG 1.0 alpha
+
+1. In Steam, right-click **Anywhere RPG** and choose **Properties…**.
+2. Under **Game Versions & Betas**, select **alpha**. The **Play** button changes to **Update**; let it
+   update.
+3. Afterwards, it's worth running **Installed Files → Verify integrity of game files** in the same
+   Properties window.
+
+![Steam: Properties, Game Versions & Betas, select "alpha", then Installed Files, Verify integrity of game files](docs/images/switch-to-anywhere-rpg-1.0-alpha.png)
+
+To go back, select **Default Public Version** the same way, and use the 0.18 release above.
 
 > **Not carried over to 1.0.** Anywhere RPG 1.0 now does these natively, so they stay on the
 > `0.18` branch and in `v0.18-final` only:
