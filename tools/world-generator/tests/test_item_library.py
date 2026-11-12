@@ -41,6 +41,18 @@ class TestChecker(unittest.TestCase):
         self.assertEqual(len(errors), 1)
         self.assertTrue(errors[0].startswith("food_drink.json: can't be read"), errors[0])
 
+    def test_look_star_means_the_items_own_bands(self):
+        it = {"id": "weapon.sword", "category": "weapon", "type": "wieldable", "bands": ["medieval"],
+              "onlyGenres": [], "quality": "common", "price": 5, "names": {"*": "sword"},
+              "description": {"*": "A sword."}, "tags": [], "aliases": [], "sources": ["authored"],
+              "looks": [{"key": "steel", "bands": ["*"], "physical": "A straight steel sword"}]}
+        self.assertEqual(IL.check({it["id"]: it}), [])
+        self.assertEqual(IL.look_bands(it, it["looks"][0]), ["medieval"])
+        self.assertIsNone(IL.looks_for_band(it, "modern"))
+        m = maker()
+        self.assertEqual(len(m.set_looks({it["id"]: it}, "medieval")), 1)
+        self.assertEqual(m.set_looks({it["id"]: it}, "shared"), [])
+
     def test_fixtures_check_clean(self):
         self.assertEqual(IL.check(self.items), [])
 

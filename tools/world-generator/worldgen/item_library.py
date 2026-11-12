@@ -37,6 +37,13 @@ def expand_bands(bands):
     return list(BANDS) if bands == ["*"] else list(bands or [])
 
 
+def look_bands(item, look):
+    """The bands one look is drawn for. A look's ["*"] means every band the
+    item has (not all four), so a medieval-only sword's one look is ["*"]."""
+    lb = (look or {}).get("bands")
+    return expand_bands(item.get("bands")) if lb == ["*"] else list(lb or [])
+
+
 def load(items_dir=None):
     """Every ``library/items/*.json`` as {id: item}, sorted by file name. A
     missing folder is an empty library. A file that isn't valid JSON becomes
@@ -146,7 +153,7 @@ def _check_item(iid, it, errors):
         if not _bands_ok(lbands):
             err(f"look {key}: bands must be [\"*\"] or a list of {', '.join(BANDS)}")
             continue
-        covered = expand_bands(lbands)
+        covered = expand_bands(bands) if lbands == ["*"] else list(lbands)
         for b in ([b for b in covered if item_bands_ok and b not in item_bands]):
             err(f"look {key} covers band {b} which the item doesn't have")
         physical = look.get("physical")
@@ -163,7 +170,7 @@ def _check_item(iid, it, errors):
     if item_bands_ok:
         for band in item_bands:
             covering = [k for k, look in seen.items()
-                        if band in expand_bands(look.get("bands"))]
+                        if band in look_bands(it, look)]
             if not covering:
                 err(f"no look covers band {band}")
             elif len(covering) > 1:
@@ -190,7 +197,7 @@ def check(items):
 def looks_for_band(item, band):
     """The one look that covers ``band``, or None."""
     for look in item.get("looks") or []:
-        if isinstance(look, dict) and band in expand_bands(look.get("bands")):
+        if isinstance(look, dict) and band in look_bands(item, look):
             return look
     return None
 
@@ -218,7 +225,7 @@ def coverage(items):
             cat = it.get("category")
             bands[b]["categories"][cat] = bands[b]["categories"].get(cat, 0) + 1
         for look in it.get("looks") or []:
-            covered = expand_bands(look.get("bands"))
+            covered = look_bands(it, look)
             total_looks += 1
             if len(covered) >= 2:
                 shared += 1

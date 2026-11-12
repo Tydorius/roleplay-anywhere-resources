@@ -40,7 +40,7 @@ def set_looks(items, name):
     out = []
     for iid, it in sorted(items.items()):
         for look in it.get("looks") or []:
-            bands = IL.expand_bands(look.get("bands"))
+            bands = IL.look_bands(it, look)
             if name == "shared":
                 fits = len(bands) >= 2
             else:

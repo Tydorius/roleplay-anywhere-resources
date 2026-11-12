@@ -135,8 +135,8 @@ groups are `food_drink`, `medicine`, `tools`, `weapons_armour`, `clothing`, `jew
   text per band, `*` as the fallback. Give a band its own name when the thing is called
   differently there ("ale jug" / "beer bottle" / "beer can").
 - **`looks`** is what makes items different from objects: one entry per image. `key` is short
-  (`glass`, `steel`, `holo`), unique within the item. Each look's `bands` is `["*"]` or a list,
-  and **together the looks cover exactly the item's bands, each band once** (the checker
+  (`glass`, `steel`, `holo`), unique within the item. Each look's `bands` is `["*"]` (every band
+  the item has, so a medieval-only sword's one look is `["*"]`) or a list, and **together the looks cover exactly the item's bands, each band once** (the checker
   enforces it: a gap and an overlap are both errors).
   - A look that covers two or more bands must describe something that really looks the same in
     each of them (a loaf, an apple, a rope, a wine bottle, a gold ring). When in doubt, split.
