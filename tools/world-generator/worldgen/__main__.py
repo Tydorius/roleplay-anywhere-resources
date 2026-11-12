@@ -75,14 +75,28 @@ def main(argv=None):
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")
     chk.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
-    lib = sub.add_parser("library", help="check the room library and report its coverage")
-    lib.add_argument("action", choices=["check"], help="check: validate every library file")
+    lib = sub.add_parser("library", help="check the room and item libraries and report coverage")
+    lib.add_argument("action", choices=["check", "items"],
+                     help="check: validate every room library file; "
+                          "items: validate every library/items file")
     lib.add_argument("--path", default=None, help="library folder (default: library/)")
     lib.add_argument("--coverage", action="store_true",
-                     help="also list room slots that no object can fill")
+                     help="also list room slots that no object can fill, or the "
+                          "item library's coverage table")
     args = ap.parse_args(argv)
 
     if args.command == "library":
+        if args.action == "items":
+            from worldgen import item_library as item_mod
+            items_dir = os.path.join(args.path, "items") if args.path else None
+            items = item_mod.load(items_dir)
+            errors = item_mod.check(items)
+            for e in errors:
+                print("ERROR " + e)
+            print(f"items: {len(items)} items, {len(errors)} error(s)")
+            if not errors and args.coverage:
+                item_mod.report(items)
+            return 1 if errors else 0
         from worldgen import library as library_mod
         lb = library_mod.load(args.path or library_mod.LIB_DIR)
         errors, warnings = library_mod.check(lb)

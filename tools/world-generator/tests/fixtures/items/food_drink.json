@@ -1,0 +1,41 @@
+{
+  "_note": "Fixture items for tests/test_item_library.py; the format is library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "drink.wine_bottle",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bottle of wine"},
+      "description": {"*": "A corked bottle of red wine."},
+      "looks": [
+        {"key": "glass", "bands": ["*"],
+         "physical": "A dark green glass wine bottle with a cork stopper and a plain tan paper label"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Wine bottle", "Bottle of red wine"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.bread_loaf",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "loaf of bread"},
+      "description": {"*": "A heavy loaf with a split crust."},
+      "looks": [
+        {"key": "crusty", "bands": ["*"],
+         "physical": "A round golden-brown bread loaf with a pale split top dusted with flour"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Bread"],
+      "sources": ["harvest"]
+    }
+  ]
+}
