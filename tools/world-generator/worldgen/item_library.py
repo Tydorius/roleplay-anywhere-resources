@@ -39,7 +39,8 @@ def expand_bands(bands):
 
 def load(items_dir=None):
     """Every ``library/items/*.json`` as {id: item}, sorted by file name. A
-    missing folder is an empty library. The second item with an id keeps a
+    missing folder is an empty library. A file that isn't valid JSON becomes
+    a "!<file>" entry carrying ``_load_error``, which ``check`` reports. The second item with an id keeps a
     ``_dupe_files`` list on the first, which ``check`` reports."""
     folder = items_dir or ITEMS_DIR
     items = {}
@@ -50,7 +51,10 @@ def load(items_dir=None):
         try:
             with open(f, "r", encoding="utf-8") as fh:
                 data = json.load(fh)
-        except (OSError, ValueError):
+        except (OSError, ValueError) as e:
+            # an unreadable file must fail the check, never vanish from it
+            name = os.path.basename(f)
+            items["!" + name] = {"_file": name, "_load_error": str(e)}
             continue
         for it in ((data or {}).get("items") or []):
             if not isinstance(it, dict):
@@ -93,6 +97,9 @@ def _check_item(iid, it, errors):
     def err(msg):
         errors.append(f"{iid}: {msg}")
 
+    if "_load_error" in it:
+        errors.append(f"{it['_file']}: can't be read ({it['_load_error']})")
+        return
     files = it.get("_dupe_files")
     if files:
         if len(set(files)) == 1:

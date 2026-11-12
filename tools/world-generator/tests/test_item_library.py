@@ -33,6 +33,14 @@ class TestChecker(unittest.TestCase):
         mutate(it)
         return IL.check({it.get("id"): it})
 
+    def test_unreadable_file_is_an_error(self):
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, "food_drink.json"), "w", encoding="utf-8") as f:
+                f.write('{"items": [ {"id": "food.bread",')
+            errors = IL.check(IL.load(d))
+        self.assertEqual(len(errors), 1)
+        self.assertTrue(errors[0].startswith("food_drink.json: can't be read"), errors[0])
+
     def test_fixtures_check_clean(self):
         self.assertEqual(IL.check(self.items), [])
 

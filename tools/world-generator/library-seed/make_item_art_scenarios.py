@@ -140,6 +140,12 @@ def _restamp_ids(root, by_name):
 def main():
     out_root = sys.argv[1] if len(sys.argv) > 1 else DEFAULT_OUT
     items = IL.load()
+    errors = IL.check(items)
+    if errors:
+        for e in errors:
+            print("ERROR " + e)
+        sys.exit(f"{len(errors)} item library error(s); fix them first "
+                 "(python -m worldgen library items)")
     print(f"{len(items)} items from {IL.ITEMS_DIR}")
     for name in SETS:
         n, code, tail = build_set(items, name, out_root)
