@@ -1691,32 +1691,35 @@ def _place_fields(zone, rect, out, rng, templates, map_ctx=None):
         gate_at = track[0][1] if (track and gate in ("east", "west")) else \
             track[0][0] if track else p.x + p.w // 2
         if fence:
-            for side, y in (("south", p.y), ("north", p.y1)):
+            for side, y in (("south", p.y), ("north", p.y1 - fh + 1)):
                 x = p.x
                 while x + fw <= p.x1 + 1:
                     if side == gate and abs(x + fw // 2 - gate_at) <= 1:
                         x += fw
                         continue
-                    cells = {(xx, y) for xx in range(x, x + fw)}
+                    cells = {(xx, yy) for xx in range(x, x + fw)
+                             for yy in range(y, y + fh)}
                     if not cells & claimed:
                         out.props.append(Placement(fence.name, (x, y), name))
                         claimed |= cells
                     x += fw
             for side, x in (("west", p.x), ("east", p.x1 - fw + 1)):
-                y = p.y + 1
-                while y + fh <= p.y1:
+                y = p.y + fh
+                while y + fh <= p.y1 - fh + 1:
                     if side == gate and abs(y + fh // 2 - gate_at) <= 1:
                         y += fh
                         continue
-                    cells = {(xx, yy) for xx in range(x, x + fw) for yy in range(y, y + fh)}
+                    cells = {(xx, yy) for xx in range(x, x + fw)
+                             for yy in range(y, y + fh)}
                     if not cells & claimed:
                         out.props.append(Placement(fence.name, (x, y), name))
                         claimed |= cells
                     y += fh
 
         # parallel crop rows, a one-cell furrow between them, along the plot's
-        # longer side
-        inter = p.interior(1)
+        # longer side, filling the plot shrunk by the ring's thickness
+        inter = Rect(p.x + fw, p.y + fh, p.w - 2 * fw, p.h - 2 * fh) if fence \
+            else p.interior(1)
         cw, ch = crop.size
         if p.w >= p.h:
             y = inter.y

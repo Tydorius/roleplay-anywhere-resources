@@ -51,5 +51,73 @@ class TestFencePickingThinPieces(unittest.TestCase):
         self.assertIs(_pick_fence(catalogue(post, rail)), post)
 
 
+class _MapCtx:
+    """Just the field-name pool _place_fields reads from the map context."""
+
+    def __init__(self):
+        self.field_names = set()
+
+
+def place_fields(pieces, seed):
+    cat = catalogue(*pieces)
+    rect = Rect(0, 0, 52, 40)
+    out = ZoneOut(None, rect)
+    _place_fields(None, rect, out, random.Random(seed), cat, _MapCtx())
+    return out, cat
+
+
+class TestPlacedPiecesFitTheirPlot(unittest.TestCase):
+    def check(self, out, cat):
+        """Every placement sits whole inside its plot, and no two pieces
+        (expanded by their template's size) share a cell."""
+        self.assertGreaterEqual(len(out.fields), 2, "no field plots were laid")
+        plots = dict(out.fields)
+        owner = {}
+        for pl in out.props:
+            w, h = cat[pl.template].size
+            x, y = pl.pos
+            self.assertTrue(plots[pl.region].contains_rect(Rect(x, y, w, h)),
+                            f"{pl.template} at {(x, y)} escapes its plot")
+            for c in ((xx, yy) for xx in range(x, x + w) for yy in range(y, y + h)):
+                self.assertNotIn(c, owner, f"{pl.template} at {(x, y)} shares "
+                                            f"{c} with {owner.get(c)}")
+                owner[c] = pl.template
+
+    def test_tall_fence_wide_crop(self):
+        for seed in (1, 2, 3):
+            with self.subTest(seed=seed):
+                out, cat = place_fields(
+                    (tpl("Wattle hurdle", size=(1, 2), tags=("fence",)),
+                     tpl("Barley row", size=(2, 1), tags=("crop",))), seed)
+                self.check(out, cat)
+                placed = {pl.template for pl in out.props}
+                self.assertIn("Wattle hurdle", placed)
+                self.assertIn("Barley row", placed)
+
+    def test_wide_fence_tall_crop(self):
+        for seed in (1, 2, 3):
+            with self.subTest(seed=seed):
+                out, cat = place_fields(
+                    (tpl("Split-rail fence", size=(2, 1), tags=("fence",)),
+                     tpl("Bean row", size=(1, 2), tags=("crop",))), seed)
+                self.check(out, cat)
+
+    def test_bad_catalogue(self):
+        """The catalogue that broke the live world: a 2x2 bed tagged 'fence'
+        and a counter tagged 'shop' must not be laid by the field code."""
+        for seed in (1, 2, 3):
+            with self.subTest(seed=seed):
+                out, cat = place_fields(
+                    (tpl("Wattled garden bed", size=(2, 2), tags=("plant", "fence")),
+                     tpl("Elm tap counter", size=(3, 1), walkability=0.0,
+                         tags=("counter", "furniture", "bar", "shop")),
+                     tpl("Wheat seedling", tags=("crop",))), seed)
+                self.check(out, cat)
+                placed = {pl.template for pl in out.props}
+                self.assertNotIn("Elm tap counter", placed)
+                self.assertNotIn("Wattled garden bed", placed)
+                self.assertIn("Wheat seedling", placed)
+
+
 if __name__ == "__main__":
     unittest.main()
