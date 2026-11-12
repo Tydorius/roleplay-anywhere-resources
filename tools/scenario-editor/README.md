@@ -159,8 +159,6 @@ The dialog's steps:
   (stairs included), a storey reached only by its stairs isn't reported as sealed, and floor
   openings count as cells nobody can walk into. A note lists the code mods a scenario's data
   needs. Region groups need no scenario data, so the panel can't tell when that mod is in use.
-
-  ![Upper storeys in their band beside the play area](media/scenario_editor_z-levels.png)
 - **Re-roll layout…** appears on a workspace that came from the generator. The same world, placed
   again from its saved `plan.json` under a new seed — no model calls, a few seconds — and it opens
   as a new workspace; the old one stays untouched. A framed world keeps its frame: the plan
