@@ -53,7 +53,7 @@ test('gameVersion reads 1.0\'s build flags and 0.18\'s constant before the log l
 
 test('portals, floors and performance are retired; the rest stay bundled', () => {
   const avail = bundledMods();
-  assert.deepEqual(avail, ['lights', 'lorebooks', 'memory-add', 'region-groups', 'smooth-edges', 'wall-aware-perception']);
+  assert.deepEqual(avail, ['lights', 'lorebooks', 'memory-add', 'region-groups', 'secret-passages', 'smooth-edges', 'wall-aware-perception']);
 });
 
 test('add with no names (or "all") takes every bundled mod but the samples', () => {

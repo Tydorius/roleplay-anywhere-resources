@@ -86,6 +86,11 @@ game, so **re-run install after adding, changing or removing a mod**.
 - `examples/region-groups` makes touching rectangles with the same name act as one region, so
   you can build L-shaped houses or a forest wrapped round a village. See
   [its README](examples/region-groups/README.md). **Works on 1.0.**
+- `examples/secret-passages` makes a door in a wall secret: until a character knows it it's
+  wall to them, and until the player knows it it's drawn as wall and left out of the GM's
+  doorway lines. Knowledge is per character: found by the player near it, shown or told by
+  the GM, or learned by watching it used. See
+  [its README](examples/secret-passages/README.md). **Works on 1.0.**
 - `examples/smooth-edges` takes the cell-grid steps off water and road shores (diagonal corner
   cuts, rounded ends) and fades natural region ground along its true outline. See
   [its README](examples/smooth-edges/README.md). **Works on 1.0.**
