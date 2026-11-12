@@ -35,6 +35,14 @@ LOCKED_ROOM_WORDS = re.compile(
 # Rooms that may stay locked with nobody holding a key: the key is meant to
 # stay outside (CELL_WORDS names the same holding places as the lock list)
 CELL_WORDS = re.compile(r"\b(cells?|jails?|gaols?|lock-?ups?)\b")
+# ... but a "cell" in a chapel, temple or monastery is a monk's or keeper's
+# bedroom, not a jail: when "cell" is the room's only lock word and the room or
+# its building reads as religious, it stays unlocked
+MONASTIC_WORDS = re.compile(
+    r"\b(chapels?|church(?:es)?|temples?|shrines?|monaster(?:y|ies)|abbey|abbeys|"
+    r"prior(?:y|ies)|convents?|nunner(?:y|ies)|friar(?:y|ies)|cloisters?|"
+    r"monks?|nuns?|friars?|hermits?|sanctuar(?:y|ies))\b")
+BARE_CELL_WORDS = re.compile(r"\bcells?\b")
 # Who a locked room's key goes to first: the head of the place, by role words
 HEAD_ROLE_WORDS = re.compile(
     r"\b(owners?|keepers?|captains?|wardens?|sheriffs?|jailers?|gaolers?|"
@@ -171,6 +179,11 @@ def _locks(world):
         text = f"{base} {_room_purpose(design, base)}".lower()
         if not LOCKED_ROOM_WORDS.search(text):
             continue
+        if BARE_CELL_WORDS.search(text) and \
+                not LOCKED_ROOM_WORDS.search(BARE_CELL_WORDS.sub(" ", text)):
+            d = building.layout.design
+            if MONASTIC_WORDS.search(f"{text} {d.name} {d.kind} {d.purpose}".lower()):
+                continue  # a sleeping cell, not a jail
         if not openings.get(name):
             continue      # no doors to lock, and no way in either
         if _seals_off(world, room, openings, blocked, jumps, starts):
