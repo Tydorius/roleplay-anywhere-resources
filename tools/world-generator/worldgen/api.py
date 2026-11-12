@@ -339,6 +339,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
                       for e in ((spec.get("nativeLocks") or {}).get("locks") or [])],
             "theft_buildings": len((spec.get("nativeLocks") or {}).get("theft") or []),
         },
+        "secret_doors": len(spec.get("nativeSecrets") or []),
         "nature": {
             "natural_regions": len(nat.get("shape") or []),
             "water_regions": len(nat.get("water") or []),
@@ -430,6 +431,13 @@ def _summary_text(world, spec, seed, emit):
         for entry in locks.get("locks") or []:
             held = ", ".join(entry.get("holders") or []) or "nobody (a cell)"
             lines.append(f"  - {entry['room']}: {held}")
+    secrets = spec.get("nativeSecrets") or []
+    if secrets:
+        lines.append(f"secret doors {len(secrets)}")
+        for entry in secrets:
+            known = ", ".join(entry.get("knownBy") or []) or "nobody"
+            where = " and ".join(entry.get("between") or [])
+            lines.append(f"  - {where}: {known}")
     nat = spec.get("nativeNature") or {}
     if nat.get("shape") or nat.get("water") or nat.get("vehicles"):
         water = world.metrics.get("water") or {}

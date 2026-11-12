@@ -24,7 +24,7 @@ const MARKER = '/*arpg-modloader*/';
 const ORIG = '.arpg-orig';
 // This loader's release (README's version table), and the game version its patches were built
 // against. main supports Anywhere RPG 1.0 only; the 0.18 loader stays on the 0.18 branch.
-const LOADER_VERSION = '2.2.0';
+const LOADER_VERSION = '2.3.0';
 const TESTED = '1.0';
 // memory-add only shows how to add a GM call, so "add" with no names leaves it out.
 const SAMPLES = new Set(['memory-add']);
@@ -181,6 +181,87 @@ export const PATCHES = [
       `fade:${mask}?(globalThis.__arpg&&globalThis.__arpg.groundFade` +
       `?globalThis.__arpg.groundFade(${region},${mask},${fade}(${mask},${region}.size))` +
       `:${fade}(${mask},${region}.size)):null,alpha:`,
+  },
+  {
+    name: 'wall-regions',
+    // The wall-edge builder every wall-drawing path uses (the ground, buildWalls,
+    // buildTexturedWalls, wall-caster shadows, door info and the minimap): each walled
+    // region's openings decide which edges are drawn. The simulation never calls it, so a
+    // mod may rewrite the region list first (drop an opening and its wall is drawn whole) —
+    // that changes what is drawn, never where anyone can walk.
+    find: /function ([\w$]+)\(([\w$]+)\)\{(?=const [\w$]+=new Map,[\w$]+=new Map,[\w$]+=new Map,[\w$]+=new Map,[\w$]+=new Map\(\2\.map\()/g,
+    replace: (_m, fn, regions) =>
+      `function ${fn}(${regions}){` +
+      `${regions}=globalThis.__arpg&&globalThis.__arpg.wallRegions?globalThis.__arpg.wallRegions(${regions}):${regions};`,
+  },
+  {
+    name: 'entity-hidden',
+    // The scene's per-entity sprite sync. Its off-screen test hides the container, the overhead
+    // label, both shadows and the light, then skips the entity. Mods may take an entity off
+    // screen the same way, per world (identified by the camera-rect cull that ends at the
+    // entity's own light sync).
+    find: /if\(([\w$]+)\+([\w$]+)<([\w$]+)\.x\|\|\1-\2>\3\.right\|\|([\w$]+)\+([\w$]+)<\3\.y\|\|\4-\5>\3\.bottom\)\{([^]{0,250}?this\.syncEntityLight\(([\w$]+),\1,\4\))/g,
+    replace: (_m, x, halfW, rect, y, halfH, culled, ent) =>
+      `if(${x}+${halfW}<${rect}.x||${x}-${halfW}>${rect}.right||${y}+${halfH}<${rect}.y||${y}-${halfH}>${rect}.bottom` +
+      `||globalThis.__arpg&&globalThis.__arpg.hidden(this.world,${ent})){${culled}`,
+  },
+  {
+    name: 'pointer-hits',
+    // The pointer hit test behind hover, click, select and the context menu: the scene's
+    // entities that its own hidden (ghosted) test skips. Mods hide an entity from the pointer
+    // the same way.
+    find: /for\(const ([\w$]+) of this\.world\.entities\)\{if\(([\w$]+)\(this\.world,\1\)\)continue;/g,
+    replace: (_m, ent, ghosted) =>
+      `for(const ${ent} of this.world.entities){` +
+      `if(${ghosted}(this.world,${ent})||globalThis.__arpg&&globalThis.__arpg.hidden(this.world,${ent}))continue;`,
+  },
+  {
+    name: 'door-list',
+    // The shared list of doors that may stop someone: only locked doors reach it. A mod may
+    // gate more doors onto the list (they then reach the per-walker pass test and, shut, the
+    // sight blockers). Identified as the door push in the world's region/entity scan, anchored
+    // on its function's head to capture the world.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+),([\w$]+)\)\{([^]{0,450}?)if\(\(([\w$]+)=([\w$]+)\.objectTemplate\)!=null&&\7\.door\)\{([\w$]+)\(\8,"locked"\)&&([\w$]+)\.doors\.push\(\8\);continue\}/g,
+    replace: (_m, fn, world, b, c, d, mid, tpl, ent, locked, cache) =>
+      `function ${fn}(${world},${b},${c},${d}){${mid}` +
+      `if((${tpl}=${ent}.objectTemplate)!=null&&${tpl}.door){` +
+      `(${locked}(${ent},"locked")||globalThis.__arpg&&globalThis.__arpg.doorGated(${world},${ent}))&&${cache}.doors.push(${ent});continue}`,
+  },
+  {
+    name: 'door-pass-nav',
+    // The per-walker door pass test at the end of the movement grid builder: every door on the
+    // shared list whose key the walker doesn't hold becomes a shut door (a blocked edge) for
+    // that walker. Mods get the same say per walker; the game's own key test is handed in as a
+    // callback. Identified by its scan of the shared door list into this.shutDoors.
+    find: /([\w$]+)&&(!?[\w$]+)\)\{const ([\w$]+)=([\w$]+)\(\1\);for\(const ([\w$]+) of ([\w$]+)\.doors\)([\w$]+)\(([\w$]+),\3,\5\)\|\|this\.shutDoors\.push\(\5\)\}/g,
+    replace: (_m, walker, notFlag, keys, keysOf, door, cache, keyOpens, world) =>
+      `${walker}&&${notFlag}){const ${keys}=${keysOf}(${walker});` +
+      `for(const ${door} of ${cache}.doors)` +
+      `(globalThis.__arpg?globalThis.__arpg.doorPasses(${world},${door},${walker},()=>${keyOpens}(${world},${keys},${door})):${keyOpens}(${world},${keys},${door}))` +
+      `||this.shutDoors.push(${door})}`,
+  },
+  {
+    name: 'door-pass-swing',
+    // The door swing test: does person `n` hold door `t` open? A door nobody holds open blocks
+    // sight and passage through its doorway. Shares the doorPasses dispatcher with
+    // door-pass-nav, so a mod's per-walker answer covers walking and swing alike. Identified by
+    // its person guard head and locked-or-key tail.
+    find: /function ([\w$]+)\(([\w$]+),([\w$]+),([\w$]+)\)\{if\(\4\.dead\|\|\4\.type!=="npc"&&\4\.type!=="player"\)return!1;([^]{0,600}?)return!([\w$]+)\(\3,"locked"\)\|\|([\w$]+)\(\2,([\w$]+)\(\4\),\3\)\}/g,
+    replace: (_m, fn, world, door, person, mid, locked, keyOpens, keysOf) =>
+      `function ${fn}(${world},${door},${person}){` +
+      `if(${person}.dead||${person}.type!=="npc"&&${person}.type!=="player")return!1;${mid}` +
+      `return globalThis.__arpg?globalThis.__arpg.doorPasses(${world},${door},${person},()=>${keyOpens}(${world},${keysOf}(${person}),${door}))` +
+      `:!${locked}(${door},"locked")||${keyOpens}(${world},${keysOf}(${person}),${door})}`,
+  },
+  {
+    name: 'gm-doorways',
+    // The GM's doorway list (each doorway its crossings, room and door entities), behind the
+    // GM prompt's door details. Mods may drop a doorway from it. Identified by the build call
+    // ahead of the near-doorway distance filter.
+    find: /let ([\w$]+)=([\w$]+)\(([\w$]+),([\w$]+),([\w$]+)\);(?=[\w$]+\|\|\(\1=\1\.filter\([\w$]+=>[\w$]+\([\w$]+\.crossings\[0\]\.cell,[\w$]+\)<=)/g,
+    replace: (_m, list, build, world, who, rooms) =>
+      `let ${list}=${build}(${world},${who},${rooms});` +
+      `if(globalThis.__arpg)${list}=${list}.filter(d=>globalThis.__arpg.doorwayShown(${world},d));`,
   },
 ];
 

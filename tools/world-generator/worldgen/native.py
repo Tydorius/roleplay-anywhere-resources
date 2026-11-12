@@ -13,7 +13,9 @@ the wall line; the doorway's room (the smallest region the wall splits) picks
 the kind from its `door` field ("door" when missing, "none" leaves it open).
 A locked door is a door object carrying the "locked" status effect; a key is
 an item template whose `opens` names the region its doors belong to, held as
-an inventory stack by whoever should open them.
+an inventory stack by whoever should open them. A secret door is a door
+object carrying the game's own "concealed" effect, with who knows it in
+`arpgMods.secretPassages.passages` keyed by the door's id.
 Coordinates: [0,0] is the bottom-left cell, y grows north.
 """
 import random
@@ -342,6 +344,52 @@ def set_locked(scn, region, locked, ids):
                                   if not is_lock(fx)]
             count += 1
     return {"count": count}
+
+
+# ---------------------------------------------------------------- secret doors
+
+def is_secret_fx(fx):
+    """Whether a status effect hides a door: any whose mechanics hold a
+    "concealed" entry (the same mechanic behind invisible characters)."""
+    return bool(fx and isinstance(fx.get("def"), dict)
+                and isinstance(fx["def"].get("mechanics"), list)
+                and any(m and m.get("type") == "concealed"
+                        for m in fx["def"]["mechanics"] if isinstance(m, dict)))
+
+
+def is_secret(e):
+    return any(is_secret_fx(fx) for fx in e.get("statusEffects") or [])
+
+
+def set_secret(scn, door, ids):
+    """Mark a door object secret — the game's own concealed effect — unless it
+    already is. Without the secret-passages mod the door just draws faint."""
+    if is_secret(door):
+        return
+    door.setdefault("statusEffects", []).append({
+        "id": ids("se"),
+        "def": {"desc": "secret passage", "emoji": "🕳️", "type": "constant",
+                "mechanics": [{"type": "concealed"}]},
+        "appliedAt": 28800})
+
+
+def doors_between(scn, region_a, region_b):
+    """The door objects between two regions: those whose two cells have
+    exactly one inside each region's rectangle (a doorway wider than one
+    cell has a door object per cell of it)."""
+    ra, rb = _rect(region_a), _rect(region_b)
+    return [e for e in scn.get("entities") or []
+            if is_door(scn, e)
+            and sum(1 for c in door_cells(e) if _in_rect(ra, *c)) == 1
+            and sum(1 for c in door_cells(e) if _in_rect(rb, *c)) == 1]
+
+
+def add_secret_data(scn, door, known_by):
+    """Record who knows a secret door, in arpgMods.secretPassages.passages
+    keyed by the door's id — merged into any arpgMods the scenario already
+    carries, never over it."""
+    scn.setdefault("arpgMods", {}).setdefault("secretPassages", {}).setdefault(
+        "passages", {})[door["id"]] = {"knownBy": list(known_by or [])}
 
 
 def keys_to(scn, region):
