@@ -12,10 +12,31 @@ It runs on Python 3.8+ with the standard library only (Pillow is optional,
 just for map previews), and the scenario builder, validator and preview
 renderer are vendored — nothing outside this folder is needed.
 
-**Game version:** being ported to Anywhere RPG 1.0. Its only contract with the game is the
-scenario format. It still writes the 0.18 form, which 1.0 reads unchanged, and its validator already
-follows 1.0's rules (see `worldgen/vendor/README.md`). Writing 1.0's own floors, doors, locks, liquids
-and populations comes next. The extensions still need the 0.18 code-mod loader mods.
+**Game version:** built for Anywhere RPG 1.0 (Steam alpha build 26557354). Its only contract with
+the game is the scenario format, which its validator checks against 1.0's rules (see
+`worldgen/vendor/README.md`). Every world gets 1.0's own features, with no mods needed:
+- floors and two-way stairs;
+- door objects;
+- locked rooms and their keys;
+- theft flags;
+- natural shapes, water and vehicles;
+- populations, with their members already in place.
+
+A generated castle was started in the live 1.0 game to confirm the import (see
+[MODEL_RESULTS.md](MODEL_RESULTS.md)). The `region-groups` and `lights` extensions still need the
+code-mod loader mods. The 0.18 version is on the `0.18` branch.
+
+**Native populations:** every world also ships the game's own nameless creatures as
+`npcTemplates` (chosen in `worldgen/populations.py`): livestock (sheep, cows, goats or pigs)
+graze regions whose names or zone kinds read as pasture, paddock, pen or fold; chickens and
+ducks keep the farmyards and the yards of farms; rats nest in cellars, stores, warehouses,
+granaries, sewers and docks; crows settle the crop plots; townsfolk cross a market, square or
+plaza of an urban or town zone in a period-fitting sprite (peasant in fantasy or history,
+casual in the present day); and two of the town watch patrol a town's main street unless the
+cast already has a guard, watch or police of its own. Counts grow with the region's area
+(livestock 2-5, vermin 2-3, crowds 3-5), no population spawns where the player starts, and the
+whole world holds at most 20 creatures — the largest counts trim first. The choice is
+deterministic given the run's seed.
 
 > **Still in progress:** layout improvements are under way. Maps can come out long and wide,
 > with empty ground in places and squeezed furniture. A world's `plan.json` holds everything
@@ -190,6 +211,10 @@ person per slot, and code fills in the facts. The dialog's **Let the map decide*
 (population `"map"`) sizes the cast from each zone's kind; a range the user sets
 is firm. If P1b produces nothing, the run carries on without a cast.
 
+A person's role also picks their in-game sprite from Anywhere RPG 1.0's character
+sheets — an innkeeper, a town guard or a nurse gets that role's own sprites — and
+a role with no match keeps the plain casual one.
+
 ### Getting more buildings
 
 With **Let the map decide** ticked (the editor's default), P1 plans to the base cap
@@ -286,19 +311,20 @@ A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes t
 ## Extensions (all off by default)
 
 The default path needs **no game mods**: the zip imports and plays in the
-unmodded game. Each extension opts in with `--ext <id>` (repeatable) and
-needs the matching mods from `../code-mod-loader` (this repository) installed
-in the game:
+unmodded game. Each extension opts in with `--ext <id>` (repeatable); the
+ones that need the matching mods from `../code-mod-loader` (this repository)
+installed in the game say so:
 
 | Extension | What it adds | Game mods needed |
 |---|---|---|
-| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, stair portals, in a lit band beyond a dark world's edge | `portals`, `floors` |
-| `portals` | Two-way portal pads linking two cells | `portals` |
+| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded | none |
 | `region-groups` | A zone may wrap around the map and still act as one region | `region-groups` |
 | `lights` | Each light source gets a kind (candle, torch, hearth fire, ember, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour, written as `arpgMods.lights` | `lights` |
 
-`floors` needs `portals` (its stairs are portals): enabling floors turns
-portals on with it.
+The `portals` extension is gone: its stairs were portal pads, and 1.0's own
+floors link stairs natively. A settings file or `plan.json` from an older
+generator may still name `portals` (or the `floors` mod); the retired id is
+dropped with no error, and such a world rebuilds as 1.0 native floors.
 
 Light strengths (`light`, 0.2 to 1.0) are plain game data, asked for on every
 run: they are what the unmodded game lights at night. The `lights` extension
@@ -352,11 +378,11 @@ it); `solid` walls are 1-thick walkability-0 object strips. The gate (marked
 or the edge part nearest a road mouth) gets an outside entrance and a
 courtyard door, and 1-wide courtyard paths run gate → inside parts; nothing
 of the zone dresses inside the walls. With `floors` on, each part's upper
-storeys sit in the band **in the compound's ground arrangement** — storeys
-at the same level touch where their ground regions touch, and a walkable
-wall gets its wall-walk storey 2 wherever both ends have one, so the towers
-and the gatehouse join along the walk upstairs. With floors off, a compound
-is ground floor only and plays in the unmodded game.
+storeys are floors of their own, and a walkable wall gets its wall-walk
+storey 2 wherever both ends have one — joined to each end's storey by a
+linked passage pair (planes cannot share a door in 1.0), so the towers and
+the gatehouse meet along the walk upstairs. With floors off, a compound is
+ground floor only and plays in the unmodded game.
 
 The feasibility answers behind those choices are in
 `reports/012-feasibility.md`, each pinned by builder specs in
@@ -398,10 +424,8 @@ by `fixtures/apartment-block.plan.json`.
 **Taller buildings.** `storeys` runs 1-6 for a unit building or a compound
 part (3 otherwise). A unit building's upper storeys repeat the ground stamp —
 corridor and stair positions identical, numbering continuing — with no
-per-storey design. In the `floors` band a stack taller than the play area's
-height wraps into columns; a block whose ground entrance faces east has its
-storeys' build-time doors flipped west onto the boundary strip, so the
-builder's flat walk still reaches every storey.
+per-storey design; each storey is laid out as its own 1.0 floor, so a stack
+of any height fits beside the map.
 
 **A row of parts** (`"shape": "row"`, `"frontage": "north|south|east|west"`,
 `"front": "street|parking|walkway|none"`) lines parts up side by side facing
@@ -426,7 +450,7 @@ hub at the corridor's foot, two wards of six one-bed rooms.
 
 **Void zones** (`"exterior": "void"` on a zone) turn everything outside the
 zone's walled regions into out of bounds: walkability-0 slab objects over
-ground tinted the boundary colour, exactly the World's Edge treatment
+ground tinted the boundary colour, the game's own out-of-bounds void look
 (`passableAtBuild` so the build-time walk crosses, hardened to 0 by
 `inject_arpg_mods` — it plays in the unmodded game). Filler, props and paths
 never land there. Roads to and from a void zone become walled corridor

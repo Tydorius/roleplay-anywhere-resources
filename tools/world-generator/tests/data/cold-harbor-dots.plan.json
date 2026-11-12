@@ -1,0 +1,3030 @@
+{
+ "name": "Cold Harbor",
+ "worldBackground": "A isolated fishing hamlet perched on a cold, rocky coast. The villagers are hardy, but the harsh environment breeds a tense, communal spirit. A widowed net-mender, to whom everyone owes a favour, holds a quiet authority over the settlement.",
+ "setting": {
+  "era": "medieval",
+  "technology": "simple",
+  "density": "sparse",
+  "climate": "cold and windy",
+  "band": "medieval",
+  "genre": "fantasy"
+ },
+ "mapSize": "small",
+ "zones": [
+  {
+   "name": "Village Green",
+   "kind": "village",
+   "sizeClass": "medium",
+   "description": "A grassy clearing where the hamlet's cottages and inn cluster around a central well.",
+   "ground": "grass",
+   "adjacentTo": [
+    "Fishing Docks"
+   ],
+   "outdoor": [
+    "village well",
+    "woodpile",
+    "net drying rack"
+   ],
+   "arrangement": "around_green",
+   "buildings": [
+    {
+     "name": "Salty Seal Inn",
+     "kind": "inn",
+     "sizeClass": "medium",
+     "purpose": "lodging and ale for travelers and fishermen",
+     "units": {
+      "name": "Room",
+      "count": 2,
+      "residents": 3
+     },
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home"
+    },
+    {
+     "name": "Smokehouse",
+     "kind": "workshop",
+     "sizeClass": "small",
+     "purpose": "smoking fish for preservation",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home",
+     "residents": 3,
+     "couples": 1
+    },
+    {
+     "name": "Net-Mender's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "home and workshop for the widowed net-mender",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home",
+     "residents": 4,
+     "couples": 1
+    },
+    {
+     "name": "Fisherman's Cottage",
+     "kind": "cottage",
+     "sizeClass": "small",
+     "purpose": "housing for a fishing family",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home",
+     "residents": 8,
+     "couples": 2
+    }
+   ],
+   "dressing": {
+    "paths": "dirt",
+    "props": [
+     {
+      "template": "Village Well",
+      "count": 1,
+      "hint": "center"
+     },
+     {
+      "template": "Woodpile",
+      "count": 1,
+      "hint": "beside:Smokehouse"
+     },
+     {
+      "template": "Net Drying Rack",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Fish Cart",
+      "count": 1,
+      "hint": "beside:Salty Seal Inn"
+     },
+     {
+      "template": "Barrel",
+      "count": 1,
+      "hint": "beside:Smokehouse"
+     },
+     {
+      "template": "Lantern Post",
+      "count": 2,
+      "hint": "along_path"
+     },
+     {
+      "template": "Brazier",
+      "count": 1,
+      "hint": "center"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Pine Tree",
+      "density": "low"
+     },
+     {
+      "template": "Bush",
+      "density": "low"
+     },
+     {
+      "template": "Boulder",
+      "density": "low"
+     }
+    ]
+   }
+  },
+  {
+   "name": "Fishing Docks",
+   "kind": "docks",
+   "sizeClass": "small",
+   "description": "Wooden piers reaching into the sea where boats are moored and fish are unloaded.",
+   "ground": "stone",
+   "adjacentTo": [
+    "Village Green"
+   ],
+   "outdoor": [
+    "fishing boat",
+    "net drying rack",
+    "cargo crate"
+   ],
+   "buildings": [
+    {
+     "name": "Gear Shed",
+     "kind": "warehouse",
+     "sizeClass": "small",
+     "purpose": "storage for fishing gear and nets",
+     "yard": null,
+     "wealth": "modest",
+     "condition": "kept",
+     "status": "home",
+     "residents": 3,
+     "couples": 1
+    }
+   ],
+   "dressing": {
+    "paths": "cobble",
+    "props": [
+     {
+      "template": "Fishing Boat",
+      "count": 1,
+      "hint": "along_path"
+     },
+     {
+      "template": "Net Drying Rack",
+      "count": 1,
+      "hint": "edge"
+     },
+     {
+      "template": "Cargo Crate",
+      "count": 1,
+      "hint": "beside:Gear Shed"
+     },
+     {
+      "template": "Lantern Post",
+      "count": 1,
+      "hint": "along_path"
+     }
+    ],
+    "filler": [
+     {
+      "template": "Pine Tree",
+      "density": "low"
+     }
+    ]
+   }
+  }
+ ],
+ "roads": [
+  {
+   "from": "Village Green",
+   "to": "Fishing Docks",
+   "kind": "dirt"
+  }
+ ],
+ "templates": [
+  {
+   "name": "Village Well",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A stone well with a wooden bucket, central to the hamlet's water supply.",
+   "physicalDescription": "A circular stone structure with a wooden roof and chain.",
+   "tags": [
+    "well",
+    "water",
+    "landmark"
+   ],
+   "rule": "placed in the center of the village green or beside a cottage yard."
+  },
+  {
+   "name": "Woodpile",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A neatly stacked pile of firewood for the cold winters.",
+   "physicalDescription": "Logs stacked in a rectangular pile.",
+   "tags": [
+    "wood",
+    "storage",
+    "fuel"
+   ],
+   "rule": "beside the smokehouse or cottage yards, against a wall or fence."
+  },
+  {
+   "name": "Net Drying Rack",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden rack for drying fishing nets in the wind.",
+   "physicalDescription": "A long wooden frame with horizontal bars.",
+   "tags": [
+    "work",
+    "drying",
+    "fishing"
+   ],
+   "rule": "in an open area with good airflow, like beside the docks or in the village green edge."
+  },
+  {
+   "name": "Fishing Boat",
+   "size": [
+    3,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A sturdy wooden boat for fishing in the cold seas.",
+   "physicalDescription": "A clinker-built boat with oars and nets inside.",
+   "tags": [
+    "boat",
+    "transport",
+    "fishing"
+   ],
+   "rule": "on the fishing docks or beached on the shore near the docks."
+  },
+  {
+   "name": "Cargo Crate",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden crate for storing goods on the docks.",
+   "physicalDescription": "A slatted wooden box with markings.",
+   "tags": [
+    "storage",
+    "container"
+   ],
+   "lootPool": "Cargo crate on dock",
+   "rule": "on the fishing docks, near the gear shed or boats."
+  },
+  {
+   "name": "Fish Cart",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden cart for transporting fish from the docks to the village.",
+   "physicalDescription": "A two-wheeled cart with a flatbed for fish.",
+   "tags": [
+    "transport",
+    "work",
+    "fish"
+   ],
+   "rule": "beside the docks or in the yard of the inn or smokehouse."
+  },
+  {
+   "name": "Barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A wooden barrel for storing fish oil or salt.",
+   "physicalDescription": "A staved wooden barrel with hoops.",
+   "tags": [
+    "storage",
+    "container"
+   ],
+   "rule": "in the yard of the smokehouse or near the docks, against a building."
+  },
+  {
+   "name": "Pine Tree",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tall pine tree adapted to the cold climate.",
+   "physicalDescription": "A coniferous tree with a brown trunk and green needles.",
+   "tags": [
+    "plant",
+    "tree",
+    "wild"
+   ],
+   "rule": "scatter on the wild ground away from buildings, in clusters or singly."
+  },
+  {
+   "name": "Bush",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A hardy shrub that grows in the rocky soil.",
+   "physicalDescription": "A low, leafy bush with thorns.",
+   "tags": [
+    "plant",
+    "wild"
+   ],
+   "rule": "cluster in wild areas, especially near rocks and trees."
+  },
+  {
+   "name": "Boulder",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A large rock scattered on the rocky coast.",
+   "physicalDescription": "A grey, weathered boulder.",
+   "tags": [
+    "rock",
+    "terrain",
+    "wild"
+   ],
+   "rule": "scatter on the wild ground, especially on rocky areas."
+  },
+  {
+   "name": "Lantern Post",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.6,
+   "description": "A wooden post with a lantern for lighting the paths.",
+   "physicalDescription": "A tall post with a glass lantern on top.",
+   "tags": [
+    "light",
+    "outdoor"
+   ],
+   "rule": "along paths in the village green and fishing docks, near doors."
+  },
+  {
+   "name": "Brazier",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.0,
+   "forSleep": false,
+   "light": 0.9,
+   "description": "A metal brazier with fire for warmth and light.",
+   "physicalDescription": "A iron bowl on a stand with burning coals.",
+   "tags": [
+    "light",
+    "fire",
+    "warmth"
+   ],
+   "rule": "in the village green center or near the docks for gatherings."
+  },
+  {
+   "name": "Elm plank bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm plank bench on splayed legs, long enough for two to sit shoulder to shoulder.",
+   "physicalDescription": "Top-down view of a backless plank bench: one long mid-brown elm board, the leg ends showing at each short edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "bench.plank",
+   "sprite": "library/sprites/medieval/bench.plank.webp"
+  },
+  {
+   "name": "Elm small round table",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm small round table just big enough for two cups and a game of cards.",
+   "physicalDescription": "Top-down view of a small round table: a round tawny elm top on a single central post.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.round_small",
+   "sprite": "library/sprites/medieval/table.round_small.webp"
+  },
+  {
+   "name": "Undyed linen great chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A deep great chair with broad arms and a plump oatmeal undyed linen cushion.",
+   "physicalDescription": "Top-down view of a roomy great chair: wide light brown beech arms either side, a cream undyed linen seat cushion, a padded back along the top edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "chair.armchair",
+   "back": "north",
+   "sprite": "library/sprites/medieval/chair.armchair.webp"
+  },
+  {
+   "name": "Elm tap counter",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm tap counter ringed with old cup marks, an elm foot rail running along its base.",
+   "physicalDescription": "Top-down view of a tap counter three cells wide: long tawny elm top with a few mugs and a rag, a raised lip along the bottom (customer) edge, taps and bottles along the top edge.",
+   "tags": [
+    "counter",
+    "furniture",
+    "bar",
+    "shop"
+   ],
+   "libraryId": "counter.bar",
+   "back": "north",
+   "sprite": "library/sprites/medieval/counter.bar.webp"
+  },
+  {
+   "name": "Elm plank table",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm plank table, big enough for a meal for two or a pile of chores.",
+   "physicalDescription": "Top-down view of a plain plank table: a rectangular tawny elm top, twice as wide as it is deep, legs at the corners.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.plank",
+   "sprite": "library/sprites/medieval/table.plank.webp"
+  },
+  {
+   "name": "Ash chess table",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash chess table, a game left half-played in the middle of it.",
+   "physicalDescription": "Top-down view of a small square chess table: an inlaid checkered honey ash board with pieces mid-game, a chair at the top and bottom edges.",
+   "tags": [
+    "game",
+    "table"
+   ],
+   "libraryId": "game.chess",
+   "sprite": "library/sprites/medieval/game.chess.webp"
+  },
+  {
+   "name": "Stoneware oil lamp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "A stoneware oil lamp on a beech stand, its little flame steady as long as no one opens the door.",
+   "physicalDescription": "Top-down view of a small light brown beech stand with an oil lamp: a brown stoneware lamp seen from above, a single flame at its spout and a ring of warm light.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.oil_lamp",
+   "sprite": "library/sprites/medieval/light.oil_lamp.webp"
+  },
+  {
+   "name": "Copper cooking fire",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.6,
+   "description": "A copper pot hangs from a tripod over the coals, something with barley in it always simmering.",
+   "physicalDescription": "Top-down view of a cooking fire: a ring of blue-grey slate stones around glowing coals, a round copper cauldron in the middle seen from above with a ladle in it, the tripod's three legs reaching out to the corners.",
+   "tags": [
+    "stove",
+    "cooking",
+    "heat",
+    "light"
+   ],
+   "libraryId": "stove.cookfire",
+   "sprite": "library/sprites/medieval/stove.cookfire.webp"
+  },
+  {
+   "name": "Elm wash basin",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm bowl of cold water set on a stool, with a scrap of cloth and a sliver of soap beside it.",
+   "physicalDescription": "Top-down view of a wash basin: a round tawny elm bowl of water on a square honey ash stool, a folded rag and a jug beside it.",
+   "tags": [
+    "sink",
+    "washroom"
+   ],
+   "libraryId": "sink.wash_basin",
+   "sprite": "library/sprites/medieval/sink.wash_basin.webp"
+  },
+  {
+   "name": "Copper barrel",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm barrel bound with copper hoops, the bung stained dark by whatever it holds.",
+   "physicalDescription": "Top-down view of a round barrel: circular tawny elm lid made of planks, two hoops visible at the rim, a bung near the edge.",
+   "tags": [
+    "barrel",
+    "storage"
+   ],
+   "libraryId": "barrel.wooden",
+   "sprite": "library/sprites/medieval/barrel.wooden.webp"
+  },
+  {
+   "name": "Glazed earthenware bread oven",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.4,
+   "description": "A glazed earthenware bread oven, its domed back still warm hours after the morning loaves came out.",
+   "physicalDescription": "Top-down view of a bread oven: a rounded brown glazed earthenware dome filling the square, a flat front lip at the bottom with a small ruddy copper door and a wooden peel leaning beside it.",
+   "tags": [
+    "oven",
+    "cooking",
+    "baking",
+    "light"
+   ],
+   "libraryId": "oven.bread_oven",
+   "back": "north",
+   "sprite": "library/sprites/medieval/oven.bread_oven.webp"
+  },
+  {
+   "name": "Beech stock shelf",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech stock shelf crowded with wares, the cheap goods low down and the dear ones within the keeper's reach.",
+   "physicalDescription": "Top-down view of a shallow stock shelf two cells wide: light brown beech shelf edge along the bottom, back panel against the top edge, rows of jars, boxes and bundles packed tight.",
+   "tags": [
+    "shelf",
+    "furniture",
+    "shop"
+   ],
+   "libraryId": "shelf.goods",
+   "back": "north",
+   "sprite": "library/sprites/medieval/shelf.goods.webp"
+  },
+  {
+   "name": "Green glass wine rack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech wine rack of diamond-shaped cubbies, each holding a dusty bottle-green bottle neck-out.",
+   "physicalDescription": "Top-down view of a wine rack: light brown beech lattice against the top edge, bottle necks pointing toward the bottom edge in neat rows.",
+   "tags": [
+    "rack",
+    "furniture",
+    "storage",
+    "cellar"
+   ],
+   "libraryId": "rack.wine",
+   "back": "north",
+   "sprite": "library/sprites/medieval/rack.wine.webp"
+  },
+  {
+   "name": "Wrought iron weapon rack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash weapon rack with notched slots for long arms, a couple of them still filled.",
+   "physicalDescription": "Top-down view of a weapon rack: honey ash frame against the top edge with a row of notches, the tips of three long weapons leaning back into it, a wrought iron bar locking them in place.",
+   "tags": [
+    "rack",
+    "furniture",
+    "weapons",
+    "shop"
+   ],
+   "libraryId": "rack.weapon",
+   "back": "north",
+   "sprite": "library/sprites/medieval/rack.weapon.webp"
+  },
+  {
+   "name": "Undyed linen bedroll",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "An oatmeal bedroll spread on the bare floor, its ties trailing loose.",
+   "physicalDescription": "Top-down view of a cream undyed linen bedroll laid flat on the floor, the top corner turned back like a blanket.",
+   "tags": [
+    "bed",
+    "furniture"
+   ],
+   "libraryId": "bed.roll",
+   "sprite": "library/sprites/medieval/bed.roll.webp"
+  },
+  {
+   "name": "Ash kit chest",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash kit chest meant for the foot of a bunk, stencilled with a number and held shut by wolfskin straps.",
+   "physicalDescription": "Top-down view of a low kit chest: rectangular honey ash lid with a stencilled number, two grey straps across it, a handle at either end.",
+   "tags": [
+    "locker",
+    "furniture",
+    "storage",
+    "dormitory"
+   ],
+   "libraryId": "locker.footlocker",
+   "sprite": "library/sprites/medieval/locker.footlocker.webp"
+  },
+  {
+   "name": "Beech peg stand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech peg stand with a coat or two hanging from its hooks and a hat on top.",
+   "physicalDescription": "Top-down view of a peg stand: small round light brown beech base, a central post with four hooks pointing outward, a coat draped over one side.",
+   "tags": [
+    "rack",
+    "furniture"
+   ],
+   "libraryId": "rack.coat",
+   "sprite": "library/sprites/medieval/rack.coat.webp"
+  },
+  {
+   "name": "Beech joiner's bench",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A joiner's bench with a thick beech top and a wrought iron vise that still bites hard.",
+   "physicalDescription": "Top-down view of a joiner's bench: a heavy light brown beech top with a row of bench-dog holes, a wrought iron screw vise at the right end, a shelf of planes and chisels along the top edge.",
+   "tags": [
+    "workstation",
+    "furniture"
+   ],
+   "libraryId": "workbench.joiner",
+   "back": "north",
+   "sprite": "library/sprites/medieval/workbench.joiner.webp"
+  },
+  {
+   "name": "Ash tool rack",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A tool rack with an outline painted round each hanging tool, so a missing one shows at once.",
+   "physicalDescription": "Top-down view of a tool rack: pale ash board against the top edge with pewter hand tools hung on a row of pegs, a narrow tray of fixings along the bottom.",
+   "tags": [
+    "rack",
+    "furniture",
+    "workshop"
+   ],
+   "libraryId": "rack.tool",
+   "back": "north",
+   "sprite": "library/sprites/medieval/rack.tool.webp"
+  },
+  {
+   "name": "Elm crate",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An elm crate sealed tight, a shipper's mark stamped on its side.",
+   "physicalDescription": "Top-down view of a square crate: tawny elm lid with reinforced edges and a stencilled mark in one corner.",
+   "tags": [
+    "crate",
+    "furniture",
+    "storage",
+    "warehouse"
+   ],
+   "libraryId": "crate.wooden",
+   "sprite": "library/sprites/medieval/crate.wooden.webp"
+  },
+  {
+   "name": "Undyed linen double bed",
+   "size": [
+    2,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "A beech double bed wide enough for two, under an oatmeal undyed linen quilt.",
+   "physicalDescription": "Top-down view of a double bed: light brown beech frame, a cream undyed linen quilt, two pillows side by side against the headboard at the top.",
+   "tags": [
+    "bed",
+    "furniture"
+   ],
+   "libraryId": "bed.double",
+   "back": "north",
+   "sprite": "library/sprites/medieval/bed.double.webp"
+  },
+  {
+   "name": "Ash bedside table",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash bedside table with one drawer for keepsakes and a top for a light.",
+   "physicalDescription": "Top-down view of a small bedside table: a square pale ash top, a drawer pull showing on the bottom edge.",
+   "tags": [
+    "table",
+    "bedside",
+    "furniture"
+   ],
+   "libraryId": "nightstand.plain",
+   "back": "north",
+   "sprite": "library/sprites/medieval/nightstand.plain.webp"
+  },
+  {
+   "name": "Beech clothes cupboard",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech clothes cupboard barely wider than its door, a single change of clothes hanging inside.",
+   "physicalDescription": "Top-down view of a slim clothes cupboard: square light brown beech top, a single door along the bottom edge, back against the top edge.",
+   "tags": [
+    "wardrobe",
+    "furniture",
+    "bedroom"
+   ],
+   "libraryId": "wardrobe.narrow",
+   "back": "north",
+   "sprite": "library/sprites/medieval/wardrobe.narrow.webp"
+  },
+  {
+   "name": "Wrought iron brazier",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.7,
+   "description": "A wrought iron brazier on three legs, coals ticking and glowing, good for warming hands and lighting faces.",
+   "physicalDescription": "Top-down view of a round brazier: a black wrought iron bowl heaped with red-hot coals, three short legs just visible at the rim, a faint ring of ash on the floor around it.",
+   "tags": [
+    "hearth",
+    "heat",
+    "light"
+   ],
+   "libraryId": "hearth.brazier",
+   "sprite": "library/sprites/medieval/hearth.brazier.webp"
+  },
+  {
+   "name": "Beech trestle table",
+   "size": [
+    3,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech trestle table of boards laid over trestles, quick to strip down once the meal is done.",
+   "physicalDescription": "Top-down view of a long trestle table: three light brown beech boards side by side, resting on X-shaped trestles at each end.",
+   "tags": [
+    "table",
+    "furniture"
+   ],
+   "libraryId": "table.trestle",
+   "sprite": "library/sprites/medieval/table.trestle.webp"
+  },
+  {
+   "name": "Beech wooden chair",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "A beech wooden chair, plain and straight-backed, with one leg a touch shorter than the rest.",
+   "physicalDescription": "Top-down view of a simple wooden chair: a square light brown beech seat with the backrest along the top edge.",
+   "tags": [
+    "seat",
+    "furniture"
+   ],
+   "libraryId": "chair.plain",
+   "back": "north",
+   "sprite": "library/sprites/medieval/chair.plain.webp"
+  },
+  {
+   "name": "Pewter candle stand",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0.2,
+   "description": "A pewter candle stand holding one fat candle, its wax run down in long tears.",
+   "physicalDescription": "Top-down view of a candle stand: a small round silver-grey pewter drip pan with a single lit candle in the middle, a soft yellow halo around it.",
+   "tags": [
+    "light"
+   ],
+   "libraryId": "light.candle",
+   "sprite": "library/sprites/medieval/light.candle.webp"
+  },
+  {
+   "name": "Wool cushioned settle",
+   "size": [
+    2,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash cushioned settle heaped with grey wool cushions and a folded fur.",
+   "physicalDescription": "Top-down view of a padded cushioned settle: a honey ash frame with a high back along the top edge, grey wool cushions along the seat.",
+   "tags": [
+    "seat",
+    "upholstered",
+    "furniture"
+   ],
+   "libraryId": "sofa.settle_cushioned",
+   "back": "north",
+   "sprite": "library/sprites/medieval/sofa.settle_cushioned.webp"
+  },
+  {
+   "name": "Ash floor harp",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash floor harp strung with bronze, its carved pillar taller than the player.",
+   "physicalDescription": "Seen from above at a steep three-quarter angle: a floor harp laid flat on its side so its whole outline shows, a tall triangle with a thick straight dark stained ash sound box along the bottom, a curved ash neck along the top and a straight front pillar, dark bronze strings in parallel lines between neck and sound box.",
+   "tags": [
+    "instrument",
+    "music"
+   ],
+   "libraryId": "instrument.harp",
+   "sprite": "library/sprites/medieval/instrument.harp.webp"
+  },
+  {
+   "name": "Wool bed",
+   "size": [
+    1,
+    2
+   ],
+   "walkability": 0.3,
+   "forSleep": true,
+   "light": 0,
+   "description": "An ash bed made up with grey wool blankets tucked tight.",
+   "physicalDescription": "Top-down view of a single bed: pale ash frame, grey wool blanket folded back, a pale pillow against the headboard at the top.",
+   "tags": [
+    "bed",
+    "furniture"
+   ],
+   "libraryId": "bed.single",
+   "back": "north",
+   "sprite": "library/sprites/medieval/bed.single.webp"
+  },
+  {
+   "name": "Ash slop bucket",
+   "size": [
+    1,
+    1
+   ],
+   "walkability": 0.5,
+   "forSleep": false,
+   "light": 0,
+   "description": "An ash slop bucket nobody has emptied for a while, and the smell says so.",
+   "physicalDescription": "Top-down view of a round slop bucket: honey ash rim with scraps and crumpled rubbish inside, a lid lying askew.",
+   "tags": [
+    "bin",
+    "waste"
+   ],
+   "libraryId": "bin.waste",
+   "sprite": "library/sprites/medieval/bin.waste.webp"
+  }
+ ],
+ "items": [
+  {
+   "name": "Dried Fish",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "A tough, preserved fish for lean times.",
+   "physicalDescription": "A shriveled fish on a stick, white background"
+  },
+  {
+   "name": "Fresh Fish",
+   "type": "consumable",
+   "quality": "common",
+   "value": 10,
+   "description": "A freshly caught cod, still glistening.",
+   "physicalDescription": "A whole fish with scales, white background"
+  },
+  {
+   "name": "Bread",
+   "type": "consumable",
+   "quality": "common",
+   "value": 3,
+   "description": "A coarse, dark bread from the village oven.",
+   "physicalDescription": "A round loaf of bread, white background"
+  },
+  {
+   "name": "Ale",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "A mug of weak, bitter ale.",
+   "physicalDescription": "A wooden mug with liquid, white background"
+  },
+  {
+   "name": "Cheese",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "A wedge of hard cheese.",
+   "physicalDescription": "A piece of cheese, white background"
+  },
+  {
+   "name": "Sausage",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 12,
+   "description": "A smoked sausage.",
+   "physicalDescription": "A sausage, white background"
+  },
+  {
+   "name": "Fishing Net",
+   "type": "material",
+   "quality": "common",
+   "value": 20,
+   "description": "A sturdy net for catching fish.",
+   "physicalDescription": "A coiled net with ropes, white background"
+  },
+  {
+   "name": "Rope Coil",
+   "type": "material",
+   "quality": "common",
+   "value": 10,
+   "description": "Hemp rope for securing gear.",
+   "physicalDescription": "A coil of brown rope, white background"
+  },
+  {
+   "name": "Fishing Knife",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 50,
+   "description": "A sharp knife for gutting fish.",
+   "physicalDescription": "A short sword-like knife, white background"
+  },
+  {
+   "name": "Wooden Bucket",
+   "type": "misc",
+   "quality": "common",
+   "value": 8,
+   "description": "A bucket for hauling water or fish.",
+   "physicalDescription": "A wooden bucket with handle, white background"
+  },
+  {
+   "name": "Tin Cup",
+   "type": "misc",
+   "quality": "common",
+   "value": 3,
+   "description": "A simple cup for drinking.",
+   "physicalDescription": "A metal cup, white background"
+  },
+  {
+   "name": "Woolen Scarf",
+   "type": "misc",
+   "quality": "common",
+   "value": 15,
+   "description": "A thick scarf to ward off the cold.",
+   "physicalDescription": "A red woolen scarf, white background"
+  },
+  {
+   "name": "Leather Boots",
+   "type": "boots",
+   "quality": "common",
+   "value": 25,
+   "description": "Sturdy boots for wet conditions.",
+   "physicalDescription": "A pair of brown leather boots, white background"
+  },
+  {
+   "name": "Woolen Gloves",
+   "type": "gloves",
+   "quality": "common",
+   "value": 12,
+   "description": "Woolen gloves for cold hands.",
+   "physicalDescription": "A pair of grey gloves, white background"
+  },
+  {
+   "name": "Coin Purse",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A small purse with a few coins.",
+   "physicalDescription": "A leather pouch with coins, white background"
+  },
+  {
+   "name": "Silver Coin",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 10,
+   "description": "A single silver coin.",
+   "physicalDescription": "A shiny silver coin, white background"
+  },
+  {
+   "name": "Gold Coin",
+   "type": "misc",
+   "quality": "rare",
+   "value": 50,
+   "description": "A gold coin, rare in this hamlet.",
+   "physicalDescription": "A gold coin, white background"
+  },
+  {
+   "name": "Healing Herb",
+   "type": "consumable",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "A bundle of medicinal herbs.",
+   "physicalDescription": "A small pouch of herbs, white background"
+  },
+  {
+   "name": "Bandage",
+   "type": "consumable",
+   "quality": "common",
+   "value": 8,
+   "description": "A strip of cloth for wounds.",
+   "physicalDescription": "A rolled bandage, white background"
+  },
+  {
+   "name": "Tar",
+   "type": "material",
+   "quality": "common",
+   "value": 10,
+   "description": "Black tar for waterproofing nets.",
+   "physicalDescription": "A jar of black tar, white background"
+  },
+  {
+   "name": "Spare Net",
+   "type": "material",
+   "quality": "uncommon",
+   "value": 30,
+   "description": "A backup fishing net.",
+   "physicalDescription": "A folded net, white background"
+  },
+  {
+   "name": "Boat Oar",
+   "type": "wieldable",
+   "quality": "common",
+   "value": 15,
+   "description": "A wooden oar for rowing.",
+   "physicalDescription": "A long wooden oar, white background"
+  },
+  {
+   "name": "Anchor",
+   "type": "misc",
+   "quality": "rare",
+   "value": 100,
+   "description": "A heavy iron anchor for boats.",
+   "physicalDescription": "A rusty anchor, white background"
+  },
+  {
+   "name": "Fishing Rod",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 40,
+   "description": "A simple rod for fishing.",
+   "physicalDescription": "A long stick with line, white background"
+  },
+  {
+   "name": "Lamp",
+   "type": "misc",
+   "quality": "common",
+   "value": 12,
+   "description": "An oil lamp for light.",
+   "physicalDescription": "A small oil lamp, white background"
+  },
+  {
+   "name": "Oil Flask",
+   "type": "consumable",
+   "quality": "common",
+   "value": 5,
+   "description": "A flask of oil for the lamp.",
+   "physicalDescription": "A small bottle of oil, white background"
+  },
+  {
+   "name": "Key",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "An iron key for a chest.",
+   "physicalDescription": "An old-fashioned key, white background"
+  },
+  {
+   "name": "Chest Key",
+   "type": "misc",
+   "quality": "uncommon",
+   "value": 15,
+   "description": "A key to the gear shed.",
+   "physicalDescription": "A large key, white background"
+  },
+  {
+   "name": "Map Scrap",
+   "type": "misc",
+   "quality": "rare",
+   "value": 60,
+   "description": "A piece of a sea map.",
+   "physicalDescription": "A torn parchment map, white background"
+  },
+  {
+   "name": "Compass",
+   "type": "misc",
+   "quality": "rare",
+   "value": 80,
+   "description": "A brass compass for navigation.",
+   "physicalDescription": "A small compass, white background"
+  },
+  {
+   "name": "Wool Cloak",
+   "type": "torso",
+   "quality": "uncommon",
+   "value": 40,
+   "description": "A heavy cloak for storms.",
+   "physicalDescription": "A brown woolen cloak, white background"
+  },
+  {
+   "name": "Hood",
+   "type": "head",
+   "quality": "common",
+   "value": 18,
+   "description": "A hood to protect from wind.",
+   "physicalDescription": "A grey hood, white background"
+  },
+  {
+   "name": "Waterproof Boots",
+   "type": "boots",
+   "quality": "uncommon",
+   "value": 35,
+   "description": "Waterproof boots for fishing.",
+   "physicalDescription": "A pair of black boots, white background"
+  },
+  {
+   "name": "Leather Gloves",
+   "type": "gloves",
+   "quality": "uncommon",
+   "value": 20,
+   "description": "Leather gloves for grip.",
+   "physicalDescription": "A pair of leather gloves, white background"
+  },
+  {
+   "name": "Ring",
+   "type": "ring",
+   "quality": "rare",
+   "value": 100,
+   "description": "A silver ring with a sea shell.",
+   "physicalDescription": "A ring with a shell, white background"
+  },
+  {
+   "name": "Necklace",
+   "type": "necklace",
+   "quality": "uncommon",
+   "value": 30,
+   "description": "A necklace of fish teeth.",
+   "physicalDescription": "A necklace with teeth, white background"
+  },
+  {
+   "name": "Potion",
+   "type": "consumable",
+   "quality": "rare",
+   "value": 70,
+   "description": "A vial of healing potion.",
+   "physicalDescription": "A small vial with red liquid, white background"
+  },
+  {
+   "name": "Water Flask",
+   "type": "consumable",
+   "quality": "common",
+   "value": 4,
+   "description": "A flask of fresh water.",
+   "physicalDescription": "A leather flask, white background"
+  },
+  {
+   "name": "Sack",
+   "type": "material",
+   "quality": "common",
+   "value": 6,
+   "description": "A burlap sack for storage.",
+   "physicalDescription": "A brown sack, white background"
+  },
+  {
+   "name": "String",
+   "type": "material",
+   "quality": "common",
+   "value": 3,
+   "description": "A ball of twine.",
+   "physicalDescription": "A ball of string, white background"
+  },
+  {
+   "name": "Needle",
+   "type": "misc",
+   "quality": "common",
+   "value": 5,
+   "description": "A sewing needle.",
+   "physicalDescription": "A small needle, white background"
+  },
+  {
+   "name": "Thread",
+   "type": "material",
+   "quality": "common",
+   "value": 4,
+   "description": "A spool of thread.",
+   "physicalDescription": "A spool of thread, white background"
+  },
+  {
+   "name": "Whetstone",
+   "type": "misc",
+   "quality": "common",
+   "value": 10,
+   "description": "A stone for sharpening knives.",
+   "physicalDescription": "A grey whetstone, white background"
+  },
+  {
+   "name": "Flint",
+   "type": "misc",
+   "quality": "common",
+   "value": 8,
+   "description": "A flint for starting fires.",
+   "physicalDescription": "A small flint stone, white background"
+  },
+  {
+   "name": "Steel",
+   "type": "material",
+   "quality": "uncommon",
+   "value": 25,
+   "description": "A piece of steel for tools.",
+   "physicalDescription": "A metal ingot, white background"
+  },
+  {
+   "name": "Nail",
+   "type": "material",
+   "quality": "common",
+   "value": 2,
+   "description": "An iron nail.",
+   "physicalDescription": "A small nail, white background"
+  },
+  {
+   "name": "Hammer",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 45,
+   "description": "A small hammer for repairs.",
+   "physicalDescription": "A claw hammer, white background"
+  },
+  {
+   "name": "Saw",
+   "type": "wieldable",
+   "quality": "uncommon",
+   "value": 50,
+   "description": "A hand saw for wood.",
+   "physicalDescription": "A hand saw, white background"
+  },
+  {
+   "name": "Pants",
+   "type": "pants",
+   "quality": "common",
+   "value": 20,
+   "description": "A pair of woolen trousers.",
+   "physicalDescription": "A pair of brown pants, white background"
+  }
+ ],
+ "lootPools": {
+  "Salty Seal Inn pantry": {
+   "items": [
+    "Bread",
+    "Ale",
+    "Cheese",
+    "Sausage",
+    "Fresh Fish",
+    "Water Flask"
+   ],
+   "weights": {
+    "Ale": 0.4
+   }
+  },
+  "Smokehouse storage": {
+   "items": [
+    "Dried Fish",
+    "Sausage",
+    "Tar",
+    "Fishing Knife"
+   ],
+   "weights": {}
+  },
+  "Net-Mender's tool chest": {
+   "items": [
+    "Fishing Net",
+    "Rope Coil",
+    "Spare Net",
+    "Needle",
+    "Thread",
+    "Whetstone"
+   ],
+   "weights": {}
+  },
+  "Fisherman's cottage cupboard": {
+   "items": [
+    "Bread",
+    "Cheese",
+    "Woolen Scarf",
+    "Leather Boots",
+    "Woolen Gloves",
+    "Coin Purse",
+    "Healing Herb"
+   ],
+   "weights": {}
+  },
+  "Gear shed locker": {
+   "items": [
+    "Fishing Rod",
+    "Anchor",
+    "Boat Oar",
+    "Lamp",
+    "Oil Flask",
+    "Chest Key"
+   ],
+   "weights": {}
+  },
+  "Cargo crate on dock": {
+   "items": [
+    "Gold Coin",
+    "Silver Coin",
+    "Map Scrap",
+    "Compass",
+    "Potion",
+    "Ring",
+    "Necklace"
+   ],
+   "weights": {
+    "Gold Coin": 0.3,
+    "Map Scrap": 0.4,
+    "Compass": 0.4,
+    "Potion": 0.3,
+    "Ring": 0.3,
+    "Necklace": 0.5
+   }
+  }
+ },
+ "buildings": [
+  {
+   "name": "Salty Seal Inn",
+   "suite": null,
+   "wall": "stone",
+   "ground": "wooden floor",
+   "rooms": [
+    {
+     "name": "Taproom",
+     "share": "large",
+     "use": "taproom",
+     "purpose": "The main room where ale is served and fishermen gather."
+    },
+    {
+     "name": "Kitchen",
+     "share": "medium",
+     "use": "kitchen",
+     "purpose": "Where meals are prepared for guests and the innkeeper."
+    },
+    {
+     "name": "Cellar",
+     "share": "small",
+     "use": "cellar",
+     "purpose": "Storage for ale barrels and dried fish."
+    }
+   ],
+   "connections": [
+    [
+     "Taproom",
+     "Kitchen"
+    ],
+    [
+     "Taproom",
+     "Cellar"
+    ]
+   ],
+   "entrance": {
+    "room": "Taproom",
+    "side": "south"
+   },
+   "wealth": {},
+   "unit": {
+    "rooms": [
+     {
+      "name": "Guest dormitory",
+      "share": "medium",
+      "use": "dormitory",
+      "purpose": "A dormitory room with three beds for travelers."
+     }
+    ],
+    "connections": [],
+    "entrance": {
+     "room": "Guest dormitory",
+     "side": "west"
+    },
+    "furniture": [
+     {
+      "template": "Undyed linen bedroll",
+      "room": "Guest dormitory",
+      "count": 3,
+      "hint": "row:far"
+     },
+     {
+      "template": "Ash kit chest",
+      "room": "Guest dormitory",
+      "count": 3,
+      "hint": "beside:Undyed linen bedroll"
+     },
+     {
+      "template": "Stoneware oil lamp",
+      "room": "Guest dormitory",
+      "count": 1,
+      "hint": "corner"
+     },
+     {
+      "template": "Beech peg stand",
+      "room": "Guest dormitory",
+      "count": 1,
+      "hint": "near_door"
+     }
+    ],
+    "libraryLayouts": {
+     "Guest dormitory": "dormitory.medium.a"
+    }
+   },
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Elm plank bench",
+     "room": "Taproom",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Elm small round table",
+     "room": "Taproom",
+     "count": 1,
+     "hint": "beside:Elm plank bench"
+    },
+    {
+     "template": "Undyed linen great chair",
+     "room": "Taproom",
+     "count": 3,
+     "hint": "around:Elm small round table"
+    },
+    {
+     "template": "Elm tap counter",
+     "room": "Taproom",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Elm plank table",
+     "room": "Taproom",
+     "count": 3,
+     "hint": "center"
+    },
+    {
+     "template": "Undyed linen great chair",
+     "room": "Taproom",
+     "count": 6,
+     "hint": "around:Elm plank table"
+    },
+    {
+     "template": "Ash chess table",
+     "room": "Taproom",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Stoneware oil lamp",
+     "room": "Taproom",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Copper cooking fire",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Elm small round table",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "row:far"
+    },
+    {
+     "template": "Elm wash basin",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "beside:Copper cooking fire"
+    },
+    {
+     "template": "Copper barrel",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Glazed earthenware bread oven",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Beech stock shelf",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Stoneware oil lamp",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Copper barrel",
+     "room": "Cellar",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Green glass wine rack",
+     "room": "Cellar",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Wrought iron weapon rack",
+     "room": "Cellar",
+     "count": 1,
+     "hint": "wall:far"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Taproom": "common_room.large.c",
+    "Kitchen": "kitchen.medium.c",
+    "Cellar": "storage.small.c"
+   }
+  },
+  {
+   "name": "Smokehouse",
+   "suite": null,
+   "wall": "wood",
+   "ground": "wood planks",
+   "rooms": [
+    {
+     "name": "Smoking Room",
+     "share": "medium",
+     "use": "workshop",
+     "purpose": "the main area where fish is smoked over wood fires for preservation"
+    },
+    {
+     "name": "Master Bedchamber",
+     "share": "small",
+     "use": "master_bedroom",
+     "purpose": "for the couple sharing a double bed"
+    },
+    {
+     "name": "Worker's Bedroom",
+     "share": "small",
+     "use": "bedroom",
+     "purpose": "for the third person with a single bed"
+    }
+   ],
+   "connections": [
+    [
+     "Smoking Room",
+     "Master Bedchamber"
+    ],
+    [
+     "Smoking Room",
+     "Worker's Bedroom"
+    ]
+   ],
+   "entrance": {
+    "room": "Smoking Room",
+    "side": "south"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Beech joiner's bench",
+     "room": "Smoking Room",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Beech joiner's bench",
+     "room": "Smoking Room",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Ash tool rack",
+     "room": "Smoking Room",
+     "count": 1,
+     "hint": "beside:Beech joiner's bench"
+    },
+    {
+     "template": "Elm crate",
+     "room": "Smoking Room",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Undyed linen great chair",
+     "room": "Smoking Room",
+     "count": 1,
+     "hint": "beside:Beech joiner's bench"
+    },
+    {
+     "template": "Undyed linen double bed",
+     "room": "Master Bedchamber",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "Master Bedchamber",
+     "count": 1,
+     "hint": "beside:Undyed linen double bed+symmetric"
+    },
+    {
+     "template": "Undyed linen bedroll",
+     "room": "Worker's Bedroom",
+     "count": 1,
+     "hint": "wall:side+away_from_door"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Worker's Bedroom",
+     "count": 1,
+     "hint": "wall:far"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Smoking Room": "workshop.medium.a",
+    "Master Bedchamber": "bedroom.master.small.a",
+    "Worker's Bedroom": "bedroom.small.b"
+   }
+  },
+  {
+   "name": "Net-Mender's Cottage",
+   "wall": "wood",
+   "ground": "packed earth",
+   "rooms": [
+    {
+     "name": "Hearth room",
+     "share": "large",
+     "use": "living_room",
+     "purpose": "living room"
+    },
+    {
+     "name": "Bedchamber",
+     "share": "medium",
+     "use": "master_bedroom",
+     "purpose": "master bedroom"
+    },
+    {
+     "name": "Children's loft",
+     "share": "small",
+     "use": "bedroom",
+     "purpose": "bedroom"
+    }
+   ],
+   "connections": [
+    [
+     "Hearth room",
+     "Bedchamber"
+    ],
+    [
+     "Hearth room",
+     "Children's loft"
+    ]
+   ],
+   "entrance": {
+    "room": "Hearth room",
+    "side": "east"
+   },
+   "furniture": [
+    {
+     "template": "Wrought iron brazier",
+     "room": "Hearth room",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Beech trestle table",
+     "room": "Hearth room",
+     "count": 2,
+     "hint": "center"
+    },
+    {
+     "template": "Beech wooden chair",
+     "room": "Hearth room",
+     "count": 8,
+     "hint": "around:Beech trestle table"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Hearth room",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Elm tap counter",
+     "room": "Hearth room",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Pewter candle stand",
+     "room": "Hearth room",
+     "count": 2,
+     "hint": "corner"
+    },
+    {
+     "template": "Undyed linen double bed",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "Bedchamber",
+     "count": 2,
+     "hint": "beside:Undyed linen double bed+symmetric"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Bedchamber",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Undyed linen bedroll",
+     "room": "Children's loft",
+     "count": 2,
+     "hint": "wall:side+away_from_door"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Children's loft",
+     "count": 1,
+     "hint": "wall:far"
+    }
+   ],
+   "yard": null,
+   "suite": "cottage.family",
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Hearth room": "common_room.large.b",
+    "Bedchamber": "bedroom.master.medium.a",
+    "Children's loft": "bedroom.small.b"
+   }
+  },
+  {
+   "name": "Fisherman's Cottage",
+   "suite": null,
+   "wall": "wood",
+   "ground": "wood planks",
+   "rooms": [
+    {
+     "name": "Hall",
+     "share": "medium",
+     "use": "living_room",
+     "purpose": "A central hall with a hearth where the family gathers to share meals and tell stories of the day's catch."
+    },
+    {
+     "name": "Kitchen",
+     "share": "small",
+     "use": "kitchen",
+     "purpose": "A compact kitchen equipped for cooking fresh fish and boiling vegetables, essential for the family's sustenance."
+    },
+    {
+     "name": "First Bedchamber",
+     "share": "medium",
+     "use": "master_bedroom",
+     "purpose": "A private room for the first couple, featuring a double bed and a small chest for clothes, offering respite from the coastal chill."
+    },
+    {
+     "name": "Second Bedchamber",
+     "share": "medium",
+     "use": "master_bedroom",
+     "purpose": "Another private chamber for the second couple, with a double bed and simple furnishings for comfort."
+    },
+    {
+     "name": "Dormitory",
+     "share": "medium",
+     "use": "dormitory",
+     "purpose": "A shared sleeping area with multiple beds for the children or other family members, fostering a sense of community."
+    }
+   ],
+   "connections": [
+    [
+     "Hall",
+     "Kitchen"
+    ],
+    [
+     "Hall",
+     "First Bedchamber"
+    ],
+    [
+     "Hall",
+     "Second Bedchamber"
+    ],
+    [
+     "Hall",
+     "Dormitory"
+    ]
+   ],
+   "entrance": {
+    "room": "Hall",
+    "side": "south"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Ash chess table",
+     "room": "Hall",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Beech wooden chair",
+     "room": "Hall",
+     "count": 2,
+     "hint": "around:Ash chess table"
+    },
+    {
+     "template": "Wool cushioned settle",
+     "room": "Hall",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Elm small round table",
+     "room": "Hall",
+     "count": 1,
+     "hint": "beside:Wool cushioned settle"
+    },
+    {
+     "template": "Ash floor harp",
+     "room": "Hall",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Stoneware oil lamp",
+     "room": "Hall",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Copper cooking fire",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Elm small round table",
+     "room": "Kitchen",
+     "count": 2,
+     "hint": "beside:Copper cooking fire"
+    },
+    {
+     "template": "Elm wash basin",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Copper barrel",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "wall:side+corner"
+    },
+    {
+     "template": "Pewter candle stand",
+     "room": "Kitchen",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Undyed linen double bed",
+     "room": "First Bedchamber",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "First Bedchamber",
+     "count": 2,
+     "hint": "beside:Undyed linen double bed+symmetric"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "First Bedchamber",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Undyed linen double bed",
+     "room": "Second Bedchamber",
+     "count": 1,
+     "hint": "wall:far"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "Second Bedchamber",
+     "count": 2,
+     "hint": "beside:Undyed linen double bed+symmetric"
+    },
+    {
+     "template": "Elm wash basin",
+     "room": "Second Bedchamber",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Second Bedchamber",
+     "count": 1,
+     "hint": "wall:near"
+    },
+    {
+     "template": "Pewter candle stand",
+     "room": "Second Bedchamber",
+     "count": 1,
+     "hint": "corner"
+    },
+    {
+     "template": "Wool bed",
+     "room": "Dormitory",
+     "count": 4,
+     "hint": "row:side"
+    },
+    {
+     "template": "Ash kit chest",
+     "room": "Dormitory",
+     "count": 1,
+     "hint": "beside:Wool bed"
+    },
+    {
+     "template": "Elm plank table",
+     "room": "Dormitory",
+     "count": 1,
+     "hint": "center"
+    },
+    {
+     "template": "Undyed linen great chair",
+     "room": "Dormitory",
+     "count": 2,
+     "hint": "around:Elm plank table"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Hall": "common_room.medium.c",
+    "Kitchen": "kitchen.small.a",
+    "First Bedchamber": "bedroom.master.medium.a",
+    "Second Bedchamber": "bedroom.master.medium.c",
+    "Dormitory": "dormitory.medium.b"
+   }
+  },
+  {
+   "name": "Gear Shed",
+   "suite": null,
+   "wall": "wood",
+   "ground": "wooden floor",
+   "rooms": [
+    {
+     "name": "Gear Storage",
+     "share": "medium",
+     "use": "warehouse",
+     "purpose": "Storage for fishing nets, ropes, and gear"
+    },
+    {
+     "name": "Couple's Chamber",
+     "share": "small",
+     "use": "master_bedroom",
+     "purpose": "Bedroom for the couple with a double bed"
+    },
+    {
+     "name": "Single's Quarters",
+     "share": "small",
+     "use": "bedroom",
+     "purpose": "Bedroom for the third resident with a single bed"
+    }
+   ],
+   "connections": [
+    [
+     "Gear Storage",
+     "Couple's Chamber"
+    ],
+    [
+     "Gear Storage",
+     "Single's Quarters"
+    ]
+   ],
+   "entrance": {
+    "room": "Gear Storage",
+    "side": "north"
+   },
+   "wealth": {},
+   "yard": null,
+   "furniture": [
+    {
+     "template": "Ash tool rack",
+     "room": "Gear Storage",
+     "count": 3,
+     "hint": "row:side"
+    },
+    {
+     "template": "Green glass wine rack",
+     "room": "Gear Storage",
+     "count": 5,
+     "hint": "row:side"
+    },
+    {
+     "template": "Elm crate",
+     "room": "Gear Storage",
+     "count": 1,
+     "hint": "wall:far+corner"
+    },
+    {
+     "template": "Ash slop bucket",
+     "room": "Gear Storage",
+     "count": 1,
+     "hint": "near_door"
+    },
+    {
+     "template": "Undyed linen double bed",
+     "room": "Couple's Chamber",
+     "count": 1,
+     "hint": "wall:side+away_from_door"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "Couple's Chamber",
+     "count": 1,
+     "hint": "beside:Undyed linen double bed+symmetric"
+    },
+    {
+     "template": "Undyed linen bedroll",
+     "room": "Single's Quarters",
+     "count": 1,
+     "hint": "wall:far+corner"
+    },
+    {
+     "template": "Ash bedside table",
+     "room": "Single's Quarters",
+     "count": 1,
+     "hint": "beside:Undyed linen bedroll"
+    },
+    {
+     "template": "Beech clothes cupboard",
+     "room": "Single's Quarters",
+     "count": 1,
+     "hint": "wall:side"
+    },
+    {
+     "template": "Stoneware oil lamp",
+     "room": "Single's Quarters",
+     "count": 1,
+     "hint": "corner"
+    }
+   ],
+   "upper": [],
+   "stairs": null,
+   "libraryLayouts": {
+    "Gear Storage": "storage.medium.a",
+    "Couple's Chamber": "bedroom.master.small.b",
+    "Single's Quarters": "bedroom.small.a"
+   }
+  }
+ ],
+ "npcs": [
+  {
+   "name": "Eldrin Stonehand",
+   "gender": "male",
+   "home": "Net-Mender's Cottage",
+   "work": "Net-Mender's Cottage",
+   "description": "Eldrin is the widowed net-mender who holds quiet authority over Cold Harbor, seeking to maintain the village's fragile peace while worrying that his influence might fade with his age.",
+   "physicalDescription": "He is lean and weathered, wearing a thick woolen tunic patched at the elbows, with hands calloused from years of mending nets.",
+   "kind": "adult",
+   "role": "net-mender",
+   "sells": false
+  },
+  {
+   "name": "Borin Fishback",
+   "gender": "male",
+   "home": "Fisherman's Cottage",
+   "work": "Fishing Docks",
+   "description": "Borin is a herring fisher who works the dangerous waters with his wife Astrid, wanting to provide for his family but fearing the increasing storms that threaten his boat.",
+   "physicalDescription": "He is broad-shouldered and strong, clad in oilskin trousers and a sealskin jacket, with a scar on his left cheek from a net mishap.",
+   "partner": "Astrid Fishback",
+   "kind": "adult",
+   "role": "herring fisher",
+   "sells": true
+  },
+  {
+   "name": "Astrid Fishback",
+   "gender": "female",
+   "home": "Fisherman's Cottage",
+   "work": "Fishing Docks",
+   "description": "Astrid is a herring fisher who partners with her husband Borin, desiring to see their children grow up safe while worrying about the hardships of the sea.",
+   "physicalDescription": "She is sturdy and practical, wearing a knitted wool sweater and leather boots, with her hair braided tightly against the wind.",
+   "partner": "Borin Fishback",
+   "kind": "adult",
+   "role": "herring fisher",
+   "sells": true
+  },
+  {
+   "name": "Lissa Fishback",
+   "gender": "female",
+   "role": "the fisher's daughter",
+   "home": "Fisherman's Cottage",
+   "work": "Fisherman's Cottage",
+   "description": "Lissa is the fisher's daughter, helping with chores around the cottage, wanting to learn the net-mending trade but concerned that she might never be as skilled as Eldrin.",
+   "physicalDescription": "She is small and quick, dressed in a simple linen dress with a shawl, with bright eyes that miss nothing.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Lars Fishback",
+   "gender": "male",
+   "role": "the fisher's son",
+   "home": "Fisherman's Cottage",
+   "work": "Fisherman's Cottage",
+   "description": "Lars is the fisher's son, assisting his father with mending gear, aspiring to become a great fisher yet fearing the cold depths of the ocean.",
+   "physicalDescription": "He is wiry and energetic, wearing a tattered tunic and breeches, with a mop of dark hair always in his eyes.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Harald Blacktide",
+   "gender": "male",
+   "home": "Salty Seal Inn",
+   "work": "Salty Seal Inn",
+   "description": "Harald is the innkeeper of Salty Seal Inn, managing the lodging and ale with his wife Greta, seeking to attract travelers while worrying about the sparse traffic in this isolated hamlet.",
+   "physicalDescription": "He is stout and jovial, wearing a leather apron over a woolen shirt, with a thick beard stained with ale.",
+   "partner": "Greta Blacktide",
+   "kind": "adult",
+   "flat": 1,
+   "role": "innkeeper",
+   "sells": true
+  },
+  {
+   "name": "Greta Blacktide",
+   "gender": "female",
+   "home": "Salty Seal Inn",
+   "work": "Salty Seal Inn",
+   "description": "Greta is the cook at the inn, preparing hearty meals for guests alongside her husband Harald, desiring to keep the hearth warm but concerned about the rising cost of ingredients.",
+   "physicalDescription": "She is plump and warm, dressed in a flour-dusted apron and a headscarf, with hands always busy kneading dough.",
+   "partner": "Harald Blacktide",
+   "kind": "adult",
+   "flat": 1,
+   "role": "cook",
+   "sells": true
+  },
+  {
+   "name": "Ingrid Blacktide",
+   "gender": "female",
+   "role": "the innkeeper's daughter",
+   "home": "Salty Seal Inn",
+   "work": "Salty Seal Inn",
+   "description": "Ingrid is the innkeeper's daughter, helping serve in the inn, wanting to see the world beyond Cold Harbor but feeling trapped by the village's isolation.",
+   "physicalDescription": "She is fair-haired and curious, wearing a simple dress with a ribbon, always glancing at the distant horizon.",
+   "kind": "child",
+   "flat": 1,
+   "sells": false
+  },
+  {
+   "name": "Bjorn Ember",
+   "gender": "male",
+   "role": "smokehouse worker",
+   "home": "Smokehouse",
+   "work": "Smokehouse",
+   "description": "Bjorn Ember, the smokehouse worker and husband of Helga, strives to preserve fish for the village, wanting to secure food for winter, but worrying about the declining fish stocks.",
+   "physicalDescription": "Bjorn has a sturdy build, often seen in a soot-stained leather apron, with calloused hands from stoking the smokehouse fires.",
+   "partner": "Helga Ember",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Helga Ember",
+   "gender": "female",
+   "role": "smokehouse assistant",
+   "home": "Smokehouse",
+   "work": "Smokehouse",
+   "description": "Helga Ember, the smokehouse assistant and wife of Bjorn, seeks to support their household through her work, but fears the health effects from constant smoke exposure.",
+   "physicalDescription": "Helga is of medium height, with braided hair tied back, wearing a woolen dress and an apron, her face lined with the worries of daily labor.",
+   "partner": "Bjorn Ember",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Thora Ember",
+   "gender": "female",
+   "role": "the elder",
+   "home": "Smokehouse",
+   "work": "Smokehouse",
+   "description": "Thora Ember, the elder of the household, wants to pass on family traditions to the younger generations, but worries about the erosion of communal spirit in the harsh settlement.",
+   "physicalDescription": "Thora is frail but sharp-eyed, dressed in a simple woolen shawl, with silver hair tied back, her hands gnarled from years of work.",
+   "kind": "elder",
+   "sells": false
+  },
+  {
+   "name": "Erik Storm",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Salty Seal Inn",
+   "work": "Fishing Docks",
+   "description": "Erik Storm, the herring fisher and husband of Ida, works at the docks to provide for his family, wanting to ensure their survival, but fears the unpredictable sea.",
+   "physicalDescription": "Erik is tall and lean, with wind-chapped skin, wearing a sealskin coat and boots, his eyes constantly scanning the horizon.",
+   "partner": "Ida Storm",
+   "kind": "adult",
+   "flat": 2,
+   "sells": true
+  },
+  {
+   "name": "Ida Storm",
+   "gender": "female",
+   "role": "herring fisher",
+   "home": "Salty Seal Inn",
+   "work": "Fishing Docks",
+   "description": "Ida Storm, the herring fisher and wife of Erik, balances work with family life, seeking to create a safe home, but she worries about her child's future.",
+   "physicalDescription": "Ida is of medium build, with strong arms from hauling nets, dressed in practical woolens, her hair covered by a scarf.",
+   "partner": "Erik Storm",
+   "kind": "adult",
+   "flat": 2,
+   "sells": true
+  },
+  {
+   "name": "Sven Storm",
+   "gender": "male",
+   "role": "the fisher's son",
+   "home": "Salty Seal Inn",
+   "work": "Salty Seal Inn",
+   "description": "Sven Storm, the son of Erik and Ida, stays at the inn dreaming of adventure beyond the village, but he worries about leaving his family.",
+   "physicalDescription": "Sven is a lanky boy with messy hair, often seen playing near the inn, wearing a too-large coat handed down from his father.",
+   "kind": "child",
+   "flat": 2,
+   "sells": false
+  },
+  {
+   "name": "Hakon Winter",
+   "gender": "male",
+   "role": "herring fisher",
+   "home": "Fisherman's Cottage",
+   "work": "Fishing Docks",
+   "description": "Hakon Winter, the herring fisher and husband of Eira, works hard to support his family, wanting to ensure their survival, but he fears the increasing storms.",
+   "physicalDescription": "Hakon is broad-shouldered, with a beard braided with cords, wearing an oilskin jacket, his hands rough from net mending.",
+   "partner": "Eira Winter",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Eira Winter",
+   "gender": "female",
+   "role": "herring fisher",
+   "home": "Fisherman's Cottage",
+   "work": "Fishing Docks",
+   "description": "Eira Winter, the herring fisher and wife of Hakon, manages the household while fishing, seeking to strengthen family ties, but she worries about the loneliness of winter.",
+   "physicalDescription": "Eira is sturdy with bright eyes, dressed in a woolen skirt and shawl, her hair braided tightly for work.",
+   "partner": "Hakon Winter",
+   "kind": "adult",
+   "sells": true
+  },
+  {
+   "name": "Peer Winter",
+   "gender": "male",
+   "role": "the fisher's son",
+   "home": "Fisherman's Cottage",
+   "work": "Fisherman's Cottage",
+   "description": "Peer Winter, the son of Hakon and Eira, stays home wanting to learn the fishing trade, but he worries about not being strong enough.",
+   "physicalDescription": "Peer is a young boy with a serious expression, often seen helping with chores, wearing a cap pulled low over his eyes.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Kari Winter",
+   "gender": "female",
+   "role": "the fisher's daughter",
+   "home": "Fisherman's Cottage",
+   "work": "Fisherman's Cottage",
+   "description": "Kari Winter, the daughter of Hakon and Eira, dreams of leaving the village to see distant lands, but she fears the unknown beyond the coast.",
+   "physicalDescription": "Kari is a slight girl with flowing hair, always looking out to sea, wearing a dress patched from old nets, her expression full of longing.",
+   "kind": "child",
+   "sells": false
+  },
+  {
+   "name": "Asta Stonehand",
+   "gender": "female",
+   "description": "Asta Stonehand is the net-mender apprentice and partner of Bjorn Stonehand, who wants to prove her skill in mending the village's nets before the winter gales, but worries that the fish are running scarce.",
+   "physicalDescription": "sturdy build, wearing a thick woolen shawl, with her fingers stained blue from net dye.",
+   "partner": "Bjorn Stonehand",
+   "home": "Net-Mender's Cottage",
+   "kind": "adult",
+   "role": "net-mender apprentice",
+   "work": "Net-Mender's Cottage",
+   "sells": false
+  },
+  {
+   "name": "Bjorn Stonehand",
+   "gender": "male",
+   "description": "Bjorn Stonehand is the net-mender and partner of Asta Stonehand, who seeks to maintain the quality of the fishing nets to support the hamlet, yet fears the increasing storms may damage his work.",
+   "physicalDescription": "broad-shouldered, clad in a leather apron, with a small tattoo of a fish on his wrist.",
+   "partner": "Asta Stonehand",
+   "home": "Net-Mender's Cottage",
+   "kind": "adult",
+   "role": "net-mender",
+   "work": "Net-Mender's Cottage",
+   "sells": false
+  },
+  {
+   "name": "Signe Stonehand",
+   "gender": "female",
+   "role": "the net-mender's child",
+   "description": "Signe Stonehand is the young child of the household, who wants to help with the net-mending but is too small, and worries about the cold wind that howls at night.",
+   "physicalDescription": "small and fair-haired, wearing a patched wool dress, with a wooden net float as a toy.",
+   "home": "Net-Mender's Cottage",
+   "kind": "child",
+   "work": "Net-Mender's Cottage",
+   "sells": false
+  },
+  {
+   "name": "Kjell Gearson",
+   "gender": "male",
+   "description": "Kjell is the gear keeper and partner to Sigrid; he wants to ensure the nets are mended before the next storm, but worries that the harsh winds will tear them again.",
+   "physicalDescription": "Sturdy build, wearing a patched woolen cloak, with a scar on his left hand from a net knife.",
+   "partner": "Sigrid Gearson",
+   "home": "Gear Shed",
+   "kind": "adult",
+   "role": "gear keeper",
+   "work": "Gear Shed",
+   "sells": false
+  },
+  {
+   "name": "Sigrid Gearson",
+   "gender": "female",
+   "description": "Sigrid is the gear assistant and partner to Kjell; she wants to learn the finer points of net-mending, but fears she'll never be as skilled as the old net-mender.",
+   "physicalDescription": "Slender build, wearing a simple linen dress, with hair braided tightly for work.",
+   "partner": "Kjell Gearson",
+   "home": "Gear Shed",
+   "kind": "adult",
+   "role": "gear assistant",
+   "work": "Gear Shed",
+   "sells": false
+  },
+  {
+   "name": "Rurik Gearson",
+   "gender": "male",
+   "description": "Rurik is the son of Kjell and Sigrid, helping with chores at the Gear Shed; he wants to one day become a fisher, but worries he's too young for the hard work.",
+   "physicalDescription": "Lanky build, wearing a too-large tunic handed down from his father, with freckles on his nose.",
+   "home": "Gear Shed",
+   "kind": "child",
+   "work": "Gear Shed",
+   "sells": false,
+   "role": "child"
+  }
+ ],
+ "player": {
+  "name": "Kaelen Frostwind",
+  "gender": "female",
+  "role": "a wandering scholar",
+  "home": "Salty Seal Inn",
+  "work": "Salty Seal Inn",
+  "description": "A wandering scholar from distant lands, Kaelen seeks to study the resilient community of Cold Harbor, planning to stay through the harsh winter to observe their ways.",
+  "physicalDescription": "Slim build, clad in a thick woolen cloak and sturdy boots, with a weathered face that tells of many journeys, and a sharp, observant eye.",
+  "inventory": [
+   [
+    "Compass",
+    1
+   ],
+   [
+    "Map Scrap",
+    1
+   ]
+  ],
+  "equipment": {
+   "torso": "Wool Cloak",
+   "boots": "Leather Boots",
+   "gloves": "Woolen Gloves"
+  }
+ },
+ "narrativeRules": [
+  "Emphasize the biting cold in every description.",
+  "Highlight the communal reliance on the net-mender.",
+  "Introduce subtle rivalries among fishermen.",
+  "Use scarcity of supplies to drive decisions.",
+  "Let favors be the primary social currency.",
+  "Describe the sea as both provider and threat.",
+  "Keep the population sparse and interactions brief.",
+  "Reveal rumors slowly to build intrigue."
+ ],
+ "narrativeFlavor": "intense",
+ "difficulty": "medium",
+ "currency": {
+  "name": "the copper",
+  "description": "A small copper coin used for daily trade.",
+  "format": "5 coppers"
+ },
+ "startingCurrency": 300,
+ "attributes": {
+  "strength": 5,
+  "dexterity": 5,
+  "intellect": 5,
+  "perception": 5,
+  "charisma": 5
+ },
+ "skills": {
+  "Fishing": 2,
+  "Net Mending": 3,
+  "Boat Handling": 1,
+  "Weather Reading": 2,
+  "Foraging": 1,
+  "Cooking": 2,
+  "Smokehouse Operation": 1,
+  "Carpentry": 0,
+  "First Aid": 1,
+  "Negotiation": 2,
+  "Bartering": 2,
+  "Survival": 3,
+  "Tracking": 1,
+  "Swimming": 2,
+  "Knot Tying": 3,
+  "Fish Preservation": 2,
+  "Shipbuilding": 0,
+  "Community Lore": 2
+ },
+ "weatherKinds": [
+  "clear",
+  "fog",
+  "rain",
+  "snow",
+  "blizzard",
+  "wind"
+ ],
+ "variables": [
+  {
+   "name": "Rumours",
+   "emoji": "💬",
+   "type": "text",
+   "value": "No rumors yet",
+   "initial": "No rumors yet"
+  },
+  {
+   "name": "Supplies",
+   "emoji": "🌾",
+   "type": "number",
+   "value": 8,
+   "initial": 8,
+   "min": 0,
+   "max": 12,
+   "ratePerHour": -0.1,
+   "lowZone": {
+    "threshold": 2,
+    "effectDesc": "hunger pains",
+    "emoji": "⚠️"
+   }
+  },
+  {
+   "name": "Morale",
+   "emoji": "❤️",
+   "type": "number",
+   "value": 5,
+   "initial": 5,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": -0.05,
+   "lowZone": {
+    "threshold": 3,
+    "effectDesc": "restlessness",
+    "emoji": "⚡"
+   }
+  },
+  {
+   "name": "FishCatch",
+   "emoji": "🐟",
+   "type": "number",
+   "value": 5,
+   "initial": 5,
+   "min": 0,
+   "max": 20,
+   "ratePerHour": 0.2,
+   "highZone": {
+    "threshold": 15,
+    "effectDesc": "abundant haul",
+    "emoji": "🎉"
+   }
+  },
+  {
+   "name": "Wind",
+   "emoji": "🌬️",
+   "type": "number",
+   "value": 3,
+   "initial": 3,
+   "min": 0,
+   "max": 10,
+   "ratePerHour": 0.0
+  }
+ ],
+ "perkTrees": [
+  {
+   "name": "Sea's Whisper",
+   "root": {
+    "name": "Tide Sense",
+    "type": "passive",
+    "description": "Your study of the sea allows you to predict tidal changes with accuracy, granting advantage on navigation checks near water.",
+    "physicalDescription": "An old nautical chart with annotated tides.",
+    "children": [
+     {
+      "name": "Weathered Prognostication",
+      "type": "active",
+      "description": "Your observation of clouds and wind lets you forecast the day's weather, providing the GM with hints about upcoming conditions.",
+      "physicalDescription": "A weathered knot tied around a barometer.",
+      "children": []
+     },
+     {
+      "name": "Fish Whisperer",
+      "type": "passive",
+      "description": "Your sense of fish movements reveals likely fishing spots when you are near water.",
+      "physicalDescription": "A fish silhouette with rippling water.",
+      "children": []
+     },
+     {
+      "name": "Ocean Lore",
+      "type": "passive",
+      "description": "Your knowledge of local sea creatures enables you to identify dangers and opportunities during sea travel.",
+      "physicalDescription": "A scroll with sketches of sea monsters and safe routes.",
+      "children": []
+     },
+     {
+      "name": "Saltwind's Grace",
+      "type": "passive",
+      "description": "Your lungs are strengthened by the salty air, granting advantage on stamina checks when breathing cold sea air.",
+      "physicalDescription": "A feathered cloak fluttering in the sea breeze.",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Cold Harbor Lore",
+   "root": {
+    "name": "Hamlet Histories",
+    "type": "passive",
+    "description": "Your knowledge of the hamlet's founding stories and key events grants insight into villager motivations.",
+    "physicalDescription": "An ancient village map carved into stone.",
+    "children": [
+     {
+      "name": "Favor Ledger",
+      "type": "passive",
+      "description": "Your ability to track debts and favors owed to and from villagers lets you recall who owes you a favor.",
+      "physicalDescription": "A ledger with names and symbolic favors recorded.",
+      "children": []
+     },
+     {
+      "name": "Secrets of the Stonehand",
+      "type": "passive",
+      "description": "Your learning of hidden Stonehand knowledge, such as net-mending techniques, improves your repair work.",
+      "physicalDescription": "A family crest featuring a net and spindle.",
+      "children": []
+     },
+     {
+      "name": "Whispers of the Past",
+      "type": "active",
+      "description": "Your communion with the spirits of the hamlet reveals secrets, but requires a moment of quiet reflection.",
+      "physicalDescription": "A candle flame with ghostly figures dancing around it.",
+      "children": []
+     },
+     {
+      "name": "Ancestral Guidance",
+      "type": "passive",
+      "description": "Your receipt of subtle hints from ancestors grants advantage on history or survival checks.",
+      "physicalDescription": "A glowing ancestor portrait watching over you.",
+      "children": []
+     }
+    ]
+   }
+  },
+  {
+   "name": "Hardy Survivor",
+   "root": {
+    "name": "Endurance of the North",
+    "type": "passive",
+    "description": "Your body is adapted to the cold, reducing fatigue and granting resistance to cold damage.",
+    "physicalDescription": "A fur cloak with frost patterns woven into it.",
+    "children": [
+     {
+      "name": "Cold Resistance",
+      "type": "passive",
+      "description": "Your immunity to cold damage and extreme temperatures allows survival in harsh conditions.",
+      "physicalDescription": "A snowflake crystallizing on a beating heart.",
+      "children": []
+     },
+     {
+      "name": "Resourceful Foraging",
+      "type": "active",
+      "description": "Your foraging skill lets you find edible plants and resources in the wild, providing food and materials.",
+      "physicalDescription": "A basket filled with berries and roots.",
+      "children": []
+     },
+     {
+      "name": "Craftsman's Touch",
+      "type": "passive",
+      "description": "Your craftsmanship improves the durability of tools and equipment you create.",
+      "physicalDescription": "A hammer resting on an anvil.",
+      "children": []
+     },
+     {
+      "name": "Winter's Grip",
+      "type": "passive",
+      "description": "Your ability to withstand blizzards and navigate snow easily prevents slowdown.",
+      "physicalDescription": "A boot print in deep snow with ice crystals.",
+      "children": []
+     }
+    ]
+   }
+  }
+ ],
+ "calendar": [
+  {
+   "name": "Assist with Net Mending",
+   "location": "Net-Mender's Cottage",
+   "day": 0,
+   "start": "09:00",
+   "hours": 2,
+   "recurrence": "daily",
+   "missedConsequence": "Eldrin Stonehand becomes distrustful, making it harder to gain his favor and access his knowledge."
+  },
+  {
+   "name": "Help at the Salty Seal Inn",
+   "location": "Salty Seal Inn",
+   "day": 0,
+   "start": "18:00",
+   "hours": 3,
+   "recurrence": "daily",
+   "missedConsequence": "Harald Blacktide charges the player for lodging, depleting their funds and limiting resources."
+  },
+  {
+   "name": "Storm Warning Assembly",
+   "location": "Village Green",
+   "day": 1,
+   "start": "08:00",
+   "hours": 1,
+   "recurrence": "none",
+   "missedConsequence": "The player misses critical storm preparation plans, leading to increased damage and injuries during the storm."
+  },
+  {
+   "name": "Fishermen's Meeting",
+   "location": "Fishing Docks",
+   "day": 3,
+   "start": "10:00",
+   "hours": 2,
+   "recurrence": "none",
+   "missedConsequence": "The player is not informed of route changes, resulting in lower catch efficiency and food shortages."
+  }
+ ],
+ "quests": [
+  {
+   "title": "Preparing for the Impending Storm",
+   "objectives": [
+    {
+     "text": "Assess the condition of the fishing docks",
+     "prerequisites": [
+      {
+       "text": "Go to Fishing Docks",
+       "primary": true
+      }
+     ]
+    },
+    {
+     "text": "Secure the fishing nets and gear",
+     "prerequisites": [
+      {
+       "text": "Go to Gear Shed",
+       "primary": true
+      },
+      {
+       "text": "Consult with Kjell Gearson",
+       "primary": false
+      }
+     ]
+    },
+    {
+     "text": "Report the status to Eldrin Stonehand",
+     "prerequisites": [
+      {
+       "text": "Go to Net-Mender's Cottage",
+       "primary": true
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "cast": {
+  "households": [
+   {
+    "home": "Net-Mender's Cottage",
+    "couples": 0,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "net-mender",
+      "work": "Net-Mender's Cottage",
+      "sells": false
+     }
+    ]
+   },
+   {
+    "home": "Fisherman's Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Salty Seal Inn",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "innkeeper",
+      "work": "Salty Seal Inn",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "cook",
+      "work": "Salty Seal Inn",
+      "sells": true
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 1
+   },
+   {
+    "home": "Smokehouse",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "smokehouse worker",
+      "work": "Smokehouse",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "smokehouse assistant",
+      "work": "Smokehouse",
+      "sells": true
+     },
+     {
+      "kind": "elder"
+     }
+    ]
+   },
+   {
+    "home": "Gear Shed",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "gear keeper",
+      "work": "Gear Shed",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "gear assistant",
+      "work": "Gear Shed",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Salty Seal Inn",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "child"
+     }
+    ],
+    "flat": 2
+   },
+   {
+    "home": "Fisherman's Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "adult",
+      "role": "herring fisher",
+      "work": "Fishing Docks",
+      "sells": true
+     },
+     {
+      "kind": "child"
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   },
+   {
+    "home": "Net-Mender's Cottage",
+    "couples": 1,
+    "members": [
+     {
+      "kind": "adult",
+      "role": "net-mender apprentice",
+      "work": "Net-Mender's Cottage",
+      "sells": false
+     },
+     {
+      "kind": "adult",
+      "role": "net-mender",
+      "work": "Net-Mender's Cottage",
+      "sells": false
+     },
+     {
+      "kind": "child"
+     }
+    ]
+   }
+  ]
+ },
+ "library": {
+  "version": 1,
+  "band": "medieval",
+  "templates": 31
+ },
+ "extensions": [
+  "floors"
+ ]
+}

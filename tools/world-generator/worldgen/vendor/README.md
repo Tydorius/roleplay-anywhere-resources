@@ -19,6 +19,8 @@ the pipeline never touches anything outside this repository.
   - `render_map.py` treats Pillow as optional: without it the script prints one
     clear message and exits 0 instead of crashing on `from PIL import ...`.
   - the usage strings name `worldgen/vendor/…` instead of `_tools/…`.
+  - `render_map.py` draws a zero-wide object (a 1.0 door, `size [1, 0]` or `[0, 1]`) as a bar on its wall
+    line. Pillow refuses a zero-height rectangle, so every world with doors lost its preview (2026-11-11).
 
 They are invoked by relative path (`worldgen/vendor/<tool>.py`), in-process
 imports are not used. To pick up an upstream change, copy the file here and

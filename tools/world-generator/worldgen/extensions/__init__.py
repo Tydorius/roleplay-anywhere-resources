@@ -1,4 +1,4 @@
-"""Mod extensions a run may enable.
+"""Optional extensions a run may enable.
 
 Every extension is an opt-in toggle, **off by default**: a run without
 extensions needs no game mods — the base prompts never mention a mod
@@ -8,16 +8,17 @@ registry below is what a UI lists as unchecked toggles.
 An extension adds prompt fragments (``worldgen/prompts/ext/<ext>/<phase>.txt``,
 appended to that phase's prompt when enabled), contract fields for the model
 to reply with, and — for floors — a post-layout step that places the extra
-storeys and writes the game-mod data (``arpgMods``). A run without an
+storeys. Not every extension needs a game mod any more: ``floors`` uses
+Anywhere RPG 1.0's own floors and plays unmodded, while ``region-groups``
+and ``lights`` write ``arpgMods`` data the game-mod-loader mods in
+``roleplay-anywhere-resources/tools/code-mod-loader`` read; an extension's
+``mods`` names the ones it needs (empty for none). A run without an
 extension never mentions its features to the model and never runs its code.
 
-The game mods live in ``roleplay-anywhere-resources/tools/code-mod-loader``
-(``portals``, ``floors``, ``region-groups``, ``lights``); an extension's ``mods``
-names the ones it needs.
-
-``floors`` needs ``portals`` (its stairs are portal pads): enabling floors
-turns portals on too — :func:`expand` records that, and :func:`expand_notes`
-says so for a user.
+``requires`` names extensions turned on with this one (:func:`expand`
+records that, and :func:`expand_notes` says so for a user); no extension
+uses it today — ``floors`` needed ``portals`` until 1.0's own floors
+replaced both mods.
 """
 
 
@@ -35,21 +36,22 @@ class Extension:
         self.default = False
 
     def as_dict(self):
+        without = self.without_mod
+        if not without:
+            without = ("no game mod needed" if not self.mods else
+                       "the world won't work right without "
+                       + ("them" if len(self.mods) > 1 else "it"))
         return {"id": self.id, "title": self.title, "mods": list(self.mods),
                 "description": self.description, "requires": list(self.requires),
-                "withoutMod": self.without_mod or "the world won't work right without "
-                              + ("them" if len(self.mods) > 1 else "it"),
+                "withoutMod": without,
                 "default": self.default}
 
 
 REGISTRY = (
-    Extension("floors", "Floors (upper storeys)", ("portals", "floors"),
-              "Multi-storey buildings: bedrooms and halls upstairs, reached by "
-              "stair portals, in a lit band beyond the world's dark edge.",
-              requires=("portals",)),
-    Extension("portals", "Portals", ("portals",),
-              "Two-way portal pads linking two cells; the stairs between "
-              "storeys are portals."),
+    Extension("floors", "Floors (upper storeys)", (),
+              "Multi-storey buildings: bedrooms and halls upstairs, reached "
+              "by stairs, using Anywhere RPG 1.0's own floors; no game mod "
+              "needed."),
     Extension("region-groups", "Region groups", ("region-groups",),
               "A zone may wrap around the map and still act as one region; "
               "wilder zone shapes for large plans."),
@@ -66,7 +68,8 @@ IMPLIED = {e.id: e.requires for e in REGISTRY if e.requires}
 
 
 def expand(exts):
-    """The full extension set implied by ``exts`` (floors implies portals)."""
+    """The full extension set implied by ``exts`` (each one's ``requires``,
+    when it has any)."""
     out = set()
     for e in exts or ():
         out.add(e)
@@ -76,7 +79,7 @@ def expand(exts):
 
 def expand_notes(exts):
     """(full extension set, one note per dependency the user did not name
-    directly) — turning floors on turns portals on, and says so."""
+    directly) — an extension with ``requires`` says so here."""
     given = set(exts or ())
     full = expand(given)
     notes = []

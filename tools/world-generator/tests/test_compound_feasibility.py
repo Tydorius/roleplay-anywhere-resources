@@ -13,11 +13,10 @@ up in reports/012-feasibility.md.
 3. Solid walls: a walkability-0 object strip blocks movement, claims no
    wall cell of the walled regions it runs between, and leaves the parts
    reachable through their own doors.
-4. Upper storeys that touch: two storey regions placed touching in the band
-   auto-connect (same parent: the boundary region), and the floors payload
-   still maps each storey to its own building. The seal's behaviour with
-   the shared door is asserted as it stands today and flipped when the
-   compound storeys land (change 4): see test_seal_keeps_inter_storey_doors.
+4. Upper storeys as 1.0 floors: each storey is its own plane east of the
+   map, 24 cells apart, a pocket region reached by portal stairs. The
+   build-time fiction doors are stripped by the seal, and the stairs link
+   as the game's own "Link Portal": see TestNativeFloors.
 """
 import json
 import os
@@ -126,12 +125,12 @@ class _BuildCase(unittest.TestCase):
         self.assertEqual(E, [], "the validator reported errors")
         return b
 
-    def write_and_inject(self, b, arpg_mods):
+    def write_and_finish(self, b, spec):
         tmp = tempfile.mkdtemp(prefix="worldgen-feas-inj-")
         self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
         root, _z, _n = b.write(tmp, make_zip=False)
         from worldgen import mods
-        mods.inject_arpg_mods(root, arpg_mods)
+        mods.finish_scenario(root, spec)
         with open(os.path.join(root, "scenario.json"), encoding="utf-8") as f:
             return json.load(f)
 
@@ -297,76 +296,99 @@ class TestSolidWalls(_BuildCase):
 
 # -------------------------------------------------------- 4. touching storeys
 
-BAND_T1 = (60, 4)   # storey of the west tower, east of the 24-cell strip
-BAND_T2 = (68, 4)   # storey of the east tower, one cell east: touching
+FLOOR_T1 = (64, 1)   # storey of the west tower: 24+ cells east of the play area
+FLOOR_T2 = (96, 1)   # storey of the east tower: 24 cells east of that
 STOREY_SIZE = (8, 8)
 
 
-class TestTouchingStoreys(_BuildCase):
+class TestNativeFloors(_BuildCase):
     def _spec_storeys(self):
-        """A ground pair west of a boundary strip, and their storeys east of
-        it: same size as the ground regions, same relative arrangement, one
-        cell apart so they touch. Each storey keeps the build-time door the
-        floors extension writes (opening onto the slab, passable at build)."""
+        """A ground pair on the play area, and their storeys east of it as
+        islands 24 cells apart — each the size of its ground region, with
+        the build-time door the floors extension writes and a pair of stair
+        pads (walkable 1x1 objects) linking ground to storey."""
         regions = [
             _region("The Grounds", (0, 0), (36, 20)),
             _region("West Tower", (6, 4), STOREY_SIZE, wall="stone", doors=["west"]),
             _region("East Tower", (16, 4), STOREY_SIZE, wall="stone", doors=["north"]),
-            _region("The Edge of the World", (36, 0), (40, 20)),
-            _region("West Tower (upper floor)", BAND_T1, STOREY_SIZE,
+            _region("West Tower (upper floor)", FLOOR_T1, STOREY_SIZE,
                     wall="stone", doors=["west"]),
-            _region("East Tower (upper floor)", BAND_T2, STOREY_SIZE,
+            _region("East Tower (upper floor)", FLOOR_T2, STOREY_SIZE,
                     wall="stone", doors=["north"]),
         ]
         objects = [
-            {"name": "The World's Edge", "size": [24, 20], "walkability": 1.0,
-             "passableAtBuild": True, "maxHp": 999, "heightM": 3,
-             "description": "The world's edge.", "physicalDescription": "Void.",
-             "tags": ["landmark"], "placements": [[36, 0]]},
+            _object("West Tower stairs up", (1, 1), 1.0, [[8, 7]]),
+            _object("West Tower stairs down", (1, 1), 1.0, [[66, 3]]),
+            _object("East Tower stairs up", (1, 1), 1.0, [[18, 7]]),
+            _object("East Tower stairs down", (1, 1), 1.0, [[98, 3]]),
         ]
-        return _spec(regions, objects, grid=(76, 20), player=(2, 2))
+        return _spec(regions, objects, grid=(104, 20), player=(2, 2))
 
-    def _arpg(self):
-        return {"floors": [
-            {"name": "West Tower floor 2", "area": "West Tower (upper floor)",
-             "above": "West Tower", "openings": []},
-            {"name": "East Tower floor 2", "area": "East Tower (upper floor)",
-             "above": "East Tower", "openings": []},
-        ], "portals": []}
+    def _native(self):
+        return {
+            "grid": [36, 20],
+            "floors": [
+                {"region": "West Tower (upper floor)",
+                 "anchor": "West Tower", "level": 1},
+                {"region": "East Tower (upper floor)",
+                 "anchor": "East Tower", "level": 1},
+            ],
+            "portals": [
+                {"a": "West Tower stairs up 1", "b": "West Tower stairs down 1"},
+                {"a": "East Tower stairs up 1", "b": "East Tower stairs down 1"},
+            ],
+            "seal": ["West Tower (upper floor)", "East Tower (upper floor)"],
+        }
 
-    def test_touching_storeys_auto_connect_under_the_boundary(self):
+    def test_storeys_apart_carry_no_shared_doors(self):
+        """Planes cannot share a door: two storeys 24 cells apart never
+        auto-connect, and each keeps only its own build-time door."""
         b = self.build(self._spec_storeys())
-        by_name = {r["name"]: r for r in b.regions}
-        self.assertEqual(by_name["West Tower (upper floor)"]["_parent"]["name"],
-                         "The Edge of the World")
-        self.assertEqual(by_name["East Tower (upper floor)"]["_parent"]["name"],
-                         "The Edge of the World")
         ops = _openings(b)
-        self.assertIn((67, 7), ops["West Tower (upper floor)"],
-                      "the shared wall walk door, west side")
-        self.assertIn((68, 7), ops["East Tower (upper floor)"],
-                      "the shared wall walk door, east side")
+        self.assertEqual(sorted(tuple(c) for c in ops["West Tower (upper floor)"]),
+                         [(FLOOR_T1[0], FLOOR_T1[1] + 3)])
+        self.assertEqual(sorted(tuple(c) for c in ops["East Tower (upper floor)"]),
+                         [(FLOOR_T2[0] + 3, FLOOR_T2[1] + STOREY_SIZE[1] - 1)])
 
-    def test_each_storey_maps_to_its_own_building(self):
+    def test_finish_writes_pockets_links_and_seals(self):
         b = self.build(self._spec_storeys())
-        scn = self.write_and_inject(b, self._arpg())
-        by_area = {f["area"]: f for f in scn["arpgMods"]["floors"]}
-        self.assertEqual(by_area["West Tower (upper floor)"]["above"], "West Tower")
-        self.assertEqual(by_area["East Tower (upper floor)"]["above"], "East Tower")
-        return scn
-
-    def test_seal_keeps_the_shared_door_and_strips_the_fiction_doors(self):
-        """The seal takes only the build-time fiction doors: an opening on a
-        storey's border that another storey also keeps (a wall-walk door) is
-        a real door between two storeys of one compound, and ships."""
-        scn = self.test_each_storey_maps_to_its_own_building()
+        scn = self.write_and_finish(b, {"nativeFloors": self._native()})
         by_name = {r["name"]: r for r in scn["regions"]}
-        west = {tuple(c) for c in by_name["West Tower (upper floor)"]["openings"]}
-        east = {tuple(c) for c in by_name["East Tower (upper floor)"]["openings"]}
-        self.assertNotIn((60, 7), west, "the west fiction door is sealed away")
-        self.assertNotIn((71, 11), east, "the east fiction door is sealed away")
-        self.assertIn((67, 7), west, "the wall-walk door ships")
-        self.assertIn((68, 7), east, "the wall-walk door ships")
+        west = by_name["West Tower (upper floor)"]
+        east = by_name["East Tower (upper floor)"]
+        # pockets: each storey hangs off its own ground region, at level 1
+        self.assertEqual(west["pocket"],
+                         {"anchor": by_name["West Tower"]["id"], "level": 1})
+        self.assertEqual(east["pocket"],
+                         {"anchor": by_name["East Tower"]["id"], "level": 1})
+        # portals: both stair ends point at each other
+        ents = {e["name"]: e for e in scn["entities"] if e["type"] == "object"}
+        up, down = ents["West Tower stairs up 1"], ents["West Tower stairs down 1"]
+        self.assertEqual(up["portal"], {"to": down["id"]})
+        self.assertEqual(down["portal"], {"to": up["id"]})
+        # the seal: the build-time fiction doors are gone, gridSize is the
+        # play area, and the storeys sit east of it
+        self.assertEqual(west["openings"], [])
+        self.assertEqual(east["openings"], [])
+        self.assertEqual(scn["gridSize"], [36, 20])
+        self.assertGreaterEqual(west["position"][0], 36 + 24)
+        self.assertGreaterEqual(east["position"][0] - west["position"][0]
+                                - west["size"][0], 24)
+
+    def test_the_finished_scenario_passes_the_checks(self):
+        b = self.build(self._spec_storeys())
+        tmp = tempfile.mkdtemp(prefix="worldgen-feas-chk-")
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        root, _z, _n = b.write(tmp, make_zip=False)
+        from worldgen import mods, checks as checks_mod
+        mods.finish_scenario(root, {"nativeFloors": self._native()})
+        path = os.path.join(root, "scenario.json")
+        self.assertEqual(checks_mod.check_scenario_mods(
+            path, {"nativeFloors": self._native()}), [])
+        from worldgen.vendor import scenario_checks
+        found = scenario_checks.check(*scenario_checks.load(path))
+        self.assertEqual([f for f in found if f["level"] == "error"], [],
+                         [f["msg"] for f in found])
 
 
 if __name__ == "__main__":

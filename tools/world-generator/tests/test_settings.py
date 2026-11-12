@@ -30,7 +30,7 @@ class TestFormat(unittest.TestCase):
         back = settings.loads(settings.dumps(s))
         self.assertEqual(back, s)
         self.assertEqual(back["kind"], settings.KIND)
-        self.assertEqual(back["extensions"], ["floors", "portals"], "floors brings portals")
+        self.assertEqual(back["extensions"], ["floors"])
 
     def test_answers_are_cleaned_like_the_forms_clean_them(self):
         s = a_settings(answers={"genre": {"choices": ["Fantasy", "Not an option"]},
@@ -47,6 +47,8 @@ class TestFormat(unittest.TestCase):
                  ('{"kind": "%s", "version": 99, "idea": "x"}' % settings.KIND, "newer"),
                  ('{"kind": "%s", "version": 1, "mode": "huge", "idea": "x"}' % settings.KIND,
                   "unknown mode"),
+                 ('{"kind": "%s", "version": 1, "idea": "x", "extensions": "floors"}'
+                  % settings.KIND, "list of extension ids"),
                  ('{"kind": "%s", "version": 1, "idea": "x", "extensions": ["jetpacks"]}'
                   % settings.KIND, "unknown extension"),
                  ('{"kind": "%s", "version": 1}' % settings.KIND, "nothing to build"),
@@ -55,6 +57,12 @@ class TestFormat(unittest.TestCase):
             with self.assertRaises(settings.SettingsError) as cm:
                 settings.loads(text)
             self.assertIn(why, str(cm.exception), text)
+
+    def test_a_retired_extension_id_drops_quietly(self):
+        # an older world's settings name portals; this generator has retired it
+        text = ('{"kind": "%s", "version": 1, "idea": "x", '
+                '"extensions": ["floors", "portals"]}' % settings.KIND)
+        self.assertEqual(settings.loads(text)["extensions"], ["floors"])
 
     def test_no_provider_or_key_is_kept(self):
         data = json.loads(settings.dumps(a_settings()))

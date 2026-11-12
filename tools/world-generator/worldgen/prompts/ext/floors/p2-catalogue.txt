@@ -1,0 +1,5 @@
+STAIRCASES (the floors extension)
+- The code makes the stairs itself: for every multi-storey building it places
+  its own stair objects on each storey and links them storey to storey. The
+  catalogue must not include a staircase template of its own — a stair
+  template would only place stairs that lead nowhere.

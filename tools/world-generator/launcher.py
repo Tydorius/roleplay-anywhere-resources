@@ -296,16 +296,20 @@ class Launcher:
 
     def pick_extensions(self, given=()):
         self.out("")
-        self.out("Extensions add features that need code mods from ../code-mod-loader")
-        self.out("installed in the game. All off makes a world for the plain game.")
+        self.out("Extensions add features. Some need code mods from")
+        self.out("../code-mod-loader installed in the game; others need no mod.")
+        self.out("All off makes a world for the plain game.")
         chosen = set(given)
         for e in REGISTRY:
             if e.id in expand(chosen):
                 self.out(f"  {e.title}: on (needed by {', '.join(sorted(x for x in chosen if e.id in expand([x]) and x != e.id))})")
                 continue
             self.out(f"  {e.title}: {e.description}")
-            self.out(f"    Needs the {' + '.join(e.mods)} mod{'s' if len(e.mods) > 1 else ''}; "
-                     f"{e.as_dict()['withoutMod']}.")
+            if e.mods:
+                self.out(f"    Needs the {' + '.join(e.mods)} mod{'s' if len(e.mods) > 1 else ''}; "
+                         f"{e.as_dict()['withoutMod']}.")
+            else:
+                self.out("    No game mod needed.")
             if self.yes(f"  Turn on {e.title}?"):
                 chosen.add(e.id)
         return sorted(expand(chosen))

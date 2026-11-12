@@ -164,10 +164,12 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertEqual(by_name["mockp"]["keyHint"], "\u2026abcd")
         self.assertEqual(by_name["mockp"]["model"], "mock-model")
         exts = {e["id"]: e for e in m["extensions"]}
-        self.assertEqual(set(exts), {"floors", "portals", "region-groups", "lights"})
+        # the portals extension is retired: floors writes 1.0's native floors
+        # and stairs, needs no game mod and turns on nothing else
+        self.assertEqual(set(exts), {"floors", "region-groups", "lights"})
         self.assertFalse(any(e["default"] for e in exts.values()))
-        self.assertEqual(exts["floors"]["mods"], ["portals", "floors"])
-        self.assertEqual(exts["floors"]["requires"], ["portals"])
+        self.assertEqual(exts["floors"]["mods"], [])
+        self.assertEqual(exts["floors"]["requires"], [])
         code, raw = self.request("GET", "/api/worldgen/meta")
         self.assertNotIn(FULL_KEY, raw, "the api key reached the browser")
 
@@ -328,7 +330,7 @@ class TestWorldgenEndpoints(unittest.TestCase):
         self.assertEqual(s["kind"], wg.wgsettings.KIND)
         self.assertEqual(s["frame"]["summary"], "An edited summary.")
         self.assertEqual(s["model"], "mock-model")
-        self.assertEqual(s["extensions"], ["floors", "portals"])
+        self.assertEqual(s["extensions"], ["floors"], "floors no longer brings portals along")
         text = json.dumps(s)
         self.assertNotIn(FULL_KEY, text)
         self.assertNotIn("mockp", text, "the provider name stays on this machine")

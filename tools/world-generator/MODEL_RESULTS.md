@@ -7,6 +7,9 @@ Two tests, both on one small fishing hamlet:
 1. **Complete worlds:** six models each built the whole world alone, three times, the way you'd run the generator yourself. Start here if you're choosing a model.
 2. **One prompt at a time:** 15 local models and 7 tested earlier answered all 11 generator prompts, each from the same hand-picked earlier results, so each prompt is a fair comparison on its own.
 
+A third test, [Complex structures on Anywhere RPG 1.0](#complex-structures-on-anywhere-rpg-10), was run later on
+four free OpenRouter models. It covers castles, a hospital and flats with the floors option on.
+
 ## Read this first
 
 - **One hamlet.** A town, a station or a castle may favour different models.
@@ -70,6 +73,66 @@ Deckard Q8 ran locally with 128k context. The others ran on OpenRouter's free ti
 | LFM 2.5 2.6B | - | 0 | 11 | 27 | 4 | 413,371 | OpenRouter free tier. |
 
 Stock Gemma 4 26B and 31B on OpenRouter's free tier are left out: they returned rate-limit errors (429) on every round, so they were never really tested there. The same models ran locally without trouble.
+
+## Complex structures on Anywhere RPG 1.0
+
+Run on 2026-11-11 on the `worldgen-native-1.0` branch, with `--ext floors`. Four free OpenRouter models each
+built four worlds from a one-line idea:
+- **Castle:** a walled border castle with corner towers, a gatehouse, a three-storey keep, a chapel, barracks and
+  stables.
+- **Hospital:** a 1950s cottage hospital with wards along one corridor, a two-storey nurses' home and a mortuary.
+- **Flats:** a four-storey block of flats above a row of shops.
+- **Hamlet:** the fishing hamlet again, as a baseline.
+
+| Model | Worlds built (of 4) | Minutes per world | Tokens per world | What it planned |
+|---|---|---|---|---|
+| Flint v1.0 | 4 | 10–25 | 126k–284k | Closest to the ideas: a 3-storey keep with three corner towers, 4-storey flats above an abandoned pawn shop, a 2-storey nurses' home. |
+| Dots 3 Note (preview) | 4 | 29–43 | 182k–247k | The most ambitious: a walled castle compound with a 3-storey keep, an 11-building hospital compound, 4-storey flats above a shop row. |
+| Nemotron 3.5 Lightning | 4 | 106–142 | 297k–387k | Works, but very slow. Its hospital left out the two-storey nurses' home. |
+| Nemotron 3 Ultra 550B | 0 | – | – | Never returned usable JSON (P1 or P2 gave none). |
+
+Inkling 2 Small was also tried. OpenRouter refuses its free tier outside approved apps (HTTP 403).
+
+**Read this first:**
+- **One run per idea per model, on the free tier.** Timings include rate-limit waits.
+- **Failures that weren't the model's:**
+  - Dots' hamlet first failed on a generator bug. A turned counter covered a villager's start cell; fixed on
+    this branch.
+  - Lightning's flats first failed because the generator was being edited mid-run.
+  - Both plans build cleanly now, so they count as built.
+
+**What the 1.0 features did:** all 12 plans were rebuilt on the branch's final code. Every one builds with no
+validator errors, every room is reachable, and the shipped-scenario check finds nothing.
+- **Floors:** 1 to 3 upper storeys on every building that asked for them, with each stair pair linked both
+  ways.
+- **Doors:** 16 to 146 door objects per world. The castles have gates on the walls, a barred door and a curtain.
+- **Locks:** each castle locks its armoury and gives the key to the gatekeeper, or to the captain and one other.
+- **Theft:** 2 to 8 buildings per world are flagged.
+- **Populations:** goats on a castle field, rats in grain stores, a town watch on the hospital streets,
+  townsfolk on the flats' square. Each home starts full.
+- **Stairs to nowhere:** decorative staircases the models furnished were dropped, 2 to 8 per world in five
+  worlds.
+
+**Bugs these runs found, all fixed on this branch:**
+- turned furniture covering a start cell;
+- a stair placed in a corridor's dead-end tail beyond a lamp;
+- upstairs furniture losing its turn;
+- map previews crashing on door objects.
+
+A chapel keeper's sleeping "cell" was locked like a jail cell in two castles. That's fixed too: a bare "cell" in a
+chapel, temple or monastery stays unlocked.
+
+**Left as is:**
+- Some small unit kitchens can't fit a hearth, worktable and stove.
+- One great hall dropped ten pieces of furniture for lack of room.
+
+**Live check in the game:** Flint's castle, "Rookhold", was started in Anywhere RPG 1.0. The game's own save at
+08:00 on day 1 shows everything imported:
+- the keep's two upper floors and four linked stairs;
+- 39 doors, gates and a curtain;
+- the armoury's three locked doors, with both key holders carrying the key;
+- five theft-flagged buildings;
+- all five goats in their field.
 
 ## Terms
 

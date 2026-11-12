@@ -4,13 +4,16 @@ portals count as connections), walkways and doors clear, density, and
 unplaced pieces with reasons. With the floors extension: floor areas the
 size of their ground region, storeys sealed (no opening on their outer
 border), portal ends that exist, walkable stairs, upper rooms reachable from
-their stairs, and nothing in an opening. Results go to metrics.json (the
-pipeline writes the dict; run_checks returns it).
+their stairs, and the 1.0 layout — every storey its own plane east of the
+play area, 24 cells apart. Results go to metrics.json (the pipeline writes
+the dict; run_checks returns it).
 
 The walkability model mirrors build_scenario.py exactly: the outer ring of a
 walled region is wall except at door openings, and walkability-0 objects block.
 """
+from .layout_room import object_cells
 from .model import Rect, shared_wall_cells
+from .phases import RUIN_WORDS, STAIR_WORDS, ruined_building, stair_furniture_name
 
 
 def _ring(rect):
@@ -38,9 +41,9 @@ def compute_openings(world):
     return openings
 
 
-def walkability_grid(world, openings):
-    """(blocked_cells, door_cells) over the whole map."""
-    W, H = world.grid
+def _base_grid(world, openings):
+    """(blocked_cells, door_cells) of the built shapes alone: the walls of
+    walled regions (minus their doorways) and walkability-0 objects."""
     blocked = set()
     doors = set()
     for r in world.regions:
@@ -51,17 +54,44 @@ def walkability_grid(world, openings):
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            w, h = t.size
-            blocked |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                        for y in range(o.pos[1], o.pos[1] + h)}
+            blocked |= object_cells(world, o)
     return blocked, doors
+
+
+def walkability_grid(world, openings):
+    """(blocked_cells, door_cells) over the whole map: walls, solid objects
+    and deep water. Shallow water is waded — walk "slow" — so it stays
+    walkable; deep water has walk "no" and blocks like a wall."""
+    from . import native
+    blocked, doors = _base_grid(world, openings)
+    blocked |= native.deep_cells(world)
+    return blocked, doors
+
+
+def _planes(world):
+    """The rects a cell may exist on: the map (the play area) and, when the
+    floors extension ran, every storey plane east of it — 1.0 floors sit
+    outside gridSize, but their cells are as real as the map's."""
+    planes = [Rect(0, 0, world.grid[0], world.grid[1])]
+    planes += [f.rect for f in getattr(world, "floors", []) or []]
+    return planes
+
+
+def on_a_plane(world, cell):
+    """Whether `cell` sits on the map or one of the storey planes."""
+    return any(p.contains_cell(cell) for p in _planes(world))
 
 
 def flood(world, starts, blocked, jumps=None):
     """Cells reachable from `starts`: four-way through unblocked cells, plus
-    any jump edges (stair portals), which connect two cells directly."""
-    W, H = world.grid
-    seen = set(s for s in starts if 0 <= s[0] < W and 0 <= s[1] < H and s not in blocked)
+    any jump edges (stair portals), which connect two cells directly. A cell
+    off the map counts while it sits on a storey plane."""
+    planes = _planes(world)
+
+    def exists(c):
+        return any(p.contains_cell(c) for p in planes)
+
+    seen = set(s for s in starts if exists(s) and s not in blocked)
     todo = list(seen)
     while todo:
         x, y = todo.pop()
@@ -69,15 +99,16 @@ def flood(world, starts, blocked, jumps=None):
         if jumps:
             nxt += tuple(jumps.get((x, y), ()))
         for c in nxt:
-            if 0 <= c[0] < W and 0 <= c[1] < H and c not in seen and c not in blocked:
+            if exists(c) and c not in seen and c not in blocked:
                 seen.add(c)
                 todo.append(c)
     return seen
 
 
 def portal_jumps(world):
-    """{cell: [cells]} for the two ends of every stair portal: stepping onto
-    a stair is stepping onto the stair it pairs with (the portals mod)."""
+    """{cell: [cells]} for the two ends of every linked pair (stairs, wall-walk
+    passages): stepping onto a pad is stepping onto the pad it pairs with —
+    the game's own portals."""
     ends = {n: o.pos for o, n in object_entity_names(world).items()}
     out = {}
     for p in getattr(world, "portals", None) or []:
@@ -115,60 +146,47 @@ def object_entity_names(world):
     return names
 
 
-def _shared_storey_doors(world, openings):
-    """{storey region name: {cells}} — the doors between touching storeys
-    (a compound's wall walks), the only openings allowed on a storey's
-    border."""
-    from .extensions.floors import shared_storey_doors
-    floors = getattr(world, "floors", []) or []
-    return shared_storey_doors({f.region_name: f.rect for f in floors},
-                               {f.region_name: openings.get(f.region_name, set())
-                                for f in floors})
+def _gap(a, b):
+    """Cells between two rects (0 if they touch or overlap), measured like a
+    king moves — the same rule the game's own floor layout keeps."""
+    return max(0, b.x - a.x1 - 1, a.x - b.x1 - 1, b.y - a.y1 - 1, a.y - b.y1 - 1)
 
 
 def _floors_checks(world, blocked):
     """Issues with the placed upper storeys: floor areas the size of their
-    `above` region, no opening on a storey's outer border (a wall-walk door
-    shared with another storey excepted), portal ends that exist and belong
-    to one portal each, walkable stairs in separate cells, upper rooms
-    reachable from their stairs (openings block, as in the game mod), and
-    nothing sitting in an opening."""
+    `above` region, no opening on a storey's outer border, portal ends that
+    exist and belong to one portal each, walkable stairs in separate cells,
+    upper rooms reachable from their stairs, and the 1.0 layout itself —
+    every storey its own plane, east of the play area, none closer than
+    FLOOR_GAP cells to the map or each other."""
     issues = []
     names = object_entity_names(world)
     name_set = {n.lower() for n in names.values()}
     regions = {r.name: r for r in world.regions}
     region_set = {n.lower() for n in regions}
     openings = compute_openings(world)
-    keep = _shared_storey_doors(world, openings)
+    floors = list(getattr(world, "floors", []) or [])
 
-    def obj_footprints():
-        for o in world.objects:
-            t = world.templates[o.template]
-            w, h = t.size
-            yield o, {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                      for y in range(o.pos[1], o.pos[1] + h)}
-
-    for f in getattr(world, "floors", []):
+    for f in floors:
         above = regions.get(f.above)
         if above is None:
             issues.append(f"{f.region_name}: above region {f.above!r} does not exist")
         elif (f.rect.w, f.rect.h) != (above.rect.w, above.rect.h):
             issues.append(f"{f.region_name} is {f.rect.w}x{f.rect.h} but sits over "
                           f"{f.above} at {above.rect.w}x{above.rect.h}")
-        # sealed: no opening on the outer border of the storey's floor area
-        # except a wall-walk door it shares with another storey
+        # sealed: no opening at all on the outer border of the storey's
+        # floor area — its only ways in and out are its stairs and passages
         ring = _ring(f.rect)
         part_names = [f.region_name] + [r.full_name for r in f.layout.rooms
                                         if r.full_name != f.region_name]
         for name in part_names:
-            hit = (openings.get(name, set()) & ring) - keep.get(f.region_name, set())
+            hit = openings.get(name, set()) & ring
             if hit:
                 issues.append(f"{name} has an exterior opening at {sorted(hit)}; "
                               f"its only ways in and out are its stairs")
-        if f.stair_down is None and f.stair_up is None:
-            if not keep.get(f.region_name):
-                issues.append(f"{f.region_name} has no stairs and no door to "
-                              f"another storey; nobody can reach it")
+        if f.stair_down is None and f.stair_up is None and not f.passages:
+            issues.append(f"{f.region_name} has no stairs and no passage to "
+                          f"another storey; nobody can reach it")
         for label, ref in (("stair down", f.stair_down),
                            ("stair up", f.stair_up),
                            ("stair below's up stair", f.stair_below_up)):
@@ -179,13 +197,16 @@ def _floors_checks(world, blocked):
                 issues.append(f"{f.region_name}: its {label} template {ref[0]!r} is missing")
             elif t.walkability <= 0:
                 issues.append(f"{f.region_name}: its {label} ({ref[0]}) is not walkable")
-        # upper rooms reachable from this storey's stairs, openings blocked
+        for ref in f.passages:
+            t = world.templates.get(ref[0])
+            if t is None:
+                issues.append(f"{f.region_name}: its passage template {ref[0]!r} is missing")
+            elif t.walkability <= 0:
+                issues.append(f"{f.region_name}: its passage ({ref[0]}) is not walkable")
+        # upper rooms reachable from this storey's stairs
         starts = [ref[1] for ref in (f.stair_down, f.stair_up) if ref is not None]
         if starts:
-            blocked2 = set(blocked)
-            if f.opening_rect is not None:
-                blocked2 |= f.opening_rect.cells()
-            seen = flood(world, starts, blocked2)
+            seen = flood(world, starts, set(blocked))
             for room in f.layout.rooms:
                 if not (room.rect.interior().cells() & seen):
                     issues.append(f"{room.base_name} on {f.region_name} is not "
@@ -194,12 +215,18 @@ def _floors_checks(world, blocked):
         if f.stair_down is not None and f.stair_up is not None \
                 and f.stair_down[1] == f.stair_up[1]:
             issues.append(f"{f.region_name}: its stairs down and up share one cell")
-        if f.opening_rect is not None:
-            cells = f.opening_rect.cells()
-            for o, fp in obj_footprints():
-                if fp & cells:
-                    issues.append(f"{names.get(o, o.template)} sits in the opening "
-                                  f"{f.opening_name}")
+    # the 1.0 layout: every floor its own plane, east of the play area
+    # (first at the map's width + FLOOR_GAP), FLOOR_GAP cells apart
+    from .extensions.floors import FLOOR_GAP
+    for i, f in enumerate(floors):
+        if _gap(f.rect, Rect(0, 0, world.grid[0], world.grid[1])) < FLOOR_GAP:
+            issues.append(f"{f.region_name} sits less than {FLOOR_GAP} cells east of "
+                          f"the play area; the game lays floors out {FLOOR_GAP} cells "
+                          f"beyond the map")
+        for g in floors[i + 1:]:
+            if _gap(f.rect, g.rect) < FLOOR_GAP:
+                issues.append(f"{f.region_name} and {g.region_name} are less than "
+                              f"{FLOOR_GAP} cells apart; each floor is a plane of its own")
     # every portal edge is its own pad: no object or cell may be the end of
     # more than one portal, from either side
     seen_ends = {}
@@ -226,55 +253,6 @@ def _floors_checks(world, blocked):
                               f"is already the {seen_ends[key]} end of another portal")
             else:
                 seen_ends[key] = end
-    # the boundary: everything east of the play area. One region spans the
-    # strip and the band behind it, tinted the void's colour (so the band's
-    # gaps read as empty dark and the storeys as the only lit things there),
-    # unwalled; the strip's first SEPARATOR_WIDTH cells are sealed by the
-    # slab object, which covers them exactly. Nothing else may sit in the
-    # strip, and every storey nests east of the slab, inside the region.
-    if list(getattr(world, "floors", []) or []):
-        from .extensions.floors import (BOUNDARY_COLOR, BOUNDARY_NAME, SEPARATOR_WIDTH,
-                                        SLAB_NAME)
-        from .model import Rect as _Rect
-        b = next((r for r in world.regions if r.name == BOUNDARY_NAME), None)
-        if b is None:
-            issues.append(f"no {BOUNDARY_NAME} region east of the play area")
-        else:
-            if b.rect.y != 0 or b.rect.h != world.grid[1] \
-                    or b.rect.x1 != world.grid[0] - 1:
-                issues.append(f"{BOUNDARY_NAME} is {b.rect.w}x{b.rect.h} at "
-                              f"({b.rect.x},{b.rect.y}); it must span the map's height "
-                              f"{world.grid[1]} and reach its east edge")
-            if b.wall:
-                issues.append(f"{BOUNDARY_NAME} is walled; the slab, not walls, seals it")
-            if b.ground_color != BOUNDARY_COLOR:
-                issues.append(f"{BOUNDARY_NAME} is tinted {b.ground_color!r}, not the "
-                              f"void's {BOUNDARY_COLOR}")
-            slab = world.templates.get(SLAB_NAME)
-            placed = [o for o in world.objects if o.template == SLAB_NAME]
-            strip = _Rect(b.rect.x, 0, SEPARATOR_WIDTH, world.grid[1])
-            if slab is None:
-                issues.append(f"no {SLAB_NAME} object to seal {BOUNDARY_NAME}")
-            else:
-                if slab.walkability > 0:
-                    issues.append(f"{SLAB_NAME} must block every cell it covers")
-                if not placed:
-                    issues.append(f"{SLAB_NAME} is never placed")
-                for o in placed:
-                    if o.pos != (strip.x, strip.y) \
-                            or slab.size != (strip.w, strip.h):
-                        issues.append(f"{SLAB_NAME} must cover the strip exactly")
-            for f in world.floors:
-                if f.rect.x < strip.x1 + 1 or f.rect.x1 > b.rect.x1:
-                    issues.append(f"{f.region_name} does not sit east of the slab, "
-                                  f"inside {BOUNDARY_NAME}")
-            for r in world.regions:
-                if r is not b and strip.contains_rect(r.rect) and r.rect != strip:
-                    issues.append(f"{r.name} sits inside the world's edge strip")
-            for o, fp in obj_footprints():
-                if o.template != SLAB_NAME and fp & strip.cells():
-                    issues.append(f"{names.get(o, o.template)} sits inside the "
-                                  f"world's edge strip")
     return issues
 
 
@@ -298,111 +276,322 @@ def _compound_checks(world, from_player):
     return issues
 
 
-def check_scenario_mods(scenario_path, arpg_mods):
+def _ruined_at(scn, pos):
+    """Whether `pos` sits inside a region the built scenario itself calls a
+    ruin (a ruin word in its name or description) — a stair there may rise
+    to a collapsed floor."""
+    px, py = pos if isinstance(pos, (list, tuple)) and len(pos) == 2 \
+        else (None, None)
+    if not isinstance(px, int) or not isinstance(py, int):
+        return False
+    for r in scn.get("regions", []):
+        x, y = r.get("position") or (None, None)
+        w, h = r.get("size") or (0, 0)
+        if not (isinstance(x, int) and isinstance(y, int)):
+            continue
+        if x <= px < x + w and y <= py < y + h and (
+                RUIN_WORDS.search(r.get("name") or "")
+                or RUIN_WORDS.search(r.get("description") or "")):
+            return True
+    return False
+
+
+def check_scenario_mods(scenario_path, spec):
     """Issues with the built scenario.json against what the generator laid
-    out: arpgMods must be present and match exactly, and every upper storey
-    must be sealed — no opening on its floor area's outer border."""
+    out: the arpgMods the spec carries (lights) must match exactly; every
+    storey region must carry the right pocket; every linked pair's objects
+    must point at each other; no sealed storey may keep an opening on its
+    outer border; the floors must sit outside gridSize, FLOOR_GAP cells
+    apart; every doorway whose room is not "none" must carry a door object,
+    and no door object may sit anywhere but on a doorway; no stair-named
+    object ships without a portal, unless it rises in a ruin. Locks: every key
+    opens a region that exists, and every room the spec locked has doors.
+    Nature: the natural shapes, water surfaces and vehicle fields landed on
+    the built scenario, and nobody stands on deep water.
+    Populations: every native population's home region exists, its sprite is
+    one the game knows, and it landed on the built scenario. Members: every
+    member entity's templateId names a built npcTemplate, its npcHome is one
+    of that template's homes, it stands inside that home region, no home holds
+    more members than its count, and every member the spec placed landed."""
     import json
+    from . import native
     with open(scenario_path, "r", encoding="utf-8") as f:
         scn = json.load(f)
     issues = []
-    if "arpgMods" not in scn:
-        return ["built scenario.json has no arpgMods"]
-    got = scn["arpgMods"]
-    if got != arpg_mods:
-        bad = [k for k in set(got) | set(arpg_mods) if got.get(k) != arpg_mods.get(k)]
-        issues += [f"built scenario.json arpgMods.{k} does not match the spec"
-                   for k in sorted(bad)]
+    # doors first, so the check runs for every world, floors or not
+    doorway_keys = {dw["key"] for dw in native.doorways(scn)}
+    doors = native.doors_by_key(scn)
+    for dw in native.doorways(scn):
+        if dw["room"].get("door", "door") == "none":
+            continue
+        if not doors.get(dw["key"]):
+            issues.append(f"doorway {dw['key']} into "
+                          f"{dw['room'].get('name')!r} has no door object")
+    for key, on_key in doors.items():
+        if key not in doorway_keys:
+            issues.append(f"door object {on_key[0].get('name')!r} at "
+                          f"{on_key[0].get('pos')} sits on no doorway")
+    # no stairs to nowhere: a stair-named object linked to no portal leads
+    # nowhere (the code places the real, linked stairs), unless it rises in
+    # a region the scenario itself calls a ruin
+    stair_templates = {t.get("id") for t in scn.get("objectTemplates") or []
+                       if STAIR_WORDS.search(t.get("name") or "")}
+    if stair_templates:
+        ruin_stairs = set(((spec or {}).get("nativeStairs") or {}).get("ruined") or [])
+        for e in scn.get("entities") or []:
+            if e.get("type") != "object" \
+                    or e.get("templateId") not in stair_templates \
+                    or isinstance(e.get("portal"), dict):
+                continue
+            if e.get("name") not in ruin_stairs and not _ruined_at(scn, e.get("pos")):
+                issues.append(f"stair object {e.get('name')!r} at "
+                              f"{e.get('pos')} leads nowhere (no portal)")
+    # 1.0 locks and keys: every key opens a region that exists, and every
+    # room the spec locked carries doors to lock
+    region_ids = {r.get("id") for r in scn.get("regions", [])}
+    for t in scn.get("itemTemplates") or []:
+        if t.get("opens") is not None and t.get("opens") not in region_ids:
+            issues.append(f"key {t.get('name')!r} opens {t.get('opens')!r}, "
+                          f"which is no region")
+    for entry in ((spec or {}).get("nativeLocks") or {}).get("locks") or []:
+        room = next((r for r in scn.get("regions", [])
+                     if r.get("name") == entry.get("room")), None)
+        if room is None:
+            issues.append(f"locked room {entry.get('room')!r} is no region "
+                          f"of the built scenario")
+        elif not native.region_doors(scn, room):
+            issues.append(f"locked room {entry.get('room')!r} has no doors")
+    # 1.0 nature: the natural shapes, water surfaces and vehicle fields the
+    # spec chose landed on the built scenario, and nothing that cannot swim
+    # stands on deep water
+    nature = (spec or {}).get("nativeNature") or {}
+    if nature:
+        from .vendor import scenario_checks as vendor
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        for name in nature.get("shape") or []:
+            area = by_name.get(name)
+            if area is None:
+                issues.append(f"natural shape names region {name!r}, which "
+                              f"the built scenario does not have")
+            elif area.get("shape") not in ("natural", "organic"):
+                issues.append(f"region {name!r} ships without its natural shape")
+        for name in nature.get("water") or []:
+            area = by_name.get(name)
+            if area is None:
+                issues.append(f"water surface names region {name!r}, which "
+                              f"the built scenario does not have")
+            elif area.get("surface") != "water":
+                issues.append(f"region {name!r} ships without its water surface")
+        for name, fields in (nature.get("vehicles") or {}).items():
+            t = next((t for t in scn.get("objectTemplates") or []
+                      if t.get("name") == name), None)
+            if t is None:
+                issues.append(f"vehicle {name!r} is no object template "
+                              f"of the built scenario")
+                continue
+            for k, v in fields.items():
+                if t.get(k) != v:
+                    issues.append(f"vehicle {name!r} lost its {k} in the build")
+        tpl = {t.get("id"): t for t in scn.get("objectTemplates") or []}
+        wet = vendor.liquid_cells(scn, scn.get("regions") or [])
+        for e in scn.get("entities") or []:
+            if e.get("type") == "object":
+                t = tpl.get(e.get("templateId")) or {}
+                if t.get("vehicle"):
+                    continue  # a boat is meant to sit on water
+                hit = set(vendor.footprint(e, tpl)) & wet
+                if hit:
+                    issues.append(f"object {e.get('name')!r} stands on deep "
+                                  f"water at {sorted(hit)[:4]}")
+            elif e.get("type") in ("npc", "player") and \
+                    tuple(e.get("pos") or ()) in wet:
+                issues.append(f"{e.get('name')!r} starts on deep water")
+    # 1.0 populations: every home region the spec names exists in the built
+    # scenario, every sprite is one the game knows, and each template landed
+    # on the built scenario with its homes resolved to the region ids
+    pops = (spec or {}).get("nativePopulations") or []
+    if pops:
+        from .vendor import scenario_checks as vendor
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        built = {t.get("name"): t for t in scn.get("npcTemplates") or []}
+        for p in pops:
+            label = f"population {p.get('name')!r}"
+            for h in p.get("homes") or []:
+                if h.get("region") not in by_name:
+                    issues.append(f"{label} names home region "
+                                  f"{h.get('region')!r}, which the built "
+                                  f"scenario does not have")
+            if p.get("animationId") not in vendor.ANIMATIONS:
+                issues.append(f"{label} plays unknown sprite "
+                              f"{p.get('animationId')!r}")
+            t = built.get(p.get("name"))
+            if t is None:
+                issues.append(f"{label} did not land on the built scenario")
+                continue
+            homes = {h.get("regionId"): h.get("count")
+                     for h in t.get("homes") or []}
+            for h in p.get("homes") or []:
+                area = by_name.get(h.get("region"))
+                if area is not None and \
+                        homes.get(area.get("id")) != h.get("count"):
+                    issues.append(f"{label} lost its home in "
+                                  f"{h.get('region')!r} on the build")
+        # the members the homes start with: every member entity belongs to a
+        # built template, its npcHome is one of that template's homes, it
+        # stands inside that home region, no home holds more members than its
+        # count, and each member the spec placed landed on the build
+        tpl_by_id = {t.get("id"): t for t in scn.get("npcTemplates") or []}
+        region_by_id = {r.get("id"): r for r in scn.get("regions", [])}
+
+        def holds(area, pos):
+            x, y = (area or {}).get("position", (0, 0))
+            w, h = (area or {}).get("size", (0, 0))
+            return isinstance(pos, (list, tuple)) and len(pos) == 2 and \
+                x <= pos[0] < x + w and y <= pos[1] < y + h
+
+        landed = set()
+        per_home = {}
+        for e in scn.get("entities") or []:
+            if e.get("type") != "npc" or not e.get("templateId"):
+                continue
+            label = f"population member {e.get('name')!r}"
+            t = tpl_by_id.get(e.get("templateId"))
+            if t is None:
+                issues.append(f"{label} carries templateId "
+                              f"{e.get('templateId')!r}, which is no built "
+                              f"npcTemplate")
+                continue
+            rid = e.get("npcHome")
+            homes = {h.get("regionId"): h.get("count")
+                     for h in t.get("homes") or []}
+            if rid not in homes:
+                issues.append(f"{label} has npcHome {rid!r}, which is not a "
+                              f"home of {t.get('name')!r}")
+                continue
+            if not holds(region_by_id.get(rid), e.get("pos")):
+                issues.append(f"{label} stands at {e.get('pos')}, outside its "
+                              f"home region "
+                              f"{(region_by_id.get(rid) or {}).get('name')!r}")
+            landed.add((e.get("templateId"), rid, tuple(e.get("pos") or ())))
+            key = (e.get("templateId"), rid)
+            per_home[key] = per_home.get(key, 0) + 1
+        for (tid, rid), n in sorted(per_home.items(), key=lambda kv: str(kv[0])):
+            t = tpl_by_id.get(tid) or {}
+            count = next((h.get("count") for h in t.get("homes") or []
+                          if h.get("regionId") == rid), 0)
+            if n > count:
+                issues.append(f"home {(region_by_id.get(rid) or {}).get('name')!r} "
+                              f"holds {n} members of {t.get('name')!r}, more "
+                              f"than its count {count}")
+        for p in pops:
+            t = built.get(p.get("name"))
+            if t is None:
+                continue     # reported above: it did not land
+            for h in p.get("homes") or []:
+                area = by_name.get(h.get("region"))
+                if area is None:
+                    continue  # reported above: no such region
+                for cell in h.get("members") or []:
+                    if (t.get("id"), area.get("id"), tuple(cell)) not in landed:
+                        issues.append(f"population {p.get('name')!r} member at "
+                                      f"{list(cell)} in {h.get('region')!r} did "
+                                      f"not land on the built scenario")
+    arpg_mods = (spec or {}).get("arpgMods")
+    got = scn.get("arpgMods")
+    if arpg_mods:
+        if got != arpg_mods:
+            bad = [k for k in set(got or {}) | set(arpg_mods)
+                   if (got or {}).get(k) != arpg_mods.get(k)]
+            issues += [f"built scenario.json arpgMods.{k} does not match the spec"
+                       for k in sorted(bad)]
+        # the lights mod finds its templates by exact name, and lights only those the game lights
+        lit = {t.get("name"): t for t in scn.get("objectTemplates", [])}
+        for name in ((arpg_mods.get("lights") or {}).get("templates") or {}):
+            if name not in lit:
+                issues.append(f"arpgMods.lights names {name!r}, which is not an object template")
+            elif not lit[name].get("light"):
+                issues.append(f"arpgMods.lights gives {name!r} a kind, but its light is 0")
+    elif isinstance(got, dict) and ("floors" in got or "portals" in got):
+        issues.append("built scenario.json has arpgMods.floors/portals; 1.0 floors "
+                      "are native (pockets and portals), not a game mod")
+    native = (spec or {}).get("nativeFloors") or {}
+    if not native.get("floors"):
+        return issues
+    from .extensions.floors import FLOOR_GAP
     by_name = {r.get("name"): r for r in scn.get("regions", [])}
-    # the lights mod finds its templates by exact name, and lights only those the game lights
-    lit = {t.get("name"): t for t in scn.get("objectTemplates", [])}
-    for name in ((arpg_mods.get("lights") or {}).get("templates") or {}):
-        if name not in lit:
-            issues.append(f"arpgMods.lights names {name!r}, which is not an object template")
-        elif not lit[name].get("light"):
-            issues.append(f"arpgMods.lights gives {name!r} a kind, but its light is 0")
-    # the wall-walk doors between touching storeys are the one opening a
-    # storey's border may keep
-    from .extensions.floors import shared_storey_doors
-    from .model import Rect as _Rect2
-    _rects, _ops = {}, {}
-    for f in arpg_mods.get("floors") or []:
-        area = by_name.get(f.get("area"))
-        if area is not None:
-            x, y = area.get("position", (0, 0))
-            w, h = area.get("size", (0, 0))
-            _rects[f.get("area")] = _Rect2(x, y, w, h)
-            _ops[f.get("area")] = {tuple(c) for c in area.get("openings") or []}
-    keep = shared_storey_doors(_rects, _ops)
-    for f in arpg_mods.get("floors") or []:
-        area = by_name.get(f.get("area"))
+    gw, gh = (scn.get("gridSize") or [0, 0])[:2]
+    rects = {}
+    for fl in native["floors"]:
+        area = by_name.get(fl["region"])
         if area is None:
-            issues.append(f"built scenario.json has no region {f.get('area')!r}")
+            issues.append(f"built scenario.json has no region {fl['region']!r}")
+            continue
+        x, y = area.get("position", (0, 0))
+        w, h = area.get("size", (0, 0))
+        rects[fl["region"]] = (x, y, x + w - 1, y + h - 1)
+        anchor = by_name.get(fl["anchor"])
+        pocket = area.get("pocket")
+        if not isinstance(pocket, dict):
+            issues.append(f"{fl['region']!r} carries no pocket; the game reads it "
+                          f"as an ordinary region")
+        elif anchor is None:
+            issues.append(f"{fl['region']!r} is anchored at {fl['anchor']!r}, "
+                          f"which the built scenario does not have")
+        elif pocket != {"anchor": anchor.get("id"), "level": fl["level"]}:
+            issues.append(f"{fl['region']!r} has pocket {pocket}, not the laid-out "
+                          f"{{anchor: {fl['anchor']!r}, level: {fl['level']}}}")
+        # 1.0 floors are planes beside the map, not on it
+        if x < gw + FLOOR_GAP or y < 0:
+            issues.append(f"{fl['region']!r} at ({x},{y}) does not sit {FLOOR_GAP} cells "
+                          f"east of the play area")
+    names = list(rects)
+    for i, a in enumerate(names):
+        for b in names[i + 1:]:
+            (ax0, ay0, ax1, ay1), (bx0, by0, bx1, by1) = rects[a], rects[b]
+            g = max(0, bx0 - ax1 - 1, ax0 - bx1 - 1, by0 - ay1 - 1, ay0 - by1 - 1)
+            if g < FLOOR_GAP:
+                issues.append(f"{a!r} and {b!r} are {g} cells apart, not {FLOOR_GAP}; "
+                              f"each floor is a plane of its own")
+    # every linked pair points both ways, at the laid-out ends
+    objs = {e.get("name"): e for e in scn.get("entities", [])
+            if e.get("type") == "object"}
+    for pair in native.get("portals") or []:
+        a, b = objs.get(pair["a"]), objs.get(pair["b"])
+        for (side, e, other) in ((pair["a"], a, pair["b"]), (pair["b"], b, pair["a"])):
+            if e is None:
+                issues.append(f"built scenario.json has no object entity {side!r} "
+                              f"to link a portal on")
+                continue
+            other_e = objs.get(other)
+            if not isinstance(e.get("portal"), dict) or \
+                    e["portal"].get("to") != (other_e or {}).get("id"):
+                issues.append(f"{side!r} does not point its portal at {other!r}")
+    # sealed: no opening on a sealed storey's border, and its inner rooms
+    # keep their doors (the seal must take the border only — a strip that
+    # reaches the rooms turns every upper floor into sealed boxes)
+    for name in native.get("seal") or []:
+        area = by_name.get(name)
+        if area is None:
             continue
         x, y = area.get("position", (0, 0))
         w, h = area.get("size", (0, 0))
         ring = {(cx, cy) for cx in range(x, x + w) for cy in (y, y + h - 1)}
         ring |= {(cx, cy) for cx in (x, x + w - 1) for cy in range(y, y + h)}
-        allowed = ring & keep.get(f.get("area"), set())
         for r in scn.get("regions", []):
-            hit = {tuple(c) for c in r.get("openings") or ()} & ring - allowed
+            hit = {tuple(c) for c in r.get("openings") or ()} & ring
             if hit:
                 issues.append(f"{r.get('name')!r} keeps an exterior opening at "
-                              f"{sorted(hit)} on {f.get('area')!r}")
-        # interior doors: a walled room inside a storey keeps at least one opening.
-        # The seal must take the storey's border only — a strip that reaches the
-        # rooms turns every upper floor into sealed boxes nobody can walk between.
-        ax, ay = area.get("position", (0, 0))
-        aw, ah = area.get("size", (0, 0))
+                              f"{sorted(hit)} on {name!r}")
         for r in scn.get("regions", []):
-            if not r.get("wall") or r.get("name") == f.get("area"):
+            if not r.get("wall") or r.get("name") == name:
                 continue
             rx, ry = r.get("position", (0, 0))
             rw, rh = r.get("size", (0, 0))
-            if not (rx > ax and ry > ay and rx + rw < ax + aw and ry + rh < ay + ah):
+            if not (rx > x and ry > y and rx + rw < x + w and ry + rh < y + h):
                 continue   # not strictly inside this storey
             if not r.get("openings"):
-                issues.append(f"{r.get('name')!r} is sealed inside {f.get('area')!r}; "
+                issues.append(f"{r.get('name')!r} is sealed inside {name!r}; "
                               f"the seal must take the storey's border only")
-    if arpg_mods.get("floors"):
-        import os
-        from .extensions.floors import (BOUNDARY_COLOR, BOUNDARY_NAME, SEPARATOR_WIDTH,
-                                        SLAB_NAME)
-        b = by_name.get(BOUNDARY_NAME)
-        if b is None:
-            issues.append(f"built scenario.json has no region {BOUNDARY_NAME!r}")
-        else:
-            if b.get("wall") or b.get("openings"):
-                issues.append(f"{BOUNDARY_NAME!r} must be an open region sealed by "
-                              f"the slab, not walls")
-            if b.get("groundColor") != BOUNDARY_COLOR:
-                issues.append(f"{BOUNDARY_NAME!r} lost its {BOUNDARY_COLOR} tint")
-        slab = next((t for t in scn.get("objectTemplates", [])
-                     if t.get("name") == SLAB_NAME), None)
-        if slab is None:
-            issues.append(f"built scenario.json has no {SLAB_NAME!r} template")
-        else:
-            if slab.get("walkability", 0) != 0:
-                issues.append(f"{SLAB_NAME!r} kept its build-time passability; "
-                              f"in play it must block")
-            if b is not None and list(slab.get("size", [])) != \
-                    [SEPARATOR_WIDTH, b.get("size", [0, 0])[1]]:
-                issues.append(f"{SLAB_NAME!r} is {slab.get('size')} but the strip is "
-                              f"{[SEPARATOR_WIDTH, b.get('size', [0, 0])[1]]}; the slab "
-                              f"must cover it exactly (a stale first-pass size from the "
-                              f"growth loop)")
-            ent = next((e for e in scn.get("entities", [])
-                        if e.get("templateId") == slab.get("id")), None)
-            if ent is None:
-                issues.append(f"{SLAB_NAME!r} is never placed in the built scenario")
-            elif b is not None and (list(ent.get("pos", [])) != list(b.get("position", []))
-                                    or list(ent.get("size", [])) != list(slab.get("size", []))):
-                issues.append(f"{SLAB_NAME!r} is placed at {ent.get('pos')} "
-                              f"{ent.get('size')}, not covering the strip")
-            sprite = os.path.join(os.path.dirname(scenario_path), "media",
-                                  slab["id"], f"{slab['id']}-sprite.webp")
-            if not os.path.exists(sprite):
-                issues.append(f"{SLAB_NAME!r} has no sprite beside the built scenario")
     return issues
 
 
@@ -438,13 +627,11 @@ def _cut_off_cells(world, openings, jumps):
     walled region's border, a step across one needs the cell inside it to be an
     opening, and every other cell of a room can be stood on. Objects that are
     solid block their cells. (scenario_checks.py's Walls is the reference.)"""
-    W, H = world.grid
     solid = set()
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + t.size[0])
-                      for y in range(o.pos[1], o.pos[1] + t.size[1])}
+            solid |= object_cells(world, o)
     inside = {}
     for r in world.regions:
         if r.wall:
@@ -461,15 +648,14 @@ def _cut_off_cells(world, openings, jumps):
         c = todo.pop()
         x, y = c
         steps = [n for n in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
-                 if 0 <= n[0] < W and 0 <= n[1] < H and n not in solid and can_step(c, n)]
+                 if on_a_plane(world, n) and n not in solid and can_step(c, n)]
         for n in steps + list(jumps.get(c, ())):
             if n not in seen:
                 seen.add(n)
                 todo.append(n)
     cells = set()
     for r in world.regions:
-        if r.kind != "boundary":         # the floors extension's sealed dark strip
-            cells |= r.rect.cells()
+        cells |= r.rect.cells()
     # the strips a building leaves between its flats are behind walls on every
     # side, with nothing in them: nobody is meant to stand there
     for r in world.regions:
@@ -479,8 +665,57 @@ def _cut_off_cells(world, openings, jumps):
     return sorted(cells - solid - seen)
 
 
+def _drop_dead_stairs(world):
+    """No stairs to nowhere: furniture named for a stair but linked to no
+    portal goes — the floors code places the real, linked stairs — and a
+    ruined building keeps its stair, which may rise to a collapsed floor.
+    Every later metric sees the final object set. Returns the counts for the
+    run summary."""
+    ends = set()
+    for p in getattr(world, "portals", None) or []:
+        ends.add((p.get("from") or {}).get("object"))
+        ends.add((p.get("to") or {}).get("object"))
+    names = object_entity_names(world)
+    building_of = {}
+    for b in world.buildings:
+        for layout in [b.layout] + [f.layout for f in getattr(b, "floors", []) or []]:
+            for r in layout.rooms:
+                building_of[r.full_name] = b
+            for uo in getattr(layout, "unit_outs", []) or []:
+                for r in uo.layout.rooms:
+                    building_of[r.full_name] = b
+    keep, dropped, ruined, ruin_kept = [], 0, 0, []
+    for o in world.objects:
+        if not stair_furniture_name(o.template) or names[o] in ends:
+            keep.append(o)
+            continue
+        b = building_of.get(o.region)
+        if b is not None and ruined_building(b.layout.design):
+            ruined += 1
+            keep.append(o)
+            ruin_kept.append(o)
+        else:
+            dropped += 1
+            world.failures.append(
+                (f"stair {o.template} in {o.region}",
+                 "dropped: it leads nowhere (the code places the real stairs)"))
+    world.objects[:] = keep
+    # the kept ruin stairs by the builder's entity name (numbered after the
+    # drops), so the shipped-scenario check knows them even when only the
+    # building's status, not any name, says it is a ruin
+    final = object_entity_names(world)
+    world.ruined_stairs = sorted(final[o] for o in ruin_kept)
+    return {"dropped": dropped, "ruined": ruined}
+
+
 def run_checks(world):
+    from . import native
+    # no stairs to nowhere first, so every metric below sees the final set
+    stairs = _drop_dead_stairs(world)
     openings = compute_openings(world)
+    # the water view is refreshed first, with the characters now placed: deep
+    # water that would cut them off drops its surface before it blocks
+    water = native.final_water(world, refresh=True)
     blocked, doors = walkability_grid(world, openings)
 
     # ---- overlap and containment (the builder's nesting rule)
@@ -493,20 +728,18 @@ def run_checks(world):
     obj_overlaps = []
     claimed = {}
     for o in world.objects:
-        t = world.templates[o.template]
-        w, h = t.size
-        for cx in range(o.pos[0], o.pos[0] + w):
-            for cy in range(o.pos[1], o.pos[1] + h):
-                if (cx, cy) in claimed:
-                    obj_overlaps.append(f"{o.template} at {o.pos} overlaps {claimed[(cx, cy)]}")
-                else:
-                    claimed[(cx, cy)] = f"{o.template} at {o.pos}"
+        for cell in sorted(object_cells(world, o)):
+            if cell in claimed:
+                obj_overlaps.append(f"{o.template} at {o.pos} overlaps {claimed[cell]}")
+            else:
+                claimed[cell] = f"{o.template} at {o.pos}"
     out_of_bounds = [f"{o.template} at {o.pos}" for o in world.objects
-                     if not (0 <= o.pos[0] < world.grid[0] and 0 <= o.pos[1] < world.grid[1])]
+                     if not on_a_plane(world, o.pos)]
 
     # ---- reachability: every room from the player's start, every entrance
-    # from a road. The stair portals count as connections: a sealed upper
-    # storey is reached through its stairs, exactly as the game mod plays it.
+    # from a road. The linked stair and passage pads count as connections:
+    # a sealed upper storey is reached through its stairs, exactly as the
+    # game's own portals play it.
     player = world.player
     jumps = portal_jumps(world)
     from_player = flood(world, [player.pos], blocked, jumps) if player else set()
@@ -548,9 +781,7 @@ def run_checks(world):
     for o in world.objects:
         t = world.templates[o.template]
         if t.walkability <= 0:
-            w, h = t.size
-            solid |= {(x, y) for x in range(o.pos[0], o.pos[0] + w)
-                      for y in range(o.pos[1], o.pos[1] + h)}
+            solid |= object_cells(world, o)
     blocked_doors = sorted(doors & solid)
     # a walkway is blocked only by accident: intentional wall objects (a
     # compound's solid walls) stand on their own ground, not on a path
@@ -633,6 +864,8 @@ def run_checks(world):
         "objects_out_of_bounds": out_of_bounds,
         "characters": {"total": len(world.characters), "issues": char_issues},
         "floors": floors_metrics,
+        "stairs": stairs,
+        "water": native.water_metrics(world, water),
         "compounds": {"compounds": len(getattr(world, "compounds", []) or []),
                       "issues": [f"{w}: {r}" for (w, r) in compound_issues]},
     }

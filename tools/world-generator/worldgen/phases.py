@@ -1934,15 +1934,49 @@ def _drop_unit_copies(rooms, d, units, building_name, log):
     return keep
 
 
+# no stairs to nowhere: furniture named for a stair leads nowhere (the floors
+# code places the real, linked stairs); a ruined building is the exception
+STAIR_WORDS = re.compile(r"\b(stairs?|staircases?|stairways?|stairwells?)\b",
+                         re.IGNORECASE)
+STAIR_ENDINGS = (" stairs up", " stairs down", " passage")  # the floors code's own
+RUIN_WORDS = re.compile(r"\b(ruin(s|ed)?|derelict|collapsed|burnt-out|gutted)\b",
+                        re.IGNORECASE)
+
+
+def stair_furniture_name(name):
+    """A template name that names a stair — but never the floors code's own
+    "<Building> stairs up/down" and passage templates, which link for real."""
+    return isinstance(name, str) and bool(STAIR_WORDS.search(name)) \
+        and not name.lower().endswith(STAIR_ENDINGS)
+
+
+def ruined_building(b):
+    """A building is a ruin when the cast abandoned it (P1b status), the room
+    library marked its condition 'ruined', or its own name/kind/purpose says
+    so; its stairs may rise to a collapsed upper floor and stay."""
+    if isinstance(b, dict):
+        status, condition = b.get("status"), b.get("condition")
+        words = (b.get("name"), b.get("kind"), b.get("purpose"))
+    else:
+        status = getattr(b, "status", "") or ""
+        condition = getattr(b, "condition", "") or ""
+        words = (getattr(b, "name", ""), getattr(b, "kind", ""),
+                 getattr(b, "purpose", ""))
+    if status == "abandoned" or condition == "ruined":
+        return True
+    return any(isinstance(w, str) and RUIN_WORDS.search(w) for w in words)
+
+
 def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
-                pools=None):
+                pools=None, ruined=False):
     """``storeys`` is the building's P1 storey count with floors enabled
     (None when it is off, so upper/stairs are stripped). ``units`` is the P1
     units object (or just true) for a unit building: its nested "unit" design
     is kept and cleaned, and shared rooms that are numbered copies of the unit
     are dropped.
     ``pools`` is the catalogue's loot pool names; references outside it are
-    dropped with a reason."""
+    dropped with a reason. ``ruined`` keeps stair furniture (a ruined
+    building's stair may rise to a collapsed floor)."""
     d["name"] = building_name
     if d.get("wall") not in WALLS:
         log.append((f"building {building_name}", f"wall {d.get('wall')!r} -> 'wood'"))
@@ -1985,6 +2019,10 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
                         f"furniture {f.get('template') if isinstance(f, dict) else f!r} dropped: "
                         "unknown template or room"))
             continue
+        if stair_furniture_name(f.get("template")) and not ruined:
+            log.append((f"building {building_name}",
+                        f"furniture {f['template']} dropped: the code places the real stairs"))
+            continue
         if not _check_int(f.get("count", 1)) or not 1 <= f["count"] <= MAX_COUNT:
             f["count"] = 1
         if hint_errors(f.get("hint", ""), templates=templates):
@@ -2019,7 +2057,7 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
                     f"lootPool {d['lootPool']!r} dropped: no such pool"))
         d.pop("lootPool", None)
     d["upper"], d["stairs"] = _sanitize_upper(d, building_name, rnames, templates, log, storeys,
-                                              pools)
+                                              pools, ruined)
     if units:
         if isinstance(d.get("unit"), dict) and d["unit"]:
             d["unit"] = _sanitize_unit(d["unit"], building_name, templates, log, pools)
@@ -2037,7 +2075,7 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
 
 
 def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
-                      pools=None):
+                      pools=None, ruined=False):
     """(upper list, stairs) cleaned against the floors contract. Without the
     extension, or for a single-storey building, both come back empty."""
     if storeys is None or storeys < 2:
@@ -2091,6 +2129,11 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
                 log.append((f"building {building_name}",
                             f"furniture {f.get('template') if isinstance(f, dict) else f!r} "
                             f"in {label} dropped: unknown template or room"))
+                continue
+            if stair_furniture_name(f.get("template")) and not ruined:
+                log.append((f"building {building_name}",
+                            f"furniture {f['template']} in {label} dropped: "
+                            "the code places the real stairs"))
                 continue
             if not _check_int(f.get("count", 1)) or not 1 <= f["count"] <= MAX_COUNT:
                 f["count"] = 1
@@ -3170,7 +3213,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
             d.pop("unit", None)
         design = sanitize_p3(d, b["name"], tnames, stats["dropped"],
                              storeys=(b.get("storeys", 1) if floors else None),
-                             units=b.get("units") or False, pools=pool_names)
+                             units=b.get("units") or False, pools=pool_names,
+                             ruined=ruined_building(b))
         library_plan.expand_fitting(lib, registry, design, b, band, genre, world_seed,
                                     stats["dropped"], ensure_beds=not b.get("units"))
         if b.get("units"):
@@ -3225,7 +3269,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                 continue
             design = sanitize_p3(d, b["name"], tnames, stats["dropped"],
                                  storeys=(b.get("storeys", 1) if floors else None),
-                                 units=b.get("units") or False, pools=pool_names)
+                                 units=b.get("units") or False, pools=pool_names,
+                                 ruined=ruined_building(b))
             designs.append(design)
             # a home that came back with fewer beds than P1 promised sleeps
             # only what its furniture beds (the layout's bed-ensuring pass

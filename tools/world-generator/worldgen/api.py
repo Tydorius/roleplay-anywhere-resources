@@ -199,6 +199,22 @@ def _mid(pair):
     return (pair[0] + pair[1]) // 2
 
 
+def _populations_summary(spec):
+    """The native populations by region: which template spawns how many of
+    what in which region, plus the totals and how many members start in
+    place."""
+    from worldgen import populations
+    pops = spec.get("nativePopulations") or []
+    return {
+        "templates": len(pops),
+        "creatures": populations.creature_count(pops),
+        "placed": populations.placed_count(pops),
+        "regions": [{"template": p.get("name"), "region": h.get("region"),
+                     "count": h.get("count")}
+                    for p in pops for h in p.get("homes") or []],
+    }
+
+
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
@@ -233,14 +249,21 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     rc_build, _ = _run([sys.executable, builder, os.path.join(out_dir, "spec.py"),
                         "--out", out_dir], emit)
     mods_issues = []
-    if rc_build == 0 and spec.get("arpgMods") and os.path.isdir(built):
+    doors = {}
+    if rc_build == 0 and os.path.isdir(built):
+        # every world ships finished, extensions or not: the door kinds and
+        # door objects (and the native floor data when there are storeys)
         from worldgen import mods as mods_mod
-        mods_mod.inject_arpg_mods(built, spec["arpgMods"])
-        _emit(emit, f"arpgMods injected into {built} (re-zipped)")
+        mods_mod.finish_scenario(built, spec)
+        _emit(emit, f"native doors, floor data and mods written into {built} "
+                    "(re-zipped)")
         mods_issues = checks_mod.check_scenario_mods(
-            os.path.join(built, "scenario.json"), spec["arpgMods"])
+            os.path.join(built, "scenario.json"), spec)
         for issue in mods_issues:
             _emit(emit, "ERROR " + issue)
+        from worldgen import native
+        with open(os.path.join(built, "scenario.json"), "r", encoding="utf-8") as f:
+            doors = native.door_counts(json.load(f))
     if rc_build == 0 and os.path.isdir(built):
         from worldgen import library_art
         n_art = library_art.attach_sprites(built, plan_data)
@@ -260,6 +283,7 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     summary = _summary_dict(world, spec, plan_data, seed, zip_path, out_dir,
                             failed, rc_val, val_out, gen,
                             round((time.time() - t0) / 60.0, 1))
+    summary["doors"] = doors          # the shipped door objects, by kind
     summary["extensions"] = sorted(exts)
     _progress(progress, "done",
               f"{'FAILED:' if failed else 'built'} {spec['name']}", gen)
@@ -283,6 +307,13 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
     else:
         client = None
         calls, retries, tokens, dropped_model, minutes, idea = 0, 0, 0, 0, layout_minutes, None
+    nat = spec.get("nativeNature") or {}
+    water = world.metrics.get("water") or {}
+    depths = {}
+    draws = {}
+    for reg in water.get("regions") or []:
+        depths[reg.get("depth")] = depths.get(reg.get("depth"), 0) + 1
+        draws[reg.get("draw")] = draws.get(reg.get("draw"), 0) + 1
     return {
         "ok": not failed and n_err == 0,
         "provider": client.provider if client else None,
@@ -303,6 +334,23 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
         "entrances_from_road": f"{ents.get('reachable_from_road')}/{ents.get('total')}",
         "reachability": world.metrics.get("reachability"),
         "map_warnings": world.metrics.get("map_warnings", []),
+        "locks": {
+            "rooms": [{"room": e.get("room"), "keys": e.get("holders")}
+                      for e in ((spec.get("nativeLocks") or {}).get("locks") or [])],
+            "theft_buildings": len((spec.get("nativeLocks") or {}).get("theft") or []),
+        },
+        "nature": {
+            "natural_regions": len(nat.get("shape") or []),
+            "water_regions": len(nat.get("water") or []),
+            "water_deep": depths.get("deep", 0),
+            "water_shallow": depths.get("shallow", 0),
+            "water_rivers": draws.get("river", 0),
+            "water_pools": draws.get("pool", 0),
+            "water_surfaces_dropped": len(water.get("dropped") or []),
+            "vehicles": len(nat.get("vehicles") or {}),
+        },
+        "populations": _populations_summary(spec),
+        "stairs": world.metrics.get("stairs") or {"dropped": 0, "ruined": 0},
     }
 
 
@@ -375,10 +423,44 @@ def _summary_text(world, spec, seed, emit):
     lines.append(f"doors clear: {world.metrics.get('doors_clear')}  "
                  f"walkways clear: {world.metrics.get('walkways_clear')}  "
                  f"region overlaps: {len(world.metrics.get('region_overlaps', []))}")
+    locks = (spec.get("nativeLocks") or {})
+    if locks.get("locks") or locks.get("theft"):
+        lines.append(f"locked rooms {len(locks.get('locks') or [])}  "
+                     f"theft buildings {len(locks.get('theft') or [])}")
+        for entry in locks.get("locks") or []:
+            held = ", ".join(entry.get("holders") or []) or "nobody (a cell)"
+            lines.append(f"  - {entry['room']}: {held}")
+    nat = spec.get("nativeNature") or {}
+    if nat.get("shape") or nat.get("water") or nat.get("vehicles"):
+        water = world.metrics.get("water") or {}
+        deep = sum(1 for x in water.get("regions") or [] if x.get("depth") == "deep")
+        rivers = sum(1 for x in water.get("regions") or [] if x.get("draw") == "river")
+        lines.append(f"natural regions {len(nat.get('shape') or [])}  "
+                     f"water {len(nat.get('water') or [])} "
+                     f"({deep} deep, {rivers} river)  "
+                     f"vehicles {len(nat.get('vehicles') or {})}")
+        for gone in water.get("dropped") or []:
+            lines.append(f"  - {gone['name']}: {gone['reason']}")
+    pops = spec.get("nativePopulations") or []
+    if pops:
+        from worldgen import populations as populations_mod
+        n_regions = sum(len(p.get("homes") or []) for p in pops)
+        lines.append(f"populations: {populations_mod.creature_count(pops)} "
+                     f"creatures in {n_regions} regions "
+                     f"({len(pops)} templates), "
+                     f"{populations_mod.placed_count(pops)} placed at the start")
+        for p in pops:
+            homes = ", ".join(f"{h['region']} x{h['count']}"
+                              for h in p.get("homes") or [])
+            lines.append(f"  - {p['name']}: {homes}")
     fl = world.metrics.get("floors") or {}
     if fl.get("floors"):
-        lines.append(f"upper storeys {fl['floors']}  stair portals {fl['portals']}  "
+        lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "
                      f"floors checks: {'ok' if not fl.get('issues') else fl['issues']}")
+    st = world.metrics.get("stairs") or {}
+    if st.get("dropped") or st.get("ruined"):
+        lines.append(f"stairs to nowhere dropped {st.get('dropped', 0)}  "
+                     f"ruined stairs kept {st.get('ruined', 0)}")
     for w in world.metrics.get("map_warnings", []):
         lines.append(f"warning: {w}")
     lines.append("=" * 64)
