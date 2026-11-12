@@ -183,7 +183,7 @@ class TestWorlds(unittest.TestCase):
         # quick mode, the idea, default population, use the frame, three
         # extensions off, the old furnishing method (the canned P3 replies are
         # old-style), default seed, start
-        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "", ""],
+        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "n", "", ""],
                     self.tmp,
                     client=ScriptedClient([_dump(a_frame())] + canned_replies()))
         summary = s.launcher.new_world()
@@ -209,7 +209,7 @@ class TestWorlds(unittest.TestCase):
         s = Session(["2", "",
                      "1", "", "", "6", "a warm hearth", "", "",
                      "1", "2", "no demons",
-                     "10-30", "1", "n", "n", "n", "n", "", ""],
+                     "10-30", "1", "n", "n", "n", "n", "n", "", ""],
                     self.tmp,
                     client=ScriptedClient([_dump(a_frame())] + canned_replies()))
         summary = s.launcher.new_world()
@@ -240,7 +240,7 @@ class TestWorlds(unittest.TestCase):
                          _dump(a_frame())] + canned_replies()
         s = Session(["4", "a mill village", "1", ""]
                     + [""] * 13
-                    + ["", "1", "1", "n", "n", "n", "n", "", ""],
+                    + ["", "1", "1", "n", "n", "n", "n", "n", "", ""],
                     self.tmp, client=ScriptedClient(frame_replies))
         summary = s.launcher.new_world()
         self.assertTrue(summary["ok"], summary)
@@ -254,7 +254,7 @@ class TestWorlds(unittest.TestCase):
         self.assertEqual(plan["questionnaire"]["mode"], "long")
 
     def test_a_run_saves_its_settings_and_a_settings_file_runs_again(self):
-        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "4", ""],
+        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n", "n", "4", ""],
                     self.tmp,
                     client=ScriptedClient([_dump(a_frame())] + canned_replies()))
         first = s.launcher.new_world()
@@ -286,7 +286,7 @@ class TestWorlds(unittest.TestCase):
         self.assertIn("Can't use that file: this isn't a world settings file", s.text())
 
     def test_floors_needs_no_mod(self):
-        s = Session(["y", "n", "n"], self.tmp)       # floors yes; region groups, lights no
+        s = Session(["y", "n", "n", "n"], self.tmp)  # floors yes; region groups, lights, secret passages no
         self.assertEqual(s.launcher.pick_extensions(), ["floors"])
         self.assertIn("No game mod needed", s.text())
         self.assertNotIn("needed by", s.text())
