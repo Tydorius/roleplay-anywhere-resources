@@ -1582,7 +1582,11 @@ def _pick_crop(templates):
 
 
 def _pick_fence(templates):
-    fences = [t for t in templates.values() if _matches(t, FENCE_WORDS)]
+    """The catalogue's fence, but only a thin piece (its smaller side is 1):
+    the ring is one piece thick, so a 2x2 bed tagged 'fence' is no fence and
+    the plot goes without a ring."""
+    fences = [t for t in templates.values()
+              if _matches(t, FENCE_WORDS) and min(t.size) == 1]
     return min(fences, key=lambda t: (t.size[0] * t.size[1], t.name)) if fences else None
 
 

@@ -40,5 +40,16 @@ class TestCropPickingWholeWords(unittest.TestCase):
             self.assertIsNone(_pick_crop(catalogue(tpl(name))), name)
 
 
+class TestFencePickingThinPieces(unittest.TestCase):
+    def test_a_fenced_bed_is_no_fence(self):
+        bed = tpl("Wattled garden bed", size=(2, 2), tags=("plant", "fence"))
+        self.assertIsNone(_pick_fence(catalogue(bed)))
+
+    def test_thin_pieces_are_fences_and_the_smallest_wins(self):
+        post = tpl("Post fence", tags=("fence",))
+        rail = tpl("Split-rail fence", size=(2, 1), tags=("fence",))
+        self.assertIs(_pick_fence(catalogue(post, rail)), post)
+
+
 if __name__ == "__main__":
     unittest.main()
