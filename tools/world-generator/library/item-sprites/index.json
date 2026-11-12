@@ -1,0 +1,58 @@
+{
+ "clothing.bonnet.cotton": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A white cotton bonnet with blue ribbon ties and a stiff brim",
+  "reviewed": true
+ },
+ "container.tankard.pewter": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A dull pewter tankard with a glass bottom and dented lip",
+  "reviewed": true
+ },
+ "drink.spirits.bottle": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A squat glass bottle of dark brandy sealed with a driven cork",
+  "reviewed": true
+ },
+ "light.lantern.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass and glass storm lantern with a cross-hatched globe",
+  "reviewed": true
+ },
+ "medicine.laudanum.vial": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A small blue-glass vial of laudanum with a paper label",
+  "reviewed": true
+ },
+ "tool.curry_comb.comb": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A wooden curry comb with a leather hand strap and worn teeth",
+  "reviewed": true
+ },
+ "tool.riding_crop.crop": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A leather riding crop with a braided grip and keeper loop",
+  "reviewed": true
+ },
+ "weapon.sabre.guard": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A naval cutlass with a brass bowl guard and curved blade",
+  "reviewed": true
+ }
+}
