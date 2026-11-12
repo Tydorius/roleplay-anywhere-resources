@@ -1,0 +1,755 @@
+{
+  "_note": "Food and drink. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "food.bread",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "loaf of bread"},
+      "description": {"*": "A crusty loaf, heavy for its size and smelling of the morning's bake."},
+      "looks": [
+        {"key": "round", "bands": ["*"], "physical": "A round crusty loaf of bread with a split golden-brown top and a dusting of flour"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Crust of bread", "Bread loaf", "Bread", "Black bread", "Rye Bread", "Crusty Bread", "Crusty barley loaf", "Barley Loaf", "Refectory bread", "Fresh bread", "Fresh Bread Roll", "Salt Bread", "Flatbread"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.hardtack",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "hardtack biscuit"},
+      "description": {"*": "A ship's biscuit, hard as a roof slate and about as tasty."},
+      "looks": [
+        {"key": "square", "bands": ["*"], "physical": "A pale square biscuit riddled with cracks and browned at the corners"}
+      ],
+      "tags": ["food", "travel"],
+      "aliases": ["Hardtack", "Hardtack Biscuit", "Hard Tack Biscuit", "Ration Biscuit", "Hard biscuit and dried beef"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.cheese",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "wedge of cheese"},
+      "description": {"*": "A wedge of hard cheese, sharp on the tongue and keeps for weeks."},
+      "looks": [
+        {"key": "wedge", "bands": ["*"], "physical": "A wedge of hard yellow cheese with a waxed orange rind"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Hard cheese", "Cheese wedge", "Cheese", "Hard Cheese Wedge", "Smoke-Cured Cheese Wedge", "Sheep's milk cheese", "Wheel of Goat Cheese"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.butter",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "crock of butter"},
+      "description": {"*": "A small crock of butter, salted to keep it sweet."},
+      "looks": [
+        {"key": "crock", "bands": ["*"], "physical": "A small clay crock of pale yellow butter covered with a blue cloth"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Butter crock", "Butter Pat", "Salted butter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.stew",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bowl of stew"},
+      "description": {"*": "A hot bowl of thick stew, whatever the pot held today."},
+      "looks": [
+        {"key": "bowl", "bands": ["*"], "physical": "A clay bowl of thick brown stew with a wooden spoon resting in it"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Hasty stew", "Stew", "Hearthfire Stew Bowl", "Bowl of Pottage", "Potage Bowl", "Millet porridge", "Oat porridge", "Barley grits", "Boiling brew"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.salted_pork",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "salted pork"},
+      "description": {"*": "A salted haunch of pork, cured to last the winter."},
+      "looks": [
+        {"key": "haunch", "bands": ["*"], "physical": "A salted haunch of pink-brown pork wrapped in brown cloth and bound with cord"}
+      ],
+      "tags": ["food", "meat"],
+      "aliases": ["Salted Pork", "Poached Meat", "Salted Mutton Haunch", "Muntjac meat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.jerky",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "dried meat"},
+      "description": {"*": "Strips of dried meat, tough and salty, they keep forever."},
+      "looks": [
+        {"key": "strips", "bands": ["*"], "physical": "Strips of dark dried meat tied together with brown twine"}
+      ],
+      "tags": ["food", "meat", "travel"],
+      "aliases": ["Dried venison", "Dried Jerky", "Dried Meat", "Cured Venison Strip"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.bacon",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bacon rashers"},
+      "description": {"*": "Streaky rashers of bacon, ready for the pan."},
+      "looks": [
+        {"key": "rashers", "bands": ["*"], "physical": "Streaky rashers of pink bacon laid on a sheet of waxed brown paper"}
+      ],
+      "tags": ["food", "meat"],
+      "aliases": ["Bacon rasher"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.herring",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "salted herring"},
+      "description": {"*": "Cured fish, the smell of it will follow you all day."},
+      "looks": [
+        {"key": "fish", "bands": ["*"], "physical": "Two whole cured herring in silvery-brown skins laid on a wooden board"}
+      ],
+      "tags": ["food", "fish"],
+      "aliases": ["Pickled Herring", "Salted herring", "Smoked Herring", "Fresh herring", "Dried Fish", "Salted Fish", "Salted cod", "Dried Cod", "Herring Fillet", "Salted Cod Piece", "Salted cod (winter)", "Smoked eel", "Seaweed Salad", "Dulse pouch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.pickled_veg",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "jar of pickles"},
+      "description": {"*": "A sealed jar of pickled roots, sour and crunchy."},
+      "looks": [
+        {"key": "jar", "bands": ["*"], "physical": "A sealed glass jar of pickled roots and onions floating in amber brine"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Pickled onion jar", "Pickled radish jar", "Pickled Egg Jar", "Pickled Root", "Salted radish"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.egg",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "hen's egg"},
+      "description": {"*": "A fresh egg, still warm if you're lucky."},
+      "looks": [
+        {"key": "brown", "bands": ["*"], "physical": "A speckled brown hen's egg"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Chicken egg", "Dovecote eggs", "Duck Pond Egg", "Duck Eggs", "Brine-boiled egg"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.synthetic_egg",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "synthetic egg"},
+      "description": {"*": "A vat-grown egg, uniform as a machine can make it."},
+      "looks": [
+        {"key": "moulded", "bands": ["*"], "physical": "A pale grey egg with a visible mould seam running its length"}
+      ],
+      "tags": ["food", "synthetic"],
+      "aliases": ["Synthetic egg", "Salted duck egg"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.apple",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "apple"},
+      "description": {"*": "A crisp apple, sweet with a little bite behind it."},
+      "looks": [
+        {"key": "red", "bands": ["*"], "physical": "A red apple with a short brown stem"}
+      ],
+      "tags": ["food", "fruit"],
+      "aliases": ["Apple", "Windfall Apple", "Windfall Apples"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.pear",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pear"},
+      "description": {"*": "A ripe pear, juice waiting behind the skin."},
+      "looks": [
+        {"key": "green", "bands": ["*"], "physical": "A green pear with a brown stem"}
+      ],
+      "tags": ["food", "fruit"],
+      "aliases": ["Monsoon Pear"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.orange",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "orange"},
+      "description": {"*": "A bright orange, the peel coming away in eager strips."},
+      "looks": [
+        {"key": "citrus", "bands": ["*"], "physical": "A bright orange citrus fruit with a dimpled peel"}
+      ],
+      "tags": ["food", "fruit"],
+      "aliases": ["Rain-chilled orange"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.berries",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "basket of berries"},
+      "description": {"*": "A basket of berries, picked this morning and stained fingers to prove it."},
+      "looks": [
+        {"key": "basket", "bands": ["*"], "physical": "A small woven basket piled with dark purple berries"}
+      ],
+      "tags": ["food", "fruit"],
+      "aliases": ["Basket of blackberries", "Forest Blackberries", "Bramble Berry Pouch", "Wild Berry"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.nuts",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "handful of nuts"},
+      "description": {"*": "A handful of nuts, good for the pocket on a long walk."},
+      "looks": [
+        {"key": "walnuts", "bands": ["*"], "physical": "A small pile of brown walnuts with two cracked shells"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Handful of Nuts", "Bitter Almonds"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.potato",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "potato"},
+      "description": {"*": "A plain potato, dull until it hits the fire."},
+      "looks": [
+        {"key": "dirty", "bands": ["*"], "physical": "A dirty brown potato with a few dark eye spots"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Small Potato"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.carrot",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bunch of carrots"},
+      "description": {"*": "A bunch of carrots, green tops still on."},
+      "looks": [
+        {"key": "bunch", "bands": ["*"], "physical": "A bunch of three orange carrots tied with green tops"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Wilted Carrot"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.onion",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "onion"},
+      "description": {"*": "An onion that will make you cry and thank it."},
+      "looks": [
+        {"key": "golden", "bands": ["*"], "physical": "A golden-brown onion with papery skin and thin root whiskers"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Wild Onion"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.honey",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pot of honey"},
+      "description": {"*": "A pot of honey, sweet and thick enough to hold a spoon upright."},
+      "looks": [
+        {"key": "pot", "bands": ["*"], "physical": "A clay pot of golden honey sealed with a waxed cloth cover"}
+      ],
+      "tags": ["food", "sweet"],
+      "aliases": ["Honey pot", "Jar of Honey", "Strained Honey Pot", "Honey", "Honeycomb"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.honey_cake",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "honey cake"},
+      "description": {"*": "A small honey cake, a fair-day treat."},
+      "looks": [
+        {"key": "glazed", "bands": ["*"], "physical": "A small round cake glazed to a deep amber with a drip down its side"}
+      ],
+      "tags": ["food", "sweet"],
+      "aliases": ["Honey Cake", "Goblin Honey Bun", "Salty Pretzel"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.dried_apple",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "dried apple rings"},
+      "description": {"*": "Strung apple rings, chewy and sweet through the winter."},
+      "looks": [
+        {"key": "string", "bands": ["*"], "physical": "A string of curled dried apple rings on brown twine"}
+      ],
+      "tags": ["food", "fruit"],
+      "aliases": ["Dried Apple Slice", "Dried Apple Rings"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.beans",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "beans", "medieval": "bag of beans", "modern": "tin of beans"},
+      "description": {"*": "Beans, plain and filling, the meal that waits for you."},
+      "looks": [
+        {"key": "bag", "bands": ["medieval"], "physical": "A small cloth bag of dried beans tied at the neck"},
+        {"key": "tin", "bands": ["modern"], "physical": "A dented tin can with a faded paper label"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Bag of dried beans", "Canned beans"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.canned_goods",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tinned food"},
+      "description": {"*": "A sealed tin from the store cupboard, good for years yet."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A sealed tin can with a bright coloured paper wrapper"}
+      ],
+      "tags": ["food", "storage"],
+      "aliases": ["Canned Soup", "Canned peaches"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.ramen",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "instant noodles"},
+      "description": {"*": "A block of instant noodles, a meal three minutes away."},
+      "looks": [
+        {"key": "block", "bands": ["*"], "physical": "A block of pale instant noodles in a clear foil wrapper"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Ramen bricks", "Instant Ramen Bundle", "Instant ramen brick", "Instant congee cup"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.takeout",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "takeaway noodle bowl"},
+      "description": {"*": "A takeaway bowl of noodles, still warm under the lid."},
+      "looks": [
+        {"key": "bowl", "bands": ["*"], "physical": "A lidded paper bowl of noodles with chopsticks laid across the top"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Noodle takeaway bowl", "Slow pho jar", "Night-Shift Bento"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.protein_pouch",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "protein pouch"},
+      "description": {"*": "A pouch of protein paste, all the nutrition and none of the joy."},
+      "looks": [
+        {"key": "foil", "bands": ["*"], "physical": "A crumpled silver foil pouch with a tear notch at the corner"}
+      ],
+      "tags": ["food", "synthetic"],
+      "aliases": ["Protein pouch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.steamed_bun",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "steamed bun"},
+      "description": {"*": "A steamed bun from the corner stall, soft and hot."},
+      "looks": [
+        {"key": "bun", "bands": ["*"], "physical": "A plump white steamed bun sitting in a waxed paper wrapper"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Steamed pork bun"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.sweets",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "boiled sweets"},
+      "description": {"*": "A twist of boiled sweets, make them last."},
+      "looks": [
+        {"key": "twist", "bands": ["*"], "physical": "A paper twist of amber boiled sweets, one spilled loose"}
+      ],
+      "tags": ["food", "sweet"],
+      "aliases": ["Mint Leaf Candy", "Bag of sweets", "Sugar Cube"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.granola_bar",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "cereal bar"},
+      "description": {"*": "A cereal bar, the honest sort of snack."},
+      "looks": [
+        {"key": "bar", "bands": ["*"], "physical": "A cereal bar in a foil wrapper with a torn corner"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Granola bar", "Half-eaten Granola Bar", "Stale granola bar", "Protein bar", "Half-eaten burrito", "Soggy taco", "Stolen cracker"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.herb_greens",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bunch of fresh herbs"},
+      "description": {"*": "A bunch of fresh greens, bright against all the tinned food."},
+      "looks": [
+        {"key": "basil", "bands": ["*"], "physical": "A bunch of fresh basil with dark green leaves tied at the stems"}
+      ],
+      "tags": ["food", "plant"],
+      "aliases": ["Grow-Room Basil Bunch", "Bitter herb sprig", "Lamp Lettuce Bundle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "food.ration_pack",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "ration pack"},
+      "description": {"*": "A ration pack, packed to keep body and soul on speaking terms."},
+      "looks": [
+        {"key": "block", "bands": ["*"], "physical": "A compact block of rations in waxed paper wrapping with a strapped band"}
+      ],
+      "tags": ["food", "travel", "military"],
+      "aliases": ["Ration pack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.ale",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "jug of ale"},
+      "description": {"*": "A jug of ale, small beer for a big thirst."},
+      "looks": [
+        {"key": "jug", "bands": ["*"], "physical": "A squat clay jug of ale with a wooden lid and foam dribbled down the side"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Ale", "Cheap Ale", "Bottle of ale", "Jug of ale", "Jack of Ale", "Heather ale jug", "Ale jug", "Small beer flask", "Ale Mug", "Millet wine jug"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.beer_can",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "can of beer"},
+      "description": {"*": "A can of cold beer, cheap and cheerful."},
+      "looks": [
+        {"key": "can", "bands": ["*"], "physical": "A dented aluminium beer can in gold and red"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Cheap beer can", "Ale bottle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.wine_bottle",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "bottle of wine"},
+      "description": {"*": "A corked bottle of red wine, drinkable and then some."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A dark green glass wine bottle with a cork stopper and a plain tan label"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Bottle of southern red", "Cracked Vintage Wine"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.cider",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "jug of cider"},
+      "description": {"*": "A jug of rough cider, sharp enough to strip a beard."},
+      "looks": [
+        {"key": "stoneware", "bands": ["*"], "physical": "A corked stoneware jug of cloudy cider with a dribble down the belly"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Soured cider", "Jug of rough cider", "Thornwick Cider Flask", "Emberstill Cider Jug"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.spirits",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "flask of spirits", "industrial": "bottle of brandy"},
+      "description": {"*": "Strong spirits, the sort that fix one problem and start another."},
+      "looks": [
+        {"key": "bottle", "bands": ["industrial"], "physical": "A squat glass bottle of dark brandy sealed with a driven cork"},
+        {"key": "flask", "bands": ["modern", "scifi"], "physical": "A dented steel hip flask with a captive screw cap"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Brandy bottle", "Brandy Flask", "Rum Flask", "Measure of rum", "Dark rum", "Bourbon bottle", "Orchard Brandy Bottle", "Emberstill Plum Brandy Flask", "Whiskey flask", "Rice whisky flask", "Rice spirit bottle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.tea",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tin of tea"},
+      "description": {"*": "A tin of tea leaves, enough brews to see out the week."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A sealed tin of loose leaf tea with a domed lid"}
+      ],
+      "tags": ["drink"],
+      "aliases": ["Tea canister", "Tin of tea", "Wax tea tins", "Grey tea tin", "Chrysanthemum tea tin", "Chrysanthemum tea flask", "Boiled Rain Tea Flask", "Pot of tea"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.coffee",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "instant coffee"},
+      "description": {"*": "A jar of coffee, the engine of the working day."},
+      "looks": [
+        {"key": "jar", "bands": ["*"], "physical": "A brown glass jar of dark coffee granules with a tight lid"}
+      ],
+      "tags": ["drink"],
+      "aliases": ["Coffee beans", "Cold brew coffee", "Instant coffee tin", "Soy-kaf sachet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.water_bottle",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bottle of water"},
+      "description": {"*": "A sealed bottle of clean water."},
+      "looks": [
+        {"key": "plastic", "bands": ["*"], "physical": "A translucent blue-tinted plastic bottle of water with a screw cap"}
+      ],
+      "tags": ["drink", "water"],
+      "aliases": ["Bottled water"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.energy_drink",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "energy drink"},
+      "description": {"*": "A tall can of energy drink, fizzing with promise."},
+      "looks": [
+        {"key": "can", "bands": ["*"], "physical": "A tall slim energy drink can in green and silver"}
+      ],
+      "tags": ["drink"],
+      "aliases": ["Energy drink", "Half-empty Energy Drink", "Protein Shake"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.soda",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "soda can"},
+      "description": {"*": "A brightly coloured can of soda, cold and loud."},
+      "looks": [
+        {"key": "can", "bands": ["*"], "physical": "A bright aluminium soda can in orange and blue"}
+      ],
+      "tags": ["drink"],
+      "aliases": ["Neon soda can"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "drink.milk",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "milk carton"},
+      "description": {"*": "A carton of milk, best before close enough."},
+      "looks": [
+        {"key": "carton", "bands": ["*"], "physical": "A waxed paper carton with a blue trim and a folded spout"}
+      ],
+      "tags": ["drink"],
+      "aliases": ["Soy Milk Carton", "Buttermilk jug"],
+      "sources": ["harvest"]
+    }
+  ]
+}

@@ -1,0 +1,805 @@
+{
+  "_note": "Everyday clothing for every worn slot. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "clothing.knit_cap",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "knitted cap"},
+      "description": {"*": "A thick knitted cap that has saved every ear it has met."},
+      "looks": [
+        {"key": "knit", "bands": ["*"], "physical": "A thick knitted cap in undyed grey wool with a folded brim"}
+      ],
+      "tags": ["clothing", "head", "warm"],
+      "aliases": ["Wool cap", "Woolen Cap", "Worsted cap", "Beanie"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.straw_hat",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "straw hat"},
+      "description": {"*": "A wide straw hat, shade for a whole day in the field."},
+      "looks": [
+        {"key": "wide", "bands": ["*"], "physical": "A wide woven straw hat with a dark cloth band and frayed brim"}
+      ],
+      "tags": ["clothing", "head"],
+      "aliases": ["Straw Field Hat", "Broad woven hat", "Sun hat", "Fisherman's Hat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.hood",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "wool hood"},
+      "description": {"*": "A laced wool hood, better than any hat in the rain."},
+      "looks": [
+        {"key": "laced", "bands": ["*"], "physical": "A laced wool hood with a pointed crown and deep shoulder cape"}
+      ],
+      "tags": ["clothing", "head", "warm"],
+      "aliases": ["Woollen Hood", "Barkcloth Hood", "Seaman's bonnet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.bonnet",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bonnet"},
+      "description": {"*": "A cotton bonnet tied under the chin, starched for chapel."},
+      "looks": [
+        {"key": "cotton", "bands": ["*"], "physical": "A white cotton bonnet with blue ribbon ties and a stiff brim"}
+      ],
+      "tags": ["clothing", "head"],
+      "aliases": ["Bonnet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.baseball_cap",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "baseball cap"},
+      "description": {"*": "A faded cap, bent to fit one particular head."},
+      "looks": [
+        {"key": "cap", "bands": ["*"], "physical": "A faded blue baseball cap with a brass buckle strap and curved peak"}
+      ],
+      "tags": ["clothing", "head"],
+      "aliases": ["Nightjar billed cap"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.hard_hat",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hard hat"},
+      "description": {"*": "A hard hat, scuffed by everything it has saved its wearer from."},
+      "looks": [
+        {"key": "yellow", "bands": ["*"], "physical": "A yellow hard hat with a ribbed shell and chin strap"}
+      ],
+      "tags": ["clothing", "head", "work"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.rain_hat",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "rain hat"},
+      "description": {"*": "A wide oilskin hat that sheds the worst of the weather."},
+      "looks": [
+        {"key": "oilskin", "bands": ["*"], "physical": "A wide-brimmed yellow oilskin hat with a chin cord and rolled sides"}
+      ],
+      "tags": ["clothing", "head", "weather"],
+      "aliases": ["Sou'wester Hat", "Wide rain hat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.spectacles",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "spectacles"},
+      "description": {"*": "Round spectacles that turn the blur back into letters."},
+      "looks": [
+        {"key": "round", "bands": ["*"], "physical": "Round gold wire spectacles with curled ear wires"}
+      ],
+      "tags": ["clothing", "face"],
+      "aliases": ["Thin round spectacles", "Brass Reading Glasses", "Broken Spectacles", "Scholar's lens", "Spare Reading Glasses", "Reading glasses", "Spectacles", "Star-Reader's Spectacles"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.dust_mask",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "dust mask"},
+      "description": {"*": "A cup mask that filters the dust everyone pretends not to breathe."},
+      "looks": [
+        {"key": "cup", "bands": ["*"], "physical": "A grey cup-shaped dust mask with blue elastic straps"}
+      ],
+      "tags": ["clothing", "face"],
+      "aliases": ["Particulate mask", "Filter mask", "Bandana mask", "Discarded mask", "Silk bandana"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.goggles",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "goggles"},
+      "description": {"*": "Work goggles that keep sparks, spray and grit off the eyes."},
+      "looks": [
+        {"key": "forge", "bands": ["medieval", "industrial"], "physical": "Leather forge goggles with dark green glass lenses and a buckle strap"},
+        {"key": "pilot", "bands": ["modern", "scifi"], "physical": "Rounded pilot goggles with amber lenses and an elastic strap"}
+      ],
+      "tags": ["clothing", "face"],
+      "aliases": ["Forge Goggles", "Pilot goggles", "Swim goggles"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.wool_cloak",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "wool cloak"},
+      "description": {"*": "A heavy cloak, blanket by night and wall against the wind by day."},
+      "looks": [
+        {"key": "heavy", "bands": ["*"], "physical": "A heavy grey wool cloak with a clasp at the throat and mud-stained hem"}
+      ],
+      "tags": ["clothing", "torso", "warm"],
+      "aliases": ["Wool Cloak", "Warm Wool Cloak", "Hooded wool cloak", "Hodden Grey Cloak", "Wool Travel Cloak", "Mothballed cloak"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.oilskin_coat",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "oilskin coat"},
+      "description": {"*": "A long oilskin coat, and the rain runs off it like off a duck."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A long brown oilskin coat with strapped cuffs and storm collar"}
+      ],
+      "tags": ["clothing", "torso", "weather"],
+      "aliases": ["Oilskin Coat", "Oilskin cape", "Surveyor's coat", "Oilskin trousers", "Oilskin boots"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.fur_cloak",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "fur cloak"},
+      "description": {"*": "A fur cloak, warm as standing next to the animal was dangerous."},
+      "looks": [
+        {"key": "fur", "bands": ["*"], "physical": "A heavy fur cloak of patchy brown pelts with a leather tie"}
+      ],
+      "tags": ["clothing", "torso", "warm"],
+      "aliases": ["Fur Cloak", "Furs Cloak"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.robe",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "robe"},
+      "description": {"*": "A plain robe, worn threadbare at the knees and cuffs."},
+      "looks": [
+        {"key": "plain", "bands": ["*"], "physical": "A plain robe of coarse brown wool with a rope belt"}
+      ],
+      "tags": ["clothing", "torso"],
+      "aliases": ["Tattered Robe", "Grey travelling robes", "Dusty shroud", "Funeral Shroud", "Short Bathhouse Robe", "Shadow-stitched Shroud"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.work_apron",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "work apron"},
+      "description": {"*": "A leather apron scarred by sparks, blades and worse."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A heavy leather work apron with a neck strap and burn marks"}
+      ],
+      "tags": ["clothing", "torso", "work"],
+      "aliases": ["Leather Work Apron", "Net-mender's apron"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.greatcoat",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "winter coat"},
+      "description": {"*": "A heavy coat that stands between its owner and the whole winter."},
+      "looks": [
+        {"key": "heavy", "bands": ["*"], "physical": "A heavy grey wool overcoat with brass buttons and a deep collar"}
+      ],
+      "tags": ["clothing", "torso", "warm"],
+      "aliases": ["Winter coat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.denim_jacket",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "denim jacket"},
+      "description": {"*": "A denim jacket faded to exactly the right shade."},
+      "looks": [
+        {"key": "denim", "bands": ["*"], "physical": "A blue denim jacket with copper rivets and buttoned chest pockets"}
+      ],
+      "tags": ["clothing", "torso"],
+      "aliases": ["Denim jacket"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.hoodie",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hoodie"},
+      "description": {"*": "A soft hoodie with a washed-out crest and both drawstrings gone."},
+      "looks": [
+        {"key": "grey", "bands": ["*"], "physical": "A grey hoodie with a kangaroo pocket and faded shoulder print"}
+      ],
+      "tags": ["clothing", "torso"],
+      "aliases": ["Grey University Hoodie"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.work_jacket",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "work jacket"},
+      "description": {"*": "A canvas work jacket, patched at both elbows out of habit."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A canvas work jacket in faded green with buttoned cuffs and elbow patches"}
+      ],
+      "tags": ["clothing", "torso", "work"],
+      "aliases": ["Work jacket", "Patched cotton jacket", "Smock frock"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.rain_poncho",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "rain poncho"},
+      "description": {"*": "A thin poncho that packs small and keeps most of the rain off."},
+      "looks": [
+        {"key": "clear", "bands": ["*"], "physical": "A translucent blue-tinted rain poncho with snap fasteners and hood"}
+      ],
+      "tags": ["clothing", "torso", "weather"],
+      "aliases": ["Rain poncho", "Clear rain poncho", "Patched rain poncho", "Neon slicker"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.lab_coat",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "lab coat"},
+      "description": {"*": "A lab coat with sleeves rolled and a pen in the pocket."},
+      "looks": [
+        {"key": "cream", "bands": ["*"], "physical": "A cream lab coat with three pockets and wooden buttons"}
+      ],
+      "tags": ["clothing", "torso", "work"],
+      "aliases": ["Obsidian laboratory coat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.uniform_tunic",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "uniform tunic"},
+      "description": {"*": "An issued tunic, the same cut as a hundred others."},
+      "looks": [
+        {"key": "issued", "bands": ["*"], "physical": "A plain uniform tunic in undyed wool with a cord belt and stitched hem"}
+      ],
+      "tags": ["clothing", "torso", "uniform"],
+      "aliases": ["Plain issue uniform", "Patched Baronial Livery", "Crimson Theory robes", "Sapphire-trimmed academy uniform", "Crimson desert robes", "White-and-gold silk robes", "Emerald training harness"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.holo_jacket",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "holo jacket"},
+      "description": {"*": "A jacket with thread that glows along every seam."},
+      "looks": [
+        {"key": "holo", "bands": ["*"], "physical": "A dark jacket with glowing cyan thread running along its seams"}
+      ],
+      "tags": ["clothing", "torso", "tech"],
+      "aliases": ["Holo-thread jacket"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.tunic",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tunic"},
+      "description": {"*": "A coarse tunic that has been somebody's whole wardrobe."},
+      "looks": [
+        {"key": "coarse", "bands": ["*"], "physical": "A coarse oatmeal tunic with rolled cuffs and a rope-tied waist"}
+      ],
+      "tags": ["clothing", "shirt"],
+      "aliases": ["Woolen Tunic", "Belted Wool Tunic"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.linen_shirt",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "linen shirt"},
+      "description": {"*": "A linen shirt boiled clean and patched at the collar."},
+      "looks": [
+        {"key": "linen", "bands": ["*"], "physical": "A cream linen shirt with a drawstring collar and brown stitching"}
+      ],
+      "tags": ["clothing", "shirt"],
+      "aliases": ["Linen shirt", "Woollen shirt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.flannel_shirt",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "flannel shirt"},
+      "description": {"*": "A check flannel shirt, soft with age and sawdust."},
+      "looks": [
+        {"key": "check", "bands": ["*"], "physical": "A red-and-black check flannel shirt with buttoned cuffs"}
+      ],
+      "tags": ["clothing", "shirt", "warm"],
+      "aliases": ["Flannel Shirt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.sweater",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "knitted sweater"},
+      "description": {"*": "A hand-knit sweater that smells faintly of lanolin and home."},
+      "looks": [
+        {"key": "cable", "bands": ["*"], "physical": "A cable-knit sweater in cream wool with elbow patches"}
+      ],
+      "tags": ["clothing", "shirt", "warm"],
+      "aliases": ["Fisherman's sweater", "Wool sweater", "Fisherman's jumper"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.t_shirt",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "t-shirt"},
+      "description": {"*": "A cotton t-shirt washed a hundred times too many."},
+      "looks": [
+        {"key": "grey", "bands": ["*"], "physical": "A heather-grey cotton t-shirt with a small chest pocket"}
+      ],
+      "tags": ["clothing", "shirt"],
+      "aliases": ["Stained T-shirt", "Cotton t-shirt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.scrubs_top",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "scrubs top"},
+      "description": {"*": "A scrub top, the uniform of long shifts and longer nights."},
+      "looks": [
+        {"key": "teal", "bands": ["*"], "physical": "A teal scrub top with a v-neck and chest pocket"}
+      ],
+      "tags": ["clothing", "shirt", "uniform"],
+      "aliases": ["Scrubs top"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.jumpsuit",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["industrial", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "work coverall"},
+      "description": {"*": "A one-piece work suit with grease at every cuff."},
+      "looks": [
+        {"key": "suit", "bands": ["*"], "physical": "A one-piece work suit in faded blue with a zip front and tool loops"}
+      ],
+      "tags": ["clothing", "shirt", "work"],
+      "aliases": ["Ship suit"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.belt",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "leather belt"},
+      "description": {"*": "A leather belt with a buckle worn bright by hands."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A brown leather belt with a brass frame buckle and extra punched holes"}
+      ],
+      "tags": ["clothing"],
+      "aliases": ["Leather belt", "Heavy leather belt", "Judo belt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.breeches",
+      "category": "clothing",
+      "type": "pants",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "breeches"},
+      "description": {"*": "Loose breeches tied at the knee, wool that has seen every season."},
+      "looks": [
+        {"key": "loose", "bands": ["*"], "physical": "Loose brown wool breeches with a drawstring waist and knee ties"}
+      ],
+      "tags": ["clothing", "pants"],
+      "aliases": ["Hempen trousers", "Woolen Trousers", "Linen breeches", "Russet Breeches", "Wool hose"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.trousers",
+      "category": "clothing",
+      "type": "pants",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "trousers"},
+      "description": {"*": "Mended trousers, comfortable in the way only old clothes are."},
+      "looks": [
+        {"key": "mended", "bands": ["*"], "physical": "Mended grey work trousers with a button fly and patched knees"}
+      ],
+      "tags": ["clothing", "pants"],
+      "aliases": ["Patched trousers"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.jeans",
+      "category": "clothing",
+      "type": "pants",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "jeans"},
+      "description": {"*": "Faded jeans broken in to exactly one person's shape."},
+      "looks": [
+        {"key": "faded", "bands": ["*"], "physical": "Faded blue denim jeans with worn knees and a leather patch"}
+      ],
+      "tags": ["clothing", "pants"],
+      "aliases": ["Denim jeans", "Worn Denim Jeans"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.cargo_pants",
+      "category": "clothing",
+      "type": "pants",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "cargo pants"},
+      "description": {"*": "Quick-dry cargo pants built for wet decks and long shifts."},
+      "looks": [
+        {"key": "cargo", "bands": ["*"], "physical": "Quick-dry cargo pants in slate grey with strapped thigh pockets"}
+      ],
+      "tags": ["clothing", "pants"],
+      "aliases": ["Quick-dry cargo pants", "Puddle-cuffed work pants"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.leather_gloves",
+      "category": "clothing",
+      "type": "gloves",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "leather gloves"},
+      "description": {"*": "Thin leather gloves, soft enough for reins and tough enough for rope."},
+      "looks": [
+        {"key": "thin", "bands": ["*"], "physical": "Thin brown leather gloves with stitched seams and a buttoned wrist"}
+      ],
+      "tags": ["clothing", "gloves"],
+      "aliases": ["Leather Gloves", "Kid gloves", "Silk-Lined Riding Gloves", "Fisherman's Gloves", "Leather Bracer"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.work_gloves",
+      "category": "clothing",
+      "type": "gloves",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "work gloves"},
+      "description": {"*": "Work gloves that have taken the splinters meant for hands."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "Padded canvas work gloves with leather palms and frayed cuffs"}
+      ],
+      "tags": ["clothing", "gloves", "work"],
+      "aliases": ["Work gloves", "Hide Work Gloves", "Insulated work gloves", "Archival gloves", "Insulated gauntlets", "Hide mitts"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.mittens",
+      "category": "clothing",
+      "type": "gloves",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "mittens"},
+      "description": {"*": "Thick mittens, clumsy and warm, and nobody minds."},
+      "looks": [
+        {"key": "thick", "bands": ["*"], "physical": "A pair of thick knitted mittens in grey wool with red cuffs"}
+      ],
+      "tags": ["clothing", "gloves", "warm"],
+      "aliases": ["Wool mittens", "Knitted mittens", "Heavy Mittens", "Sea-mittens", "Woolen Gloves"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.leather_boots",
+      "category": "clothing",
+      "type": "boots",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "leather boots"},
+      "description": {"*": "Scuffed leather boots that know every road their owner walks."},
+      "looks": [
+        {"key": "scuffed", "bands": ["*"], "physical": "A pair of scuffed brown leather boots with laced ankles and worn heels"}
+      ],
+      "tags": ["clothing", "boots"],
+      "aliases": ["Leather Boots", "Old Boot", "Barn Boots", "Hobnail boots", "Riding boots", "Polished boot", "Polished academy boots", "Cobble-Tread Boots", "Fenland Boots", "Salt-Water Boots", "Sea boots"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.work_boots",
+      "category": "clothing",
+      "type": "boots",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "work boots"},
+      "description": {"*": "Steel-toed boots that stomp where slippers fear to tread."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A pair of steel-toed work boots with black toe caps and thick soles"}
+      ],
+      "tags": ["clothing", "boots", "work"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.rubber_boots",
+      "category": "clothing",
+      "type": "boots",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "rubber boots"},
+      "description": {"*": "Rubber boots for the wettest work there is."},
+      "looks": [
+        {"key": "wellington", "bands": ["*"], "physical": "A pair of green rubber wellington boots with ribbed soles"}
+      ],
+      "tags": ["clothing", "boots", "weather"],
+      "aliases": ["Rubber Boots", "Rubber rain boots", "Thigh wading boots", "Rubber shower sandals"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.sneakers",
+      "category": "clothing",
+      "type": "boots",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sneakers"},
+      "description": {"*": "A pair of canvas sneakers, one lace shorter than the other."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A worn canvas sneaker with a rubber toe cap and frayed lace"}
+      ],
+      "tags": ["clothing", "boots"],
+      "aliases": ["Lost sneaker", "Canvas sneakers", "Leather Running Shoes"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.magnetic_boots",
+      "category": "clothing",
+      "type": "boots",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "magnetic boots"},
+      "description": {"*": "Magnetic boots that clamp to the deck when the ship lurches."},
+      "looks": [
+        {"key": "mag", "bands": ["*"], "physical": "Heavy boots with brushed steel sole plates and ankle clasp"}
+      ],
+      "tags": ["clothing", "boots", "tech"],
+      "aliases": ["Magnetic boots"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.scarf",
+      "category": "clothing",
+      "type": "necklace",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "scarf"},
+      "description": {"*": "A long scarf wound twice and still with length to spare."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A long knitted scarf in rust-red wool with fringed ends"}
+      ],
+      "tags": ["clothing", "warm"],
+      "aliases": ["Woolen Scarf", "Wool scarf", "Woollen shawl", "Arachne Silk Scarf"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.socks",
+      "category": "clothing",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "wool socks"},
+      "description": {"*": "A pair of wool socks, darned at the heel by somebody patient."},
+      "looks": [
+        {"key": "grey", "bands": ["*"], "physical": "A pair of grey wool socks, one darned at the heel with red thread"}
+      ],
+      "tags": ["clothing", "warm"],
+      "aliases": ["Grey Wool Socks", "Woolen Socks", "Dirty sock"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.blanket",
+      "category": "clothing",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "blanket"},
+      "description": {"*": "A wool blanket, scratchy and irreplaceable."},
+      "looks": [
+        {"key": "wool", "bands": ["*"], "physical": "A folded grey wool blanket with a striped border and fringe"}
+      ],
+      "tags": ["clothing", "warm", "bedding"],
+      "aliases": ["Wool blanket", "Tattered blanket", "Straw Mattress", "Straw Pallet", "Rush Floor Mat"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.towel",
+      "category": "clothing",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "towel"},
+      "description": {"*": "A thin towel, dried stiff and folded anyway."},
+      "looks": [
+        {"key": "striped", "bands": ["*"], "physical": "A folded striped towel with a hanging loop and frayed corner"}
+      ],
+      "tags": ["clothing", "hygiene"],
+      "aliases": ["Linen Bath Towel", "Steamhouse Towel", "Thin bathhouse Towel"],
+      "sources": ["harvest"]
+    }
+  ]
+}

@@ -1,0 +1,535 @@
+{
+  "_note": "Documents, keys and money. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "document.book",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "book", "modern": "paperback", "scifi": "paperback"},
+      "description": {"*": "A book read so often it falls open at the best part."},
+      "looks": [
+        {"key": "bound", "bands": ["medieval", "industrial"], "physical": "A thick leather-bound book with a brass clasp and burgundy spine"},
+        {"key": "paper", "bands": ["modern", "scifi"], "physical": "A worn paperback with a creased spine and dog-eared cover"}
+      ],
+      "tags": ["document", "book"],
+      "aliases": ["Dusty Tome", "Heavy tome", "A book read forty times", "Corvane's sealed treatise", "Treatise on Elemental Control", "Basic alchemy guide", "Nine-Breath Gathering Primer", "Crimson Vein Sutra fragment", "Forbidden Tome Fragment", "History of Elowen", "Pocket Philosophy Book", "Dusty encyclopedia", "Dusty paperback", "Travel guide book", "Old Physics Journal", "Statutes of the Athenaeum", "Encyclopaedia Magica"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.journal",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "journal"},
+      "description": {"*": "A journal that has taken more confessions than any priest."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A worn leather journal with a strap closure and bulging pages"}
+      ],
+      "tags": ["document", "book"],
+      "aliases": ["Old leather journal", "Leather Bound Journal", "Hand-written Journal", "Dusty journal", "Composer's notebook", "Sketchbook", "Staff notebook", "Order notebook", "Tattered notebook", "Stained notebook", "Crumpled notebook page", "Leather planner"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.holy_book",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "holy book"},
+      "description": {"*": "A small holy book, spine cracked from devout thumbs."},
+      "looks": [
+        {"key": "black", "bands": ["*"], "physical": "A small black holy book with gilt page edges and a ribbon marker"}
+      ],
+      "tags": ["document", "book", "holy"],
+      "aliases": ["Prayer Book", "Leather bible", "Friar's Travelling Psalter", "Tide psalter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.scroll",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "scroll"},
+      "description": {"*": "A rolled scroll, sealed and waiting on the wrong reader."},
+      "looks": [
+        {"key": "rolled", "bands": ["*"], "physical": "A rolled parchment scroll tied with a red ribbon and wax seal"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Ancient scroll", "Message Scroll", "Yellowed Scroll", "Page of old script"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.letter",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "letter"},
+      "description": {"*": "A letter, sent late, read early, kept always."},
+      "looks": [
+        {"key": "sealed", "bands": ["medieval", "industrial"], "physical": "A folded letter closed with a dark red wax seal"},
+        {"key": "envelope", "bands": ["modern", "scifi"], "physical": "A sealed brown envelope with a stamp corner and creased flap"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Unsent letter", "Sealed letter", "Unopened letter", "Traveler's Letter", "Letter of admission", "Secret Note", "Torn phone number", "Room service menu"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.map",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "map"},
+      "description": {"*": "A map soft at the folds, marked in somebody's shorthand."},
+      "looks": [
+        {"key": "folded", "bands": ["*"], "physical": "A folded map creased soft from use with coloured road lines and a compass rose"}
+      ],
+      "tags": ["document", "map"],
+      "aliases": ["Old Map", "Ancient map", "Crumpled Map", "Map of Gull Haven", "Sea Chart", "Star Chart Folio", "Ancient Map of the Catacombs", "Othic rubbing", "Paper chart"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.newspaper",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "newspaper"},
+      "description": {"*": "A newspaper, a day old and already fish-wrap."},
+      "looks": [
+        {"key": "folded", "bands": ["*"], "physical": "A folded newspaper with grey print and a smudged masthead"}
+      ],
+      "tags": ["document", "news"],
+      "aliases": ["Damp Newspaper", "Old newspaper", "Local Gazette", "Folded newspaper", "Soggy newspaper scrap", "Damp Newspaper"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.ledger",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "ledger"},
+      "description": {"*": "A heavy ledger where every debt and kindness is written down."},
+      "looks": [
+        {"key": "bound", "bands": ["*"], "physical": "A heavy bound ledger with a ribbon marker and ink-stained cover"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Estate ledger", "Tithe ledger", "Catch ledger", "Pocket ledger", "Student Progress Ledger", "Steward's Toll Ledger", "Noodle recipe ledger", "Reclaim tariff ledger", "Ledger", "Ledger Book"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.flyer",
+      "category": "document",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "flyer"},
+      "description": {"*": "A crumpled handbill, somebody's cause in cheap print."},
+      "looks": [
+        {"key": "crumpled", "bands": ["*"], "physical": "A crumpled printed handbill with a torn corner and bold ink"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Tattered Flyer", "Campus Flyer", "Concert flyer", "Discarded flyer", "Party flyer", "Tariff protest flier", "Political pamphlet", "Hidden pamphlet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.receipt",
+      "category": "document",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "receipt"},
+      "description": {"*": "A till receipt, folded small in a pocket where it will live for months."},
+      "looks": [
+        {"key": "curly", "bands": ["*"], "physical": "A long curly till receipt with grey print and a creased fold"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Crumpled receipt", "Receipt roll", "Lottery ticket"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.id_card",
+      "category": "document",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "ID card"},
+      "description": {"*": "An ID card with a bad photo and a good reason to keep it."},
+      "looks": [
+        {"key": "card", "bands": ["*"], "physical": "A pale blue ID card with a photo corner and dark stripe"}
+      ],
+      "tags": ["document", "id"],
+      "aliases": ["Student ID card", "Library card", "Forgotten library card", "Press Badge", "Business card", "Bus pass"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.passport",
+      "category": "document",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "passport"},
+      "description": {"*": "A passport thick with stamps from kinder years."},
+      "looks": [
+        {"key": "booklet", "bands": ["*"], "physical": "A dark blue passport booklet with a gold border and bent corner"}
+      ],
+      "tags": ["document", "id"],
+      "aliases": ["Passport holder"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.sheet_music",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sheet music"},
+      "description": {"*": "Loose sheets of music, annotated in pencil by three different hands."},
+      "looks": [
+        {"key": "loose", "bands": ["*"], "physical": "Loose sheets of printed music with a pencil marking and folded corner"}
+      ],
+      "tags": ["document", "music"],
+      "aliases": ["Sheet music"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.notes",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "notes"},
+      "description": {"*": "Loose notes in a hurry of handwriting."},
+      "looks": [
+        {"key": "loose", "bands": ["*"], "physical": "Loose handwritten notes on rough paper with a brown ink blot"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Scribbled notes", "Lecture Notes", "Student's notes", "Scribbled Homework", "Ink-stained Parchment", "Academic timetable", "Fourth-tier request slip", "Interdict request form", "Printed source code", "Graded homework stack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.decree",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "official decree"},
+      "description": {"*": "An official paper with a hanging seal, trouble in formal language."},
+      "looks": [
+        {"key": "seal", "bands": ["*"], "physical": "An official document with a heavy pendant wax seal and ribbon"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Official Decree", "Crown Tax Notice", "Auditor's Seizure Writ", "Agent's contract paper", "Traveler's Papers"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.tally_stick",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tally stick"},
+      "description": {"*": "A split tally stick, notches that two people remember differently."},
+      "looks": [
+        {"key": "notched", "bands": ["*"], "physical": "A notched wooden tally stick with a split half and knife marks"}
+      ],
+      "tags": ["document"],
+      "aliases": ["Tally Stick", "Timber tally stick", "Tax Tally Stick"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "document.seal_matrix",
+      "category": "document",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "seal matrix"},
+      "description": {"*": "A bronze seal matrix, and whoever holds it speaks with its crest."},
+      "looks": [
+        {"key": "bronze", "bands": ["*"], "physical": "A bronze seal matrix with a cut crest and turned wooden handle"}
+      ],
+      "tags": ["document", "seal"],
+      "aliases": ["Lord's seal matrix", "Silver Seal of Office", "Wool Merchant's Seal", "Wax seal"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.iron",
+      "category": "key",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "iron key"},
+      "description": {"*": "A heavy iron key that fits a door somebody cares about."},
+      "looks": [
+        {"key": "heavy", "bands": ["*"], "physical": "A heavy iron key with a looped bow and square-cut teeth"}
+      ],
+      "tags": ["key"],
+      "aliases": ["Iron Key", "Ancient Key", "Heavy Steel Key", "Steel Key", "Iron Gate Key", "House Key", "Inn Key", "Inn room key", "Cottage Key", "Heavy cart-key", "Gatehouse Armoury key", "Harbor Store Key", "Net Loft Key", "Wine Cellar Key", "Manor Master Key", "Strongroom Key", "Tithe Strongbox Key", "Thorn-Key", "Ward key", "Store key", "Pharmacy key", "Clinic ward key", "Bonded key", "Rainlight hut key"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.brass",
+      "category": "key",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "brass key"},
+      "description": {"*": "A small brass key, bright from a pocket."},
+      "looks": [
+        {"key": "small", "bands": ["*"], "physical": "A small brass key with a hollow barrel and cut wards"}
+      ],
+      "tags": ["key"],
+      "aliases": ["Brass Key", "brass door key", "Spare key"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.skeleton",
+      "category": "key",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "skeleton key"},
+      "description": {"*": "A skeleton key that has met more locks than its owner admits."},
+      "looks": [
+        {"key": "thin", "bands": ["*"], "physical": "A thin double-ended key with a flat shaft and minimal wards"}
+      ],
+      "tags": ["key", "rogue"],
+      "aliases": ["Skeleton key"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.ring",
+      "category": "key",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "key ring"},
+      "description": {"*": "A ring of keys, one for every door a busy life needs."},
+      "looks": [
+        {"key": "ring", "bands": ["*"], "physical": "A steel ring holding four worn keys of different sizes"}
+      ],
+      "tags": ["key"],
+      "aliases": ["Ring of keys", "Library Keyring", "Bailiff's key ring", "Ring of Gatehouse Keys", "Surgery annex keyring"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.card",
+      "category": "key",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "keycard"},
+      "description": {"*": "A keycard that opens doors for as long as the account stays good."},
+      "looks": [
+        {"key": "card", "bands": ["*"], "physical": "A cream keycard with a dark magnetic stripe and hole punch"}
+      ],
+      "tags": ["key", "tech"],
+      "aliases": ["Hotel key card", "Dining hall keycard", "Master keycard", "Freight lift keycard"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "key.car",
+      "category": "key",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "car key"},
+      "description": {"*": "A vehicle key with a fob worn smooth by the thumb."},
+      "looks": [
+        {"key": "fob", "bands": ["*"], "physical": "A car key with a black remote fob and chipped plastic head"}
+      ],
+      "tags": ["key", "tech"],
+      "aliases": ["Moped ignition key", "Tower key fob", "Crane remote pendant"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.copper_coin",
+      "category": "money",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "copper coin"},
+      "description": {"*": "A worn copper coin, small money for small needs."},
+      "looks": [
+        {"key": "worn", "bands": ["*"], "physical": "A worn copper coin with a rubbed face and nicked edge"}
+      ],
+      "tags": ["money"],
+      "aliases": ["Copper coin", "Lost Copper Coin", "Small Coin"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.silver_coin",
+      "category": "money",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "silver coin"},
+      "description": {"*": "A silver coin that will buy dinner or buy favour."},
+      "looks": [
+        {"key": "milled", "bands": ["*"], "physical": "A bright silver coin with a milled edge and worn crest"}
+      ],
+      "tags": ["money"],
+      "aliases": ["Silver Coin", "Silver pennies", "Pouch of Silver Pennies", "Purse of shillings", "Silver Stag Coin", "Stolen Silver"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.gold_coin",
+      "category": "money",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 4,
+      "names": {"*": "gold coin"},
+      "description": {"*": "An old gold coin, soft-edged from too many hands."},
+      "looks": [
+        {"key": "old", "bands": ["*"], "physical": "An old gold coin with a stamped profile and bright scratch marks"}
+      ],
+      "tags": ["money", "gold"],
+      "aliases": ["Ancient Coin", "Gold Tooth"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.coins",
+      "category": "money",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "loose change"},
+      "description": {"*": "A scatter of coins from three currencies and one couch."},
+      "looks": [
+        {"key": "scatter", "bands": ["*"], "physical": "A small scatter of mixed metal coins with a hair clip among them"}
+      ],
+      "tags": ["money"],
+      "aliases": ["Loose Change", "Foreign currency coins", "Lost coin"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.banknotes",
+      "category": "money",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "banknotes"},
+      "description": {"*": "A banded stack of notes, counted and recounted."},
+      "looks": [
+        {"key": "banded", "bands": ["*"], "physical": "A banded stack of banknotes with a paper strap"}
+      ],
+      "tags": ["money"],
+      "aliases": ["Banded cash"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.coin_purse",
+      "category": "money",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "coin purse"},
+      "description": {"*": "A drawstring purse that jingles when it should not."},
+      "looks": [
+        {"key": "drawstring", "bands": ["*"], "physical": "A drawstring leather coin purse bulging with coins"}
+      ],
+      "tags": ["money", "container"],
+      "aliases": ["Coin Purse", "Copper Coin Purse", "Silk Pouch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.wallet",
+      "category": "money",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "wallet"},
+      "description": {"*": "A worn wallet, cards on one side and excuses on the other."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A worn brown leather wallet, slightly open with card slots showing"}
+      ],
+      "tags": ["money", "container"],
+      "aliases": ["Stolen Wallet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "money.token",
+      "category": "money",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "token"},
+      "description": {"*": "A token good for one wash, one toll or one turn of something."},
+      "looks": [
+        {"key": "brass", "bands": ["medieval", "industrial"], "physical": "A worn brass token with a ribbed edge and square hole"},
+        {"key": "chit", "bands": ["modern", "scifi"], "physical": "A bright plastic chit with a clipped corner and printed stripe"}
+      ],
+      "tags": ["money"],
+      "aliases": ["Toll Token", "Brass Token", "Laundry token handful", "Reclaim power chit", "Water ration chip", "Sanded Training Dummy Token"],
+      "sources": ["harvest"]
+    }
+  ]
+}

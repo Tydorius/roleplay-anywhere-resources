@@ -1,0 +1,192 @@
+{
+  "_note": "Magic items, fantasy genres. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "magic.spell_scroll",
+      "category": "magic",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "spell scroll"},
+      "description": {"*": "A rolled scroll with a spell written in a hand that moved on its own."},
+      "looks": [
+        {"key": "rolled", "bands": ["*"], "physical": "A rolled scroll sealed with a wax sigil and faintly glowing runes"}
+      ],
+      "tags": ["magic", "scroll"],
+      "aliases": ["Small spell scroll"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.wand",
+      "category": "magic",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "wand"},
+      "description": {"*": "A slim wand, carved, warmed and pointed with intent."},
+      "looks": [
+        {"key": "carved", "bands": ["*"], "physical": "A slim rune-carved wand of dark wood with a clear crystal tip"}
+      ],
+      "tags": ["magic"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "magic.staff",
+      "category": "magic",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "wizard's staff"},
+      "description": {"*": "A gnarled staff taller than its owner and older than the road."},
+      "looks": [
+        {"key": "gnarled", "bands": ["*"], "physical": "A tall gnarled staff bound with copper wire around a crystal head"}
+      ],
+      "tags": ["magic"],
+      "aliases": ["Scepter of Eternal Night"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.healing_potion",
+      "category": "magic",
+      "type": "consumable",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "potion of healing"},
+      "description": {"*": "A stoppered flask of rose-red potion that knits flesh while you watch."},
+      "looks": [
+        {"key": "flask", "bands": ["*"], "physical": "A round glass flask of rose-red potion stoppered with cork and wax"}
+      ],
+      "tags": ["magic", "potion"],
+      "aliases": ["Health Potion", "Healing draught", "Rainbow Potion", "Strange Elixir", "Qi-Gathering pill"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.mana_potion",
+      "category": "magic",
+      "type": "consumable",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "potion of mana"},
+      "description": {"*": "A flask of deep blue potion that pours power back into an emptied mage."},
+      "looks": [
+        {"key": "flask", "bands": ["*"], "physical": "A slim glass flask of deep blue potion with a driven cork"}
+      ],
+      "tags": ["magic", "potion"],
+      "aliases": ["Mana Potion", "Sleeping potion"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.grimoire",
+      "category": "magic",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "rare",
+      "price": 4,
+      "names": {"*": "grimoire"},
+      "description": {"*": "A heavy grimoire that is warm to the hand and should not be."},
+      "looks": [
+        {"key": "bound", "bands": ["*"], "physical": "A heavy grimoire bound in cracked black leather with iron clasps"}
+      ],
+      "tags": ["magic", "book"],
+      "aliases": ["Dusty Grimoire", "Forbidden grimoire", "Ancient Soul Phylactery", "Finger-bone reliquary"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.talisman",
+      "category": "magic",
+      "type": "misc",
+      "bands": ["medieval", "scifi"],
+      "onlyGenres": ["fantasy"],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "warding talisman"},
+      "description": {"*": "A paper talisman marked in red strokes, pinned where the luck should stay."},
+      "looks": [
+        {"key": "paper", "bands": ["*"], "physical": "A pale yellow paper talisman marked with red brush strokes and a pin"}
+      ],
+      "tags": ["magic", "charm"],
+      "aliases": ["Warding talisman", "Hedge charm against blight", "Warding Charm", "Granny Wick's Luck Charm", "Rain ghost paper charm"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.mana_crystal",
+      "category": "magic",
+      "type": "material",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "mana crystal"},
+      "description": {"*": "A rough crystal that hums faintly and drinks the light."},
+      "looks": [
+        {"key": "rough", "bands": ["*"], "physical": "A rough crystal glowing faint violet with cloudy inclusions"}
+      ],
+      "tags": ["magic", "crystal"],
+      "aliases": ["Mana Crystal", "Small Mana Crystal", "Low-grade spirit stone", "Cracked spirit stone", "Ethereal Essence", "Spectral Shard", "Warding Crystal", "Enchantress's Focus Crystal", "Obsidian Focus Crystal", "Spirit-touched beast core"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.reagent_vial",
+      "category": "magic",
+      "type": "material",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "reagent vial"},
+      "description": {"*": "A corked vial of something the apothecary keeps behind the counter."},
+      "looks": [
+        {"key": "vial", "bands": ["*"], "physical": "A corked vial of crimson reagent sealed with black wax"}
+      ],
+      "tags": ["magic", "reagent"],
+      "aliases": ["Reagent vial", "Mire-crawler toxin", "Vial of Grave Dust", "Dried Blood", "Bat Wing", "Dried toad leg", "Moth-wing dust", "Pale moth wing", "Crushed Beetle Wing", "Glowing cave fungus", "Glowing Moss", "Glowing mushroom", "Guano Sample"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.mage_light",
+      "category": "magic",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "mage-light lantern"},
+      "description": {"*": "A lantern holding a sphere of cold light that never needs oil."},
+      "looks": [
+        {"key": "sphere", "bands": ["*"], "physical": "A brass cage lantern holding a pale blue sphere of glowing light"}
+      ],
+      "tags": ["magic", "light"],
+      "aliases": ["Mage-light lantern", "Ever-burning Ember", "Kobold Warm-Stone", "Everwarm Bed-Brick"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "magic.spatial_ring",
+      "category": "magic",
+      "type": "ring",
+      "bands": ["medieval"],
+      "onlyGenres": ["fantasy"],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "spatial ring"},
+      "description": {"*": "A plain iron ring that opens onto more room than a wagon."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A black iron ring with a hairline seam of silver light"}
+      ],
+      "tags": ["magic", "jewellery"],
+      "aliases": ["Spatial ring"],
+      "sources": ["harvest"]
+    }
+  ]
+}
