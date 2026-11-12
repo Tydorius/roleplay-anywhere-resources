@@ -9,11 +9,12 @@ An extension adds prompt fragments (``worldgen/prompts/ext/<ext>/<phase>.txt``,
 appended to that phase's prompt when enabled), contract fields for the model
 to reply with, and — for floors — a post-layout step that places the extra
 storeys. Not every extension needs a game mod any more: ``floors`` uses
-Anywhere RPG 1.0's own floors and plays unmodded, while ``region-groups``
-and ``lights`` write ``arpgMods`` data the game-mod-loader mods in
-``roleplay-anywhere-resources/tools/code-mod-loader`` read; an extension's
-``mods`` names the ones it needs (empty for none). A run without an
-extension never mentions its features to the model and never runs its code.
+Anywhere RPG 1.0's own floors and plays unmodded, while ``region-groups``,
+``lights`` and ``secret-passages`` write ``arpgMods`` data the
+game-mod-loader mods in ``roleplay-anywhere-resources/tools/code-mod-loader``
+read; an extension's ``mods`` names the ones it needs (empty for none). A run
+without an extension never mentions its features to the model and never runs
+its code.
 
 ``requires`` names extensions turned on with this one (:func:`expand`
 records that, and :func:`expand_notes` says so for a user); no extension
@@ -60,6 +61,12 @@ REGISTRY = (
               "electric, neon, screen, magic) and, where the setting calls "
               "for it, a colour: flicker, embers and coloured glow in game.",
               without_mod="without it the world still plays; its lamps just look plain"),
+    Extension("secret-passages", "Secret passages", ("secret-passages",),
+              "Now and then a hidden door: a priest hole, a smuggler's den, "
+              "or one interior doorway in a castle, keep or manor, known to "
+              "the building's key holders and found in play.",
+              without_mod="without it the world still plays; its secret doors "
+                          "are ordinary doors that look faint"),
 )
 
 BY_ID = {e.id: e for e in REGISTRY}

@@ -1,11 +1,12 @@
-"""Anywhere RPG 1.0 secret doors on a generated world: the Python port of
-the editor's secret-passage helpers (world10.js) produces exactly the
-shapes the game's secret-passages mod reads, a manor's priest hole ships
-hidden and known to its household, a castle gets one hidden interior
-doorway of its own choosing that keeps every room reachable, a village of
-plain houses hides nothing, and a doorway on the player's only way to
-their bed is left ordinary and noted — while locks and secrets stack on
-the same door."""
+"""Anywhere RPG 1.0 secret doors on a generated world, under the opt-in
+secret-passages extension: the Python port of the editor's secret-passage
+helpers (world10.js) produces exactly the shapes the game's
+secret-passages mod reads, a manor's priest hole ships hidden and known to
+its household, a castle gets one hidden interior doorway of its own
+choosing that keeps every room reachable, a village of plain houses hides
+nothing, and a doorway on the player's only way to their bed is left
+ordinary and noted — while locks and secrets stack on the same door.
+Without the extension nothing is hidden and no mod data is written."""
 import json
 import os
 import shutil
@@ -16,6 +17,9 @@ import worldgen
 from worldgen import api, native
 from worldgen.vendor import scenario_checks
 from tests.test_sleep import CATALOGUE, _tmpl
+
+# secret doors are opt-in: every build here that expects one turns this on
+EXT = ("secret-passages",)
 
 
 def secret_world():
@@ -320,10 +324,11 @@ class TestSecretShapes(unittest.TestCase):
 
 
 class TestSecretChoices(unittest.TestCase):
-    """What the generator decides to hide, at spec level."""
+    """What the generator decides to hide, at spec level, with the
+    extension on."""
 
     def _spec(self, data):
-        world = worldgen.run(data, seed=1)
+        world = worldgen.run(data, seed=1, extensions=EXT)
         return world, worldgen.build_spec(world, data)
 
     def test_the_priest_hole_is_hidden_and_known_to_the_household(self):
@@ -380,6 +385,39 @@ class TestSecretChoices(unittest.TestCase):
                            "holders": ["Sim Steward"]}])
 
 
+class TestSecretsAreOptIn(unittest.TestCase):
+    """Secret doors are the opt-in secret-passages extension: a build
+    without it hides nothing and writes no mod data."""
+
+    def test_without_the_extension_nothing_is_hidden(self):
+        data = manor_plan()
+        spec = worldgen.build_spec(worldgen.run(data, seed=1), data)
+        self.assertEqual(spec["nativeSecrets"], [])
+        tmp = tempfile.mkdtemp(prefix="worldgen-secrets-")
+        try:
+            summary = api._layout_and_build(manor_plan(), seed=1, out_dir=tmp)
+            path = os.path.join(summary["out"],
+                                summary["zip"][:-len(".zip")], "scenario.json")
+            with open(path, "r", encoding="utf-8") as f:
+                scn = json.load(f)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        self.assertEqual(summary["secret_doors"], 0)
+        self.assertNotIn("arpgMods", scn)
+        concealed = [e["name"] for e in scn["entities"]
+                     for fx in e.get("statusEffects") or []
+                     for m in (fx.get("def") or {}).get("mechanics") or []
+                     if m.get("type") == "concealed"]
+        self.assertEqual(concealed, [], "no door carries the concealed effect")
+        # the priest hole is still there, behind an ordinary door
+        hole, bedroom = (next(r for r in scn["regions"] if r["name"] == name)
+                         for name in ("Netherby Manor Priest Hole",
+                                      "Netherby Manor Master Bedroom"))
+        doors = native.doors_between(scn, hole, bedroom)
+        self.assertTrue(doors)
+        self.assertFalse(any(native.is_secret(d) for d in doors))
+
+
 class TestSecretChecks(unittest.TestCase):
     """What the shipped-scenario check says about secret trouble."""
 
@@ -404,11 +442,12 @@ class TestSecretChecks(unittest.TestCase):
 
 
 class TestFixtureWorldSecrets(unittest.TestCase):
-    """medieval-glm-plan.json built end to end, with the farmhouse's
-    Larder rewritten in the plan as the family's priest hole: the build
-    stays clean, the hole's doors ship hidden with the farmwife the only
-    one who knows them, the summary counts the one secret door, and the
-    vendored 1.0 checker reports nothing against the shipped world."""
+    """medieval-glm-plan.json built end to end with the extension on, the
+    farmhouse's Larder rewritten in the plan as the family's priest hole:
+    the build stays clean, the hole's doors ship hidden with the farmwife
+    the only one who knows them, the summary counts the one secret door,
+    and the vendored 1.0 checker reports nothing against the shipped
+    world."""
 
     @classmethod
     def setUpClass(cls):
@@ -429,8 +468,10 @@ class TestFixtureWorldSecrets(unittest.TestCase):
                 for f in g["furniture"]:
                     if f["room"] == "Larder":
                         f["room"] = "Priest Hole"
-        cls.spec = worldgen.build_spec(worldgen.run(cls.data, seed=1), cls.data)
-        cls.summary = api._layout_and_build(cls.data, seed=1, out_dir=cls.tmp)
+        cls.spec = worldgen.build_spec(
+            worldgen.run(cls.data, seed=1, extensions=EXT), cls.data)
+        cls.summary = api._layout_and_build(cls.data, seed=1, out_dir=cls.tmp,
+                                            extra_exts=EXT)
         path = os.path.join(cls.summary["out"],
                             cls.summary["zip"][:-len(".zip")], "scenario.json")
         with open(path, "r", encoding="utf-8") as f:
@@ -523,7 +564,7 @@ class TestSecretReviewFixes(unittest.TestCase):
                                 "purpose": "the lord's coin"})
         castle["connections"].append(["Study", "Vault"])
         for seed in range(1, 6):
-            world = worldgen.run(data, seed=seed)
+            world = worldgen.run(data, seed=seed, extensions=EXT)
             spec = worldgen.build_spec(world, data)
             openings = checks.compute_openings(world)
             blocked, _doors = checks.walkability_grid(world, openings)

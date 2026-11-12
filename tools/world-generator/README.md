@@ -23,8 +23,8 @@ the game is the scenario format, which its validator checks against 1.0's rules 
 - populations, with their members already in place.
 
 A generated castle was started in the live 1.0 game to confirm the import (see
-[MODEL_RESULTS.md](MODEL_RESULTS.md)). The `region-groups` and `lights` extensions still need the
-code-mod loader mods. The 0.18 version is on the `0.18` branch.
+[MODEL_RESULTS.md](MODEL_RESULTS.md)). The `region-groups`, `lights` and `secret-passages`
+extensions still need the code-mod loader mods. The 0.18 version is on the `0.18` branch.
 
 **Native populations:** every world also ships the game's own nameless creatures as
 `npcTemplates` (chosen in `worldgen/populations.py`): livestock (sheep, cows, goats or pigs)
@@ -38,13 +38,16 @@ cast already has a guard, watch or police of its own. Counts grow with the regio
 whole world holds at most 20 creatures — the largest counts trim first. The choice is
 deterministic given the run's seed.
 
-**Native secret doors:** a room named like a priest hole, hidden chamber, smuggler's den or
-escape tunnel gets its doorway hidden — and up to a third of castles, keeps, manor houses and
-other grand buildings get one hidden interior doorway of their own, into a study, library,
-chapel, cellar or vault if there is one. The doors carry 1.0's own `concealed` effect, and who
-knows them — the building's key holders, else nobody — rides in the `secretPassages` mod data.
-The doors are only hidden in play with the matching mod from
-`../code-mod-loader/examples/secret-passages` (this repository).
+**Native secret doors:** these are the opt-in `secret-passages` extension, off by default: turn
+it on with `--ext secret-passages`, or with its toggle in the editor. With it on, a room named
+like a priest hole, hidden chamber, smuggler's den or escape tunnel gets its doorway hidden —
+and up to a third of castles, keeps, manor houses and other grand buildings get one hidden
+interior doorway of their own, into a study, library, chapel, cellar or vault if there is one.
+The doors carry 1.0's own `concealed` effect, and who knows them — the building's key holders,
+else nobody — rides in the `secretPassages` mod data. The extension needs the matching mod from
+`../code-mod-loader/examples/secret-passages` (this repository): the doors are only hidden in
+play with it installed, and without it they are ordinary doors that look faint. A world built
+without the extension hides no door and carries no mod data for them.
 
 > **Still in progress:** layout improvements are under way. Maps can come out long and wide,
 > with empty ground in places and squeezed furniture. A world's `plan.json` holds everything
@@ -328,6 +331,7 @@ installed in the game say so:
 | `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded | none |
 | `region-groups` | A zone may wrap around the map and still act as one region | `region-groups` |
 | `lights` | Each light source gets a kind (candle, torch, hearth fire, ember, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour, written as `arpgMods.lights` | `lights` |
+| `secret-passages` | Now and then a hidden door (a priest hole, a smuggler's den, or one interior doorway in a castle, keep or manor), known to the building's key holders and found in play, written as `arpgMods.secretPassages` | `secret-passages` |
 
 The `portals` extension is gone: its stairs were portal pads, and 1.0's own
 floors link stairs natively. A settings file or `plan.json` from an older
@@ -339,6 +343,10 @@ run: they are what the unmodded game lights at night. The `lights` extension
 adds the kinds and colours on top. Without the `lights` mod installed, a world
 built with it simply looks plain. Plans made before light strengths were asked
 for have none, so re-rolling one adds no lamps; generate it again instead.
+
+Secret doors come only with the `secret-passages` extension. Without the
+`secret-passages` mod installed, a world built with it still plays: its
+secret doors are ordinary doors that look faint.
 
 Example:
 `python -m worldgen generate --idea "…" --provider zai --out out/x --ext floors`.

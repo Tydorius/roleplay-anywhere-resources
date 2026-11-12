@@ -898,8 +898,12 @@ def build_spec(world, plan):
     # buildings where taking is theft: applied onto the built regions by name
     spec["nativeLocks"] = {"locks": _locks(world),
                            "theft": _theft_buildings(world)}
-    # ... and for the secret doorways (with who knows them)
-    spec["nativeSecrets"] = _secrets(world)
+    # ... and for the secret doorways (with who knows them), which only the
+    # secret-passages extension hides: without it no door gets the effect
+    # and no mod data is written
+    spec["nativeSecrets"] = (_secrets(world)
+                             if "secret-passages" in getattr(world, "extensions", ())
+                             else [])
     # ... and for the natural shapes, water surfaces and vehicle fields
     spec["nativeNature"] = nature
     # ... and for the native populations (livestock, vermin, crowds, patrols):
