@@ -579,7 +579,8 @@ function wgBindForm(dlg) {
   $("wgPopMap").onchange = e => wgSetPopMap(e.target.checked);
   $("wgIdea").oninput = estimate;
   dlg.querySelectorAll("[data-ext]").forEach(cb => cb.onchange = () => {
-    // floors needs portals (its stairs are portals): turning floors on turns portals on too
+    // an extension that requires another turns it on too (none does since
+    // portals was retired; the rule stays for future extensions)
     const ext = wgMeta.extensions.find(x => x.id === cb.dataset.ext);
     if (cb.checked) for (const need of ext?.requires || []) {
       const el = dlg.querySelector(`[data-ext="${CSS.escape(need)}"]`);
