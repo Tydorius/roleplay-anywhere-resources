@@ -166,7 +166,7 @@ class TestWorldgenEndpoints(unittest.TestCase):
         exts = {e["id"]: e for e in m["extensions"]}
         # the portals extension is retired: floors writes 1.0's native floors
         # and stairs, needs no game mod and turns on nothing else
-        self.assertEqual(set(exts), {"floors", "region-groups", "lights"})
+        self.assertEqual(set(exts), {"floors", "region-groups", "lights", "secret-passages"})
         self.assertFalse(any(e["default"] for e in exts.values()))
         self.assertEqual(exts["floors"]["mods"], [])
         self.assertEqual(exts["floors"]["requires"], [])
