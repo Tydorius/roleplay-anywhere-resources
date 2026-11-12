@@ -61,8 +61,10 @@ SECRET_ROOM_WORDS = re.compile(
     r"smuggl|bolt.?hole|escape (tunnel|passage)")
 # Buildings that get one secret interior doorway of their own, now and then
 # (a third of them at most): the strongholds and grand houses
+# (whole words: "keep" must not catch an innkeeper's or a shopkeeper's house)
 GRAND_BUILDING_WORDS = re.compile(
-    r"castle|keep|manor|palace|fortress|citadel|ruin|abbey|monastery|tower")
+    r"\b(castles?|keeps?|manors?|palaces?|fortress(?:es)?|citadels?|ruins?|"
+    r"ruined|abbeys?|monaster(?:y|ies)|towers?)\b")
 # ... and the rooms such a doorway prefers to open into
 SECRET_INTO_WORDS = re.compile(
     r"\b(stud(?:y|ies)|librar(?:y|ies)|chapels?|cellars?|stores?|storerooms?|"
@@ -333,11 +335,20 @@ def _secrets(world):
         if bed is not None:
             forbidden.add(bed.full_name)
     rng = random.Random(f"{world.seed}|nativeSecrets")
+    # what the starts reach with every door open: a hidden doorway may take no
+    # room of its building out of that, so a wing behind it stays reachable too
+    reached = checks.flood(world, starts, blocked, jumps)
+
+    def rooms_reached(seen, building):
+        return {n for n, b in buildings.items() if b is building
+                and region(n) is not None
+                and region(n).rect.interior().cells() & seen}
     pick_from = [n for n in grand if n not in took_one]
     rng.shuffle(pick_from)
     for bname in pick_from[: -(-len(grand) // 3)]:
         building = next(b for b in world.buildings
                         if b.layout.design.name == bname)
+        before = rooms_reached(reached, building)
         pairs = []
         for name, nbrs in sorted(doorways.items()):
             if buildings.get(name) is not building or name in forbidden:
@@ -346,13 +357,11 @@ def _secrets(world):
                 if name > other or buildings.get(other) is not building \
                         or other in forbidden or not hideable(cells):
                     continue
-                # both rooms stay reachable without the doorway: a secret
-                # door is a wall to whoever doesn't know it, and a hidden
-                # bridge would strand a wing of the building
+                # every room of the building the starts reached still is,
+                # without the doorway: a secret door is a wall to whoever
+                # doesn't know it, and a hidden bridge would strand a wing
                 seen = checks.flood(world, starts, blocked | set(cells), jumps)
-                a, b = region(name), region(other)
-                if a.rect.interior().cells() & seen and \
-                        b.rect.interior().cells() & seen:
+                if rooms_reached(seen, building) >= before:
                     pairs.append((name, other, cells))
         if not pairs:
             continue

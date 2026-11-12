@@ -498,3 +498,50 @@ class TestFixtureWorldSecrets(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSecretReviewFixes(unittest.TestCase):
+    """Claude's review: whole-word building kinds, and no hidden doorway
+    strands a room behind it (not just the two rooms either side)."""
+
+    def test_keep_is_a_whole_word(self):
+        from worldgen.spec_writer import GRAND_BUILDING_WORDS as grand
+        for text in ("castle", "the old keep", "ruined tower", "manor",
+                     "a fortress"):
+            self.assertTrue(grand.search(text), text)
+        for text in ("innkeeper's house", "shopkeeper", "beekeeper cottage",
+                     "keeper's lodge"):
+            self.assertFalse(grand.search(text), text)
+
+    def test_a_hidden_doorway_never_strands_a_room_behind_it(self):
+        from worldgen import checks
+        data = castle_plan()
+        castle = data["buildings"][0] if "buildings" in data else None
+        if castle is None:
+            self.skipTest("castle_plan shape changed")
+        castle["rooms"].append({"name": "Vault", "share": "small",
+                                "purpose": "the lord's coin"})
+        castle["connections"].append(["Study", "Vault"])
+        for seed in range(1, 6):
+            world = worldgen.run(data, seed=seed)
+            spec = worldgen.build_spec(world, data)
+            openings = checks.compute_openings(world)
+            blocked, _doors = checks.walkability_grid(world, openings)
+            jumps = checks.portal_jumps(world)
+            starts = set(world.reserved)
+            for road in world.roads:
+                starts |= road.cells()
+            rooms = [r for r in world.regions if r.is_room
+                     and r.name.startswith("Ashfell Castle ")]
+            open_seen = checks.flood(world, starts, blocked, jumps)
+            reach = {r.name for r in rooms
+                     if r.rect.interior().cells() & open_seen}
+            for entry in spec["nativeSecrets"]:
+                a, b = entry["between"]
+                cells = (openings.get(a) or set()) & (openings.get(b) or set())
+                seen = checks.flood(world, starts, blocked | set(cells), jumps)
+                still = {r.name for r in rooms
+                         if r.rect.interior().cells() & seen}
+                self.assertEqual(still, reach,
+                                 f"seed {seed}: hiding {a} / {b} strands "
+                                 f"{sorted(reach - still)}")
