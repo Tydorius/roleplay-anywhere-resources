@@ -14,6 +14,7 @@ yards, to a density scaled by the setting.
 """
 import dataclasses
 import random
+import re
 from collections import deque
 
 from . import layout_compound
@@ -1561,17 +1562,21 @@ FENCE_WORDS = ("fence", "hedge", "palisade", "paling", "hurdle")
 
 
 def _matches(t, words):
-    if any(w in t.name.lower() for w in words):
-        return True
-    tags = " ".join(t.tags or ()).lower()
-    return any(w in tags for w in words)
+    """A word matches only as a whole word of the name or of one tag,
+    singular or plain plural ('herbs' matches 'herb'): a counter tagged
+    'shop' is not the crop 'hop', and 'corner' is not 'corn'."""
+    tokens = set()
+    for text in (t.name,) + tuple(t.tags or ()):
+        tokens |= {tok for tok in re.split(r"[^a-z0-9]+", text.lower()) if tok}
+    return any(tok == w or tok == w + "s" or tok == w + "es"
+               for tok in tokens for w in words)
 
 
 def _pick_crop(templates):
     """The catalogue's crop or field-row piece, walkable first and the
     fullest row wins (a wheat row over a herb bed, say)."""
     crops = [t for t in templates.values()
-             if _matches(t, CROP_WORDS) and not any(w in t.name.lower() for w in STORE_WORDS)]
+             if _matches(t, CROP_WORDS) and not _matches(t, STORE_WORDS)]
     return min(crops, key=lambda t: (t.walkability <= 0, -t.size[0] * t.size[1], t.name)) \
         if crops else None
 
