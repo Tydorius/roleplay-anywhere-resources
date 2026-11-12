@@ -10,6 +10,10 @@
   const perceiveHooks = [];
   const liquidCanvasHooks = [];
   const groundFadeHooks = [];
+  const hiddenHooks = [];
+  const wallRegionsHooks = [];
+  const doorHooks = [];
+  const doorwayHooks = [];
   let api = null;
 
   // A broken mod must never take the game down with it.
@@ -41,6 +45,12 @@
     }
   }
 
+  // The game's own status test (`locked`, `phasing`, …): does the entity carry a mechanic of
+  // this type? Reimplemented from the bundle's status-effect scan.
+  function hasMechanic(entity, type) {
+    return !!(entity?.statusEffects ?? []).some(s => s.def?.mechanics?.some(m => m.type === type));
+  }
+
   const arpg = {
     version: 2,
     mods: [],
@@ -48,6 +58,9 @@
     cfgSeen: new Set(),
     // Filled in by the patched bundle with 1.0's own sight helpers (`lineClear`, `sightBlockers`).
     game: {},
+    // The last world the loader has seen: set on world creation and on every tick and prompt
+    // dispatch, before hooks run. The wallRegions dispatcher passes it to its hooks.
+    lastWorld: null,
     get api() { return api; },
     set api(v) {
       api = v;
@@ -70,13 +83,17 @@
     // World editor's preview when `editing` is true).
     // Mod data in the scenario's `arpgMods` key is copied onto the world (and so into saves).
     worldCreated(world, scenario, editing) {
+      arpg.lastWorld = world;
       if (scenario && scenario.arpgMods && typeof scenario.arpgMods === 'object') {
         world.arpgMods = JSON.parse(JSON.stringify(scenario.arpgMods));
       }
       runHooks('world', worldHooks, [world, scenario, !!editing]);
     },
     // Called at the start of every unpaused simulation step.
-    tick(world) { runHooks('tick', tickHooks, [world]); },
+    tick(world) {
+      arpg.lastWorld = world;
+      runHooks('tick', tickHooks, [world]);
+    },
     // Called whenever the game asks whether two entities are within notice range; `answer` is
     // the game's own (straight-line distance). Hooks run in order, each seeing the answer so
     // far; one returning a boolean replaces it.
@@ -114,6 +131,7 @@
     // context limits it was built with. While the prompt is over the character budget, the game
     // rebuilds it with lower limits, so this can run several times for one GM turn.
     prompt(parts, world, limits) {
+      arpg.lastWorld = world;
       runHooks('prompt', promptHooks, [parts, world, limits ?? null]);
       return parts;
     },
@@ -148,6 +166,78 @@
         }
       }
       return def;
+    },
+    // Called by the scene's sprite sync and pointer hit test for every entity: is this entity
+    // hidden (off screen, unhoverable, unclickable)? True if any hook says so. Runs per entity
+    // per frame, so with no hooks it answers without looping.
+    hidden(world, entity) {
+      if (!hiddenHooks.length) return false;
+      for (const hook of hiddenHooks) {
+        try {
+          if (hook(world, entity)) return true;
+        } catch (e) {
+          warnOnce('hidden', hook, e);
+        }
+      }
+      return false;
+    },
+    // Called by the wall-edge builder with the region list every wall-drawing path uses (walls,
+    // wall-caster shadows, door info, the minimap). Each hook gets the previous hook's regions
+    // and the last world the loader has seen; one returning an array replaces them, anything
+    // else (or a throw) is skipped. Only what is drawn changes, never where anyone can walk.
+    wallRegions(regions) {
+      let out = regions;
+      for (const hook of wallRegionsHooks) {
+        try {
+          const r = hook(out, arpg.lastWorld);
+          if (Array.isArray(r)) out = r;
+        } catch (e) {
+          warnOnce('wall-regions', hook, e);
+        }
+      }
+      return out;
+    },
+    // Called while the shared door list is built: true puts this (possibly unlocked) door on
+    // the list of doors that may stop someone.
+    doorGated(world, door) {
+      for (const hook of doorHooks) {
+        if (!hook.gated) continue;
+        try {
+          if (hook.gated(world, door)) return true;
+        } catch (e) {
+          warnOnce('door', hook, e);
+        }
+      }
+      return false;
+    },
+    // The per-walker door pass test both call sites share (the movement grid's shut doors and
+    // the swing test). `native` starts as the game's own answer — the door has no `locked`
+    // mechanic, or the walker's keys open it (`keyPass`, called only when locked) — and each
+    // hook may replace it: a boolean wins, anything else keeps the answer so far.
+    doorPasses(world, door, walker, keyPass) {
+      let current = !hasMechanic(door, 'locked') || keyPass();
+      for (const hook of doorHooks) {
+        if (!hook.passes) continue;
+        try {
+          const r = hook.passes(world, door, walker, current);
+          if (typeof r === 'boolean') current = r;
+        } catch (e) {
+          warnOnce('door', hook, e);
+        }
+      }
+      return current;
+    },
+    // Called for each doorway of the GM's doorway list: false drops it (its doors stay out of
+    // the GM prompt's door details). True with no hooks.
+    doorwayShown(world, doorway) {
+      for (const hook of doorwayHooks) {
+        try {
+          if (hook(world, doorway) === false) return false;
+        } catch (e) {
+          warnOnce('doorway', hook, e);
+        }
+      }
+      return true;
     },
     // The mod-facing API.
     registerMod(name) { arpg.mods.push(name); },
@@ -198,6 +288,46 @@
       groundFadeHooks.push(hook);
       groundFadeHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
     },
+    // hook(world, entity) → truthy to hide the entity: the scene's sprite sync treats it as
+    // off screen (no container, label, shadows or light) and the pointer hit test skips it, so
+    // it can't be hovered, clicked or selected. Runs per entity per frame: keep it cheap.
+    // `order` (default 0) sorts hooks, higher running later.
+    onHidden(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      hiddenHooks.push(hook);
+      hiddenHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
+    // hook(regions, world) → regions: rewrite the wall regions every wall-drawing path uses
+    // (walls, wall-caster shadows, door info, the minimap), before the wall edges are derived.
+    // Each hook gets the previous hook's regions and the last world the loader has seen;
+    // return an array to replace them, anything else to keep them. This only changes what is
+    // drawn, never where anyone can walk. `order` (default 0) sorts hooks, higher running
+    // later.
+    onWallRegions(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      wallRegionsHooks.push(hook);
+      wallRegionsHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
+    // {gated(world, door) → boolean, passes(world, door, walker, native) → boolean|undefined},
+    // deciding doors per character. `gated` puts an otherwise-unlocked door on the list of
+    // doors that may stop someone; `passes` decides, per walker, whether a door passes —
+    // walking (the movement grid's shut doors) and door swing (shut doors block sight) ask the
+    // same question — where `native` is the answer so far (the game's own: unlocked, or the
+    // walker's keys open it). Return a boolean to replace it, undefined to keep it. `walker`
+    // is unset for queries that aren't walks. `order` (default 0) sorts hooks, higher running
+    // later and having the last word.
+    onDoor(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      doorHooks.push(hook);
+      doorHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
+    // hook(world, doorway) → false to drop the doorway from the GM's list (each doorway is
+    // `{crossings, room, doors}`); anything else keeps it. `order` (default 0) sorts hooks.
+    onDoorway(hook, { order = 0 } = {}) {
+      hook.arpgOrder = order;
+      doorwayHooks.push(hook);
+      doorwayHooks.sort((x, y) => x.arpgOrder - y.arpgOrder);
+    },
     // Adds a header file to the GM's api-call list, after `after` (a header name) or at the end.
     addApiHeader(name, text, after) {
       const dir = 'overseer/api-actions/';
@@ -212,6 +342,9 @@
         return JSON.stringify(list);
       });
     },
+    // The game's own status test: does the entity carry a mechanic of this type? A door is
+    // locked exactly when hasMechanic(door, "locked").
+    hasMechanic,
     // The walls and shut doors 1.0's own sight test takes (the world's wall regions, plus the
     // door edges nobody holds open). Building it scans every entity, so hold on to the result
     // when testing many lines. undefined when the patched bundle hasn't supplied the builder.

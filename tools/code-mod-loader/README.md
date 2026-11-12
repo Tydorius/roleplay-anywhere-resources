@@ -1,4 +1,4 @@
-# Code-mod loader 2.2.0
+# Code-mod loader 2.3.0
 
 Adds JavaScript mods to Anywhere RPG, beyond what config packs can do: for example new GM API
 calls, or changes to the prompts the game builds. It works like BepInEx does for Unity games,
@@ -14,6 +14,7 @@ changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 
 | Version | Date | Changes |
 |---|---|---|
+| 2.3.0 | 2026-11-11 | Seven new patches for hidden entities, drawn walls and per-walker doors: `onHidden` takes an entity off screen and out of pointer hits, `onWallRegions` rewrites the regions walls are drawn from (drawing only, never walking), `onDoor` decides per character which doors block walking and door swing (and can gate an unlocked door onto the door list), `onDoorway` filters the GM's doorway list, and `hasMechanic` is the game's own status test. |
 | 2.2.0 | 2026-11-10 | Two new render patches, liquid-canvas and ground-fade, add the `onLiquidCanvas` and `onGroundFade` hooks: mods can repaint a water/road chunk's colour and flow canvases (and override its blur radius) and reshape the fade at a region's ground edges. |
 | 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors and take 1.0's doors off the joints between pieces. Both mods are ported to 1.0. |
 | 2.0.0 | 2026-11-10 | For Anywhere RPG 1.0 only. Reads 1.0's version; fixes the `world-create` and `gm-prompt` patches for 1.0; `onPrompt` hooks now get the context limits; drops the `prompt-budgets`, `nav-cache-get/put`, `edge-memo` and `nav-grid` patches with the `promptBudgets`, `setNavCache` and `onNav` APIs; retires the portals, floors and performance mods (1.0 does them natively); `memory-add` writes 1.0's prose memory. |
@@ -114,7 +115,7 @@ All the original files are kept as `*.arpg-orig` beside the patched ones.
 
 | File | Change |
 |---|---|
-| `resources/app/dist/assets/index-*.js` | Fourteen small patches, each found by its content (see the next table). |
+| `resources/app/dist/assets/index-*.js` | Twenty-one small patches, each found by its content (see the next table). |
 | `resources/app/dist/index.html` | `<script>` tags for `arpg-mods/loader.js` and each mod, placed before the game bundle. |
 | `resources/app/dist/arpg-mods/` | The loader and the copied mods. |
 
@@ -136,6 +137,13 @@ The bundle patches. Each must match exactly once, or install stops and changes n
 | `gm-prompt` | Where the GM prompt's head, sections and tail are built from the world and the context limits | `onPrompt`. |
 | `liquid-canvas` | The liquid overlay painter, between painting a chunk's two canvases and blurring them into the tile | `onLiquidCanvas`. |
 | `ground-fade` | The region ground fade in the scene's groundOwners() | `onGroundFade`. |
+| `wall-regions` | The wall-edge builder every wall-drawing path uses (walls, wall-caster shadows, door info, the minimap) | `__arpg.wallRegions` (`onWallRegions`): rewrite the regions walls are drawn from. Drawing only — the simulation never calls this builder, so where anyone can walk never changes. |
+| `entity-hidden` | The scene's per-entity sprite sync, at its off-screen cull | `__arpg.hidden` (`onHidden`): take an entity off screen, with its label, shadows and light. |
+| `pointer-hits` | The pointer hit test behind hover, click, select and the context menu | `__arpg.hidden` again: a hidden entity can't be hovered or clicked. |
+| `door-list` | The shared list of doors that may stop someone (only locked doors reach it) | `__arpg.doorGated` (`onDoor`): gate more doors onto the list. |
+| `door-pass-nav` | The per-walker door pass test at the end of the movement grid builder | `__arpg.doorPasses` (`onDoor`): decide, per walker, which doors become blocked edges for walking. |
+| `door-pass-swing` | The door swing test ("does this person hold it open?"; shut doors block sight) | `__arpg.doorPasses` again: the same per-walker say for door swing. |
+| `gm-doorways` | The GM's doorway list, behind the GM prompt's door details | `__arpg.doorwayShown` (`onDoorway`): drop doorways from the GM's list. |
 
 ## Writing a mod
 
@@ -154,6 +162,11 @@ A mod is a plain script that runs before the game bundle. It uses `globalThis.__
 | `onPerceive((world, a, b, range, search, answer) => boolean \| undefined, {order})` | Runs whenever the game asks whether `a` and `b` are within notice range. `answer` is the answer so far, starting from the game's straight-line test. Return a boolean to replace it, or nothing to leave it. Hooks with a higher `order` run later and have the last word. `search` is the game's path search. |
 | `onLiquidCanvas(payload => number \| undefined, {order})` | Runs when a water/road chunk's two canvases are fully painted, before they are blurred into the tile. Repaint them, and return a finite number ≥ 0 to override this chunk's blur radius. See [Liquid canvases and ground fades](#liquid-canvases-and-ground-fades). |
 | `onGroundFade((region, mask, def) => Float32Array \| undefined, {order})` | Runs when the game fades a region's ground at its edges. Return a `Float32Array` of `def.length` to replace the fade — the same array for the same mask, or the ground is rebuilt every sync. See [Liquid canvases and ground fades](#liquid-canvases-and-ground-fades). |
+| `onHidden((world, entity) => boolean, {order})` | Runs per entity per frame, in the scene's sprite sync and the pointer hit test. Return true to hide the entity: it is drawn nowhere (no container, label, shadows or light) and can't be hovered, clicked or selected. Keep it cheap. |
+| `onWallRegions((regions, world) => regions, {order})` | Runs before wall edges are derived, for every wall-drawing path (walls, wall-caster shadows, door info, the minimap). Return an array of regions to replace the list (each hook gets the previous hook's result; `world` is the last world the loader has seen), anything else to keep it. This only changes what is drawn, never where anyone can walk. |
+| `onDoor({gated(world, door) => boolean, passes(world, door, walker, native) => boolean \| undefined}, {order})` | Decides doors per character. `gated` puts an otherwise-unlocked door on the list of doors that may stop someone. `passes` answers, per walker, whether a door passes — walking (the movement grid's shut doors) and door swing (shut doors block sight) ask the same question — where `native` is the answer so far (the game's own: unlocked, or the walker's keys open it). Return a boolean to replace it, `undefined` to keep it. `walker` is unset for queries that aren't walks. |
+| `onDoorway((world, doorway) => boolean, {order})` | Filters the GM's doorway list (each doorway is `{crossings, room, doors}`). Return false to drop a doorway from the GM prompt's door details; anything else keeps it. |
+| `hasMechanic(entity, type)` | The game's own status test: does the entity carry a mechanic of this type? A door is locked exactly when `hasMechanic(door, "locked")`. |
 | `sightBlockers(world)` | The walls and shut doors 1.0's own sight test takes (the world's wall regions, plus the door edges nobody holds open). Building it scans every entity, so hold on to the result when testing many lines. |
 | `lineOfSight(world, from, to, blockers?)` | 1.0 stealth's line-of-sight test: walls and shut doors block, bars, gates and open doorways don't. Points are continuous (an entity's centre is `[pos[0]+size[0]/2, pos[1]+size[1]/2]`); pass `blockers` when testing many lines. |
 | `planeOf(world, point)` | The plane a point is on: the pocket region (a floor or cellar) containing it, or `null` on the main map. |

@@ -80,7 +80,8 @@ test('the 0.18-only patches are gone', () => {
   const names = PATCHES.map(p => p.name);
   assert.deepEqual(names, ['api-registry', 'config-reader', 'world-create', 'pathfinder', 'region-arrival',
     'region-destination', 'region-same-room', 'sim-tick', 'perception', 'line-of-sight', 'sight-blockers',
-    'gm-prompt', 'liquid-canvas', 'ground-fade']);
+    'gm-prompt', 'liquid-canvas', 'ground-fade', 'wall-regions', 'entity-hidden', 'pointer-hits', 'door-list',
+    'door-pass-nav', 'door-pass-swing', 'gm-doorways']);
 });
 
 // Shapes copied from the 1.0 bundle (index-BrLojUrw.js), cut down to what each anchor needs.
