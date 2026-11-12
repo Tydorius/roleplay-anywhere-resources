@@ -14,6 +14,7 @@ yards, to a density scaled by the setting.
 """
 import dataclasses
 import random
+import re
 from collections import deque
 
 from . import layout_compound
@@ -1561,23 +1562,31 @@ FENCE_WORDS = ("fence", "hedge", "palisade", "paling", "hurdle")
 
 
 def _matches(t, words):
-    if any(w in t.name.lower() for w in words):
-        return True
-    tags = " ".join(t.tags or ()).lower()
-    return any(w in tags for w in words)
+    """A word matches only as a whole word of the name or of one tag,
+    singular or plain plural ('herbs' matches 'herb'): a counter tagged
+    'shop' is not the crop 'hop', and 'corner' is not 'corn'."""
+    tokens = set()
+    for text in (t.name,) + tuple(t.tags or ()):
+        tokens |= {tok for tok in re.split(r"[^a-z0-9]+", text.lower()) if tok}
+    return any(tok == w or tok == w + "s" or tok == w + "es"
+               for tok in tokens for w in words)
 
 
 def _pick_crop(templates):
     """The catalogue's crop or field-row piece, walkable first and the
     fullest row wins (a wheat row over a herb bed, say)."""
     crops = [t for t in templates.values()
-             if _matches(t, CROP_WORDS) and not any(w in t.name.lower() for w in STORE_WORDS)]
+             if _matches(t, CROP_WORDS) and not _matches(t, STORE_WORDS)]
     return min(crops, key=lambda t: (t.walkability <= 0, -t.size[0] * t.size[1], t.name)) \
         if crops else None
 
 
 def _pick_fence(templates):
-    fences = [t for t in templates.values() if _matches(t, FENCE_WORDS)]
+    """The catalogue's fence, but only a thin piece (its smaller side is 1):
+    the ring is one piece thick, so a 2x2 bed tagged 'fence' is no fence and
+    the plot goes without a ring."""
+    fences = [t for t in templates.values()
+              if _matches(t, FENCE_WORDS) and min(t.size) == 1]
     return min(fences, key=lambda t: (t.size[0] * t.size[1], t.name)) if fences else None
 
 
@@ -1682,32 +1691,35 @@ def _place_fields(zone, rect, out, rng, templates, map_ctx=None):
         gate_at = track[0][1] if (track and gate in ("east", "west")) else \
             track[0][0] if track else p.x + p.w // 2
         if fence:
-            for side, y in (("south", p.y), ("north", p.y1)):
+            for side, y in (("south", p.y), ("north", p.y1 - fh + 1)):
                 x = p.x
                 while x + fw <= p.x1 + 1:
                     if side == gate and abs(x + fw // 2 - gate_at) <= 1:
                         x += fw
                         continue
-                    cells = {(xx, y) for xx in range(x, x + fw)}
+                    cells = {(xx, yy) for xx in range(x, x + fw)
+                             for yy in range(y, y + fh)}
                     if not cells & claimed:
                         out.props.append(Placement(fence.name, (x, y), name))
                         claimed |= cells
                     x += fw
             for side, x in (("west", p.x), ("east", p.x1 - fw + 1)):
-                y = p.y + 1
-                while y + fh <= p.y1:
+                y = p.y + fh
+                while y + fh <= p.y1 - fh + 1:
                     if side == gate and abs(y + fh // 2 - gate_at) <= 1:
                         y += fh
                         continue
-                    cells = {(xx, yy) for xx in range(x, x + fw) for yy in range(y, y + fh)}
+                    cells = {(xx, yy) for xx in range(x, x + fw)
+                             for yy in range(y, y + fh)}
                     if not cells & claimed:
                         out.props.append(Placement(fence.name, (x, y), name))
                         claimed |= cells
                     y += fh
 
         # parallel crop rows, a one-cell furrow between them, along the plot's
-        # longer side
-        inter = p.interior(1)
+        # longer side, filling the plot shrunk by the ring's thickness
+        inter = Rect(p.x + fw, p.y + fh, p.w - 2 * fw, p.h - 2 * fh) if fence \
+            else p.interior(1)
         cw, ch = crop.size
         if p.w >= p.h:
             y = inter.y
