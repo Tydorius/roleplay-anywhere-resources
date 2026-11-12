@@ -19,14 +19,30 @@ const TOOLS = [
   {id: "door", key: "d", label: "Door", icon: "⌧", hint: "Click a cell on a walled region's outer row or column to add or remove a door. A shared wall gets doors on both sides."},
   {id: "measure", key: "m", label: "Measure", icon: "⟷", hint: "Drag to measure. A selected hostile shows its 7-cell aggro and 14-cell give-up rings."},
 ];
-Object.assign(S, {tool: "select", hover: null, hoverEdge: null, placeTpl: recall("editor.placeTpl") || "", placeRot: 0,
-  measure: null, box: null, drawRect: null, clip: null, space: false, msg: "", linkFrom: null});
+Object.assign(S, {tool: "select", level: "", hover: null, hoverEdge: null, placeTpl: recall("editor.placeTpl") || "",
+  placeRot: 0, measure: null, box: null, drawRect: null, clip: null, space: false, msg: "", linkFrom: null});
+
+/** The rect of the current level's plane (the map's when the level is unknown). */
+const levelPlane = () => MapOps.levelRect(S.scn, S.level) || MapOps.planes(S.scn)[0];
+
+/** S.level for the scenario just opened: the level kept for it last time, or the map. Keyed on the
+ *  scenario object, so an undo or an edit in place never resets the choice. */
+let levelScn = null;
+function syncLevel() {
+  if (S.scn === levelScn) return;
+  levelScn = S.scn;
+  const want = S.scn ? recall("editor.level." + S.source) : "";
+  S.level = !S.scn || want === "*" || MapOps.levelRect(S.scn, want) ? want : "";
+}
 
 function fit() {
   if (!S.scn) return;
-  const r = cv.getBoundingClientRect(), [w, h] = MapOps.extent(S.scn);     // the map and any floors beside it
+  syncLevel();
+  const r = cv.getBoundingClientRect(), [x0, y0, x1, y1] = MapOps.levelExtent(S.scn, S.level);   // the level's plane
+  const w = x1 - x0 + 1, h = y1 - y0 + 1;
   S.view.s = Math.max(1, Math.min((r.width - 20) / w, (r.height - 20) / h));
-  S.view.ox = (r.width - w * S.view.s) / 2; S.view.oy = (r.height - h * S.view.s) / 2 + (h - H()) * S.view.s;
+  S.view.ox = (r.width - w * S.view.s) / 2 - x0 * S.view.s;
+  S.view.oy = (r.height - h * S.view.s) / 2 + (y1 + 1 - H()) * S.view.s;
 }
 function center(x, y, minScale = 14) {
   const r = cv.getBoundingClientRect();
@@ -37,8 +53,9 @@ function center(x, y, minScale = 14) {
 }
 
 // ---------------------------------------------------------------- level picker
-/** Fills the toolbar's level picker: the map, then each floor by building name and level. The options
- *  are rebuilt only when the floors themselves changed, so the open choice stays put. */
+/** Fills the toolbar's level picker: the map, then each floor by building name and level, then the
+ *  side-by-side overview. The options are rebuilt only when the floors themselves changed, so the
+ *  open choice stays put; the picker always shows S.level. */
 function refreshLevels() {
   const sel = $("levelPick");
   if (!sel) return;
@@ -46,23 +63,47 @@ function refreshLevels() {
     const b = byId(f.pocket.anchor);
     return {id: f.id, name: f.name, level: f.pocket.level, building: b ? b.name : "no building"};
   }).sort((a, b) => a.building.localeCompare(b.building) || a.level - b.level);
+  if (S.level !== "*" && S.level !== "" && !floors.some(f => f.id === S.level)) {
+    S.level = ""; fit();            // an undo can take the floor being viewed away
+  }
   const key = floors.map(f => `${f.id}\u0000${f.name}\u0000${f.level}\u0000${f.building}`).join("\u0001");
   if (key !== refreshLevels.key) {
     refreshLevels.key = key;
     sel.innerHTML = `<option value="">Map</option>` + floors.map(f =>
-      `<option value="${esc(f.id)}">${esc(`${f.building} · floor ${f.level > 0 ? "+" : ""}${f.level} · ${f.name}`)}</option>`).join("");
+      `<option value="${esc(f.id)}">${esc(`${f.building} · floor ${f.level > 0 ? "+" : ""}${f.level} · ${f.name}`)}</option>`).join("")
+      + `<option value="*">All levels (side by side)</option>`;
   }
+  if (sel.value !== S.level) sel.value = S.level;
   sel.hidden = !floors.length;
 }
 
-/** Scales and centres the view on one floor (about 80% of the canvas) and selects it. */
+/** Shows one level: "" the map, a floor's id that floor, "*" every plane side by side. Fits the
+ *  level (a floor fills about 80% of the canvas), remembers the choice for the scenario and
+ *  redraws. The tool and a portal link being drawn (S.linkFrom) are kept, so a portal is linked
+ *  by clicking one end, switching level and clicking the other. */
+function setLevel(level) {
+  if (!S.scn) return;
+  if (level !== "*" && level !== "" && !MapOps.levelRect(S.scn, level)) return;   // unknown id: keep the level
+  S.level = level;
+  S.hover = null; S.hoverEdge = null;   // the pointer is elsewhere until it moves again
+  remember("editor.level." + S.source, level);
+  const sel = $("levelPick");
+  if (sel && sel.value !== level) sel.value = level;
+  const f = level && level !== "*" && MapOps.isFloor(byId(level)) ? byId(level) : null;
+  if (f) {                          // a floor: the showFloor scaling, centred on the plane
+    const r = cv.getBoundingClientRect();
+    S.view.s = Math.max(1, Math.min(80, Math.min(r.width * .8 / f.size[0], r.height * .8 / f.size[1])));
+    S.view.ox = r.width / 2 - (f.position[0] + f.size[0] / 2) * S.view.s;
+    S.view.oy = r.height / 2 - (H() - (f.position[1] + f.size[1] / 2)) * S.view.s;
+  } else fit();
+  draw();
+}
+
+/** Switches to a floor's level and selects it (the "Add floor…" dialog). */
 function showFloor(id) {
   const f = byId(id);
   if (!f || !MapOps.isFloor(f)) return;
-  const r = cv.getBoundingClientRect();
-  S.view.s = Math.max(1, Math.min(80, Math.min(r.width * .8 / f.size[0], r.height * .8 / f.size[1])));
-  S.view.ox = r.width / 2 - (f.position[0] + f.size[0] / 2) * S.view.s;
-  S.view.oy = r.height / 2 - (H() - (f.position[1] + f.size[1] / 2)) * S.view.s;
+  setLevel(id);
   select({kind: "region", id});
 }
 
@@ -163,6 +204,12 @@ function drawWalls(g, s) {
 
 const gripAt = r => [sx(r.position[0] + r.size[0] / 2), sy(r.position[1] + r.size[1] / 2)];
 
+/** An entity's footprint rect, never degenerate (a 1.0 door object is zero-wide). */
+const entRect = e => {
+  const r = MapOps.rect({pos: e.pos, size: e.type === "object" ? entSize(e) : [1, 1]});
+  return [r[0], r[1], Math.max(r[2], r[0]), Math.max(r[3], r[1])];
+};
+
 function draw() {
   const dpr = window.devicePixelRatio || 1, R = cv.getBoundingClientRect();
   if (cv.width !== Math.round(R.width * dpr) || cv.height !== Math.round(R.height * dpr)) {
@@ -170,18 +217,24 @@ function draw() {
   }
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, R.width, R.height);
+  syncLevel();
   if (!S.scn) { minimap.render(null); return; }
   refreshLevels();
-  const s = S.view.s, [gw, gh] = S.scn.gridSize, L = S.layers;
-  ctx.fillStyle = groundColor(S.scn.defaultTile || {});
-  ctx.fillRect(sx(0), sy(gh), gw * s, gh * s);
-  const floors = regions().filter(MapOps.isFloor);
-  for (const f of floors) {             // a floor is its own plane, beside the map
-    ctx.fillStyle = groundColor(S.scn.defaultTile || {});
-    ctx.fillRect(sx(f.position[0]), sy(f.position[1] + f.size[1]), f.size[0] * s, f.size[1] * s);
-  }
+  const s = S.view.s, L = S.layers;
 
-  const regs = [...regions()].sort((a, b) => area(b) - area(a));
+  // What this draw shows: the current level only (every plane for "*"), and only what meets the
+  // visible world rect with a cell of margin. Both lists are computed once and reused below.
+  const on = t => MapOps.onLevel(S.scn, S.level, t);
+  const show = S.level === "*" ? MapOps.planes(S.scn) : [levelPlane()];
+  const vis = [wx(0) - 1, wy(R.height) - 1, wx(R.width) + 1, wy(0) + 1];
+  const seen = r => !MapOps.disjoint(r, vis);
+  const visRegs = regions().filter(g => on(g) && seen(MapOps.rect(g)));
+  const visEnts = entities().filter(e => on(e) && seen(entRect(e)));
+
+  ctx.fillStyle = groundColor(S.scn.defaultTile || {});
+  for (const p of show) ctx.fillRect(sx(p[0]), sy(p[3] + 1), (p[2] - p[0] + 1) * s, (p[3] - p[1] + 1) * s);
+
+  const regs = [...visRegs].sort((a, b) => area(b) - area(a));
   const liquidBy = Liquids.resolveAll(S.scn).byRegion;   // what the game makes of every surface, once per draw
   for (const g of regs) {
     if (L[regionLayer(g)].hide) continue;
@@ -195,7 +248,7 @@ function draw() {
   }
   if (s >= 6) {
     ctx.strokeStyle = "rgba(0,0,0,.08)"; ctx.lineWidth = 1; ctx.beginPath();
-    for (const p of MapOps.planes(S.scn)) {
+    for (const p of show) {
       const x0 = Math.max(p[0], Math.floor(wx(0))), x1 = Math.min(p[2] + 1, Math.ceil(wx(R.width)));
       const y0 = Math.max(p[1], Math.floor(wy(R.height))), y1 = Math.min(p[3] + 1, Math.ceil(wy(0)));
       if (x1 < x0 || y1 < y0) continue;
@@ -204,20 +257,20 @@ function draw() {
     }
     ctx.stroke();
   }
-  if (!L.objects.hide) for (const e of entities()) {
+  if (!L.objects.hide) for (const e of visEnts) {
     if (e.type !== "object") continue;
     const [w, h] = entSize(e);
     drawObject(e, sx(e.pos[0]), sy(e.pos[1] + h), w, h, s);
   }
   if (!L.walled.hide) for (const g of regs) if (g.wall) drawWalls(g, s);
-  for (const f of floors) {             // label each floor with its level and building
+  for (const f of visRegs.filter(MapOps.isFloor)) {   // label each floor with its level and building
     const X = sx(f.position[0]), Y = sy(f.position[1] + f.size[1]);
     ctx.setLineDash([6, 4]); ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(0,0,0,.55)";
     ctx.strokeRect(X - 3, Y - 3, f.size[0] * s + 6, f.size[1] * s + 6); ctx.setLineDash([]);
     const lv = f.pocket.level, anchor = byId(f.pocket.anchor);
     label2(`Floor ${lv > 0 ? "+" : ""}${lv}${anchor ? ` · ${anchor.name}` : ""}`, X - 3, Y - 24);
   }
-  for (const e of entities()) {
+  for (const e of visEnts) {
     const k = entKind(e);
     if (k === "objects" || L[k].hide) continue;
     ctx.beginPath(); ctx.arc(sx(e.pos[0] + .5), sy(e.pos[1] + .5), Math.max(2.5, s * .38), 0, Math.PI * 2);
@@ -240,22 +293,23 @@ function draw() {
   }
   drawSelection(s);
   drawToolOverlay(s);
+  minimap.setPlane(S.level === "*" ? null : levelPlane());
   minimap.render({x0: wx(0), y0: wy(R.height), x1: wx(R.width), y1: wy(0)});
 }
 
 function drawSelection(s) {
-  const col = selColor();
+  const col = selColor(), on = t => MapOps.onLevel(S.scn, S.level, t);
   ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.setLineDash([6, 4]);
   for (const sel of S.sels) {
     if (sel.kind === "template") continue;
     const o = byId(sel.id);
-    if (!o) continue;
+    if (!o || !on(o)) continue;                       // only what the current level shows
     if (sel.kind === "region") ctx.strokeRect(sx(o.position[0]), sy(o.position[1] + o.size[1]), o.size[0] * s, o.size[1] * s);
     else { const [w, h] = o.type === "object" ? entSize(o) : [1, 1]; ctx.strokeRect(sx(o.pos[0]) - 2, sy(o.pos[1] + h) - 2, w * s + 4, h * s + 4); }
   }
   ctx.setLineDash([]);
   const p = primary(), o = p && byId(p.id);
-  if (S.tool === "select" && p?.kind === "region" && o && S.sels.length === 1 && !S.layers[regionLayer(o)].lock) {
+  if (S.tool === "select" && p?.kind === "region" && o && on(o) && S.sels.length === 1 && !S.layers[regionLayer(o)].lock) {
     const [gx, gy] = gripAt(o);                       // the move handle
     ctx.beginPath(); ctx.arc(gx, gy, 8, 0, Math.PI * 2); ctx.fillStyle = col; ctx.fill();
     ctx.lineWidth = 2; ctx.strokeStyle = "rgba(0,0,0,.6)"; ctx.stroke();
@@ -267,22 +321,31 @@ function drawSelection(s) {
     }
   }
   // aggro rings around a selected hostile
-  if (o && p.kind === "entity" && o.type === "npc" && (o.hostile || o.stance === "hostile")) {
+  if (o && on(o) && p.kind === "entity" && o.type === "npc" && (o.hostile || o.stance === "hostile")) {
     for (const [rad, dash] of [[7, []], [14, [8, 6]]]) {
       ctx.beginPath(); ctx.arc(sx(o.pos[0] + .5), sy(o.pos[1] + .5), rad * s, 0, Math.PI * 2);
       ctx.setLineDash(dash); ctx.lineWidth = 2; ctx.strokeStyle = "rgba(208,68,58,.85)"; ctx.stroke();
     }
     ctx.setLineDash([]);
   }
-  // a selected portal's two ends, joined across whatever lies between them (even another plane)
-  if (p?.kind === "entity" && o?.type === "object") {
+  // a selected portal's two ends. On the overview they are joined across whatever lies between
+  // them (even another plane); on one level the other end is off-screen, so the visible end gets
+  // a short label naming where the portal leads.
+  if (p?.kind === "entity" && o?.type === "object" && on(o)) {
     const b = World10.portalPartner(S.scn, o);
     if (b) {
-      const [w, h] = entSize(o), [bw, bh] = entSize(b);
-      const a = [sx(o.pos[0] + w / 2), sy(o.pos[1] + h / 2)], z = [sx(b.pos[0] + bw / 2), sy(b.pos[1] + bh / 2)];
-      ctx.setLineDash([6, 4]); ctx.lineWidth = 2; ctx.strokeStyle = col;
-      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(z[0], z[1]); ctx.stroke(); ctx.setLineDash([]);
-      label2("portal", (a[0] + z[0]) / 2 - 15, (a[1] + z[1]) / 2 - 9);
+      const [w, h] = entSize(o), lv = MapOps.levelOf(S.scn, b);
+      if (S.level === "*" || lv === MapOps.levelOf(S.scn, o)) {
+        const [bw, bh] = entSize(b);
+        const a = [sx(o.pos[0] + w / 2), sy(o.pos[1] + h / 2)], z = [sx(b.pos[0] + bw / 2), sy(b.pos[1] + bh / 2)];
+        ctx.setLineDash([6, 4]); ctx.lineWidth = 2; ctx.strokeStyle = col;
+        ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(z[0], z[1]); ctx.stroke(); ctx.setLineDash([]);
+        label2("portal", (a[0] + z[0]) / 2 - 15, (a[1] + z[1]) / 2 - 9);
+      } else {
+        const f = lv && byId(lv);
+        label2(`↕ ${f ? `Floor ${f.pocket.level > 0 ? "+" : ""}${f.pocket.level} · ${f.name}` : "Map"}`,
+          sx(o.pos[0] + w) + 8, sy(o.pos[1] + h) + 8);
+      }
     }
   }
   // the object a portal link is being drawn from
@@ -344,25 +407,27 @@ function label2(text, x, y) {
 const normRect = (a, b) => [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[0], b[0]), Math.max(a[1], b[1])];
 
 // ---------------------------------------------------------------- hit testing
+/** Only the current level's things answer the pointer (everything on the "*" overview). */
+const onLv = t => MapOps.onLevel(S.scn, S.level, t);
 function stackAt(x, y) {
   const L = S.layers, out = [];
   for (const e of entities()) {
-    if (e.type === "object" || e.pos[0] !== x || e.pos[1] !== y) continue;
+    if (e.type === "object" || e.pos[0] !== x || e.pos[1] !== y || !onLv(e)) continue;
     const k = entKind(e); if (!L[k].lock && !L[k].hide) out.push({kind: "entity", id: e.id});
   }
   if (!L.objects.lock && !L.objects.hide) for (const e of entities()) {
-    if (e.type !== "object") continue;
+    if (e.type !== "object" || !onLv(e)) continue;
     const [w, h] = entSize(e);
     if (x >= e.pos[0] && y >= e.pos[1] && x < e.pos[0] + w && y < e.pos[1] + h) out.push({kind: "entity", id: e.id});
   }
-  regions().filter(r => inRect(r, x, y) && !L[regionLayer(r)].lock && !L[regionLayer(r)].hide)
+  regions().filter(r => onLv(r) && inRect(r, x, y) && !L[regionLayer(r)].lock && !L[regionLayer(r)].hide)
     .sort((a, b) => area(a) - area(b)).forEach(r => out.push({kind: "region", id: r.id}));
   return out;
 }
 function selectedEntityAt(c) {
   for (const sel of S.sels) {
     const o = sel.kind === "entity" && byId(sel.id);
-    if (!o || S.layers[entKind(o)].lock) continue;
+    if (!o || S.layers[entKind(o)].lock || !onLv(o)) continue;
     const [w, h] = o.type === "object" ? entSize(o) : [1, 1];
     if (c[0] >= o.pos[0] && c[1] >= o.pos[1] && c[0] < o.pos[0] + w && c[1] < o.pos[1] + h) return o;
   }
@@ -374,11 +439,11 @@ function selectedRegion() {
 }
 function edgeUnder(pt) {
   const r = selectedRegion();
-  return r ? MapOps.edgeAt(r, pt[0], pt[1], 5 / S.view.s) : null;
+  return r && onLv(r) ? MapOps.edgeAt(r, pt[0], pt[1], 5 / S.view.s) : null;
 }
 function onGrip(px, py) {
   const r = selectedRegion();
-  if (!r) return false;
+  if (!r || !onLv(r)) return false;
   const [gx, gy] = gripAt(r);
   return Math.hypot(px - gx, py - gy) <= 11;
 }
@@ -387,8 +452,8 @@ function onGrip(px, py) {
 function doorRegionAt(c) {
   if (S.layers.walled.lock || S.layers.walled.hide) return null;
   const p = primary(), sel = p?.kind === "region" && byId(p.id);
-  if (sel?.wall && MapOps.onEdge(MapOps.rect(sel), c)) return sel;
-  return regions().filter(r => r.wall && MapOps.onEdge(MapOps.rect(r), c)).sort((a, b) => area(a) - area(b))[0] || null;
+  if (sel?.wall && onLv(sel) && MapOps.onEdge(MapOps.rect(sel), c)) return sel;
+  return regions().filter(r => r.wall && onLv(r) && MapOps.onEdge(MapOps.rect(r), c)).sort((a, b) => area(a) - area(b))[0] || null;
 }
 
 // ---------------------------------------------------------------- editing helpers
@@ -488,8 +553,15 @@ function paste() {
 let drag = null;
 function cellOf(e) { const r = cv.getBoundingClientRect(); return [Math.floor(wx(e.clientX - r.left)), Math.floor(wy(e.clientY - r.top))]; }
 function ptOf(e) { const r = cv.getBoundingClientRect(); return [wx(e.clientX - r.left), wy(e.clientY - r.top)]; }
-const onMap = c => !!MapOps.planeAt(S.scn, c[0], c[1]);          // the map or a floor
-const clampCell = c => MapOps.clampTo(S.scn, c[0], c[1], [1, 1]);
+/** The cell lies on a plane the pointer can act on: the current level's plane (any of them, the
+ *  map or a floor, for the "*" overview). */
+const onMap = c => S.level === "*" ? !!MapOps.planeAt(S.scn, c[0], c[1]) : !!MapOps.inRect(levelPlane(), c[0], c[1]);
+/** Keeps a cell on the plane the place tools and region drawing work on (the plane under it for "*"). */
+const clampCell = c => {
+  if (S.level === "*") return MapOps.clampTo(S.scn, c[0], c[1], [1, 1]);
+  const p = levelPlane();
+  return [Math.max(p[0], Math.min(p[2], c[0])), Math.max(p[1], Math.min(p[3], c[1]))];
+};
 
 cv.addEventListener("contextmenu", e => e.preventDefault());
 cv.addEventListener("pointerdown", e => {
@@ -617,8 +689,8 @@ function linkClick(c) {
 function boxSelect(b) {
   const L = S.layers, picked = [];
   const within = r => r[0] >= b[0] && r[1] >= b[1] && r[2] <= b[2] && r[3] <= b[3];
-  for (const e of entities()) if (!L[entKind(e)].lock && !L[entKind(e)].hide && within(MapOps.rect(e.type === "object" ? {pos: e.pos, size: entSize(e)} : e))) picked.push({kind: "entity", id: e.id});
-  for (const r of regions()) if (!L[regionLayer(r)].lock && !L[regionLayer(r)].hide && within(MapOps.rect(r))) picked.push({kind: "region", id: r.id});
+  for (const e of entities()) if (onLv(e) && !L[entKind(e)].lock && !L[entKind(e)].hide && within(MapOps.rect(e.type === "object" ? {pos: e.pos, size: entSize(e)} : e))) picked.push({kind: "entity", id: e.id});
+  for (const r of regions()) if (onLv(r) && !L[regionLayer(r)].lock && !L[regionLayer(r)].hide && within(MapOps.rect(r))) picked.push({kind: "region", id: r.id});
   S.sels = picked;
   inspect();
   toast(picked.length ? `${picked.length} selected` : "Nothing wholly inside the box");
@@ -650,17 +722,7 @@ function buildTools() {
     if (!b) return;
     if (b.dataset.act === "mapsize") mapSizeDialog(); else setTool(b.dataset.tool);
   };
-  $("levelPick").onchange = () => {
-    const id = $("levelPick").value;
-    if (id) showFloor(id);
-    else {          // the map alone: what fit() shows before any floor was added
-      const r = cv.getBoundingClientRect(), [w, h] = S.scn.gridSize;
-      S.view.s = Math.max(1, Math.min((r.width - 20) / w, (r.height - 20) / h));
-      S.view.ox = (r.width - w * S.view.s) / 2; S.view.oy = (r.height - h * S.view.s) / 2;
-      draw();
-    }
-    $("levelPick").value = id;
-  };
+  $("levelPick").onchange = () => setLevel($("levelPick").value);
   setTool("select");
 }
 function renderToolOpts() {

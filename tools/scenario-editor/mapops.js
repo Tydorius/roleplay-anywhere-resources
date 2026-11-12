@@ -80,6 +80,40 @@
     return [w, h];
   }
 
+  // ---------------------------------------------------------------- levels
+  // The editor shows one level at a time: "" the main map, a floor's region id that floor,
+  // "*" every plane side by side. The game's own camera works the same way.
+
+  /** The plane a level names: the map's rect for "", the floor's rect for its id, null for "*" or
+   *  an id no floor has. */
+  function levelRect(scn, level) {
+    if (level === "") return planes(scn)[0];
+    if (level === "*") return null;
+    const f = scn.regions.find(r => r.id === level && isFloor(r));
+    return f ? rect(f) : null;
+  }
+
+  /** The level a region or entity lies on: "" on the map, the floor's id inside a floor (a floor
+   *  region is a level of its own). A region counts by its rect, an entity by its footprint. */
+  function levelOf(scn, thing) {
+    if (!thing || (!thing.position && !thing.pos)) return "";
+    if (isFloor(thing)) return thing.id;
+    const p = planeOf(scn, rect(thing)) || (thing.pos ? planeAt(scn, thing.pos[0], thing.pos[1]) : null);
+    if (!p || sameRect(p, planes(scn)[0])) return "";
+    const f = scn.regions.find(o => isFloor(o) && sameRect(rect(o), p));
+    return f ? f.id : "";
+  }
+
+  /** Whether `thing` is shown on `level` (everything is shown on the "*" overview). */
+  const onLevel = (scn, level, thing) => level === "*" || levelOf(scn, thing) === level;
+
+  /** The inclusive rect to fit for a level: its plane, or everything from 0,0 for "*" (an unknown
+   *  id falls back to the map, like ""). */
+  function levelExtent(scn, level) {
+    if (level === "*") { const [w, h] = extent(scn); return [0, 0, w - 1, h - 1]; }
+    return levelRect(scn, level) || planes(scn)[0];
+  }
+
   /** (dx, dy) shortened so rect r stays inside plane p. */
   function clampShift(p, r, dx, dy) {
     return [Math.max(p[0] - r[0], Math.min(p[2] - r[2], dx)), Math.max(p[1] - r[1], Math.min(p[3] - r[3], dy))];
@@ -470,5 +504,6 @@
   return {rect, inRect, containsRect, disjoint, partial, onEdge, nearestEdgeCell, snapOpenings, shiftOpenings,
     FLOOR_GAP, isFloor, planes, planeOf, planeAt, extent, clampTo, contents, parentOf,
     regionAt, nestingProblem, newId, nextName, moveRegion, moveEntities, rotateObject, resizeRegion, edgeAt, doorSet,
-    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds};
+    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds,
+    levelRect, levelOf, onLevel, levelExtent};
 });
