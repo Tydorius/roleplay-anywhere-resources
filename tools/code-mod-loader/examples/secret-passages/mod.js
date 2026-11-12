@@ -50,6 +50,15 @@
   }
   const midpoint = d => (d.size[0] === 0 ? [d.pos[0], d.pos[1] + 0.5] : [d.pos[0] + 0.5, d.pos[1]]);
 
+  // Where a viewer at `p` looks at a door: its midpoint, nudged a hair to the viewer's own side.
+  // The midpoint sits on the wall line itself, and 1.0's sight walk ends in the cell beyond it,
+  // so a ray aimed at the bare midpoint from the near side would be cut by the shut door itself.
+  function faceOf(d, p) {
+    const m = midpoint(d), axis = d.size[0] === 0 ? 0 : 1;
+    m[axis] += p[axis] < d.pos[axis] ? -0.05 : 0.05;
+    return m;
+  }
+
   // Which side of a door's crossing a point (or a cell's centre) is on: 0 or 1.
   function side(d, p) {
     return d.size[0] === 0 ? (p[0] < d.pos[0] ? 0 : 1) : (p[1] < d.pos[1] ? 0 : 1);
@@ -71,7 +80,7 @@
       if (hasA === hasB) continue;
       const cell = hasA ? a : b, other = hasA ? b : a;
       const dir = other[0] > cell[0] ? 'e' : other[0] < cell[0] ? 'w' : other[1] > cell[1] ? 'n' : 's';
-      out.push([r, `${cell[0]},${cell[1]},${dir}`]);
+      out.push([r.id ?? r, `${cell[0]},${cell[1]},${dir}`]);
     }
     return out;
   }
@@ -144,7 +153,7 @@
     const known = data(world)?.known ?? {};
     const hidden = new Set();
     for (const id of secret.keys()) if (!pid || !(known[id] ?? []).includes(pid)) hidden.add(id);
-    const close = new Map(); // region → Set of "x,y,side" openings to leave out
+    const close = new Map(); // region id (the region itself if it has none) → Set of "x,y,side" openings to leave out
     for (const id of hidden) for (const [r, key] of openingsOf(world, secret.get(id))) {
       if (!close.has(r)) close.set(r, new Set());
       close.get(r).add(key);
@@ -161,16 +170,26 @@
     return entry;
   }
 
-  arpg.onHidden((world, entity) => !!cache.get(world)?.hidden.has(entity.id));
+  // The cache for a world, built on first use. A loaded save never passes through world
+  // creation, and the game is often paused right after loading, so no tick has built it yet.
+  const entryOf = world => cache.get(world) ?? refresh(world);
+  let seen = null; // the last world the scene drew, for wallRegions before the loader has one
+
+  arpg.onHidden((world, entity) => {
+    seen = world;
+    return entryOf(world).hidden.has(entity.id);
+  });
 
   // The regions walls are drawn from, with the hidden doors' openings drawn shut: a
   // shallow copy per region that has one to close, everything else as it came.
   arpg.onWallRegions((regions, world) => {
-    const close = cache.get(world)?.close;
-    if (!close?.size) return regions; // nothing hidden: the same list
+    const w = world ?? seen;
+    if (!w) return regions;
+    const close = entryOf(w).close;
+    if (!close.size) return regions; // nothing hidden: the same list
     let copied = false;
     const out = regions.map(r => {
-      const drop = close.get(r);
+      const drop = close.get(r.id ?? r);
       if (!drop || !Array.isArray(r.openings)) return r;
       const kept = r.openings.filter(o => !drop.has(`${o[0]},${o[1]},${o[2]}`));
       if (kept.length === r.openings.length) return r;
@@ -189,8 +208,8 @@
   });
 
   arpg.onDoorway((world, doorway) => {
-    const hidden = cache.get(world)?.hidden;
-    return !(hidden?.size && (doorway.doors ?? []).some(d => hidden.has(d.id)));
+    const hidden = entryOf(world).hidden;
+    return !(hidden.size && (doorway.doors ?? []).some(d => hidden.has(d.id)));
   });
 
   const warned = new Set();
@@ -249,7 +268,7 @@
         const dist = cheb(pc, mid);
         if (dist > set.findRange + 2) rt.approach.delete(id); // gone clear: a new approach may roll
         if (dist > set.findRange || arpg.planeOf(world, mid) !== plane || rt.approach.has(id)) continue;
-        if (arpg.lineOfSight(world, pc, mid, blockers) === false) continue; // no sight: not this pass
+        if (arpg.lineOfSight(world, pc, faceOf(door, pc), blockers) === false) continue; // no sight: not this pass
         rt.approach.add(id);
         const chance = num(data(world)?.passages?.[id]?.findChance, set.findChance);
         if (arpg.secretPassages.random() < chance) playerFinds(world, door);
@@ -285,7 +304,7 @@
       if (!isCharacter(e) || e.dead || !e.pos || e === user || knows(world, door.id, e)) continue;
       const c = centre(e);
       if (cheb(c, mid) > onlookerRange || arpg.planeOf(world, c) !== plane) continue;
-      if (arpg.lineOfSight(world, c, mid, blockers) === false) continue;
+      if (arpg.lineOfSight(world, c, faceOf(door, c), blockers) === false) continue;
       if (e === world.player) {
         log(world, `You saw ${user.name} slip through a hidden door: ${door.name}.`);
         playerFinds(world, door);
@@ -325,7 +344,7 @@
 
   const DIRECTIONS = ['E', 'NE', 'N', 'NW', 'W', 'SW', 'S', 'SE'];
   arpg.onPrompt((parts, world, limits) => {
-    const entry = cache.get(world) ?? refresh(world);
+    const entry = entryOf(world);
     if (!entry.secret.size || !world.player?.pos) return;
     const pc = centre(world.player);
     const plane = arpg.planeOf(world, pc);
@@ -367,5 +386,5 @@
     });
   });
 
-  arpg.secretPassages = { refresh, learn, knows, playerFinds, crossing, midpoint, side, openingsOf, random: Math.random };
+  arpg.secretPassages = { refresh, learn, knows, playerFinds, crossing, midpoint, faceOf, side, openingsOf, random: Math.random };
 })();

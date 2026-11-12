@@ -372,3 +372,40 @@ test('nothing near the player: empty content', () => {
   assert.ok(secrets(p));
   assert.equal(secrets(p).content, '');
 });
+
+// 1.0's sight walk ends in the cell that holds the target point, and a shut door on the edge
+// it crosses cuts the ray. Model that: a ray is cut when it crosses the door's line x = 15.
+const cutAtDoorLine = (from, to) => (Math.floor(from[0]) < 15) === (Math.floor(to[0]) < 15);
+
+test('the player can find the door from either side (sight aims at their own face of it)', () => {
+  for (const [pos, label] of [[[13, 11], 'Hall side'], [[16, 11], 'Study side']]) {
+    const arpg = load();
+    withSight(arpg, cutAtDoorLine);
+    const m = setup(arpg, { d1: { findChance: 1 } });
+    m.world.entities = m.world.entities.filter(e => e !== m.alys && e !== m.bran);
+    arpg.secretPassages.random = () => 0;
+    m.player.pos = pos;
+    arpg.tick(m.world);
+    assert.deepEqual(knownBy(m.world, 'd1'), ['p1'], label);
+  }
+});
+
+test('a loaded save hides the door before any tick or prompt (no world creation runs)', () => {
+  const arpg = load();
+  const m = make();
+  m.world.arpgMods = { secretPassages: { known: {} } };
+  assert.equal(arpg.hidden(m.world, m.door), true);
+  const regions = arpg.wallRegions(m.world.regions);
+  assert.deepEqual([...regions[0].openings], [[10, 11, 'w']], 'drawn shut with no tick yet');
+});
+
+test('openings are matched by region id, so a replaced region object still draws shut', () => {
+  const arpg = load();
+  const m = make();
+  m.world.regions.forEach((r, i) => { r.id = `r${i}`; });
+  arpg.worldCreated(m.world, m.scenario, false);
+  m.world.regions = m.world.regions.map(r => ({ ...r })); // the game rebuilt its region objects
+  const regions = arpg.wallRegions(m.world.regions);
+  assert.deepEqual([...regions[0].openings], [[10, 11, 'w']]);
+  assert.deepEqual([...regions[1].openings], []);
+});
