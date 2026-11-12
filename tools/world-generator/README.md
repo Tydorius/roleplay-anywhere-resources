@@ -38,6 +38,14 @@ cast already has a guard, watch or police of its own. Counts grow with the regio
 whole world holds at most 20 creatures — the largest counts trim first. The choice is
 deterministic given the run's seed.
 
+**Native secret doors:** a room named like a priest hole, hidden chamber, smuggler's den or
+escape tunnel gets its doorway hidden — and up to a third of castles, keeps, manor houses and
+other grand buildings get one hidden interior doorway of their own, into a study, library,
+chapel, cellar or vault if there is one. The doors carry 1.0's own `concealed` effect, and who
+knows them — the building's key holders, else nobody — rides in the `secretPassages` mod data.
+The doors are only hidden in play with the matching mod from
+`../code-mod-loader/examples/secret-passages` (this repository).
+
 > **Still in progress:** layout improvements are under way. Maps can come out long and wide,
 > with empty ground in places and squeezed furniture. A world's `plan.json` holds everything
 > the model wrote, so `layout --plan` (or **Re-roll layout…** in the editor) builds it again

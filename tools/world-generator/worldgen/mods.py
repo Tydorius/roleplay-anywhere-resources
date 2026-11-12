@@ -12,6 +12,9 @@ and a door object hung on every doorway that has none (of the doorway's
 room's kind — a doorway with no door object is an open gap in 1.0, and the
 game adds no doors to imported scenarios), the ``nativeLocks`` rooms locked
 with their keys handed out and the theft buildings flagged, the
+``nativeSecrets`` doorways hidden (every door object of the doorway carries
+the game's own concealed effect, and who knows it lands in
+``arpgMods.secretPassages``, merged into any arpgMods already there), the
 ``nativeNature`` shapes and surfaces on the regions and vehicle fields on
 the templates, the ``nativePopulations`` written as the game's own
 ``npcTemplates`` (one per kind, their home regions resolved to the ids the
@@ -144,6 +147,28 @@ def finish_scenario(scenario_dir, spec):
             area = by_name.get(name)
             if area is not None:
                 area["takingIsTheft"] = True
+    # then the secret doors, onto the same hung doors: every doorway the
+    # generator hid gets each of its door objects the concealed effect and a
+    # passages entry saying who knows it (once per door object — a wider
+    # doorway has more than one), merged into the arpgMods the scenario may
+    # already carry and into the spec's, so the shipped-scenario check still
+    # compares like for like
+    secrets = spec.get("nativeSecrets") or []
+    if secrets:
+        by_name = {r.get("name"): r for r in scn.get("regions", [])}
+        ids = native_mod.Ids(scn)
+        for entry in secrets:
+            first = by_name.get((entry.get("between") or [None])[0])
+            second = by_name.get((entry.get("between") or [None, None])[1])
+            if first is None or second is None:
+                continue
+            known = list(entry.get("knownBy") or [])
+            for door in native_mod.doors_between(scn, first, second):
+                native_mod.set_secret(scn, door, ids)
+                native_mod.add_secret_data(scn, door, known)
+                spec.setdefault("arpgMods", {}).setdefault(
+                    "secretPassages", {}).setdefault(
+                    "passages", {})[door["id"]] = {"knownBy": known}
     # the same by-name trick for the nature pass: the shapes and surfaces on
     # the regions, the vehicle fields on the object templates — surface only
     # on unwalled regions, which is the only place the game keeps it

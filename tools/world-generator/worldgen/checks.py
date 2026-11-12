@@ -306,6 +306,9 @@ def check_scenario_mods(scenario_path, spec):
     and no door object may sit anywhere but on a doorway; no stair-named
     object ships without a portal, unless it rises in a ruin. Locks: every key
     opens a region that exists, and every room the spec locked has doors.
+    Secrets: every hidden doorway names two rooms with door objects between
+    them, and every secretPassages id is a door carrying the concealed
+    effect.
     Nature: the natural shapes, water surfaces and vehicle fields landed on
     the built scenario, and nobody stands on deep water.
     Populations: every native population's home region exists, its sprite is
@@ -361,6 +364,28 @@ def check_scenario_mods(scenario_path, spec):
                           f"of the built scenario")
         elif not native.region_doors(scn, room):
             issues.append(f"locked room {entry.get('room')!r} has no doors")
+    # 1.0 secret doors: every doorway the spec hid names two rooms the built
+    # scenario has, with door objects between them, and every passages entry
+    # names a door that hides with the concealed effect
+    by_name = {r.get("name"): r for r in scn.get("regions", [])}
+    for entry in (spec or {}).get("nativeSecrets") or []:
+        between = entry.get("between") or []
+        label = " and ".join(repr(n) for n in between)
+        rooms = [by_name.get(n) for n in between[:2]]
+        if len(between) != 2 or None in rooms:
+            issues.append(f"secret doorway between {label} names a room "
+                          f"the built scenario does not have")
+        elif not native.doors_between(scn, *rooms):
+            issues.append(f"secret doorway between {label} has no door "
+                          f"objects between its rooms")
+    ents = {e.get("id"): e for e in scn.get("entities") or []}
+    passages = (((scn.get("arpgMods") or {}).get("secretPassages") or {})
+                .get("passages") or {})
+    for did in sorted(passages):
+        e = ents.get(did)
+        if e is None or not native.is_door(scn, e) or not native.is_secret(e):
+            issues.append(f"secretPassages passage {did!r} is no door with "
+                          f"the concealed effect")
     # 1.0 nature: the natural shapes, water surfaces and vehicle fields the
     # spec chose landed on the built scenario, and nothing that cannot swim
     # stands on deep water

@@ -54,6 +54,19 @@ PUBLIC_WORDS = re.compile(
     r"\b(inns?|taverns?|pubs?|bars?|alehouses?|saloons?|cantinas?|teahouses?|"
     r"temples?|chapels?|churches?|cathedrals?|shrines?|abbeys?|monasteries?|"
     r"halls?|guildhalls?)\b")
+# Rooms hidden by their own name or purpose: their doorway onto the room they
+# open through ships secret, known to the household
+SECRET_ROOM_WORDS = re.compile(
+    r"priest.?hole|hidden (room|chamber|stair)|secret (room|chamber|passage|stair)|"
+    r"smuggl|bolt.?hole|escape (tunnel|passage)")
+# Buildings that get one secret interior doorway of their own, now and then
+# (a third of them at most): the strongholds and grand houses
+GRAND_BUILDING_WORDS = re.compile(
+    r"castle|keep|manor|palace|fortress|citadel|ruin|abbey|monastery|tower")
+# ... and the rooms such a doorway prefers to open into
+SECRET_INTO_WORDS = re.compile(
+    r"\b(stud(?:y|ies)|librar(?:y|ies)|chapels?|cellars?|stores?|storerooms?|"
+    r"bed(?:rooms?|chambers?)|vaults?)\b")
 
 
 def _door_kind(*texts):
@@ -195,6 +208,160 @@ def _locks(world):
         if not holders and not CELL_WORDS.search(text):
             continue      # nobody to hold the key: only a cell stays locked
         out.append({"room": name, "holders": holders})
+    return out
+
+
+def _room_doorways(world, openings):
+    """{room name: [(neighbour room name, doorway cells)]} for every doorway
+    between two room regions — the rooms touch and both open their side of
+    the wall between them, so it is a doorway in the built scenario too. A
+    building's entrance or a side door to open ground never appears here:
+    its other side is the building region, not a room."""
+    rooms = [r for r in world.regions if r.is_room]
+    out = {}
+    for i, a in enumerate(rooms):
+        for b in rooms[i + 1:]:
+            cells = (openings.get(a.name) or set()) & (openings.get(b.name) or set())
+            if not cells:
+                continue
+            out.setdefault(a.name, []).append((b.name, cells))
+            out.setdefault(b.name, []).append((a.name, cells))
+    return out
+
+
+def _touches_portal(cells, jumps):
+    """Whether a doorway sits on a stair or portal pad: hiding a door that
+    opens straight onto a portal would send whoever steps through it flying."""
+    pads = set(jumps or {})
+    for (x, y) in cells:
+        for c in ((x, y), (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if c in pads:
+                return True
+    return False
+
+
+def _opens_into(name_a, name_b, rooms):
+    """Whether a doorway opens into a study, library, chapel, cellar, store,
+    bedroom or vault — the rooms a secret door prefers (either side)."""
+    for name in (name_a, name_b):
+        entry = rooms.get(name)
+        if entry is None:
+            continue
+        design, base = entry
+        if SECRET_INTO_WORDS.search(
+                f"{base} {_room_purpose(design, base)}".lower()):
+            return True
+    return False
+
+
+def _secrets(world):
+    """[{"between": [room, room], "knownBy": [names]}] for the doorways that
+    ship secret. A room hidden by its own name or purpose — a priest hole, a
+    smuggler's cache — gets the doorway into the smallest room it opens
+    through (never the entrance, a stair or the player's only way to their
+    start cell or bed, noted when it would be). A third of the castles,
+    keeps, manors and their kin (rounding up) get one interior doorway of
+    their own, chosen from the world's seed, into a study, library, chapel,
+    cellar, store, bedroom or vault when one will do — a building that
+    already got one by name gets no second. Whoever would hold the building's
+    keys knows them; nobody else does."""
+    import random
+    from . import checks
+    rooms = _loot_map(world)
+    buildings = _building_of_room(world)
+    openings = checks.compute_openings(world)
+    blocked, _doors = checks.walkability_grid(world, openings)
+    jumps = checks.portal_jumps(world)
+    starts = set(world.reserved)
+    for road in world.roads:
+        starts |= road.cells()
+    doorways = _room_doorways(world, openings)
+
+    def region(name):
+        return world.regions_by_name.get(name)
+
+    out = []
+    used = set()          # doorways already made secret, by their cells
+
+    def hideable(cells):
+        return not _touches_portal(cells, jumps) and frozenset(cells) not in used
+
+    # ---- by name: the hidden rooms
+    took_one = set()      # building names that already have a secret
+    for name, (design, base) in sorted(rooms.items()):
+        text = f"{base} {_room_purpose(design, base)}".lower()
+        if not SECRET_ROOM_WORDS.search(text):
+            continue
+        room, building = region(name), buildings.get(name)
+        if room is None or building is None:
+            continue
+        cands = [(other, cells) for (other, cells) in doorways.get(name) or ()
+                 if hideable(cells)]
+        if not cands:
+            _note(world, f"room {name}",
+                  "left an ordinary door: it opens onto no room a secret "
+                  "door could hide (only the entrance, a stair or a doorway "
+                  "already secret)")
+            continue
+        # the smallest room it opens through; area, then name, keeps it seeded
+        other, cells = min(
+            cands,
+            key=lambda oc: (region(oc[0]).rect.w * region(oc[0]).rect.h, oc[0]))
+        if _seals_off(world, room, {name: cells}, blocked, jumps, starts):
+            _note(world, f"room {name}",
+                  "left an ordinary door: a secret one would cut off the "
+                  "player's start cell or bed")
+            continue
+        out.append({"between": [name, other],
+                    "knownBy": _key_holders(world, building)})
+        used.add(frozenset(cells))
+        took_one.add(building.layout.design.name)
+
+    # ---- by building: a third of the strongholds (rounding up), one secret
+    # interior doorway each, chosen from the world's seed
+    grand = sorted(
+        b.layout.design.name for b in world.buildings
+        if GRAND_BUILDING_WORDS.search(
+            f"{b.layout.design.kind} {b.layout.design.name} "
+            f"{b.layout.design.purpose}".lower()))
+    if not grand:
+        return out
+    forbidden = set()     # the start cell's and the bed's rooms are never touched
+    if world.player is not None:
+        forbidden.add(world.player.region)
+        bed = world.sleep_assign.get(world.player.person.name)
+        if bed is not None:
+            forbidden.add(bed.full_name)
+    rng = random.Random(f"{world.seed}|nativeSecrets")
+    pick_from = [n for n in grand if n not in took_one]
+    rng.shuffle(pick_from)
+    for bname in pick_from[: -(-len(grand) // 3)]:
+        building = next(b for b in world.buildings
+                        if b.layout.design.name == bname)
+        pairs = []
+        for name, nbrs in sorted(doorways.items()):
+            if buildings.get(name) is not building or name in forbidden:
+                continue
+            for (other, cells) in nbrs:
+                if name > other or buildings.get(other) is not building \
+                        or other in forbidden or not hideable(cells):
+                    continue
+                # both rooms stay reachable without the doorway: a secret
+                # door is a wall to whoever doesn't know it, and a hidden
+                # bridge would strand a wing of the building
+                seen = checks.flood(world, starts, blocked | set(cells), jumps)
+                a, b = region(name), region(other)
+                if a.rect.interior().cells() & seen and \
+                        b.rect.interior().cells() & seen:
+                    pairs.append((name, other, cells))
+        if not pairs:
+            continue
+        preferred = [p for p in pairs if _opens_into(p[0], p[1], rooms)]
+        name, other, cells = rng.choice(sorted(preferred or pairs,
+                                               key=lambda p: (p[0], p[1])))
+        out.append({"between": [name, other],
+                    "knownBy": _key_holders(world, building)})
+        used.add(frozenset(cells))
     return out
 
 
@@ -722,6 +889,8 @@ def build_spec(world, plan):
     # buildings where taking is theft: applied onto the built regions by name
     spec["nativeLocks"] = {"locks": _locks(world),
                            "theft": _theft_buildings(world)}
+    # ... and for the secret doorways (with who knows them)
+    spec["nativeSecrets"] = _secrets(world)
     # ... and for the natural shapes, water surfaces and vehicle fields
     spec["nativeNature"] = nature
     # ... and for the native populations (livestock, vermin, crowds, patrols):
