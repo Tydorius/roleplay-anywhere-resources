@@ -224,12 +224,13 @@ function draw() {
 
   // What this draw shows: the current level only (every plane for "*"), and only what meets the
   // visible world rect with a cell of margin. Both lists are computed once and reused below.
-  const on = t => MapOps.onLevel(S.scn, S.level, t);
+  S.levelOf = MapOps.levelIndex(S.scn);         // the planes read once per draw, reused by hit tests
+  const on = onLv;
   const show = S.level === "*" ? MapOps.planes(S.scn) : [levelPlane()];
   const vis = [wx(0) - 1, wy(R.height) - 1, wx(R.width) + 1, wy(0) + 1];
   const seen = r => !MapOps.disjoint(r, vis);
-  const visRegs = regions().filter(g => on(g) && seen(MapOps.rect(g)));
-  const visEnts = entities().filter(e => on(e) && seen(entRect(e)));
+  const visRegs = regions().filter(g => seen(MapOps.rect(g)) && on(g));
+  const visEnts = entities().filter(e => seen(entRect(e)) && on(e));
 
   ctx.fillStyle = groundColor(S.scn.defaultTile || {});
   for (const p of show) ctx.fillRect(sx(p[0]), sy(p[3] + 1), (p[2] - p[0] + 1) * s, (p[3] - p[1] + 1) * s);
@@ -298,7 +299,7 @@ function draw() {
 }
 
 function drawSelection(s) {
-  const col = selColor(), on = t => MapOps.onLevel(S.scn, S.level, t);
+  const col = selColor(), on = onLv;
   ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.setLineDash([6, 4]);
   for (const sel of S.sels) {
     if (sel.kind === "template") continue;
@@ -408,7 +409,7 @@ const normRect = (a, b) => [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max
 
 // ---------------------------------------------------------------- hit testing
 /** Only the current level's things answer the pointer (everything on the "*" overview). */
-const onLv = t => MapOps.onLevel(S.scn, S.level, t);
+function onLv(t) { return S.level === "*" || (S.levelOf || MapOps.levelIndex(S.scn))(t) === S.level; }
 function stackAt(x, y) {
   const L = S.layers, out = [];
   for (const e of entities()) {

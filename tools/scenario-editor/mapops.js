@@ -93,16 +93,26 @@
     return f ? rect(f) : null;
   }
 
-  /** The level a region or entity lies on: "" on the map, the floor's id inside a floor (a floor
-   *  region is a level of its own). A region counts by its rect, an entity by its footprint. */
-  function levelOf(scn, thing) {
-    if (!thing || (!thing.position && !thing.pos)) return "";
-    if (isFloor(thing)) return thing.id;
-    const p = planeOf(scn, rect(thing)) || (thing.pos ? planeAt(scn, thing.pos[0], thing.pos[1]) : null);
-    if (!p || sameRect(p, planes(scn)[0])) return "";
-    const f = scn.regions.find(o => isFloor(o) && sameRect(rect(o), p));
-    return f ? f.id : "";
+  /** A function giving the level a region or entity lies on: "" on the map, the floor's id inside a
+   *  floor (a floor region is a level of its own). A region counts by its rect, an entity by its
+   *  footprint. The planes are read once, so a draw or a hit test over many things stays linear;
+   *  build a fresh one after the floors change. */
+  function levelIndex(scn) {
+    const map = planes(scn)[0], floors = scn.regions.filter(isFloor).map(f => [rect(f), f.id]);
+    return thing => {
+      if (!thing || (!thing.position && !thing.pos)) return "";
+      if (isFloor(thing)) return thing.id;
+      const r = rect(thing);
+      if (containsRect(map, r)) return "";
+      for (const [p, id] of floors) if (containsRect(p, r)) return id;
+      if (thing.pos && !inRect(map, thing.pos[0], thing.pos[1]))
+        for (const [p, id] of floors) if (inRect(p, thing.pos[0], thing.pos[1])) return id;
+      return "";
+    };
   }
+
+  /** The level one region or entity lies on (see levelIndex; use that for many things). */
+  const levelOf = (scn, thing) => levelIndex(scn)(thing);
 
   /** Whether `thing` is shown on `level` (everything is shown on the "*" overview). */
   const onLevel = (scn, level, thing) => level === "*" || levelOf(scn, thing) === level;
@@ -505,5 +515,5 @@
     FLOOR_GAP, isFloor, planes, planeOf, planeAt, extent, clampTo, contents, parentOf,
     regionAt, nestingProblem, newId, nextName, moveRegion, moveEntities, rotateObject, resizeRegion, edgeAt, doorSet,
     toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds,
-    levelRect, levelOf, onLevel, levelExtent};
+    levelRect, levelIndex, levelOf, onLevel, levelExtent};
 });

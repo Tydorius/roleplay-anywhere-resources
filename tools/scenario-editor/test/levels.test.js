@@ -64,3 +64,15 @@ test("levelExtent: the plane to fit, or everything from 0,0 for the overview", (
   assert.deepEqual(M.levelExtent(s, "*"), [0, 0, 63, 29]);
   assert.deepEqual(M.levelExtent(s, "nope"), [0, 0, 29, 29], "an unknown id falls back to the map");
 });
+
+test("levelIndex agrees with levelOf for every region and entity", () => {
+  const scn = {gridSize: [20, 20], regions: [
+    {id: "f1", name: "Up", position: [30, 0], size: [10, 10], pocket: {anchor: "b", level: 1}},
+    {id: "b", name: "Hall", position: [2, 2], size: [6, 6]},
+    {id: "r1", name: "Loft", position: [31, 1], size: [3, 3]}],
+    entities: [{id: "o1", type: "object", pos: [32, 2], size: [1, 1]}, {id: "n1", type: "npc", pos: [3, 3]}]};
+  const idx = M.levelIndex(scn);
+  for (const t of [...scn.regions, ...scn.entities]) assert.equal(idx(t), M.levelOf(scn, t));
+  assert.deepEqual(scn.regions.map(idx), ["f1", "", "f1"]);
+  assert.deepEqual(scn.entities.map(idx), ["f1", ""]);
+});
