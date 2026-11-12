@@ -115,8 +115,17 @@ function drawObject(e, X, Y, w, h, s, alpha = 1) {
   ctx.globalAlpha = alpha;
   if (!w || !h) {                     // a 1.0 door object: zero-wide, on the doorway's wall line
     ctx.fillStyle = (t.door === "curtain" ? "#b5654a" : t.door === "bars" ? "#7d8790" : "#8a5a2b");
-    if (!w) ctx.fillRect(X - Math.max(1.5, s * .12), Y, Math.max(3, s * .24), s);
-    else ctx.fillRect(X, Y - Math.max(1.5, s * .12), s, Math.max(3, s * .24));
+    if (World10.isSecret(e)) {        // a secret passage: dashed, wall hiding a door
+      const dash = Math.max(3, s * .45);
+      ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = Math.max(3, s * .24);
+      ctx.lineCap = "butt"; ctx.setLineDash([dash, dash * .7]);
+      ctx.beginPath();
+      if (!w) { ctx.moveTo(X, Y); ctx.lineTo(X, Y + s); } else { ctx.moveTo(X, Y); ctx.lineTo(X + s, Y); }
+      ctx.stroke(); ctx.setLineDash([]);
+    } else {
+      if (!w) ctx.fillRect(X - Math.max(1.5, s * .12), Y, Math.max(3, s * .24), s);
+      else ctx.fillRect(X, Y - Math.max(1.5, s * .12), s, Math.max(3, s * .24));
+    }
     ctx.globalAlpha = 1;
     return;
   }

@@ -329,6 +329,90 @@
     if (kept.length !== (person.inventory || []).length) set(person, "inventory", kept);
   }
 
+  // ---------------------------------------------------------------- secret passages
+  /** Any status effect whose mechanics hold a "concealed" entry marks a secret door, the same
+   *  mechanic the secret-passages mod reads (and invisible characters use). */
+  const isSecretFx = fx => !!(fx && fx.def && Array.isArray(fx.def.mechanics) && fx.def.mechanics.some(m => m && m.type === "concealed"));
+  const isSecret = e => (e.statusEffects || []).some(isSecretFx);
+
+  /** Writes passages[e.id] = entry into scn.arpgMods.secretPassages, or takes the door's entry off
+   *  when entry is empty (with any parent object that leaves empty). */
+  function putPassage(scn, e, entry, set) {
+    const mods = scn.arpgMods, sp = mods && mods.secretPassages;
+    if (Object.keys(entry).length) {
+      if (sp) set(sp, "passages", {...sp.passages, [e.id]: entry});
+      else if (mods) set(mods, "secretPassages", {passages: {[e.id]: entry}});
+      else set(scn, "arpgMods", {secretPassages: {passages: {[e.id]: entry}}});
+      return;
+    }
+    const ps = sp && sp.passages;
+    if (!ps || !(e.id in ps)) return;
+    const kept = {...ps};
+    delete kept[e.id];
+    if (Object.keys(kept).length) return set(sp, "passages", kept);
+    set(sp, "passages", undefined);
+    if (!Object.keys(sp).length) {
+      set(mods, "secretPassages", undefined);
+      if (!Object.keys(mods).length) set(scn, "arpgMods", undefined);
+    }
+  }
+
+  /** Marks a door object as a secret passage or takes it off: on adds the "concealed" effect when
+   *  missing; off strips every concealed effect and the door's mod data. */
+  function setSecret(scn, e, on, set) {
+    if (on) {
+      if (!isSecret(e)) set(e, "statusEffects", [...(e.statusEffects || []), {id: MapOps.newId("se"),
+        def: {desc: "secret passage", emoji: "🕳️", type: "constant", mechanics: [{type: "concealed"}]}, appliedAt: 28800}]);
+      return;
+    }
+    if (isSecret(e)) set(e, "statusEffects", (e.statusEffects || []).filter(fx => !isSecretFx(fx)));
+    putPassage(scn, e, {}, set);
+  }
+
+  /** The door's secret-passage data as the mod reads it, the missing parts as [], "" and null. */
+  function secretInfo(scn, e) {
+    const sp = scn.arpgMods && scn.arpgMods.secretPassages, own = (sp && sp.passages && sp.passages[e.id]) || {};
+    return {knownBy: Array.isArray(own.knownBy) ? own.knownBy.slice() : [],
+      hint: typeof own.hint === "string" ? own.hint : "",
+      findChance: typeof own.findChance === "number" ? own.findChance : null};
+  }
+
+  /** Writes the door's secret-passage data: names trimmed and empties dropped, a blank hint left
+   *  out, a find chance only when it's a number in (0, 1]. Nothing left takes the entry off. */
+  function setSecretInfo(scn, e, info, set) {
+    const entry = {};
+    const knownBy = (info.knownBy || []).map(n => String(n).trim()).filter(Boolean);
+    if (knownBy.length) entry.knownBy = knownBy;
+    if (typeof info.hint === "string" && info.hint.trim()) entry.hint = info.hint.trim();
+    if (typeof info.findChance === "number" && info.findChance > 0 && info.findChance <= 1)
+      entry.findChance = info.findChance;
+    putPassage(scn, e, entry, set);
+  }
+
+  /** Messages about the scenario's secret passages: data on a door that isn't secret, a knownBy name
+   *  no character has, and a secret door on no doorway. `only` limits them to one door object. */
+  function secretProblems(scn, only) {
+    const out = [];
+    const sp = scn.arpgMods && scn.arpgMods.secretPassages, ps = sp && sp.passages;
+    const names = new Set(scn.entities.filter(e => e.type === "npc" || e.type === "player").map(e => e.name));
+    const keys = new Set(doorways(scn).map(d => d.key));
+    if (ps) for (const [id, p] of Object.entries(ps)) {
+      if (only && id !== only.id) continue;
+      const e = scn.entities.find(o => o.id === id), own = p || {};
+      if (!e || !isDoor(scn, e) || !isSecret(e)) {
+        out.push(e ? `"${e.name}" has secret passage data but isn't a secret door.`
+          : `Secret passage data names "${id}", which isn't on the map.`);
+        continue;
+      }
+      for (const n of own.knownBy || []) if (!names.has(n))
+        out.push(`"${e.name}": nobody called "${n}" is on the map.`);
+    }
+    for (const e of scn.entities)
+      if ((!only || e === only) && isDoor(scn, e) && isSecret(e) && !keys.has(doorKeyOf(e)))
+        out.push(`"${e.name}" is a secret door on no doorway; the game removes it.`);
+    return out;
+  }
+
   // ---------------------------------------------------------------- NPC types
   /** Every NPC type: 1.0's npcTemplates first, then any 0.18 hostileNpcTemplates. */
   const npcTypes = scn => [...(scn.npcTemplates || []), ...(scn.hostileNpcTemplates || [])];
@@ -414,5 +498,6 @@
     openingSides, doorways, doorKeyOf, doorPlacement, isDoor, doorsByKey, doorTemplate, hangDoor,
     setDoorwayKind, regionDoorways, setRegionDoorKind, hangAllDoors, strayDoors, regionDoors,
     isLocked, regionLocked, setLocked, keyTemplate, keyHolders, giveKey, takeKey,
+    isSecretFx, isSecret, setSecret, secretInfo, setSecretInfo, secretProblems,
     npcTypes, isLegacy, homesOf, stanceOf, convertToNpcTemplates, setHomes, setStance, addNpcType};
 });

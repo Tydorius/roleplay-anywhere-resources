@@ -474,12 +474,28 @@ function setDoorLocked(e, locked) {
     : (e.statusEffects || []).filter(fx => !isLock(fx)));
 }
 
-/** The door fields of a door object: its kind (every door on its doorway follows) and its own lock. */
+/** The door fields of a door object: its kind (every door on its doorway follows), its own lock, and
+ *  its secret passage — who knows it, a hint, a find chance — as the secret-passages mod reads it. */
 function doorObjHtml(e, t, dw) {
+  const secret = World10.isSecret(e), info = World10.secretInfo(S.scn, e);
+  const problems = World10.secretProblems(S.scn, e);
   return (dw ? field("Door", `<select id="oDoorKind" ${dis()}>${doorKindOpts(t?.door || "door", "none (remove it)")}</select>`,
       "Every door on this doorway changes with it.")
     : `<p class="note warn">Not on a doorway; the game removes it.</p>`)
-    + `<label class="check"><input type="checkbox" id="oDoorLocked" ${World10.isLocked(e) ? "checked" : ""} ${dis()}> Locked</label>`;
+    + `<label class="check"><input type="checkbox" id="oDoorLocked" ${World10.isLocked(e) ? "checked" : ""} ${dis()}> Locked</label>`
+    + `<label class="check"><input type="checkbox" id="oDoorSecret" ${secret ? "checked" : ""} ${dis()}> Secret passage</label>`
+    + `<small class="note">Hidden as wall until a character knows it. Needs the secret-passages mod; without it the door just looks faint.</small>`
+    + (secret
+      ? field("Known by", `<input type="text" id="oDoorKnown" list="oDoorKnownList" value="${esc(info.knownBy.join(", "))}" ${dis()} placeholder="names, comma-separated">`,
+          "Characters who know it from the start.")
+        + `<datalist id="oDoorKnownList">${entities().filter(p => p.type === "npc" || p.type === "player")
+            .map(p => `<option value="${esc(p.name)}">`).join("")}</datalist>`
+        + field("Hint", `<input type="text" id="oDoorHint" value="${esc(info.hint)}" ${dis()} placeholder="e.g. a draught behind the bookcase">`,
+          "Told to the GM privately, and to the player when they find the door.")
+        + field("Find chance", `<input type="number" id="oDoorFind" min="0" max="1" step="0.05" value="${esc(info.findChance ?? "")}" ${dis()}>`,
+          "The chance per approach of the player noticing it. Empty is the mod's default.")
+      : "")
+    + (problems.length ? `<p class="note warn">${problems.map(esc).join("<br>")}</p>` : "");
 }
 
 // A strip of 24 hours: how many people are in the region in each hour, by role.
@@ -567,6 +583,20 @@ function inspectObject(box, e) {
   if ($("oDoorLocked")) $("oDoorLocked").onchange = () => {
     const want = $("oDoorLocked").checked;
     edit(`${want ? "Lock" : "Unlock"} ${e.name}`, () => setDoorLocked(e, want));
+  };
+  if ($("oDoorSecret")) $("oDoorSecret").onchange = () => {
+    const want = $("oDoorSecret").checked;
+    edit(`${want ? "Mark" : "Unmark"} ${e.name} as a secret passage`, () => World10.setSecret(S.scn, e, want, set));
+  };
+  const putSecret = (label, patch) =>
+    edit(`${label} of ${e.name}`, () => World10.setSecretInfo(S.scn, e, {...World10.secretInfo(S.scn, e), ...patch}, set));
+  if ($("oDoorKnown")) $("oDoorKnown").onchange = () =>
+    putSecret("Known by", {knownBy: $("oDoorKnown").value.split(",").map(s => s.trim()).filter(Boolean)});
+  if ($("oDoorHint")) $("oDoorHint").onchange = () => putSecret("Hint", {hint: $("oDoorHint").value});
+  if ($("oDoorFind")) $("oDoorFind").onchange = () => {
+    const raw = $("oDoorFind").value.trim();
+    if (raw !== "" && !(Number(raw) > 0 && Number(raw) <= 1)) { toast("Find chance is between 0 and 1"); inspect(); return; }
+    putSecret("Find chance", {findChance: raw === "" ? null : Number(raw)});
   };
   $("oLink").onclick = () => { S.linkFrom = e.id; toast("Click the object at the other end (Esc cancels)"); draw(); };
   if ($("oUnlink")) $("oUnlink").onclick = () => edit(`Unlink ${e.name}`, () => { World10.unlinkPortal(S.scn, e, set); });
