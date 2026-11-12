@@ -887,6 +887,74 @@
       "tags": ["tool", "restraint"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "tool.entrenching_tool",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "entrenching tool"},
+      "description": {"*": "A short entrenching tool, for making the ground liveable in a hurry."},
+      "looks": [
+        {"key": "fixed", "bands": ["*"], "physical": "A short-handled entrenching spade with a riveted steel head and plain wooden grip"}
+      ],
+      "tags": ["tool", "digging", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.trench_whistle",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "trench whistle"},
+      "description": {"*": "A trench whistle, small enough to lose and too loud to ignore."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A flat brass trench whistle with a ringed top and short brass chain"}
+      ],
+      "tags": ["tool", "signal", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.wire_cutters",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "wire cutters"},
+      "description": {"*": "Wire cutters with long handles, for wire that bites back."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "Long-handled steel wire cutters with curved shearing jaws and plain wooden grips"}
+      ],
+      "tags": ["tool", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.trench_periscope",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "trench periscope"},
+      "description": {"*": "A trench periscope, for seeing over the top without going there."},
+      "looks": [
+        {"key": "tube", "bands": ["*"], "physical": "A slim khaki-painted brass periscope tube with a hinged mirror head at the top"}
+      ],
+      "tags": ["tool", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

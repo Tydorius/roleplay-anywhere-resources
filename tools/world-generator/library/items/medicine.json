@@ -459,6 +459,23 @@
       "tags": ["medicine"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "medicine.field_dressing",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "field dressing"},
+      "description": {"*": "A field dressing in its sealed packet, the first friend of a bad wound."},
+      "looks": [
+        {"key": "packet", "bands": ["*"], "physical": "A flat khaki fabric field dressing packet bound with brown tape and a torn opener tab"}
+      ],
+      "tags": ["medicine", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

@@ -682,6 +682,23 @@
       "tags": ["trinket", "keepsake"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "jewellery.identity_disc",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "identity disc"},
+      "description": {"*": "An identity disc on a bootlace, carried for the day it is needed."},
+      "looks": [
+        {"key": "fibre", "bands": ["*"], "physical": "An oval red-brown fibre identity disc on a woven cord, its edges worn smooth"}
+      ],
+      "tags": ["jewellery", "id", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

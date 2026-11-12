@@ -818,6 +818,40 @@
       "tags": ["food", "meat"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "food.ration_biscuits",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tin of ration biscuits"},
+      "description": {"*": "A tin of hard ration biscuits, proof against damp, teeth and time."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A squat olive-painted tin with the lid prised off, showing stacked oat-brown biscuits inside"}
+      ],
+      "tags": ["food", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "drink.field_canteen",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "field canteen"},
+      "description": {"*": "A field canteen in its felt cover, water kept cool and tasting of tin."},
+      "looks": [
+        {"key": "felt", "bands": ["*"], "physical": "A round grey metal field canteen in a khaki felt cover with a screw cap on a chain"}
+      ],
+      "tags": ["drink", "water", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

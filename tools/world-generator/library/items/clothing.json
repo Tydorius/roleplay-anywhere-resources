@@ -987,6 +987,40 @@
       "tags": ["clothing"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "clothing.box_respirator",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "box respirator"},
+      "description": {"*": "A rubberised gas mask with round eyepieces, and its satchel to keep the damp out."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A rubberised khaki canvas gas mask with round glass eyepieces and a breathing hose, lying on its olive canvas satchel"}
+      ],
+      "tags": ["clothing", "face", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.puttees",
+      "category": "clothing",
+      "type": "pants",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "puttees"},
+      "description": {"*": "Long wool puttees wound from ankle to knee, and never tight enough."},
+      "looks": [
+        {"key": "rolled", "bands": ["*"], "physical": "A pair of olive wool leg wraps rolled into tight spirals with tan cotton tie tapes"}
+      ],
+      "tags": ["clothing", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

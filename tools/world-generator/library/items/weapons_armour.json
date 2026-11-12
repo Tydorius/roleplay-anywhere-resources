@@ -527,6 +527,74 @@
       "tags": ["weapon", "blade"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "armour.steel_helmet",
+      "category": "armour",
+      "type": "head",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "steel helmet"},
+      "description": {"*": "A wide-brimmed steel helmet, standard issue and already dented."},
+      "looks": [
+        {"key": "brim", "bands": ["*"], "physical": "A round khaki-painted steel helmet with a wide brim, domed crown and leather chin strap"}
+      ],
+      "tags": ["armour", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.flare_pistol",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "flare pistol"},
+      "description": {"*": "A flare pistol, for arguing with the night sky in coloured light."},
+      "looks": [
+        {"key": "break", "bands": ["*"], "physical": "A stubby brass flare pistol with a break-open barrel and checkered wooden grip"}
+      ],
+      "tags": ["weapon", "signal", "gun", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.ammo_bandolier",
+      "category": "weapon",
+      "type": "torso",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "ammunition bandolier"},
+      "description": {"*": "A cotton ammunition bandolier, every loop filled with rifle clips."},
+      "looks": [
+        {"key": "cotton", "bands": ["*"], "physical": "A khaki cotton ammunition bandolier with stitched loops holding brass rifle cartridges"}
+      ],
+      "tags": ["weapon", "ammo", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.trench_knife",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "trench knife"},
+      "description": {"*": "A trench knife with a knuckle guard, for the closest of quarters."},
+      "looks": [
+        {"key": "knuckle", "bands": ["*"], "physical": "A blued steel trench knife with a studded knuckle guard and grooved wooden grip"}
+      ],
+      "tags": ["weapon", "knife", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

@@ -527,6 +527,23 @@
       "tags": ["tech", "part"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "tech.field_handset",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "field telephone handset"},
+      "description": {"*": "A field telephone handset, for shouting down a wire that shouts back."},
+      "looks": [
+        {"key": "rubber", "bands": ["*"], "physical": "A black hard rubber telephone handset with a braided cord and brass switchboard plug"}
+      ],
+      "tags": ["tech", "signal", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

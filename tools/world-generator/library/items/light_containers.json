@@ -413,6 +413,40 @@
       "tags": ["container", "drink"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "container.mess_tin",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "mess tin"},
+      "description": {"*": "A two-part mess tin, lid and pan, battered into a map of its meals."},
+      "looks": [
+        {"key": "pan", "bands": ["*"], "physical": "A grey two-part metal mess tin with a hinged handle and a dented sliding lid"}
+      ],
+      "tags": ["container", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "container.kit_bag",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "kit bag"},
+      "description": {"*": "A canvas kit bag that carries a soldier's whole worldly issue."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A long olive canvas kit bag gathered at the neck by a rope drawstring, with brass grommets"}
+      ],
+      "tags": ["container", "military"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }
