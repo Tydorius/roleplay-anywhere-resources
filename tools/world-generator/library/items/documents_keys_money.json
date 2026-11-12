@@ -16,7 +16,7 @@
         {"key": "paper", "bands": ["modern", "scifi"], "physical": "A worn paperback with a creased spine and dog-eared cover"}
       ],
       "tags": ["document", "book"],
-      "aliases": ["Dusty Tome", "Heavy tome", "A book read forty times", "Corvane's sealed treatise", "Treatise on Elemental Control", "Basic alchemy guide", "Nine-Breath Gathering Primer", "Crimson Vein Sutra fragment", "Forbidden Tome Fragment", "History of Elowen", "Pocket Philosophy Book", "Dusty encyclopedia", "Dusty paperback", "Travel guide book", "Old Physics Journal", "Statutes of the Athenaeum", "Encyclopaedia Magica"],
+      "aliases": ["Dusty Tome", "Heavy tome", "A book read forty times", "Corvane's sealed treatise", "Treatise on Elemental Control", "Basic alchemy guide", "Nine-Breath Gathering Primer", "Crimson Vein Sutra fragment", "Forbidden Tome Fragment", "Pocket Philosophy Book", "Dusty encyclopedia", "Dusty paperback", "Travel guide book", "Old Physics Journal", "Statutes of the Athenaeum", "Encyclopaedia Magica"],
       "sources": ["harvest"]
     },
     {

@@ -66,7 +66,7 @@
         {"key": "crest", "bands": ["*"], "physical": "A heavy signet ring bearing a worn crest on a flat oval face"}
       ],
       "tags": ["jewellery", "seal"],
-      "aliases": ["Iron signet ring", "Signet Ring", "Thornbarrow Signet Ring", "Late Baron's Signet Ring", "Lord's Silver Signet", "Ferrant thumb signet", "Vayne signet on a chain"],
+      "aliases": ["Iron signet ring", "Signet Ring", "Lord's Silver Signet", "Ferrant thumb signet", "Vayne signet on a chain"],
       "sources": ["harvest"]
     },
     {

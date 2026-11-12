@@ -628,7 +628,7 @@
         {"key": "stoneware", "bands": ["*"], "physical": "A corked stoneware jug of cloudy cider with a dribble down the belly"}
       ],
       "tags": ["drink", "alcohol"],
-      "aliases": ["Soured cider", "Jug of rough cider", "Thornwick Cider Flask", "Emberstill Cider Jug"],
+      "aliases": ["Soured cider", "Jug of rough cider", "Emberstill Cider Jug"],
       "sources": ["harvest"]
     },
     {
