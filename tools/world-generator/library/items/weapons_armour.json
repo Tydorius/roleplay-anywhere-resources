@@ -408,6 +408,125 @@
       "tags": ["armour", "tech"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "weapon.musket",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "musket"},
+      "description": {"*": "A percussion musket, long enough to matter and slow to load."},
+      "looks": [
+        {"key": "percussion", "bands": ["*"], "physical": "A percussion musket with a long browned barrel, side hammer and plain walnut stock"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.revolver",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "revolver"},
+      "description": {"*": "A six-shot revolver, oiled, loaded and kept that way."},
+      "looks": [
+        {"key": "six", "bands": ["*"], "physical": "A six-shot revolver with a fluted cylinder, blued steel frame and walnut grips"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.derringer",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "pocket pistol"},
+      "description": {"*": "A two-shot pocket pistol, small enough for a waistcoat pocket."},
+      "looks": [
+        {"key": "two", "bands": ["*"], "physical": "A small two-barrel pocket pistol with a brass frame and birds-head walnut grip"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.double_shotgun",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "double-barrelled shotgun"},
+      "description": {"*": "A double-barrelled shotgun, two chances and after that a club."},
+      "looks": [
+        {"key": "hammer", "bands": ["*"], "physical": "An outside-hammer double-barrelled shotgun with browned barrels and a walnut stock"}
+      ],
+      "tags": ["weapon", "gun"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.cartridges",
+      "category": "weapon",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "box of cartridges"},
+      "description": {"*": "A box of cartridges, counted twice and kept somewhere dry."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "An open wooden box of brass rifle cartridges stood upright in two rows"}
+      ],
+      "tags": ["weapon", "ammo"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.truncheon",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "truncheon"},
+      "description": {"*": "A constable's truncheon, worn smooth where the hand falls."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A dark wooden truncheon with a ribbed grip and wrist loop"}
+      ],
+      "tags": ["weapon", "club"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "weapon.bayonet",
+      "category": "weapon",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bayonet"},
+      "description": {"*": "A socket bayonet that turns a musket into a short spear."},
+      "looks": [
+        {"key": "socket", "bands": ["*"], "physical": "A steel socket bayonet with a bent elbow neck and locking ring"}
+      ],
+      "tags": ["weapon", "blade"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

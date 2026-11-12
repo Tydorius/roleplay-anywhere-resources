@@ -580,6 +580,23 @@
       "tags": ["material", "fishing"],
       "aliases": ["Fishing Net", "Willow net", "Net Patch", "Cork Float", "String of cork floats", "Net Weight", "Lead Sinker", "Pouch of lead sinkers", "Fish Scales", "Fish Oil"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "material.chain",
+      "category": "material",
+      "type": "material",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "length of chain"},
+      "description": {"*": "A length of chain, heavier than rope and twice as stubborn."},
+      "looks": [
+        {"key": "coil", "bands": ["*"], "physical": "A coiled length of dark iron link chain with a hook at one end"}
+      ],
+      "tags": ["material", "metal"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

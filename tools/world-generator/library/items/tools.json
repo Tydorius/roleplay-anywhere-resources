@@ -683,6 +683,210 @@
       "tags": ["tool"],
       "aliases": ["Tool bandolier"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "tool.pickaxe",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "pickaxe"},
+      "description": {"*": "A pickaxe for ground that argues back."},
+      "looks": [
+        {"key": "curved", "bands": ["*"], "physical": "A curved steel pick head fitted through a straight wooden haft"}
+      ],
+      "tags": ["tool", "mine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.sledgehammer",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "sledgehammer"},
+      "description": {"*": "A sledgehammer for posts, kerbs and other stubborn things."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A long-handled sledgehammer with a cylindrical steel head and worn hickory shaft"}
+      ],
+      "tags": ["tool"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.brace_bit",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "brace and bit"},
+      "description": {"*": "A brace and bit that bores its holes the quiet way."},
+      "looks": [
+        {"key": "sweep", "bands": ["*"], "physical": "A carpenter's brace with a swept wooden crank handle and an auger bit in the chuck"}
+      ],
+      "tags": ["tool", "wood"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.chisel",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "chisel"},
+      "description": {"*": "A chisel that persuades wood one shaving at a time."},
+      "looks": [
+        {"key": "firmer", "bands": ["*"], "physical": "A firmer chisel with a wide steel blade and hooped wooden handle"}
+      ],
+      "tags": ["tool", "wood"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.file",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "file"},
+      "description": {"*": "A flat file that turns rough edges smooth and the floor bristling."},
+      "looks": [
+        {"key": "flat", "bands": ["*"], "physical": "A flat steel file with cut teeth and a fitted wooden handle"}
+      ],
+      "tags": ["tool", "metal"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.slide_rule",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "slide rule"},
+      "description": {"*": "A slide rule, the engineer's quick answer to a long sum."},
+      "looks": [
+        {"key": "rule", "bands": ["*"], "physical": "A mahogany slide rule with a sliding centre scale and a chipped glass cursor"}
+      ],
+      "tags": ["tool", "measure"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.tape_measure",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tape measure"},
+      "description": {"*": "A tape measure that rolls the room up into numbers."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A cream cloth tape measure rolled into a brass case with a leather finger strap"}
+      ],
+      "tags": ["tool", "measure"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.plumb_bob",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "plumb bob"},
+      "description": {"*": "A plumb bob, the one straight line everybody trusts."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass teardrop plumb bob hanging from a waxed line"}
+      ],
+      "tags": ["tool", "measure"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.spyglass",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "spyglass"},
+      "description": {"*": "A brass spyglass that pulls the far shore close."},
+      "looks": [
+        {"key": "draw", "bands": ["*"], "physical": "A brass spyglass with three drawn tubes and a ribbed leather grip"}
+      ],
+      "tags": ["tool", "travel"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.magnifying_glass",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "magnifying glass"},
+      "description": {"*": "A magnifying glass that finds what eyes alone miss."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A round magnifying glass with a brass rim and a tapered dark wooden handle"}
+      ],
+      "tags": ["tool", "lens"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.padlock",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "padlock"},
+      "description": {"*": "A heavy padlock that promises more than most doors can keep."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A heavy brass padlock with a steel shackle and a round keyhole plate"}
+      ],
+      "tags": ["tool", "lock"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.handcuffs",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "handcuffs"},
+      "description": {"*": "Iron handcuffs, and usually somebody's bad evening in them."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A pair of iron handcuffs joined by a short link chain"}
+      ],
+      "tags": ["tool", "restraint"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

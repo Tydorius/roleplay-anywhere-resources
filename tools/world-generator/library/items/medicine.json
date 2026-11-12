@@ -374,6 +374,91 @@
       "tags": ["medicine", "tool"],
       "aliases": ["Stethoscope"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.glass_syringe",
+      "category": "medicine",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "glass syringe"},
+      "description": {"*": "A glass hypodermic syringe, boiled clean between patients."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A glass hypodermic syringe with a steel plunger in a lined metal case"}
+      ],
+      "tags": ["medicine", "tool"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.doctors_bag",
+      "category": "medicine",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "doctor's bag"},
+      "description": {"*": "A doctor's bag that opens on everything from forceps to hope."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A black leather doctor's bag with brass buckle straps and a carrying handle"}
+      ],
+      "tags": ["medicine", "container"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.smelling_salts",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "smelling salts"},
+      "description": {"*": "A bottle of smelling salts, sharp enough to raise the fainted."},
+      "looks": [
+        {"key": "cut", "bands": ["*"], "physical": "A cut-glass bottle of smelling salts with a silver stopper and worn ribbon"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.pill_tin",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pill tin"},
+      "description": {"*": "A brass tin of pills, two after meals and one at night."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A round brass pill tin with its lid half open on white pills"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.patent_tonic",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "patent tonic"},
+      "description": {"*": "A patent tonic that cures everything the label dares name."},
+      "looks": [
+        {"key": "ribbed", "bands": ["*"], "physical": "A ribbed emerald-glass medicine bottle with sloped shoulders and a driven cork"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

@@ -1,5 +1,5 @@
 {
-  "_note": "Technology for modern and sci-fi bands. See library/AUTHORING.md, Items.",
+  "_note": "Technology for the industrial, modern and sci-fi bands. See library/AUTHORING.md, Items.",
   "items": [
     {
       "id": "tech.smartphone",
@@ -389,6 +389,142 @@
         {"key": "handheld", "bands": ["*"], "physical": "A handheld comm unit with a stub antenna, clip and speaker grille"}
       ],
       "tags": ["tech", "comms"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.telegraph_key",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "telegraph key"},
+      "description": {"*": "A telegraph key that taps out more than it says."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass telegraph key on a wooden base with a knurled knob and binding posts"}
+      ],
+      "tags": ["tech", "comms"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.box_camera",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "box camera"},
+      "description": {"*": "A box camera for the one photograph a year worth taking."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "A brown leatherette box camera with a brass lens barrel and twin finders"}
+      ],
+      "tags": ["tech"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.phonograph_cylinder",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "phonograph cylinder"},
+      "description": {"*": "A wax cylinder with a voice worn into its grooves."},
+      "looks": [
+        {"key": "wax", "bands": ["*"], "physical": "A black wax phonograph cylinder with a slotted core and worn grooves"}
+      ],
+      "tags": ["tech", "music"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.clockwork_key",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "clockwork key"},
+      "description": {"*": "A clockwork key, and nothing runs without its turning."},
+      "looks": [
+        {"key": "wing", "bands": ["*"], "physical": "A flat brass clockwork key with a wing grip and square shaft"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.pressure_gauge",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pressure gauge"},
+      "description": {"*": "A pressure gauge watched more closely than the foreman."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass pressure gauge with a cream dial face and a needle behind glass"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.battery_jar",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "battery jar"},
+      "description": {"*": "A glass battery jar, acid and lead and a steady if nervous current."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A blue-tinted glass battery jar with lead plate lugs and a wooden lid"}
+      ],
+      "tags": ["tech", "power"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.vacuum_tube",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "vacuum tube"},
+      "description": {"*": "A vacuum tube that glows when the set is warm and working."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A pale amber glass vacuum tube with a bright filament cage and brass pin base"}
+      ],
+      "tags": ["tech", "part"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.brass_gear",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "brass gear"},
+      "description": {"*": "A brass gear, missing from somewhere that misses it."},
+      "looks": [
+        {"key": "spur", "bands": ["*"], "physical": "A brass spur gear with cut teeth and a square centre bore"}
+      ],
+      "tags": ["tech", "part"],
       "aliases": [],
       "sources": ["authored"]
     }

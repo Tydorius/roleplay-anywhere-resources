@@ -800,6 +800,193 @@
       "tags": ["clothing", "hygiene"],
       "aliases": ["Linen Bath Towel", "Steamhouse Towel", "Thin bathhouse Towel"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "clothing.top_hat",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "top hat"},
+      "description": {"*": "A tall silk hat that adds a foot of respectability."},
+      "looks": [
+        {"key": "silk", "bands": ["*"], "physical": "A tall black silk top hat with a wide curled brim and grey band"}
+      ],
+      "tags": ["clothing", "head"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.bowler_hat",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "bowler hat"},
+      "description": {"*": "A hard bowler, the hat of clerks and better classes alike."},
+      "looks": [
+        {"key": "hard", "bands": ["*"], "physical": "A hard black bowler hat with a rounded crown and narrow curled brim"}
+      ],
+      "tags": ["clothing", "head"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.flat_cap",
+      "category": "clothing",
+      "type": "head",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "flat cap"},
+      "description": {"*": "A flat cap, pulled down against weather and foremen."},
+      "looks": [
+        {"key": "tweed", "bands": ["*"], "physical": "A grey tweed flat cap with a buttoned crown and stitched-down brim"}
+      ],
+      "tags": ["clothing", "head", "warm"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.frock_coat",
+      "category": "clothing",
+      "type": "torso",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "frock coat"},
+      "description": {"*": "A long frock coat that swallows a man whole and improves him."},
+      "looks": [
+        {"key": "long", "bands": ["*"], "physical": "A long black frock coat with a velvet collar and covered buttons"}
+      ],
+      "tags": ["clothing", "torso"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.waistcoat",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "waistcoat"},
+      "description": {"*": "A wool waistcoat with a watch pocket and one spare button."},
+      "looks": [
+        {"key": "wool", "bands": ["*"], "physical": "A brown wool waistcoat with brass buttons and welt pockets"}
+      ],
+      "tags": ["clothing", "shirt"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.corset",
+      "category": "clothing",
+      "type": "innerTorso",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "corset"},
+      "description": {"*": "A corded corset that rearranges its wearer into fashion."},
+      "looks": [
+        {"key": "corded", "bands": ["*"], "physical": "A cream corded corset with brown stitching channels and back laces"}
+      ],
+      "tags": ["clothing", "shirt"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.cravat",
+      "category": "clothing",
+      "type": "necklace",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "cravat"},
+      "description": {"*": "A silk cravat, knotted by somebody with time on their hands."},
+      "looks": [
+        {"key": "silk", "bands": ["*"], "physical": "A rolled silk cravat in cream with brown stripes"}
+      ],
+      "tags": ["clothing"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.braces",
+      "category": "clothing",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "braces"},
+      "description": {"*": "A pair of braces holding trousers to their promises."},
+      "looks": [
+        {"key": "striped", "bands": ["*"], "physical": "A pair of striped cloth braces with brass length adjusters and leather end tabs"}
+      ],
+      "tags": ["clothing"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.gas_mask",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "gas mask"},
+      "description": {"*": "A rubber gas mask that turns bad air into breath."},
+      "looks": [
+        {"key": "rubber", "bands": ["*"], "physical": "A dark rubber gas mask with round tinted eyepieces and a snouted filter canister"}
+      ],
+      "tags": ["clothing", "face"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.monocle",
+      "category": "clothing",
+      "type": "face",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "monocle"},
+      "description": {"*": "A monocle, for looking down with one eye at a time."},
+      "looks": [
+        {"key": "gold", "bands": ["*"], "physical": "A gold-rimmed monocle glass hanging from a black ribbon loop"}
+      ],
+      "tags": ["clothing", "face"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "clothing.pocket_handkerchief",
+      "category": "clothing",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pocket handkerchief"},
+      "description": {"*": "A silk handkerchief folded to show exactly its best corner."},
+      "looks": [
+        {"key": "silk", "bands": ["*"], "physical": "A folded cream silk pocket square with burgundy rolled edges"}
+      ],
+      "tags": ["clothing"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

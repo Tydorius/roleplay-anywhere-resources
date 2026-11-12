@@ -345,6 +345,74 @@
       "tags": ["container", "kitchen"],
       "aliases": ["Copper Kettle", "Iron Pot"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "light.safety_lamp",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "miner's safety lamp"},
+      "description": {"*": "A miner's lamp whose gauze keeps the flame from the gas."},
+      "looks": [
+        {"key": "gauze", "bands": ["*"], "physical": "A brass miner's safety lamp with a fine wire gauze cylinder and hook handle"}
+      ],
+      "tags": ["light", "mine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "light.carbide_lamp",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "carbide lamp"},
+      "description": {"*": "A carbide lamp that burns its water and stone into light."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass carbide lamp with a bright reflector dish and a fluted water chamber"}
+      ],
+      "tags": ["light", "mine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "light.trench_lighter",
+      "category": "light",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "trench lighter"},
+      "description": {"*": "A brass petrol lighter that lights in any wind thrown at it."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass petrol lighter with a hinged lid, cotton wick and steel wheel"}
+      ],
+      "tags": ["light", "fire"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "container.hip_flask",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hip flask"},
+      "description": {"*": "A hip flask shaped to the ribs, for cold stands and long sermons."},
+      "looks": [
+        {"key": "pewter", "bands": ["*"], "physical": "A curved pewter hip flask with a hinged cap and polished face"}
+      ],
+      "tags": ["container", "drink"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

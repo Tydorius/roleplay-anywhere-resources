@@ -546,6 +546,142 @@
       "tags": ["trinket"],
       "aliases": ["Bamboo chopstick pair"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.cufflinks",
+      "category": "jewellery",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "cufflinks"},
+      "description": {"*": "A pair of gold cufflinks, the last inheritance that stayed in the family."},
+      "looks": [
+        {"key": "gold", "bands": ["*"], "physical": "A pair of oval gold cufflinks joined by short link chains"}
+      ],
+      "tags": ["jewellery", "gold"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "jewellery.tie_pin",
+      "category": "jewellery",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tie pin"},
+      "description": {"*": "A tie pin with a pearl head, worn exactly straight."},
+      "looks": [
+        {"key": "pearl", "bands": ["*"], "physical": "A gold tie pin with a round pearl head"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.snuff_box",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "snuff box"},
+      "description": {"*": "A snuff box passed round with the news and a sneeze."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A round brass snuff box with a hinged lid and an engraved star pattern"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.cigar_case",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "cigar case"},
+      "description": {"*": "A leather cigar case, one left for after the argument."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A brown leather cigar case holding two cigars with gold bands"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.tobacco_tin",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tobacco tin"},
+      "description": {"*": "A tobacco tin with a lid that never quite closes flat again."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A rectangular tobacco tin with a hinged lid and a green printed panel"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.harmonica",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "harmonica"},
+      "description": {"*": "A harmonica, the whole band in a coat pocket."},
+      "looks": [
+        {"key": "silver", "bands": ["*"], "physical": "A silver harmonica with twin cover plates over a wooden comb body"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.music_box",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "music box"},
+      "description": {"*": "A music box that plays its one tune to whoever winds it."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A polished rosewood music box with its lid open on a brass pinned cylinder"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.sepia_photograph",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sepia photograph"},
+      "description": {"*": "A sepia photograph on card, the face it holds is outgrown now."},
+      "looks": [
+        {"key": "card", "bands": ["*"], "physical": "A sepia portrait photograph mounted on a cream card with gilt scalloped edges"}
+      ],
+      "tags": ["trinket", "keepsake"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

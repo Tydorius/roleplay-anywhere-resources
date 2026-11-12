@@ -750,6 +750,74 @@
       "tags": ["drink"],
       "aliases": ["Soy Milk Carton", "Buttermilk jug"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "drink.beer_bottle",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bottle of beer"},
+      "description": {"*": "A brown bottle of beer, best cold and rarely around long enough."},
+      "looks": [
+        {"key": "brown", "bands": ["*"], "physical": "A brown glass beer bottle with a crown cap and a buff paper label"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "drink.ginger_beer",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "ginger-beer bottle"},
+      "description": {"*": "A stone bottle of fizzy ginger beer, wired cork and all."},
+      "looks": [
+        {"key": "stoneware", "bands": ["*"], "physical": "A stoneware ginger-beer bottle with a grey-brown glaze, pinched neck and wired cork"}
+      ],
+      "tags": ["drink"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "food.tinned_meat",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tin of meat"},
+      "description": {"*": "A tin of preserved meat, opened only when the larder argues."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A squat tin of preserved meat with a plain paper label and a keyed opening strip"}
+      ],
+      "tags": ["food", "meat", "storage"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "food.meat_pie",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "meat pie"},
+      "description": {"*": "A cold meat pie, bought from a window and eaten on the walk."},
+      "looks": [
+        {"key": "crimped", "bands": ["*"], "physical": "A golden-crust meat pie with a crimped rim and a centre steam hole"}
+      ],
+      "tags": ["food", "meat"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }

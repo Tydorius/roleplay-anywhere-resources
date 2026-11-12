@@ -530,6 +530,108 @@
       "tags": ["money"],
       "aliases": ["Toll Token", "Brass Token", "Laundry token handful", "Reclaim power chit", "Water ration chip", "Sanded Training Dummy Token"],
       "sources": ["harvest"]
+    },
+    {
+      "id": "money.banknote",
+      "category": "money",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "banknote"},
+      "description": {"*": "A single banknote, thin paper carrying its whole face value."},
+      "looks": [
+        {"key": "engraved", "bands": ["*"], "physical": "A single engraved brown banknote with ornate scrollwork borders and a gilt seal"}
+      ],
+      "tags": ["money"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "document.train_ticket",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "train ticket"},
+      "description": {"*": "A train ticket, third class, kept as a bookmark ever since."},
+      "looks": [
+        {"key": "buff", "bands": ["*"], "physical": "A buff cardboard train ticket with a clipped corner and a punched hole"}
+      ],
+      "tags": ["document", "travel"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "document.telegram",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "telegram"},
+      "description": {"*": "A telegram, bad news at so much a word."},
+      "looks": [
+        {"key": "form", "bands": ["*"], "physical": "A folded cream telegram form with a pasted paper strip across its middle"}
+      ],
+      "tags": ["document"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "document.postcard",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "postcard"},
+      "description": {"*": "A picture postcard, holiday weather in three lines of script."},
+      "looks": [
+        {"key": "picture", "bands": ["*"], "physical": "A cream postcard with a sepia oval vignette panel and scalloped edge"}
+      ],
+      "tags": ["document"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "document.pawn_ticket",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pawn ticket"},
+      "description": {"*": "A pawn ticket, the only receipt that doubles as a promise."},
+      "looks": [
+        {"key": "stub", "bands": ["*"], "physical": "A small manila ticket stub with a perforated edge and a red stamp mark"}
+      ],
+      "tags": ["document", "trade"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "document.blueprint",
+      "category": "document",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "blueprint"},
+      "description": {"*": "A rolled blueprint, somebody's whole plan in white lines."},
+      "looks": [
+        {"key": "cyan", "bands": ["*"], "physical": "A rolled cyan blueprint sheet with white line drawings and curled corners"}
+      ],
+      "tags": ["document", "plan"],
+      "aliases": [],
+      "sources": ["authored"]
     }
   ]
 }
