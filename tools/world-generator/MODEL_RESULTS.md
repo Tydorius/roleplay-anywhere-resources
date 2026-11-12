@@ -119,8 +119,10 @@ validator errors, every room is reachable, and the shipped-scenario check finds 
 - upstairs furniture losing its turn;
 - map previews crashing on door objects.
 
+A chapel keeper's sleeping "cell" was locked like a jail cell in two castles. That's fixed too: a bare "cell" in a
+chapel, temple or monastery stays unlocked.
+
 **Left as is:**
-- A chapel keeper's sleeping "cell" is locked like a jail cell. The keeper holds the key.
 - Some small unit kitchens can't fit a hearth, worktable and stove.
 - One great hall dropped ten pieces of furniture for lack of room.
 

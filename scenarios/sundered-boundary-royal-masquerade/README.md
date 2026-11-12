@@ -9,6 +9,9 @@ another life, along with every doom flag waiting in it.
 perks and map objects, made with Flux.2 klein), so nothing needs generating at Start Game.
 
 Made for Anywhere RPG 0.18.
+- **On 1.0:** it imports with no errors under 1.0's scenario rules, but it hasn't been played there.
+- **Open doorways:** it has no door objects, so its doorways are open gaps in 1.0. To add doors, open it in the
+  [Scenario Editor](../../tools/scenario-editor) and use **Hang doors on all of them**.
 
 | | |
 |---|---|

@@ -12,11 +12,19 @@ It runs on Python 3.8+ with the standard library only (Pillow is optional,
 just for map previews), and the scenario builder, validator and preview
 renderer are vendored — nothing outside this folder is needed.
 
-**Game version:** being ported to Anywhere RPG 1.0. Its only contract with the game is the
-scenario format. It still writes the 0.18 form, which 1.0 reads unchanged, and its validator already
-follows 1.0's rules (see `worldgen/vendor/README.md`). It now writes 1.0's own floors, doors,
-locks, liquids and populations. The `region-groups` and `lights` extensions still need the
-code-mod loader mods.
+**Game version:** built for Anywhere RPG 1.0 (Steam alpha build 26557354). Its only contract with
+the game is the scenario format, which its validator checks against 1.0's rules (see
+`worldgen/vendor/README.md`). Every world gets 1.0's own features, with no mods needed:
+- floors and two-way stairs;
+- door objects;
+- locked rooms and their keys;
+- theft flags;
+- natural shapes, water and vehicles;
+- populations, with their members already in place.
+
+A generated castle was started in the live 1.0 game to confirm the import (see
+[MODEL_RESULTS.md](MODEL_RESULTS.md)). The `region-groups` and `lights` extensions still need the
+code-mod loader mods. The 0.18 version is on the `0.18` branch.
 
 **Native populations:** every world also ships the game's own nameless creatures as
 `npcTemplates` (chosen in `worldgen/populations.py`): livestock (sheep, cows, goats or pigs)
