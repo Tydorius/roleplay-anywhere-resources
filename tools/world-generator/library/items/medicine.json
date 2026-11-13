@@ -1,0 +1,481 @@
+{
+  "_note": "Medicine, remedies and medical gear. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "medicine.healing_salve",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "herbal salve"},
+      "description": {"*": "A pot of herbal salve for cuts, bruises and everything else."},
+      "looks": [
+        {"key": "pot", "bands": ["*"], "physical": "A small clay pot of green herbal salve with a cork lid"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Healing salve", "Yarrow salve", "Balm of Yarrow", "Healer's Salve", "Slime-Drawn Wound Salve", "Hand salve", "Saddle Soap"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.herbal_tonic",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "herbal tonic"},
+      "description": {"*": "A bitter tonic, foul to sip and quick to work."},
+      "looks": [
+        {"key": "bottle", "bands": ["*"], "physical": "A corked brown bottle of herbal tonic, half full of dark liquid"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Willow-bark tonic", "Willow bark packet", "Feverfew Tincture", "Feverfew Poultice", "Herbal tincture", "Herbal decoction", "Sickness Tonic", "Kelp Tea", "Hearthmother's Fever Tonic", "Herbal cough syrup", "Cod-liver oil"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.bandage",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bandage roll"},
+      "description": {"*": "A clean roll of bandage, the first thing everyone reaches for."},
+      "looks": [
+        {"key": "roll", "bands": ["*"], "physical": "A tight roll of oat-coloured cloth bandage bound with a brass pin"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Clean linen bandage", "Linen bandage roll", "Infirmary Bandage Roll", "Rolled Bandages", "Bandage roll", "Graft-plaster pack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.soap",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bar of soap"},
+      "description": {"*": "A honest bar of soap, good for people and floors alike."},
+      "looks": [
+        {"key": "bar", "bands": ["*"], "physical": "A worn oval bar of yellow soap with a rope loop through it"}
+      ],
+      "tags": ["medicine", "hygiene"],
+      "aliases": ["Lye Soap Bar", "Scented Soap", "Rosehip Soap Ball", "Bar of soap", "Laundry soap bar", "Antiseptic soap bar"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.antiseptic_wipes",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "antiseptic wipes"},
+      "description": {"*": "A packet of antiseptic wipes, sting now, thank them later."},
+      "looks": [
+        {"key": "packet", "bands": ["*"], "physical": "A foil packet of antiseptic wipes with a peeled corner"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Antiseptic wipe"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.first_aid_kit",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "first-aid kit"},
+      "description": {"*": "A first-aid box with everything needed for a bad hour."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "A white metal first-aid box with a green cross on the lid and a carry handle"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["First-aid kit"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.pill_bottle",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bottle of pills"},
+      "description": {"*": "A bottle of pills, rattle them and feel better already."},
+      "looks": [
+        {"key": "amber", "bands": ["*"], "physical": "An amber pill bottle with a brown cap, half full of pale tablets"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Aspirin bottle", "Pain pills", "Antibiotics", "Antibiotic course"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.cough_syrup",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "cough syrup"},
+      "description": {"*": "A bottle of cough syrup that tastes of nothing good."},
+      "looks": [
+        {"key": "bottle", "bands": ["*"], "physical": "A brown bottle of thick cough syrup with a plastic dosing cup"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Cough syrup", "Mouthwash", "Cheap cologne bottle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.morphine",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 4,
+      "names": {"*": "morphine ampoule"},
+      "description": {"*": "A glass ampoule of morphine, counted and locked away for a reason."},
+      "looks": [
+        {"key": "ampoule", "bands": ["*"], "physical": "A slim glass ampoule of clear fluid with a blue ring break-line at the neck"}
+      ],
+      "tags": ["medicine", "drug"],
+      "aliases": ["Morphine ampoule"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.insulin",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 4,
+      "names": {"*": "insulin kit"},
+      "description": {"*": "An insulin kit, life in a little zip pouch."},
+      "looks": [
+        {"key": "kit", "bands": ["*"], "physical": "An insulin pen and a spare vial in a grey zip pouch"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Insulin kit"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.stim",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "stim shot"},
+      "description": {"*": "A stim shot, borrowed alertness with interest due later."},
+      "looks": [
+        {"key": "injector", "bands": ["*"], "physical": "A chrome stim injector with a glass dose vial fitted in the barrel"}
+      ],
+      "tags": ["medicine", "drug"],
+      "aliases": ["Stim Shot", "Grey-market stim inhaler"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.med_gel",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "med-gel vial"},
+      "description": {"*": "A vial of med-gel that knits a wound while you watch."},
+      "looks": [
+        {"key": "vial", "bands": ["*"], "physical": "A syringe-tipped vial of opaque blue med-gel"}
+      ],
+      "tags": ["medicine"],
+      "aliases": ["Med-gel vial", "Med-gel", "Pain-jelly tube"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.patch_pack",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "medicated patches"},
+      "description": {"*": "A sleeve of adhesive patches, each one a small mercy."},
+      "looks": [
+        {"key": "sleeve", "bands": ["*"], "physical": "A foil sleeve of adhesive patches with one pressed out beside it"}
+      ],
+      "tags": ["medicine", "drug"],
+      "aliases": ["Analgesic patch", "Sleep patch", "Suppressant strip"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.purification_tablets",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "purification tablets"},
+      "description": {"*": "A strip of tablets that turn ditch water into drinking water."},
+      "looks": [
+        {"key": "strip", "bands": ["*"], "physical": "A clear blister strip of large white purification tablets"}
+      ],
+      "tags": ["medicine", "water"],
+      "aliases": ["Purification tablet strip"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.auto_injector",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "med-injector"},
+      "description": {"*": "A med-injector, press it to the arm and let it hiss."},
+      "looks": [
+        {"key": "auto", "bands": ["*"], "physical": "A stainless auto-injector with a yellow safety cap and dose window"}
+      ],
+      "tags": ["medicine", "tech"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.cautery_pen",
+      "category": "medicine",
+      "type": "wieldable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "cautery pen"},
+      "description": {"*": "A cautery pen for closing wounds the quick way."},
+      "looks": [
+        {"key": "pen", "bands": ["*"], "physical": "A slim cautery pen with a heated loop tip and a coiled cable"}
+      ],
+      "tags": ["medicine", "tool", "tech"],
+      "aliases": ["Cautery pen"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.scalpel_set",
+      "category": "medicine",
+      "type": "wieldable",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "scalpel set"},
+      "description": {"*": "A rolled set of scalpels, everything sharp and in its place."},
+      "looks": [
+        {"key": "roll", "bands": ["*"], "physical": "A folded canvas roll holding six surgical steel scalpels of different shapes"}
+      ],
+      "tags": ["medicine", "tool"],
+      "aliases": ["Scalpel set"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.dermal_gun",
+      "category": "medicine",
+      "type": "wieldable",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "sealant gun"},
+      "description": {"*": "A dermal sealant gun that sprays skin over a wound."},
+      "looks": [
+        {"key": "gun", "bands": ["*"], "physical": "A handheld dermal sealant gun with a barrel nozzle and side-mounted cartridge"}
+      ],
+      "tags": ["medicine", "tool", "tech"],
+      "aliases": ["Dermal sealant gun"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.holy_water",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "vial of holy water"},
+      "description": {"*": "A vial of blessed water, comfort against what ails you and some things that don't."},
+      "looks": [
+        {"key": "vial", "bands": ["*"], "physical": "A small glass vial of holy water stoppered with cork and wax"}
+      ],
+      "tags": ["medicine", "holy"],
+      "aliases": ["Holy Water"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.laudanum",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "laudanum vial"},
+      "description": {"*": "A vial of laudanum, the apothecary's answer to everything."},
+      "looks": [
+        {"key": "vial", "bands": ["*"], "physical": "A small blue-glass vial of laudanum with a paper label"}
+      ],
+      "tags": ["medicine", "drug"],
+      "aliases": ["Laudanum vial"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.thermometer",
+      "category": "medicine",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "thermometer"},
+      "description": {"*": "A clinical thermometer, the first thing under the tongue and the last word."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A slim glass thermometer in a translucent green plastic case"}
+      ],
+      "tags": ["medicine", "tool"],
+      "aliases": ["Thermometer"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.stethoscope",
+      "category": "medicine",
+      "type": "necklace",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "stethoscope"},
+      "description": {"*": "A stethoscope, hung round the neck of someone who knows."},
+      "looks": [
+        {"key": "chrome", "bands": ["*"], "physical": "A stainless stethoscope with grey tubing and twin chest piece"}
+      ],
+      "tags": ["medicine", "tool"],
+      "aliases": ["Stethoscope"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "medicine.glass_syringe",
+      "category": "medicine",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "glass syringe"},
+      "description": {"*": "A glass hypodermic syringe, boiled clean between patients."},
+      "looks": [
+        {"key": "glass", "bands": ["*"], "physical": "A glass hypodermic syringe with a steel plunger in a lined metal case"}
+      ],
+      "tags": ["medicine", "tool"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.doctors_bag",
+      "category": "medicine",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "doctor's bag"},
+      "description": {"*": "A doctor's bag that opens on everything from forceps to hope."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A black leather doctor's bag with brass buckle straps and a carrying handle"}
+      ],
+      "tags": ["medicine", "container"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.smelling_salts",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "smelling salts"},
+      "description": {"*": "A bottle of smelling salts, sharp enough to raise the fainted."},
+      "looks": [
+        {"key": "cut", "bands": ["*"], "physical": "A cut-glass bottle of smelling salts with a silver stopper and worn ribbon"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.pill_tin",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pill tin"},
+      "description": {"*": "A brass tin of pills, two after meals and one at night."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A round brass pill tin with its lid half open on white pills"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.patent_tonic",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "patent tonic"},
+      "description": {"*": "A patent tonic that cures everything the label dares name."},
+      "looks": [
+        {"key": "ribbed", "bands": ["*"], "physical": "A ribbed emerald-glass medicine bottle with sloped shoulders and a driven cork"}
+      ],
+      "tags": ["medicine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "medicine.field_dressing",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "field dressing"},
+      "description": {"*": "A field dressing in its sealed packet, the first friend of a bad wound."},
+      "looks": [
+        {"key": "packet", "bands": ["*"], "physical": "A flat khaki fabric field dressing packet bound with brown tape and a torn opener tab"}
+      ],
+      "tags": ["medicine", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

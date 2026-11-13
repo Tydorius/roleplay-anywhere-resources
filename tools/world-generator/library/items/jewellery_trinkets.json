@@ -1,0 +1,704 @@
+{
+  "_note": "Jewellery and small trinkets. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "jewellery.gold_ring",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 5,
+      "names": {"*": "gold ring"},
+      "description": {"*": "A plain gold ring, worn by a hand someone remembers."},
+      "looks": [
+        {"key": "band", "bands": ["*"], "physical": "A plain gold band ring with a soft shine and worn inner curve"}
+      ],
+      "tags": ["jewellery", "gold"],
+      "aliases": ["Golden Ring", "Gold wedding band", "Wedding ring", "Wedding band", "Engraved Ring"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.silver_ring",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "silver ring"},
+      "description": {"*": "A silver ring gone dark at the bottom of a jewellery box."},
+      "looks": [
+        {"key": "band", "bands": ["*"], "physical": "A tarnished silver band ring with a worn pattern of knots"}
+      ],
+      "tags": ["jewellery", "silver"],
+      "aliases": ["Tarnished silver ring"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.iron_ring",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "iron ring"},
+      "description": {"*": "A plain iron ring, the ring of someone who owns one ring."},
+      "looks": [
+        {"key": "iron", "bands": ["*"], "physical": "A plain iron ring with hammered facets and patches of rust"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Iron Ring", "Tin Ring", "Tin Ring with Glass Bead", "Braided hair ring"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.signet_ring",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "signet ring"},
+      "description": {"*": "A signet ring, and whoever holds it can seal things in its name."},
+      "looks": [
+        {"key": "crest", "bands": ["*"], "physical": "A heavy signet ring bearing a worn crest on a flat oval face"}
+      ],
+      "tags": ["jewellery", "seal"],
+      "aliases": ["Iron signet ring", "Signet Ring", "Lord's Silver Signet", "Ferrant thumb signet", "Vayne signet on a chain"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.copper_ring",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "copper ring"},
+      "description": {"*": "A ring bent from copper wire, green where the rain got at it."},
+      "looks": [
+        {"key": "wire", "bands": ["*"], "physical": "A ring of bent copper wire with a patinated green surface"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Bent-copper ring"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.pendant",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "pendant"},
+      "description": {"*": "A small pendant on a chain, never taken off."},
+      "looks": [
+        {"key": "chain", "bands": ["*"], "physical": "A small oval pendant of pale blue stone on a fine silver chain"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Venn pendant", "Jade pendant", "Moonstone Pendant", "Nine-luck coin pendant", "Quiet Mother Icon"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.locket",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "locket"},
+      "description": {"*": "A locket with a face inside that only its wearer looks at."},
+      "looks": [
+        {"key": "oval", "bands": ["*"], "physical": "An oval brass locket on a chain, slightly open on its hinge"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Personal locket", "Locket", "Silver Locket", "Tide Locket"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.crucifix",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "crucifix"},
+      "description": {"*": "A worn crucifix, kissed so often the figure has no face left."},
+      "looks": [
+        {"key": "silver", "bands": ["*"], "physical": "A small silver crucifix on a knotted brown cord"}
+      ],
+      "tags": ["jewellery", "holy"],
+      "aliases": ["Silver crucifix", "Relic pendant of St. Brannoc"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.medal",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "medal"},
+      "description": {"*": "A medal on a ribbon, for something done once and remembered after."},
+      "looks": [
+        {"key": "ribbon", "bands": ["*"], "physical": "A worn bronze medal hanging from a faded red-and-blue ribbon"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Saint Cordelia Medallion", "Pilgrim Badge of the Hold", "Horse brass"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.prayer_beads",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "prayer beads"},
+      "description": {"*": "A string of prayer beads worn smooth by thumbs."},
+      "looks": [
+        {"key": "beads", "bands": ["*"], "physical": "A loop of dark wooden prayer beads with a tasselled cross"}
+      ],
+      "tags": ["jewellery", "holy"],
+      "aliases": ["Prayer Beads", "Rosary of Wooden Beads", "Silver Prayer Bead", "Birth-blessing cord"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.amulet",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bone amulet"},
+      "description": {"*": "A carved bone amulet, older than anyone who can explain it."},
+      "looks": [
+        {"key": "bone", "bands": ["*"], "physical": "A carved bone amulet of a stylised face on a leather cord"}
+      ],
+      "tags": ["jewellery", "charm"],
+      "aliases": ["Bone charm", "Bone Amulet", "Stone Amulet", "Sun disc on a cord", "Valerian sun clasp", "Carved keepsake token", "Whale Bone Carving"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.bead_necklace",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "bead necklace"},
+      "description": {"*": "A strand of amber beads, warm to the touch."},
+      "looks": [
+        {"key": "amber", "bands": ["*"], "physical": "A strand of polished amber beads with a brass claw clasp"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Amber bead", "Amber bead necklace"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.pearl_necklace",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 5,
+      "names": {"*": "pearl necklace"},
+      "description": {"*": "A strand of pearls, kept for occasions that rarely come."},
+      "looks": [
+        {"key": "pearls", "bands": ["*"], "physical": "A single strand of cream pearls with a gold clasp"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Saltwater pearl necklace", "Coral necklace", "Pearl"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.gold_chain",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "gold chain"},
+      "description": {"*": "A heavy gold chain that says more than its wearer does."},
+      "looks": [
+        {"key": "heavy", "bands": ["*"], "physical": "A heavy gold chain necklace of interlocking links"}
+      ],
+      "tags": ["jewellery", "gold"],
+      "aliases": ["Gold chain", "Beacon-keeper's chain"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.brooch",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "brooch"},
+      "description": {"*": "A silver brooch that pins a cloak and a reputation together."},
+      "looks": [
+        {"key": "oval", "bands": ["*"], "physical": "An oval silver brooch with an amber stone and long pin"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Silver Brooch", "Scrimshaw brooch", "Silver herring brooch", "Rose-Diamond Brooch", "Jeweled Brooch", "Lamia-Shed Scale Pendant"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.dog_tags",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "ID tags"},
+      "description": {"*": "A pair of stamped tags, so somebody knows whose turn it went badly for."},
+      "looks": [
+        {"key": "tags", "bands": ["*"], "physical": "A pair of stamped steel tags on a ball chain, one bent"}
+      ],
+      "tags": ["jewellery", "id"],
+      "aliases": ["Clinic donor tag", "Reclaim crew badge"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.silver_spoon",
+      "category": "jewellery",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "silver spoon"},
+      "description": {"*": "A silver spoon from a set nobody admits was broken up."},
+      "looks": [
+        {"key": "spoon", "bands": ["*"], "physical": "A silver spoon with a worn bowl and decorative twist handle"}
+      ],
+      "tags": ["jewellery", "silver"],
+      "aliases": ["Silver Spoon", "Silver Thorn-Crest Spoon"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.bangle",
+      "category": "jewellery",
+      "type": "ring",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "jade bangle"},
+      "description": {"*": "A jade bangle passed down hand to hand for longer than anyone counts."},
+      "looks": [
+        {"key": "jade", "bands": ["*"], "physical": "A green jade bangle bracelet polished smooth with a hairline crack"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": ["Jade heirloom bangle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.playing_cards",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "deck of cards"},
+      "description": {"*": "A worn deck of cards, short the queen of something."},
+      "looks": [
+        {"key": "deck", "bands": ["*"], "physical": "A worn deck of playing cards fanned against its tattered box"}
+      ],
+      "tags": ["trinket", "game"],
+      "aliases": ["Deck of Cards", "Playing cards", "Ivory Die", "Wooden Game Piece"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.mirror",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "mirror"},
+      "description": {"*": "A small mirror, for the quick check and the quick hide."},
+      "looks": [
+        {"key": "hand", "bands": ["medieval", "industrial"], "physical": "A round silver hand mirror with a carved handle"},
+        {"key": "compact", "bands": ["modern", "scifi"], "physical": "A pink plastic compact mirror, half open on its hinge"}
+      ],
+      "tags": ["trinket"],
+      "aliases": ["Small mirror", "Weather Glass"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.comb",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "comb"},
+      "description": {"*": "A comb with two teeth missing and no regrets."},
+      "looks": [
+        {"key": "wood", "bands": ["medieval", "industrial"], "physical": "A wooden comb with coarse and fine teeth, cracked at one end"},
+        {"key": "plastic", "bands": ["modern", "scifi"], "physical": "A black plastic comb with a broken tooth"}
+      ],
+      "tags": ["trinket", "hygiene"],
+      "aliases": ["Wooden Comb"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.pocket_watch",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "pocket watch"},
+      "description": {"*": "A pocket watch that keeps time better than its keeper keeps promises."},
+      "looks": [
+        {"key": "silver", "bands": ["*"], "physical": "A silver pocket watch with a chain and worn enamel face"}
+      ],
+      "tags": ["trinket", "time"],
+      "aliases": ["Lord's pocket watch", "Silver hunter watch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.wristwatch",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "watch"},
+      "description": {"*": "A wristwatch with a cracked strap and punctual heart."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A steel wristwatch on a brown leather strap with a worn clasp"}
+      ],
+      "tags": ["trinket", "time"],
+      "aliases": ["Expensive watch", "Wind-up watch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.stopwatch",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "stopwatch"},
+      "description": {"*": "A steel stopwatch, thumb-worn and still clicking."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A steel stopwatch with a side button and ring loop"}
+      ],
+      "tags": ["trinket", "time"],
+      "aliases": ["Stopwatch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.photograph",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "photographs"},
+      "description": {"*": "Old photographs tied together, taken out on the quiet evenings."},
+      "looks": [
+        {"key": "bundle", "bands": ["*"], "physical": "A bundle of creased photographs tied with red string"}
+      ],
+      "tags": ["trinket", "keepsake"],
+      "aliases": ["Family photograph", "Family photo in plastic sleeve", "Portrait miniature"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.incense",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "incense"},
+      "description": {"*": "A bundle of incense for the shrine, the window, or the dead."},
+      "looks": [
+        {"key": "bundle", "bands": ["*"], "physical": "A bundle of incense sticks bound with red paper and a gold thread"}
+      ],
+      "tags": ["trinket", "holy"],
+      "aliases": ["Grave offering incense", "Incense bundle", "Scented Incense Cone"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.pipe",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "smoking pipe"},
+      "description": {"*": "A pipe that has thought through more problems than its smoker."},
+      "looks": [
+        {"key": "briar", "bands": ["*"], "physical": "A curved wooden smoking pipe with a darkened bowl"}
+      ],
+      "tags": ["trinket"],
+      "aliases": ["Clay pipe", "Wooden pipe", "Tobacco pouch", "Tobacco twist"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.lute",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "lute"},
+      "description": {"*": "A small lute with a voice bigger than the room."},
+      "looks": [
+        {"key": "lute", "bands": ["*"], "physical": "A small lute with a ribbed brown body and a full set of strings"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": ["Small Oak Lute"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.vinyl_record",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "vinyl record"},
+      "description": {"*": "A vinyl record kept clean by hands that care."},
+      "looks": [
+        {"key": "disc", "bands": ["*"], "physical": "A black vinyl record in a worn paper sleeve with a red spine"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": ["Vinyl record", "Sheet Music Folder"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.ribbon",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "ribbon"},
+      "description": {"*": "A length of silk ribbon, keepsake of something soft."},
+      "looks": [
+        {"key": "silk", "bands": ["*"], "physical": "A length of blue silk ribbon loosely coiled with a frayed end"}
+      ],
+      "tags": ["trinket", "keepsake"],
+      "aliases": ["Stolen ribbon", "Silk ribbon", "Harpy Courting Ribbon", "Student Council cord"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.goblet",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "pewter goblet"},
+      "description": {"*": "A dull goblet, raised often and admired rarely."},
+      "looks": [
+        {"key": "pewter", "bands": ["*"], "physical": "A dull pewter goblet with a dented bowl and stamped base"}
+      ],
+      "tags": ["trinket", "drink"],
+      "aliases": ["Pewter tankard", "Pewter chalice", "Silver Goblet", "Jeweled Chalice", "Pewter Bowl"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "trinket.chopsticks",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "chopsticks"},
+      "description": {"*": "A pair of chopsticks and a paper sleeve, lunch solved."},
+      "looks": [
+        {"key": "bamboo", "bands": ["*"], "physical": "A pair of bamboo chopsticks laid across a printed paper sleeve"}
+      ],
+      "tags": ["trinket"],
+      "aliases": ["Bamboo chopstick pair"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "jewellery.cufflinks",
+      "category": "jewellery",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "cufflinks"},
+      "description": {"*": "A pair of gold cufflinks, the last inheritance that stayed in the family."},
+      "looks": [
+        {"key": "gold", "bands": ["*"], "physical": "A pair of oval gold cufflinks joined by short link chains"}
+      ],
+      "tags": ["jewellery", "gold"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "jewellery.tie_pin",
+      "category": "jewellery",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tie pin"},
+      "description": {"*": "A tie pin with a pearl head, worn exactly straight."},
+      "looks": [
+        {"key": "pearl", "bands": ["*"], "physical": "A gold tie pin with a round pearl head"}
+      ],
+      "tags": ["jewellery"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.snuff_box",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "snuff box"},
+      "description": {"*": "A snuff box passed round with the news and a sneeze."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A round brass snuff box with a hinged lid and an engraved star pattern"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.cigar_case",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 3,
+      "names": {"*": "cigar case"},
+      "description": {"*": "A leather cigar case, one left for after the argument."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A brown leather cigar case holding two cigars with gold bands"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.tobacco_tin",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tobacco tin"},
+      "description": {"*": "A tobacco tin with a lid that never quite closes flat again."},
+      "looks": [
+        {"key": "tin", "bands": ["*"], "physical": "A rectangular tobacco tin with a hinged lid and a green printed panel"}
+      ],
+      "tags": ["trinket", "tobacco"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.harmonica",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "harmonica"},
+      "description": {"*": "A harmonica, the whole band in a coat pocket."},
+      "looks": [
+        {"key": "silver", "bands": ["*"], "physical": "A silver harmonica with twin cover plates over a wooden comb body"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.music_box",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 4,
+      "names": {"*": "music box"},
+      "description": {"*": "A music box that plays its one tune to whoever winds it."},
+      "looks": [
+        {"key": "wood", "bands": ["*"], "physical": "A polished rosewood music box with its lid open on a brass pinned cylinder"}
+      ],
+      "tags": ["trinket", "music"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "trinket.sepia_photograph",
+      "category": "trinket",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sepia photograph"},
+      "description": {"*": "A sepia photograph on card, the face it holds is outgrown now."},
+      "looks": [
+        {"key": "card", "bands": ["*"], "physical": "A sepia portrait photograph mounted on a cream card with gilt scalloped edges"}
+      ],
+      "tags": ["trinket", "keepsake"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "jewellery.identity_disc",
+      "category": "jewellery",
+      "type": "necklace",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "identity disc"},
+      "description": {"*": "An identity disc on a bootlace, carried for the day it is needed."},
+      "looks": [
+        {"key": "fibre", "bands": ["*"], "physical": "An oval red-brown fibre identity disc on a woven cord, its edges worn smooth"}
+      ],
+      "tags": ["jewellery", "id", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

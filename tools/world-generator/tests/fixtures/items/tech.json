@@ -1,0 +1,28 @@
+{
+  "_note": "Fixture items for tests/test_item_library.py; the format is library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "tech.phone",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 5,
+      "names": {"modern": "smartphone", "scifi": "comm slate"},
+      "description": {
+        "modern": "A slab of glass that answers questions.",
+        "scifi": "A slate that holds a person's whole life."
+      },
+      "looks": [
+        {"key": "flat", "bands": ["modern"],
+         "physical": "A thin black glass slab phone with a bright blue screen edge and a silver rim"},
+        {"key": "holo", "bands": ["scifi"],
+         "physical": "A matte grey hand slab with a pale blue hologram rising from its face"}
+      ],
+      "tags": ["tech"],
+      "aliases": ["Phone"],
+      "sources": ["authored"]
+    }
+  ]
+}

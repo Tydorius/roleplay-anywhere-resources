@@ -1,0 +1,452 @@
+{
+  "_note": "Light sources and containers. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "light.candle",
+      "category": "light",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "candle"},
+      "description": {"*": "A tallow candle, an hour of light and a lot of drips."},
+      "looks": [
+        {"key": "tallow", "bands": ["*"], "physical": "A stub of cream tallow candle with a blackened wick and drip skirt"}
+      ],
+      "tags": ["light"],
+      "aliases": ["Tallow candle", "Candle", "Black Candle", "Blessed candle", "Chapel Votive Candle", "Scented candle", "Beeswax Candle", "Tallow candles", "Witchlight Candle Stub", "Rushlight", "Bundle of rushlights", "Candle box"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.oil_lamp",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "oil lamp"},
+      "description": {"*": "A clay oil lamp with a flame that leans with the draughts."},
+      "looks": [
+        {"key": "clay", "bands": ["*"], "physical": "A clay oil lamp with a sooty spout, hanging wick and brass chain"}
+      ],
+      "tags": ["light"],
+      "aliases": ["Oil lamp", "Tallow lamp"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.lantern",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "lantern", "industrial": "storm lantern", "modern": "camping lantern", "scifi": "glow-cell lantern"},
+      "description": {"*": "A lantern that keeps its flame alive through wind, rain and dark."},
+      "looks": [
+        {"key": "tin", "bands": ["medieval"], "physical": "A dented tin lantern with horn panes and a wire swing handle"},
+        {"key": "brass", "bands": ["industrial"], "physical": "A brass and glass storm lantern with a cross-hatched globe"},
+        {"key": "led", "bands": ["modern"], "physical": "A plastic camping lantern with a glowing yellow tube and fold-out handle"},
+        {"key": "cell", "bands": ["scifi"], "physical": "A cage lantern holding a pale blue glow cell with charge strips"}
+      ],
+      "tags": ["light"],
+      "aliases": ["Lantern", "Rusty lantern", "Iron Lantern", "Storm Lantern", "Brass storm lantern", "Whale-oil lamp"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.torch",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "torch"},
+      "description": {"*": "A pitch torch, more smoke than light but light all the same."},
+      "looks": [
+        {"key": "pitch", "bands": ["*"], "physical": "A pitch-soaked torch with a wrapped rag head on a split shaft"}
+      ],
+      "tags": ["light"],
+      "aliases": ["Pitch Torch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.tinderbox",
+      "category": "light",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tinderbox"},
+      "description": {"*": "A tinderbox, flint and patience, the start of every fire."},
+      "looks": [
+        {"key": "hinged", "bands": ["*"], "physical": "A hinged metal tinderbox with flint, steel and charred cloth"}
+      ],
+      "tags": ["light", "fire"],
+      "aliases": ["Tinderbox", "Small Flint", "Flint"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.matches",
+      "category": "light",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "box of matches"},
+      "description": {"*": "A box of matches, dry ones if somebody was careful."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "A wooden box of matches with a rough strike side and sliding lid"}
+      ],
+      "tags": ["light", "fire"],
+      "aliases": ["Matches", "Waxed matches"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.lighter",
+      "category": "light",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "lighter"},
+      "description": {"*": "A cheap lighter, out of fuel at the worst moment as always."},
+      "looks": [
+        {"key": "plastic", "bands": ["*"], "physical": "A plastic lighter in chrome and red with a safety wheel"}
+      ],
+      "tags": ["light", "fire"],
+      "aliases": ["Cheap Lighter", "Pocket lighter", "Butane lighter"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.headlamp",
+      "category": "light",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "headlamp"},
+      "description": {"*": "A headlamp that puts the light exactly where the eyes go."},
+      "looks": [
+        {"key": "strap", "bands": ["*"], "physical": "An elastic headlamp with a white LED on a grey strap"}
+      ],
+      "tags": ["light"],
+      "aliases": ["Headlamp", "Surgeon's head-lamp"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.flare",
+      "category": "light",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "signal flare"},
+      "description": {"*": "A signal flare, one red scream into the dark."},
+      "looks": [
+        {"key": "stick", "bands": ["*"], "physical": "A red signal flare stick with a pull cap and label band"}
+      ],
+      "tags": ["light", "signal"],
+      "aliases": ["Signal flare"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.burlap_sack",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "burlap sack"},
+      "description": {"*": "A coarse sack that has carried everything the farm grows."},
+      "looks": [
+        {"key": "coarse", "bands": ["*"], "physical": "A coarse burlap sack laced at the neck with frayed jute"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Burlap Sack"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.waterskin",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "waterskin"},
+      "description": {"*": "A leather waterskin, the traveller's first friend."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A leather waterskin with a shoulder strap and carved stopper"}
+      ],
+      "tags": ["container", "water"],
+      "aliases": ["Waterskin", "Water Skin", "Small Water Flask", "Oni Drinking Gourd"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.thermos",
+      "category": "container",
+      "type": "misc",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "vacuum flask"},
+      "description": {"*": "A vacuum flask that keeps the broth hot through a whole shift."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A steel vacuum flask with a dented cup lid and paint chips"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Broth thermos", "Vacuum flask"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.tin_mug",
+      "category": "container",
+      "type": "misc",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tin mug"},
+      "description": {"*": "A dented tin mug that has held everything from water to worse."},
+      "looks": [
+        {"key": "dented", "bands": ["*"], "physical": "A dented tin mug with a bent handle and soldered seam"}
+      ],
+      "tags": ["container", "drink"],
+      "aliases": ["Tin cup"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.wooden_bowl",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "wooden bowl"},
+      "description": {"*": "A carved bowl with dark rings from a thousand meals."},
+      "looks": [
+        {"key": "carved", "bands": ["*"], "physical": "A carved wooden bowl with dark grain rings and chipped rim"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Wooden bowl"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.tankard",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tankard"},
+      "description": {"*": "A drinking tankard, raised often and returned rarely."},
+      "looks": [
+        {"key": "wood", "bands": ["medieval"], "physical": "A carved wooden tankard with iron bands and thumb notch"},
+        {"key": "pewter", "bands": ["industrial"], "physical": "A dull pewter tankard with a glass bottom and dented lip"}
+      ],
+      "tags": ["container", "drink"],
+      "aliases": ["Wooden tankard"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.jug",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "clay jug"},
+      "description": {"*": "A glazed jug with a chip that never quite comes clean."},
+      "looks": [
+        {"key": "glazed", "bands": ["*"], "physical": "A glazed clay jug with one handle, brown drip glaze and chipped lip"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Small Pitcher", "Water jug"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.glass_vial",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "glass vial"},
+      "description": {"*": "A small glass vial, empty of whatever it used to hold."},
+      "looks": [
+        {"key": "green", "bands": ["*"], "physical": "A small green glass vial with a cork stopper"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Empty Glass Vial", "Empty vial", "Glass Vial", "Empty Bottle", "Glass Stopper"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.bucket",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bucket"},
+      "description": {"*": "A bucket that has hauled more water than a river would miss."},
+      "looks": [
+        {"key": "wood", "bands": ["medieval", "industrial"], "physical": "A wooden pail with a rope handle and blackened iron bands"},
+        {"key": "steel", "bands": ["modern", "scifi"], "physical": "A galvanised steel bucket with a wire handle and rust spots"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Iron Bucket", "Bucket", "Wooden bucket", "Wooden pail", "Tar bucket"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.tin_box",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "tin box"},
+      "description": {"*": "A round tin box that once held biscuits and now holds treasures."},
+      "looks": [
+        {"key": "round", "bands": ["*"], "physical": "A round tin box with a fitted lid and printed paper base"}
+      ],
+      "tags": ["container"],
+      "aliases": ["Biscuit tin", "Sewing box"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "container.kettle",
+      "category": "container",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "copper kettle"},
+      "description": {"*": "A copper kettle, dented in exactly the places that don't matter."},
+      "looks": [
+        {"key": "copper", "bands": ["*"], "physical": "A copper kettle with a blackened base, curved spout and bent handle"}
+      ],
+      "tags": ["container", "kitchen"],
+      "aliases": ["Copper Kettle", "Iron Pot"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "light.safety_lamp",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "miner's safety lamp"},
+      "description": {"*": "A miner's lamp whose gauze keeps the flame from the gas."},
+      "looks": [
+        {"key": "gauze", "bands": ["*"], "physical": "A brass miner's safety lamp with a fine wire gauze cylinder and hook handle"}
+      ],
+      "tags": ["light", "mine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "light.carbide_lamp",
+      "category": "light",
+      "type": "wieldable",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "carbide lamp"},
+      "description": {"*": "A carbide lamp that burns its water and stone into light."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass carbide lamp with a bright reflector dish and a fluted water chamber"}
+      ],
+      "tags": ["light", "mine"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "light.trench_lighter",
+      "category": "light",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "trench lighter"},
+      "description": {"*": "A brass petrol lighter that lights in any wind thrown at it."},
+      "looks": [
+        {"key": "brass", "bands": ["*"], "physical": "A brass petrol lighter with a hinged lid, cotton wick and steel wheel"}
+      ],
+      "tags": ["light", "fire"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "container.hip_flask",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hip flask"},
+      "description": {"*": "A hip flask shaped to the ribs, for cold stands and long sermons."},
+      "looks": [
+        {"key": "pewter", "bands": ["*"], "physical": "A curved pewter hip flask with a hinged cap and polished face"}
+      ],
+      "tags": ["container", "drink"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "container.mess_tin",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "mess tin"},
+      "description": {"*": "A two-part mess tin, lid and pan, battered into a map of its meals."},
+      "looks": [
+        {"key": "pan", "bands": ["*"], "physical": "A grey two-part metal mess tin with a hinged handle and a dented sliding lid"}
+      ],
+      "tags": ["container", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "container.kit_bag",
+      "category": "container",
+      "type": "misc",
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "kit bag"},
+      "description": {"*": "A canvas kit bag that carries a soldier's whole worldly issue."},
+      "looks": [
+        {"key": "canvas", "bands": ["*"], "physical": "A long olive canvas kit bag gathered at the neck by a rope drawstring, with brass grommets"}
+      ],
+      "tags": ["container", "military"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

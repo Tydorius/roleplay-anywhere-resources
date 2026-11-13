@@ -1,0 +1,602 @@
+{
+  "_note": "Raw and trade materials. See library/AUTHORING.md, Items.",
+  "items": [
+    {
+      "id": "material.iron_nails",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "iron nails"},
+      "description": {"*": "A handful of nails, straight ones and hopeful ones."},
+      "looks": [
+        {"key": "handful", "bands": ["*"], "physical": "A scattering of bent iron nails on a dark wood block"}
+      ],
+      "tags": ["material", "metal"],
+      "aliases": ["Iron Nail", "Iron Nails", "Bent Nail", "Handful of iron nails", "Nails", "Nails Bag", "Horseshoe nails bag", "Rusty nail", "Heavy duty staple"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.scrap_metal",
+      "category": "material",
+      "type": "material",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "scrap metal"},
+      "description": {"*": "Twisted scrap, worth little until someone needs exactly this."},
+      "looks": [
+        {"key": "twisted", "bands": ["*"], "physical": "Twisted scraps of rusted steel with sheared edges and bolt holes"}
+      ],
+      "tags": ["material", "metal", "scrap"],
+      "aliases": ["Rusty bolt", "Chemical residue"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.copper_wire",
+      "category": "material",
+      "type": "material",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "copper wire"},
+      "description": {"*": "A coil of copper wire, the veins of every machine."},
+      "looks": [
+        {"key": "coil", "bands": ["*"], "physical": "A coil of bare copper wire with paper insulation and bright cut ends"}
+      ],
+      "tags": ["material", "metal", "tech"],
+      "aliases": ["Copper wire coil", "Scrap of copper wire", "Copper coil", "Copper motor winding"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.cloth_scrap",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "cloth scrap"},
+      "description": {"*": "A folded scrap of cloth, too good to burn and too small to wear."},
+      "looks": [
+        {"key": "folded", "bands": ["*"], "physical": "A folded scrap of coarse brown cloth with frayed edges and a patch"}
+      ],
+      "tags": ["material", "cloth"],
+      "aliases": ["Tattered Cloth", "Rough Linen Cloth", "Fine Linen Scrap", "Sailcloth Scrap", "Bolt of Homespun", "Bolt of Grey Wool Cloth", "Roll of Linen", "Stained Rag"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.raw_wool",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "raw wool"},
+      "description": {"*": "A greasy handful of raw wool straight off the sheep's back."},
+      "looks": [
+        {"key": "greasy", "bands": ["*"], "physical": "A greasy handful of cream raw wool with burrs caught in it"}
+      ],
+      "tags": ["material", "cloth"],
+      "aliases": ["Raw Wool", "Fleece", "Wool Grease"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.thread",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "spool of thread"},
+      "description": {"*": "A spool of thread for the mending that never ends."},
+      "looks": [
+        {"key": "spool", "bands": ["*"], "physical": "A wooden spool of grey thread with a loose tail wound round it"}
+      ],
+      "tags": ["material", "cloth"],
+      "aliases": ["Wool Thread", "Spindle of Thread", "Mending Thread", "Spider-Silk Thread Spool", "Loose Thread", "Spare Lute String"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.twine",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "ball of twine"},
+      "description": {"*": "A ball of twine that ties the world's loose ends together."},
+      "looks": [
+        {"key": "ball", "bands": ["*"], "physical": "A ball of brown waxed twine with a looped end and loose wraps"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Waxed twine", "Hemp Twine", "Ball of twine", "Ball of sail twine", "Twine Ball", "Oakum bundle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.paracord",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "paracord"},
+      "description": {"*": "A bundle of paracord, fifty uses and counting."},
+      "looks": [
+        {"key": "bundle", "bands": ["*"], "physical": "A coiled bundle of olive paracord with a burned cut end"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Paracord bundle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.rope",
+      "category": "material",
+      "type": "material",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "rope"},
+      "description": {"*": "A coil of good rope, worth its weight in saved trouble."},
+      "looks": [
+        {"key": "coil", "bands": ["*"], "physical": "A coiled hemp rope bound with a stray end and frayed tips"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Hemp Rope", "Rope", "Rope Coil", "Flax Rope", "Cordage coil", "Mooring line", "Hemp rope coil", "Rusty Shackle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.charcoal",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "sack of charcoal"},
+      "description": {"*": "A sack of charcoal, the forge's bread."},
+      "looks": [
+        {"key": "sack", "bands": ["*"], "physical": "A cloth sack of black charcoal lumps dusted with soot"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Charcoal Sack", "Sack of Charcoal"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.firewood",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bundle of firewood"},
+      "description": {"*": "A bundle of split firewood, counted because winters are long."},
+      "looks": [
+        {"key": "bundle", "bands": ["*"], "physical": "A bundle of split firewood tied with cord and bark strips"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Firewood bundle", "Bundle of Firewood", "Alder faggots", "Driftwood", "Driftwood Log", "Wood Shavings"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.grain_sack",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "sack of grain"},
+      "description": {"*": "A heavy sack of grain, the household's whole hope in one bag."},
+      "looks": [
+        {"key": "heavy", "bands": ["*"], "physical": "A heavy cloth sack of grain tied at the neck with a wooden scoop"}
+      ],
+      "tags": ["material", "food"],
+      "aliases": ["Sack of Flour", "Flour sack", "Barley Sack", "Seed grain sack", "Sack of Miller's Toll Flour", "Nosebag of Oats", "Dried oats", "Handful of Barley", "Coarse millet", "Seed barley"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.salt",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pouch of salt"},
+      "description": {"*": "A pouch of coarse salt, the spice that keeps the meat and the peace."},
+      "looks": [
+        {"key": "pouch", "bands": ["*"], "physical": "A cloth pouch of coarse grey salt spilling onto a board"}
+      ],
+      "tags": ["material", "food"],
+      "aliases": ["Salt pouch", "Pouch of salt", "Salt pinch", "Sack of Salt", "Salt Sack", "Salt Block", "Salt brick", "Salt Crystal", "Coarse salt sack", "Granny Wick's Salt Packet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.herb_bundle",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bundle of dried herbs"},
+      "description": {"*": "A bundle of dried herbs hanging where the smoke keeps the weevils off."},
+      "looks": [
+        {"key": "bundle", "bands": ["*"], "physical": "A bundle of dried grey-green herbs bound with brown twine"}
+      ],
+      "tags": ["material", "plant"],
+      "aliases": ["Dried Herb Bundle", "Dried herbs", "Winter Herb Bundle", "Herb Bundle", "Dried Sage", "Dried valerian", "Dried roots", "Dried Root", "Angelica stems", "Woad Root", "Spearmint", "Bitter lungwort", "Mountain ginseng root", "Silverleaf", "Silver Leaf", "Silverleaf Petal", "Glowing Root", "Frozen Root"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.hide",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "animal hide"},
+      "description": {"*": "A rolled hide, raw and heavy with the field's smell still on it."},
+      "looks": [
+        {"key": "rolled", "bands": ["*"], "physical": "A rolled brown hide tied with a leather strap, fur side out"}
+      ],
+      "tags": ["material", "leather"],
+      "aliases": ["Wolf pelt", "Dusk-wolf pelt", "Boar hide", "Tattered Leather"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.bone",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bone shard"},
+      "description": {"*": "A weathered bone, cracked at one end and old beyond asking."},
+      "looks": [
+        {"key": "weathered", "bands": ["*"], "physical": "A weathered yellow-grey bone shard cracked at one end"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Jagged Bone Shard", "Wolf fang", "Rimehorn antler-core", "Ashmaw tusk", "Small Tooth", "Human Tooth", "Human Femur", "Human Rib", "Shattered Femur", "Shattered Ribcage", "Skull", "Shattered urn"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.plank",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "wooden plank"},
+      "description": {"*": "A rough plank with saw marks still fresh along the grain."},
+      "looks": [
+        {"key": "rough", "bands": ["*"], "physical": "A rough wooden plank with saw marks and a split end"}
+      ],
+      "tags": ["material", "wood"],
+      "aliases": ["Wooden Plank", "Ax handle"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.iron_ingot",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "iron ingot"},
+      "description": {"*": "A rough iron ingot, a smith's raw argument."},
+      "looks": [
+        {"key": "rough", "bands": ["*"], "physical": "A rough iron ingot with a hammered skin and rust bloom"}
+      ],
+      "tags": ["material", "metal"],
+      "aliases": ["Iron Ingot", "Steel Bolt"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.steel_rod",
+      "category": "material",
+      "type": "material",
+      "bands": ["industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "steel rod"},
+      "description": {"*": "A length of steel rod, straight and stubborn."},
+      "looks": [
+        {"key": "length", "bands": ["*"], "physical": "A length of steel rod with a bright sheared end and mill scale"}
+      ],
+      "tags": ["material", "metal"],
+      "aliases": ["Reclaimed steel rod"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.gemstone",
+      "category": "material",
+      "type": "material",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "rare",
+      "price": 5,
+      "names": {"*": "gemstone"},
+      "description": {"*": "A cut gemstone, small enough to hide and bright enough to fight over."},
+      "looks": [
+        {"key": "cut", "bands": ["*"], "physical": "A cut blue gemstone with sharp facets and a deep inner glint"}
+      ],
+      "tags": ["material", "valuable"],
+      "aliases": ["Gemstone", "Crushed gemstones", "Polished Sea Glass", "Polished River Stone"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.duct_tape",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "duct tape"},
+      "description": {"*": "A roll of duct tape holding the world's repairs together."},
+      "looks": [
+        {"key": "roll", "bands": ["*"], "physical": "A roll of silver duct tape with a torn end and warped edge"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Duct tape roll", "Plastic Wrap", "Aluminum Foil"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.tarp",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "tarp", "medieval": "canvas tarp", "industrial": "canvas tarp"},
+      "description": {"*": "A folded sheet that keeps the rain off everything that matters."},
+      "looks": [
+        {"key": "canvas", "bands": ["medieval", "industrial"], "physical": "A folded canvas tarpaulin, mildewed at the folds and rope-tied"},
+        {"key": "plastic", "bands": ["modern", "scifi"], "physical": "A folded blue plastic tarp with grommet eyelets and creased corners"}
+      ],
+      "tags": ["material", "weather"],
+      "aliases": ["Tarpaulin", "Tarp sheet", "Monsoon tarp square"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.aluminium_can",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "crushed can"},
+      "description": {"*": "A crushed drink can, litter to most and money to some."},
+      "looks": [
+        {"key": "crushed", "bands": ["*"], "physical": "A crushed aluminium drink can with a torn tab and painted stripe"}
+      ],
+      "tags": ["material", "scrap"],
+      "aliases": ["Aluminum Can", "Bent soda can", "Empty soda can", "Empty beer can", "Empty Monster can", "Shiny bottle cap"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.cardboard",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "cardboard"},
+      "description": {"*": "Flattened cardboard, the packing material of civilisation."},
+      "looks": [
+        {"key": "flat", "bands": ["*"], "physical": "A flattened brown cardboard box with torn tape and folded flaps"}
+      ],
+      "tags": ["material", "scrap"],
+      "aliases": ["Damp cardboard", "Soggy Cardboard", "Packing peanuts", "Plastic scrap", "Plastic Bag"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.circuit_board",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "circuit board"},
+      "description": {"*": "A green board of silver traces, stripped from something dead."},
+      "looks": [
+        {"key": "green", "bands": ["*"], "physical": "A green circuit board studded with silver chips and cut wires"}
+      ],
+      "tags": ["material", "tech", "scrap"],
+      "aliases": ["E-waste circuit board", "E-waste board", "Mechanical keyboard switch"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.magnet",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "uncommon",
+      "price": 2,
+      "names": {"*": "magnet"},
+      "description": {"*": "A strong magnet that collects exactly what you dropped."},
+      "looks": [
+        {"key": "block", "bands": ["*"], "physical": "A nickel-plated block magnet with scratched faces and warning tag"}
+      ],
+      "tags": ["material", "tech"],
+      "aliases": ["Neodymium magnet"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.fuel_can",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "fuel can"},
+      "description": {"*": "A fuel can, heavy with what the machines drink."},
+      "looks": [
+        {"key": "red", "bands": ["*"], "physical": "A red plastic fuel can with a spout, cap and moulded grip"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Gasoline can"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.propane",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "propane canister"},
+      "description": {"*": "A propane canister that hisses when connected and cooks when lit."},
+      "looks": [
+        {"key": "cylinder", "bands": ["*"], "physical": "A green propane canister with a valve guard and stamped collar"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Propane canister"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.horseshoe",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "horseshoe"},
+      "description": {"*": "A steel horseshoe, nail holes and luck included."},
+      "looks": [
+        {"key": "steel", "bands": ["*"], "physical": "A steel horseshoe with nail holes and a rusted heel"}
+      ],
+      "tags": ["material", "metal", "horse"],
+      "aliases": ["Horseshoe", "Fitted Horseshoe", "Horseshoe pair", "Centaur-Forged Horseshoe", "Iron Hoop"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.pigment",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pot of pigment"},
+      "description": {"*": "A small pot of ground pigment, precious as paint always is."},
+      "looks": [
+        {"key": "pot", "bands": ["*"], "physical": "A small squat pot of deep blue pigment with a wooden lid"}
+      ],
+      "tags": ["material", "craft"],
+      "aliases": ["Indigo Pigment", "Acrylic Paint Tube"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.paper",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern", "scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "paper", "medieval": "parchment", "industrial": "parchment"},
+      "description": {"*": "Blank paper, the beginning of every record and rumour."},
+      "looks": [
+        {"key": "roll", "bands": ["medieval", "industrial"], "physical": "A roll of cream parchment tied with a linen band and wax blob"},
+        {"key": "ream", "bands": ["modern", "scifi"], "physical": "A stack of cream paper wrapped in brown kraft paper"}
+      ],
+      "tags": ["material", "writing"],
+      "aliases": ["Blank Parchment", "Parchment scrap", "Stained Parchment", "Tattered Parchment", "Scrap Paper", "Paper napkin", "Soggy napkin"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.lamp_oil",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "flask of lamp oil"},
+      "description": {"*": "A flask of lamp oil, and the night gets cheaper."},
+      "looks": [
+        {"key": "flask", "bands": ["*"], "physical": "A corked flask of amber lamp oil with a wire bail handle"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Lamp oil flask", "Lantern Oil", "Lamp Oil", "Oil Flask", "Whale oil packet", "Whale Oil", "Oil Can", "Oil Rag"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.tar",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "pot of tar"},
+      "description": {"*": "A pot of black tar for hulls, wheels and everything that leaks."},
+      "looks": [
+        {"key": "pot", "bands": ["*"], "physical": "An open iron pot of black pine tar with a wooden stir stick"}
+      ],
+      "tags": ["material"],
+      "aliases": ["Tar Pot", "Pine tar pot", "Beacon Pitch Pot"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.fishing_net",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "fishing net"},
+      "description": {"*": "A folded net with cork floats and lead weights, mended a hundred times."},
+      "looks": [
+        {"key": "folded", "bands": ["*"], "physical": "A folded fishing net with cork floats and lead weights tangled in mesh"}
+      ],
+      "tags": ["material", "fishing"],
+      "aliases": ["Fishing Net", "Willow net", "Net Patch", "Cork Float", "String of cork floats", "Net Weight", "Lead Sinker", "Pouch of lead sinkers", "Fish Scales", "Fish Oil"],
+      "sources": ["harvest"]
+    },
+    {
+      "id": "material.chain",
+      "category": "material",
+      "type": "material",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "length of chain"},
+      "description": {"*": "A length of chain, heavier than rope and twice as stubborn."},
+      "looks": [
+        {"key": "coil", "bands": ["*"], "physical": "A coiled length of dark iron link chain with a hook at one end"}
+      ],
+      "tags": ["material", "metal"],
+      "aliases": [],
+      "sources": ["authored"]
+    }
+  ]
+}

@@ -90,6 +90,83 @@ All files are UTF-8 JSON, two-space indented, with no comments. A key starting w
 Shape changes are separate objects: a straw pallet, a single bed, a double and a four-poster are
 four objects. Material changes are not: an oak table and a pine table are one object.
 
+## Items: `items/<group>.json`
+
+Carried things (game `itemTemplates`: loot, tools, food, clothing), one JSON file per group. The
+groups are `food_drink`, `medicine`, `tools`, `weapons_armour`, `clothing`, `jewellery_trinkets`,
+`documents_keys_money`, `light_containers`, `materials`, `tech`, `magic`.
+
+```json
+{
+  "_note": "Food and drink.",
+  "items": [
+    {
+      "id": "drink.wine_bottle",
+      "category": "drink",
+      "type": "consumable",
+      "bands": ["*"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bottle of wine"},
+      "description": {"*": "A corked bottle of red wine."},
+      "looks": [
+        {"key": "glass", "bands": ["*"],
+         "physical": "A dark green glass wine bottle with a cork stopper and a plain tan paper label"}
+      ],
+      "tags": ["drink", "alcohol"],
+      "aliases": ["Wine bottle", "Bottle of red wine"],
+      "sources": ["harvest"]
+    }
+  ]
+}
+```
+
+- **`id`** is `<category>.<name>` (one dot), unique across all item files. **`category`** is one of
+  `food`, `drink`, `medicine`, `tool`, `weapon`, `armour`, `clothing`, `jewellery`, `document`,
+  `key`, `money`, `light`, `container`, `material`, `trinket`, `tech`, `magic`.
+- **`type`** is the game's item type: `misc`, `consumable`, `material`, `wieldable`, `head`,
+  `face`, `torso`, `innerTorso`, `pants`, `gloves`, `boots`, `necklace`, `ring`. Food, drink and
+  medicine are `consumable`; weapons and hand tools are `wieldable`; worn things use their slot.
+- **`bands`** and **`onlyGenres`** work like an object's. **`quality`** is `common`, `uncommon`,
+  `rare`, `epic` or `legendary` (most are common). **`price`** is 1–6, relative within a band:
+  1 trifle, 2 cheap, 3 ordinary, 4 dear, 5 costly, 6 treasure.
+- **`names`** and **`description`** work like an object's, but there is no token filling: plain
+  text per band, `*` as the fallback. Give a band its own name when the thing is called
+  differently there ("ale jug" / "beer bottle" / "beer can").
+- **`looks`** is what makes items different from objects: one entry per image. `key` is short
+  (`glass`, `steel`, `holo`), unique within the item. Each look's `bands` is `["*"]` (every band
+  the item has, so a medieval-only sword's one look is `["*"]`) or a list, and **together the looks cover exactly the item's bands, each band once** (the checker
+  enforces it: a gap and an overlap are both errors).
+  - A look that covers two or more bands must describe something that really looks the same in
+    each of them (a loaf, an apple, a rope, a wine bottle, a gold ring). When in doubt, split.
+  - **`physical`** is the image prompt, one sentence, the object alone: shape, colours,
+    materials, one or two details. No background, no "icon", no camera words, no people or
+    hands, no text or lettering, no scenery, and under 300 characters.
+  - The gallery draws on white and cuts the background out, so white, clear or very pale objects
+    lose parts. Give such things colour: "pale blue-tinted glass", "cream linen with brown
+    stitching", "grey steel".
+- **`tags`** are free lower-case words. **`aliases`** are the harvest names this entry stands
+  for, exact spelling, so a later step can map a model's invented item to a library one.
+  **`sources`** is `["harvest"]` or `["authored"]`.
+
+One shape = one item: a dagger, a short sword and a longsword are three items. A material or
+colour change is not: an oak staff and an ash staff are one item.
+
+To check the files (and see the coverage table):
+
+    python -m worldgen library items --coverage
+
+To write the art-review scenarios (one per set: `shared` holds every look covering two or more
+bands, `medieval`/`industrial`/`modern`/`scifi` hold their single-band looks) into the gallery
+folder, then pull back the images a person kept:
+
+    python library-seed/make_item_art_scenarios.py
+    python library-seed/pull_item_art.py <set> --kept
+
+Kept images land in `library/item-sprites/<item id>.<look key>.webp`, with the set's entries in
+`library/item-sprites/index.json`.
+
 ## Materials: `materials.json`
 
 ```json
