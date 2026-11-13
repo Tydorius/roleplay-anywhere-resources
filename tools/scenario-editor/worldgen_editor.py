@@ -272,12 +272,14 @@ def _to_workspace(out_dir, summary, plan_path):
 
 
 def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None,
-                   draft=None, library=True):
+                   draft=None, library=True, item_library=True):
     """Start a full generation (model phases + layout + build) for ``idea``,
     with an approved World Frame and its questionnaire kept on the plan.
     ``draft`` names the saved dialog draft, which records the run.
     ``library`` furnishes rooms from the room library (the default); False is
-    the old method, the model furnishing every room."""
+    the old method, the model furnishing every room. ``item_library`` stocks
+    the containers from the item library (the default); False is the model
+    inventing every item."""
     idea = str(idea or "").strip()
     questionnaire = _checked_questionnaire(questionnaire)
     if not idea and (frame is None and questionnaire is None):
@@ -307,6 +309,7 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
         summary = wgapi.generate(
             idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
             frame=frame, questionnaire=questionnaire, library=bool(library),
+            item_library=bool(item_library),
             progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                       calls=e.get("calls", 0), tokens=e.get("tokens", 0)),
             cancel=lambda: j["cancelRequested"])
@@ -414,7 +417,7 @@ def _merge_draft(draft_id, fields):
 
 # what the page may save; the frame and the run are the server's to write
 _DRAFT_FORM_KEYS = ("mode", "idea", "answers", "notes", "population", "provider", "seed",
-                    "extensions", "library", "summary", "clarifyAnswers")
+                    "extensions", "library", "item_library", "summary", "clarifyAnswers")
 
 
 def save_draft(draft_id, form):
@@ -481,6 +484,7 @@ def export_settings(form):
         answers=form.get("answers"), population=form.get("population"),
         notes=form.get("notes") or "", seed=form.get("seed", 1),
         extensions=form.get("extensions") or [], library=form.get("library", True),
+        item_library=form.get("item_library", True),
         frame=frame if isinstance(frame, dict) else None,
         clarify=form.get("clarifyAnswers"), model=model)
 
@@ -494,7 +498,7 @@ def import_settings(data):
     while (_drafts_dir() / f"{draft_id}.json").exists():
         draft_id, i = f"d-{stamp}-import-{i}", i + 1
     fields = {k: s[k] for k in ("mode", "idea", "answers", "notes", "population", "seed",
-                                "extensions", "library")}
+                                "extensions", "library", "item_library")}
     if s.get("frame"):
         fields.update(frame=s["frame"], framedMode=s["mode"], summary=s["frame"]["summary"])
     if s.get("clarify"):

@@ -1,0 +1,49 @@
+
+The world plan below is fixed. Stock its containers: write the loot pools that
+hand out what people carry here. The furniture comes in a later call.
+
+WORLD: ${setting_line}
+
+THE PLAN:
+${zone_lines}
+
+THE ITEM MENU (${band}). These items already exist, with their art. Use their
+names exactly:
+${menu_lines}
+
+Reply with ONE JSON object:
+{"lootPools": {
+   "Kitchen cupboard": {"items": ["Loaf of bread", "Wooden spoon", "Red ledger"],
+                        "weights": {"Red ledger": 0.3}},
+   "Apothecary shelf": {"items": ["Herbal salve", "Bandage roll", "Glass vial"]}
+ },
+ "variants": [
+   {"from": "Book", "name": "Red ledger", "tint": "red",
+    "description": "The steward's household accounts, in a red cover."}
+ ],
+ "items": [
+   {"name": "Seal of the Drowned Choir", "type": "misc", "quality": "rare",
+    "value": 400, "plot": true,
+    "description": "one in-world sentence",
+    "physicalDescription": "what it looks like as an icon, ending with the words white background"}
+ ]
+}
+
+- lootPools: named lists written for THIS setting, never generic: by room kind
+  (a bathroom is not a garage) and by building or shop kind (a clothing store,
+  a pharmacy and a forge each get their own). Fill them from the menu. One item
+  may sit in many pools. "weights" (item -> relative chance, most 1.0) are
+  optional. Use at least 25 different items across all pools.
+- variants: a menu item under a new name, with a new colour (red, orange,
+  yellow, green, teal, blue, purple, pink, brown, black) and its own sentence.
+  Use them for local flavour: a guild's blue ledger, a green potion, a red
+  scarf. Items marked "recolourable" take a colour best. Variants cost nothing
+  to draw; use them freely.
+- items: invent a NEW item only when the story needs something the menu and
+  variants cannot give: a quest object, a named heirloom, a faction token, a
+  unique key, a relic. Mark each "plot": true. Each new item needs its own
+  picture drawn, so never invent ordinary things (food, tools, clothes, books,
+  coins) here. Most worlds need only a few. "value" is a whole number on the
+  game's scale: one coin is about a US dollar.
+
+${rules}

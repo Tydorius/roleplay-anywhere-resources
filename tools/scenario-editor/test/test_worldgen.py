@@ -371,10 +371,13 @@ class TestWorldgenEndpoints(unittest.TestCase):
                        "frame": A_FRAME,
                        "questionnaire": {"mode": "short",
                                          "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
-                                         "population": [25, 35]}})["job"]
+                                         "population": [25, 35]},
+                       "library": True, "item_library": False})["job"]
         done = self.wait_job(j["id"])
         self.assertEqual(done["state"], "done", done["error"])
         self.assertTrue(done["source"].startswith("work/"))
+        self.assertIs(GEN_KWARGS[-1]["library"], True)        # both switches travel
+        self.assertIs(GEN_KWARGS[-1]["item_library"], False)  # and stay independent
         self.assertEqual(GEN_KWARGS[-1]["frame"], A_FRAME)
         self.assertEqual(GEN_KWARGS[-1]["questionnaire"],
                          {"mode": "short",

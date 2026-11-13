@@ -51,7 +51,8 @@ def _check_extensions(extensions):
 
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
-             emit=None, frame=None, questionnaire=None, cast=True, library=True):
+             emit=None, frame=None, questionnaire=None, cast=True, library=True,
+             item_library=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -68,9 +69,10 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         kwargs = {"providers_path": providers_path} if providers_path else {}
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire,
-                    getattr(client, "model", None), emit)
+                    getattr(client, "model", None), emit, item_library=item_library)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
+                                    item_library=item_library,
                                     progress=progress, cancel=cancel,
                                     frame=frame, questionnaire=questionnaire, cast=cast)
     if extensions:
@@ -85,7 +87,7 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
 
 
 def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
-                    emit=None):
+                    emit=None, item_library=True):
     """settings.json in the run folder, before the first model call, so even a
     run that fails leaves the choices behind for someone to look at. Never
     fails the run."""
@@ -93,7 +95,7 @@ def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnai
     try:
         os.makedirs(out_dir, exist_ok=True)
         data = settings.from_run(idea, seed, extensions, library, frame=frame,
-                                 questionnaire=questionnaire,
+                                 questionnaire=questionnaire, item_library=item_library,
                                  model=model if isinstance(model, str) else None)
         settings.write(os.path.join(out_dir, settings.FILE_NAME), data)
     except (OSError, ValueError) as e:
@@ -269,6 +271,9 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
         n_art = library_art.attach_sprites(built, plan_data)
         if n_art:
             _emit(emit, f"{n_art} shipped library sprite(s) attached to {built} (re-zipped)")
+        n_items, n_tinted = library_art.attach_item_art(built, plan_data)
+        if n_items:
+            _emit(emit, f"{n_items} shipped item image(s) attached, {n_tinted} recoloured")
     rc_val, val_out = 0, ""
     if rc_build == 0 and os.path.exists(zip_path):
         rc_val, val_out = _run([sys.executable, validator, zip_path], emit)
