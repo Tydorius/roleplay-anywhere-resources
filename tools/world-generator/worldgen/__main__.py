@@ -35,12 +35,15 @@ def _generate_args(args):
                 "seed": args.seed if args.seed is not None else s["seed"],
                 "extensions": tuple(sorted(set(s["extensions"]) | set(args.ext))),
                 "library": s["library"] if args.library is None else args.library,
+                "item_library": (s["item_library"] if args.item_library is None
+                                 else args.item_library),
                 "frame": s.get("frame"),
                 "questionnaire": settings_mod.questionnaire(s)}
     if not args.idea:
         raise ValueError("give --idea, or --settings with a world settings file")
     return {"idea": args.idea, "seed": 1 if args.seed is None else args.seed,
-            "extensions": args.ext, "library": args.library is not False}
+            "extensions": args.ext, "library": args.library is not False,
+            "item_library": args.item_library is not False}
 
 
 def main(argv=None):
@@ -59,8 +62,8 @@ def main(argv=None):
     gen.add_argument("--settings", default=None,
                      help="a world settings file (settings.json from a run folder, or one "
                           "exported from the Scenario Editor): its idea, answers, frame, seed, "
-                          "extensions and room-library choice; --idea, --seed, --ext and "
-                          "--no-library still override it")
+                          "extensions and room- and item-library choices; --idea, --seed, "
+                          "--ext, --no-library and --no-item-library still override it")
     gen.add_argument("--provider", required=True)
     gen.add_argument("--out", required=True)
     gen.add_argument("--seed", type=int, default=None, help="layout seed (default 1)")
@@ -68,6 +71,10 @@ def main(argv=None):
     gen.add_argument("--no-library", dest="library", action="store_false", default=None,
                      help="furnish every room with the model (the old method) instead of "
                           "the room library")
+    gen.add_argument("--no-item-library", dest="item_library", action="store_false",
+                     default=None,
+                     help="the model invents every item (the old method) instead of "
+                          "stocking containers from the item library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
                      help="enable an extension, off by default (repeatable; "
                           "recorded in plan.json)")

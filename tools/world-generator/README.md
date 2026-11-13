@@ -135,6 +135,14 @@ python -m unittest          # the test suite
   filler), and unit buildings (an inn's guest rooms, flats) are furnished from it too; only
   buildings with upper storeys under the floors extension keep the old P3. See
   [ROOM_LIBRARY_DESIGN.md](ROOM_LIBRARY_DESIGN.md).
+- **The item library** stocks the containers by default: instead of inventing 30–60 items,
+  the P2 items call gets a menu of the library's items for the world's band (name, category,
+  price, a recolourable mark) and writes the loot pools from it. The model may recolour a
+  menu item into a **variant** under a new name (a red ledger, a green potion); code re-tints
+  the shipped sprite (Pillow, optional — without it the variant keeps the original art). New
+  items are invented only where the plot needs them and marked `"plot": true` — only they are
+  left for image generation. `--no-item-library` (or unticking **Use item library** in the
+  editor, or answering no in the launcher) is the old method, the model inventing every item.
 - `layout` re-places a saved plan with a new seed and **no model calls** —
   re-roll the map, keep the world.
 - Each run writes `settings.json`, `plan.json`, `spec.json`, `metrics.json`, the llm call
@@ -144,15 +152,16 @@ python -m unittest          # the test suite
 
 Every run saves `settings.json` in its folder under `out/`, before the first model call, so
 a failed run has one too. It holds the choices: the idea, the questionnaire mode and
-answers, other instructions, residents, seed, extensions, the room-library choice and the
-approved World Frame. It never holds a provider, URL or API key, only the model's name as
-a note. Send it to someone, or ask for theirs, to run the same world:
+answers, other instructions, residents, seed, extensions, the room- and item-library
+choices and the approved World Frame. It never holds a provider, URL or API key, only the
+model's name as a note. Send it to someone, or ask for theirs, to run the same world:
 
 ```
 python -m worldgen generate --settings out/<run>/settings.json --provider zai --out out/again
 ```
 
-`--idea`, `--seed`, `--ext` and `--no-library` still override the file. With a frame in the
+`--idea`, `--seed`, `--ext`, `--no-library` and `--no-item-library` still override the file.
+With a frame in the
 file there is no framing call. In the launcher, **Make a new world from a settings file**
 does the same; in the Scenario Editor, **Export settings…** and **Import settings…** in the
 New world dialog write and read the same format.

@@ -121,7 +121,7 @@ The dialog's steps:
 
 - **Settings files.** **Export settings…** at the top of the dialog downloads the form as a
   small JSON file: the idea, mode, answers, other instructions, residents, seed, extensions,
-  the room-library choice and, once framed, the frame. Send it to someone and they press
+  the room- and item-library choices and, once framed, the frame. Send it to someone and they press
   **Import settings…** to get the same form back (as a new draft), frame included, so they can
   generate the same world. No provider or API key goes in it, only the model's name as a note.
   The launcher and `python -m worldgen generate --settings` read the same file, and every run
@@ -140,6 +140,11 @@ The dialog's steps:
 - **Use room library** — on by default: rooms are furnished from the generator's room library,
   which uses fewer tokens and sets beds, tables and chairs out properly. Untick it for the old
   method, where the model furnishes every room.
+- **Use item library** — on by default: containers are stocked from the generator's item
+  library, so most items come with their reviewed art. The model fills loot pools from a menu
+  and recolours variants for local colour (Pillow installed; otherwise the variant keeps the
+  original art); only the few invented plot items are left for image generation. Untick it and
+  the model invents every item, the old method.
 - **Extensions** — all off by default, so the plain world imports and plays in the unmodded game:
 
   | Extension | What it adds | Game mods needed |
