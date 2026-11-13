@@ -80,6 +80,50 @@
     return [w, h];
   }
 
+  // ---------------------------------------------------------------- levels
+  // The editor shows one level at a time: "" the main map, a floor's region id that floor,
+  // "*" every plane side by side. The game's own camera works the same way.
+
+  /** The plane a level names: the map's rect for "", the floor's rect for its id, null for "*" or
+   *  an id no floor has. */
+  function levelRect(scn, level) {
+    if (level === "") return planes(scn)[0];
+    if (level === "*") return null;
+    const f = scn.regions.find(r => r.id === level && isFloor(r));
+    return f ? rect(f) : null;
+  }
+
+  /** A function giving the level a region or entity lies on: "" on the map, the floor's id inside a
+   *  floor (a floor region is a level of its own). A region counts by its rect, an entity by its
+   *  footprint. The planes are read once, so a draw or a hit test over many things stays linear;
+   *  build a fresh one after the floors change. */
+  function levelIndex(scn) {
+    const map = planes(scn)[0], floors = scn.regions.filter(isFloor).map(f => [rect(f), f.id]);
+    return thing => {
+      if (!thing || (!thing.position && !thing.pos)) return "";
+      if (isFloor(thing)) return thing.id;
+      const r = rect(thing);
+      if (containsRect(map, r)) return "";
+      for (const [p, id] of floors) if (containsRect(p, r)) return id;
+      if (thing.pos && !inRect(map, thing.pos[0], thing.pos[1]))
+        for (const [p, id] of floors) if (inRect(p, thing.pos[0], thing.pos[1])) return id;
+      return "";
+    };
+  }
+
+  /** The level one region or entity lies on (see levelIndex; use that for many things). */
+  const levelOf = (scn, thing) => levelIndex(scn)(thing);
+
+  /** Whether `thing` is shown on `level` (everything is shown on the "*" overview). */
+  const onLevel = (scn, level, thing) => level === "*" || levelOf(scn, thing) === level;
+
+  /** The inclusive rect to fit for a level: its plane, or everything from 0,0 for "*" (an unknown
+   *  id falls back to the map, like ""). */
+  function levelExtent(scn, level) {
+    if (level === "*") { const [w, h] = extent(scn); return [0, 0, w - 1, h - 1]; }
+    return levelRect(scn, level) || planes(scn)[0];
+  }
+
   /** (dx, dy) shortened so rect r stays inside plane p. */
   function clampShift(p, r, dx, dy) {
     return [Math.max(p[0] - r[0], Math.min(p[2] - r[2], dx)), Math.max(p[1] - r[1], Math.min(p[3] - r[3], dy))];
@@ -470,5 +514,6 @@
   return {rect, inRect, containsRect, disjoint, partial, onEdge, nearestEdgeCell, snapOpenings, shiftOpenings,
     FLOOR_GAP, isFloor, planes, planeOf, planeAt, extent, clampTo, contents, parentOf,
     regionAt, nestingProblem, newId, nextName, moveRegion, moveEntities, rotateObject, resizeRegion, edgeAt, doorSet,
-    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds};
+    toggleDoor, createRegion, placeObject, placeNpc, remove, copyRegion, pasteRegion, anchorShift, resizeMap, usedBounds,
+    levelRect, levelIndex, levelOf, onLevel, levelExtent};
 });
