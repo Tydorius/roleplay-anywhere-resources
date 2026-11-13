@@ -22,14 +22,6 @@
     "model": "glm-5.3-flash",
     "max_tokens": 16000
   },
-  "zai-vision": {
-    "_comment": "z.ai vision model, for calls that send images as content parts (that is what \"vision\": true says).",
-    "base_url": "https://api.z.ai/api/paas/v4",
-    "api_key": "YOUR_API_KEY",
-    "model": "glm-4.6v",
-    "max_tokens": 8192,
-    "vision": true
-  },
   "zai-coding": {
     "_comment": "z.ai coding-plan subscription (GLM coding plan), same API, different endpoint.",
     "base_url": "https://api.z.ai/api/coding/paas/v4",
@@ -83,5 +75,13 @@
     "model": "your-model",
     "max_tokens": 16000,
     "timeout": 3600
+  },
+  "zai-vision": {
+    "_comment": "z.ai vision model, for calls that send images as content parts (that is what \"vision\": true says).",
+    "base_url": "https://api.z.ai/api/paas/v4",
+    "api_key": "YOUR_API_KEY",
+    "model": "glm-4.6v",
+    "max_tokens": 8192,
+    "vision": true
   }
 }
