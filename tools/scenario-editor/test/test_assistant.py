@@ -303,6 +303,15 @@ class TestAssistantEndpoints(unittest.TestCase):
         self.assertIsNone(done["reply"])
 
     # ------------------------------------------------------------ meta, the key
+    def test_the_pane_scripts_are_served(self):
+        """assistant.js and assistant_tools.js are wired into STATIC, as scripts."""
+        for name in ("assistant.js", "assistant_tools.js"):
+            with urllib.request.urlopen(f"{self.base}/{name}", timeout=30) as r:
+                self.assertEqual(r.status, 200, name)
+                self.assertEqual(r.headers["Content-Type"],
+                                 "text/javascript; charset=utf-8", name)
+                self.assertTrue(r.read().strip(), name)
+
     def test_meta_lists_providers_and_limits(self):
         m = self.get("/api/assistant/meta")
         by_name = {p["name"]: p for p in m["providers"]}
