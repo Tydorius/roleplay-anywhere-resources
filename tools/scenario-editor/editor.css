@@ -119,6 +119,8 @@ table.layers input { accent-color: var(--accent); }
   .work { grid-template-columns: 1fr; }
   .mapwrap { height: 65vh; order: -1; }
   .side, .side.right { border: 0; border-top: 1px solid var(--line); }
+  .work.with-as { grid-template-columns: 1fr; }
+  .assistant { height: 60vh; border-left: 0; border-top: 1px solid var(--line); }
   #images { height: 80vh; flex: none; }
 }
 
@@ -245,3 +247,29 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .wg-framebar .note.warn { color: var(--warn, #c77700); font-weight: 600; }
 .dlg-buttons .primary.wg-wait { opacity: .45; }
 .wg-clarity .wg-framebar { margin: 8px 0 2px; }
+
+/* the assistant pane */
+.work.with-as { grid-template-columns: 250px minmax(0, 1fr) minmax(250px, 320px) 330px; }
+#asToggle.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.assistant { background: var(--panel); border-left: 1px solid var(--line); min-height: 0;
+             display: flex; flex-direction: column; }
+.as-head { display: flex; gap: 6px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+.as-head select { flex: 1; min-width: 0; }
+.as-model { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; max-width: 96px; }
+.as-hint { padding: 6px 10px; margin: 0; border-bottom: 1px solid var(--line); }
+.as-log { flex: 1; min-height: 0; overflow: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.as-log > .hint { margin: 0; }
+.as-card { border: 1px solid var(--line); border-radius: 8px; padding: 6px 9px; font-size: 13px; overflow-wrap: anywhere; }
+.as-card .who { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: .06em;
+                color: var(--muted); margin-bottom: 2px; }
+.as-card.user { background: var(--bg); }
+.as-card.action { font-size: 12px; color: var(--muted); }
+.as-card.action b { color: var(--ink); }
+.as-card.err { border-color: var(--bad); }
+.as-card.err .who, .as-card.err b { color: var(--bad); }
+.as-meter { flex: none; font-size: 11px; color: var(--muted); padding: 4px 10px; min-height: 22px;
+            border-top: 1px solid var(--line); }
+.as-compose { display: flex; gap: 6px; padding: 8px 10px 10px; border-top: 1px solid var(--line); }
+.as-compose textarea { flex: 1; min-height: 54px; max-height: 180px; }
+.as-btns { display: flex; flex-direction: column; gap: 4px; justify-content: flex-end; }

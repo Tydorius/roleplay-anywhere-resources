@@ -102,7 +102,7 @@ by hand:
 servers (Ollama, LM Studio, llama-swap) ignore the key but the field must
 exist — leave `"none"`.
 
-Two optional settings handle providers with their own rules:
+Three optional settings handle providers with their own rules:
 
 - `"max_output"`: the most output tokens the provider accepts. The catalogue
   phase asks for 32000 and doubles a cut-off reply up to 65536, so a provider
@@ -111,6 +111,8 @@ Two optional settings handle providers with their own rules:
 - `"extra_body"`: extra request fields sent with every call. The DeepSeek
   preset uses it for thinking: `{"thinking": {"type": "enabled"}}`, or
   `"disabled"` for faster, cheaper replies.
+- `"vision"`: `true` marks a provider whose model accepts image content
+  parts, so tools that send images can use it (the `zai-vision` preset).
 
 ## Commands
 

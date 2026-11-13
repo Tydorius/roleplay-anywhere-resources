@@ -653,7 +653,10 @@ def _regions(scn, regions, by_name, add, mods, resolved=None):
         if len(rs) > 1:
             add("error", f"{len(rs)} regions are named {name!r}; schedules find regions by name, so this is ambiguous.",
                 *[r["id"] for r in rs])
-    for r in [scn.get("defaultTile") or {}] + regions:
+    dt = scn.get("defaultTile")
+    if dt is not None and not isinstance(dt, dict):
+        add("error", "The default tile is not an object like {\"ground\": \"grass\"}.")
+    for r in ([dt if isinstance(dt, dict) else {}] + regions):
         label = f"Region {r.get('name')!r}" if r in regions else "The default tile"
         if r.get("ground") and r["ground"] not in GROUND:
             add("error", f"{label}: ground {r['ground']!r} is not one of {', '.join(sorted(GROUND))}.", r.get("id"))
