@@ -400,12 +400,12 @@ def check_scenario_mods(scenario_path, spec):
                               f"the built scenario does not have")
             elif area.get("shape") not in ("natural", "organic"):
                 issues.append(f"region {name!r} ships without its natural shape")
-        for name in nature.get("water") or []:
+        for name, surface in (nature.get("water") or {}).items():
             area = by_name.get(name)
             if area is None:
                 issues.append(f"water surface names region {name!r}, which "
                               f"the built scenario does not have")
-            elif area.get("surface") != "water":
+            elif area.get("surface") != surface:
                 issues.append(f"region {name!r} ships without its water surface")
         for name, fields in (nature.get("vehicles") or {}).items():
             t = next((t for t in scn.get("objectTemplates") or []

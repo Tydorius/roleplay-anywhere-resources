@@ -232,6 +232,49 @@
     return out;
   }
 
+  // ---------------------------------------------------------------- the Water toggle
+  /** The scenario's water media: every medium of its list whose name contains "water", whatever its
+   *  walk. The built-in pair when the scenario has no list of its own; nothing when the list is
+   *  broken (the game fails on any surface long before water matters). */
+  function waterMedia(scn) {
+    const {list, defaults} = mediaList(scn);
+    if (list === null) return [];
+    if (defaults) return DEFAULT_MEDIA.slice();
+    return list.filter(m => m && typeof m.name === "string" && m.name.toLowerCase().includes("water"));
+  }
+
+  /** Whether a surface names one of the scenario's water media (the exact name, trimmed, any case):
+   *  what the region inspector's Water checkbox is checked on. "lava" is not water. */
+  function isWater(surface, scn) {
+    const s = normSurface(surface);
+    if (!s) return false;
+    return waterMedia(scn).some(m => normSurface(m.name) === s);
+  }
+
+  /** What ticking Water writes on an open region {surface, shape}: the shallow water medium's name
+   *  when the short side is 3 cells or less (waded), else the deep one's — the scenario's own names
+   *  when it has its own water media, the built-in pair when it hasn't — and shape "organic" from
+   *  5 x 5 up when the region carries no shape yet (shape undefined: leave the shape alone). */
+  function waterFor(region, scn) {
+    const water = waterMedia(scn);
+    const s = size2(region) || [1, 1], short = Math.min(s[0], s[1]);
+    const shallow = water.find(m => m.walk === "slow") || DEFAULT_MEDIA[1];
+    const deep = water.find(m => m.walk === "no") || DEFAULT_MEDIA[0];
+    return {
+      surface: (short <= 3 ? shallow : deep).name,
+      shape: !normShape(region.shape) && short >= ORGANIC_MIN ? "organic" : undefined,
+    };
+  }
+
+  /** What unticking Water clears: the surface always, and the shape only when the toggle is the one
+   *  that set it (the editor remembers that; `toggleSet`) and it is still the organic shape the
+   *  toggle wrote. The result carries `shape` only when it must go — a shape set by hand survives. */
+  function waterOff(region, toggleSet) {
+    return toggleSet && normShape(region.shape) === "organic"
+      ? {surface: undefined, shape: undefined} : {surface: undefined};
+  }
+
   return {DEFAULT_MEDIA, MAX_MEDIA, ORGANIC_MIN, NEW_COLOR, normShape, normSurface, isOrganic, isRiver,
-    blobMask, cellRuns, mediaList, resolveAll, liquidKind, newMedium, renameMedium};
+    blobMask, cellRuns, mediaList, resolveAll, liquidKind, newMedium, renameMedium,
+    waterMedia, isWater, waterFor, waterOff};
 });

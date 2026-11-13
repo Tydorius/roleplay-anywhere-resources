@@ -121,6 +121,7 @@ class ZoneOut:
         self.compounds = []       # [CompoundOut]
         self.yards = []           # [(name, Rect, building_name)]
         self.props = []           # [Placement] outdoor props (props + yard props + filler)
+        self.water = []           # [(name, Rect, kind)] small water regions (pond|pool|stream|ford)
         self.fields = []          # [(name, Rect)] field plots (agricultural zones)
         self.field_cells = set()  # every cell of those plots, crops and furrows
         self.added_templates = [] # templates laid out of nothing (a generic crop row)
@@ -163,6 +164,74 @@ def _lot_rect(building_rect, yard_rect):
     x1 = max(building_rect.x1, yard_rect.x1)
     y1 = max(building_rect.y1, yard_rect.y1)
     return Rect(x0, y0, x1 - x0 + 1, y1 - y0 + 1)
+
+
+WATER_SIDES = {"pool": (3, 5), "pond": (5, 9)}   # cells a side, min..max
+WATER_BAND = (2, 3)                              # a stream or ford band's width
+
+
+def _water_sizes(kind, zone_rect, rng):
+    """The (w, h) rects a water feature tries, its seeded size first, then
+    the kind's minimum: pool 3-5 cells a side, pond 5-9, a stream or ford a
+    band WATER_BAND wide running over about half to all of the zone's long
+    side."""
+    if kind in ("stream", "ford"):
+        long_side = max(zone_rect.w, zone_rect.h)
+        width = rng.randint(*WATER_BAND)
+        length = max(WATER_BAND[0] + 2,
+                     round(long_side * rng.uniform(0.5, 1.0)))
+        lo = max(WATER_BAND[0] + 2, round(long_side * 0.5))
+        sizes = [(length, width), (lo, WATER_BAND[0])]
+        if zone_rect.h > zone_rect.w:   # the band runs along the long side
+            sizes = [(h, w) for (w, h) in sizes]
+        return sizes
+    lo, hi = WATER_SIDES[kind]
+    return [(rng.randint(lo, hi), rng.randint(lo, hi)), (lo, lo)]
+
+
+def _place_water_features(out, zone, rng, occupied, buildings_cells, block_cells):
+    """Place the zone's water features (the plan's water_features) as small
+    water-region rects in the zone's free ground, on the same occupancy the
+    outdoor props use: nothing placed, reserved (path, approach, road edge)
+    or built on them, no yard, fenced plot or centre feature, and a cell of
+    shore beside every building so no water laps a wall or seals a door. A
+    feature that does not fit shrinks to its kind's minimum and is skipped
+    with a note when even that has no room. Water cells join `occupied`, so
+    no prop or filler ever stands in them."""
+    if not getattr(zone, "water_features", None):
+        return
+    yards = set()
+    for (_n, yr, _b) in out.yards:
+        yards |= yr.cells()
+    # the shore: the cells touching a building or compound block
+    shore = {(x + dx, y + dy)
+             for cells in (buildings_cells, block_cells) for (x, y) in cells
+             for dx in (-1, 0, 1) for dy in (-1, 0, 1)}
+    feature_cells = out.feature.cells() if out.feature is not None else set()
+    blocked = (out.reserved | buildings_cells | block_cells | yards | shore
+               | feature_cells | out.field_cells)
+
+    def clear(r):
+        cells = r.cells()
+        return not (cells & blocked or cells & occupied)
+
+    for (name, kind) in zone.water_features:
+        for (w, h) in _water_sizes(kind, out.rect, rng):
+            candidates = [(x, y)
+                          for x in range(out.rect.x, out.rect.x1 - w + 2)
+                          for y in range(out.rect.y, out.rect.y1 - h + 2)]
+            rng.shuffle(candidates)
+            spot = next((p for p in candidates
+                         if clear(Rect(p[0], p[1], w, h))), None)
+            if spot is not None:
+                rect = Rect(spot[0], spot[1], w, h)
+                out.water.append((name, rect, kind))
+                occupied |= rect.cells()
+                break
+        else:
+            out.failures.append(
+                (f"water {name}",
+                 f"skipped: no free ground for it in {out.rect.w}x{out.rect.h}"))
 
 
 def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
@@ -269,6 +338,13 @@ def layout_zone(zone, rect, templates, rng, road_reserved=None, map_ctx=None):
                 w, h = room.furniture.size_of(name, pos, templates)
                 occupied |= {(x, y) for x in range(pos[0], pos[0] + w) for y in range(pos[1], pos[1] + h)}
     occupied |= out.field_cells
+
+    # ---- water features: a pond, pool, stream or ford marked in the zone's
+    # outdoor list ships as a small unwalled water region in free ground,
+    # never as a prop; its cells are ground nothing else may take
+    if zone.exterior != "void":
+        _place_water_features(out, zone, rng, occupied,
+                              buildings_cells, block_cells)
 
     def building_index():
         return {b.layout.design.name: (b.layout.rect, b.layout.entrance_side) for b in out.buildings}
