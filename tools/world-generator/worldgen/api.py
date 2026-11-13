@@ -269,6 +269,9 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
         n_art = library_art.attach_sprites(built, plan_data)
         if n_art:
             _emit(emit, f"{n_art} shipped library sprite(s) attached to {built} (re-zipped)")
+        n_items, n_tinted = library_art.attach_item_art(built, plan_data)
+        if n_items:
+            _emit(emit, f"{n_items} shipped item image(s) attached, {n_tinted} recoloured")
     rc_val, val_out = 0, ""
     if rc_build == 0 and os.path.exists(zip_path):
         rc_val, val_out = _run([sys.executable, validator, zip_path], emit)
