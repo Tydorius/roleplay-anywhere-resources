@@ -1,9 +1,79 @@
 {
+ "armour.helmet.kettle": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A dented iron kettle helm with a wide brim and chin strap",
+  "reviewed": true
+ },
+ "armour.mail_shirt.rings": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A chainmail shirt of riveted steel rings draped in heavy folds",
+  "reviewed": true
+ },
+ "armour.padded_jack.quilted": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A quilted padded jack with vertical stitching and leather ties",
+  "reviewed": true
+ },
  "clothing.bonnet.cotton": {
   "bands": [
    "industrial"
   ],
   "physical": "A white cotton bonnet with blue ribbon ties and a stiff brim",
+  "reviewed": true
+ },
+ "clothing.breeches.loose": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "Loose brown wool breeches with a drawstring waist and knee ties",
+  "reviewed": true
+ },
+ "clothing.cargo_pants.cargo": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "Quick-dry cargo pants in slate grey with strapped thigh pockets",
+  "reviewed": true
+ },
+ "clothing.holo_jacket.holo": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A dark jacket with glowing cyan thread running along its seams",
+  "reviewed": true
+ },
+ "clothing.magnetic_boots.mag": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "Heavy boots with brushed steel sole plates and ankle clasp",
+  "reviewed": true
+ },
+ "clothing.robe.plain": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A plain robe of coarse brown wool with a rope belt",
+  "reviewed": true
+ },
+ "clothing.tunic.coarse": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A coarse oatmeal tunic with rolled cuffs and a rope-tied waist",
+  "reviewed": true
+ },
+ "clothing.uniform_tunic.issued": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A plain uniform tunic in undyed wool with a cord belt and stitched hem",
   "reviewed": true
  },
  "container.tankard.pewter": {
@@ -13,11 +83,95 @@
   "physical": "A dull pewter tankard with a glass bottom and dented lip",
   "reviewed": true
  },
+ "container.tankard.wood": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A carved wooden tankard with iron bands and thumb notch",
+  "reviewed": true
+ },
+ "container.waterskin.leather": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A leather waterskin with a shoulder strap and carved stopper",
+  "reviewed": true
+ },
+ "document.scroll.rolled": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A rolled parchment scroll tied with a red ribbon and wax seal",
+  "reviewed": true
+ },
  "drink.spirits.bottle": {
   "bands": [
    "industrial"
   ],
   "physical": "A squat glass bottle of dark brandy sealed with a driven cork",
+  "reviewed": true
+ },
+ "food.beans.bag": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A small cloth bag of dried beans tied at the neck",
+  "reviewed": true
+ },
+ "food.honey_cake.glazed": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A small round cake glazed to a deep amber with a drip down its side",
+  "reviewed": true
+ },
+ "food.protein_pouch.foil": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A crumpled silver foil pouch with a tear notch at the corner",
+  "reviewed": true
+ },
+ "food.steamed_bun.bun": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A plump white steamed bun sitting in a waxed paper wrapper",
+  "reviewed": true
+ },
+ "food.synthetic_egg.moulded": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A pale grey egg with a visible mould seam running its length",
+  "reviewed": true
+ },
+ "food.takeout.bowl": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A lidded paper bowl of noodles with chopsticks laid across the top",
+  "reviewed": true
+ },
+ "jewellery.amulet.bone": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A carved bone amulet of a stylised face on a leather cord",
+  "reviewed": true
+ },
+ "jewellery.copper_ring.wire": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A ring of bent copper wire with a patinated green surface",
+  "reviewed": true
+ },
+ "jewellery.iron_ring.iron": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A plain iron ring with hammered facets and patches of rust",
   "reviewed": true
  },
  "light.lantern.brass": {
@@ -27,11 +181,249 @@
   "physical": "A brass and glass storm lantern with a cross-hatched globe",
   "reviewed": true
  },
+ "light.lantern.cell": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A cage lantern holding a pale blue glow cell with charge strips",
+  "reviewed": true
+ },
+ "light.lantern.tin": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A dented tin lantern with horn panes and a wire swing handle",
+  "reviewed": true
+ },
+ "light.torch.pitch": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A pitch-soaked torch with a wrapped rag head on a split shaft",
+  "reviewed": true
+ },
+ "magic.grimoire.bound": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A heavy grimoire bound in cracked black leather with iron clasps",
+  "reviewed": true
+ },
+ "magic.healing_potion.flask": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A round glass flask of rose-red potion stoppered with cork and wax",
+  "reviewed": true
+ },
+ "magic.mage_light.sphere": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A brass cage lantern holding a pale blue sphere of glowing light",
+  "reviewed": true
+ },
+ "magic.mana_crystal.rough": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A rough crystal glowing faint violet with cloudy inclusions",
+  "reviewed": true
+ },
+ "magic.mana_potion.flask": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A slim glass flask of deep blue potion with a driven cork",
+  "reviewed": true
+ },
+ "magic.reagent_vial.vial": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A corked vial of crimson reagent sealed with black wax",
+  "reviewed": true
+ },
+ "magic.spatial_ring.iron": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A black iron ring with a hairline seam of silver light",
+  "reviewed": true
+ },
+ "magic.spell_scroll.rolled": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A rolled scroll sealed with a wax sigil and faintly glowing runes",
+  "reviewed": true
+ },
+ "magic.staff.gnarled": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A tall gnarled staff bound with copper wire around a crystal head",
+  "reviewed": true
+ },
+ "magic.wand.carved": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A slim rune-carved wand of dark wood with a clear crystal tip",
+  "reviewed": true
+ },
+ "medicine.auto_injector.auto": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A stainless auto-injector with a yellow safety cap and dose window",
+  "reviewed": true
+ },
+ "medicine.cautery_pen.pen": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A slim cautery pen with a heated loop tip and a coiled cable",
+  "reviewed": true
+ },
+ "medicine.dermal_gun.gun": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A handheld dermal sealant gun with a barrel nozzle and side-mounted cartridge",
+  "reviewed": true
+ },
  "medicine.laudanum.vial": {
   "bands": [
    "industrial"
   ],
   "physical": "A small blue-glass vial of laudanum with a paper label",
+  "reviewed": true
+ },
+ "medicine.med_gel.vial": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A syringe-tipped vial of opaque blue med-gel",
+  "reviewed": true
+ },
+ "medicine.patch_pack.sleeve": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A foil sleeve of adhesive patches with one pressed out beside it",
+  "reviewed": true
+ },
+ "medicine.stim.injector": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A chrome stim injector with a glass dose vial fitted in the barrel",
+  "reviewed": true
+ },
+ "tech.actuator_gloves.gloves": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "Gloves with articulated steel actuator bars along each finger",
+  "reviewed": true
+ },
+ "tech.comm_unit.handheld": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A handheld comm unit with a stub antenna, clip and speaker grille",
+  "reviewed": true
+ },
+ "tech.component.board": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A circuit assembly with capacitor cylinders and heat sink fins",
+  "reviewed": true
+ },
+ "tech.coolant.can": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A squat canister of green coolant with a spout and carry ring",
+  "reviewed": true
+ },
+ "tech.cooling_collar.mesh": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A mesh cooling collar with a slim pump pack and charge light",
+  "reviewed": true
+ },
+ "tech.cyber_eye.eye": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A polished ocular implant with an iris shutter and cable pigtail",
+  "reviewed": true
+ },
+ "tech.data_chip.amber": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A translucent amber data chip with contact pins along one edge",
+  "reviewed": true
+ },
+ "tech.data_slate.slate": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A cracked data slate with a glowing amber screen and corner strap",
+  "reviewed": true
+ },
+ "tech.drone_shell.shell": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A cracked grey drone shell with four folded rotors and lens housing",
+  "reviewed": true
+ },
+ "tech.implant_calibrator.handheld": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A handheld calibrator with probes and a dial face",
+  "reviewed": true
+ },
+ "tech.myomar_arm.forearm": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A myomar forearm strut with bundled fibre muscle and quick-release clamp",
+  "reviewed": true
+ },
+ "tech.power_cell.cell": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A sealed power cell with charge strips glowing green along its flank",
+  "reviewed": true
+ },
+ "tech.reflex_implant.rail": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A spine-length implant rail with connector studs and ribbon leads",
+  "reviewed": true
+ },
+ "tech.servo.motor": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A small servo motor with a spur gear, mounting flange and cable tail",
+  "reviewed": true
+ },
+ "tech.spinal_lattice.lattice": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A first-generation spinal lattice in a scratched case with etched plates",
   "reviewed": true
  },
  "tool.curry_comb.comb": {
@@ -48,11 +440,81 @@
   "physical": "A leather riding crop with a braided grip and keeper loop",
   "reviewed": true
  },
+ "trinket.lute.lute": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A small lute with a ribbed brown body and a full set of strings",
+  "reviewed": true
+ },
+ "weapon.arrows.sheaf": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A sheaf of bound arrows with grey goose fletching and bodkin points",
+  "reviewed": true
+ },
+ "weapon.bow.recurve": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A recurved wooden hunting bow with a hemp string and leather grip",
+  "reviewed": true
+ },
+ "weapon.longsword.cruciform": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A long straight sword with a cruciform hilt and wheel pommel",
+  "reviewed": true
+ },
+ "weapon.practice_sword.wood": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A wooden practice sword worn smooth at the grip with a flared crossguard",
+  "reviewed": true
+ },
+ "weapon.pulse_pistol.energy": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A stubby energy pistol with copper cooling fins and a glowing cell window",
+  "reviewed": true
+ },
  "weapon.sabre.guard": {
   "bands": [
    "industrial"
   ],
   "physical": "A naval cutlass with a brass bowl guard and curved blade",
+  "reviewed": true
+ },
+ "weapon.shield.round": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A round wooden shield painted red with a riveted iron boss",
+  "reviewed": true
+ },
+ "weapon.shortsword.arming": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A short arming sword with a battered leather scabbard and crossguard",
+  "reviewed": true
+ },
+ "weapon.spear.leaf": {
+  "bands": [
+   "medieval"
+  ],
+  "physical": "A spear with a leaf-shaped iron head socketed on an ash shaft",
+  "reviewed": true
+ },
+ "weapon.stun_baton.baton": {
+  "bands": [
+   "scifi"
+  ],
+  "physical": "A black riot baton with a blue conductor tip and rubber grip",
   "reviewed": true
  }
 }
