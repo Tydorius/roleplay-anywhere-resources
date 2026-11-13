@@ -189,5 +189,15 @@ class Crowds(unittest.TestCase):
                          ["10 sleep in 'Hall': the GM reads them all when the player is in there."])
 
 
+class DefaultTile(unittest.TestCase):
+    def test_a_non_object_default_tile_is_a_problem_not_a_crash(self):
+        scn = scenario([region("r", "Hall", (2, 2), (8, 6))])
+        scn["defaultTile"] = "grass"
+        self.assertTrue(any("The default tile is not an object" in m
+                            for m in msgs(scn, "error")))
+        scn["defaultTile"] = {"ground": "grass"}
+        self.assertFalse([m for m in msgs(scn, "error") if "default tile" in m])
+
+
 if __name__ == "__main__":
     unittest.main()
