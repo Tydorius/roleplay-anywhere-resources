@@ -109,6 +109,14 @@ finished one at once, and **Needs review** narrows the page to just those. **Can
 that job). Tick **Keep automatically** to save each image as soon as it finishes, without
 reviewing it.
 
+**Variations** (under each image type's model, 1 to 8) draws that many images in one ComfyUI job.
+The card shows them all; click the one you like and **Keep** saves it the usual way, while the others
+are dropped. **Keep all ready** and **Keep automatically** take the picked one, or the first if you
+didn't pick. ComfyUI draws a batch from one seed, so the job records the seed and each image's place
+in the batch. A batch shares the prompt's text encoding. That saves a lot with Flux.2 klein, whose
+encoder takes about as long as drawing one image: on a Mac Studio, 4 variations cost about 19 s an
+image instead of 32 s. SDXL's encoder is quick, so there it saves almost nothing (22 s instead of 24 s).
+
 ![Cards following their jobs on ComfyUI: one generating, the rest waiting in order](media/image-gallery-3.png)
 
 Finished results you haven't kept or discarded are picked up again from ComfyUI's history when the

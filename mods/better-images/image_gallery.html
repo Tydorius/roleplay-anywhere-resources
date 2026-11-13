@@ -80,6 +80,12 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
 .toast.show { opacity: 1; }
 .hint { color: var(--muted); font-size: 13px; }
+.thumb .vars { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; width: 100%; height: 100%; padding: 3px; box-sizing: border-box; }
+.thumb .var { padding: 0; border: 2px solid transparent; border-radius: 4px; background: none; display: grid; place-items: center; min-width: 0; min-height: 0; overflow: hidden; cursor: pointer; }
+.thumb .var.on { border-color: var(--accent); }
+.thumb .var img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.thumb .pick, .thumb .tag { z-index: 1; }
+.models-grid .vsel { margin-top: 6px; display: block; }
 .thumb.drop { outline: 3px dashed var(--accent); outline-offset: -6px; }
 dialog.crop { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); padding: 0; width: min(760px, calc(100vw - 32px)); }
 dialog.crop::backdrop { background: rgba(0,0,0,.5); }
@@ -220,7 +226,7 @@ function renderModels() {
         const opts = r.options.includes(files[r.role]) ? r.options : [files[r.role], ...r.options];
         sel.innerHTML = opts.map((n, i) => `<option ${n === files[r.role] ? "selected" : ""}>${esc(n)}</option>`
           + (i === r.matches - 1 && r.matches < opts.length ? `<option disabled>──────────</option>` : "")).join("");
-        sel.onchange = async () => { cfg.files[r.role] = sel.value; await saveSettings(); };
+        sel.onchange = async () => { S.settings.kinds[kind].files[r.role] = sel.value; await saveSettings(); };
         return sel;
       };
       right.append(roleSelect(main));
@@ -242,7 +248,12 @@ function renderModels() {
       right.innerHTML = `<div class="note">Connect to ComfyUI to list models.</div>`;
     }
     const label = document.createElement("div"); label.className = "k"; label.textContent = PROFILE_LABEL[kind];
-    const mid = document.createElement("div"); mid.append(famSel);
+    const vsel = document.createElement("select");  // images per Generate, to pick the best from
+    vsel.title = "Images drawn per Generate; you keep the one you pick";
+    vsel.innerHTML = [1, 2, 3, 4, 5, 6, 7, 8].map(n => `<option value="${n}" ${n === (cfg.variations || 1) ? "selected" : ""}>${n === 1 ? "1 image" : n + " variations"}</option>`).join("");
+    vsel.onchange = async () => { S.settings.kinds[kind].variations = +vsel.value; await saveSettings(); };  // S.settings is replaced on each save
+    const vl = document.createElement("label"); vl.className = "vsel"; vl.append(vsel);
+    const mid = document.createElement("div"); mid.append(famSel, vl);
     g.append(label, mid, right);
   }
   const rm = $("remover");
@@ -320,7 +331,7 @@ function updateBar() {
 function thumbUrl(it) {
   return `/media?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&file=${encodeURIComponent(it.file)}&v=${it.mtime}`;
 }
-const resultUrl = job => `/api/result?pid=${encodeURIComponent(job.pid)}`;
+const resultUrl = (job, k = 0) => `/api/result?pid=${encodeURIComponent(job.pid)}${k ? `&i=${k}` : ""}`;
 
 function card(it) {
   const el = document.createElement("div");
@@ -328,7 +339,10 @@ function card(it) {
   el.id = "c-" + it.id;
   const job = it.job, st = job?.state;
   const cur = it.file ? `<img loading="lazy" src="${thumbUrl(it)}" alt="">` : `<span class="empty">No image yet</span>`;
-  const main = st === "done" ? `<img src="${resultUrl(job)}" alt="">${it.file ? `<img class="old" src="${thumbUrl(it)}" alt="" title="current image">` : ""}` : cur;
+  const many = st === "done" && job.count > 1, pick = it.pick ?? 0;
+  const main = many ? `<div class="vars" style="grid-template-rows: repeat(${Math.ceil(job.count / 2)}, minmax(0, 1fr))">${
+      Array.from({length: job.count}, (_, k) => `<button class="var ${k === pick ? "on" : ""}" data-v="${k}" title="Variation ${k + 1}: click to pick it, Keep saves it"><img src="${resultUrl(job, k)}" alt=""></button>`).join("")}</div>`
+    : st === "done" ? `<img src="${resultUrl(job)}" alt="">${it.file ? `<img class="old" src="${thumbUrl(it)}" alt="" title="current image">` : ""}` : cur;
   const busy = it.sending ? `<div class="busy">Sending…</div>`
     : st === "pending" ? `<div class="busy">${job.position ? `Waiting in ComfyUI: #${job.position}` : "Sent to ComfyUI"}</div>`
     : st === "running" ? `<div class="busy">Generating… ${clock(job.elapsed)}</div>` : "";
@@ -342,7 +356,7 @@ function card(it) {
       <div class="desc" title="${esc(it.desc)}">${esc(it.editDesc ?? it.desc)}</div>
       ${error ? `<div class="err">${esc(error)}</div>` : ""}
       ${it.note ? `<div class="meta">${esc(it.note)}</div>` : ""}
-      ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}</div>` : ""}
+      ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}${many ? `, ${job.count} variations` : ""}</div>` : ""}
       ${it.editing ? `<div class="edit">
           <textarea class="desc-edit" spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
           ${it.kind === "portrait" ? `<select class="subject">${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
@@ -381,6 +395,7 @@ function card(it) {
   const cp = el.querySelector(".custom .prompt"); if (cp) cp.oninput = () => { it.customPrompt = cp.value; remember("customPrompt", cp.value); };
   const cn = el.querySelector(".custom .neg"); if (cn) cn.oninput = () => { it.customNegative = cn.value; remember("customNegative", cn.value); };
   for (const b of el.querySelectorAll("[data-a]")) b.onclick = () => act(it, b.dataset.a);
+  for (const b of el.querySelectorAll(".var")) b.onclick = () => { it.pick = +b.dataset.v; redraw(it); };
   const th = el.querySelector(".thumb");
   th.ondragover = e => { if (!active(it.job) && [...e.dataTransfer.items].some(x => x.kind === "file")) { e.preventDefault(); th.classList.add("drop"); } };
   th.ondragleave = () => th.classList.remove("drop");
@@ -403,7 +418,7 @@ async function act(it, a) {
   if (a === "keep") return keep(it);
   if (a === "forget" || a === "cancel") {
     const pid = it.job.pid;
-    it.job = null; it.error = null; redraw(it);
+    it.job = null; it.error = null; it.pick = null; redraw(it);
     try { await api(`/api/${a}?pid=${encodeURIComponent(pid)}`, {method: "POST"}); } catch (e) { toast(e.message); }
     return schedulePoll(300);
   }
@@ -438,7 +453,8 @@ async function submit(it) {
     it.job = await api("/api/submit", {method: "POST", body: JSON.stringify({
       source: source(), id: it.id, kind, family: cfg.family, files: famFiles(prof), desc: it.editDesc ?? it.desc,
       aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt,
-      customPrompt: it.customPrompt, customNegative: it.customNegative})});
+      customPrompt: it.customPrompt, customNegative: it.customNegative, variations: cfg.variations || 1})});
+    it.pick = null;
   } catch (e) { it.error = e.message; }
   it.sending = false; redraw(it); schedulePoll(500);
 }
@@ -454,7 +470,10 @@ async function poll() {
     for (const it of S.items) {
       if (it.sending) continue;
       const j = mine.get(it.id) || null;
-      if (JSON.stringify(j) !== JSON.stringify(it.job || null)) { it.job = j; redraw(it); }
+      if (JSON.stringify(j) !== JSON.stringify(it.job || null)) {
+        if (j?.pid !== it.job?.pid) it.pick = null;
+        it.job = j; redraw(it);
+      }
     }
   } catch (e) { S.pollError = e.message; }
   updateBar();
@@ -465,14 +484,16 @@ async function poll() {
 async function keep(it, quiet) {
   try {
     // createImageBitmap, not <img>.decode(): decode() stalls while the tab is in the background
-    const bmp = await createImageBitmap(await (await fetch(resultUrl(it.job))).blob());
+    const res = await fetch(resultUrl(it.job, it.pick ?? 0));
+    if (!res.ok) throw new Error("ComfyUI no longer has that image");
+    const bmp = await createImageBitmap(await res.blob());
     const c = document.createElement("canvas"); c.width = bmp.width; c.height = bmp.height;
     c.getContext("2d").drawImage(bmp, 0, 0); bmp.close();
     const blob = await new Promise(r => c.toBlob(r, "image/webp", 0.85));  // the game's own quality
     if (!blob || blob.type !== "image/webp") throw new Error("This browser can't save WebP; open the page in Chrome, Edge or Firefox.");
     await api(`/api/save?source=${encodeURIComponent(source())}&id=${encodeURIComponent(it.id)}&kind=${it.kind}`, {method: "POST", body: blob});
     await api(`/api/forget?pid=${encodeURIComponent(it.job.pid)}`, {method: "POST"});
-    it.job = null; it.error = null; it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now();
+    it.job = null; it.error = null; it.pick = null; it.file = `${it.id}-${it.kind}.webp`; it.mtime = Date.now();
     redraw(it);
     if (!quiet) toast(`Saved ${it.name}. Reload the scenario in the game to see it.`);
     return true;
