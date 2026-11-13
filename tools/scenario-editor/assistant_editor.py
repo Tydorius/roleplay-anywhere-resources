@@ -10,10 +10,11 @@ The edits themselves happen in the browser: this module only talks to the
 model.
 
 Model calls go through the generator's client (worldgen/llm.py), so a reply
-that is not one well-shaped JSON object is retried with the error fed back,
-and every call is logged under <workspace>/assistant-log/. One client is kept
-per (provider, workspace): providers.json is read when the pair is first
-seen, not on every turn.
+that is not one well-shaped JSON object is retried with the error fed back.
+Each turn gets its own client and its own folder under
+<workspace>/assistant-log/, so a provider whose settings were just edited is
+picked up on the next turn, a cancelled turn's abandoned request can never
+collide with the next one's logs, and one turn's logs sit together.
 """
 import threading
 import time
@@ -164,27 +165,6 @@ def _validate(parsed):
     return errors
 
 
-# ---------------------------------------------------------------- the model
-_client_cache = {}          # (provider, workspace path) -> wgllm.Client
-_client_lock = threading.Lock()
-
-
-def _client_for(provider, ws):
-    """The cached Client for a (provider, workspace) pair: providers.json is
-    read when the pair is first seen, and the pair's call logs accumulate in
-    <workspace>/assistant-log/."""
-    key = (provider, str(ws))
-    with _client_lock:
-        client = _client_cache.get(key)
-        if client is None:
-            try:
-                client = wgllm.Client(provider, log_dir=str(ws / "assistant-log"))
-            except wgllm.LLMError as e:
-                raise ValueError(str(e))
-            _client_cache[key] = client
-        return client
-
-
 # ---------------------------------------------------------------- jobs
 _job = None          # the one assistant job; None when nothing has run yet
 _lock = threading.Lock()
@@ -253,13 +233,18 @@ def start_turn(source, provider, messages, tools, scenario_summary, transcript_i
     msgs = _checked_messages(messages)
     tool_lines = _checked_tools(tools)
     summary = _checked_summary(scenario_summary)
-    client = _client_for(entry["name"], ws)
+    # one client per turn, in its own log folder (a fresh providers.json is
+    # honoured on every turn, and an abandoned cancelled request cannot touch
+    # the next turn's logs)
+    log_dir = ws / "assistant-log" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    try:
+        client = wgllm.Client(entry["name"], log_dir=str(log_dir))
+    except wgllm.LLMError as e:
+        raise ValueError(str(e))
     system = _system_prompt(tool_lines, summary)
 
     def target(update, j):
         update(model=client.model)
-        # the client is cached across turns: report this turn's share alone
-        calls0, tokens0, seconds0 = client.calls, client.tokens["total"], client.seconds
         try:
             parsed = _chat(client, system, msgs, j)
         except wgllm.ProviderBusy as e:
@@ -271,12 +256,12 @@ def start_turn(source, provider, messages, tools, scenario_summary, transcript_i
             raise RuntimeError("the model's reply never matched the required shape: "
                                + "; ".join(errors))
         update(reply=parsed["reply"], actions=parsed["actions"], label="answered",
-               calls=client.calls - calls0, tokens=client.tokens["total"] - tokens0,
-               seconds=round(client.seconds - seconds0, 1))
+               calls=client.calls, tokens=client.tokens["total"],
+               seconds=round(client.seconds, 1))
 
     return _start({"provider": entry["name"], "source": str(source or ""),
                    "transcriptId": str(transcript_id or ""),
-                   "logDir": str(client.log_dir)}, target)
+                   "logDir": str(log_dir)}, target)
 
 
 def _chat(client, system, msgs, j):

@@ -31,7 +31,7 @@ import assistant_editor as at                          # noqa: E402
 FULL_KEY = "sk-assist-1234567890abcd"                  # must never reach the browser
 
 STATE = {"replies": [], "sleep": 0.0}   # what the mocked wire serves
-INSTALLED = []                          # every fake the assistant's client cache built
+INSTALLED = []                          # every fake client the assistant built
 
 
 class FakeClient(wgllm.Client):
@@ -99,7 +99,6 @@ class TestAssistantEndpoints(unittest.TestCase):
 
     def setUp(self):
         at._job = None                 # no turn of an earlier test is running
-        at._client_cache.clear()
         INSTALLED.clear()
         STATE["replies"] = []
         STATE["sleep"] = 0.0
@@ -181,9 +180,11 @@ class TestAssistantEndpoints(unittest.TestCase):
                       sent[0]["content"])
         # ...then the transcript, verbatim
         self.assertEqual(sent[1:], [{"role": "user", "content": "make the tavern warmer"}])
-        # the client logs into the workspace's assistant-log/, and a call landed there
-        self.assertEqual(fake.log_dir, str(self.ws / "assistant-log"))
-        logs = sorted((self.ws / "assistant-log").glob("*-assistant.json"))
+        # the client logs into the workspace's assistant-log/, in this turn's own
+        # folder, and a call landed there
+        self.assertEqual(fake.log_dir[:len(str(self.ws / "assistant-log"))],
+                         str(self.ws / "assistant-log"))
+        logs = sorted((self.ws / "assistant-log").glob("*/*-assistant.json"))
         self.assertTrue(logs, "no call log was written")
         data = json.loads(logs[0].read_text("utf-8"))
         self.assertEqual(data["phase"], "assistant")
@@ -319,7 +320,7 @@ class TestAssistantEndpoints(unittest.TestCase):
                      self.request("GET", "/api/assistant/job")[1],
                      self.request("GET", "/api/assistant/meta")[1]):
             self.assertNotIn(FULL_KEY, text)
-        for log in (self.ws / "assistant-log").glob("*-assistant.json"):
+        for log in (self.ws / "assistant-log").glob("*/*-assistant.json"):
             self.assertNotIn(FULL_KEY, log.read_text("utf-8"))
 
 
