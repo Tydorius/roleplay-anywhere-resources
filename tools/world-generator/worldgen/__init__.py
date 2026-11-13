@@ -82,6 +82,9 @@ class World:
         self.void_zones = set()        # zone names with exterior "void"
         self.void_default = False      # every zone void: void default tile
         self.sleep_assign = {}         # person name -> RoomOut with their bed
+        self.zone_water = {}           # zone name -> "deep"|"shallow" (a water mark)
+        self.feature_water = set()     # water regions grown from a plan feature
+        self.water_marks = False       # the plan itself marks water anywhere
 
 
 def _most_private_room(world, b):
@@ -913,6 +916,30 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     # every water lookup (placement walks, checks, the spec) reads the zone
     # kinds from here, so a river zone is water to all of them alike
     world.zone_kinds = {z.name: z.kind for z in plan.zones}
+    # the plan's own water marks, set on the world before anything lays out:
+    # every water question after this reads the marks instead of guessing
+    # from names
+    world.zone_water = {z.name: z.water for z in plan.zones if z.water}
+    world.water_marks = bool(world.zone_water) or any(
+        isinstance(e, dict) for z in plan.zones for e in z.outdoor)
+    water_names = {" ".join(n.lower().split())
+                   for z in plan.zones for (n, _k) in (z.water_features or [])}
+    if water_names:
+        # P2 catalogued a marked water feature as a prop before the layout
+        # knew it was water; drop it wherever the plan put it — the feature
+        # ships as a water region, never as a prop
+        for z in plan.zones:
+            for p in [p for p in z.dressing.props
+                      if " ".join((p.template or "").lower().split()) in water_names]:
+                z.dressing.props.remove(p)
+                world.failures.append(
+                    (f"prop {p.template}", "dropped: water in this plan, not a prop"))
+            for b in z.buildings:
+                for p in [p for p in b.yard_props
+                          if " ".join((p.template or "").lower().split()) in water_names]:
+                    b.yard_props.remove(p)
+                    world.failures.append(
+                        (f"prop {p.template}", "dropped: water in this plan, not a prop"))
 
     # ---- regions: zones (one region per piece), roads, then each piece's
     # buildings, paths and props; only the primary piece carries buildings
@@ -944,6 +971,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                                            description=f"The road from {road.a} to {road.b}."))
 
     names_seen = {}
+    water_pending = []   # [(zone, feature name, Rect, kind)] to emit last
     # a unit building stamps one bed per resident per copy: the catalogue's
     # bed (or a plain one added here) must exist before the zones lay out
     if any(getattr(b, "units", None) and b.units.residents
@@ -959,11 +987,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                 zz = z
                 piece_label = z.name
             else:
-                # extra pieces carry no buildings, compounds, paths or centre
-                # props; they still take the zone's filler so a wrap dresses
-                # like one land
+                # extra pieces carry no buildings, compounds, paths, centre
+                # props or water; they still take the zone's filler so a wrap
+                # dresses like one land
                 zz = dataclasses.replace(
-                    z, buildings=[], compounds=[], outdoor=[],
+                    z, buildings=[], compounds=[], outdoor=[], water_features=[],
                     dressing=dataclasses.replace(z.dressing, props=[], paths="none"))
                 piece_label = f"{z.name} {_piece_direction(primary, prect)}"
             zout = None
@@ -991,6 +1019,8 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             if i == 0:   # the primary piece carries the zone's buildings
                 world.zone_building_area[z.name] = sum(
                     b.layout.rect.w * b.layout.rect.h for b in zout.buildings)
+            water_pending.extend(
+                (z, wname, wrect, wkind) for (wname, wrect, wkind) in zout.water)
             world.failures.extend([(w, r) if i == 0 else (f"{w} [{piece_label}]", r)
                                    for (w, r) in zout.failures])
             world.fallbacks.extend(zout.fallbacks)
@@ -1147,6 +1177,32 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     if "floors" in exts:
         from .extensions import floors as floors_ext
         floors_ext.apply(world, plan_data, rng)
+
+    # ---- the plan's small water features: each ships as an unwalled water
+    # region inside its zone, named for the feature. Emitted last, so a name
+    # clashing with a zone, building or room already placed gets a suffix
+    # instead of a duplicate-region failure.
+    water_desc = {
+        "pond": "An open pond at the edge of {z}.",
+        "pool": "A still pool of water in {z}.",
+        "stream": "A stream running through {z}.",
+        "ford": "A shallow ford across the stream in {z}.",
+    }
+    water_taken = {r.name for r in world.regions}
+    for (z, wname, wrect, wkind) in water_pending:
+        name = " ".join(w if not w[:1].islower() else w[:1].upper() + w[1:]
+                        for w in wname.split())
+        base, k = name, 2
+        while name in water_taken:
+            name = f"{base} {k}"
+            k += 1
+        water_taken.add(name)
+        g, tex = zone_ground.get(z.ground, ("grass", "grass"))
+        world.regions.append(RegionOut(
+            name, wrect, "water", parent=z.name, ground=g, ground_texture=tex,
+            ambience={"day": "nature_outdoors", "night": "crickets"},
+            description=water_desc.get(wkind, "Open water in {z}.").format(z=z.name)))
+        world.feature_water.add(name)
 
     world.regions_by_name = {r.name: r for r in world.regions}
     if len(world.regions_by_name) != len(world.regions):

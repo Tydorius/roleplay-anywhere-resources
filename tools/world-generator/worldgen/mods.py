@@ -179,10 +179,10 @@ def finish_scenario(scenario_dir, spec):
             area = by_name.get(name)
             if area is not None:
                 area["shape"] = "natural"
-        for name in nature.get("water") or []:
+        for name, surface in (nature.get("water") or {}).items():
             area = by_name.get(name)
             if area is not None and not area.get("wall"):
-                area["surface"] = "water"
+                area["surface"] = surface
         templates = {t.get("name"): t for t in scn.get("objectTemplates", [])}
         for name, fields in (nature.get("vehicles") or {}).items():
             t = templates.get(name)

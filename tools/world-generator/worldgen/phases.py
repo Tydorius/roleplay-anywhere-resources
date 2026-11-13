@@ -18,7 +18,9 @@ from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
                     SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
-                    bed_capacity, is_spare_room, is_sleep_name as _sleeps)
+                    WATER_FEATURE_KINDS, WATER_MARKS,
+                    bed_capacity, is_spare_room, is_sleep_name as _sleeps,
+                    outdoor_name, outdoor_water)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -119,6 +121,14 @@ def _zone_line(zone):
     z = f"{zone.get('name')} ({zone.get('kind')}, {zone.get('sizeClass')}, ground {zone.get('ground')})"
     desc = (zone.get("description") or "").strip()
     return z + (f": {desc}" if desc else "")
+
+
+def _outdoor_feature_names(zone):
+    """The zone's outdoor features the catalogue is asked to furnish: every
+    plain feature and an object form without water. A water feature ships as
+    a water region the layout places, so no template is made for it."""
+    return [outdoor_name(e) for e in (zone.get("outdoor") or [])
+            if outdoor_name(e) and not outdoor_water(e)]
 
 
 def _building_line(b):
@@ -1013,11 +1023,29 @@ def check_p1(d, floors=False, residents=None):
         if z.get("exterior", "") not in EXTERIORS:
             errors.append(f"{ctx}.exterior: omit for open ground or set void, "
                           f"not {z.get('exterior')!r}")
+        if z.get("water", "") not in ("",) + WATER_MARKS:
+            errors.append(f"{ctx}.water: must be deep or shallow, "
+                          f"not {z.get('water')!r}")
         adj = z.get("adjacentTo", [])
         if not isinstance(adj, list):
             errors.append(f"{ctx}.adjacentTo: must be a list of zone names")
-        if not isinstance(z.get("outdoor", []), list):
+        outdoor = z.get("outdoor", [])
+        if not isinstance(outdoor, list):
             errors.append(f"{ctx}.outdoor: must be a list of short feature names")
+        else:
+            for j, e in enumerate(outdoor):
+                if isinstance(e, str):
+                    continue
+                if not isinstance(e, dict):
+                    errors.append(f"{ctx}.outdoor[{j}]: must be a feature "
+                                  f'name, or {{"name", "water"}}')
+                elif not _is_str(e.get("name")) or not e.get("name").strip():
+                    errors.append(f"{ctx}.outdoor[{j}].name: required, "
+                                  "a feature name")
+                elif e.get("water") not in WATER_FEATURE_KINDS:
+                    errors.append(f"{ctx}.outdoor[{j}].water: must be one of "
+                                  f"{list(WATER_FEATURE_KINDS)}, "
+                                  f"not {e.get('water')!r}")
         bl = z.get("buildings", [])
         if not isinstance(bl, list):
             errors.append(f"{ctx}.buildings: must be a list")
@@ -1139,7 +1167,22 @@ def sanitize_p1(d, log, floors=False, residents=None):
             z.pop("exterior", None)
         z["adjacentTo"] = [n for n in (z.get("adjacentTo") or [])
                            if isinstance(n, str) and n != z["name"]]
-        z.setdefault("outdoor", [])
+        if z.get("water", "") not in ("",) + WATER_MARKS:
+            log.append((f"zone {z['name']}",
+                        f"water {z.get('water')!r} dropped (not deep or shallow)"))
+            z.pop("water", None)
+        keep = []
+        for e in (z.get("outdoor") or []):
+            if isinstance(e, str) or (
+                    isinstance(e, dict) and _is_str(e.get("name"))
+                    and e["name"].strip()
+                    and e.get("water") in WATER_FEATURE_KINDS):
+                keep.append(e)
+            else:
+                log.append((f"zone {z['name']}",
+                            f"outdoor {e!r} dropped (a name, or "
+                            '{"name", "water"} with water pond|pool|stream|ford)'))
+        z["outdoor"] = keep
         z.setdefault("buildings", [])
         zones.append(z)
     names = {z["name"] for z in zones}
@@ -3073,7 +3116,7 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         return "\n".join(
             f"- {_zone_line(z)}\n"
             f"  buildings: {'; '.join(_building_line(b) for b in z['buildings']) or 'none'}\n"
-            f"  outdoor features: {', '.join(map(str, z.get('outdoor') or [])) or 'none'}"
+            f"  outdoor features: {', '.join(_outdoor_feature_names(z)) or 'none'}"
             for z in p1["zones"])
 
     # ---- P1b: the cast. P2 onward see each building's status, and P5 fills

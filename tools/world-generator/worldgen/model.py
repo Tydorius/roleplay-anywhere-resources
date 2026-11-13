@@ -262,11 +262,83 @@ class Zone:
     ground: str = "grass"
     adjacentTo: list = field(default_factory=list)
     buildings: list = field(default_factory=list)  # [BuildingDesign]
-    outdoor: list = field(default_factory=list)    # short feature names from P1
+    outdoor: list = field(default_factory=list)    # short feature names from P1, or
+    # {"name", "water"} objects for a water feature
+    water: str = ""         # optional: "deep" | "shallow" marks the whole zone water
+    water_features: list = field(default_factory=list)  # [(name, kind)] parsed from
+    # outdoor: the features that ship as water regions, not props
     dressing: Dressing = field(default_factory=Dressing)
     arrangement: str = ""   # optional: around_green|along_street|scattered|fields
     compounds: list = field(default_factory=list)  # [Compound] placed in this zone
     exterior: str = ""      # optional: "void" = no walkable open ground
+
+
+WATER_MARKS = ("deep", "shallow")             # a zone's own "water" field
+WATER_FEATURE_KINDS = ("pond", "pool", "stream", "ford")
+
+
+def outdoor_name(entry):
+    """An outdoor feature entry's name: the plain string as it is, or the
+    object form's "name" ("" for junk)."""
+    if isinstance(entry, dict):
+        n = entry.get("name")
+        return n if isinstance(n, str) else ""
+    return entry if isinstance(entry, str) else ""
+
+
+def outdoor_water(entry):
+    """An outdoor feature entry's water kind ("pond" | "pool" | "stream" |
+    "ford"), or None when it is a plain string or names no water."""
+    if isinstance(entry, dict) and entry.get("water") in WATER_FEATURE_KINDS:
+        return entry["water"]
+    return None
+
+
+# a plain outdoor string becomes water only while the plan marks no water at
+# all, and only when its words name a small body of open water — never the
+# built water holders, which stay props
+SMALL_WATER_WORDS = {"pond": "pond", "pool": "pool", "spring": "pool",
+                     "stream": "stream", "brook": "stream", "creek": "stream",
+                     "ford": "ford"}
+NOT_SMALL_WATER = frozenset(
+    "fountain fountains well wells trough troughs basin basins "
+    "cistern cisterns".split())
+
+
+def plain_water_kind(feature):
+    """The water kind a plain outdoor feature string names, or None: pond,
+    pool, spring, stream, brook, creek or ford — but a fountain, well,
+    trough, basin or cistern holds water without being water, and stays a
+    prop."""
+    words = set(re.findall(r"[a-z]+", (feature or "").lower()))
+    if words & NOT_SMALL_WATER:
+        return None
+    return next((kind for w, kind in SMALL_WATER_WORDS.items() if w in words),
+                None)
+
+
+def zone_water_features(zones):
+    """{zone name: [(feature name, water kind)]} for the outdoor entries that
+    ship as water regions: every object-form water feature, and — only while
+    the plan carries no explicit water mark at all (no zone "water" and no
+    object-form feature anywhere) — a plain string named like a pond, pool,
+    spring, stream, brook, creek or ford. Older plans and weak models still
+    get their water; a plan that marks anything stops guessing at names."""
+    marks = any(z.water or any(isinstance(e, dict) for e in z.outdoor)
+                for z in zones)
+    out = {}
+    for z in zones:
+        feats = []
+        for entry in z.outdoor:
+            kind = outdoor_water(entry)
+            if kind is not None:
+                feats.append((outdoor_name(entry), kind))
+            elif not marks and isinstance(entry, str):
+                kind = plain_water_kind(entry)
+                if kind is not None:
+                    feats.append((entry, kind))
+        out[z.name] = feats
+    return out
 
 
 # ------------------------------------------------------------------ compounds
@@ -385,9 +457,10 @@ def green_feature_name(zone):
     """The around_green centre's region name: the zone's own outdoor feature
     when one is named like a green or common, else "<Zone> Green"."""
     for feature in getattr(zone, "outdoor", None) or []:
-        words = set(re.findall(r"[a-z]+", str(feature).lower()))
+        name = outdoor_name(feature)
+        words = set(re.findall(r"[a-z]+", name.lower()))
         if words & set(GREEN_LIKE_WORDS):
-            return " ".join(w.capitalize() for w in str(feature).split())
+            return " ".join(w.capitalize() for w in name.split())
     return f"{zone.name} Green"
 
 
@@ -960,12 +1033,32 @@ def parse_plan(data):
         if exterior not in ("", "void"):
             raise ValueError(f"zone {name!r}: bad exterior {exterior!r} "
                              f"(use void)")
+        water = z.get("water", "")
+        if water not in ("",) + WATER_MARKS:
+            raise ValueError(f"zone {name!r}: bad water {water!r} "
+                             f"(use deep or shallow)")
+        outdoor = list(z.get("outdoor", []))
+        for e in outdoor:
+            if isinstance(e, str):
+                continue
+            if not isinstance(e, dict):
+                raise ValueError(f"zone {name!r}: bad outdoor entry {e!r} "
+                                 f'(a name, or {{"name", "water"}})')
+            if not isinstance(e.get("name"), str) or not e["name"].strip():
+                raise ValueError(f"zone {name!r}: bad outdoor entry {e!r} "
+                                 "(name must be a feature name)")
+            if e.get("water") is not None \
+                    and e.get("water") not in WATER_FEATURE_KINDS:
+                raise ValueError(f"zone {name!r}: bad outdoor entry {e!r} "
+                                 f"(water must be one of "
+                                 f"{list(WATER_FEATURE_KINDS)})")
         zone = Zone(
             name=name, kind=z.get("kind", "field"), size_class=z.get("sizeClass", "medium"),
             description=z.get("description", ""), ground=z.get("ground", "grass"),
             adjacentTo=list(z.get("adjacentTo", [])),
             buildings=[_parse_building(b, designs) for b in z.get("buildings", [])],
-            outdoor=list(z.get("outdoor", [])),
+            outdoor=outdoor,
+            water=water,
             dressing=dressing,
             arrangement=arrangement,
             exterior=exterior,
@@ -973,6 +1066,9 @@ def parse_plan(data):
         if zone.size_class not in VALID_ZONE_SIZES:
             raise ValueError(f"zone {name!r}: bad sizeClass {zone.size_class!r}")
         zones.append(zone)
+    by_name = {z.name: z for z in zones}
+    for name, feats in zone_water_features(zones).items():
+        by_name[name].water_features = feats
     names = {z.name for z in zones}
     for z in zones:
         for n in z.adjacentTo:

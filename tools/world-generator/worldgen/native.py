@@ -467,12 +467,23 @@ def _words(text):
 
 
 def is_water_region(world, region, zone_kinds=None):
-    """Whether an unwalled region ships as water: water by name, or a zone
-    whose class is water (a river, lake or shore zone — settlement and
-    farmland words win over water ones, as in zone_class). Roads and paths
-    are never water: a way across the water is a bridge, a region without a
-    surface that the liquid flows under."""
+    """Whether an unwalled region ships as water. The explicit marks come
+    first, whatever the region's name or kind: a zone the plan marked
+    "water" (world.zone_water, keyed by zone name), or a region the layout
+    made from a marked water feature (world.feature_water, keyed by region
+    name). The name/kind word check runs only as a fallback, while the plan
+    carries no marks at all (world.water_marks) — older plans and weak
+    models still get their water, a plan that marks anything stops guessing.
+    Roads and paths are never water: a way across the water is a bridge, a
+    region without a surface that the liquid flows under."""
     if region.wall or region.kind in ("road", "path"):
+        return False
+    if region.name in (getattr(world, "feature_water", None) or ()):
+        return True
+    zone_water = getattr(world, "zone_water", None) or {}
+    if region.kind == "zone" and (region.group or region.name) in zone_water:
+        return True
+    if getattr(world, "water_marks", False):
         return False
     from .model import (AGRICULTURAL_WORDS, SETTLEMENT_WORDS, WATER_WORDS)
     if _words(region.name) & set(WATER_WORDS):
@@ -502,11 +513,44 @@ def river_shape_p(region):
 
 def water_regions(world, zone_kinds=None):
     """{region name: 'deep' | 'shallow'} for every region that ships with a
-    water surface, before any reachability drops."""
+    water surface, before any reachability drops. A zone marked "water"
+    carries its mark's depth, which overrides the short-side rule; every
+    other water region keeps water_depth."""
+    zone_water = getattr(world, "zone_water", None) or {}
     out = {}
     for r in world.regions:
         if is_water_region(world, r, zone_kinds):
-            out[r.name] = water_depth(r)
+            mark = zone_water.get(r.group or r.name) if r.kind == "zone" else None
+            out[r.name] = mark or water_depth(r)
+    return out
+
+
+def water_surfaces(world, water=None):
+    """{region name: the surface it ships with}: "water", which the game
+    resolves shallow or deep by the region's short side, unless a zone mark
+    disagrees with that rule and names the medium outright. `water` is the
+    final {name: depth} map (computed when omitted), drops included."""
+    if water is None:
+        water = water_regions(world)
+    zone_water = getattr(world, "zone_water", None) or {}
+    out = {}
+    for name in water:
+        r = world.regions_by_name.get(name)
+        mark = zone_water.get(r.group or r.name) \
+            if r is not None and r.kind == "zone" else None
+        out[name] = f"{mark} water" \
+            if mark and r is not None and mark != water_depth(r) else "water"
+    return out
+
+
+def organic_water_regions(world):
+    """Names of the water-feature regions that ship with shape "natural":
+    both sides at least 5 — the game draws smaller ones as rectangles."""
+    out = []
+    for name in getattr(world, "feature_water", None) or ():
+        r = world.regions_by_name.get(name)
+        if r is not None and r.rect.w >= 5 and r.rect.h >= 5:
+            out.append(name)
     return out
 
 
