@@ -47,8 +47,12 @@ them (see "Editing 1.0 features" below). Of `unbounded` it edits only the liquid
 
 ### Editing 1.0 features
 
-- **Floors:** **Add floor…** on a walled region makes a new storey beside the map, the region panel
-  sets a floor's level, and the level picker in the toolbar chooses which level the map shows.
+- **Floors:** **Add floor…** on a walled region makes a new storey, and the region panel sets a
+  floor's level. The map shows one level at a time: the level picker in the toolbar picks the map,
+  any floor, or **All levels (side by side)** to see every plane at once, and the minimap follows
+  the same level. Only the current level answers the pointer. A portal (stairs, a ladder) is linked
+  across levels by clicking one end, switching level, and clicking the other end; a selected portal
+  whose other end is elsewhere says where it leads.
 - **Portals:** **Link to…** in the object panel, then click the object at the other end; **Unlink**
   takes a pair apart.
 - **Doors:** the region panel sets the door kind and colour and each doorway's own door, and **Hang

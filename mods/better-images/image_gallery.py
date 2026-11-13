@@ -112,6 +112,14 @@ _info_cache = {}
 JOBS = {}
 _jobs_lock = threading.Lock()
 LOST_AFTER = 5  # polls with the job neither queued nor in ComfyUI's history
+MAX_VARIATIONS = 8  # images per job (batch_size), to pick the best from
+
+
+def variations(v):
+    try:
+        return min(MAX_VARIATIONS, max(1, int(v)))
+    except (TypeError, ValueError):
+        return 1
 
 
 # ---------------------------------------------------------------- settings and store
@@ -125,14 +133,15 @@ def default_store():
 
 def load_settings():
     s = {"comfy": "http://127.0.0.1:8188", "remover": "auto",
-         "kinds": {k: {"family": "flux2-klein", "files": {}} for k in PROFILES}}
+         "kinds": {k: {"family": "flux2-klein", "files": {}, "variations": 1} for k in PROFILES}}
     if SETTINGS.exists():
         try:
             saved = json.loads(SETTINGS.read_text("utf-8"))
             s.update({k: v for k, v in saved.items() if k in ("comfy", "remover")})
             for k, v in (saved.get("kinds") or {}).items():
                 if k in s["kinds"] and isinstance(v, dict):
-                    s["kinds"][k] = {"family": v.get("family", "flux2-klein"), "files": dict(v.get("files") or {})}
+                    s["kinds"][k] = {"family": v.get("family", "flux2-klein"), "files": dict(v.get("files") or {}),
+                                     "variations": variations(v.get("variations", 1))}
         except (ValueError, OSError):
             pass
     return s
@@ -408,18 +417,27 @@ def build(req, settings, url):
     base = max(v for n in wf.values() for k, v in n["inputs"].items() if k in ("width", "height"))
     w, h = snap_size(base, float(req.get("aspect") or 1))
     seed = random.randrange(10 ** 12)
+    n = variations(req.get("variations"))
     vals = {"PROMPT": prompt, "WIDTH": w, "HEIGHT": h, "SEED": seed}
-    negative = ""
+    negative, batched = "", 0
     for node in wf.values():  # fill <input>=TOKEN slots from node titles, as the game does
         title = node.get("_meta", {}).get("title", "")
         for inp, tok in re.findall(r"(\w+)=(\w+)", title):
             if tok in vals:
                 node["inputs"][inp] = vals[tok]
+        if "width=WIDTH" in title and "batch_size" in node["inputs"]:  # the empty latent
+            node["inputs"]["batch_size"] = n
+            batched += 1
         if title == "Negative":
             parts = [p for p in (node["inputs"]["text"], negative_extra) if p]
             node["inputs"]["text"] = negative = ", ".join(parts)
+    if n > 1 and not batched:
+        raise ValueError("this workflow has no batch size to set")
+    # ComfyUI draws a whole batch from one seed: variation k is the k-th noise of that seed (the same
+    # seed with "Latent From Batch" at index k redraws it; index 0 is what a batch of one gives).
     return wf, {"prompt": prompt, "negative": negative, "seed": seed, "width": w, "height": h,
-                "files": files, "remover": remover}
+                "files": files, "remover": remover,
+                "variations": [{"seed": seed, "batch_index": k} for k in range(n)]}
 
 
 def submit(req, settings):
@@ -435,7 +453,7 @@ def submit(req, settings):
         raise RuntimeError("ComfyUI refused the workflow: " + e.read().decode("utf-8", "replace")[:1500])
     job = {"pid": r["prompt_id"], "url": url, "source": req["source"], "id": req["id"], "kind": req["kind"],
            "state": "pending", "position": None, "submitted": time.time(), "started": None, "finished": None,
-           "error": None, "meta": meta, "png": None, "misses": 0}
+           "error": None, "meta": meta, "imgs": [], "pngs": {}, "misses": 0}
     with _jobs_lock:
         for old in [j for j in JOBS.values() if j["source"] == job["source"] and j["id"] == job["id"]]:
             JOBS.pop(old["pid"], None)  # one job per image; a newer one replaces an unreviewed result
@@ -447,6 +465,7 @@ def public(job):
     now = time.time()
     end = job["finished"] or now
     return {**{k: job[k] for k in ("pid", "source", "id", "kind", "state", "position", "error", "meta")},
+            "count": len(job.get("imgs") or []),
             "waited": round((job["started"] or end) - job["submitted"]),
             "elapsed": round(end - job["started"]) if job["started"] else 0}
 
@@ -485,16 +504,20 @@ def finish(j):
             j["state"], j["error"], j["finished"] = "error", "ComfyUI dropped this job (restarted or cleared?)", time.time()
         return
     status = hist.get("status", {})
-    imgs = [i for o in hist.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
+    imgs = output_images(hist)
     if status.get("status_str") == "error" or not imgs:
         msgs = [m[1].get("exception_message", "") for m in status.get("messages", []) if m[0] == "execution_error"]
         interrupted = any(m[0] == "execution_interrupted" for m in status.get("messages", []))
         j["error"] = ("Cancelled" if interrupted else "ComfyUI error: " + ("; ".join(msgs) or "no image produced"))
         j["state"], j["finished"] = "error", time.time()
         return
-    q = urllib.parse.urlencode({k: imgs[0][k] for k in ("filename", "subfolder", "type")})
-    j["png"] = comfy(j["url"], "/view?" + q, timeout=120)
+    j["imgs"] = imgs  # every variation; fetched from ComfyUI when first shown (result_png)
     j["state"], j["finished"] = "done", time.time()
+
+
+def output_images(hist):
+    """The saved images of a history entry, in batch order (temp previews left out)."""
+    return [i for o in hist.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
 
 
 def load_state():
@@ -550,7 +573,7 @@ def adopt(src, url):
         extra = p[3]
         mine = str(extra.get("client_id", "")).startswith(CLIENT_PREFIX)
         status = h.get("status", {})
-        imgs = [i for o in h.get("outputs", {}).values() for i in o.get("images", []) if i.get("type") == "output"]
+        imgs = output_images(h)
         if status.get("status_str") != "success" or not imgs:
             continue
         # the game's own results are matched by the description in their prompt; they come back
@@ -567,18 +590,22 @@ def adopt(src, url):
             best[it["id"]] = {"pid": pid, "url": url, "source": src["id"], "id": it["id"], "kind": tag["kind"],
                               "state": "done", "position": None, "submitted": created,
                               "started": min(times) if times else created, "finished": max(times) if times else created,
-                              "error": None, "meta": tag["meta"], "png": None, "img": imgs[0], "misses": 0}
+                              "error": None, "meta": tag["meta"], "imgs": imgs, "pngs": {}, "misses": 0}
     with _jobs_lock:
         for j in best.values():
             JOBS[j["pid"]] = j
     return len(best)
 
 
-def result_png(j):
-    if j["png"] is None and j.get("img"):
-        q = urllib.parse.urlencode({k: j["img"][k] for k in ("filename", "subfolder", "type")})
-        j["png"] = comfy(j["url"], "/view?" + q, timeout=120)
-    return j["png"]
+def result_png(j, index=0):
+    """Variation <index> of a finished job, fetched from ComfyUI's /view on first use."""
+    imgs = j.get("imgs") or []
+    if not 0 <= index < len(imgs):
+        raise LookupError("no such variation")
+    if index not in j["pngs"]:
+        q = urllib.parse.urlencode({k: imgs[index][k] for k in ("filename", "subfolder", "type")})
+        j["pngs"][index] = comfy(j["url"], "/view?" + q, timeout=120)
+    return j["pngs"][index]
 
 
 def cancel(pid):
@@ -687,7 +714,7 @@ class Handler(BaseHTTPRequestHandler):
                 j = JOBS.get(q["pid"][0])
                 if not j or j["state"] != "done":
                     raise LookupError("no image for that job")
-                return self.send(200, result_png(j), "image/png")
+                return self.send(200, result_png(j, int((q.get("i") or ["0"])[0])), "image/png")
             if u.path == "/media":
                 src = self.source(q)
                 iid, name = q["id"][0], q["file"][0]
@@ -716,7 +743,8 @@ class Handler(BaseHTTPRequestHandler):
                 for k, v in (new.get("kinds") or {}).items():
                     if k in s["kinds"] and v.get("family") in sim.FAMILIES:
                         s["kinds"][k] = {"family": v["family"], "files": {r: n for r, n in (v.get("files") or {}).items()
-                                                                          if r in sim.FAMILIES[v["family"]]["files"] and n}}
+                                                                          if r in sim.FAMILIES[v["family"]]["files"] and n},
+                                         "variations": variations(v.get("variations", s["kinds"][k]["variations"]))}
                 save_settings(s)
                 return self.send(200, s)
             if u.path == "/api/submit":

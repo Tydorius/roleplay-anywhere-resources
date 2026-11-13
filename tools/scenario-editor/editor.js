@@ -215,6 +215,12 @@ function select(sel, centerOn = false) {
   S.sels = sel ? [sel] : []; draw(); inspect();
   if (centerOn && sel) {
     const o = byId(sel.id);
+    // a selection from off the canvas (the inspector, search, the references list) shows its own
+    // level first, then centres on it — unless the side-by-side overview is showing
+    if (o && S.scn && S.level !== "*" && (o.position || o.pos) && MapOps.levelOf(S.scn, o) !== S.level) {
+      const lv = MapOps.levelOf(S.scn, o);
+      if (MapOps.levelRect(S.scn, lv)) setLevel(lv);
+    }
     if (o?.position) center(o.position[0] + o.size[0] / 2, o.position[1] + o.size[1] / 2, 6);
     else if (o?.pos) center(o.pos[0], o.pos[1]);
   }
