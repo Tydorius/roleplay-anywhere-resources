@@ -20,11 +20,39 @@
   "physical": "A quilted padded jack with vertical stitching and leather ties",
   "reviewed": true
  },
+ "armour.steel_helmet.brim": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A round khaki-painted steel helmet with a wide brim, domed crown and leather chin strap",
+  "reviewed": true
+ },
  "clothing.bonnet.cotton": {
   "bands": [
    "industrial"
   ],
   "physical": "A white cotton bonnet with blue ribbon ties and a stiff brim",
+  "reviewed": true
+ },
+ "clothing.bowler_hat.hard": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A hard black bowler hat with a rounded crown and narrow curled brim",
+  "reviewed": true
+ },
+ "clothing.box_respirator.canvas": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A rubberised khaki canvas gas mask with round glass eyepieces and a breathing hose, lying on its olive canvas satchel",
+  "reviewed": true
+ },
+ "clothing.braces.striped": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A pair of striped cloth braces with brass length adjusters and leather end tabs",
   "reviewed": true
  },
  "clothing.breeches.loose": {
@@ -41,11 +69,32 @@
   "physical": "Quick-dry cargo pants in slate grey with strapped thigh pockets",
   "reviewed": true
  },
+ "clothing.corset.corded": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A cream corded corset with brown stitching channels and back laces",
+  "reviewed": true
+ },
+ "clothing.cravat.silk": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A rolled silk cravat in cream with brown stripes",
+  "reviewed": true
+ },
  "clothing.denim_jacket.denim": {
   "bands": [
    "modern"
   ],
   "physical": "A blue denim jacket with copper rivets and buttoned chest pockets",
+  "reviewed": true
+ },
+ "clothing.frock_coat.long": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A long black frock coat with a velvet collar and covered buttons",
   "reviewed": true
  },
  "clothing.holo_jacket.holo": {
@@ -76,6 +125,20 @@
   "physical": "Heavy boots with brushed steel sole plates and ankle clasp",
   "reviewed": true
  },
+ "clothing.monocle.gold": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A gold-rimmed monocle glass hanging from a black ribbon loop",
+  "reviewed": true
+ },
+ "clothing.puttees.rolled": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A pair of olive wool leg wraps rolled into tight spirals with tan cotton tie tapes",
+  "reviewed": true
+ },
  "clothing.robe.plain": {
   "bands": [
    "medieval"
@@ -97,6 +160,13 @@
   "physical": "A worn canvas sneaker with a rubber toe cap and frayed lace",
   "reviewed": true
  },
+ "clothing.top_hat.silk": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A tall black silk top hat with a wide curled brim and grey band",
+  "reviewed": true
+ },
  "clothing.tunic.coarse": {
   "bands": [
    "medieval"
@@ -109,6 +179,20 @@
    "medieval"
   ],
   "physical": "A plain uniform tunic in undyed wool with a cord belt and stitched hem",
+  "reviewed": true
+ },
+ "container.kit_bag.canvas": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A long olive canvas kit bag gathered at the neck by a rope drawstring, with brass grommets",
+  "reviewed": true
+ },
+ "container.mess_tin.pan": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A grey two-part metal mess tin with a hinged handle and a dented sliding lid",
   "reviewed": true
  },
  "container.tankard.pewter": {
@@ -132,11 +216,32 @@
   "physical": "A leather waterskin with a shoulder strap and carved stopper",
   "reviewed": true
  },
+ "document.blueprint.cyan": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A rolled cyan blueprint sheet with white line drawings and curled corners",
+  "reviewed": true
+ },
  "document.passport.booklet": {
   "bands": [
    "modern"
   ],
   "physical": "A dark blue passport booklet with a gold border and bent corner",
+  "reviewed": true
+ },
+ "document.pawn_ticket.stub": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A small manila ticket stub with a perforated edge and a red stamp mark",
+  "reviewed": true
+ },
+ "document.postcard.picture": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A cream postcard with a sepia oval vignette panel and scalloped edge",
   "reviewed": true
  },
  "document.scroll.rolled": {
@@ -146,11 +251,39 @@
   "physical": "A rolled parchment scroll tied with a red ribbon and wax seal",
   "reviewed": true
  },
+ "document.telegram.form": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A folded cream telegram form with a pasted paper strip across its middle",
+  "reviewed": true
+ },
+ "document.train_ticket.buff": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A buff cardboard train ticket with a clipped corner and a punched hole",
+  "reviewed": true
+ },
  "drink.energy_drink.can": {
   "bands": [
    "modern"
   ],
   "physical": "A tall slim energy drink can in green and silver",
+  "reviewed": true
+ },
+ "drink.field_canteen.felt": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A round grey metal field canteen in a khaki felt cover with a screw cap on a chain",
+  "reviewed": true
+ },
+ "drink.ginger_beer.stoneware": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A stoneware ginger-beer bottle with a grey-brown glaze, pinched neck and wired cork",
   "reviewed": true
  },
  "drink.spirits.bottle": {
@@ -181,11 +314,25 @@
   "physical": "A small round cake glazed to a deep amber with a drip down its side",
   "reviewed": true
  },
+ "food.meat_pie.crimped": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A golden-crust meat pie with a crimped rim and a centre steam hole",
+  "reviewed": true
+ },
  "food.protein_pouch.foil": {
   "bands": [
    "scifi"
   ],
   "physical": "A crumpled silver foil pouch with a tear notch at the corner",
+  "reviewed": true
+ },
+ "food.ration_biscuits.tin": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A squat olive-painted tin with the lid prised off, showing stacked oat-brown biscuits inside",
   "reviewed": true
  },
  "food.steamed_bun.bun": {
@@ -209,6 +356,13 @@
   "physical": "A lidded paper bowl of noodles with chopsticks laid across the top",
   "reviewed": true
  },
+ "food.tinned_meat.tin": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A squat tin of preserved meat with a plain paper label and a keyed opening strip",
+  "reviewed": true
+ },
  "jewellery.amulet.bone": {
   "bands": [
    "medieval"
@@ -230,11 +384,32 @@
   "physical": "A heavy gold chain necklace of interlocking links",
   "reviewed": true
  },
+ "jewellery.identity_disc.fibre": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "An oval red-brown fibre identity disc on a woven cord, its edges worn smooth",
+  "reviewed": true
+ },
  "jewellery.iron_ring.iron": {
   "bands": [
    "medieval"
   ],
   "physical": "A plain iron ring with hammered facets and patches of rust",
+  "reviewed": true
+ },
+ "jewellery.tie_pin.pearl": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A gold tie pin with a round pearl head",
+  "reviewed": true
+ },
+ "light.carbide_lamp.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass carbide lamp with a bright reflector dish and a fluted water chamber",
   "reviewed": true
  },
  "light.lantern.brass": {
@@ -265,11 +440,25 @@
   "physical": "A dented tin lantern with horn panes and a wire swing handle",
   "reviewed": true
  },
+ "light.safety_lamp.gauze": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass miner's safety lamp with a fine wire gauze cylinder and hook handle",
+  "reviewed": true
+ },
  "light.torch.pitch": {
   "bands": [
    "medieval"
   ],
   "physical": "A pitch-soaked torch with a wrapped rag head on a split shaft",
+  "reviewed": true
+ },
+ "light.trench_lighter.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass petrol lighter with a hinged lid, cotton wick and steel wheel",
   "reviewed": true
  },
  "magic.grimoire.bound": {
@@ -377,6 +566,27 @@
   "physical": "A handheld dermal sealant gun with a barrel nozzle and side-mounted cartridge",
   "reviewed": true
  },
+ "medicine.doctors_bag.leather": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A black leather doctor's bag with brass buckle straps and a carrying handle",
+  "reviewed": true
+ },
+ "medicine.field_dressing.packet": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A flat khaki fabric field dressing packet bound with brown tape and a torn opener tab",
+  "reviewed": true
+ },
+ "medicine.glass_syringe.glass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A glass hypodermic syringe with a steel plunger in a lined metal case",
+  "reviewed": true
+ },
  "medicine.insulin.kit": {
   "bands": [
    "modern"
@@ -405,6 +615,27 @@
   "physical": "A foil sleeve of adhesive patches with one pressed out beside it",
   "reviewed": true
  },
+ "medicine.patent_tonic.ribbed": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A ribbed emerald-glass medicine bottle with sloped shoulders and a driven cork",
+  "reviewed": true
+ },
+ "medicine.pill_tin.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A round brass pill tin with its lid half open on white pills",
+  "reviewed": true
+ },
+ "medicine.smelling_salts.cut": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A cut-glass bottle of smelling salts with a silver stopper and worn ribbon",
+  "reviewed": true
+ },
  "medicine.stethoscope.chrome": {
   "bands": [
    "modern"
@@ -426,6 +657,13 @@
   "physical": "A slim glass thermometer in a translucent green plastic case",
   "reviewed": true
  },
+ "money.banknote.engraved": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A single engraved brown banknote with ornate scrollwork borders and a gilt seal",
+  "reviewed": true
+ },
  "money.banknotes.banded": {
   "bands": [
    "modern"
@@ -445,6 +683,34 @@
    "scifi"
   ],
   "physical": "Gloves with articulated steel actuator bars along each finger",
+  "reviewed": true
+ },
+ "tech.battery_jar.glass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A blue-tinted glass battery jar with lead plate lugs and a wooden lid",
+  "reviewed": true
+ },
+ "tech.box_camera.box": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brown leatherette box camera with a brass lens barrel and twin finders",
+  "reviewed": true
+ },
+ "tech.brass_gear.spur": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass spur gear with cut teeth and a square centre bore",
+  "reviewed": true
+ },
+ "tech.clockwork_key.wing": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A flat brass clockwork key with a wing grip and square shaft",
   "reviewed": true
  },
  "tech.comm_unit.handheld": {
@@ -503,6 +769,13 @@
   "physical": "A cracked grey drone shell with four folded rotors and lens housing",
   "reviewed": true
  },
+ "tech.field_handset.rubber": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A black hard rubber telephone handset with a braided cord and brass switchboard plug",
+  "reviewed": true
+ },
  "tech.implant_calibrator.handheld": {
   "bands": [
    "scifi"
@@ -517,11 +790,25 @@
   "physical": "A myomar forearm strut with bundled fibre muscle and quick-release clamp",
   "reviewed": true
  },
+ "tech.phonograph_cylinder.wax": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A black wax phonograph cylinder with a slotted core and worn grooves",
+  "reviewed": true
+ },
  "tech.power_cell.cell": {
   "bands": [
    "scifi"
   ],
   "physical": "A sealed power cell with charge strips glowing green along its flank",
+  "reviewed": true
+ },
+ "tech.pressure_gauge.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass pressure gauge with a cream dial face and a needle behind glass",
   "reviewed": true
  },
  "tech.reflex_implant.rail": {
@@ -559,11 +846,32 @@
   "physical": "A first-generation spinal lattice in a scratched case with etched plates",
   "reviewed": true
  },
+ "tech.telegraph_key.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass telegraph key on a wooden base with a knurled knob and binding posts",
+  "reviewed": true
+ },
+ "tech.vacuum_tube.glass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A pale amber glass vacuum tube with a bright filament cage and brass pin base",
+  "reviewed": true
+ },
  "tool.curry_comb.comb": {
   "bands": [
    "industrial"
   ],
   "physical": "A wooden curry comb with a leather hand strap and worn teeth",
+  "reviewed": true
+ },
+ "tool.entrenching_tool.fixed": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A short-handled entrenching spade with a riveted steel head and plain wooden grip",
   "reviewed": true
  },
  "tool.fountain_pen.gold": {
@@ -573,11 +881,74 @@
   "physical": "A black fountain pen with a gold nib and cap ring",
   "reviewed": true
  },
+ "tool.handcuffs.iron": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A pair of iron handcuffs joined by a short link chain",
+  "reviewed": true
+ },
+ "tool.magnifying_glass.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A round magnifying glass with a brass rim and a tapered dark wooden handle",
+  "reviewed": true
+ },
  "tool.riding_crop.crop": {
   "bands": [
    "industrial"
   ],
   "physical": "A leather riding crop with a braided grip and keeper loop",
+  "reviewed": true
+ },
+ "tool.slide_rule.rule": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A mahogany slide rule with a sliding centre scale and a chipped glass cursor",
+  "reviewed": true
+ },
+ "tool.spyglass.draw": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brass spyglass with three drawn tubes and a ribbed leather grip",
+  "reviewed": true
+ },
+ "tool.tape_measure.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A cream cloth tape measure rolled into a brass case with a leather finger strap",
+  "reviewed": true
+ },
+ "tool.trench_periscope.tube": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A slim khaki-painted brass periscope tube with a hinged mirror head at the top",
+  "reviewed": true
+ },
+ "tool.trench_whistle.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A flat brass trench whistle with a ringed top and short brass chain",
+  "reviewed": true
+ },
+ "tool.wire_cutters.long": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "Long-handled steel wire cutters with curved shearing jaws and plain wooden grips",
+  "reviewed": true
+ },
+ "trinket.cigar_case.leather": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A brown leather cigar case holding two cigars with gold bands",
   "reviewed": true
  },
  "trinket.lute.lute": {
@@ -587,11 +958,39 @@
   "physical": "A small lute with a ribbed brown body and a full set of strings",
   "reviewed": true
  },
+ "trinket.music_box.wood": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A polished rosewood music box with its lid open on a brass pinned cylinder",
+  "reviewed": true
+ },
+ "trinket.sepia_photograph.card": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A sepia portrait photograph mounted on a cream card with gilt scalloped edges",
+  "reviewed": true
+ },
+ "trinket.snuff_box.brass": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A round brass snuff box with a hinged lid and an engraved star pattern",
+  "reviewed": true
+ },
  "trinket.stopwatch.steel": {
   "bands": [
    "modern"
   ],
   "physical": "A steel stopwatch with a side button and ring loop",
+  "reviewed": true
+ },
+ "trinket.tobacco_tin.tin": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A rectangular tobacco tin with a hinged lid and a green printed panel",
   "reviewed": true
  },
  "trinket.vinyl_record.disc": {
@@ -608,6 +1007,13 @@
   "physical": "A steel wristwatch on a brown leather strap with a worn clasp",
   "reviewed": true
  },
+ "weapon.ammo_bandolier.cotton": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A khaki cotton ammunition bandolier with stitched loops holding brass rifle cartridges",
+  "reviewed": true
+ },
  "weapon.arrows.sheaf": {
   "bands": [
    "medieval"
@@ -620,6 +1026,13 @@
    "modern"
   ],
   "physical": "A wooden baseball bat with a taped grip and dented barrel",
+  "reviewed": true
+ },
+ "weapon.bayonet.socket": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A steel socket bayonet with a bent elbow neck and locking ring",
   "reviewed": true
  },
  "weapon.bow.recurve": {
@@ -636,11 +1049,46 @@
   "physical": "A brass knuckle-duster with four finger rings polished by use",
   "reviewed": true
  },
+ "weapon.cartridges.box": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "An open wooden box of brass rifle cartridges stood upright in two rows",
+  "reviewed": true
+ },
+ "weapon.derringer.two": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A small two-barrel pocket pistol with a brass frame and birds-head walnut grip",
+  "reviewed": true
+ },
+ "weapon.double_shotgun.hammer": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "An outside-hammer double-barrelled shotgun with browned barrels and a walnut stock",
+  "reviewed": true
+ },
+ "weapon.flare_pistol.break": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A stubby brass flare pistol with a break-open barrel and checkered wooden grip",
+  "reviewed": true
+ },
  "weapon.longsword.cruciform": {
   "bands": [
    "medieval"
   ],
   "physical": "A long straight sword with a cruciform hilt and wheel pommel",
+  "reviewed": true
+ },
+ "weapon.musket.percussion": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A percussion musket with a long browned barrel, side hammer and plain walnut stock",
   "reviewed": true
  },
  "weapon.pistol.slide": {
@@ -718,6 +1166,20 @@
    "scifi"
   ],
   "physical": "A black riot baton with a blue conductor tip and rubber grip",
+  "reviewed": true
+ },
+ "weapon.trench_knife.knuckle": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A blued steel trench knife with a studded knuckle guard and grooved wooden grip",
+  "reviewed": true
+ },
+ "weapon.truncheon.wood": {
+  "bands": [
+   "industrial"
+  ],
+  "physical": "A dark wooden truncheon with a ribbed grip and wrist loop",
   "reviewed": true
  }
 }
