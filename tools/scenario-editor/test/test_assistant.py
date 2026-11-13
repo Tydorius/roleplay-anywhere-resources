@@ -262,13 +262,23 @@ class TestAssistantEndpoints(unittest.TestCase):
         self.assertIn("12,000", raw)
         code, raw = self.turn(tools=["rename things " + "very " * 100])
         self.assertEqual(code, 400)
-        self.assertIn("200", raw)
+        self.assertIn("400", raw)
         code, raw = self.turn(tools="rename-region")
         self.assertEqual(code, 400)
         code, _ = self.request("POST", "/api/assistant/cancel")
         self.assertEqual(code, 400)                     # nothing is running
         code, _ = self.request("POST", "/api/assistant/turn", ["not", "an", "object"])
         self.assertEqual(code, 400)
+
+    def test_a_turn_without_summary_or_tools_is_refused(self):
+        """A pane that stops sending either field fails loudly, not as a model
+        that quietly knows nothing (the silent-field class of bug)."""
+        code, raw = self.turn(tools=None)
+        self.assertEqual(code, 400)
+        self.assertIn("tools", raw)
+        code, raw = self.turn(scenarioSummary=None)
+        self.assertEqual(code, 400)
+        self.assertIn("summary", raw)
 
     def test_an_unknown_workspace_or_provider_is_refused(self):
         for source in ("staging", "work/nope", "", None):

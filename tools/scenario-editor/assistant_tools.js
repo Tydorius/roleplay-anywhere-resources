@@ -248,14 +248,14 @@
             work = region(scn, n.workRegionId);
             if (!work) return fail("no region has id \"" + n.workRegionId + "\"");
           }
+          const blocks = buildSchedule(home, work, shift);
+          const problems = Schedule.validate(blocks, regionNames(scn));
+          if (problems.length) return fail("the schedule would be invalid: " + problems.map(p => p.msg).join("; "));
           const cell = freeCell(scn, home, null);
           if (!cell) return fail("the region \"" + home.name + "\" has no free cell");
           const res = MapOps.placeNpc(scn, {name, gender: n.gender, description: n.description,
             physicalDescription: n.physicalDescription}, cell[0], cell[1], set);
           if (res.error) return fail(res.error);
-          const blocks = buildSchedule(home, work, shift);
-          const problems = Schedule.validate(blocks, regionNames(scn));
-          if (problems.length) return fail("the schedule would be invalid: " + problems.map(p => p.msg).join("; "));
           set(res.npc, "schedule", blocks);
           created.push(res.npc.id);
         });

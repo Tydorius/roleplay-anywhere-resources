@@ -17,8 +17,9 @@ const A = {
 
 const AS_MAX_ROUNDS = 8;       // model turns per request, its own acting turns included
 const AS_POLL_MS = 1200;
-const AS_TOOL_LINE = 200;      // the server refuses a longer tool line
+const AS_TOOL_LINE = 400;      // the server refuses a longer tool line
 const AS_RESULTS_CHARS = 6000; // stay well under the server's per-message limit
+const AS_INPUT_CHARS = 6000;   // and an over-long ask is refused before it joins the transcript
 
 /** The tool list for the prompt, each line cut to the server's limit. The cut lands in the
  *  description's tail, never in the arguments, which come first in the line. */
@@ -100,6 +101,8 @@ async function asUserSend() {
   if (!A.provider) return toast("No model provider — pick one at the top of the pane");
   const text = $("asInput").value.trim();
   if (!text) return;
+  if (text.length > AS_INPUT_CHARS)
+    return toast(`That message is ${text.length.toLocaleString("en-US")} characters — keep it under ${AS_INPUT_CHARS.toLocaleString("en-US")}`);
   $("asInput").value = "";
   A.messages.push({role: "user", content: text});
   asCard("user", "You", text);
@@ -122,7 +125,7 @@ async function asConversation() {
         break;                                    // Stop: the last reply stays up; the meter says the rest
       }
       A.calls += j.calls || 0; A.tokens += j.tokens || 0; A.lastSeconds = j.seconds || 0;
-      A.messages.push({role: "assistant", content: j.reply || ""});
+      A.messages.push({role: "assistant", content: asAssistantContent(j)});
       asCard("assistant", "Assistant", j.reply || "(no reply text)");
       asMeter();
       const results = [];
@@ -131,10 +134,12 @@ async function asConversation() {
         results.push(await asRunAction(a));
       }
       if (A.stopped || !results.length) break;    // a plain answer: the conversation is done
-      if (A.rounds >= AS_MAX_ROUNDS) { asCard("action", null, "stopped after " + AS_MAX_ROUNDS + " rounds"); break; }
+      // the outcomes go into the transcript even at the round cap, so the next
+      // request's model knows what its last actions did
       const msg = asToolResultsMessage(results);
       A.messages.push({role: "user", content: msg});
       asCard("action", null, msg.length > 300 ? msg.slice(0, 300) + "…" : msg);
+      if (A.rounds >= AS_MAX_ROUNDS) { asCard("action", null, "stopped after " + AS_MAX_ROUNDS + " rounds"); break; }
     }
   } finally {
     asBusy(false);
@@ -151,12 +156,42 @@ async function asTurn() {
     first = (await api("/api/assistant/turn", {method: "POST", body: JSON.stringify({
       source: S.source,
       provider: A.provider,
-      messages: A.messages,
+      messages: asWindow(),
       tools: asPromptLines(),
       scenarioSummary: JSON.stringify(AssistantTools.summary(S.scn)),
     })})).job;
   } catch (e) { asCard("err", null, e.message); return null; }
   return asPoll(first);
+}
+
+/** The messages to send: the newest that fit the server's limits, starting on a user message.
+ *  The scenario summary is rebuilt every turn, so the old turns the window drops carry nothing
+ *  the model still needs. */
+function asWindow() {
+  const maxN = A.meta?.maxMessages || 60, maxChars = 60000;   // margin under the server's 80,000
+  const out = [];
+  let chars = 0;
+  for (let i = A.messages.length - 1; i >= 0; i--) {
+    const m = A.messages[i], len = (m.content || "").length;
+    if (out.length >= maxN || chars + len > maxChars) break;
+    out.unshift(m);
+    chars += len;
+  }
+  while (out.length > 1 && out[0].role !== "user") out.shift();
+  return out;
+}
+
+/** What the model said, the way it said it: the JSON it replied with, kept under the server's
+ *  per-message limit. Its own turns in the transcript must follow the protocol too, or later
+ *  replies start imitating the prose. */
+function asAssistantContent(j) {
+  let s;
+  try { s = JSON.stringify({reply: j.reply || "", actions: j.actions || []}); } catch { s = ""; }
+  if (s.length > 7800) {
+    try { s = JSON.stringify({reply: (j.reply || "").slice(0, 3000),
+      actions: (j.actions || []).map(a => ({tool: a.tool, args: {}}))}); } catch { s = '{"reply":"","actions":[]}'; }
+  }
+  return s;
 }
 
 /** Polls the job with a thinking card up; resolves with the finished job, or null when it
@@ -197,9 +232,12 @@ async function asRunAction(a) {
   edit("AI: " + name, () => {
     try { res = tool.run(S.scn, args, set); }
     catch (e) { thrown = e.message; throw e; }     // edit() rolls the partial change back
+    if (!res || !res.ok) {                         // a reported failure must change nothing
+      thrown = (res && res.error) || "the tool failed"; res = null;
+      throw new Error(thrown);
+    }
   });
   if (thrown) return asActionDone(name, thrown, false);
-  if (!res || !res.ok) return asActionDone(name, (res && res.error) || "the tool failed", false);
   const first = Array.isArray(res.data?.createdIds) ? res.data.createdIds[0] : null;
   if (first && byId(first)) select({kind: "entity", id: first}, true);   // show what it made
   return asActionDone(name, res.summary || "done", true, res);
@@ -254,6 +292,11 @@ async function asReattach() {
   if (done.state !== "done") { asCard("err", null, done.error || ("the turn was " + done.state)); return; }
   A.calls += done.calls || 0; A.tokens += done.tokens || 0; A.lastSeconds = done.seconds || 0;
   asCard("assistant", "Assistant", done.reply || "(no reply text)");
+  if (done.source && S.source && done.source !== S.source) {
+    asCard("err", null, "the actions were not run: this turn belongs to " + done.source);
+    asMeter();
+    return;
+  }
   for (const a of done.actions || []) await asRunAction(a);
   asMeter();
 }

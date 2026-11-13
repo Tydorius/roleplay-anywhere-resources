@@ -29,7 +29,7 @@ MAX_MESSAGES = 60
 MAX_MESSAGE_CHARS = 8000
 MAX_TRANSCRIPT_CHARS = 80_000
 MAX_TOOLS = 40
-MAX_TOOL_CHARS = 200
+MAX_TOOL_CHARS = 400   # the registry's longest line (add_npcs) is 380; 200 cut its field list
 SUMMARY_LIMIT = 12_000
 REPLY_LIMIT = 8000
 TOOL_NAME_LIMIT = 60
@@ -91,10 +91,8 @@ def _checked_messages(messages):
 
 
 def _checked_tools(tools):
-    if tools is None:
-        return []
-    if not isinstance(tools, list):
-        raise ValueError("tools must be a list of strings")
+    if not isinstance(tools, list):   # a missing list is never quietly an empty one: the
+        raise ValueError("tools must be a list of strings")   # model must see its tools
     if len(tools) > MAX_TOOLS:
         raise ValueError(f"at most {MAX_TOOLS} tools (got {len(tools)})")
     out = []
@@ -108,10 +106,8 @@ def _checked_tools(tools):
 
 
 def _checked_summary(summary):
-    if summary is None:
-        return ""
-    if not isinstance(summary, str):
-        raise ValueError("the scenario summary must be a string")
+    if not isinstance(summary, str):   # and no silent "(empty scenario)": the pane must
+        raise ValueError("the scenario summary must be a string")   # say what it sends
     if len(summary) > SUMMARY_LIMIT:
         raise ValueError(f"the scenario summary is longer than "
                          f"{SUMMARY_LIMIT:,} characters")
