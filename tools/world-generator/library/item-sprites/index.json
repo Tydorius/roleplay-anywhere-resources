@@ -1,4 +1,12 @@
 {
+ "armour.bulletproof_vest.vest": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A black ballistic vest with front plate pockets and velcro straps",
+  "reviewed": true
+ },
  "armour.helmet.kettle": {
   "bands": [
    "medieval"
@@ -20,11 +28,46 @@
   "physical": "A quilted padded jack with vertical stitching and leather ties",
   "reviewed": true
  },
+ "armour.riot_helmet.visor": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A black riot helmet with a tinted visor and neck flap",
+  "reviewed": true
+ },
  "armour.steel_helmet.brim": {
   "bands": [
    "industrial"
   ],
   "physical": "A round khaki-painted steel helmet with a wide brim, domed crown and leather chin strap",
+  "reviewed": true
+ },
+ "clothing.baseball_cap.cap": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A faded blue baseball cap with a brass buckle strap and curved peak",
+  "reviewed": true
+ },
+ "clothing.belt.leather": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A brown leather belt with a brass frame buckle and extra punched holes",
+  "reviewed": true
+ },
+ "clothing.blanket.wool": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A folded grey wool blanket with a striped border and fringe",
   "reviewed": true
  },
  "clothing.bonnet.cotton": {
@@ -90,6 +133,31 @@
   "physical": "A blue denim jacket with copper rivets and buttoned chest pockets",
   "reviewed": true
  },
+ "clothing.dust_mask.cup": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A grey cup-shaped dust mask with blue elastic straps",
+  "reviewed": true
+ },
+ "clothing.flannel_shirt.check": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A red-and-black check flannel shirt with buttoned cuffs",
+  "reviewed": true
+ },
+ "clothing.flat_cap.tweed": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A grey tweed flat cap with a buttoned crown and stitched-down brim",
+  "reviewed": true
+ },
  "clothing.frock_coat.long": {
   "bands": [
    "industrial"
@@ -97,11 +165,68 @@
   "physical": "A long black frock coat with a velvet collar and covered buttons",
   "reviewed": true
  },
+ "clothing.fur_cloak.fur": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A heavy fur cloak of patchy brown pelts with a leather tie",
+  "reviewed": true
+ },
+ "clothing.gas_mask.rubber": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A dark rubber gas mask with round tinted eyepieces and a snouted filter canister",
+  "reviewed": true
+ },
+ "clothing.goggles.forge": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "Leather forge goggles with dark green glass lenses and a buckle strap",
+  "reviewed": true
+ },
+ "clothing.goggles.pilot": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "Rounded pilot goggles with amber lenses and an elastic strap",
+  "reviewed": true
+ },
+ "clothing.greatcoat.heavy": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A heavy grey wool overcoat with brass buttons and a deep collar",
+  "reviewed": true
+ },
+ "clothing.hard_hat.yellow": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A yellow hard hat with a ribbed shell and chin strap",
+  "reviewed": true
+ },
  "clothing.holo_jacket.holo": {
   "bands": [
    "scifi"
   ],
   "physical": "A dark jacket with glowing cyan thread running along its seams",
+  "reviewed": true
+ },
+ "clothing.hood.laced": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A laced wool hood with a pointed crown and deep shoulder cape",
   "reviewed": true
  },
  "clothing.hoodie.grey": {
@@ -118,11 +243,72 @@
   "physical": "Faded blue denim jeans with worn knees and a leather patch",
   "reviewed": true
  },
+ "clothing.jumpsuit.suit": {
+  "bands": [
+   "industrial",
+   "scifi"
+  ],
+  "physical": "A one-piece work suit in faded blue with a zip front and tool loops",
+  "reviewed": true
+ },
+ "clothing.knit_cap.knit": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A thick knitted cap in undyed grey wool with a folded brim",
+  "reviewed": true
+ },
+ "clothing.lab_coat.cream": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A cream lab coat with three pockets and wooden buttons",
+  "reviewed": true
+ },
+ "clothing.leather_boots.scuffed": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A pair of scuffed brown leather boots with laced ankles and worn heels",
+  "reviewed": true
+ },
+ "clothing.leather_gloves.thin": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "Thin brown leather gloves with stitched seams and a buttoned wrist",
+  "reviewed": true
+ },
+ "clothing.linen_shirt.linen": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A cream linen shirt with a drawstring collar and brown stitching",
+  "reviewed": true
+ },
  "clothing.magnetic_boots.mag": {
   "bands": [
    "scifi"
   ],
   "physical": "Heavy boots with brushed steel sole plates and ankle clasp",
+  "reviewed": true
+ },
+ "clothing.mittens.thick": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A pair of thick knitted mittens in grey wool with red cuffs",
   "reviewed": true
  },
  "clothing.monocle.gold": {
@@ -132,6 +318,22 @@
   "physical": "A gold-rimmed monocle glass hanging from a black ribbon loop",
   "reviewed": true
  },
+ "clothing.oilskin_coat.long": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A long brown oilskin coat with strapped cuffs and storm collar",
+  "reviewed": true
+ },
+ "clothing.pocket_handkerchief.silk": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A folded cream silk pocket square with burgundy rolled edges",
+  "reviewed": true
+ },
  "clothing.puttees.rolled": {
   "bands": [
    "industrial"
@@ -139,11 +341,46 @@
   "physical": "A pair of olive wool leg wraps rolled into tight spirals with tan cotton tie tapes",
   "reviewed": true
  },
+ "clothing.rain_hat.oilskin": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A wide-brimmed yellow oilskin hat with a chin cord and rolled sides",
+  "reviewed": true
+ },
+ "clothing.rain_poncho.clear": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A translucent blue-tinted rain poncho with snap fasteners and hood",
+  "reviewed": true
+ },
  "clothing.robe.plain": {
   "bands": [
    "medieval"
   ],
   "physical": "A plain robe of coarse brown wool with a rope belt",
+  "reviewed": true
+ },
+ "clothing.rubber_boots.wellington": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pair of green rubber wellington boots with ribbed soles",
+  "reviewed": true
+ },
+ "clothing.scarf.long": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A long knitted scarf in rust-red wool with fringed ends",
   "reviewed": true
  },
  "clothing.scrubs_top.teal": {
@@ -160,11 +397,74 @@
   "physical": "A worn canvas sneaker with a rubber toe cap and frayed lace",
   "reviewed": true
  },
+ "clothing.socks.grey": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A pair of grey wool socks, one darned at the heel with red thread",
+  "reviewed": true
+ },
+ "clothing.spectacles.round": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "Round gold wire spectacles with curled ear wires",
+  "reviewed": true
+ },
+ "clothing.straw_hat.wide": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A wide woven straw hat with a dark cloth band and frayed brim",
+  "reviewed": true
+ },
+ "clothing.sweater.cable": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A cable-knit sweater in cream wool with elbow patches",
+  "reviewed": true
+ },
+ "clothing.t_shirt.grey": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A heather-grey cotton t-shirt with a small chest pocket",
+  "reviewed": true
+ },
  "clothing.top_hat.silk": {
   "bands": [
    "industrial"
   ],
   "physical": "A tall black silk top hat with a wide curled brim and grey band",
+  "reviewed": true
+ },
+ "clothing.towel.striped": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A folded striped towel with a hanging loop and frayed corner",
+  "reviewed": true
+ },
+ "clothing.trousers.mended": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "Mended grey work trousers with a button fly and patched knees",
   "reviewed": true
  },
  "clothing.tunic.coarse": {
@@ -179,6 +479,114 @@
    "medieval"
   ],
   "physical": "A plain uniform tunic in undyed wool with a cord belt and stitched hem",
+  "reviewed": true
+ },
+ "clothing.waistcoat.wool": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A brown wool waistcoat with brass buttons and welt pockets",
+  "reviewed": true
+ },
+ "clothing.wool_cloak.heavy": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A heavy grey wool cloak with a clasp at the throat and mud-stained hem",
+  "reviewed": true
+ },
+ "clothing.work_apron.leather": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A heavy leather work apron with a neck strap and burn marks",
+  "reviewed": true
+ },
+ "clothing.work_boots.steel": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pair of steel-toed work boots with black toe caps and thick soles",
+  "reviewed": true
+ },
+ "clothing.work_gloves.canvas": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "Padded canvas work gloves with leather palms and frayed cuffs",
+  "reviewed": true
+ },
+ "clothing.work_jacket.canvas": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A canvas work jacket in faded green with buttoned cuffs and elbow patches",
+  "reviewed": true
+ },
+ "container.bucket.steel": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A galvanised steel bucket with a wire handle and rust spots",
+  "reviewed": true
+ },
+ "container.bucket.wood": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A wooden pail with a rope handle and blackened iron bands",
+  "reviewed": true
+ },
+ "container.burlap_sack.coarse": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A coarse burlap sack laced at the neck with frayed jute",
+  "reviewed": true
+ },
+ "container.glass_vial.green": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A small green glass vial with a cork stopper",
+  "reviewed": true
+ },
+ "container.hip_flask.pewter": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A curved pewter hip flask with a hinged cap and polished face",
+  "reviewed": true
+ },
+ "container.jug.glazed": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A glazed clay jug with one handle, brown drip glaze and chipped lip",
+  "reviewed": true
+ },
+ "container.kettle.copper": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A copper kettle with a blackened base, curved spout and bent handle",
   "reviewed": true
  },
  "container.kit_bag.canvas": {
@@ -209,6 +617,32 @@
   "physical": "A carved wooden tankard with iron bands and thumb notch",
   "reviewed": true
  },
+ "container.thermos.steel": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A steel vacuum flask with a dented cup lid and paint chips",
+  "reviewed": true
+ },
+ "container.tin_box.round": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A round tin box with a fitted lid and printed paper base",
+  "reviewed": true
+ },
+ "container.tin_mug.dented": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dented tin mug with a bent handle and soldered seam",
+  "reviewed": true
+ },
  "container.waterskin.leather": {
   "bands": [
    "medieval"
@@ -216,11 +650,130 @@
   "physical": "A leather waterskin with a shoulder strap and carved stopper",
   "reviewed": true
  },
+ "container.wooden_bowl.carved": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A carved wooden bowl with dark grain rings and chipped rim",
+  "reviewed": true
+ },
  "document.blueprint.cyan": {
   "bands": [
    "industrial"
   ],
   "physical": "A rolled cyan blueprint sheet with white line drawings and curled corners",
+  "reviewed": true
+ },
+ "document.book.bound": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A thick leather-bound book with a brass clasp and burgundy spine",
+  "reviewed": true
+ },
+ "document.book.paper": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A worn paperback with a creased spine and dog-eared cover",
+  "reviewed": true
+ },
+ "document.decree.seal": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "An official document with a heavy pendant wax seal and ribbon",
+  "reviewed": true
+ },
+ "document.flyer.crumpled": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A crumpled printed handbill with a torn corner and bold ink",
+  "reviewed": true
+ },
+ "document.holy_book.black": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A small black holy book with gilt page edges and a ribbon marker",
+  "reviewed": true
+ },
+ "document.id_card.card": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pale blue ID card with a photo corner and dark stripe",
+  "reviewed": true
+ },
+ "document.journal.leather": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A worn leather journal with a strap closure and bulging pages",
+  "reviewed": true
+ },
+ "document.ledger.bound": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A heavy bound ledger with a ribbon marker and ink-stained cover",
+  "reviewed": true
+ },
+ "document.letter.envelope": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A sealed brown envelope with a stamp corner and creased flap",
+  "reviewed": true
+ },
+ "document.letter.sealed": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A folded letter closed with a dark red wax seal",
+  "reviewed": true
+ },
+ "document.map.folded": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A folded map creased soft from use with coloured road lines and a compass rose",
+  "reviewed": true
+ },
+ "document.newspaper.folded": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A folded newspaper with grey print and a smudged masthead",
+  "reviewed": true
+ },
+ "document.notes.loose": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "Loose handwritten notes on rough paper with a brown ink blot",
   "reviewed": true
  },
  "document.passport.booklet": {
@@ -244,11 +797,43 @@
   "physical": "A cream postcard with a sepia oval vignette panel and scalloped edge",
   "reviewed": true
  },
+ "document.receipt.curly": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A long curly till receipt with grey print and a creased fold",
+  "reviewed": true
+ },
  "document.scroll.rolled": {
   "bands": [
    "medieval"
   ],
   "physical": "A rolled parchment scroll tied with a red ribbon and wax seal",
+  "reviewed": true
+ },
+ "document.seal_matrix.bronze": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A bronze seal matrix with a cut crest and turned wooden handle",
+  "reviewed": true
+ },
+ "document.sheet_music.loose": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "Loose sheets of printed music with a pencil marking and folded corner",
+  "reviewed": true
+ },
+ "document.tally_stick.notched": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A notched wooden tally stick with a split half and knife marks",
   "reviewed": true
  },
  "document.telegram.form": {
@@ -263,6 +848,46 @@
    "industrial"
   ],
   "physical": "A buff cardboard train ticket with a clipped corner and a punched hole",
+  "reviewed": true
+ },
+ "drink.ale.jug": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A squat clay jug of ale with a wooden lid and foam dribbled down the side",
+  "reviewed": true
+ },
+ "drink.beer_bottle.brown": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A brown glass beer bottle with a crown cap and a buff paper label",
+  "reviewed": true
+ },
+ "drink.beer_can.can": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dented aluminium beer can in gold and red",
+  "reviewed": true
+ },
+ "drink.cider.stoneware": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A corked stoneware jug of cloudy cider with a dribble down the belly",
+  "reviewed": true
+ },
+ "drink.coffee.jar": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A brown glass jar of dark coffee granules with a tight lid",
   "reviewed": true
  },
  "drink.energy_drink.can": {
@@ -286,11 +911,80 @@
   "physical": "A stoneware ginger-beer bottle with a grey-brown glaze, pinched neck and wired cork",
   "reviewed": true
  },
+ "drink.milk.carton": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A waxed paper carton with a blue trim and a folded spout",
+  "reviewed": true
+ },
+ "drink.soda.can": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bright aluminium soda can in orange and blue",
+  "reviewed": true
+ },
  "drink.spirits.bottle": {
   "bands": [
    "industrial"
   ],
   "physical": "A squat glass bottle of dark brandy sealed with a driven cork",
+  "reviewed": true
+ },
+ "drink.spirits.flask": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dented steel hip flask with a captive screw cap",
+  "reviewed": true
+ },
+ "drink.tea.tin": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A sealed tin of loose leaf tea with a domed lid",
+  "reviewed": true
+ },
+ "drink.water_bottle.plastic": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A translucent blue-tinted plastic bottle of water with a screw cap",
+  "reviewed": true
+ },
+ "drink.wine_bottle.glass": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dark green glass wine bottle with a cork stopper and a plain tan label",
+  "reviewed": true
+ },
+ "food.apple.red": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A red apple with a short brown stem",
+  "reviewed": true
+ },
+ "food.bacon.rashers": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "Streaky rashers of pink bacon laid on a sheet of waxed brown paper",
   "reviewed": true
  },
  "food.beans.bag": {
@@ -307,11 +1001,136 @@
   "physical": "A dented tin can with a faded paper label",
   "reviewed": true
  },
+ "food.berries.basket": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A small woven basket piled with dark purple berries",
+  "reviewed": true
+ },
+ "food.bread.round": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A round crusty loaf of bread with a split golden-brown top and a dusting of flour",
+  "reviewed": true
+ },
+ "food.butter.crock": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A small clay crock of pale yellow butter covered with a blue cloth",
+  "reviewed": true
+ },
+ "food.canned_goods.tin": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A sealed tin can with a bright coloured paper wrapper",
+  "reviewed": true
+ },
+ "food.carrot.bunch": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bunch of three orange carrots tied with green tops",
+  "reviewed": true
+ },
+ "food.cheese.wedge": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A wedge of hard yellow cheese with a waxed orange rind",
+  "reviewed": true
+ },
+ "food.dried_apple.string": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A string of curled dried apple rings on brown twine",
+  "reviewed": true
+ },
+ "food.egg.brown": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A speckled brown hen's egg",
+  "reviewed": true
+ },
+ "food.granola_bar.bar": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A cereal bar in a foil wrapper with a torn corner",
+  "reviewed": true
+ },
+ "food.hardtack.square": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A pale square biscuit riddled with cracks and browned at the corners",
+  "reviewed": true
+ },
+ "food.herb_greens.basil": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bunch of fresh basil with dark green leaves tied at the stems",
+  "reviewed": true
+ },
+ "food.herring.fish": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "Two whole cured herring in silvery-brown skins laid on a wooden board",
+  "reviewed": true
+ },
+ "food.honey.pot": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A clay pot of golden honey sealed with a waxed cloth cover",
+  "reviewed": true
+ },
  "food.honey_cake.glazed": {
   "bands": [
    "medieval"
   ],
   "physical": "A small round cake glazed to a deep amber with a drip down its side",
+  "reviewed": true
+ },
+ "food.jerky.strips": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "Strips of dark dried meat tied together with brown twine",
   "reviewed": true
  },
  "food.meat_pie.crimped": {
@@ -321,11 +1140,76 @@
   "physical": "A golden-crust meat pie with a crimped rim and a centre steam hole",
   "reviewed": true
  },
+ "food.nuts.walnuts": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A small pile of brown walnuts with two cracked shells",
+  "reviewed": true
+ },
+ "food.onion.golden": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A golden-brown onion with papery skin and thin root whiskers",
+  "reviewed": true
+ },
+ "food.orange.citrus": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bright orange citrus fruit with a dimpled peel",
+  "reviewed": true
+ },
+ "food.pear.green": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A green pear with a brown stem",
+  "reviewed": true
+ },
+ "food.pickled_veg.jar": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A sealed glass jar of pickled roots and onions floating in amber brine",
+  "reviewed": true
+ },
+ "food.potato.dirty": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dirty brown potato with a few dark eye spots",
+  "reviewed": true
+ },
  "food.protein_pouch.foil": {
   "bands": [
    "scifi"
   ],
   "physical": "A crumpled silver foil pouch with a tear notch at the corner",
+  "reviewed": true
+ },
+ "food.ramen.block": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A block of pale instant noodles in a clear foil wrapper",
   "reviewed": true
  },
  "food.ration_biscuits.tin": {
@@ -335,11 +1219,46 @@
   "physical": "A squat olive-painted tin with the lid prised off, showing stacked oat-brown biscuits inside",
   "reviewed": true
  },
+ "food.ration_pack.block": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A compact block of rations in waxed paper wrapping with a strapped band",
+  "reviewed": true
+ },
+ "food.salted_pork.haunch": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A salted haunch of pink-brown pork wrapped in brown cloth and bound with cord",
+  "reviewed": true
+ },
  "food.steamed_bun.bun": {
   "bands": [
    "scifi"
   ],
   "physical": "A plump white steamed bun sitting in a waxed paper wrapper",
+  "reviewed": true
+ },
+ "food.stew.bowl": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A clay bowl of thick brown stew with a wooden spoon resting in it",
+  "reviewed": true
+ },
+ "food.sweets.twist": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A paper twist of amber boiled sweets, one spilled loose",
   "reviewed": true
  },
  "food.synthetic_egg.moulded": {
@@ -370,6 +1289,30 @@
   "physical": "A carved bone amulet of a stylised face on a leather cord",
   "reviewed": true
  },
+ "jewellery.bangle.jade": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A green jade bangle bracelet polished smooth with a hairline crack",
+  "reviewed": true
+ },
+ "jewellery.bead_necklace.amber": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A strand of polished amber beads with a brass claw clasp",
+  "reviewed": true
+ },
+ "jewellery.brooch.oval": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "An oval silver brooch with an amber stone and long pin",
+  "reviewed": true
+ },
  "jewellery.copper_ring.wire": {
   "bands": [
    "scifi"
@@ -377,11 +1320,45 @@
   "physical": "A ring of bent copper wire with a patinated green surface",
   "reviewed": true
  },
+ "jewellery.crucifix.silver": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A small silver crucifix on a knotted brown cord",
+  "reviewed": true
+ },
+ "jewellery.cufflinks.gold": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A pair of oval gold cufflinks joined by short link chains",
+  "reviewed": true
+ },
+ "jewellery.dog_tags.tags": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pair of stamped steel tags on a ball chain, one bent",
+  "reviewed": true
+ },
  "jewellery.gold_chain.heavy": {
   "bands": [
    "modern"
   ],
   "physical": "A heavy gold chain necklace of interlocking links",
+  "reviewed": true
+ },
+ "jewellery.gold_ring.band": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A plain gold band ring with a soft shine and worn inner curve",
   "reviewed": true
  },
  "jewellery.identity_disc.fibre": {
@@ -398,6 +1375,75 @@
   "physical": "A plain iron ring with hammered facets and patches of rust",
   "reviewed": true
  },
+ "jewellery.locket.oval": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "An oval brass locket on a chain, slightly open on its hinge",
+  "reviewed": true
+ },
+ "jewellery.medal.ribbon": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A worn bronze medal hanging from a faded red-and-blue ribbon",
+  "reviewed": true
+ },
+ "jewellery.pearl_necklace.pearls": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A single strand of cream pearls with a gold clasp",
+  "reviewed": true
+ },
+ "jewellery.pendant.chain": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A small oval pendant of pale blue stone on a fine silver chain",
+  "reviewed": true
+ },
+ "jewellery.prayer_beads.beads": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A loop of dark wooden prayer beads with a tasselled cross",
+  "reviewed": true
+ },
+ "jewellery.signet_ring.crest": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A heavy signet ring bearing a worn crest on a flat oval face",
+  "reviewed": true
+ },
+ "jewellery.silver_ring.band": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A tarnished silver band ring with a worn pattern of knots",
+  "reviewed": true
+ },
+ "jewellery.silver_spoon.spoon": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A silver spoon with a worn bowl and decorative twist handle",
+  "reviewed": true
+ },
  "jewellery.tie_pin.pearl": {
   "bands": [
    "industrial"
@@ -405,11 +1451,85 @@
   "physical": "A gold tie pin with a round pearl head",
   "reviewed": true
  },
+ "key.brass.small": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A small brass key with a hollow barrel and cut wards",
+  "reviewed": true
+ },
+ "key.car.fob": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A car key with a black remote fob and chipped plastic head",
+  "reviewed": true
+ },
+ "key.card.card": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A cream keycard with a dark magnetic stripe and hole punch",
+  "reviewed": true
+ },
+ "key.iron.heavy": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A heavy iron key with a looped bow and square-cut teeth",
+  "reviewed": true
+ },
+ "key.ring.ring": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A steel ring holding four worn keys of different sizes",
+  "reviewed": true
+ },
+ "key.skeleton.thin": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A thin double-ended key with a flat shaft and minimal wards",
+  "reviewed": true
+ },
+ "light.candle.tallow": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A stub of cream tallow candle with a blackened wick and drip skirt",
+  "reviewed": true
+ },
  "light.carbide_lamp.brass": {
   "bands": [
    "industrial"
   ],
   "physical": "A brass carbide lamp with a bright reflector dish and a fluted water chamber",
+  "reviewed": true
+ },
+ "light.flare.stick": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A red signal flare stick with a pull cap and label band",
+  "reviewed": true
+ },
+ "light.headlamp.strap": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "An elastic headlamp with a white LED on a grey strap",
   "reviewed": true
  },
  "light.lantern.brass": {
@@ -440,11 +1560,43 @@
   "physical": "A dented tin lantern with horn panes and a wire swing handle",
   "reviewed": true
  },
+ "light.lighter.plastic": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A plastic lighter in chrome and red with a safety wheel",
+  "reviewed": true
+ },
+ "light.matches.box": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A wooden box of matches with a rough strike side and sliding lid",
+  "reviewed": true
+ },
+ "light.oil_lamp.clay": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A clay oil lamp with a sooty spout, hanging wick and brass chain",
+  "reviewed": true
+ },
  "light.safety_lamp.gauze": {
   "bands": [
    "industrial"
   ],
   "physical": "A brass miner's safety lamp with a fine wire gauze cylinder and hook handle",
+  "reviewed": true
+ },
+ "light.tinderbox.hinged": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A hinged metal tinderbox with flint, steel and charred cloth",
   "reviewed": true
  },
  "light.torch.pitch": {
@@ -524,11 +1676,35 @@
   "physical": "A tall gnarled staff bound with copper wire around a crystal head",
   "reviewed": true
  },
+ "magic.talisman.paper": {
+  "bands": [
+   "medieval",
+   "scifi"
+  ],
+  "physical": "A pale yellow paper talisman marked with red brush strokes and a pin",
+  "reviewed": true
+ },
  "magic.wand.carved": {
   "bands": [
    "medieval"
   ],
   "physical": "A slim rune-carved wand of dark wood with a clear crystal tip",
+  "reviewed": true
+ },
+ "material.aluminium_can.crushed": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A crushed aluminium drink can with a torn tab and painted stripe",
+  "reviewed": true
+ },
+ "material.bone.weathered": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A weathered yellow-grey bone shard cracked at one end",
   "reviewed": true
  },
  "material.cardboard.flat": {
@@ -538,11 +1714,315 @@
   "physical": "A flattened brown cardboard box with torn tape and folded flaps",
   "reviewed": true
  },
+ "material.chain.coil": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A coiled length of dark iron link chain with a hook at one end",
+  "reviewed": true
+ },
+ "material.charcoal.sack": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A cloth sack of black charcoal lumps dusted with soot",
+  "reviewed": true
+ },
+ "material.circuit_board.green": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A green circuit board studded with silver chips and cut wires",
+  "reviewed": true
+ },
+ "material.cloth_scrap.folded": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A folded scrap of coarse brown cloth with frayed edges and a patch",
+  "reviewed": true
+ },
+ "material.copper_wire.coil": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A coil of bare copper wire with paper insulation and bright cut ends",
+  "reviewed": true
+ },
+ "material.duct_tape.roll": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A roll of silver duct tape with a torn end and warped edge",
+  "reviewed": true
+ },
+ "material.firewood.bundle": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A bundle of split firewood tied with cord and bark strips",
+  "reviewed": true
+ },
+ "material.fishing_net.folded": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A folded fishing net with cork floats and lead weights tangled in mesh",
+  "reviewed": true
+ },
+ "material.fuel_can.red": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A red plastic fuel can with a spout, cap and moulded grip",
+  "reviewed": true
+ },
+ "material.gemstone.cut": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A cut blue gemstone with sharp facets and a deep inner glint",
+  "reviewed": true
+ },
+ "material.grain_sack.heavy": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A heavy cloth sack of grain tied at the neck with a wooden scoop",
+  "reviewed": true
+ },
+ "material.herb_bundle.bundle": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A bundle of dried grey-green herbs bound with brown twine",
+  "reviewed": true
+ },
+ "material.hide.rolled": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A rolled brown hide tied with a leather strap, fur side out",
+  "reviewed": true
+ },
+ "material.horseshoe.steel": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A steel horseshoe with nail holes and a rusted heel",
+  "reviewed": true
+ },
+ "material.iron_ingot.rough": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A rough iron ingot with a hammered skin and rust bloom",
+  "reviewed": true
+ },
+ "material.iron_nails.handful": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A scattering of bent iron nails on a dark wood block",
+  "reviewed": true
+ },
+ "material.lamp_oil.flask": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A corked flask of amber lamp oil with a wire bail handle",
+  "reviewed": true
+ },
+ "material.magnet.block": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A nickel-plated block magnet with scratched faces and warning tag",
+  "reviewed": true
+ },
+ "material.paper.ream": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A stack of cream paper wrapped in brown kraft paper",
+  "reviewed": true
+ },
+ "material.paper.roll": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A roll of cream parchment tied with a linen band and wax blob",
+  "reviewed": true
+ },
+ "material.paracord.bundle": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A coiled bundle of olive paracord with a burned cut end",
+  "reviewed": true
+ },
+ "material.pigment.pot": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A small squat pot of deep blue pigment with a wooden lid",
+  "reviewed": true
+ },
+ "material.plank.rough": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A rough wooden plank with saw marks and a split end",
+  "reviewed": true
+ },
+ "material.propane.cylinder": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A green propane canister with a valve guard and stamped collar",
+  "reviewed": true
+ },
+ "material.raw_wool.greasy": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A greasy handful of cream raw wool with burrs caught in it",
+  "reviewed": true
+ },
+ "material.rope.coil": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A coiled hemp rope bound with a stray end and frayed tips",
+  "reviewed": true
+ },
+ "material.salt.pouch": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A cloth pouch of coarse grey salt spilling onto a board",
+  "reviewed": true
+ },
+ "material.scrap_metal.twisted": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "Twisted scraps of rusted steel with sheared edges and bolt holes",
+  "reviewed": true
+ },
+ "material.steel_rod.length": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A length of steel rod with a bright sheared end and mill scale",
+  "reviewed": true
+ },
+ "material.tar.pot": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "An open iron pot of black pine tar with a wooden stir stick",
+  "reviewed": true
+ },
+ "material.tarp.canvas": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A folded canvas tarpaulin, mildewed at the folds and rope-tied",
+  "reviewed": true
+ },
+ "material.tarp.plastic": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A folded blue plastic tarp with grommet eyelets and creased corners",
+  "reviewed": true
+ },
+ "material.thread.spool": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A wooden spool of grey thread with a loose tail wound round it",
+  "reviewed": true
+ },
+ "material.twine.ball": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A ball of brown waxed twine with a looped end and loose wraps",
+  "reviewed": true
+ },
+ "medicine.antiseptic_wipes.packet": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A foil packet of antiseptic wipes with a peeled corner",
+  "reviewed": true
+ },
  "medicine.auto_injector.auto": {
   "bands": [
    "scifi"
   ],
   "physical": "A stainless auto-injector with a yellow safety cap and dose window",
+  "reviewed": true
+ },
+ "medicine.bandage.roll": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A tight roll of oat-coloured cloth bandage bound with a brass pin",
   "reviewed": true
  },
  "medicine.cautery_pen.pen": {
@@ -580,11 +2060,44 @@
   "physical": "A flat khaki fabric field dressing packet bound with brown tape and a torn opener tab",
   "reviewed": true
  },
+ "medicine.first_aid_kit.box": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A white metal first-aid box with a green cross on the lid and a carry handle",
+  "reviewed": true
+ },
  "medicine.glass_syringe.glass": {
   "bands": [
    "industrial"
   ],
   "physical": "A glass hypodermic syringe with a steel plunger in a lined metal case",
+  "reviewed": true
+ },
+ "medicine.healing_salve.pot": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A small clay pot of green herbal salve with a cork lid",
+  "reviewed": true
+ },
+ "medicine.herbal_tonic.bottle": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A corked brown bottle of herbal tonic, half full of dark liquid",
+  "reviewed": true
+ },
+ "medicine.holy_water.vial": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A small glass vial of holy water stoppered with cork and wax",
   "reviewed": true
  },
  "medicine.insulin.kit": {
@@ -608,6 +2121,14 @@
   "physical": "A syringe-tipped vial of opaque blue med-gel",
   "reviewed": true
  },
+ "medicine.morphine.ampoule": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A slim glass ampoule of clear fluid with a blue ring break-line at the neck",
+  "reviewed": true
+ },
  "medicine.patch_pack.sleeve": {
   "bands": [
    "scifi"
@@ -622,6 +2143,14 @@
   "physical": "A ribbed emerald-glass medicine bottle with sloped shoulders and a driven cork",
   "reviewed": true
  },
+ "medicine.pill_bottle.amber": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "An amber pill bottle with a brown cap, half full of pale tablets",
+  "reviewed": true
+ },
  "medicine.pill_tin.brass": {
   "bands": [
    "industrial"
@@ -629,11 +2158,36 @@
   "physical": "A round brass pill tin with its lid half open on white pills",
   "reviewed": true
  },
+ "medicine.purification_tablets.strip": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A clear blister strip of large white purification tablets",
+  "reviewed": true
+ },
+ "medicine.scalpel_set.roll": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A folded canvas roll holding six surgical steel scalpels of different shapes",
+  "reviewed": true
+ },
  "medicine.smelling_salts.cut": {
   "bands": [
    "industrial"
   ],
   "physical": "A cut-glass bottle of smelling salts with a silver stopper and worn ribbon",
+  "reviewed": true
+ },
+ "medicine.soap.bar": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A worn oval bar of yellow soap with a rope loop through it",
   "reviewed": true
  },
  "medicine.stethoscope.chrome": {
@@ -671,6 +2225,15 @@
   "physical": "A banded stack of banknotes with a paper strap",
   "reviewed": true
  },
+ "money.coin_purse.drawstring": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A drawstring leather coin purse bulging with coins",
+  "reviewed": true
+ },
  "money.coins.scatter": {
   "bands": [
    "modern"
@@ -678,11 +2241,67 @@
   "physical": "A small scatter of mixed metal coins with a hair clip among them",
   "reviewed": true
  },
+ "money.copper_coin.worn": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A worn copper coin with a rubbed face and nicked edge",
+  "reviewed": true
+ },
+ "money.gold_coin.old": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "An old gold coin with a stamped profile and bright scratch marks",
+  "reviewed": true
+ },
+ "money.silver_coin.milled": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A bright silver coin with a milled edge and worn crest",
+  "reviewed": true
+ },
+ "money.token.brass": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A worn brass token with a ribbed edge and square hole",
+  "reviewed": true
+ },
+ "money.token.chit": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bright plastic chit with a clipped corner and printed stripe",
+  "reviewed": true
+ },
+ "money.wallet.leather": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A worn brown leather wallet, slightly open with card slots showing",
+  "reviewed": true
+ },
  "tech.actuator_gloves.gloves": {
   "bands": [
    "scifi"
   ],
   "physical": "Gloves with articulated steel actuator bars along each finger",
+  "reviewed": true
+ },
+ "tech.battery.cells": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "Two AA battery cells with copper tops and printed jackets",
   "reviewed": true
  },
  "tech.battery_jar.glass": {
@@ -704,6 +2323,14 @@
    "industrial"
   ],
   "physical": "A brass spur gear with cut teeth and a square centre bore",
+  "reviewed": true
+ },
+ "tech.cable.braided": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A braided charging cable with a frayed end and connector",
   "reviewed": true
  },
  "tech.clockwork_key.wing": {
@@ -776,11 +2403,27 @@
   "physical": "A black hard rubber telephone handset with a braided cord and brass switchboard plug",
   "reviewed": true
  },
+ "tech.headphones.overear": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "Black over-ear headphones with a padded band and coiled cord",
+  "reviewed": true
+ },
  "tech.implant_calibrator.handheld": {
   "bands": [
    "scifi"
   ],
   "physical": "A handheld calibrator with probes and a dial face",
+  "reviewed": true
+ },
+ "tech.laptop.grey": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A dented grey laptop, open at an angle, with a scuffed lid",
   "reviewed": true
  },
  "tech.myomar_arm.forearm": {
@@ -809,6 +2452,14 @@
    "industrial"
   ],
   "physical": "A brass pressure gauge with a cream dial face and a needle behind glass",
+  "reviewed": true
+ },
+ "tech.radio.crank": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A hand-crank radio with a folded aerial and dial face",
   "reviewed": true
  },
  "tech.reflex_implant.rail": {
@@ -853,11 +2504,102 @@
   "physical": "A brass telegraph key on a wooden base with a knurled knob and binding posts",
   "reviewed": true
  },
+ "tech.usb_drive.stick": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A small USB drive in black plastic on a keyring loop",
+  "reviewed": true
+ },
  "tech.vacuum_tube.glass": {
   "bands": [
    "industrial"
   ],
   "physical": "A pale amber glass vacuum tube with a bright filament cage and brass pin base",
+  "reviewed": true
+ },
+ "tool.bandolier.canvas": {
+  "bands": [
+   "industrial",
+   "scifi"
+  ],
+  "physical": "A canvas tool bandolier with looped leather pockets and brass buckle",
+  "reviewed": true
+ },
+ "tool.bolt_cutters.long": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "Long-handled bolt cutters with red grips and wide jaws",
+  "reviewed": true
+ },
+ "tool.box_cutter.cutter": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "An orange box cutter with a segmented blade extended",
+  "reviewed": true
+ },
+ "tool.brace_bit.sweep": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A carpenter's brace with a swept wooden crank handle and an auger bit in the chuck",
+  "reviewed": true
+ },
+ "tool.chalk.stub": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A stub of pale blue chalk worn at one end",
+  "reviewed": true
+ },
+ "tool.chisel.firmer": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A firmer chisel with a wide steel blade and hooped wooden handle",
+  "reviewed": true
+ },
+ "tool.claw_hammer.claw": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A steel claw hammer with a yellow hickory handle",
+  "reviewed": true
+ },
+ "tool.compass.baseplate": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A translucent orange baseplate compass with a red needle and bezel ring",
+  "reviewed": true
+ },
+ "tool.compass.brass": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A brass compass with a glass lid and a blued needle",
+  "reviewed": true
+ },
+ "tool.crowbar.flat": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A flat steel crowbar with a hooked end and chipped paint",
   "reviewed": true
  },
  "tool.curry_comb.comb": {
@@ -874,11 +2616,56 @@
   "physical": "A short-handled entrenching spade with a riveted steel head and plain wooden grip",
   "reviewed": true
  },
+ "tool.felling_axe.long": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A long-handled felling axe with a polished steel bit and worn ash haft",
+  "reviewed": true
+ },
+ "tool.file.flat": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A flat steel file with cut teeth and a fitted wooden handle",
+  "reviewed": true
+ },
+ "tool.fish_hook.barbed": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A barbed steel fish hook with a ringed eye",
+  "reviewed": true
+ },
  "tool.fountain_pen.gold": {
   "bands": [
    "modern"
   ],
   "physical": "A black fountain pen with a gold nib and cap ring",
+  "reviewed": true
+ },
+ "tool.hammer.iron": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A round iron hammer head on a worn ash handle",
+  "reviewed": true
+ },
+ "tool.hand_axe.steel": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A small steel axe head fitted on a curved wooden haft",
   "reviewed": true
  },
  "tool.handcuffs.iron": {
@@ -888,11 +2675,143 @@
   "physical": "A pair of iron handcuffs joined by a short link chain",
   "reviewed": true
  },
+ "tool.hunting_knife.fixed": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A fixed-blade knife with a wooden handle and brass rivets",
+  "reviewed": true
+ },
+ "tool.kitchen_knife.chef": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A large stainless chef's knife with a black handle and rivets",
+  "reviewed": true
+ },
+ "tool.kitchen_knife.plain": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A straight kitchen knife with a wooden handle and forged tang",
+  "reviewed": true
+ },
+ "tool.ladle.wood": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A long wooden ladle with a deep bowl and hooked handle",
+  "reviewed": true
+ },
+ "tool.lockpicks.roll": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A roll of dark cloth holding slim steel lockpicks and a tension bar",
+  "reviewed": true
+ },
+ "tool.loom_shuttle.boat": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A boat-shaped wooden weaving shuttle holding a pirn of thread",
+  "reviewed": true
+ },
  "tool.magnifying_glass.brass": {
   "bands": [
    "industrial"
   ],
   "physical": "A round magnifying glass with a brass rim and a tapered dark wooden handle",
+  "reviewed": true
+ },
+ "tool.multitool.folding": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A folding multi-tool with pliers, blade and file fanned open",
+  "reviewed": true
+ },
+ "tool.oar.wood": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A wooden oar with a worn blade and leather collar",
+  "reviewed": true
+ },
+ "tool.padlock.brass": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A heavy brass padlock with a steel shackle and a round keyhole plate",
+  "reviewed": true
+ },
+ "tool.pen.ballpoint": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A slim black ballpoint pen with a click cap",
+  "reviewed": true
+ },
+ "tool.pickaxe.curved": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A curved steel pick head fitted through a straight wooden haft",
+  "reviewed": true
+ },
+ "tool.pliers.grip": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pair of grip pliers with red rubber handles and serrated jaws",
+  "reviewed": true
+ },
+ "tool.plumb_bob.brass": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A brass teardrop plumb bob hanging from a waxed line",
+  "reviewed": true
+ },
+ "tool.pocket_knife.folding": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A folding pocket knife with horn scales and a brass bolster",
+  "reviewed": true
+ },
+ "tool.quill_ink.quill": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A grey goose quill pen beside a corked glass inkwell",
+  "reviewed": true
+ },
+ "tool.rat_trap.spring": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A wooden spring rat trap with a brass trigger bar",
   "reviewed": true
  },
  "tool.riding_crop.crop": {
@@ -902,11 +2821,114 @@
   "physical": "A leather riding crop with a braided grip and keeper loop",
   "reviewed": true
  },
+ "tool.saw.wood": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A long hand saw with an open wooden handle and rusted teeth",
+  "reviewed": true
+ },
+ "tool.scales.brass": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A brass balance scale with a set of stacked weights",
+  "reviewed": true
+ },
+ "tool.screwdriver.yellow": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A screwdriver with a yellow handle and flattened tip",
+  "reviewed": true
+ },
+ "tool.scythe.curved": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A scythe with a long curved blade lashed to a bent wooden snath",
+  "reviewed": true
+ },
+ "tool.sewing_kit.roll": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A rolled cloth sewing kit with needles and small spools of coloured thread",
+  "reviewed": true
+ },
+ "tool.sewing_needle.steel": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A long steel sewing needle with a grey thread tail through its eye",
+  "reviewed": true
+ },
+ "tool.sledgehammer.long": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A long-handled sledgehammer with a cylindrical steel head and worn hickory shaft",
+  "reviewed": true
+ },
  "tool.slide_rule.rule": {
   "bands": [
    "industrial"
   ],
   "physical": "A mahogany slide rule with a sliding centre scale and a chipped glass cursor",
+  "reviewed": true
+ },
+ "tool.snares.coil": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A coil of brass snare wire with a carved wooden peg",
+  "reviewed": true
+ },
+ "tool.soldering_iron.iron": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pencil soldering iron with a coiled cable and safety guard",
+  "reviewed": true
+ },
+ "tool.spade.iron": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A wooden spade with a cracked iron edge and a T-handle",
+  "reviewed": true
+ },
+ "tool.spade.steel": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A round-point steel shovel with a D-handle and worn grip",
+  "reviewed": true
+ },
+ "tool.spoon.wood": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A carved wooden spoon worn smooth and dark at the bowl",
   "reviewed": true
  },
  "tool.spyglass.draw": {
@@ -923,6 +2945,14 @@
   "physical": "A cream cloth tape measure rolled into a brass case with a leather finger strap",
   "reviewed": true
  },
+ "tool.tongs.long": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A pair of long blacksmith's tongs, blackened at the tips",
+  "reviewed": true
+ },
  "tool.trench_periscope.tube": {
   "bands": [
    "industrial"
@@ -937,11 +2967,44 @@
   "physical": "A flat brass trench whistle with a ringed top and short brass chain",
   "reviewed": true
  },
+ "tool.umbrella.black": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A black folding umbrella with a curved wooden handle",
+  "reviewed": true
+ },
+ "tool.whetstone.flat": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A flat grey whetstone bevelled by long use and darkened with oil",
+  "reviewed": true
+ },
  "tool.wire_cutters.long": {
   "bands": [
    "industrial"
   ],
   "physical": "Long-handled steel wire cutters with curved shearing jaws and plain wooden grips",
+  "reviewed": true
+ },
+ "tool.wrench.combo": {
+  "bands": [
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A chrome combination wrench with an open jaw and ring end",
+  "reviewed": true
+ },
+ "trinket.chopsticks.bamboo": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pair of bamboo chopsticks laid across a printed paper sleeve",
   "reviewed": true
  },
  "trinket.cigar_case.leather": {
@@ -951,6 +3014,48 @@
   "physical": "A brown leather cigar case holding two cigars with gold bands",
   "reviewed": true
  },
+ "trinket.comb.plastic": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A black plastic comb with a broken tooth",
+  "reviewed": true
+ },
+ "trinket.comb.wood": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A wooden comb with coarse and fine teeth, cracked at one end",
+  "reviewed": true
+ },
+ "trinket.goblet.pewter": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A dull pewter goblet with a dented bowl and stamped base",
+  "reviewed": true
+ },
+ "trinket.harmonica.silver": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A silver harmonica with twin cover plates over a wooden comb body",
+  "reviewed": true
+ },
+ "trinket.incense.bundle": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bundle of incense sticks bound with red paper and a gold thread",
+  "reviewed": true
+ },
  "trinket.lute.lute": {
   "bands": [
    "medieval"
@@ -958,11 +3063,70 @@
   "physical": "A small lute with a ribbed brown body and a full set of strings",
   "reviewed": true
  },
+ "trinket.mirror.compact": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A pink plastic compact mirror, half open on its hinge",
+  "reviewed": true
+ },
+ "trinket.mirror.hand": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A round silver hand mirror with a carved handle",
+  "reviewed": true
+ },
  "trinket.music_box.wood": {
   "bands": [
    "industrial"
   ],
   "physical": "A polished rosewood music box with its lid open on a brass pinned cylinder",
+  "reviewed": true
+ },
+ "trinket.photograph.bundle": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A bundle of creased photographs tied with red string",
+  "reviewed": true
+ },
+ "trinket.pipe.briar": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern"
+  ],
+  "physical": "A curved wooden smoking pipe with a darkened bowl",
+  "reviewed": true
+ },
+ "trinket.playing_cards.deck": {
+  "bands": [
+   "medieval",
+   "industrial",
+   "modern",
+   "scifi"
+  ],
+  "physical": "A worn deck of playing cards fanned against its tattered box",
+  "reviewed": true
+ },
+ "trinket.pocket_watch.silver": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A silver pocket watch with a chain and worn enamel face",
+  "reviewed": true
+ },
+ "trinket.ribbon.silk": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A length of blue silk ribbon loosely coiled with a frayed end",
   "reviewed": true
  },
  "trinket.sepia_photograph.card": {
@@ -1056,6 +3220,22 @@
   "physical": "An open wooden box of brass rifle cartridges stood upright in two rows",
   "reviewed": true
  },
+ "weapon.combat_knife.black": {
+  "bands": [
+   "modern",
+   "scifi"
+  ],
+  "physical": "A black combat knife with a serrated spine and polymer grip",
+  "reviewed": true
+ },
+ "weapon.dagger.iron": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A straight iron dagger with a wooden grip and ring pommel",
+  "reviewed": true
+ },
  "weapon.derringer.two": {
   "bands": [
    "industrial"
@@ -1110,6 +3290,14 @@
    "scifi"
   ],
   "physical": "A stubby energy pistol with copper cooling fins and a glowing cell window",
+  "reviewed": true
+ },
+ "weapon.revolver.six": {
+  "bands": [
+   "industrial",
+   "modern"
+  ],
+  "physical": "A six-shot revolver with a fluted cylinder, blued steel frame and walnut grips",
   "reviewed": true
  },
  "weapon.rifle.lever": {
@@ -1180,6 +3368,14 @@
    "industrial"
   ],
   "physical": "A dark wooden truncheon with a ribbed grip and wrist loop",
+  "reviewed": true
+ },
+ "weapon.walking_stick.ferrule": {
+  "bands": [
+   "medieval",
+   "industrial"
+  ],
+  "physical": "A dark wooden walking stick with an iron ferrule and polished grip",
   "reviewed": true
  }
 }
