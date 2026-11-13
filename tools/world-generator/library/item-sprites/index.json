@@ -41,11 +41,32 @@
   "physical": "Quick-dry cargo pants in slate grey with strapped thigh pockets",
   "reviewed": true
  },
+ "clothing.denim_jacket.denim": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A blue denim jacket with copper rivets and buttoned chest pockets",
+  "reviewed": true
+ },
  "clothing.holo_jacket.holo": {
   "bands": [
    "scifi"
   ],
   "physical": "A dark jacket with glowing cyan thread running along its seams",
+  "reviewed": true
+ },
+ "clothing.hoodie.grey": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A grey hoodie with a kangaroo pocket and faded shoulder print",
+  "reviewed": true
+ },
+ "clothing.jeans.faded": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "Faded blue denim jeans with worn knees and a leather patch",
   "reviewed": true
  },
  "clothing.magnetic_boots.mag": {
@@ -60,6 +81,20 @@
    "medieval"
   ],
   "physical": "A plain robe of coarse brown wool with a rope belt",
+  "reviewed": true
+ },
+ "clothing.scrubs_top.teal": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A teal scrub top with a v-neck and chest pocket",
+  "reviewed": true
+ },
+ "clothing.sneakers.canvas": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A worn canvas sneaker with a rubber toe cap and frayed lace",
   "reviewed": true
  },
  "clothing.tunic.coarse": {
@@ -97,11 +132,25 @@
   "physical": "A leather waterskin with a shoulder strap and carved stopper",
   "reviewed": true
  },
+ "document.passport.booklet": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A dark blue passport booklet with a gold border and bent corner",
+  "reviewed": true
+ },
  "document.scroll.rolled": {
   "bands": [
    "medieval"
   ],
   "physical": "A rolled parchment scroll tied with a red ribbon and wax seal",
+  "reviewed": true
+ },
+ "drink.energy_drink.can": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A tall slim energy drink can in green and silver",
   "reviewed": true
  },
  "drink.spirits.bottle": {
@@ -116,6 +165,13 @@
    "medieval"
   ],
   "physical": "A small cloth bag of dried beans tied at the neck",
+  "reviewed": true
+ },
+ "food.beans.tin": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A dented tin can with a faded paper label",
   "reviewed": true
  },
  "food.honey_cake.glazed": {
@@ -167,6 +223,13 @@
   "physical": "A ring of bent copper wire with a patinated green surface",
   "reviewed": true
  },
+ "jewellery.gold_chain.heavy": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A heavy gold chain necklace of interlocking links",
+  "reviewed": true
+ },
  "jewellery.iron_ring.iron": {
   "bands": [
    "medieval"
@@ -186,6 +249,13 @@
    "scifi"
   ],
   "physical": "A cage lantern holding a pale blue glow cell with charge strips",
+  "reviewed": true
+ },
+ "light.lantern.led": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A plastic camping lantern with a glowing yellow tube and fold-out handle",
   "reviewed": true
  },
  "light.lantern.tin": {
@@ -272,6 +342,13 @@
   "physical": "A slim rune-carved wand of dark wood with a clear crystal tip",
   "reviewed": true
  },
+ "material.cardboard.flat": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A flattened brown cardboard box with torn tape and folded flaps",
+  "reviewed": true
+ },
  "medicine.auto_injector.auto": {
   "bands": [
    "scifi"
@@ -286,11 +363,25 @@
   "physical": "A slim cautery pen with a heated loop tip and a coiled cable",
   "reviewed": true
  },
+ "medicine.cough_syrup.bottle": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A brown bottle of thick cough syrup with a plastic dosing cup",
+  "reviewed": true
+ },
  "medicine.dermal_gun.gun": {
   "bands": [
    "scifi"
   ],
   "physical": "A handheld dermal sealant gun with a barrel nozzle and side-mounted cartridge",
+  "reviewed": true
+ },
+ "medicine.insulin.kit": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "An insulin pen and a spare vial in a grey zip pouch",
   "reviewed": true
  },
  "medicine.laudanum.vial": {
@@ -314,11 +405,39 @@
   "physical": "A foil sleeve of adhesive patches with one pressed out beside it",
   "reviewed": true
  },
+ "medicine.stethoscope.chrome": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A stainless stethoscope with grey tubing and twin chest piece",
+  "reviewed": true
+ },
  "medicine.stim.injector": {
   "bands": [
    "scifi"
   ],
   "physical": "A chrome stim injector with a glass dose vial fitted in the barrel",
+  "reviewed": true
+ },
+ "medicine.thermometer.glass": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A slim glass thermometer in a translucent green plastic case",
+  "reviewed": true
+ },
+ "money.banknotes.banded": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A banded stack of banknotes with a paper strap",
+  "reviewed": true
+ },
+ "money.coins.scatter": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A small scatter of mixed metal coins with a hair clip among them",
   "reviewed": true
  },
  "tech.actuator_gloves.gloves": {
@@ -412,11 +531,25 @@
   "physical": "A spine-length implant rail with connector studs and ribbon leads",
   "reviewed": true
  },
+ "tech.remote.black": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A black remote control with rubber buttons and taped battery hatch",
+  "reviewed": true
+ },
  "tech.servo.motor": {
   "bands": [
    "scifi"
   ],
   "physical": "A small servo motor with a spur gear, mounting flange and cable tail",
+  "reviewed": true
+ },
+ "tech.smartphone.black": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A black smartphone with a cracked screen and scuffed corners",
   "reviewed": true
  },
  "tech.spinal_lattice.lattice": {
@@ -433,6 +566,13 @@
   "physical": "A wooden curry comb with a leather hand strap and worn teeth",
   "reviewed": true
  },
+ "tool.fountain_pen.gold": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A black fountain pen with a gold nib and cap ring",
+  "reviewed": true
+ },
  "tool.riding_crop.crop": {
   "bands": [
    "industrial"
@@ -447,11 +587,39 @@
   "physical": "A small lute with a ribbed brown body and a full set of strings",
   "reviewed": true
  },
+ "trinket.stopwatch.steel": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A steel stopwatch with a side button and ring loop",
+  "reviewed": true
+ },
+ "trinket.vinyl_record.disc": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A black vinyl record in a worn paper sleeve with a red spine",
+  "reviewed": true
+ },
+ "trinket.wristwatch.steel": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A steel wristwatch on a brown leather strap with a worn clasp",
+  "reviewed": true
+ },
  "weapon.arrows.sheaf": {
   "bands": [
    "medieval"
   ],
   "physical": "A sheaf of bound arrows with grey goose fletching and bodkin points",
+  "reviewed": true
+ },
+ "weapon.baseball_bat.wood": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A wooden baseball bat with a taped grip and dented barrel",
   "reviewed": true
  },
  "weapon.bow.recurve": {
@@ -461,11 +629,25 @@
   "physical": "A recurved wooden hunting bow with a hemp string and leather grip",
   "reviewed": true
  },
+ "weapon.brass_knuckles.duster": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A brass knuckle-duster with four finger rings polished by use",
+  "reviewed": true
+ },
  "weapon.longsword.cruciform": {
   "bands": [
    "medieval"
   ],
   "physical": "A long straight sword with a cruciform hilt and wheel pommel",
+  "reviewed": true
+ },
+ "weapon.pistol.slide": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A black semi-automatic pistol with a blued slide and checkered grip",
   "reviewed": true
  },
  "weapon.practice_sword.wood": {
@@ -482,11 +664,25 @@
   "physical": "A stubby energy pistol with copper cooling fins and a glowing cell window",
   "reviewed": true
  },
+ "weapon.rifle.lever": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A lever-action rifle with a walnut stock and brass receiver",
+  "reviewed": true
+ },
  "weapon.sabre.guard": {
   "bands": [
    "industrial"
   ],
   "physical": "A naval cutlass with a brass bowl guard and curved blade",
+  "reviewed": true
+ },
+ "weapon.shells.box": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "An open box of red plastic shotgun cartridges with brass heads",
   "reviewed": true
  },
  "weapon.shield.round": {
@@ -501,6 +697,13 @@
    "medieval"
   ],
   "physical": "A short arming sword with a battered leather scabbard and crossguard",
+  "reviewed": true
+ },
+ "weapon.shotgun.pump": {
+  "bands": [
+   "modern"
+  ],
+  "physical": "A pump-action shotgun with a heat shield and worn walnut stock",
   "reviewed": true
  },
  "weapon.spear.leaf": {
