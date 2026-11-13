@@ -41,21 +41,23 @@
   });
 
   // ---------------------------------------------------------------- free cells
-  /** A deterministic free cell [x, y] inside `reg`: its interior cells (a walled region's outer
-   *  ring is its wall), nearest the centre first, skipping cells an entity covers or `taken`
-   *  holds ("x,y"). null when the region has none left. */
+  /** A deterministic free cell [x, y] in `reg`, nearest the centre first. Walls are thin lines on
+   *  the region's border, not cells, so every cell of a walled room stands; doorway cells (any
+   *  region's openings) are skipped so nothing placed here blocks a door, as are cells an entity
+   *  covers and `taken` ("x,y"). null when the region has none left. */
   function freeCell(scn, reg, taken) {
-    const r = MapOps.rect(reg), in1 = reg.wall ? 1 : 0;
-    const x0 = r[0] + in1, y0 = r[1] + in1, x1 = r[2] - in1, y1 = r[3] - in1;
-    if (x1 < x0 || y1 < y0) return null;
+    const r = MapOps.rect(reg);
+    const doors = new Set();
+    for (const o of scn.regions || []) for (const g of o.openings || []) doors.add(g[0] + "," + g[1]);
     const cx = (r[0] + r[2]) / 2, cy = (r[1] + r[3]) / 2, cells = [];
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+    for (let y = r[1]; y <= r[3]; y++) for (let x = r[0]; x <= r[2]; x++) {
       const dx = x - cx, dy = y - cy;
       cells.push([dx * dx + dy * dy, y, x]);
     }
     cells.sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2]);
     for (const [, y, x] of cells)
-      if (!occupied(scn, x, y) && !(taken && taken.has(x + "," + y))) return [x, y];
+      if (!occupied(scn, x, y) && !doors.has(x + "," + y) && !(taken && taken.has(x + "," + y)))
+        return [x, y];
     return null;
   }
 

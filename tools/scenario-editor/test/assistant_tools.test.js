@@ -110,10 +110,10 @@ test("freeCell scans the interior from the centre, skipping covered and taken ce
   const field = R(s, "field");                       // open 10 × 10 at [15,15]; the cow is on [20,20]
   assert.deepEqual(T.freeCell(s, field, new Set()), [19, 19]);
   assert.deepEqual(T.freeCell(s, field, new Set(["19,19"])), [20, 19]);
-  const kitchen = R(s, "kitchen");                   // walled: interior x 3-5, y 3-6; the table covers [3,3]-[4,3]
+  const kitchen = R(s, "kitchen");                   // walled 5 × 6 at [2,2]: every cell stands; the table covers [3,3]-[4,3]
   assert.deepEqual(T.freeCell(s, kitchen, new Set()), [4, 4]);
   const shed = {id: "shed", name: "Shed", wall: "wood", position: [26, 26], size: [2, 2], openings: []};
-  assert.equal(T.freeCell(s, shed, new Set()), null, "a 2 × 2 walled region has no interior");
+  assert.deepEqual(T.freeCell(s, shed, new Set()), [26, 26], "walls are lines: every cell of a walled room stands");
 });
 
 // ---------------------------------------------------------------- add_npcs
@@ -177,6 +177,8 @@ test("add_npcs rejects duplicate names, full regions and unknown ids", () => {
   assert.equal(twins.data.createdIds.length, 1);
   assert.equal(twins.data.errors.length, 1, "the second is rejected");
   s.regions.push({id: "shed", name: "Shed", wall: "wood", position: [26, 26], size: [2, 2], openings: []});
+  s.entities.push({id: "crate_a", type: "object", pos: [26, 26], size: [2, 1], inventory: [], statusEffects: []},
+                  {id: "crate_b", type: "object", pos: [26, 27], size: [2, 1], inventory: [], statusEffects: []});
   const full = T.TOOLS.add_npcs.run(s, {npcs: [{name: "Ghost", homeRegionId: "shed"}]}, set);
   assert.equal(full.ok, false);
   assert.match(full.error, /no free cell/);
@@ -286,7 +288,7 @@ test("place_objects places the count on distinct free cells", () => {
   const walled = T.TOOLS.place_objects.run(s, {templateId: "tpl_barrel", regionId: "kitchen", count: 2}, set);
   assert.equal(walled.ok, true);
   for (const p of walled.data.placed)
-    assert.ok(p.cell[0] >= 3 && p.cell[0] <= 5 && p.cell[1] >= 3 && p.cell[1] <= 6, "inside the walls");
+    assert.ok(p.cell[0] >= 2 && p.cell[0] <= 6 && p.cell[1] >= 2 && p.cell[1] <= 7, "every cell of the walled room stands");
 });
 
 // ---------------------------------------------------------------- rename_thing
