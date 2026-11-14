@@ -16,6 +16,7 @@ raw replies, the parsed result, durations, token usage and the errors. These
 are reasoning models: the provider's ``max_tokens`` is always sent, and only
 ``message.content`` is read.
 """
+import base64
 import json
 import os
 import re
@@ -227,6 +228,23 @@ def repair_brackets(t):
     return "".join(out)
 
 
+def image_part(source, mime="image/webp"):
+    """One OpenAI image content part for ``source`` (the image's bytes, or a
+    path to an image file), as a data URL. It goes in a message's content
+    list, beside ``{"type": "text", "text": ...}`` parts, and only to a
+    provider with ``"vision": true``."""
+    if isinstance(source, (bytes, bytearray)):
+        data = bytes(source)
+    else:
+        try:
+            with open(source, "rb") as f:
+                data = f.read()
+        except OSError as e:
+            raise LLMError(f"cannot read image {source}: {e}")
+    b64 = base64.b64encode(data).decode("ascii")
+    return {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{b64}"}}
+
+
 class Client:
     """One provider, one run. ``call()`` never raises on model/contract
     failures; it returns the parsed object from the last attempt that
@@ -242,6 +260,7 @@ class Client:
     on_wait = None     # called about once a second during a wait; may raise to stop it
     max_output = None  # the provider's output-token cap; None is no cap
     extra_body = {}    # more request fields merged into every request
+    vision = False     # the provider's model takes image content parts
 
     def __init__(self, provider, providers_path=PROVIDERS_PATH, log_dir=None):
         cfg = load_provider(provider, providers_path)
@@ -253,6 +272,7 @@ class Client:
         self.rate_limit_wait = _seconds(cfg, "rate_limit_wait")
         self.max_output = _max_output(cfg)
         self.extra_body = _extra_body(cfg)
+        self.vision = bool(cfg.get("vision"))
         self._api_key = cfg["api_key"]
         self.log_dir = log_dir
         self.calls = 0
@@ -270,6 +290,34 @@ class Client:
         self.calls += 1
         messages = [{"role": "system", "content": system},
                     {"role": "user", "content": user}]
+        return self._ask(phase, messages, validate, max_retries)
+
+    def chat(self, phase, system, messages, validate=None, max_retries=2):
+        """One call over a whole conversation. ``messages`` is the history so
+        far, ``{"role": ..., "content": ...}`` entries whose content is a
+        string or a list of OpenAI content parts (``{"type": "text", ...}``
+        or the image parts from :func:`image_part`). A non-None ``system``
+        goes in front as the one system message; the caller's list is never
+        touched (retry turns go on a copy). Same contract loop, logging,
+        counters and return semantics as :meth:`call`."""
+        self.calls += 1
+        messages = ([{"role": "system", "content": system}] if system is not None
+                    else []) + list(messages)
+        return self._ask(phase, messages, validate, max_retries)
+
+    def _ask(self, phase, messages, validate, max_retries):
+        """The attempt loop behind ``call`` and ``chat``: one JSON object per
+        reply, scrubbed and checked with ``validate(parsed) -> [errors]``,
+        retried with the errors fed back (a reply cut at the budget goes
+        again with twice the budget), every attempt logged. Returns the
+        accepted object, the last parsed object, or None."""
+        if not self.vision:
+            for m in messages:
+                if isinstance(m.get("content"), list) and any(
+                        isinstance(p, dict) and p.get("type") == "image_url"
+                        for p in m["content"]):
+                    raise LLMError(f'provider {self.provider!r} has no "vision": true '
+                                   "in providers.json, so it cannot be sent images")
         record = {"phase": phase, "model": self.model, "attempts": [],
                   "result": None, "ok": False, "seconds": 0.0,
                   "tokens": {"prompt": 0, "completion": 0, "total": 0}}
@@ -456,8 +504,8 @@ def check_provider(name, providers_path=PROVIDERS_PATH):
     """Send one tiny request through a provider and report what answered.
 
     Returns a report dict (``ok``, ``provider``, ``model``, ``seconds``,
-    ``reply`` on success; ``error`` on failure). The api key is never part
-    of the report."""
+    ``vision``, ``reply`` on success; ``error`` on failure). The api key is
+    never part of the report."""
     cfg = load_provider(name, providers_path)
     base_url = cfg["base_url"].rstrip("/")
     try:
@@ -497,7 +545,7 @@ def check_provider(name, providers_path=PROVIDERS_PATH):
                 "error": f"malformed provider response: {e}"}
     seconds = round(time.time() - t0, 2)
     report = {"ok": True, "provider": name, "model": cfg["model"],
-              "seconds": seconds}
+              "seconds": seconds, "vision": bool(cfg.get("vision"))}
     if isinstance(data.get("model"), str):
         report["served_model"] = data["model"]
     try:

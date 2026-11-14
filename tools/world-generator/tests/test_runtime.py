@@ -14,7 +14,7 @@ PKG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 
 # everything the package may import: the standard library (3.8), the package
 # itself, and Pillow (always behind a try/except ImportError)
-STDLIB = {"argparse", "ast", "collections", "copy", "dataclasses", "datetime",
+STDLIB = {"argparse", "ast", "base64", "collections", "copy", "dataclasses", "datetime",
           "decimal", "functools", "hashlib", "importlib", "io", "itertools",
           "json", "math", "os", "pathlib", "random", "re", "shutil", "socket", "string",
           "struct", "subprocess", "sys", "tempfile", "time", "urllib",
