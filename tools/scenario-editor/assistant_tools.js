@@ -578,8 +578,10 @@
       if (!plan.remove.length) return null;
       const report = Refs.previewDelete(scn, plan.remove.map(e => e.id), {});
       const notes = [...report.changed.map(c => c.ownerName + ": " + c.what), ...report.warnings];
+      const names = plan.remove.slice(0, 12).map(e => "\"" + e.name + "\"").join(", ")
+        + (plan.remove.length > 12 ? " and " + (plan.remove.length - 12) + " more" : "");
       return "Remove " + plan.remove.length + (plan.remove.length === 1 ? " object" : " objects") + " from \""
-        + r.name + "\": " + plan.remove.map(e => "\"" + e.name + "\"").join(", ") + "."
+        + r.name + "\": " + names + "."
         + (plan.keep.length ? " Keeps: " + plan.keep.map(e => "\"" + e.name + "\" ("
           + (World10.isDoor(scn, e) ? "door" : "portal end") + ")").join(", ") + "." : "")
         + (notes.length ? " Also: " + notes.join("; ") + "." : "");

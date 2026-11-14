@@ -49,6 +49,7 @@ STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/refs.js": ("refs.js", "text/javascript; charset=utf-8"),
           "/refsui.js": ("refsui.js", "text/javascript; charset=utf-8"),
           "/worldgen.js": ("worldgen.js", "text/javascript; charset=utf-8"),
+          "/design.js": ("design.js", "text/javascript; charset=utf-8"),
           "/assistant_tools.js": ("assistant_tools.js", "text/javascript; charset=utf-8"),
           "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
           "/editor.css": ("editor.css", "text/css; charset=utf-8")}

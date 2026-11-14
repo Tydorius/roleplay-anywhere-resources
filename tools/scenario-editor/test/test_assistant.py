@@ -315,7 +315,7 @@ class TestAssistantEndpoints(unittest.TestCase):
     # ------------------------------------------------------------ meta, the key
     def test_the_pane_scripts_are_served(self):
         """assistant.js and assistant_tools.js are wired into STATIC, as scripts."""
-        for name in ("assistant.js", "assistant_tools.js"):
+        for name in ("assistant.js", "assistant_tools.js", "design.js"):
             with urllib.request.urlopen(f"{self.base}/{name}", timeout=30) as r:
                 self.assertEqual(r.status, 200, name)
                 self.assertEqual(r.headers["Content-Type"],
