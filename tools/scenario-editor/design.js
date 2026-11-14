@@ -359,11 +359,13 @@
 
       const tryPositions = (item, hint, positions, budget) => {
         const size = item.size;
-        let count = 0;
+        let count = 0, sealSkips = 0, otherSkips = 0;
         for (const pos of positions) {
           if (count >= budget) break;
           if (banned.has(item.templateId + "@" + pos[0] + "," + pos[1]) ||
-              !legalInto(occ, pos, size) || sealsFloor(item, pos)) continue;
+              !legalInto(occ, pos, size)) { otherSkips++; continue; }
+          if (sealsFloor(item, pos)) { sealSkips++; continue; }   // the cell was free; keeping the
+                                                                  // floor walkable ruled it out
           if (hint.symmetric && count + 2 <= budget) {
             const m = mirror(pos, size);
             // the mirror of a piece near the middle can overlap it
@@ -386,7 +388,7 @@
           if (isSolid({templateId: item.templateId})) addCells(solidCovered, pos, size);
           count += 1;
         }
-        return count;
+        return {count, sealSkips, otherSkips};
       };
 
       // a piece goes after the one it stands beside or around, so chairs never look for a table
@@ -423,15 +425,19 @@
           cands = anywhere;
         }
         const tries = hint.symmetric ? cands.slice().sort(byCenter) : cands;
-        let count = tryPositions(f, hint, tries, f.count);
+        let last = tryPositions(f, hint, tries, f.count);
+        let count = last.count;
         if (count < f.count && constrained(hint)) {
           falls.push({templateId: f.templateId,
             reason: "hint '" + f.hint + "' could not be fully met"});
-          count += tryPositions(f, hint, anywhere, f.count - count);
+          last = tryPositions(f, hint, anywhere, f.count - count);
+          count += last.count;
         }
         if (count < f.count)
           fails.push({templateId: f.templateId, placed: count, wanted: f.count,
-            reason: "no free cell in the room"});
+            // cells were free, but a solid piece on any of them would have walled floor off
+            reason: last.sealSkips ? "no placement that keeps the room walkable"
+                                   : "no free cell in the room"});
       }
       return {placed, failures: fails, fallbacks: falls};
     }

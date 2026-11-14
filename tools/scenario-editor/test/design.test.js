@@ -272,6 +272,28 @@ test("nothing is placed on the cell outside a nested room's door", () => {
 });
 
 
+test("a dense solid dump stops short with an honest reason, the floor still connected", () => {
+  const s = world();
+  s.regions = [{id: "store", name: "Store", wall: "wood", position: [1, 1], size: [20, 20],
+    openings: [[11, 1], [1, 11]]}];
+  s.entities = [];
+  const items = Array.from({length: 12}, () => ({templateId: "crate", count: 12}));
+  const out = D.furnish(s, s.regions[0], items);
+  // more crates than the room takes without walling floor off: the rest are refused, and the
+  // reason says why (cells were free; a crate on any of them would have sealed something)
+  assert.ok(out.failures.length > 0 && out.placements.length < 144);
+  for (const f of out.failures)
+    assert.equal(f.reason, "no placement that keeps the room walkable", JSON.stringify(f));
+  const covered = new Set(out.placements.map(p => p.pos.join(",")));
+  const seen = flood([1, 1, 20, 20], covered, [[11, 1], [1, 11]]);
+  let stranded = 0;
+  for (let x = 1; x <= 20; x++)
+    for (let y = 1; y <= 20; y++)
+      if (!covered.has(x + "," + y) && !seen.has(x + "," + y)) stranded++;
+  assert.ok(stranded <= 2, stranded + " free cells are sealed off");
+});
+
+
 // ---------------------------------------------------------------- the hint parser
 
 test("parseHint: wall:<side> keeps a piece against a wall", () => {
