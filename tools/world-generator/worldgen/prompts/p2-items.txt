@@ -40,5 +40,6 @@ Reply with ONE JSON object:
   One item may sit in many pools (a water bottle almost everywhere), another
   in only one. Each pool may carry "weights" (item -> relative chance, most
   1.0) to make some items rarer in that pool on top of the quality weighting.
+${library_purposes_block}
 
 ${rules}
