@@ -140,8 +140,11 @@ class Templates:
         if obj.get("back"):
             t["back"] = obj["back"]
         if obj.get("container"):
-            # the plan carries the flag so the run summary can count containers
+            # the plan carries the flag so the run summary can count containers,
+            # and the storage tag so the layout checks know them without the plan
             t["container"] = True
+            if "storage" not in t["tags"]:
+                t["tags"].append("storage")
         if art:
             t["sprite"] = f"library/sprites/{band}/{obj['id']}.webp"
         self.by_key[key] = t

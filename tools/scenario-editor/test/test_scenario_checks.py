@@ -189,5 +189,47 @@ class Crowds(unittest.TestCase):
                          ["10 sleep in 'Hall': the GM reads them all when the player is in there."])
 
 
+class Containers(unittest.TestCase):
+    """A hand-authored world whose containers all start empty: an info note (a hand-made world
+    may want them empty), only with a few container placements — storage-tagged or carrying a
+    loot pool — and nothing stocked anywhere: an inventory on any entity or a template money
+    tier means there is something to find.
+    """
+    CHEST = {"id": "t_chest", "name": "Chest", "size": [1, 1], "walkability": 0,
+             "tags": ["storage"]}
+    CRATE = {"id": "t_crate", "name": "Crate", "size": [1, 1], "walkability": 0,
+             "lootPoolIds": ["i_coin"]}
+    COIN = {"id": "i_coin", "name": "Coin", "type": "misc", "quality": "common"}
+
+    def boxes(self, chests, crates=0, inventory_on=None, money=None):
+        ents = [obj(f"c{i}", f"Chest {i}", "t_chest", (2, 3 + i)) for i in range(chests)]
+        ents += [obj(f"k{i}", f"Crate {i}", "t_crate", (6, 3 + i)) for i in range(crates)]
+        if inventory_on is not None:
+            ents[inventory_on]["inventory"] = [{"templateId": "i_coin", "count": 1}]
+        scn = scenario([], ents, [dict(self.CHEST), dict(self.CRATE)])
+        scn["itemTemplates"] = [self.COIN]
+        if money is not None:
+            scn["objectTemplates"][0]["money"] = money
+        return scn
+
+    def notes(self, scn):
+        return [f for f in scenario_checks.check(scn)
+                if f["msg"] == "This scenario's containers all start empty."]
+
+    def test_four_empty_container_placements_are_one_info_note(self):
+        found = self.notes(self.boxes(2, 2))
+        self.assertEqual([(f["level"], f["refs"]) for f in found],
+                         [("info", ["t_chest", "t_crate"])])
+
+    def test_one_inventory_anywhere_suppresses_the_note(self):
+        self.assertEqual(self.notes(self.boxes(2, 2, inventory_on=0)), [])
+
+    def test_a_template_money_tier_suppresses_the_note(self):
+        self.assertEqual(self.notes(self.boxes(2, 2, money=2)), [])
+
+    def test_fewer_than_three_containers_stay_silent(self):
+        self.assertEqual(self.notes(self.boxes(2)), [])
+
+
 if __name__ == "__main__":
     unittest.main()
