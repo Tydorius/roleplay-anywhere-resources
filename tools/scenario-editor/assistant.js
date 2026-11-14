@@ -5,7 +5,9 @@
 // lives in assistant_tools.js; the conversation happens server-side (assistant_editor.py): a send
 // posts the transcript with a freshly built summary of the scenario, polls the job, runs the
 // reply's actions and, when anything ran, feeds their results back for one more turn — at most
-// AS_MAX_ROUNDS turns per request. The transcript lives in memory only.
+// AS_MAX_ROUNDS turns per request. The transcript lives in memory only. The rebuild tools are
+// the exception to "runs in this page": they go to the server as a job, which the pane polls and
+// whose staged result it offers to apply or discard.
 
 const A = {
   open: false, provider: "",
@@ -20,6 +22,8 @@ const AS_POLL_MS = 1200;
 const AS_TOOL_LINE = 400;      // the server refuses a longer tool line
 const AS_RESULTS_CHARS = 6000; // stay well under the server's per-message limit
 const AS_INPUT_CHARS = 6000;   // and an over-long ask is refused before it joins the transcript
+const AS_REBUILD_POLL_MS = 1500;  // the rebuild job's poll; the chat turn keeps its own
+const AS_PREVIEW_LINES = 20;      // diff lines the rebuild dialog lists before a "+N more"
 
 /** The tool list for the prompt, each line cut to the server's limit. The cut lands in the
  *  description's tail, never in the arguments, which come first in the line. */
@@ -220,6 +224,7 @@ async function asRunAction(a) {
   const tool = AssistantTools.TOOLS[name];
   if (!tool || !args) return asActionDone(name, tool ? "args must be an object" : "unknown tool", false);
   if (!S.editable || !S.scn) return asActionDone(name, "read only: copy the scenario to a workspace first", false);
+  if (tool.server) return asRunRebuild(name, tool, args);
   if (tool.destructive) {
     const text = AssistantTools.preview(S.scn, {tool: name, args})
       || `Run ${name} with ${JSON.stringify(args)}.`;
@@ -275,6 +280,113 @@ function asToolResultsMessage(results) {
   return "Tool results: " + JSON.stringify(out);
 }
 
+// ---------------------------------------------------------------- the server tools (rebuilds)
+/** One server tool: the model call and the relayout happen on the server, in the rebuild's own
+ *  job slot — this page only starts the job, polls it and shows the staged preview to apply or
+ *  discard. A refused start (no plan, unknown name) or a failed job is the tool's error result;
+ *  applying replaces the whole workspace, so the open source is reloaded after it. Returns the
+ *  result the follow-up turn reports. */
+async function asRunRebuild(name, tool, args) {
+  let instruction = typeof args.instruction === "string" ? args.instruction : "";
+  if (name === "populate_zone" && Number.isInteger(args.quota))
+    instruction += " (quota: about " + args.quota + " people)";   // the wire carries instruction only
+  let first = null;
+  try {
+    first = (await api("/api/assistant/rebuild", {method: "POST", body: JSON.stringify({
+      source: S.source,
+      provider: A.provider,
+      kind: tool.kind,
+      target: args[tool.targetArg],
+      instruction,
+      seed: args.seed,
+    })})).job;
+  } catch (e) { return asActionDone(name, e.message, false); }
+  const card = asCard("action", null, "");
+  const progress = t => { card.innerHTML = `<span class="who">action</span><b>${esc(name)}</b> ${esc(t)}`; };
+  progress("rebuilding…");
+  let done = null, stopped = false, lost = false;
+  try {
+    for (;;) {
+      if (A.stopped) { stopped = true; break; }        // Stop ends the wait; the job runs on
+      let j = null;
+      try { j = (await api("/api/assistant/rebuild")).job; } catch {}
+      if (!j || j.id !== first.id) { lost = true; break; }
+      if (j.state !== "running") { done = j; break; }
+      progress("rebuilding — " + (j.label || j.phase || ""));
+      await new Promise(r => setTimeout(r, AS_REBUILD_POLL_MS));
+    }
+  } finally { card.remove(); }
+  if (stopped) return asActionDone(name, "stopped waiting — the rebuild keeps running on the server, where its result stays staged", false);
+  if (lost) return asActionDone(name, "the rebuild job left its slot before finishing", false);
+  if (done.state !== "done") return asActionDone(name, done.error || ("the rebuild was " + done.state), false);
+  return asRebuildDecide(name, done);
+}
+
+/** The finished rebuild: its staged preview as a dialog — Apply replaces the open scenario (and
+ *  reloads it), Discard (or Esc) leaves everything as it is. */
+async function asRebuildDecide(name, j) {
+  const pv = j.preview || {};
+  const lines = asPreviewLines(pv), shown = lines.slice(0, AS_PREVIEW_LINES);
+  const more = lines.length - shown.length;
+  const lead = (j.label || "The rebuild is staged")
+    + (j.seed != null ? " — the world was re-placed with seed " + j.seed : "")
+    + ". Applying replaces the whole open scenario with the rebuilt one; discarding keeps this one.";
+  const choice = await openDialog("Apply rebuild", `
+    <p class="note">${esc(lead)}</p>
+    <div class="fd-preview"><ul>${shown.map(l => `<li>${esc(l)}</li>`).join("")}</ul></div>
+    ${more > 0 ? `<p class="note">+${more} more change${more === 1 ? "" : "s"}…</p>` : ""}`,
+    [{label: "Discard", value: null}, {label: "Apply", value: "apply", primary: true}]);
+  if (choice !== "apply") {
+    try { await api("/api/assistant/rebuild/discard", {method: "POST"}); }
+    catch (e) { return asActionDone(name, "the discard failed: " + e.message, false); }
+    return asActionDone(name, "discarded — the open scenario was never touched", true,
+      {summary: "discarded: the rebuild was not applied, the scenario is unchanged", data: {discarded: true}});
+  }
+  let out = null;
+  try { out = await api("/api/assistant/rebuild/apply", {method: "POST"}); }
+  catch (e) { return asActionDone(name, "the apply failed: " + e.message, false); }
+  try { await openSource(S.source); }                 // the workspace is the new build now
+  catch (e) { asCard("err", null, "applied, but reloading the scenario failed: " + e.message); }
+  const what = asPreviewSummary(pv);
+  const summary = "applied" + (what ? ": " + what : "") + "; " + (out.carried || 0) + " image"
+    + (out.carried === 1 ? "" : "s") + " carried over; the previous scenario is backed up at " + out.backup;
+  return asActionDone(name, summary, true,
+    {summary, data: {applied: true, carried: out.carried, backup: out.backup, preview: pv}});
+}
+
+/** The staged preview as one line per change: names added and removed (a rename shows as both),
+ *  dressing props re-counted, and the headline counts and reachability. */
+function asPreviewLines(pv) {
+  const out = [];
+  const delta = (what, d) => {
+    for (const n of (d && d.added) || []) out.push("+ " + what + " \"" + n + "\"");
+    for (const n of (d && d.removed) || []) out.push("- " + what + " \"" + n + "\"");
+  };
+  delta("region", pv.regions);
+  delta("person", pv.npcNames);
+  delta("object template", pv.objectTemplateNames);
+  for (const [t, pair] of Object.entries(pv.dressingProps || {}))
+    out.push("~ dressing prop \"" + t + "\": " + pair[0] + " → " + pair[1]);
+  for (const [k, v] of Object.entries(pv.counts || {}))
+    if (Array.isArray(v)) out.push(k + ": " + v[0] + " → " + v[1]);
+  if (pv.metrics && pv.metrics.reachability !== undefined)
+    out.push("reachability: " + Math.round(pv.metrics.reachability * 100) + "%"
+      + (pv.metrics.dropped ? ", " + pv.metrics.dropped + " object(s) dropped" : ""));
+  return out;
+}
+
+/** The same preview as one clause, for the result card the follow-up turn reads. */
+function asPreviewSummary(pv) {
+  const bits = [];
+  if (pv.regions) bits.push(pv.regions.added.length + " region" + (pv.regions.added.length === 1 ? "" : "s")
+    + " added, " + pv.regions.removed.length + " removed");
+  for (const [k, v] of Object.entries(pv.counts || {}))
+    if (Array.isArray(v)) bits.push(k + " " + v[0] + " → " + v[1]);
+  if (pv.metrics && pv.metrics.reachability !== undefined)
+    bits.push("reachability " + Math.round(pv.metrics.reachability * 100) + "%");
+  return bits.join(", ");
+}
+
 // ---------------------------------------------------------------- reattach, source switches
 /** After a refresh: a turn still running is picked up — the pane opens, the composer waits, and
  *  the reply and its actions land when it ends (the transcript itself is gone with the old page,
@@ -303,13 +415,28 @@ async function asReattach() {
 
 // The transcript belongs to the scenario it started on: switching sources starts it over — and
 // never happens mid-turn, which would aim the model's remaining actions at another scenario.
+// Reloading the same source mid-turn is fine: that is what applying a rebuild does.
 const asOpenSource = openSource;
 openSource = async id => {
-  if (A.running) { toast("The assistant is working — stop it before switching scenarios"); $("source").value = S.source; return; }
+  if (A.running && id !== S.source) { toast("The assistant is working — stop it before switching scenarios"); $("source").value = S.source; return; }
   const before = S.source;
   await asOpenSource(id);
-  if (S.source !== before) asClear();
+  if (S.source !== before) { asClear(); asCheckPlan(); }
 };
+
+/** Whether the open source can be rebuilt at all: the server tools need a saved plan, and only a
+ *  world the generator made carries one, so a note beside the composer says so when it is
+ *  missing. Checked once per source switch, like the re-roll button. */
+let asPlanCheck = 0;
+async function asCheckPlan() {
+  const mine = ++asPlanCheck;
+  let missing = false;
+  if (S.source.startsWith("work/")) {
+    try { missing = !(await api("/api/worldgen/plan?source=" + encodeURIComponent(S.source))).has; }
+    catch { missing = false; }
+  }
+  if (mine === asPlanCheck) $("asPlanNote").hidden = !missing;
+}
 
 // ---------------------------------------------------------------- wiring
 $("asToggle").onclick = () => asTogglePane();

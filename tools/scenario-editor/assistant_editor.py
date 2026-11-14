@@ -288,4 +288,5 @@ def _chat(client, system, msgs, j):
 
 def meta():
     return {"providers": wg.providers(), "maxActions": MAX_ACTIONS,
-            "maxMessages": MAX_MESSAGES, "summaryLimit": SUMMARY_LIMIT}
+            "maxMessages": MAX_MESSAGES, "summaryLimit": SUMMARY_LIMIT,
+            "rebuild": True}

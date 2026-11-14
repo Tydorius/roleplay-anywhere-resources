@@ -5,6 +5,9 @@
 // the model. Every change goes through the caller's set(obj, key, value), arrays replaced with new
 // ones, never spliced in place. TOOLS is the single source of truth for what the pane can do;
 // promptLines() renders it for the system prompt and preview() words the destructive ones.
+// The three rebuild tools are marked server: their run never does the work — the pane starts it
+// as a job on the server and polls it (kind names the pipeline there, targetArg the argument
+// that names the target).
 
 (function (root, factory) {
   if (typeof module === "object" && module.exports)
@@ -16,6 +19,7 @@
   const MAX_REGIONS = 150;       // summary caps, so the report stays prompt-sized
   const MAX_TEMPLATES = 80;
   const MAX_FIND = 20;
+  const MAX_INSTRUCTION = 1000;  // the rebuild tools' cap, as the server refuses longer ones
   // A shift's working hours; "none" (or no work region) stays home all day.
   const SHIFTS = {day: ["08:00", "18:00"], evening: ["15:00", "23:00"], night: ["22:00", "06:00"]};
 
@@ -155,6 +159,31 @@
   /** One registry entry. run never sees null args (and answers, never throws). */
   function tool(name, args, desc, destructive, run) {
     return {name, args, desc, destructive: !!destructive, run: (scn, a, set) => run(scn, a || {}, set)};
+  }
+
+  /** What every rebuild tool checks in this page: a target named exactly and a plain-language
+   *  instruction inside the cap. The server re-checks both against the plan (and refuses a
+   *  workspace without one); run only ever answers, because the work happens server-side.
+   *  `extra` is the tool's own check, run before the server answer. */
+  function checkRebuildArgs(name, targetArg, args, extra) {
+    if (!isStr(args[targetArg]) || !args[targetArg].trim())
+      return bad(name + " needs a " + targetArg + " name");
+    if (!isStr(args.instruction) || !args.instruction.trim())
+      return bad(name + " needs an instruction");
+    if (args.instruction.trim().length > MAX_INSTRUCTION)
+      return bad("the instruction is longer than " + MAX_INSTRUCTION + " characters");
+    if (args.seed !== undefined && !Number.isInteger(args.seed))
+      return bad("the seed must be a whole number");
+    const problem = extra ? extra(args) : null;
+    if (problem) return problem;
+    return bad(name + " runs on the server: the pane starts it as a rebuild job and polls it");
+  }
+
+  /** One server-tool entry: the pane posts it to /api/assistant/rebuild as a job of `kind`, with
+   *  the argument `targetArg` (an exact building or zone name) as the target. */
+  function serverTool(name, args, desc, kind, targetArg, run) {
+    return {name, args, desc, destructive: false, server: true, kind, targetArg,
+            run: (scn, a) => run(a || {})};
   }
 
   // ---------------------------------------------------------------- the registry
@@ -649,6 +678,22 @@
           summary: "renamed to \"" + name + "\"" + (res.count ? ", " + res.count + " mention" + (res.count === 1 ? "" : "s") + " updated" : ""),
           data: {id: args.id, name, mentions: res.count}};
       }),
+
+    rebuild_building: serverTool("rebuild_building", "{building, instruction, seed?}",
+      "Redesign one building of the generated world from a plain-language instruction, on the server: the world is re-placed and the result offered to apply or discard. building is the building's exact name; needs a world the generator made.",
+      "building", "building",
+      args => checkRebuildArgs("rebuild_building", "building", args)),
+
+    redress_zone: serverTool("redress_zone", "{zone, instruction, seed?}",
+      "Redo one zone's outdoor dressing (props, paths) from a plain-language instruction, on the server; the world is re-placed and the result offered to apply or discard. zone is the zone's exact name; needs a world the generator made.",
+      "redress_zone", "zone",
+      args => checkRebuildArgs("redress_zone", "zone", args)),
+
+    populate_zone: serverTool("populate_zone", "{zone, instruction, quota?}",
+      "Add people to one zone from a plain-language instruction, on the server; nobody already there is removed or renamed. zone is the zone's exact name; quota is roughly how many people to add; needs a world the generator made.",
+      "populate_zone", "zone",
+      args => checkRebuildArgs("populate_zone", "zone", args, a =>
+        a.quota !== undefined && !Number.isInteger(a.quota) ? bad("the quota must be a whole number") : null)),
   };
 
   // ---------------------------------------------------------------- prompt and confirm text

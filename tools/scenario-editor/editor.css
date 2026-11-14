@@ -270,6 +270,7 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .as-card.err .who, .as-card.err b { color: var(--bad); }
 .as-meter { flex: none; font-size: 11px; color: var(--muted); padding: 4px 10px; min-height: 22px;
             border-top: 1px solid var(--line); }
+.as-plan { margin: 0; padding: 3px 10px 5px; }
 .as-compose { display: flex; gap: 6px; padding: 8px 10px 10px; border-top: 1px solid var(--line); }
 .as-compose textarea { flex: 1; min-height: 54px; max-height: 180px; }
 .as-btns { display: flex; flex-direction: column; gap: 4px; justify-content: flex-end; }

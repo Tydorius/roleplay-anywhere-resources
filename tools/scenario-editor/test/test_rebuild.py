@@ -418,6 +418,46 @@ class TestRebuildEndpoints(unittest.TestCase):
         code, raw = self.request("POST", "/api/assistant/rebuild/discard")
         self.assertEqual(code, 400)                    # nothing left to discard
 
+    def test_end_to_end_over_http_start_poll_apply_then_discard(self):
+        """The pane's own path over the wire, in one flow: start a building
+        rebuild, poll it to done, apply it (the workspace is replaced and the
+        stage cleared), then run a second rebuild and discard it (the applied
+        build stays exactly as it is)."""
+        before = self.snapshot()      # restored afterwards: the tests after
+        self.addCleanup(self.restore_workspace, before)   # this one stay pristine
+        # start → poll → apply
+        STATE["replies"] = [json.dumps(renamed_design())]
+        job = self.rebuild()
+        self.assertIn(job["state"], ("running", "done"))
+        done = self.wait_done(job["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        self.assertEqual(staged["building"], TARGET)
+
+        code, raw = self.request("POST", "/api/assistant/rebuild/apply")
+        self.assertEqual(code, 200, raw)
+        self.assertTrue(json.loads(raw)["applied"])
+        new_scn = json.loads((self.ws / "scenario.json").read_text("utf-8"))
+        self.assertEqual(new_scn, json.loads(
+            (Path(staged["built_dir"]) / "scenario.json").read_text("utf-8")),
+            "the workspace holds the staged build")
+        self.assertIn(f"{TARGET} Taproom", [r["name"] for r in new_scn["regions"]])
+        inn = next(b for b in json.loads((self.ws / "plan.json").read_text("utf-8"))
+                   ["buildings"] if b["name"] == TARGET)
+        self.assertIn("Taproom", [r["name"] for r in inn["rooms"]])
+        self.assertIsNone(self.get("/api/assistant/rebuild")["staged"],
+                          "applying clears the stage")
+
+        # a second rebuild, discarded: the applied build stays as it is
+        STATE["replies"] = [json.dumps(renamed_design())]
+        self.finish(self.rebuild())
+        self.assertIsNotNone(self.get("/api/assistant/rebuild")["staged"])
+        code, raw = self.request("POST", "/api/assistant/rebuild/discard")
+        self.assertEqual(code, 200, raw)
+        self.assertIsNone(self.get("/api/assistant/rebuild")["staged"])
+        self.assertEqual(json.loads((self.ws / "scenario.json").read_text("utf-8")),
+                         new_scn, "discarding changed nothing")
+
     # ------------------------------------------------------------ redress_zone
     def test_a_redress_replaces_only_that_zones_dressing(self):
         before = self.snapshot()

@@ -598,7 +598,8 @@ test("rename_thing renames a region and the blocks and events that name it", () 
 test("promptLines lists the registry; the destructive tools are flagged and lines stay short", () => {
   assert.deepEqual(Object.keys(T.TOOLS), ["find", "get_region", "get_person", "list_object_templates", "edit_texts",
     "add_npcs", "update_npc", "remove_npc", "remove_object", "place_objects", "create_room", "create_building",
-    "furnish_region", "clear_region", "add_level", "link_portal", "rename_thing"]);
+    "furnish_region", "clear_region", "add_level", "link_portal", "rename_thing",
+    "rebuild_building", "redress_zone", "populate_zone"]);
   const lines = T.promptLines();
   assert.equal(lines.length, Object.keys(T.TOOLS).length);
   for (const l of lines) {
@@ -607,6 +608,31 @@ test("promptLines lists the registry; the destructive tools are flagged and line
   }
   assert.match(lines.find(l => l.startsWith("furnish_region")), /wall:<side>/, "the hint vocabulary is on the line");
   assert.deepEqual(Object.keys(T.TOOLS).filter(k => T.TOOLS[k].destructive), ["remove_npc", "remove_object", "clear_region"]);
+});
+
+// ---------------------------------------------------------------- the server tools
+test("the rebuild tools are server tools: flagged, kind-mapped, args checked, never local", () => {
+  const server = Object.keys(T.TOOLS).filter(k => T.TOOLS[k].server);
+  assert.deepEqual(server, ["rebuild_building", "redress_zone", "populate_zone"]);
+  assert.deepEqual(server.map(k => T.TOOLS[k].kind), ["building", "redress_zone", "populate_zone"]);
+  assert.deepEqual(server.map(k => T.TOOLS[k].targetArg), ["building", "zone", "zone"]);
+  assert.ok(server.every(k => !T.TOOLS[k].destructive), "their dialog is the confirmation");
+  const lines = T.promptLines();
+  for (const name of server)
+    assert.match(lines.find(l => l.startsWith(name)), /exact name/, name + " says the target is exact");
+  // good args answer that the work happens on the server — run is never the rebuild itself
+  const s = world();
+  for (const [name, args] of [
+    ["rebuild_building", {building: "Inn", instruction: "a warmer taproom"}],
+    ["rebuild_building", {building: "Inn", instruction: "a warmer taproom", seed: 7}],
+    ["redress_zone", {zone: "Field", instruction: "market stalls"}],
+    ["populate_zone", {zone: "Field", instruction: "two farmhands", quota: 2}],
+  ]) {
+    const res = T.TOOLS[name].run(s, args, set);
+    assert.equal(res.ok, false, name);
+    assert.match(res.error, /server/, name);
+  }
+  assert.deepEqual(s, world(), "nothing local was touched");
 });
 
 test("preview words the destructive actions from a previewDelete report", () => {
@@ -656,6 +682,14 @@ test("every tool answers {ok: false, error} on bad input and never throws", () =
     ["add_level", {buildingId: "inn", name: 5}],
     ["link_portal", {}], ["link_portal", {aId: "table"}], ["link_portal", {aId: "nope", bId: "table"}],
     ["link_portal", {aId: "cow", bId: "table"}],
+    ["rebuild_building", {}], ["rebuild_building", {building: "Inn"}],
+    ["rebuild_building", {building: "Inn", instruction: ""}],
+    ["rebuild_building", {building: 4, instruction: "x"}],
+    ["rebuild_building", {building: "Inn", instruction: "x", seed: "later"}],
+    ["rebuild_building", {building: "Inn", instruction: "x".repeat(1001)}],
+    ["redress_zone", {}], ["redress_zone", {zone: "Field"}],
+    ["redress_zone", {zone: "Field", instruction: "x", seed: 1.5}],
+    ["populate_zone", {}], ["populate_zone", {zone: "Field", instruction: "x", quota: "two"}],
   ];
   for (const [name, args] of cases) {
     let res;
