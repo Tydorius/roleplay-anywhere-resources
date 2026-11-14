@@ -8,9 +8,10 @@
 
 (function (root, factory) {
   if (typeof module === "object" && module.exports)
-    module.exports = factory(require("./mapops.js"), require("./refs.js"), require("./schedule.js"));
-  else root.AssistantTools = factory(root.MapOps, root.Refs, root.Schedule);
-})(typeof self !== "undefined" ? self : this, function (MapOps, Refs, Schedule) {
+    module.exports = factory(require("./mapops.js"), require("./refs.js"), require("./schedule.js"),
+      require("./design.js"), require("./world10.js"));
+  else root.AssistantTools = factory(root.MapOps, root.Refs, root.Schedule, root.Design, root.World10);
+})(typeof self !== "undefined" ? self : this, function (MapOps, Refs, Schedule, Design, World10) {
 
   const MAX_REGIONS = 150;       // summary caps, so the report stays prompt-sized
   const MAX_TEMPLATES = 80;
@@ -120,6 +121,35 @@
       blocks.push({start: "14:00", end: ws, location: home.name, role: "leisure"});
     }
     return blocks;
+  }
+
+  // ---------------------------------------------------------------- the room tools
+  const WALLS = ["wood", "brick", "stone", "steel"];       // the wall materials the game draws
+  const SIDES = ["n", "e", "s", "w"];                      // a region side, as openings carry them
+
+  /** The middle edge cell of `reg`'s side ("n", "e", "s" or "w"): where create_room puts its door. */
+  function sideCell(reg, side) {
+    const r = MapOps.rect(reg);
+    const midX = Math.floor((r[0] + r[2]) / 2), midY = Math.floor((r[1] + r[3]) / 2);
+    return side === "n" ? [midX, r[3]] : side === "s" ? [midX, r[1]]
+      : side === "w" ? [r[0], midY] : [r[2], midY];
+  }
+
+  /** What clear_region does to `reg`: the placed objects wholly inside it, split into what goes and
+   *  what stays — what "objects" keeps the door objects and the portal ends (stairs), to count them. */
+  function clearPlan(scn, reg, what) {
+    const inside = MapOps.contents(scn, reg).entities.filter(e => e.type === "object");
+    const keep = what === "objects" ? inside.filter(e => World10.isDoor(scn, e) || e.portal) : [];
+    const kept = new Set(keep);
+    return {remove: inside.filter(e => !kept.has(e)), keep};
+  }
+
+  /** The next free level of a building: 1, 2, … and only once the positives are spent, -1, -2, … */
+  function nextLevel(scn, building) {
+    const used = new Set(World10.floorsOf(scn, building).map(f => f.pocket.level));
+    for (let n = 1; n <= 99; n++) if (!used.has(n)) return n;
+    for (let n = 1; n <= 99; n++) if (!used.has(-n)) return -n;
+    return null;
   }
 
   /** One registry entry. run never sees null args (and answers, never throws). */
@@ -355,6 +385,156 @@
           data: {placed, templateId: tpl.id, regionId: reg.id}};
       }),
 
+    create_room: tool("create_room", "{name, x, y, w, h, wall?, doors?, description?} (w and h 1-40; wall: wood, brick, stone or steel, absent for an open area; doors: sides n/e/s/w, at most one per side, default s for a walled room)",
+      "Create a rectangular room or open area whose bottom-left cell is (x, y). Each door lands on the middle of its side, and a door object hangs on the doorway.",
+      false, (scn, args, set) => {
+        if (!isStr(args.name) || !args.name.trim()) return bad("create_room needs a name");
+        if (!Number.isInteger(args.x) || !Number.isInteger(args.y)) return bad("create_room needs whole-number x and y");
+        if (!Number.isInteger(args.w) || args.w < 1 || args.w > 40) return bad("w must be a whole number from 1 to 40");
+        if (!Number.isInteger(args.h) || args.h < 1 || args.h > 40) return bad("h must be a whole number from 1 to 40");
+        if (args.wall !== undefined && !WALLS.includes(args.wall))
+          return bad("wall must be one of " + WALLS.join(", ") + ", or left out for an open area");
+        if (args.description !== undefined && !isStr(args.description)) return bad("description must be a string");
+        const walled = !!args.wall;
+        let doors = args.doors === undefined ? (walled ? ["s"] : []) : args.doors;
+        if (!Array.isArray(doors)) return bad("doors must be a list of sides (n, e, s, w)");
+        doors = doors.slice();
+        if (doors.some(d => !SIDES.includes(d))) return bad("a door side is one of n, e, s, w");
+        if (new Set(doors).size !== doors.length) return bad("at most one door per side");
+        if (doors.length && !walled) return bad("an open area has no walls to put a door in");
+        const res = MapOps.createRegion(scn, [args.x, args.y], [args.x + args.w - 1, args.y + args.h - 1],
+          {name: args.name.trim(), wall: args.wall, description: args.description}, set);
+        if (res.error) return bad(res.error);
+        const cells = [];
+        for (const side of doors) {
+          const cell = sideCell(res.region, side);
+          const d = MapOps.toggleDoor(scn, res.region, cell, set);
+          if (d.error) return bad(d.error);
+          cells.push(cell);
+        }
+        const have = World10.doorsByKey(scn);              // a doorway may already carry a door
+        for (const dw of World10.regionDoorways(scn, res.region))
+          if (!(have.get(dw.key) || []).length)
+            World10.hangDoor(scn, dw, res.region.door ?? "door", set);
+        return {ok: true,
+          summary: "created \"" + res.region.name + "\", a " + args.w + "x" + args.h + " "
+            + (walled ? args.wall + " room" : "open area") + " at [" + args.x + "," + args.y + "]"
+            + (cells.length === 1 ? " with a door on " + doors[0] : cells.length ? " with doors on " + doors.join(" and ") : ""),
+          data: {regionId: res.region.id, doors: cells}};
+      }),
+
+    furnish_region: tool("furnish_region", "{regionId, items: [{templateId, count, hint?}]} (at most 12 items, count 1-12, hint max 80 characters)",
+      "Furnish a region; the engine picks the cells. Hint tokens join with \"+\": wall:<side> row:<side> corner center near_door away_from_door beside:<ref> around:<ref> symmetric; a side is n, e, s, w, far, side or near (from the room's main door); a ref is a template id or name.",
+      false, (scn, args, set) => {
+        if (!isStr(args.regionId)) return bad("furnish_region needs a regionId string");
+        const reg = region(scn, args.regionId);
+        if (!reg) return bad("no region has id \"" + args.regionId + "\"");
+        if (!Array.isArray(args.items) || !args.items.length) return bad("furnish_region needs items: [{templateId, count, hint?}]");
+        if (args.items.length > 12) return bad("at most 12 items per furnish_region action");
+        for (const it of args.items) {
+          if (!it || typeof it !== "object" || Array.isArray(it)) return bad("an item must be an object {templateId, count, hint?}");
+          if (!isStr(it.templateId) || !it.templateId) return bad("an item needs a templateId");
+          if (!Number.isInteger(it.count) || it.count < 1 || it.count > 12) return bad("count must be a whole number from 1 to 12");
+          if (it.hint !== undefined && !isStr(it.hint)) return bad("hint must be a string");
+          if (isStr(it.hint) && it.hint.length > 80) return bad("a hint is at most 80 characters");
+        }
+        const out = Design.furnish(scn, reg, args.items);
+        if (!out.placements.length) {
+          const why = out.failures.map(f => (f.templateId || "?") + ": " + f.reason).join("; ");
+          return bad("nothing could be placed in \"" + reg.name + "\"" + (why ? " (" + why + ")" : ""));
+        }
+        const nameOf = id => ((scn.objectTemplates || []).find(t => t.id === id) || {name: id}).name;
+        const placed = out.placements.map(p => {
+          const e = MapOps.placeObject(scn, (scn.objectTemplates || []).find(t => t.id === p.templateId),
+            p.pos[0], p.pos[1], set);
+          return {id: e.id, name: e.name, cell: e.pos.slice()};
+        });
+        const want = args.items.reduce((n, it) => n + it.count, 0);
+        return {ok: true,
+          summary: "placed " + placed.length + " of " + want + " pieces in \"" + reg.name + "\""
+            + (out.failures.length ? " (" + out.failures.map(f => nameOf(f.templateId) + ": " + f.reason).join("; ") + ")" : ""),
+          data: {regionId: reg.id, placed, failures: out.failures, fallbacks: out.fallbacks}};
+      }),
+
+    clear_region: tool("clear_region", "{regionId, what?} (what: \"objects\", the default, or \"clutter\")",
+      "Remove the placed objects wholly inside a region. \"objects\" keeps the door objects and the linked portal ends (stairs), reporting what it kept; \"clutter\" removes every placed object, those included. People, nested regions and templates are never touched.",
+      true, (scn, args, set) => {
+        if (!isStr(args.regionId)) return bad("clear_region needs a regionId string");
+        const reg = region(scn, args.regionId);
+        if (!reg) return bad("no region has id \"" + args.regionId + "\"");
+        const what = args.what === undefined ? "objects" : args.what;
+        if (what !== "objects" && what !== "clutter") return bad("what must be \"objects\" or \"clutter\"");
+        const plan = clearPlan(scn, reg, what);
+        if (!plan.remove.length) return bad("no placed objects to clear inside \"" + reg.name + "\"");
+        const report = Refs.forceDelete(scn, plan.remove.map(e => e.id), {}, set);
+        const doors = plan.keep.filter(e => World10.isDoor(scn, e)).length;
+        const stairs = plan.keep.length - doors;
+        const kept = [doors ? doors + " door" + (doors === 1 ? "" : "s") : null,
+          stairs ? stairs + " portal end" + (stairs === 1 ? "" : "s") : null].filter(Boolean).join(" and ");
+        return {ok: true,
+          summary: "cleared \"" + reg.name + "\": removed " + plan.remove.length + " object"
+            + (plan.remove.length === 1 ? "" : "s") + (kept ? ", kept " + kept : ""),
+          data: {kept: plan.keep.map(e => ({id: e.id, name: e.name,
+            why: World10.isDoor(scn, e) ? "door" : "portal end"})), report}};
+      }),
+
+    add_level: tool("add_level", "{buildingId, name?, level?, stairsTemplateId?}",
+      "Add a floor to a walled building (the next free level, 1 then 2 and so on, unless level names one). With stairsTemplateId one stair copy stands in the building and one on the new floor, linked as a portal pair; without it the floor is unreachable until stairs link it.",
+      false, (scn, args, set) => {
+        if (!isStr(args.buildingId)) return bad("add_level needs a buildingId string");
+        const building = region(scn, args.buildingId);
+        if (!building) return bad("no region has id \"" + args.buildingId + "\"");
+        if (args.name !== undefined && !isStr(args.name)) return bad("name must be a string");
+        if (args.stairsTemplateId !== undefined && !isStr(args.stairsTemplateId)) return bad("stairsTemplateId must be a string");
+        const stairTpl = args.stairsTemplateId === undefined ? null
+          : (scn.objectTemplates || []).find(t => t.id === args.stairsTemplateId);
+        if (args.stairsTemplateId !== undefined && !stairTpl)
+          return bad("no object template has id \"" + args.stairsTemplateId + "\"");
+        if (stairTpl && World10.isDoor(scn, {type: "object", templateId: stairTpl.id}))
+          return bad("a door template can't be stairs");
+        if (args.level !== undefined && !Number.isInteger(args.level)) return bad("level must be a whole number other than 0");
+        let level = args.level;
+        if (!level) {                                      // absent (or 0): the next free level
+          level = nextLevel(scn, building);
+          if (level === null) return bad("\"" + building.name + "\" has too many floors to number");
+        }
+        const label = (args.name !== undefined ? args.name.trim() : "") || building.name + ", floor " + level;
+        const stairCell = stairTpl ? freeCell(scn, building, null) : null;
+        if (stairTpl && !stairCell) return bad("\"" + building.name + "\" has no free cell for the stairs");
+        const res = World10.addFloor(scn, building, {name: label, level}, set);
+        if (res.error) return bad(res.error);
+        const data = {floorId: res.region.id, floorLevel: level};
+        let stairs = "";
+        if (stairTpl) {
+          const a = MapOps.placeObject(scn, stairTpl, stairCell[0], stairCell[1], set);
+          const top = freeCell(scn, res.region, null);
+          if (!top) return bad("the new floor has no free cell for the stairs");
+          const b = MapOps.placeObject(scn, stairTpl, top[0], top[1], set);
+          const link = World10.linkPortal(scn, a, b, set);
+          if (link.error) return bad(link.error);
+          data.stairIds = [a.id, b.id];
+          stairs = " with linked stairs";
+        }
+        return {ok: true,
+          summary: "added \"" + res.region.name + "\" (level " + level + " of \"" + building.name + "\")" + stairs
+            + (stairTpl ? "" : "; it is unreachable until stairs link it"),
+          data};
+      }),
+
+    link_portal: tool("link_portal", "{aId, bId}",
+      "Link two placed objects as a portal pair (stairs between floors); both ends then lead to each other. A door can't be a portal.",
+      false, (scn, args, set) => {
+        if (!isStr(args.aId)) return bad("link_portal needs an aId string");
+        if (!isStr(args.bId)) return bad("link_portal needs a bId string");
+        const a = entity(scn, args.aId), b = entity(scn, args.bId);
+        if (!a) return bad("nothing has id \"" + args.aId + "\"");
+        if (!b) return bad("nothing has id \"" + args.bId + "\"");
+        const res = World10.linkPortal(scn, a, b, set);
+        if (res.error) return bad(res.error);
+        return {ok: true, summary: "linked \"" + a.name + "\" and \"" + b.name + "\" as a portal pair",
+          data: {aId: a.id, bId: b.id}};
+      }),
+
     rename_thing: tool("rename_thing", "{id, name}",
       "Rename a region, entity or template, updating every schedule block and calendar event that names it.",
       false, (scn, args, set) => {
@@ -390,6 +570,20 @@
   function preview(scn, action) {
     const t = action && TOOLS[action.tool];
     if (!t || !t.destructive) return null;
+    if (t.name === "clear_region") {
+      const args = action.args || {};
+      const r = isStr(args.regionId) ? region(scn, args.regionId) : null;
+      if (!r || (args.what !== undefined && args.what !== "objects" && args.what !== "clutter")) return null;
+      const plan = clearPlan(scn, r, args.what === undefined ? "objects" : args.what);
+      if (!plan.remove.length) return null;
+      const report = Refs.previewDelete(scn, plan.remove.map(e => e.id), {});
+      const notes = [...report.changed.map(c => c.ownerName + ": " + c.what), ...report.warnings];
+      return "Remove " + plan.remove.length + (plan.remove.length === 1 ? " object" : " objects") + " from \""
+        + r.name + "\": " + plan.remove.map(e => "\"" + e.name + "\"").join(", ") + "."
+        + (plan.keep.length ? " Keeps: " + plan.keep.map(e => "\"" + e.name + "\" ("
+          + (World10.isDoor(scn, e) ? "door" : "portal end") + ")").join(", ") + "." : "")
+        + (notes.length ? " Also: " + notes.join("; ") + "." : "");
+    }
     if (t.name !== "remove_npc" && t.name !== "remove_object") return null;
     const id = action.args && action.args.id;
     if (!isStr(id)) return null;

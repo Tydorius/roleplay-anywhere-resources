@@ -6,6 +6,8 @@ const T = require("../assistant_tools.js");
 const M = require("../mapops.js");
 const Refs = require("../refs.js");
 const Schedule = require("../schedule.js");
+const World10 = require("../world10.js");
+const Design = require("../design.js");
 
 const set = (o, k, v) => { if (v === undefined) delete o[k]; else o[k] = v; };
 const snap = o => JSON.stringify(o);
@@ -40,6 +42,8 @@ function world() {
     objectTemplates: [
       {id: "tpl_table", name: "Table", size: [2, 1], maxHp: 20, tags: ["furniture"], lootPoolIds: ["itpl_bread"]},
       {id: "tpl_barrel", name: "Barrel", size: [1, 1], maxHp: 15, tags: [], lootPoolIds: []},
+      {id: "tpl_stool", name: "Stool", size: [1, 1], maxHp: 10, tags: ["furniture"], lootPoolIds: []},
+      {id: "tpl_stairs", name: "Stairs", size: [1, 1], walkability: 1, maxHp: 50, tags: [], lootPoolIds: []},
     ],
     itemTemplates: [{id: "itpl_bread", name: "Bread", type: "food", quality: "common", value: 1, description: "A crusty loaf"}],
     npcTemplates: [{id: "ntpl_bandit", name: "Bandit", description: "A highway robber", homes: [{regionId: "field", count: 2}]}],
@@ -291,6 +295,196 @@ test("place_objects places the count on distinct free cells", () => {
     assert.ok(p.cell[0] >= 2 && p.cell[0] <= 6 && p.cell[1] >= 2 && p.cell[1] <= 7, "every cell of the walled room stands");
 });
 
+// ---------------------------------------------------------------- create_room
+test("create_room builds a walled room with a hung door on the middle of its south edge", () => {
+  const s = world();
+  const res = T.TOOLS.create_room.run(s, {name: "Closet", x: 2, y: 20, w: 6, h: 5, wall: "wood"}, set);
+  assert.equal(res.ok, true);
+  const reg = R(s, res.data.regionId);
+  assert.equal(reg.wall, "wood");
+  assert.deepEqual(reg.position, [2, 20]);
+  assert.deepEqual(reg.size, [6, 5]);
+  assert.deepEqual(reg.openings, [[4, 20]], "one opening at the middle of the south edge");
+  assert.deepEqual(res.data.doors, [[4, 20]]);
+  const dw = World10.doorways(s).find(d => d.room === reg);
+  assert.ok(dw, "the opening makes a doorway");
+  const door = s.entities.find(e => World10.isDoor(s, e));
+  assert.ok(door, "a door object was hung");
+  assert.equal(World10.doorKeyOf(door), dw.key, "it hangs on the new doorway");
+  assert.equal(door.name, "Door 1");
+  assert.deepEqual(R(s, "house").openings, [[6, 2]], "no neighbour shares the wall line: nothing else opens");
+});
+
+test("create_room opens both sides of a shared wall and lands several doors", () => {
+  const s = world();
+  const res = T.TOOLS.create_room.run(s, {name: "Stable", x: 23, y: 2, w: 4, h: 4, wall: "wood", doors: ["w"]}, set);
+  assert.equal(res.ok, true);
+  const reg = R(s, res.data.regionId);
+  assert.deepEqual(reg.openings, [[23, 3]], "the door at the middle of the west edge");
+  assert.ok(R(s, "inn").openings.some(c => c[0] === 22 && c[1] === 3), "the inn opens its facing cell too");
+  const dw = World10.doorways(s).find(d => d.room === reg);
+  assert.ok(dw, "the shared wall is a doorway");
+  assert.ok(s.entities.some(e => World10.isDoor(s, e) && World10.doorKeyOf(e) === dw.key), "with a door object on it");
+
+  const two = T.TOOLS.create_room.run(s, {name: "Shop", x: 2, y: 12, w: 7, h: 6, wall: "brick", doors: ["n", "e"]}, set);
+  assert.equal(two.ok, true);
+  const shop = R(s, two.data.regionId);
+  assert.deepEqual(shop.openings, [[5, 17], [8, 14]], "n lands mid-north-edge, e mid-east-edge");
+  assert.deepEqual(two.data.doors, [[5, 17], [8, 14]]);
+  assert.equal(s.entities.filter(e => World10.isDoor(s, e)).length, 3, "every doorway got a door object");
+});
+
+test("create_room: an open area gets no doors; overlaps and off-map rooms are refused", () => {
+  const s = world();
+  const open = T.TOOLS.create_room.run(s, {name: "Yard", x: 15, y: 26, w: 5, h: 3}, set);
+  assert.equal(open.ok, true);
+  const reg = R(s, open.data.regionId);
+  assert.ok(!reg.wall);
+  assert.deepEqual(reg.openings, []);
+  assert.deepEqual(open.data.doors, []);
+  assert.equal(s.entities.filter(e => World10.isDoor(s, e)).length, 0, "no door objects anywhere");
+  const before = s.regions.length;
+  const overlap = T.TOOLS.create_room.run(s, {name: "X", x: 20, y: 3, w: 6, h: 4, wall: "wood"}, set);
+  assert.equal(overlap.ok, false);
+  assert.match(overlap.error, /overlap/);
+  const away = T.TOOLS.create_room.run(s, {name: "X", x: 27, y: 2, w: 6, h: 3, wall: "wood"}, set);
+  assert.equal(away.ok, false);
+  assert.match(away.error, /leave the map/);
+  assert.equal(s.regions.length, before, "the refused rooms changed nothing");
+});
+
+// ---------------------------------------------------------------- furnish_region
+test("furnish_region places what the engine works out, named after the template", () => {
+  const s = world();
+  const items = [
+    {templateId: "tpl_table", count: 1, hint: "wall:n"},
+    {templateId: "tpl_stool", count: 4, hint: "around:Table"},
+  ];
+  const res = T.TOOLS.furnish_region.run(s, {regionId: "inn", items}, set);
+  assert.equal(res.ok, true);
+  assert.deepEqual(res.data.failures, []);
+  assert.deepEqual(res.data.fallbacks, []);
+  const w = world(), want = Design.furnish(w, R(w, "inn"), items);
+  assert.deepEqual(want.failures, []);
+  assert.equal(res.data.placed.length, want.placements.length);
+  res.data.placed.forEach((p, i) => {
+    assert.equal(p.cell.join(","), want.placements[i].pos.join(","), "placement " + i + " matches the engine");
+    const e = E(s, p.id);
+    assert.equal(e.templateId, want.placements[i].templateId);
+    assert.deepEqual(e.pos, want.placements[i].pos);
+  });
+  assert.equal(res.data.placed[0].cell[1], 6, "the table stands against the north wall");
+  assert.deepEqual(res.data.placed.map(p => p.name), ["Table 2", "Stool 1", "Stool 2", "Stool 3", "Stool 4"],
+    "copies are named after the template");
+});
+
+test("furnish_region: an over-full request partly succeeds; unknown ids are refused", () => {
+  const s = world();
+  s.regions.push({id: "shed", name: "Shed", wall: "wood", position: [26, 26], size: [2, 2], openings: []});
+  const full = T.TOOLS.furnish_region.run(s, {regionId: "shed", items: [{templateId: "tpl_barrel", count: 12}]}, set);
+  assert.equal(full.ok, true, "partial success");
+  assert.equal(full.data.placed.length, 4, "a 2x2 shed holds four barrels");
+  assert.equal(full.data.failures.length, 1);
+  assert.equal(full.data.failures[0].placed, 4);
+  assert.equal(full.data.failures[0].wanted, 12);
+  assert.match(full.data.failures[0].reason, /no free cell/);
+  assert.match(full.summary, /placed 4 of 12/);
+  const noRegion = T.TOOLS.furnish_region.run(s, {regionId: "nope", items: [{templateId: "tpl_barrel", count: 1}]}, set);
+  assert.equal(noRegion.ok, false);
+  const noTpl = T.TOOLS.furnish_region.run(s, {regionId: "inn", items: [{templateId: "nope", count: 1}]}, set);
+  assert.equal(noTpl.ok, false);
+  assert.match(noTpl.error, /unknown template/);
+});
+
+// ---------------------------------------------------------------- clear_region
+test("clear_region removes the clutter, keeping and counting doors and portal ends", () => {
+  const s = world();
+  T.TOOLS.place_objects.run(s, {templateId: "tpl_barrel", regionId: "inn", count: 3}, set);
+  const door = World10.hangDoor(s, World10.doorways(s).find(d => d.room === R(s, "inn")), "door", set);
+  const stairs = s.objectTemplates.find(t => t.id === "tpl_stairs");
+  const low = M.placeObject(s, stairs, 16, 4, set);
+  const high = M.placeObject(s, stairs, 20, 16, set);
+  World10.linkPortal(s, low, high, set);
+  const templates = s.objectTemplates.length;
+  const pre = T.preview(s, {tool: "clear_region", args: {regionId: "inn"}});
+  assert.ok(pre.includes("Barrel 1") && pre.includes("Barrel 3"), "the preview names the barrels");
+  assert.ok(pre.includes("Door 1") && pre.includes("Stairs 1"), "and what it would keep");
+  const res = T.TOOLS.clear_region.run(s, {regionId: "inn"}, set);
+  assert.equal(res.ok, true);
+  assert.equal(s.entities.filter(e => e.name.startsWith("Barrel")).length, 0, "the barrels are gone");
+  assert.equal(res.data.report.removed.length, 3);
+  assert.ok(E(s, door.id) && E(s, low.id), "the door and the portal end stay");
+  assert.equal(res.data.kept.length, 2);
+  assert.deepEqual(res.data.kept.map(k => k.why).sort(), ["door", "portal end"]);
+  assert.ok(E(s, "mara"), "people stay");
+  assert.ok(E(s, "table"), "objects outside the region stay");
+  assert.equal(World10.portalPartner(s, high), low, "the far stair and its link stay");
+  assert.equal(s.objectTemplates.length, templates, "templates stay");
+});
+
+test("clear_region with what \"clutter\" takes the doors and stairs too", () => {
+  const s = world();
+  T.TOOLS.place_objects.run(s, {templateId: "tpl_barrel", regionId: "inn", count: 1}, set);
+  const door = World10.hangDoor(s, World10.doorways(s).find(d => d.room === R(s, "inn")), "door", set);
+  const pre = T.preview(s, {tool: "clear_region", args: {regionId: "inn", what: "clutter"}});
+  assert.ok(pre.includes("Door 1"), "the preview lists the door among the removals");
+  const res = T.TOOLS.clear_region.run(s, {regionId: "inn", what: "clutter"}, set);
+  assert.equal(res.ok, true);
+  assert.equal(s.entities.filter(e => e.name.startsWith("Barrel") || e.name.startsWith("Door")).length, 0);
+  assert.deepEqual(res.data.kept, []);
+  assert.ok(E(s, "mara"), "people still stay");
+  assert.ok(!E(s, door.id), "the door object is gone");
+});
+
+// ---------------------------------------------------------------- add_level, link_portal
+test("add_level adds a floor, with linked stairs when asked", () => {
+  const s = world();
+  const res = T.TOOLS.add_level.run(s, {buildingId: "inn", stairsTemplateId: "tpl_stairs"}, set);
+  assert.equal(res.ok, true);
+  const floor = R(s, res.data.floorId);
+  assert.ok(floor, "the floor region exists");
+  assert.equal(floor.pocket.anchor, "inn");
+  assert.equal(floor.pocket.level, res.data.floorLevel);
+  assert.equal(res.data.floorLevel, 1, "the first free level");
+  assert.equal(floor.name, "Inn, floor 1");
+  assert.equal(floor.wall, "brick");
+  assert.equal(res.data.stairIds.length, 2);
+  const [a, b] = res.data.stairIds.map(id => E(s, id));
+  assert.ok(a && b, "both stair objects exist");
+  assert.deepEqual([a.name, b.name], ["Stairs 1", "Stairs 2"]);
+  assert.ok(M.inRect(M.rect(R(s, "inn")), a.pos[0], a.pos[1]), "one stair in the building");
+  assert.ok(M.inRect(M.rect(floor), b.pos[0], b.pos[1]), "one on the new floor");
+  assert.equal(World10.portalPartner(s, a), b);
+  assert.equal(World10.portalPartner(s, b), a);
+  assert.match(res.summary, /linked stairs/);
+
+  const plain = T.TOOLS.add_level.run(s, {buildingId: "house"}, set);
+  assert.equal(plain.ok, true);
+  const loft = R(s, plain.data.floorId);
+  assert.ok(loft && loft.pocket.anchor === "house" && loft.pocket.level === 1);
+  assert.equal(loft.name, "House, floor 1");
+  assert.ok(!plain.data.stairIds, "no stairs placed");
+  assert.match(plain.summary, /unreachable until stairs/);
+  const open = T.TOOLS.add_level.run(s, {buildingId: "field"}, set);
+  assert.equal(open.ok, false);
+  assert.match(open.error, /walls/);
+});
+
+test("link_portal pairs two objects and refuses a door", () => {
+  const s = world();
+  const barrel = M.placeObject(s, s.objectTemplates.find(t => t.id === "tpl_barrel"), 20, 16, set);
+  const res = T.TOOLS.link_portal.run(s, {aId: "table", bId: barrel.id}, set);
+  assert.equal(res.ok, true);
+  assert.equal(World10.portalPartner(s, E(s, "table")), barrel);
+  assert.equal(World10.portalPartner(s, barrel), E(s, "table"));
+  assert.match(res.summary, /Table 1/);
+  assert.match(res.summary, /Barrel 1/);
+  const door = World10.hangDoor(s, World10.doorways(s).find(d => d.room === R(s, "inn")), "door", set);
+  const refused = T.TOOLS.link_portal.run(s, {aId: door.id, bId: barrel.id}, set);
+  assert.equal(refused.ok, false);
+  assert.match(refused.error, /door/i);
+});
+
 // ---------------------------------------------------------------- rename_thing
 test("rename_thing renames a region and the blocks and events that name it", () => {
   const s = world();
@@ -307,13 +501,18 @@ test("rename_thing renames a region and the blocks and events that name it", () 
 });
 
 // ---------------------------------------------------------------- registry shape and bad input
-test("promptLines lists the registry; only the remove tools are destructive", () => {
+test("promptLines lists the registry; the destructive tools are flagged and lines stay short", () => {
   assert.deepEqual(Object.keys(T.TOOLS), ["find", "get_region", "get_person", "list_object_templates", "edit_texts",
-    "add_npcs", "update_npc", "remove_npc", "remove_object", "place_objects", "rename_thing"]);
+    "add_npcs", "update_npc", "remove_npc", "remove_object", "place_objects", "create_room", "furnish_region",
+    "clear_region", "add_level", "link_portal", "rename_thing"]);
   const lines = T.promptLines();
   assert.equal(lines.length, Object.keys(T.TOOLS).length);
-  for (const l of lines) assert.match(l, /^\S+ — .+ — .+$/);
-  assert.deepEqual(Object.keys(T.TOOLS).filter(k => T.TOOLS[k].destructive), ["remove_npc", "remove_object"]);
+  for (const l of lines) {
+    assert.match(l, /^\S+ — .+ — .+$/);
+    assert.ok(l.length < 400, l.split(" — ")[0] + " is " + l.length + " characters");
+  }
+  assert.match(lines.find(l => l.startsWith("furnish_region")), /wall:<side>/, "the hint vocabulary is on the line");
+  assert.deepEqual(Object.keys(T.TOOLS).filter(k => T.TOOLS[k].destructive), ["remove_npc", "remove_object", "clear_region"]);
 });
 
 test("preview words the destructive actions from a previewDelete report", () => {
@@ -344,6 +543,25 @@ test("every tool answers {ok: false, error} on bad input and never throws", () =
     ["place_objects", {templateId: "nope", regionId: "field", count: 1}],
     ["place_objects", {templateId: "tpl_barrel", regionId: "nope", count: 1}],
     ["rename_thing", {}], ["rename_thing", {id: "nope", name: "X"}], ["rename_thing", {id: "field"}],
+    ["create_room", {}], ["create_room", {name: "X"}], ["create_room", {name: "X", x: 0, y: 0, w: 0, h: 5}],
+    ["create_room", {name: "X", x: 0, y: 0, w: 5, h: 41}], ["create_room", {name: "X", x: 0, y: 0, w: 1.5, h: 5}],
+    ["create_room", {name: "X", x: 0, y: 0, w: 3, h: 3, wall: "glass"}],
+    ["create_room", {name: "X", x: 0, y: 0, w: 3, h: 3, wall: "wood", doors: "s"}],
+    ["create_room", {name: "X", x: 0, y: 0, w: 3, h: 3, wall: "wood", doors: ["s", "s"]}],
+    ["create_room", {name: "X", x: 0, y: 0, w: 3, h: 3, doors: ["s"]}],
+    ["furnish_region", {}], ["furnish_region", {regionId: "inn"}],
+    ["furnish_region", {regionId: "nope", items: [{templateId: "tpl_barrel", count: 1}]}],
+    ["furnish_region", {regionId: "inn", items: [{templateId: "tpl_barrel", count: 0}]}],
+    ["furnish_region", {regionId: "inn", items: [{templateId: "tpl_barrel", count: 13}]}],
+    ["furnish_region", {regionId: "inn", items: [{templateId: "tpl_barrel", count: 1, hint: 5}]}],
+    ["furnish_region", {regionId: "inn", items: [{templateId: "tpl_barrel", count: 1, hint: "x".repeat(81)}]}],
+    ["furnish_region", {regionId: "inn", items: Array.from({length: 13}, () => ({templateId: "tpl_barrel", count: 1}))}],
+    ["clear_region", {}], ["clear_region", {regionId: "nope"}], ["clear_region", {regionId: "inn", what: "all"}],
+    ["add_level", {}], ["add_level", {buildingId: "nope"}], ["add_level", {buildingId: "field"}],
+    ["add_level", {buildingId: "inn", stairsTemplateId: "nope"}], ["add_level", {buildingId: "inn", level: 0.5}],
+    ["add_level", {buildingId: "inn", name: 5}],
+    ["link_portal", {}], ["link_portal", {aId: "table"}], ["link_portal", {aId: "nope", bId: "table"}],
+    ["link_portal", {aId: "cow", bId: "table"}],
   ];
   for (const [name, args] of cases) {
     let res;
