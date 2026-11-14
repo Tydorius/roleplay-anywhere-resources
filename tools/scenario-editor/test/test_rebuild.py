@@ -1,0 +1,366 @@
+"""The rebuild endpoints of the Scenario Editor, over HTTP with the model
+mocked at the wire (the fake Client is the generator's real one with only the
+HTTP POST replaced): one model call edits a building's design in the saved
+plan, then the generator's own relayout — a real build, no model — re-places
+the world. The workspace is untouched until the stage is applied; applying it
+backs the old scenario and media up and carries images onto the new ids by
+name.
+
+The workspace under test is built once, for real, in setUpClass: the village
+fixture's plan written as plan.json beside a scenario a relayout produced.
+"""
+import json
+import sys
+import tempfile
+import threading
+import time
+import unittest
+import urllib.error
+import urllib.request
+from http.server import ThreadingHTTPServer
+from pathlib import Path
+from unittest.mock import patch
+
+HERE = Path(__file__).resolve().parent.parent          # tools/scenario-editor
+sys.path.insert(0, str(HERE))
+
+import worldgen_editor as wg                           # noqa: E402  (gallery + generator on sys.path)
+import image_gallery as ig                             # noqa: E402
+from worldgen import api as wgapi                      # noqa: E402
+from worldgen import llm as wgllm                      # noqa: E402
+from worldgen import phases as wgphases                # noqa: E402
+import scenario_editor as se                           # noqa: E402
+import rebuild_editor as rb                            # noqa: E402
+
+FIXTURE = HERE.parent / "world-generator" / "fixtures" / "village.json"
+FULL_KEY = "sk-rebuild-1234567890abcd"                 # must never reach the browser
+TARGET = "The Green Dragon Inn"
+INSTRUCTION = "turn the common room into a proper taproom"
+SEED = 42                                              # the workspace's own seed
+
+STATE = {"replies": [], "sleep": 0.0}   # what the mocked wire serves
+INSTALLED = []                          # every fake client the rebuild built
+
+
+class FakeClient(wgllm.Client):
+    """The generator's real Client with the network cut out: _post serves the
+    queued raw replies (sleeping first when a test needs a slow model);
+    everything else — the contract loop, the counters, the call logs — is the
+    real code. No providers.json is read."""
+
+    def __init__(self, provider, providers_path=wgllm.PROVIDERS_PATH, log_dir=None):
+        self.provider = provider
+        self.model = "mock-model"
+        self.base_url = "http://127.0.0.1:1/v1"
+        self._api_key = FULL_KEY
+        self.max_tokens = 4000
+        self.timeout = 30
+        self.rate_limit_wait = 0
+        self.max_output = None
+        self.extra_body = {}
+        self.vision = False
+        self.on_wait = None
+        self.log_dir = log_dir
+        self.calls = 0
+        self.retries = 0
+        self.last_error = None
+        self.last_cut = False
+        self.tokens = {"prompt": 0, "completion": 0, "total": 0}
+        self.seconds = 0.0
+        self.attempts = []              # the messages of every wire attempt
+        INSTALLED.append(self)
+
+    def _post(self, messages, max_tokens=None):
+        self.attempts.append([dict(m) for m in messages])
+        raw = STATE["replies"].pop(0)
+        if STATE["sleep"]:
+            time.sleep(STATE["sleep"])
+        return raw, {"prompt": 10, "completion": 5, "total": 15, "finish": "stop"}
+
+
+def renamed_design(old="Common Room", new="Taproom"):
+    """The fixture's own design for the target building with one room renamed
+    everywhere it is referenced — a valid p3 reply that changes the world."""
+    plan = json.loads(FIXTURE.read_text("utf-8"))
+    d = json.loads(json.dumps(next(b for b in plan["buildings"] if b["name"] == TARGET)))
+    for r in d["rooms"]:
+        if r["name"] == old:
+            r["name"] = new
+    d["connections"] = [[new if x == old else x for x in c] for c in d["connections"]]
+    if d["entrance"]["room"] == old:
+        d["entrance"]["room"] = new
+    for f in d["furniture"]:
+        if f["room"] == old:
+            f["room"] = new
+    return d
+
+
+def named_design(name):
+    """The fixture's design under a wrong name — a reply check_p3 rejects."""
+    d = renamed_design()
+    d["name"] = name
+    return d
+
+
+class TestRebuildEndpoints(unittest.TestCase):
+    srv = None
+    base = None
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory(prefix="rebuild-editor-test-")
+        t = Path(cls.tmp.name)
+        cls.addClassCleanup(cls.tmp.cleanup)
+        wg.PROVIDERS_JSON = t / "providers.json"
+        old_work, old_backups, old_out = ig.WORK, ig.BACKUPS, wg.OUT_ROOT
+        ig.WORK, ig.BACKUPS, wg.OUT_ROOT = t / "work", t / "backups", t / "out"
+        cls.addClassCleanup(setattr, ig, "WORK", old_work)
+        cls.addClassCleanup(setattr, ig, "BACKUPS", old_backups)
+        cls.addClassCleanup(setattr, wg, "OUT_ROOT", old_out)
+        wg.save_provider("mockp", "http://127.0.0.1:1/v1", FULL_KEY, "mock-model", 16000)
+
+        # the workspace: one real build from the fixture's plan (no model),
+        # imported as a workspace with that plan saved beside it
+        init_out = t / "out-init"
+        summary = wgapi.relayout(str(FIXTURE), seed=SEED, out_dir=str(init_out))
+        cls.sid = wg._to_workspace(init_out, summary, FIXTURE)
+        cls.ws = Path(ig.WORK) / cls.sid[len("work/"):]
+
+        se.Handler.store = t / "store"
+        se.Handler.store.mkdir()
+        cls.srv = ThreadingHTTPServer(("127.0.0.1", 0), se.Handler)
+        cls.addClassCleanup(cls.srv.shutdown)
+        threading.Thread(target=cls.srv.serve_forever, daemon=True).start()
+        cls.base = f"http://127.0.0.1:{cls.srv.server_address[1]}"
+
+    def setUp(self):
+        rb._job = None                 # no rebuild of an earlier test is running
+        rb._staged = None              # and no stage is left over
+        INSTALLED.clear()
+        STATE["replies"] = []
+        STATE["sleep"] = 0.0
+        p = patch.object(wgllm, "Client", FakeClient)
+        p.start()
+        self.addCleanup(p.stop)
+
+    # ------------------------------------------------------------ http helpers
+    @classmethod
+    def request(cls, method, path, body=None):
+        data = json.dumps(body).encode() if isinstance(body, (dict, list)) else body
+        req = urllib.request.Request(cls.base + path, data=data, method=method)
+        try:
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.status, r.read().decode("utf-8")
+        except urllib.error.HTTPError as e:
+            return e.code, e.read().decode("utf-8")
+
+    @classmethod
+    def get(cls, path):
+        code, raw = cls.request("GET", path)
+        assert code == 200, f"GET {path}: {code} {raw}"
+        return json.loads(raw)
+
+    def rebuild_body(self, **over):
+        body = {"source": self.sid, "provider": "mockp", "kind": "building",
+                "target": TARGET, "instruction": INSTRUCTION, "seed": SEED}
+        body.update(over)
+        return body
+
+    def rebuild(self, **over):
+        """One POST /api/assistant/rebuild with a small valid body; ``over``
+        replaces fields. Returns the running job."""
+        code, raw = self.request("POST", "/api/assistant/rebuild", self.rebuild_body(**over))
+        assert code == 200, f"POST /api/assistant/rebuild: {code} {raw}"
+        return json.loads(raw)["job"]
+
+    def wait_done(self, job_id, timeout=90):
+        deadline = time.time() + timeout
+        while time.time() < deadline:
+            j = self.get("/api/assistant/rebuild")["job"]
+            if j and j["id"] == job_id and j["state"] != "running":
+                return j
+            time.sleep(0.1)
+        raise AssertionError(f"rebuild job {job_id} did not finish in {timeout}s")
+
+    def finish(self, job):
+        done = self.wait_done(job["id"])
+        self.assertEqual(done["state"], "done", done["error"])
+        return done
+
+    def snapshot(self):
+        """The workspace's whole current state, to prove it untouched."""
+        files = {str(p.relative_to(self.ws)): p.read_bytes()
+                 for p in sorted(self.ws.rglob("*")) if p.is_file()}
+        return files
+
+    @staticmethod
+    def npc_id(scn, name):
+        return next(e["id"] for e in scn["entities"]
+                    if e.get("type") == "npc" and e.get("name") == name)
+
+    # ------------------------------------------------------------ a happy rebuild
+    def test_a_happy_rebuild_stages_a_preview_and_touches_nothing(self):
+        before = self.snapshot()
+        STATE["replies"] = [json.dumps(renamed_design())]
+        done = self.finish(self.rebuild())
+        self.assertEqual(done["target"], TARGET)
+        self.assertEqual(done["seed"], SEED)
+        self.assertEqual(done["provider"], "mockp")
+        self.assertEqual(done["model"], "mock-model")
+        self.assertEqual(done["calls"], 1)
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        self.assertEqual(staged["building"], TARGET)
+        self.assertEqual(staged["seed"], SEED)
+        self.assertIn(f"{TARGET} Taproom", staged["preview"]["regions"]["added"])
+        self.assertIn(f"{TARGET} Common Room", staged["preview"]["regions"]["removed"])
+        counts = staged["preview"]["counts"]
+        self.assertEqual(counts["npcs"][0], counts["npcs"][1])
+        self.assertEqual(counts["doors"][0], counts["doors"][1])
+        self.assertIn("reachability", staged["preview"]["metrics"])
+        self.assertLess(len(json.dumps(staged["preview"])), 4096)
+        self.assertTrue(Path(staged["out_dir"]).is_dir())
+        self.assertTrue(Path(staged["plan_path"]).is_file())
+        # ...and the workspace has not changed one byte
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(len(INSTALLED[-1].attempts), 1)   # accepted on the first try
+
+    def test_the_prompt_mirrors_the_original_p3_lines_plus_the_instruction(self):
+        STATE["replies"] = [json.dumps(renamed_design())]
+        self.finish(self.rebuild())
+        sent = INSTALLED[-1].attempts[0]
+        self.assertEqual(sent[0], {"role": "system", "content":
+                                   "You generate scenario data for a map RPG. "
+                                   "You reply with one JSON object and nothing else."})
+        user = sent[1]["content"]
+        self.assertIn(f"The user wants this building redesigned as follows — obey it: "
+                      f"{INSTRUCTION}", user)
+        plan = json.loads(FIXTURE.read_text("utf-8"))
+        zone = next(z for z in plan["zones"]
+                    if any(b["name"] == TARGET for b in z["buildings"]))
+        b = next(x for x in zone["buildings"] if x["name"] == TARGET)
+        self.assertIn(wgphases._setting_line(plan, plan.get("frame")), user)
+        self.assertIn(wgphases._zone_line(zone), user)
+        self.assertIn(wgphases._building_line(b), user)
+        self.assertIn(wgphases._compound_line(plan.get("compounds") or [], zone, b), user)
+        self.assertIn(wgphases._units_line(b), user)
+        self.assertIn("- Straw bed | 1x2 | note: along the wall of a sleeping room, "
+                      "never blocking a door", user)
+
+    def test_an_invalid_design_is_retried_with_the_errors_fed_back(self):
+        STATE["replies"] = [json.dumps(named_design("The Wrong Inn")),
+                            json.dumps(renamed_design())]
+        done = self.finish(self.rebuild())
+        self.assertEqual(done["calls"], 1)             # one call, two attempts
+        fake = INSTALLED[-1]
+        self.assertEqual(len(fake.attempts), 2)        # exactly one retry
+        first, again = fake.attempts
+        self.assertEqual(again[:2], first)             # system + prompt unchanged
+        self.assertEqual(again[2]["role"], "assistant")  # the bad reply quoted back
+        self.assertIn("The Wrong Inn", again[2]["content"])
+        self.assertEqual(again[3]["role"], "user")     # ...and the error fed back
+        self.assertIn(f"reply name must be exactly {TARGET!r}", again[3]["content"])
+
+    # ------------------------------------------------------------ refused and busy
+    def test_bad_requests_are_refused_before_any_job_starts(self):
+        code, raw = self.request("GET", "/api/assistant/rebuild")
+        self.assertEqual(code, 200)
+        self.assertEqual(json.loads(raw), {"job": None, "staged": None})
+        for over, needle in (
+                ({"target": "The Blue Dragon Inn"}, "no building named"),
+                ({"target": "the green dragon inn"}, "no building named"),
+                ({"instruction": ""}, "instruction"),
+                ({"instruction": "x" * 1001}, "1-1000"),
+                ({"source": "staging"}, "workspace"),
+                ({"source": "work/nope"}, "workspace"),
+                ({"kind": "zone"}, "kind"),
+                ({"seed": "later"}, "seed")):
+            code, raw = self.request("POST", "/api/assistant/rebuild",
+                                     {"source": self.sid, "provider": "mockp",
+                                      "kind": "building", "target": TARGET,
+                                      "instruction": INSTRUCTION, "seed": SEED, **over})
+            self.assertEqual(code, 400, over)
+            self.assertIn(needle, raw)
+        self.assertFalse(INSTALLED)                    # the model was never asked
+
+    def test_a_second_rebuild_while_one_runs_is_busy(self):
+        STATE["sleep"] = 2.0
+        STATE["replies"] = [json.dumps(renamed_design())]
+        first = self.rebuild()
+        code, raw = self.request("POST", "/api/assistant/rebuild", self.rebuild_body())
+        self.assertEqual(code, 409)
+        self.assertTrue(json.loads(raw)["busy"])
+        done = self.finish(first)                      # the first still completes
+        self.assertEqual(done["state"], "done")
+
+    # ------------------------------------------------------------ applying a stage
+    def test_apply_replaces_the_workspace_and_carries_images_by_name(self):
+        STATE["replies"] = [json.dumps(renamed_design())]
+        self.finish(self.rebuild())
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        # a portrait exists for the old innkeeper's id, under the old id's folder
+        old_scn = json.loads((self.ws / "scenario.json").read_text("utf-8"))
+        old_id = self.npc_id(old_scn, "Maribel Dabney")
+        portrait = self.ws / "media" / old_id / f"{old_id}-portrait.webp"
+        portrait.parent.mkdir(parents=True)
+        portrait.write_bytes(b"planted-portrait-bytes")
+
+        code, raw = self.request("POST", "/api/assistant/rebuild/apply")
+        self.assertEqual(code, 200, raw)
+        out = json.loads(raw)
+        self.assertTrue(out["applied"])
+        self.assertEqual(out["carried"], 1)
+
+        # the previous scenario and the whole media tree live under the backup
+        backup = Path(out["backup"])
+        self.assertIn("-rebuild", backup.name)
+        self.assertEqual(json.loads((backup / "scenario.json").read_text("utf-8")),
+                         old_scn)
+        self.assertEqual((backup / "media" / old_id / f"{old_id}-portrait.webp")
+                         .read_bytes(), b"planted-portrait-bytes")
+
+        # the workspace now holds the new build, and the plan is the edited one
+        new_scn = json.loads((self.ws / "scenario.json").read_text("utf-8"))
+        built = json.loads((Path(staged["built_dir"]) / "scenario.json")
+                           .read_text("utf-8"))
+        self.assertEqual(new_scn, built)
+        self.assertEqual(json.loads((self.ws / "plan.json").read_text("utf-8")),
+                         json.loads((Path(staged["plan_path"])).read_text("utf-8")))
+        inn = next(b for b in json.loads((self.ws / "plan.json").read_text("utf-8"))
+                   ["buildings"] if b["name"] == TARGET)
+        self.assertIn("Taproom", [r["name"] for r in inn["rooms"]])
+
+        # the carried portrait: same npc by name, brand-new id
+        new_id = self.npc_id(new_scn, "Maribel Dabney")
+        self.assertNotEqual(new_id, old_id)
+        carried = self.ws / "media" / new_id / f"{new_id}-portrait.webp"
+        self.assertTrue(carried.is_file(), f"no portrait carried to {new_id}")
+        self.assertEqual(carried.read_bytes(), b"planted-portrait-bytes")
+        self.assertFalse((self.ws / "media" / old_id).exists())
+
+        # the stage is gone, and the key never left the server
+        self.assertIsNone(self.get("/api/assistant/rebuild")["staged"])
+        self.assertNotIn(FULL_KEY, raw)
+        self.assertNotIn(FULL_KEY,
+                         self.request("GET", "/api/assistant/rebuild")[1])
+
+    def test_apply_without_a_stage_is_refused(self):
+        code, raw = self.request("POST", "/api/assistant/rebuild/apply")
+        self.assertEqual(code, 400)
+        self.assertIn("staged", raw)
+
+    def test_discard_leaves_the_workspace_untouched(self):
+        before = self.snapshot()
+        STATE["replies"] = [json.dumps(renamed_design())]
+        self.finish(self.rebuild())
+        self.assertIsNotNone(self.get("/api/assistant/rebuild")["staged"])
+        code, raw = self.request("POST", "/api/assistant/rebuild/discard")
+        self.assertEqual(code, 200)
+        self.assertTrue(json.loads(raw)["ok"])
+        self.assertIsNone(self.get("/api/assistant/rebuild")["staged"])
+        self.assertEqual(self.snapshot(), before)
+        code, raw = self.request("POST", "/api/assistant/rebuild/discard")
+        self.assertEqual(code, 400)                    # nothing left to discard
+
+
+if __name__ == "__main__":
+    unittest.main()

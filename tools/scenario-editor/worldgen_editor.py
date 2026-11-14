@@ -262,7 +262,9 @@ def _fresh_out_dir(label):
 
 def _to_workspace(out_dir, summary, plan_path):
     """Import the built zip as a new editor workspace and copy ``plan_path``
-    beside it, so Re-roll layout works there too. Returns the source id."""
+    beside it, so Re-roll layout works there too. The run's settings.json (the
+    seed, idea, extensions and model) comes along when it wrote one. Returns
+    the source id."""
     zip_name = summary.get("zip") if isinstance(summary, dict) else None
     zip_path = Path(out_dir) / zip_name if zip_name else None
     if not zip_path or not zip_path.is_file():
@@ -270,6 +272,9 @@ def _to_workspace(out_dir, summary, plan_path):
     sid = ig.import_zip(zip_path.read_bytes())
     ws = Path(ig.WORK) / sid[len("work/"):]
     shutil.copyfile(plan_path, ws / "plan.json")
+    settings = Path(out_dir) / "settings.json"
+    if settings.is_file():
+        shutil.copyfile(settings, ws / "settings.json")
     return sid
 
 
