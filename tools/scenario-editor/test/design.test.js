@@ -393,3 +393,109 @@ test("more than twelve items fail the extras", () => {
   assert.equal(out.failures[0].reason, "too many items (at most 12)");
   assert.equal(out.placements.length, 12);
 });
+
+// ---------------------------------------------------------------- splitRooms
+
+// The property style of the generator's tests/test_building.py, over the pure split engine.
+const dims = r => [r[2] - r[0] + 1, r[3] - r[1] + 1];
+const overlap = (a, b) => !(a[2] < b[0] || b[2] < a[0] || a[3] < b[1] || b[3] < a[1]);
+const inside = (outer, r) => outer[0] <= r[0] && outer[1] <= r[1] && r[2] <= outer[2] && r[3] <= outer[3];
+const onRing = (r, c) => c[0] >= r[0] && c[1] >= r[1] && c[0] <= r[2] && c[1] <= r[3] &&
+  (c[0] === r[0] || c[0] === r[2] || c[1] === r[1] || c[1] === r[3]);
+const isCorner = (r, c) => (c[0] === r[0] || c[0] === r[2]) && (c[1] === r[1] || c[1] === r[3]);
+const rectOf = (out, name) => out.rooms.find(r => r.name === name).rect;
+
+function tilesExactly(out, rect) {
+  const [W, H] = dims(rect);
+  assert.equal(out.rooms.reduce((n, r) => n + dims(r.rect)[0] * dims(r.rect)[1], 0), W * H,
+    "the room areas sum to the footprint");
+  for (let i = 0; i < out.rooms.length; i++) {
+    assert.ok(inside(rect, out.rooms[i].rect), out.rooms[i].name + " escapes the footprint");
+    for (let j = i + 1; j < out.rooms.length; j++)
+      assert.ok(!overlap(out.rooms[i].rect, out.rooms[j].rect),
+        out.rooms[i].name + " overlaps " + out.rooms[j].name);
+    const [w, h] = dims(out.rooms[i].rect);
+    assert.ok(w >= 3 && h >= 3, out.rooms[i].name + " is " + w + "x" + h);
+  }
+}
+
+test("splitRooms tiles a 16x10 footprint exactly between three rooms", () => {
+  const rect = [0, 0, 15, 9];
+  const out = D.splitRooms(rect, [{name: "Hall", share: 2}, {name: "Workshop"}, {name: "Store"}],
+    [["Hall", "Workshop"], ["Hall", "Store"]], {room: "Hall", side: "s"});
+  assert.ok(!out.error, out.error);
+  assert.deepEqual(out.rooms.map(r => r.name), ["Hall", "Workshop", "Store"]);
+  tilesExactly(out, rect);
+  for (const [a, b, ca, cb] of out.doors) {
+    const ra = rectOf(out, a), rb = rectOf(out, b);
+    assert.ok(onRing(ra, ca) && onRing(rb, cb), a + "-" + b + " cells sit on their rooms' rings");
+    assert.ok(!isCorner(ra, ca) && !isCorner(rb, cb), a + "-" + b + " door is inset from the corners");
+    assert.equal(Math.abs(ca[0] - cb[0]) + Math.abs(ca[1] - cb[1]), 1, a + "-" + b + " is a facing pair");
+  }
+  for (const [a, b] of [["Hall", "Workshop"], ["Hall", "Store"]])
+    assert.ok(out.doors.some(d => (d[0] === a && d[1] === b) || (d[0] === b && d[1] === a)),
+      a + " and " + b + " share no wall");
+});
+
+test("splitRooms: the entrance is a cell of the named room on the footprint's named side", () => {
+  const rect = [4, 3, 18, 12];                       // a 15x10 footprint away from the origin
+  const rooms = [{name: "Hall", share: 2}, {name: "Workshop"}, {name: "Store"}];
+  const out = D.splitRooms(rect, rooms, [["Hall", "Workshop"], ["Hall", "Store"]],
+    {room: "Hall", side: "s"});
+  assert.ok(!out.error, out.error);
+  const [room, cell] = out.entrance;
+  assert.equal(room, "Hall");
+  assert.equal(cell[1], rect[1], "on the footprint's south edge");
+  assert.ok(onRing(rectOf(out, "Hall"), cell), "on the Hall's ring");
+  const east = D.splitRooms(rect, rooms, [["Hall", "Workshop"], ["Hall", "Store"]],
+    {room: "Store", side: "e"});
+  assert.ok(!east.error, east.error);
+  assert.equal(east.entrance[0], "Store");
+  assert.equal(east.entrance[1][0], rect[2], "on the footprint's east edge");
+  assert.ok(onRing(rectOf(east, "Store"), east.entrance[1]), "on the Store's ring");
+});
+
+test("splitRooms: shares shift sizes, a share-2 room is never the smallest", () => {
+  const out = D.splitRooms([0, 0, 15, 9], [{name: "Big", share: 2}, {name: "One"}, {name: "Two"}],
+    [["Big", "One"], ["Big", "Two"]], {room: "Big", side: "s"});
+  assert.ok(!out.error, out.error);
+  const area = n => { const [w, h] = dims(rectOf(out, n)); return w * h; };
+  assert.ok(area("Big") > area("One") && area("Big") > area("Two"),
+    "areas were big:" + area("Big") + " one:" + area("One") + " two:" + area("Two"));
+});
+
+test("splitRooms: a footprint too small for the minimums is an error naming a workable size", () => {
+  const rooms = [{name: "A", share: 2}, {name: "B"}, {name: "C"}];
+  const conns = [["A", "B"], ["A", "C"]];
+  const out = D.splitRooms([0, 0, 5, 4], rooms, conns, {room: "A", side: "s"});
+  assert.equal(typeof out.error, "string");
+  assert.ok(out.error.length > 0);
+  assert.match(out.error, /at least (\d+)x(\d+)/);
+  const m = /at least (\d+)x(\d+)/.exec(out.error);
+  const retry = D.splitRooms([0, 0, m[1] - 1, m[2] - 1], rooms, conns, {room: "A", side: "s"});
+  assert.ok(!retry.error, "the named size works: " + retry.error);
+  tilesExactly(retry, [0, 0, m[1] - 1, m[2] - 1]);
+});
+
+test("splitRooms: equal shares tile exactly across widths 8 to 20", () => {
+  for (let w = 8; w <= 20; w++) {
+    const rect = [3, 2, w + 2, 11];                  // w wide, 10 tall, away from the origin
+    const out = D.splitRooms(rect, [{name: "A"}, {name: "B"}, {name: "C"}],
+      [["A", "B"], ["A", "C"]], {room: "A", side: "s"});
+    assert.ok(!out.error, "w=" + w + ": " + out.error);
+    tilesExactly(out, rect);
+    assert.ok(out.doors.length >= 2, "w=" + w + ": the connections share walls");
+  }
+});
+
+test("splitRooms never mutates its arguments and stays deterministic", () => {
+  const rect = [0, 0, 15, 9];
+  const rooms = [{name: "Hall", share: 2}, {name: "Workshop"}, {name: "Store"}];
+  const conns = [["Hall", "Workshop"], ["Hall", "Store"]];
+  const ent = {room: "Hall", side: "s"};
+  const before = JSON.stringify([rect, rooms, conns, ent]);
+  const a = D.splitRooms(rect, rooms, conns, ent);
+  assert.equal(JSON.stringify([rect, rooms, conns, ent]), before, "an argument changed");
+  const [r2, rooms2, conns2] = JSON.parse(before);
+  assert.deepEqual(a, D.splitRooms(r2, rooms2, conns2, {room: "Hall", side: "s"}));
+});

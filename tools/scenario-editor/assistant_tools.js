@@ -423,6 +423,99 @@
           data: {regionId: res.region.id, doors: cells}};
       }),
 
+    create_building: tool("create_building",
+      "{name, x, y, w, h, wall, rooms, connections?, entrance?, description?} (2-8 rooms of {name, share?}; wall wood, brick, stone or steel; connections [[a, b]] default each room to the first; entrance {room, side n/e/s/w} default the first room, s)",
+      "Create a walled building split into rooms sized by share, with doors between connected rooms and an entrance on one side.",
+      false, (scn, args, set) => {
+        if (!isStr(args.name) || !args.name.trim()) return bad("create_building needs a name");
+        if (!Number.isInteger(args.x) || !Number.isInteger(args.y))
+          return bad("create_building needs whole-number x and y");
+        if (!Number.isInteger(args.w) || args.w < 1 || args.w > 40) return bad("w must be a whole number from 1 to 40");
+        if (!Number.isInteger(args.h) || args.h < 1 || args.h > 40) return bad("h must be a whole number from 1 to 40");
+        if (!WALLS.includes(args.wall))
+          return bad("wall must be one of " + WALLS.join(", ") + " (a building has walls)");
+        if (args.description !== undefined && !isStr(args.description)) return bad("description must be a string");
+        if (!Array.isArray(args.rooms) || args.rooms.length < 2 || args.rooms.length > 8)
+          return bad("rooms must be a list of 2 to 8 {name, share?}");
+        const rooms = [];
+        for (const r of args.rooms) {
+          if (!r || typeof r !== "object" || Array.isArray(r)) return bad("a room must be an object {name, share?}");
+          if (!isStr(r.name) || !r.name.trim()) return bad("every room needs a name");
+          const name = r.name.trim();
+          if (name.length > 40) return bad('the room name "' + name + '" is longer than 40 characters');
+          if (rooms.some(o => o.name === name)) return bad('two rooms are called "' + name + '"');
+          if (r.share !== undefined && (!Number.isFinite(r.share) || r.share <= 0))
+            return bad('the share of "' + name + '" must be a positive number');
+          rooms.push({name, share: r.share});
+        }
+        let connections = args.connections;
+        if (connections === undefined) connections = rooms.slice(1).map(r => [rooms[0].name, r.name]);
+        if (!Array.isArray(connections)) return bad("connections must be a list of [nameA, nameB]");
+        for (const c of connections) {
+          if (!Array.isArray(c) || c.length !== 2 || !c.every(isStr))
+            return bad("a connection is a pair of room names");
+          const off = c.find(x => !rooms.some(r => r.name === x));
+          if (off !== undefined)
+            return bad('a connection names "' + off + '", which is not a room of this building');
+        }
+        const entrance = args.entrance === undefined ? {} : args.entrance;
+        if (!entrance || typeof entrance !== "object" || Array.isArray(entrance))
+          return bad("entrance must be {room, side}");
+        if (entrance.room !== undefined && !isStr(entrance.room))
+          return bad("the entrance room must be a room name");
+        if (entrance.side !== undefined && !SIDES.includes(entrance.side))
+          return bad("the entrance side is one of " + SIDES.join(", "));
+        const entRoom = entrance.room === undefined ? rooms[0].name : entrance.room;
+        if (!rooms.some(r => r.name === entRoom))
+          return bad('the entrance room "' + entRoom + '" is not a room of this building');
+        const entSide = entrance.side === undefined ? "s" : entrance.side;
+
+        // ---- refuse up front: nothing past this line runs before the plan is made, so a refusal
+        // never leaves half a building behind
+        const rect = [args.x, args.y, args.x + args.w - 1, args.y + args.h - 1];
+        if (!MapOps.planeOf(scn, rect)) return bad("the building would leave the map");
+        for (const o of scn.regions || [])
+          if (MapOps.partial(MapOps.rect(o), rect))
+            return bad('the building would partly overlap "' + o.name + '"');
+        const name = args.name.trim();
+        for (const taken of [name, ...rooms.map(r => r.name)])
+          if (regionNames(scn).has(taken))
+            return bad('another region is already called "' + taken + '"');
+        const plan = Design.splitRooms(rect, rooms, connections, {room: entRoom, side: entSide});
+        if (plan.error) return bad(plan.error);
+
+        // ---- the footprint, one region per room, then the doors: a single toggle per door pair
+        // opens both rooms (doorSet), and the entrance's toggle opens the building and its room
+        const made = MapOps.createRegion(scn, [args.x, args.y], [rect[2], rect[3]],
+          {name, wall: args.wall, description: args.description}, set);
+        if (made.error) return bad(made.error);          // cannot happen: the name and space were checked
+        const byName = new Map([[name, made.region]]);
+        for (const r of plan.rooms) {
+          const res = MapOps.createRegion(scn, [r.rect[0], r.rect[1]], [r.rect[2], r.rect[3]],
+            {name: r.name, wall: args.wall, description: ""}, set);
+          if (res.error) return bad(res.error);          // cannot happen: names and space were checked
+          byName.set(r.name, res.region);
+        }
+        for (const d of plan.doors) {
+          const t = MapOps.toggleDoor(scn, byName.get(d[0]), d[2], set);
+          if (t.error) return bad(t.error);              // cannot happen: door cells sit on room edges
+        }
+        const ent = MapOps.toggleDoor(scn, made.region, plan.entrance[1], set);
+        if (ent.error) return bad(ent.error);
+        const have = World10.doorsByKey(scn);            // a doorway may already carry a door
+        for (const reg of [made.region, ...plan.rooms.map(r => byName.get(r.name))])
+          for (const dw of World10.regionDoorways(scn, reg))
+            if (!(have.get(dw.key) || []).length)
+              World10.hangDoor(scn, dw, reg.door ?? "door", set);
+        const doors = plan.doors.length + 1;             // the shared walls plus the entrance
+        return {ok: true,
+          summary: 'created "' + name + '", a ' + args.w + "x" + args.h + " " + args.wall
+            + " building at [" + args.x + "," + args.y + "] split into " + rooms.length + " rooms ("
+            + rooms.map(r => r.name).join(", ") + ") with " + doors + " doors",
+          data: {buildingId: made.region.id,
+            roomIds: plan.rooms.map(r => byName.get(r.name).id), doors}};
+      }),
+
     furnish_region: tool("furnish_region", "{regionId, items: [{templateId, count, hint?}]} (at most 12 items, count 1-12, hint max 80 characters)",
       "Furnish a region; the engine picks the cells. Hint tokens join with \"+\": wall:<side> row:<side> corner center near_door away_from_door beside:<ref> around:<ref> symmetric; a side is n, e, s, w, far, side or near (from the room's main door); a ref is a template id or name.",
       false, (scn, args, set) => {

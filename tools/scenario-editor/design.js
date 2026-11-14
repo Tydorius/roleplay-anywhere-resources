@@ -11,6 +11,10 @@
 // opening itself), around:/beside: references resolve by template id first, then by name, and
 // solid furniture may not strand floor the doors reached before it was placed (see
 // sealedCells) — the generator only moves pieces that end up boxed in behind such a wall.
+//
+// splitRooms, in the buildings section below, ports the generator's building layout
+// (worldgen/layout_building.py): one footprint rectangle split into rooms along a connection
+// tree. Like furnish, it never touches the scenario.
 
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory(require("./mapops.js"));
@@ -549,5 +553,266 @@
     };
   }
 
-  return {furnish, parseHint, constrained, reserveWalkways};
+  // ---------------------------------------------------------------- buildings
+
+  // Ported from the generator's worldgen/layout_building.py (_connection_tree, _room_rects,
+  // _strip_split, _divide_children) with _sizes_mins and _weighted_sizes from
+  // worldgen/layout_map.py and shared_wall_cells from worldgen/model.py, under this editor's
+  // deliberate differences: everything is deterministic (the Python's rng goes unused along this
+  // path — layout_rooms' rng never touches room splitting — and halves round up where Python's
+  // round takes the even side); a room's need is its share, a weight defaulting to 1 (one share
+  // is one minimum room, 3 x 3), not its furniture; walls are thin lines, so strip depths drop
+  // the generator's two wall columns and touching rooms share the wall line between them, making
+  // every door a facing pair of cells, one in each room. A footprint that cannot give every room
+  // its minimums is refused with a workable size, never answered with a wrong layout.
+
+  const MIN_SIDE = 3;      // every room of the split is at least this many cells on each side
+  const SHARE_AREA = 9;    // one share of weight is one minimum room (3 x 3 cells)
+
+  /** Integer sizes proportional to `weights`, summing to `total`, each at least `minSize` where
+   *  the total allows it (the generator's _weighted_sizes; ties go to the first). */
+  function weightedSizes(total, weights, minSize) {
+    const tw = weights.reduce((a, b) => a + b, 0) || 1;
+    const sizes = weights.map(w => Math.max(1, Math.round(total * w / tw)));
+    const sum = () => sizes.reduce((a, b) => a + b, 0);
+    while (sum() < total) sizes[sizes.indexOf(Math.min(...sizes))]++;
+    while (sum() > total && Math.max(...sizes) > 1) sizes[sizes.indexOf(Math.max(...sizes))]--;
+    if (total >= weights.length * minSize)
+      for (let k = 0; k < weights.length * 2; k++) {
+        const short = sizes.findIndex(s => s < minSize);
+        if (short < 0) break;
+        const tall = sizes.indexOf(Math.max(...sizes));
+        if (sizes[tall] <= minSize) break;
+        sizes[tall]--;           // one cell at a time, from the tallest to the shortest
+        sizes[short]++;
+      }
+    return sizes;
+  }
+
+  /** weightedSizes, then a pass topping up the sizes below their own minimums from those with
+   *  room to spare (the generator's _sizes_mins). */
+  function sizesMins(total, weights, mins) {
+    const n = weights.length;
+    mins = mins.map(m => Math.min(m, Math.max(1, total - n + 1)));
+    const sizes = weightedSizes(total, weights, mins.length ? Math.min(...mins) : 1);
+    for (let k = 0; k < n * 2; k++) {
+      const short = sizes.findIndex((s, i) => s < mins[i]);
+      if (short < 0) break;
+      let tall = 0;
+      for (let i = 1; i < n; i++) if (sizes[i] - mins[i] > sizes[tall] - mins[tall]) tall = i;
+      if (sizes[tall] <= mins[tall]) break;
+      const move = Math.min(sizes[tall] - mins[tall], mins[short] - sizes[short]);
+      sizes[tall] -= move;
+      sizes[short] += move;
+    }
+    return sizes;
+  }
+
+  /** The strip depth at which a strip of `span` cells holds `area` cells: the generator's
+   *  _depth_for drops two columns for its wall cells, but walls are lines here. */
+  const depthFor = (area, span) => Math.ceil(area / Math.max(1, span));
+
+  /** Cut a strip of `size` cells off the inclusive rect along side ("n", "e", "s" or "w"):
+   *  [strip, rest]. */
+  function stripSplit(rect, side, size) {
+    size = Math.max(1, size);
+    if (side === "s") return [[rect[0], rect[1], rect[2], rect[1] + size - 1],
+                              [rect[0], rect[1] + size, rect[2], rect[3]]];
+    if (side === "n") return [[rect[0], rect[3] - size + 1, rect[2], rect[3]],
+                              [rect[0], rect[1], rect[2], rect[3] - size]];
+    if (side === "w") return [[rect[0], rect[1], rect[0] + size - 1, rect[3]],
+                              [rect[0] + size, rect[1], rect[2], rect[3]]];
+    return [[rect[2] - size + 1, rect[1], rect[2], rect[3]],
+            [rect[0], rect[1], rect[2] - size, rect[3]]];
+  }
+
+  /** Rooms as a parent -> children tree from the connection list, rooted at the entrance room
+   *  (the generator's _connection_tree, already deterministic: connection order, then room
+   *  order). Rooms with no connections hang off the root so every room stays reachable. */
+  function connectionTree(names, connections, entranceRoom) {
+    const root = names.includes(entranceRoom) ? entranceRoom : names[0];
+    const adj = new Map(names.map(n => [n, new Set()]));
+    for (const [a, b] of connections)
+      if (adj.has(a) && adj.has(b) && a !== b) { adj.get(a).add(b); adj.get(b).add(a); }
+    const children = new Map(names.map(n => [n, []]));
+    const seen = new Set([root]), frontier = [root];
+    while (frontier.length) {
+      const node = frontier.shift();
+      const next = names.filter(n => adj.get(node).has(n) && !seen.has(n));
+      for (const n of next) { seen.add(n); children.get(node).push(n); }
+      frontier.push(...next);
+    }
+    for (const n of names)                 // orphans hang off the root
+      if (!seen.has(n)) children.get(root).push(n);
+    return {children, root};
+  }
+
+  /** The facing door cells between two touching rooms: one cell in each room's outer row or
+   *  column, at the midpoint of the shared stretch and inset one cell from the corners (the
+   *  generator's shared_wall_cells — under thin walls, rooms one cell apart share the wall line
+   *  between them, so every door is such a pair). [] when they do not touch. */
+  function sharedWallCells(a, b) {
+    if (a[3] + 1 === b[1]) {                       // a sits below b
+      const lo = Math.max(a[0], b[0]) + 1, hi = Math.min(a[2], b[2]) - 1;
+      if (hi >= lo) { const x = Math.floor((lo + hi) / 2); return [[x, a[3]], [x, b[1]]]; }
+    } else if (b[3] + 1 === a[1]) {                // b sits below a
+      const lo = Math.max(a[0], b[0]) + 1, hi = Math.min(a[2], b[2]) - 1;
+      if (hi >= lo) { const x = Math.floor((lo + hi) / 2); return [[x, a[1]], [x, b[3]]]; }
+    } else if (a[2] + 1 === b[0]) {                // a sits west of b
+      const lo = Math.max(a[1], b[1]) + 1, hi = Math.min(a[3], b[3]) - 1;
+      if (hi >= lo) { const y = Math.floor((lo + hi) / 2); return [[a[2], y], [b[0], y]]; }
+    } else if (b[2] + 1 === a[0]) {                // b sits west of a
+      const lo = Math.max(a[1], b[1]) + 1, hi = Math.min(a[3], b[3]) - 1;
+      if (hi >= lo) { const y = Math.floor((lo + hi) / 2); return [[a[0], y], [b[2], y]]; }
+    }
+    return [];
+  }
+
+  /** The entrance cell on the rect's side: the middle cell of that edge (the generator's
+   *  _entrance_cell). */
+  function entranceCell(rect, side) {
+    if (side === "n") return [rect[0] + Math.floor((rect[2] - rect[0]) / 2), rect[3]];
+    if (side === "s") return [rect[0] + Math.floor((rect[2] - rect[0]) / 2), rect[1]];
+    if (side === "w") return [rect[0], rect[1] + Math.floor((rect[3] - rect[1]) / 2)];
+    return [rect[2], rect[1] + Math.floor((rect[3] - rect[1]) / 2)];
+  }
+
+  /** Split a footprint rectangle into rooms the way the generator lays out a building (see the
+   *  section comment). `rect` is [x0, y0, x1, y1] inclusive; `rooms` [{name, share?}] (share a
+   *  positive number, default 1); `connections` [[nameA, nameB]] (default: each room to the
+   *  first); `entrance` {room, side} (default: the first room, "s"). Returns {rooms:
+   *  [{name, rect}], doors: [[roomA, roomB, cellInsideA, cellInsideB]], entrance: [room, cell]}
+   *  — the rooms tile the rect exactly, every touching pair carries a facing door pair inset
+   *  one cell from the corners, the entrance cell lies on the footprint's named side — or
+   *  {error} naming a workable footprint. Never mutates its arguments. */
+  function splitRooms(rect, rooms, connections, entrance) {
+    if (!Array.isArray(rect) || rect.length !== 4 || !rect.every(Number.isInteger) ||
+        rect[2] < rect[0] || rect[3] < rect[1])
+      return {error: "rect must be [x0, y0, x1, y1] with x1 >= x0 and y1 >= y0"};
+    if (!Array.isArray(rooms) || !rooms.length)
+      return {error: "rooms must be a non-empty list of {name, share?}"};
+    const names = [];
+    for (const r of rooms) {
+      if (!r || typeof r !== "object" || Array.isArray(r))
+        return {error: "a room must be an object {name, share?}"};
+      if (typeof r.name !== "string" || !r.name) return {error: "every room needs a name"};
+      if (names.includes(r.name)) return {error: 'two rooms are called "' + r.name + '"'};
+      if (r.share !== undefined && (!Number.isFinite(r.share) || r.share <= 0))
+        return {error: 'the share of "' + r.name + '" must be a positive number'};
+      names.push(r.name);
+    }
+    let conns = connections;
+    if (conns === undefined) conns = names.slice(1).map(n => [names[0], n]);
+    if (!Array.isArray(conns)) return {error: "connections must be a list of [nameA, nameB]"};
+    for (const c of conns) {
+      if (!Array.isArray(c) || c.length !== 2 || !c.every(x => typeof x === "string"))
+        return {error: "a connection is a pair of room names"};
+      const off = c.find(x => !names.includes(x));
+      if (off !== undefined)
+        return {error: 'a connection names "' + off + '", which is not one of the rooms'};
+    }
+    const ent = entrance === undefined ? {} : entrance;
+    if (!ent || typeof ent !== "object" || Array.isArray(ent))
+      return {error: "entrance must be {room, side}"};
+    const entRoom = ent.room === undefined ? names[0] : ent.room;
+    const side = ent.side === undefined ? "s" : ent.side;
+    if (!SIDES.includes(side)) return {error: "the entrance side is one of " + SIDES.join(", ")};
+    if (!names.includes(entRoom))
+      return {error: 'the entrance room "' + entRoom + '" is not one of the rooms'};
+
+    const W = rect[2] - rect[0] + 1, H = rect[3] - rect[1] + 1;
+    const tooSmall = min => "the " + W + "x" + H + " footprint cannot give every room " + MIN_SIDE +
+      " cells on each side" + (min ? "; these shares need at least " + min[0] + "x" + min[1] +
+      " cells" : "");
+    if (names.length === 1) {
+      if (W < MIN_SIDE || H < MIN_SIDE) return {error: tooSmall([MIN_SIDE, MIN_SIDE])};
+      return {rooms: [{name: names[0], rect: rect.slice()}], doors: [],
+              entrance: [names[0], entranceCell(rect, side)]};
+    }
+
+    const {children, root} = connectionTree(names, conns, entRoom);
+    const needs = new Map(rooms.map(r =>
+      [r.name, {area: (r.share === undefined ? 1 : r.share) * SHARE_AREA}]));
+    const weights = new Map();               // a room's weight is its subtree's total need
+    const weigh = n => {
+      if (weights.has(n)) return weights.get(n);
+      let w = needs.get(n).area;
+      for (const k of children.get(n) || []) w += weigh(k);
+      weights.set(n, w);
+      return w;
+    };
+    weigh(root);
+
+    /** Guillotine strips down the tree (the generator's _room_rects): every room's strip is cut
+     *  along the entrance side of its rect, its children fill the remainder side by side. */
+    const layout = fp => {
+      const placements = new Map();
+      (function assign(node, crect) {
+        const kids = children.get(node) || [];
+        if (!kids.length) { placements.set(node, crect); return; }
+        const vert = side === "s" || side === "n";
+        const span = vert ? crect[2] - crect[0] + 1 : crect[3] - crect[1] + 1;
+        const axis = vert ? crect[3] - crect[1] + 1 : crect[2] - crect[0] + 1;
+        const ownNeed = needs.get(node).area;
+        // the strip holds this room, the rest the children: deep enough for their subtree areas
+        const restMin = Math.max(MIN_SIDE, depthFor(weights.get(node) - ownNeed, span));
+        const lo = Math.min(Math.max(MIN_SIDE, depthFor(ownNeed, span)), axis - 1);
+        const hi = Math.max(lo, axis - Math.min(restMin, axis - 1));
+        let size = Math.round(axis * ownNeed / weights.get(node));
+        if (kids.length === 1)
+          // a chain: the strip stays near the depth its own need asks and the tail takes the
+          // rest, instead of proportional bands starving the last room into a sliver
+          size = Math.min(size, Math.max(lo, depthFor(ownNeed, span) + 2));
+        const [strip, rest] = stripSplit(crect, side, Math.max(lo, Math.min(size, hi)));
+        placements.set(node, strip);
+        const along = vert ? rest[2] - rest[0] + 1 : rest[3] - rest[1] + 1;
+        const deep = vert ? rest[3] - rest[1] + 1 : rest[2] - rest[0] + 1;
+        const sizes = sizesMins(along, kids.map(k => weights.get(k)),
+          kids.map(k => Math.min(Math.max(MIN_SIDE, depthFor(weights.get(k), deep)), along)));
+        let pos = 0;
+        for (let i = 0; i < kids.length; i++) {
+          assign(kids[i], vert
+            ? [rest[0] + pos, rest[1], rest[0] + pos + sizes[i] - 1, rest[3]]
+            : [rest[0], rest[1] + pos, rest[2], rest[1] + pos + sizes[i] - 1]);
+          pos += sizes[i];
+        }
+      })(root, fp.slice());
+      return placements;
+    };
+
+    const placements = layout(rect);
+    const fits = p => names.every(n => { const r = p.get(n);
+      return r && r[2] - r[0] + 1 >= MIN_SIDE && r[3] - r[1] + 1 >= MIN_SIDE; });
+    if (!fits(placements)) {
+      // name a workable size: the hard floor (3 cells a side, the tree's depth) grown until the
+      // split honours every room's minimums — height first, then width, both capped for sanity
+      const spanOf = n => { const kids = children.get(n) || [];
+        return kids.length ? Math.max(MIN_SIDE, kids.reduce((s, k) => s + spanOf(k), 0)) : MIN_SIDE; };
+      const depthOf = n => { const kids = children.get(n) || [];
+        return MIN_SIDE + Math.max(0, ...kids.map(depthOf)); };
+      const vert = side === "s" || side === "n";
+      const span0 = spanOf(root), depth0 = depthOf(root);
+      const grow = Math.max(0, Math.min(3 * Math.ceil(weights.get(root) / SHARE_AREA) + 24,
+        200 - Math.max(span0, depth0)));
+      let min = null;
+      outer:
+      for (let d = depth0; d <= depth0 + grow; d++)
+        for (let a = span0; a <= span0 + grow; a++) {
+          const w = vert ? a : d, h = vert ? d : a;
+          if (fits(layout([0, 0, w - 1, h - 1]))) { min = [w, h]; break outer; }
+        }
+      return {error: tooSmall(min)};
+    }
+
+    const out = names.map(n => ({name: n, rect: placements.get(n).slice()}));
+    const doors = [];
+    for (let i = 0; i < out.length; i++)
+      for (let j = i + 1; j < out.length; j++) {
+        const pair = sharedWallCells(out[i].rect, out[j].rect);
+        if (pair.length) doors.push([out[i].name, out[j].name, pair[0], pair[1]]);
+      }
+    return {rooms: out, doors, entrance: [root, entranceCell(rect, side)]};
+  }
+
+  return {furnish, splitRooms, parseHint, constrained, reserveWalkways};
 });

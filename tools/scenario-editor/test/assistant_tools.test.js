@@ -353,6 +353,100 @@ test("create_room: an open area gets no doors; overlaps and off-map rooms are re
   assert.equal(s.regions.length, before, "the refused rooms changed nothing");
 });
 
+// ---------------------------------------------------------------- create_building
+test("create_building raises a walled building split into rooms, doors and an entrance", () => {
+  const s = world();
+  const res = T.TOOLS.create_building.run(s, {name: "Tannery", x: 1, y: 12, w: 14, h: 9, wall: "wood",
+    rooms: [{name: "Foyer", share: 2}, {name: "Workshop"}, {name: "Store"}],
+    connections: [["Foyer", "Workshop"], ["Foyer", "Store"]], entrance: {room: "Foyer", side: "s"}}, set);
+  assert.equal(res.ok, true, res.error);
+  const b = R(s, res.data.buildingId);
+  assert.equal(b.wall, "wood");
+  assert.deepEqual(b.position, [1, 12]);
+  assert.deepEqual(b.size, [14, 9]);
+  assert.equal(res.data.roomIds.length, 3);
+  assert.equal(s.regions.length, 9, "four new regions on top of the five the world started with");
+  const rooms = res.data.roomIds.map(id => R(s, id));
+  assert.deepEqual(M.contents(s, b).regions.map(r => r.id).sort(), res.data.roomIds.slice().sort(),
+    "the three rooms sit inside the building");
+  const byName = Object.fromEntries(rooms.map(r => [r.name, r]));
+  for (const r of [b, ...rooms]) {
+    assert.ok(M.containsRect(M.rect(b), M.rect(r)), r.name + " stays inside the footprint");
+    assert.equal(r.wall, "wood", r.name + " carries the building's wall");
+  }
+  assert.ok(rooms.every(r => !r.description), "a room's description is empty");
+  const dws = World10.doorways(s);
+  const crossing = (ra, rb) => dws.some(d =>
+    (M.inRect(M.rect(ra), d.cell[0], d.cell[1]) && M.inRect(M.rect(rb), d.out[0], d.out[1])) ||
+    (M.inRect(M.rect(rb), d.cell[0], d.cell[1]) && M.inRect(M.rect(ra), d.out[0], d.out[1])));
+  for (const [a, c] of [["Foyer", "Workshop"], ["Foyer", "Store"], ["Workshop", "Store"]])
+    assert.ok(crossing(byName[a], byName[c]), a + " and " + c + " share no doorway");
+  const south = dws.find(d => d.cell[0] === d.out[0] && d.cell[1] === 12 && d.out[1] === 11);
+  assert.ok(south, "the entrance crosses the building's south wall");
+  assert.ok(M.inRect(M.rect(byName.Foyer), south.cell[0], south.cell[1]), "through the Foyer");
+  assert.equal(res.data.doors, 4, "three shared walls and the entrance");
+  const have = World10.doorsByKey(s);
+  const ours = dws.filter(d => d.room === b || rooms.includes(d.room));
+  assert.equal(ours.length, 4, "every doorway belongs to the new building");
+  for (const d of ours) assert.ok((have.get(d.key) || []).length, "a door object hangs on " + d.key);
+  for (const e of s.entities.filter(e => World10.isDoor(s, e)))
+    assert.ok(M.inRect(M.rect(b), e.pos[0], e.pos[1]), "a door object's cell left the footprint");
+});
+
+test("create_building refuses collisions, overlaps and undoable footprints with nothing added", () => {
+  const s = world();
+  const before = s.regions.length;
+  const base = {x: 1, y: 12, w: 14, h: 9, wall: "wood", rooms: [{name: "Hall"}, {name: "Store"}]};
+  const buildingClash = T.TOOLS.create_building.run(s, {...base, name: "Inn"}, set);
+  assert.equal(buildingClash.ok, false);
+  assert.match(buildingClash.error, /Inn/);
+  const roomClash = T.TOOLS.create_building.run(s, {...base, name: "Tannery"}, set);
+  assert.equal(roomClash.ok, false, "a room of the building is called Hall, like the world's region");
+  assert.match(roomClash.error, /Hall/);
+  const overlap = T.TOOLS.create_building.run(s, {...base, name: "Tannery",
+    rooms: [{name: "Shop"}, {name: "Store"}], x: 18, y: 3, w: 8, h: 5}, set);
+  assert.equal(overlap.ok, false);
+  assert.match(overlap.error, /overlap/);
+  const offMap = T.TOOLS.create_building.run(s, {...base, name: "Tannery",
+    rooms: [{name: "Shop"}, {name: "Store"}], x: 26, y: 2, w: 14, h: 9}, set);
+  assert.equal(offMap.ok, false);
+  assert.match(offMap.error, /leave the map/);
+  const small = T.TOOLS.create_building.run(s, {...base, name: "Tannery",
+    rooms: [{name: "Shop"}, {name: "Store"}, {name: "Yard"}], w: 6, h: 5}, set);
+  assert.equal(small.ok, false, "the footprint cannot honour the minimum room sizes");
+  assert.match(small.error, /at least \d+x\d+/);
+  assert.equal(s.regions.length, before, "no refusal added a region");
+});
+
+test("create_building: the bad-input matrix", () => {
+  const s = world();
+  const before = s.regions.length;
+  const good = {name: "Tannery", x: 1, y: 12, w: 14, h: 9, wall: "wood",
+    rooms: [{name: "Hall", share: 2}, {name: "Workshop"}, {name: "Store"}],
+    connections: [["Hall", "Workshop"], ["Hall", "Store"]], entrance: {room: "Hall", side: "s"}};
+  const cases = [
+    [{...good, entrance: {room: "Hall", side: "north"}}, /side/],
+    [{...good, entrance: {room: "Hall", side: 3}}, /side/],
+    [{...good, entrance: {room: "Attic", side: "s"}}, /Attic/],
+    [{...good, entrance: "south"}, /entrance/],
+    [{...good, connections: [["Hall", "Attic"]]}, /Attic/],
+    [{...good, connections: [["Hall"]]}, /connection/],
+    [{...good, rooms: []}, /rooms/],
+    [{...good, rooms: Array.from({length: 9}, (_, i) => ({name: "R" + i}))}, /rooms/],
+    [{...good, rooms: [{name: "Hall"}, {name: "Hall"}]}, /Hall/],
+    [{...good, rooms: [{name: "Hall"}, {name: "X".repeat(41)}]}, /40/],
+    [{...good, rooms: [{name: "Hall"}, {name: "S", share: 0}]}, /share/],
+    [{...good, wall: "glass"}, /wall/],
+    [{...good, w: 0}, /w must/],
+  ];
+  for (const [args, pattern] of cases) {
+    const res = T.TOOLS.create_building.run(s, args, set);
+    assert.equal(res.ok, false, snap(args).slice(0, 90));
+    assert.match(res.error, pattern);
+  }
+  assert.equal(s.regions.length, before, "nothing was added");
+});
+
 // ---------------------------------------------------------------- furnish_region
 test("furnish_region places what the engine works out, named after the template", () => {
   const s = world();
@@ -503,8 +597,8 @@ test("rename_thing renames a region and the blocks and events that name it", () 
 // ---------------------------------------------------------------- registry shape and bad input
 test("promptLines lists the registry; the destructive tools are flagged and lines stay short", () => {
   assert.deepEqual(Object.keys(T.TOOLS), ["find", "get_region", "get_person", "list_object_templates", "edit_texts",
-    "add_npcs", "update_npc", "remove_npc", "remove_object", "place_objects", "create_room", "furnish_region",
-    "clear_region", "add_level", "link_portal", "rename_thing"]);
+    "add_npcs", "update_npc", "remove_npc", "remove_object", "place_objects", "create_room", "create_building",
+    "furnish_region", "clear_region", "add_level", "link_portal", "rename_thing"]);
   const lines = T.promptLines();
   assert.equal(lines.length, Object.keys(T.TOOLS).length);
   for (const l of lines) {
