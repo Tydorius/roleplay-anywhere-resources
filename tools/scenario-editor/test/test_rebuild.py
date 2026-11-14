@@ -10,6 +10,7 @@ The workspace under test is built once, for real, in setUpClass: the village
 fixture's plan written as plan.json beside a scenario a relayout produced.
 """
 import json
+import shutil
 import sys
 import tempfile
 import threading
@@ -37,6 +38,10 @@ FULL_KEY = "sk-rebuild-1234567890abcd"                 # must never reach the br
 TARGET = "The Green Dragon Inn"
 INSTRUCTION = "turn the common room into a proper taproom"
 SEED = 42                                              # the workspace's own seed
+ZONE = "Village Green"                                 # the target building's zone
+REDRESS_INSTRUCTION = "a proper market: stalls and carts around the cross"
+POPULATE_INSTRUCTION = "two farmhands for the harvest, billeted at the cottage"
+EMPTY_ZONE = "King's Wood"                             # dressed by P4, no buildings
 
 STATE = {"replies": [], "sleep": 0.0}   # what the mocked wire serves
 INSTALLED = []                          # every fake client the rebuild built
@@ -100,6 +105,38 @@ def named_design(name):
     d = renamed_design()
     d["name"] = name
     return d
+
+
+def redressed_dressing():
+    """The fixture's own dressing for ZONE with one prop swapped — a valid p4
+    reply that changes the outdoors."""
+    plan = json.loads(FIXTURE.read_text("utf-8"))
+    z = next(z for z in plan["zones"] if z["name"] == ZONE)
+    d = json.loads(json.dumps(z["dressing"]))
+    for p in d["props"]:
+        if p["template"] == "Market cross":
+            p.update(template="Hay bale", count=2, hint="scatter")
+    return d
+
+
+def unknown_template_dressing():
+    """The redressed reply naming a template the catalogue does not carry."""
+    d = redressed_dressing()
+    d["props"][0]["template"] = "Golden Fountain"
+    return d
+
+
+def added_people():
+    """Two fresh villagers for ZONE — homes in its bedded buildings, works
+    among the plan's real buildings and zones — a valid p5 reply."""
+    def person(name, gender, work):
+        return {"name": name, "gender": gender, "role": "farmhand",
+                "home": "Oak Cottage", "work": work,
+                "description": f"{name.split()[0]} came for the harvest and "
+                               "stays for the wages.",
+                "physicalDescription": "Sun-browned, rope belt, patched sleeves."}
+    return {"npcs": [person("Nell Ashby", "female", "Millfield"),
+                     person("Tam Ashby", "male", "Tithe Barn")]}
 
 
 class TestRebuildEndpoints(unittest.TestCase):
@@ -173,6 +210,16 @@ class TestRebuildEndpoints(unittest.TestCase):
         assert code == 200, f"POST /api/assistant/rebuild: {code} {raw}"
         return json.loads(raw)["job"]
 
+    def redress(self, **over):
+        """A redress_zone rebuild of ZONE; ``over`` replaces fields."""
+        return self.rebuild(kind="redress_zone", target=ZONE,
+                            instruction=REDRESS_INSTRUCTION, **over)
+
+    def populate(self, **over):
+        """A populate_zone rebuild of ZONE; ``over`` replaces fields."""
+        return self.rebuild(kind="populate_zone", target=ZONE,
+                            instruction=POPULATE_INSTRUCTION, **over)
+
     def wait_done(self, job_id, timeout=90):
         deadline = time.time() + timeout
         while time.time() < deadline:
@@ -192,6 +239,16 @@ class TestRebuildEndpoints(unittest.TestCase):
         files = {str(p.relative_to(self.ws)): p.read_bytes()
                  for p in sorted(self.ws.rglob("*")) if p.is_file()}
         return files
+
+    def restore_workspace(self, files):
+        """Put the workspace's files back exactly as they were: a test that
+        applies a stage must not leave its plan and media for the tests after
+        it (the class workspace is built once)."""
+        shutil.rmtree(self.ws)
+        for rel, data in files.items():
+            dst = self.ws / rel
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            dst.write_bytes(data)
 
     @staticmethod
     def npc_id(scn, name):
@@ -360,6 +417,189 @@ class TestRebuildEndpoints(unittest.TestCase):
         self.assertEqual(self.snapshot(), before)
         code, raw = self.request("POST", "/api/assistant/rebuild/discard")
         self.assertEqual(code, 400)                    # nothing left to discard
+
+    # ------------------------------------------------------------ redress_zone
+    def test_a_redress_replaces_only_that_zones_dressing(self):
+        before = self.snapshot()
+        STATE["replies"] = [json.dumps(redressed_dressing())]
+        done = self.finish(self.redress())
+        self.assertEqual(done["target"], ZONE)
+        self.assertEqual(done["calls"], 1)
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        self.assertEqual(staged["zone"], ZONE)
+        self.assertEqual(staged["preview"]["dressingProps"],
+                         {"Hay bale": [0, 2], "Market cross": [1, 0],
+                          "Village well": [1, 1]})
+        self.assertIn("metrics", staged["preview"])    # the shared pipeline
+        self.assertIn("regions", staged["preview"])
+        plan = json.loads(Path(staged["plan_path"]).read_text("utf-8"))
+        fixture = json.loads(FIXTURE.read_text("utf-8"))
+        green = next(z for z in plan["zones"] if z["name"] == ZONE)
+        self.assertEqual([(p["template"], p["count"]) for p in green["dressing"]["props"]],
+                         [("Village well", 1), ("Hay bale", 2)])
+        self.assertEqual(green["dressing"]["paths"], "dirt")
+        fz = next(z for z in fixture["zones"] if z["name"] == ZONE)
+        self.assertEqual(green["dressing"]["filler"], fz["dressing"]["filler"])
+        # every other zone's dressing is untouched, and so is the workspace
+        for other in fixture["zones"]:
+            if other["name"] != ZONE:
+                mine = next(z for z in plan["zones"] if z["name"] == other["name"])
+                self.assertEqual(mine["dressing"], other["dressing"])
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(len(INSTALLED[-1].attempts), 1)   # accepted on the first try
+
+    def test_the_redress_prompt_mirrors_the_p4_lines_plus_the_instruction(self):
+        STATE["replies"] = [json.dumps(redressed_dressing())]
+        self.finish(self.redress())
+        sent = INSTALLED[-1].attempts[0]
+        self.assertEqual(sent[0]["role"], "system")
+        user = sent[1]["content"]
+        self.assertIn(f"The user wants this zone's outdoor dressing redone as "
+                      f"follows — obey it: {REDRESS_INSTRUCTION}", user)
+        plan = json.loads(FIXTURE.read_text("utf-8"))
+        zone = next(z for z in plan["zones"] if z["name"] == ZONE)
+        self.assertIn(wgphases._setting_line(plan, plan.get("frame")), user)
+        self.assertIn(wgphases._zone_line(zone), user)
+        for b in zone["buildings"]:
+            self.assertIn(wgphases._building_line(b), user)
+        self.assertIn(wgphases._catalogue_lines(plan["templates"]), user)
+        # only this zone's buildings: Millfield's barn is nowhere in it
+        barn = next(b for z in plan["zones"] if z["name"] == "Millfield"
+                    for b in z["buildings"])
+        self.assertNotIn(wgphases._building_line(barn), user)
+
+    def test_a_redress_naming_an_unknown_template_is_retried(self):
+        STATE["replies"] = [json.dumps(unknown_template_dressing()),
+                            json.dumps(redressed_dressing())]
+        done = self.finish(self.redress())
+        self.assertEqual(done["calls"], 1)             # one call, two attempts
+        fake = INSTALLED[-1]
+        self.assertEqual(len(fake.attempts), 2)        # exactly one retry
+        first, again = fake.attempts
+        self.assertEqual(again[:2], first)             # system + prompt unchanged
+        self.assertIn("Golden Fountain", again[2]["content"])
+        self.assertIn("not in the catalogue", again[3]["content"])
+
+    # ------------------------------------------------------------ populate_zone
+    def test_a_populate_appends_new_people_after_the_existing_ones(self):
+        before = self.snapshot()
+        STATE["replies"] = [json.dumps(added_people())]
+        done = self.finish(self.populate())
+        self.assertEqual(done["target"], ZONE)
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        self.assertEqual(staged["zone"], ZONE)
+        self.assertEqual(staged["preview"]["npcs"],
+                         {"added": ["Nell Ashby", "Tam Ashby"], "removed": []})
+        self.assertEqual(sorted(staged["preview"]["npcNames"]["added"]),
+                         ["Nell Ashby", "Tam Ashby"])
+        self.assertEqual(staged["preview"]["npcNames"]["removed"], [])
+        plan = json.loads(Path(staged["plan_path"]).read_text("utf-8"))
+        fixture = json.loads(FIXTURE.read_text("utf-8"))
+        self.assertEqual(plan["npcs"][:len(fixture["npcs"])], fixture["npcs"])
+        self.assertEqual([p["name"] for p in plan["npcs"][len(fixture["npcs"]):]],
+                         ["Nell Ashby", "Tam Ashby"])
+        # ...and the workspace has not changed one byte
+        self.assertEqual(self.snapshot(), before)
+        self.assertEqual(len(INSTALLED[-1].attempts), 1)
+
+    def test_the_populate_prompt_mirrors_the_p5_zone_batch_lines(self):
+        STATE["replies"] = [json.dumps(added_people())]
+        self.finish(self.populate())
+        user = INSTALLED[-1].attempts[0][1]["content"]
+        plan = json.loads(FIXTURE.read_text("utf-8"))
+        zone = next(z for z in plan["zones"] if z["name"] == ZONE)
+        self.assertIn(f"The user wants people added to this zone as follows — "
+                      f"obey it: add to the people made so far, never remove "
+                      f"or rename them: {POPULATE_INSTRUCTION}", user)
+        self.assertIn(wgphases._setting_line(plan, plan.get("frame")), user)
+        self.assertIn(wgphases._zone_line(zone), user)
+        self.assertIn("Village Green, Millfield, King's Wood", user)
+        # the inn's bed note: 3 beds, 1 of them its keeper's home, 2 spare
+        self.assertIn("sleeps 1 (0 spots free), plus 2 spare bed(s) for "
+                      "guests or patients, nobody's home", user)
+        self.assertIn("- Maribel Dabney, innkeeper, sleeps at The Green Dragon Inn", user)
+        self.assertIn("this zone's buildings hold 6 bed(s) (1 home bed(s) "
+                      "free), 3 people live here now", user)
+
+    def test_a_populate_reusing_a_name_or_homing_outside_the_zone_is_retried(self):
+        bad_name = added_people()
+        bad_name["npcs"][0]["name"] = "Maribel Dabney"    # a name the plan has
+        bad_home = added_people()
+        bad_home["npcs"][0]["home"] = "Tithe Barn"        # a building, another zone
+        STATE["replies"] = [json.dumps(bad_name), json.dumps(bad_home),
+                            json.dumps(added_people())]
+        done = self.finish(self.populate())
+        self.assertEqual(done["calls"], 1)             # one call, three attempts
+        fake = INSTALLED[-1]
+        self.assertEqual(len(fake.attempts), 3)
+        self.assertIn("already on the roster", fake.attempts[1][-1]["content"])
+        self.assertIn("must be a building of Village Green",
+                      fake.attempts[2][-1]["content"])
+        staged = self.get("/api/assistant/rebuild")["staged"]
+        self.assertEqual(staged["preview"]["npcs"]["added"],
+                         ["Nell Ashby", "Tam Ashby"])
+
+    def test_the_zone_kinds_refuse_a_bad_target_before_any_job_starts(self):
+        for kind, target, needle in (
+                ("redress_zone", "Nowhere", "no zone named"),
+                ("redress_zone", ZONE.lower(), "no zone named"),
+                ("populate_zone", "Nowhere", "no zone named"),
+                ("populate_zone", EMPTY_ZONE, "no buildings"),
+                ("populate_zone", "Millfield", "has a bed")):
+            code, raw = self.request("POST", "/api/assistant/rebuild",
+                                     {"source": self.sid, "provider": "mockp",
+                                      "kind": kind, "target": target,
+                                      "instruction": "more life", "seed": SEED})
+            self.assertEqual(code, 400, (kind, target))
+            self.assertIn(needle, raw)
+        self.assertFalse(INSTALLED)                    # the model was never asked
+
+    def test_zone_rebuilds_and_building_rebuilds_are_one_at_a_time(self):
+        STATE["sleep"] = 2.0
+        STATE["replies"] = [json.dumps(redressed_dressing())]
+        first = self.redress()
+        for body in (self.rebuild_body(kind="populate_zone", target=ZONE,
+                                       instruction=POPULATE_INSTRUCTION),
+                     self.rebuild_body()):              # the building kind too
+            code, raw = self.request("POST", "/api/assistant/rebuild", body)
+            self.assertEqual(code, 409)
+            self.assertTrue(json.loads(raw)["busy"])
+        done = self.finish(first)                      # the first still completes
+        self.assertEqual(done["state"], "done")
+
+    def test_apply_after_populate_carries_a_portrait_by_name(self):
+        before = self.snapshot()      # restored afterwards: the tests after
+        self.addCleanup(self.restore_workspace, before)   # this one stay pristine
+        STATE["replies"] = [json.dumps(added_people())]
+        self.finish(self.populate())
+        # a portrait exists for the old innkeeper's id, under the old id's folder
+        old_scn = json.loads((self.ws / "scenario.json").read_text("utf-8"))
+        old_id = self.npc_id(old_scn, "Maribel Dabney")
+        portrait = self.ws / "media" / old_id / f"{old_id}-portrait.webp"
+        portrait.parent.mkdir(parents=True)
+        portrait.write_bytes(b"planted-portrait-bytes")
+
+        code, raw = self.request("POST", "/api/assistant/rebuild/apply")
+        self.assertEqual(code, 200, raw)
+        out = json.loads(raw)
+        self.assertTrue(out["applied"])
+        self.assertEqual(out["carried"], 1)
+
+        # the added people are in the applied build, and the plan is the populated one
+        new_scn = json.loads((self.ws / "scenario.json").read_text("utf-8"))
+        self.npc_id(new_scn, "Nell Ashby")
+        self.npc_id(new_scn, "Tam Ashby")
+        self.assertEqual([p["name"] for p in json.loads(
+            (self.ws / "plan.json").read_text("utf-8"))["npcs"]][-2:],
+            ["Nell Ashby", "Tam Ashby"])
+
+        # the carried portrait: the same npc by name, brand-new id
+        new_id = self.npc_id(new_scn, "Maribel Dabney")
+        self.assertNotEqual(new_id, old_id)
+        carried = self.ws / "media" / new_id / f"{new_id}-portrait.webp"
+        self.assertTrue(carried.is_file(), f"no portrait carried to {new_id}")
+        self.assertEqual(carried.read_bytes(), b"planted-portrait-bytes")
+        self.assertIsNone(self.get("/api/assistant/rebuild")["staged"])
 
 
 if __name__ == "__main__":
