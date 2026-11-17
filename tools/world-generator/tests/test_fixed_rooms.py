@@ -26,12 +26,12 @@ class TestChecker(unittest.TestCase):
         cls.data = RG.load()
 
     def base(self, **over):
-        """A 5x4 bedroom: a bed with its bedside in the top left corner and a
-        tall chest against the east wall."""
+        """A 5x3 bedroom: a bed with its bedside in the top left corner and a
+        tall chest against the east wall, one slack row along the south."""
         room = {
             "id": "bedroom.hand.a", "family": "bedroom", "sizeBand": "small",
             "clearance": "tight", "style": "flush",
-            "wealth": ["poor", "modest"], "size": [5, 4],
+            "wealth": ["poor", "modest"], "size": [5, 3],
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
@@ -40,7 +40,7 @@ class TestChecker(unittest.TestCase):
                       "east"),
             ],
             "doors": {"north": [2, 3], "south": [0, 1, 2, 3, 4],
-                      "west": [2, 3], "east": [2, 3]},
+                      "west": [2], "east": [2]},
             "stretch": {}, "outdoor": False, "symmetric": False,
             "recipe": "bedroom.small.a",
             "description": "A hand-made room the tests break on purpose.",
@@ -88,7 +88,37 @@ class TestChecker(unittest.TestCase):
 
     def test_a_clear_stretch_line_is_fine(self):
         room = self.base()
-        room["stretch"] = {"y": [2]}
+        room["stretch"] = {"x": [2]}
+        self.assertEqual(self.errors(room), [])
+
+    def test_flush_room_with_two_empty_lines_along_a_wall(self):
+        room = self.base(size=[5, 4])
+        room["doors"]["west"] = [2, 3]
+        room["doors"]["east"] = [2, 3]
+        self.assertTrue(any("empty lines along the south wall" in e
+                            for e in self.errors(room)))
+
+    def test_open_filler_touching_an_edge(self):
+        room = self.base(size=[5, 4], style="open")
+        room["doors"]["west"] = [2, 3]
+        room["doors"]["east"] = [2, 3]
+        room["filler"] = {"at": [1, 2], "size": [3, 2]}
+        self.assertTrue(any("touches the room edge" in e
+                            for e in self.errors(room)))
+
+    def test_open_room_with_an_empty_line_its_middle_does_not_need(self):
+        room = self.base(size=[5, 5], sizeBand="medium", style="open")
+        room["doors"]["west"] = [2, 3, 4]
+        room["doors"]["east"] = [2, 3, 4]
+        room["filler"] = {"at": [1, 1], "size": [2, 2]}
+        self.assertTrue(any("along the south wall" in e
+                            for e in self.errors(room)))
+
+    def test_an_open_room_with_only_the_fillers_buffer_line_checks_clean(self):
+        room = self.base(size=[5, 4], style="open")
+        room["doors"]["west"] = [2, 3]
+        room["doors"]["east"] = [2, 3]
+        room["filler"] = {"at": [1, 1], "size": [3, 2]}
         self.assertEqual(self.errors(room), [])
 
     def test_wrong_size_band(self):
@@ -113,7 +143,7 @@ class TestChecker(unittest.TestCase):
         room = {
             "id": "bedroom.hand.sym", "family": "bedroom",
             "sizeBand": "small", "clearance": "tight", "style": "flush",
-            "wealth": ["poor", "modest"], "size": [4, 4],
+            "wealth": ["poor", "modest"], "size": [4, 3],
             "sleeps": {"singles": 0, "couples": 1},
             "pieces": [
                 piece("sleep.couple", [2, 2], [1, 0],
@@ -121,8 +151,8 @@ class TestChecker(unittest.TestCase):
                 piece("bedside", [1, 1], [0, 0], "sleep.couple.bedside2"),
                 piece("bedside", [1, 1], [3, 0], "sleep.couple.bedside2"),
             ],
-            "doors": {"south": [0, 1, 2, 3], "west": [1, 2, 3],
-                      "east": [1, 2, 3]},
+            "doors": {"south": [0, 1, 2, 3], "west": [1, 2],
+                      "east": [1, 2]},
             "stretch": {}, "outdoor": False, "symmetric": True,
             "recipe": "bedroom.small.a",
             "description": "A symmetric hand-made room.",
@@ -142,7 +172,7 @@ class TestTurning(unittest.TestCase):
         plain = {
             "id": "bedroom.hand.a", "family": "bedroom", "sizeBand": "small",
             "clearance": "tight", "style": "flush",
-            "wealth": ["poor", "modest"], "size": [5, 4],
+            "wealth": ["poor", "modest"], "size": [5, 3],
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
@@ -151,15 +181,15 @@ class TestTurning(unittest.TestCase):
                       "east"),
             ],
             "doors": {"north": [2, 3], "south": [0, 1, 2, 3, 4],
-                      "west": [2, 3], "east": [2, 3]},
-            "stretch": {"y": [2]}, "outdoor": False, "symmetric": False,
+                      "west": [2], "east": [2]},
+            "stretch": {"x": [2]}, "outdoor": False, "symmetric": False,
             "recipe": "bedroom.small.a",
             "description": "A hand-made room the tests turn around.",
         }
         symmetric = {
             "id": "bedroom.hand.sym", "family": "bedroom",
             "sizeBand": "small", "clearance": "tight", "style": "flush",
-            "wealth": ["poor", "modest"], "size": [4, 4],
+            "wealth": ["poor", "modest"], "size": [4, 3],
             "sleeps": {"singles": 0, "couples": 1},
             "pieces": [
                 piece("sleep.couple", [2, 2], [1, 0],
@@ -167,8 +197,8 @@ class TestTurning(unittest.TestCase):
                 piece("bedside", [1, 1], [0, 0], "sleep.couple.bedside2"),
                 piece("bedside", [1, 1], [3, 0], "sleep.couple.bedside2"),
             ],
-            "doors": {"south": [0, 1, 2, 3], "west": [1, 2, 3],
-                      "east": [1, 2, 3]},
+            "doors": {"south": [0, 1, 2, 3], "west": [1, 2],
+                      "east": [1, 2]},
             "stretch": {}, "outdoor": False, "symmetric": True,
             "recipe": "bedroom.small.a",
             "description": "A symmetric hand-made room.",
@@ -186,7 +216,7 @@ class TestTurning(unittest.TestCase):
 
     def test_a_quarter_turn_swaps_the_size(self):
         room = self.rooms()[0]
-        self.assertEqual(FR.rotate(room, 1)["size"], [4, 5])
+        self.assertEqual(FR.rotate(room, 1)["size"], [3, 5])
         self.assertEqual(FR.rotate(room, 2)["size"], room["size"])
 
     def test_every_turn_and_mirror_checks(self):
@@ -252,7 +282,7 @@ class TestShipped(unittest.TestCase):
 
     def test_the_shipped_rooms_folder_loads_clean(self):
         rooms = FR.load()
-        self.assertEqual(rooms, [])
+        self.assertGreater(len(rooms), 0)
         self.assertEqual(FR.check(rooms, self.data, self.lib), [])
 
     def test_unreadable_file_is_an_error(self):

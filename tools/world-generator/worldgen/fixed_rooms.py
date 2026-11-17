@@ -94,9 +94,13 @@ def use_sides(piece, siblings=()):
       med.bed, cell.bed)                         when the bed is square)
       seats (seat, seat.long, seat.lounge,      the side facing away from
       seat.state)                                the table, desk or counter
-                                                in the same group; a lone
-                                                seat's front when it backs a
-                                                wall, else any side
+                                                in the same group (unless
+                                                its own group's pieces
+                                                cover that side — a seat
+                                                wedged beside the table —
+                                                then like a lone seat); a
+                                                lone seat's front when it
+                                                backs a wall, else any side
       a piece with a back                       its front
       free-standing tables and desks            any side
       lights, decor, optional pieces            none
@@ -115,7 +119,7 @@ def use_sides(piece, siblings=()):
         return long or SIDES
     if role in SEAT_ROLES:
         away = _away_side(piece, siblings)
-        if away:
+        if away and not _side_covered(piece, away, siblings):
             return (away,)
         back = piece.get("back")
         return (OPPOSITE[back],) if back in OPPOSITE else SIDES
@@ -152,6 +156,31 @@ def _away_side(piece, siblings):
             else:
                 best = "north" if dy > 0 else "south"
     return best
+
+
+def _side_covered(piece, side, siblings):
+    """Whether every cell on one side of a piece is covered by another piece
+    of its own group — a seat wedged between its table and another piece."""
+    x, y = piece.get("at") or (0, 0)
+    w, h = piece.get("size") or (1, 1)
+    if side == "north":
+        cells = [(cx, y - 1) for cx in range(x, x + w)]
+    elif side == "south":
+        cells = [(cx, y + h) for cx in range(x, x + w)]
+    elif side == "west":
+        cells = [(x - 1, cy) for cy in range(y, y + h)]
+    else:
+        cells = [(x + w, cy) for cy in range(y, y + h)]
+    for o in siblings:
+        if o is piece:
+            continue
+        ox, oy = o.get("at") or (0, 0)
+        ow, oh = o.get("size") or (1, 1)
+        cells = [c for c in cells
+                 if not (ox <= c[0] < ox + ow and oy <= c[1] < oy + oh)]
+        if not cells:
+            return True
+    return not cells
 
 
 # ----------------------------------------------------------------- instances
@@ -512,7 +541,8 @@ def _check_room(room, groups, lib, err, check_band=True):
     if room.get("symmetric") and not _mirror_symmetric(pieces, rects, ok, w, h):
         err("flagged symmetric but its pieces do not mirror across either "
             "centre line")
-    # the filler area of an open room
+    # the filler area of an open room: a clear rectangle of at least 2x2,
+    # inside the room and off every wall, its cells reached from the doors
     filler = room.get("filler")
     if room.get("style") == "open":
         if not isinstance(filler, dict) or not _int_pair(filler.get("at")) \
@@ -520,6 +550,7 @@ def _check_room(room, groups, lib, err, check_band=True):
                 or filler["size"][0] < 2 or filler["size"][1] < 2:
             err("an open room needs a filler area of at least 2x2")
             filler = None
+    fx = fy = fw = fh = 0
     if isinstance(filler, dict) and _int_pair(filler.get("at")) \
             and _int_pair(filler.get("size"), 1):
         fx, fy = filler["at"]
@@ -528,6 +559,33 @@ def _check_room(room, groups, lib, err, check_band=True):
                or any(c in occupied for c in _cells((fx, fy, fw, fh))))
         if bad:
             err(f"filler at {filler['at']} is not a clear area inside the room")
+            filler = None
+    if filler is not None and (fx <= 0 or fy <= 0 or fx + fw >= w
+                               or fy + fh >= h):
+        err(f"filler at {filler['at']} touches the room edge; the open "
+            f"middle keeps a clear cell to every wall")
+        filler = None
+    if filler is not None and any(c not in reach
+                                  for c in _cells((fx, fy, fw, fh))):
+        err("the filler area cannot be reached from the doors")
+    # empty edge lines: a full row or column along a wall with no piece and
+    # no filler cell on it. A flush room allows at most the one slack line
+    # per wall; an open room only the line its middle needs — the buffer
+    # line the filler keeps to that wall
+    fcells = set(_cells((fx, fy, fw, fh))) if filler is not None else set()
+    for side, k in _edge_line_counts(w, h, occupied, fcells).items():
+        if k < 1:
+            continue
+        if room.get("style") == "open":
+            needed = filler is not None and {
+                "north": fy == 1, "south": fy + fh == h - 1,
+                "west": fx == 1, "east": fx + fw == w - 1}[side]
+            if not needed:
+                err(f"{k} empty line(s) along the {side} wall; an open room "
+                    f"keeps only the line its open middle needs")
+        elif k > 1:
+            err(f"{k} empty lines along the {side} wall; a flush room "
+                f"allows at most one slack line")
     # stretch lines stay insertable
     st = room.get("stretch")
     if not isinstance(st, dict):
@@ -544,6 +602,31 @@ def _check_room(room, groups, lib, err, check_band=True):
             e = stretch_ok(room, axis, line, groups, lib)
             if e:
                 err(e)
+
+
+def _edge_line_counts(w, h, occupied, filler):
+    """How many full lines sit empty along each wall: the consecutive rows
+    from the north (or the columns from the west, and so on) with no piece
+    and no filler cell on them."""
+    def row_empty(y):
+        return not any((x, y) in occupied or (x, y) in filler
+                       for x in range(w))
+
+    def col_empty(x):
+        return not any((x, y) in occupied or (x, y) in filler
+                       for y in range(h))
+
+    counts = {}
+    for side, lines in (("north", range(h)), ("south", range(h - 1, -1, -1)),
+                        ("west", range(w)), ("east", range(w - 1, -1, -1))):
+        empty = row_empty if side in ("north", "south") else col_empty
+        k = 0
+        for i in lines:
+            if not empty(i):
+                break
+            k += 1
+        counts[side] = k
+    return counts
 
 
 def _mirror_symmetric(pieces, rects, ok, w, h):
@@ -576,10 +659,13 @@ def check(rooms, groups=None, lib=None):
     sentences starting with the file and room: pieces inside the room and not
     overlapping, wall-bound pieces flush against their wall, door cells valid
     and on at least two sides, every free cell reached from every door cell,
-    every piece reached on a use side, stretch lines truly insertable, sleep
-    counts and size band matching the pieces, symmetry where flagged, and
-    ids, families, roles and groups known. ``groups`` is room_groups.load()
-    data and ``lib`` a Library; either may be None to skip its checks."""
+    every piece reached on a use side, the open room's filler clear, reached
+    and off every wall, no wall carrying more empty lines than the slack line
+    (flush) or the filler's buffer line (open), stretch lines truly
+    insertable, sleep counts and size band matching the pieces, symmetry
+    where flagged, and ids, families, roles and groups known. ``groups`` is
+    room_groups.load() data and ``lib`` a Library; either may be None to
+    skip its checks."""
     errors = []
     seen = {}
     for room in rooms:

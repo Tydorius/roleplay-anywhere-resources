@@ -128,7 +128,8 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
         opened = _open(cands[:OPEN_BASES], ctx)
         if not opened:
             return ([], f"no open variant keeps a {MIN_FILLER}x{MIN_FILLER} "
-                        f"middle with its wall groups on the walls")
+                        f"middle clear of every wall with its wall groups "
+                        f"on the walls")
         opened.sort(key=lambda c: (c[0], c[1]))
         cands = opened
     rooms = _finalize([c[2] for c in cands[:MAX_CANDIDATES]], ctx)
@@ -574,10 +575,15 @@ def _grown(room, gw, ge, gn, gs):
 
 
 def _largest_clear(room):
-    """The largest all-free rectangle at least MIN_FILLER by MIN_FILLER, or
-    None. The open middle the filler (a rug, a table) goes into."""
+    """The largest all-free rectangle at least MIN_FILLER by MIN_FILLER that
+    touches no room edge — the open middle the filler (a rug, a table) goes
+    into, with a clear cell between it and every wall. None when no such
+    rectangle exists (a strip along a wall does not count)."""
     w, h = room["size"]
-    occupied = set()
+    if w < MIN_FILLER + 2 or h < MIN_FILLER + 2:
+        return None
+    occupied = {(x, y) for x in range(w) for y in (0, h - 1)}
+    occupied |= {(x, y) for y in range(h) for x in (0, w - 1)}
     for p in room["pieces"]:
         x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
         occupied |= {(cx, cy) for cx in range(x, x + pw)
@@ -605,8 +611,11 @@ def _largest_clear(room):
 def _open(cands, ctx):
     """Open variants of the flush candidates: grow the room 1-2 cells on an
     axis (a symmetric room grows its columns in pairs), the wall-bound
-    groups riding their walls out, and keep the clear middle as the filler
-    area. Growth variants that break a rule or leave the band drop out."""
+    groups riding their walls out, and keep the largest clear middle — off
+    every wall, at least MIN_FILLER square — as the filler area. Growth
+    variants that break a rule (an open room tolerates no empty wall line
+    beyond the filler's buffer) or leave the band drop out; when every
+    variant drops, the recipe has no open room."""
     out = []
     for _, _, room in cands:
         for gx in OPEN_GROWTH:
