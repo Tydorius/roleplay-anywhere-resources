@@ -202,6 +202,21 @@ class TestP2PromptCarriesThePurposes(unittest.TestCase):
             self.assertNotIn("vestry", c2.prompts[phase], phase)
             self.assertNotIn("ROOM LIBRARY PURPOSES", c2.prompts[phase], phase)
 
+    def test_both_items_prompts_carry_the_purposes(self):
+        # the item library (on by default) swaps the items call to the menu
+        # prompt; with it off the old prompt runs. Either way the room
+        # library's purposes must reach the call that writes the pools
+        for item_library, marker in ((True, "THE ITEM MENU"), (False, "30 to 60 items")):
+            c = library_client()
+            with tempfile.TemporaryDirectory() as tmp:
+                summary = api.generate("a mill village", client=c, seed=3, cast=False,
+                                       out_dir=tmp, item_library=item_library)
+            self.assertTrue(summary["ok"], summary)
+            prompt = c.prompts["p2-items"]
+            self.assertIn(marker, prompt, item_library)
+            self.assertIn("ROOM LIBRARY PURPOSES", prompt, item_library)
+            self.assertIn("vestry", prompt, item_library)
+
 
 if __name__ == "__main__":
     unittest.main()
