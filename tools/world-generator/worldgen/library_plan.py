@@ -11,6 +11,7 @@ the layout code places it like any other. Unit buildings keep the old P3.
 Everything here is called from ``phases.run_phases`` when ``library`` is true.
 """
 import random
+import re
 
 from . import library as lib_mod
 from .library_rooms import Templates, compile_room
@@ -272,6 +273,44 @@ def fill_from_suite(d, lib, b, band, rng):
 
 # ------------------------------------------------------------------ expansion
 
+# storage-furniture words a pool name may trail with ("Kitchen shelf" for a
+# kitchen pool): ignored when a pool name is matched against a room purpose
+ORDER_WORDS = ("shelf", "shelves", "sideboard", "cupboard", "chest", "cabinet",
+               "locker", "crate", "box", "barrel")
+
+_WORD_RE = re.compile(r"[^a-z0-9]+")
+
+
+def _words(text):
+    return [w for w in _WORD_RE.split(str(text or "").lower()) if w]
+
+
+def pool_for_purpose(purpose, pools):
+    """The plan pool a room of this purpose draws from: the pool whose name
+    matches the purpose, case-insensitively, ignoring order words ("Kitchen
+    shelf" matches "kitchen") — an exact-name match first, else the
+    alphabetical first of the names containing the purpose as whole words
+    ("Bakehouse Store" holds "bakehouse", "Workshop" does not hold "shop").
+    None when no pool matches, so the line keeps no pool."""
+    pwords = _words(purpose)
+    if not pwords:
+        return None
+    exact, contains = [], []
+    for name in sorted((str(n) for n in pools), key=lambda n: (n.lower(), n)):
+        ws = _words(name)
+        trimmed = list(ws)
+        while trimmed and trimmed[-1] in ORDER_WORDS:
+            trimmed.pop()
+        if trimmed == pwords:
+            exact.append(name)
+        elif any(ws[i:i + len(pwords)] == pwords
+                 for i in range(len(ws) - len(pwords) + 1)):
+            contains.append(name)
+    if exact:
+        return exact[0]
+    return contains[0] if contains else None
+
+
 def _room_band(lib, family, share):
     """The size band a room's share asks for, nearest one its family has."""
     want = SHARE_BAND.get(share, "medium")
@@ -326,7 +365,7 @@ def ensure_sleep_room(design, b, lib, log):
     log.append((f"building {b['name']}", f"added {name}: {residents} residents had no bedroom"))
 
 
-def expand_unit(lib, registry, design, b, band, genre, seed, log):
+def expand_unit(lib, registry, design, b, band, genre, seed, log, pools=()):
     """Furnish a unit building's one copy from the library: its rooms by
     purpose, with the copy's residents as single sleepers."""
     unit = design.get("unit")
@@ -337,7 +376,8 @@ def expand_unit(lib, registry, design, b, band, genre, seed, log):
     copy = {"name": f"{b['name']} unit", "residents": per, "couples": 0,
             "wealth": b.get("wealth"), "condition": b.get("condition")}
     unit.setdefault("furniture", [])
-    expand_design(lib, registry, unit, copy, band, genre, seed, log, ensure_beds=per > 0)
+    expand_design(lib, registry, unit, copy, band, genre, seed, log,
+                  ensure_beds=per > 0, pools=pools)
     return design
 
 
@@ -355,11 +395,13 @@ def drops_at_layout(design, b, registry):
     return len(_resolve_plan(bd, object_templates(registry))[4])
 
 
-def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds=True):
+def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds=True,
+                   pools=()):
     """``expand_design``, then again compactly (each room's smallest layout,
     no optional pieces) when the full version would overflow the building."""
     keep = list(design.get("furniture") or [])
-    expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds)
+    expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds,
+                  pools=pools)
     lost = drops_at_layout(design, b, registry)
     if lost:
         after = lost
@@ -367,7 +409,7 @@ def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds
         while True:
             design["furniture"] = list(keep)
             expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=False,
-                          compact=True)
+                          compact=True, pools=pools)
             after = drops_at_layout(design, b, registry)
             if not after or len(design["rooms"]) <= 2:
                 break
@@ -391,11 +433,14 @@ def used_templates(designs):
 
 
 def expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=True,
-                  compact=False):
+                  compact=False, pools=()):
     """Turn a library design's rooms into furniture lines (appended to
     ``design["furniture"]``) and record each room's layout. Rooms without a
-    library ``use`` keep whatever furniture the design already has."""
+    library ``use`` keep whatever furniture the design already has. A line
+    whose object is a container gets the room's purpose pool from ``pools``
+    (the plan's pool names), so it draws a starting inventory."""
     rng = random.Random(f"{seed}|library|{b['name']}")
+    pool_names = {str(n) for n in pools if n}
     if ensure_beds:
         ensure_sleep_room(design, b, lib, log)
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
@@ -425,8 +470,12 @@ def expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=
         for g in comp.gaps:
             log.append((f"building {b['name']}", f"room {r['name']}: {g}"))
         for f in comp.furniture:
-            design.setdefault("furniture", []).append(
-                {"template": f.template, "room": f.room, "count": f.count, "hint": f.hint})
+            line = {"template": f.template, "room": f.room, "count": f.count, "hint": f.hint}
+            if pool_names and registry.is_container(f.template):
+                pool = pool_for_purpose(use, pool_names)
+                if pool:
+                    line["lootPool"] = pool
+            design.setdefault("furniture", []).append(line)
         used[r["name"]] = lay["id"]
         if not r.get("purpose"):
             r["purpose"] = use.replace("_", " ")

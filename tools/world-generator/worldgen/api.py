@@ -215,6 +215,24 @@ def _populations_summary(spec):
     }
 
 
+def _container_counts(spec, plan_data):
+    """{"total", "stocked"} over the built world: a container is a placement
+    whose template has a loot pool of its own (the game's lootPoolIds) or
+    whose library object is one; a stocked placement carries a drawn starting
+    inventory."""
+    library_containers = {t.get("name") for t in plan_data.get("templates", [])
+                          if t.get("container")}
+    total = stocked = 0
+    for t in spec.get("objectTemplates", []):
+        if "lootPool" not in t and t.get("name") not in library_containers:
+            continue
+        for p in t.get("placements", []):
+            total += 1
+            if isinstance(p, dict) and p.get("inventory"):
+                stocked += 1
+    return {"total": total, "stocked": stocked}
+
+
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
@@ -235,7 +253,7 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     sw.write_spec(out_dir, spec)
     from worldgen import checks as checks_mod
     checks_mod.write_metrics(os.path.join(out_dir, "metrics.json"), world.metrics)
-    _summary_text(world, spec, seed, emit)
+    _summary_text(world, spec, seed, emit, plan_data)
 
     _progress(progress, "build", "building and validating the scenario", gen)
     builder = os.path.join(VENDOR_DIR, "build_scenario.py")
@@ -327,6 +345,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
         "templates": len(plan_data.get("templates", [])),
         "npcs": len(world.characters) - 1,
         "objects_placed": sum(len(t.get("placements", [])) for t in spec["objectTemplates"]),
+        "containers": _container_counts(spec, plan_data),
         "unplaced": len(unplaced), "fallbacks": len(world.fallbacks),
         "dropped": dropped_model,
         "validator_errors": n_err, "validator_warnings": n_warn,
@@ -392,7 +411,7 @@ def _phase_report(client, stats, minutes, emit):
     emit("\n".join(lines))
 
 
-def _summary_text(world, spec, seed, emit):
+def _summary_text(world, spec, seed, emit, plan_data=None):
     """The after-build block the CLI prints (world shape and check totals)."""
     if emit is None:
         return
@@ -403,7 +422,9 @@ def _summary_text(world, spec, seed, emit):
              f"zones {len(world.zones_by_name)}  roads {len(world.roads)}  "
              f"buildings {len(world.buildings)}  regions {len(spec['regions'])}"]
     n_objects = sum(len(t.get('placements', [])) for t in spec['objectTemplates'])
-    lines.append(f"objects placed {n_objects}  characters {len(world.characters)}")
+    containers = _container_counts(spec, plan_data or {})
+    lines.append(f"objects placed {n_objects}  characters {len(world.characters)}  "
+                 f"containers stocked {containers['stocked']}/{containers['total']}")
     lines.append(f"rooms reachable {rooms.get('reachable')}/{rooms.get('total')}  "
                  f"entrances from road {ents.get('reachable_from_road')}/{ents.get('total')}  "
                  f"reachability {world.metrics.get('reachability')}")
