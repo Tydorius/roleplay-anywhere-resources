@@ -30,7 +30,9 @@ Reply with ONE JSON object:
 - A container template may name its default pool from the list above:
   "lootPool": "Kitchen cupboard" on the template. P3 later points a specific
   room or shelf at a pool, so the same shelf template can hold clothes in one shop and baseball
-  bats in the next.
+  bats in the next. When the room library furnishes the interiors, a loot pool is
+  named after each of its room purposes (the list comes with the room-library
+  add-on below), and the containers it places draw from their room's purpose pool.
 - Sizes in cells: bed 1x2 (sleeps 1), double bed 2x2 (sleeps 2), table 2x1
   or 2x2, chair/stool/lamp 1x1, tree 1x1 to 3x3. Walkability 0 unless a
   person could step over or onto it; sleep objects are the exception — a bed,
