@@ -276,7 +276,8 @@ function inspectRegion(box, r) {
     ${field("Name", `<div class="row"><input type="text" id="fName" value="${esc(r.name)}" ${dis()} style="flex:1"><button id="fRename" ${dis()}>Rename</button></div>`,
       "Renaming also updates every schedule and calendar event that names this region.")}
     ${formHtml("rg", open ? {...r, shape: Liquids.normShape(r.shape) || ""} : r, defs)}
-    ${open ? field("Liquid", `<input type="text" id="fSurface" list="surfaceList" value="${esc(r.surface || "")}" ${dis()} placeholder="e.g. shallow water">`,
+    ${open ? field("Liquid", `<div class="row"><input type="text" id="fSurface" list="surfaceList" value="${esc(r.surface || "")}" ${dis()} style="flex:1" placeholder="e.g. shallow water">` +
+      `<label class="check"><input type="checkbox" id="fWater" ${dis()} ${Liquids.isWater(r.surface, S.scn) ? "checked" : ""}> Water</label></div>`,
       "Empty is dry ground. A name the list doesn't have, the game adds itself (as one nobody can cross).") : ""}
     ${open && res.media ? `<datalist id="surfaceList">${res.media.map(m => `<option value="${esc(m.name)}">`).join("")}</datalist>` : ""}
     <div class="row2">${field("Ambience by day", `<select id="fAmbDay" ${dis()}><option value="">—</option>${M.ambience.map(a => `<option ${amb.day === a ? "selected" : ""}>${a}</option>`).join("")}</select>`)}
@@ -302,6 +303,27 @@ function inspectRegion(box, r) {
   if ($("fSurface")) $("fSurface").onchange = () => {
     const v = Liquids.normSurface($("fSurface").value);   // empty removes the surface
     edit(`Liquid of ${r.name}`, () => set(r, "surface", v));
+  };
+  if ($("fWater")) $("fWater").onchange = () => {
+    // Water on: the shallow medium's name at 3 cells short side or less, the deep one's above that
+    // (the scenario's own water names when it has them), and an organic shape from 5 x 5 when the
+    // region had none — remembered in S.waterShape so unticking clears only that, never a shape
+    // set by hand. One tick or untick is one undo step, like every other field here.
+    S.waterShape ||= new Set();
+    if ($("fWater").checked) {
+      const w = Liquids.waterFor(r, S.scn);
+      edit(`Water of ${r.name}`, () => {
+        set(r, "surface", w.surface);
+        if (w.shape !== undefined) { set(r, "shape", w.shape); S.waterShape.add(r.id); }
+      });
+    } else {
+      const off = Liquids.waterOff(r, S.waterShape.has(r.id));
+      edit(`Dry ground of ${r.name}`, () => {
+        set(r, "surface", off.surface);
+        if ("shape" in off) set(r, "shape", undefined);
+        S.waterShape.delete(r.id);
+      });
+    }
   };
   $("fRename").onclick = () => renameThing(r, $("fName").value);
   $("fName").onkeydown = e => { if (e.key === "Enter") renameThing(r, $("fName").value); };

@@ -507,7 +507,8 @@ def _nature(world, plan):
         placed.add(tuple(world.player.pos))
     posts = [r for r in world.regions if r.kind == "post"]
     shapes = []
-    for name in native.natural_regions(world, zone_kinds):
+    for name in native.natural_regions(world, zone_kinds) \
+            + native.organic_water_regions(world):
         region = world.regions_by_name.get(name)
         danger = native.corner_cells(region.rect)
         what = None
@@ -521,7 +522,8 @@ def _nature(world, plan):
                   f"its corner, where the drawn blob may leave no ground")
             continue
         shapes.append(name)
-    return {"shape": shapes, "water": sorted(water), "vehicles": vehicles}
+    return {"shape": shapes, "water": native.water_surfaces(world, water),
+            "vehicles": vehicles}
 
 
 def _population_members(world, pops, natural):

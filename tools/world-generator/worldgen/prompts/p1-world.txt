@@ -17,7 +17,8 @@ Reply with ONE JSON object with exactly these fields:
       "description": "one sentence",
       "ground": "grass|dirt|gravel|stone",
       "adjacentTo": ["names of other zones in this list"],
-      "outdoor": ["short names of outdoor features this zone needs, e.g. 'village well', 'loading crane'"],
+      "water": "optional, omit unless the zone IS water: deep|shallow",
+      "outdoor": ["short names of outdoor features this zone needs, e.g. 'village well', 'loading crane'; a water feature is an object: {\"name\": \"duck pond\", \"water\": \"pond|pool|stream|ford\"}"],
       "arrangement": "optional, omit for today's default: around_green|along_street|scattered|fields",
       "exterior": "optional, omit for open ground: void seals the zone - nothing outside its walls is walkable (a ship, a station, a sealed bunker)",
       "buildings": [
