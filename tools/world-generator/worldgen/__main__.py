@@ -83,10 +83,11 @@ def main(argv=None):
     chk.add_argument("name", help="provider name from providers.json")
     chk.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
     lib = sub.add_parser("library", help="check the room and item libraries and report coverage")
-    lib.add_argument("action", choices=["check", "items", "groups"],
+    lib.add_argument("action", choices=["check", "items", "groups", "rooms"],
                      help="check: validate every room library file; "
                           "items: validate every library/items file; "
-                          "groups: validate every library/groups file")
+                          "groups: validate every library/groups file; "
+                          "rooms: validate every library/rooms file")
     lib.add_argument("--path", default=None, help="library folder (default: library/)")
     lib.add_argument("--coverage", action="store_true",
                      help="also list room slots that no object can fill, or the "
@@ -117,6 +118,20 @@ def main(argv=None):
             real = [k for k in data["groups"] if not str(k).startswith("!")]
             print(f"groups: {len(real)} groups, {len(data['recipes'])} recipes, "
                   f"{len(errors)} error(s)")
+            return 1 if errors else 0
+        if args.action == "rooms":
+            from worldgen import fixed_rooms as rooms_mod
+            from worldgen import library as library_mod
+            from worldgen import room_groups as groups_mod
+            lb = library_mod.load(args.path or library_mod.LIB_DIR)
+            gdata = groups_mod.load(os.path.join(args.path, "groups")
+                                    if args.path else None)
+            rooms = rooms_mod.load(os.path.join(args.path, "rooms")
+                                   if args.path else None)
+            errors = rooms_mod.check(rooms, gdata, lb)
+            for e in errors:
+                print("ERROR " + e)
+            print(f"rooms: {len(rooms)} rooms, {len(errors)} error(s)")
             return 1 if errors else 0
         from worldgen import library as library_mod
         lb = library_mod.load(args.path or library_mod.LIB_DIR)

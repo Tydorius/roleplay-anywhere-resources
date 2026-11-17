@@ -304,6 +304,64 @@ file holds the family's groups and one recipe per layout, naming the groups it n
   hand-edited afterwards. `python -m worldgen library groups` checks them; the rules above
   are what it enforces.
 
+## Rooms: `rooms/<family>.json`
+
+Fixed rooms are composed furniture: whole rooms of placed groups — a bed with its
+bedside, a chest, a lamp — checked and turned as one shape. There is no wall ring: every
+cell is floor, the walls are the room's edges, and a wall-bound piece stands flush against
+the edge it backs. Each file holds the family's rooms, one per size band, clearance and
+style the composer found a clear layout for.
+
+```json
+{
+  "id": "bedroom.small.1.tight",
+  "family": "bedroom",
+  "sizeBand": "small",
+  "clearance": "tight",
+  "style": "flush",
+  "wealth": ["poor", "modest"],
+  "size": [6, 3],
+  "sleeps": {"singles": 1, "couples": 0},
+  "pieces": [
+    {"role": "light.small", "size": [1, 1], "at": [0, 0], "group": "light.small.single"},
+    {"role": "bedside", "size": [1, 1], "at": [2, 0], "group": "sleep.bedside.storage.small.opt"},
+    {"role": "sleep", "size": [1, 2], "at": [3, 0], "back": "north", "group": "sleep.bedside.storage.small.opt"},
+    {"role": "seat", "size": [1, 1], "at": [5, 0], "group": "storage.big.seat.opt", "optional": true},
+    {"role": "storage.small", "size": [1, 1], "at": [2, 1], "group": "sleep.bedside.storage.small.opt", "optional": true},
+    {"role": "storage.big", "size": [1, 2], "at": [5, 1], "back": "east", "group": "storage.big.seat.opt"},
+    {"role": "decor.floor", "size": [1, 1], "at": [0, 2], "group": "decor.floor.single.bedroom", "optional": true}
+  ],
+  "doors": {"north": [1, 4], "south": [1, 2, 3, 4], "west": [1]},
+  "stretch": {"x": [0, 1, 2, 3, 4, 5], "y": [3]},
+  "outdoor": false,
+  "symmetric": false,
+  "recipe": "bedroom.small.a",
+  "description": "A small bedroom room (6x3) of 4 furniture groups at tight spacing."
+}
+```
+
+- **Room:** `id` is unique across all files. `clearance` is `tight`, `roomy` or `grand`
+  (1, 2 or 3 clear cells kept between groups); `style` is `flush` or `open`. `wealth`
+  lists the tiers the room furnishes. `size` is the room in cells and `sizeBand` must fit
+  its area. `sleeps` counts the beds, `outdoor` and `symmetric` flag what they name,
+  `recipe` names the source recipe and `description` is one sentence.
+- **Pieces:** each is a group's piece placed into the room — `role`, `size` and `at`
+  cell, `back` on a wall-bound piece (flush against that edge, facing in), `group` naming
+  the group it came from, `optional` when the room still works without it. Pieces never
+  overlap, and every piece keeps a reached free cell beside it on a side it can be used
+  from: a bed a long side, a seat the side facing away from its table, a wall-bound piece
+  its front. Lights, decor and optional fillers need none.
+- **Doors:** per side, the cell offsets along that wall that can take one — free edge
+  cells only, on at least two sides, every door opening into one connected free area.
+- **Stretch:** `x` columns and `y` rows where an empty line can be inserted to grow the
+  room; each line must sit clear of pieces and leave the room valid once inserted.
+- **Open style:** the roomier variant records a `filler` — the clear middle's `at` and
+  `size`, at least 2x2.
+- The files are composed from the group recipes by `worldgen/room_composer.py` and may be
+  hand-edited afterwards. `python -m worldgen library rooms` checks them; the rules above
+  are what it enforces. `worldgen.fixed_rooms.rotate` turns a stored room to any side —
+  four quarter turns return it unchanged.
+
 ## Purposes: `purposes.json`
 
 ```json
