@@ -1,0 +1,866 @@
+{
+  "groups": [
+    {
+      "id": "sleep.storage.small",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.fuel.opt.hut",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat3.hut",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.hut",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.hut",
+      "family": "hut",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.hut",
+      "family": "hut",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "sleep.storage.small.decor.floor.opt",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.single.hut",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.hut",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuel.single",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.hut",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.cook.fuel.opt",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "cook",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat4.hut",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.hut",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "sleep.storage.small.opt.hut",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.hut1",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.hut2",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.fuel.opt.hut1",
+      "family": "hut",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.hut3",
+      "family": "hut",
+      "wall": "none",
+      "use": [
+        "north",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "hut.medium.a",
+      "family": "hut",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.fuel.opt.hut",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat3.hut",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.hut",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.hut",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.hut",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "hut.medium.b",
+      "family": "hut",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.decor.floor.opt",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.single.hut",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat2.hut",
+          "kind": "required"
+        },
+        {
+          "group": "fuel.single",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.hut",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.hut",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "hut.medium.c",
+      "family": "hut",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.cook.fuel.opt",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat4.hut",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.hut",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.hut",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.hut",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "hut.small.a",
+      "family": "hut",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.opt.hut",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.single.hut",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat2.hut1",
+          "kind": "required"
+        },
+        {
+          "group": "fuel.single",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.hut",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "hut.small.b",
+      "family": "hut",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.opt.hut",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.fuel.opt.hut",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat2.hut2",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.hut",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "hut.small.c",
+      "family": "hut",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.opt.hut",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.fuel.opt.hut1",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat2.hut3",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.hut",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

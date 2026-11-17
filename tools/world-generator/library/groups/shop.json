@@ -1,0 +1,1046 @@
+{
+  "groups": [
+    {
+      "id": "counter.serve.storage.small.opt.shop",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.shop",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "display.single",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.shop",
+      "family": "shop",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.shop",
+      "family": "shop",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.shop",
+      "family": "shop",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.shop",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.shop",
+      "family": "shop",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.bulk2.storage.small.opt",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.shop1",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop1",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.single.shop1",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.shop1",
+      "family": "shop",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.shop",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.shop1",
+      "family": "shop",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop2",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.shop2",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop3",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.cold.storage.small.opt",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop4",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "display.single.shop5",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.small.opt.seat.opt",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.small",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.shop3",
+      "family": "shop",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.small.opt.shop1",
+      "family": "shop",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "shop.large.a",
+      "family": "shop",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.small.opt.shop",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "display.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.shop",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "light.big.single.shop",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "display.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.shop",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.large.b",
+      "family": "shop",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.bulk2.storage.small.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop1",
+          "kind": "repeatable",
+          "count": [
+            3,
+            6
+          ]
+        },
+        {
+          "group": "display.single.shop1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "seat.single.shop1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ],
+          "minWealth": "modest"
+        },
+        {
+          "group": "storage.big.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.shop1",
+          "kind": "optional"
+        },
+        {
+          "group": "display.single.shop2",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.shop2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.medium.a",
+      "family": "shop",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.small.opt.shop",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "display.single.shop3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.shop",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "storage.bulk.single.shop1",
+          "kind": "optional"
+        },
+        {
+          "group": "display.single.shop2",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.shop",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.medium.b",
+      "family": "shop",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.cold.storage.small.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "display.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "display.single.shop4",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.shop",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.medium.c",
+      "family": "shop",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.small.opt.shop",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.shop",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "display.single.shop5",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "optional",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "display.single.shop4",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.small.a",
+      "family": "shop",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.shop",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "counter.serve.storage.small.opt.seat.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "display.single.shop3",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "display.single.shop4",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.small.b",
+      "family": "shop",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.small",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.shop",
+          "kind": "required"
+        },
+        {
+          "group": "display.single.shop1",
+          "kind": "required"
+        },
+        {
+          "group": "display.single.shop4",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.shop3",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.shop",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "shop.small.c",
+      "family": "shop",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.shop1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "counter.serve.storage.small.opt.shop1",
+          "kind": "anchor"
+        },
+        {
+          "group": "display.single.shop3",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.shop1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.single.shop",
+          "kind": "optional"
+        },
+        {
+          "group": "display.single.shop4",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

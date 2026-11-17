@@ -1,0 +1,1073 @@
+{
+  "groups": [
+    {
+      "id": "wash.toilet.wash.toilet.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.bath.wash.bath.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.washroom",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.washroom",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.washroom",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.washroom",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.bath.single",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.washroom1",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.fuel.opt.washroom",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.toilet.single.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.washroom1",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.washroom1",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.washroom2",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.bath.decor.floor.seat.opt",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.washroom2",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.washroom",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.toilet.wash.basin.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.bath.decor.floor.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.washroom3",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.washroom1",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.bath.seat.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.storage.small",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "waste.single.washroom1",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.wash.basin.opt.washroom",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.storage.small.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "washroom.medium.a",
+      "family": "washroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "wash.toilet.wash.toilet.opt",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.washroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.bath.wash.bath.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.washroom",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.long.single.washroom",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.washroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.medium.b",
+      "family": "washroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "wash.bath.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            4
+          ]
+        },
+        {
+          "group": "wash.basin.single.washroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "seat.long.single.washroom1",
+          "kind": "required"
+        },
+        {
+          "group": "heat.fuel.opt.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.washroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.washroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.washroom2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.medium.c",
+      "family": "washroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "wash.bath.decor.floor.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.washroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.washroom2",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.washroom",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "heat.single.washroom",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "decor.floor.single.washroom",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.washroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.small.a",
+      "family": "washroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "wash.toilet.wash.basin.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.bath.decor.floor.opt",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "storage.small.single.washroom3",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.washroom",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.washroom1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.small.b",
+      "family": "washroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "wash.bath.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.storage.small",
+          "kind": "required"
+        },
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "waste.single.washroom1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.washroom1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.small.c",
+      "family": "washroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.wash.basin.opt.washroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.bath.single",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "waste.single.washroom1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.washroom1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.tiny.a",
+      "family": "washroom",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.storage.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.washroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.tiny.b",
+      "family": "washroom",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "wash.bath.decor.floor.opt",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "wash.toilet.wash.basin.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.washroom1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "washroom.tiny.c",
+      "family": "washroom",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "wash.toilet.single.washroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.washroom1",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

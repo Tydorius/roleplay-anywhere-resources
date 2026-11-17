@@ -1,0 +1,928 @@
+{
+  "groups": [
+    {
+      "id": "table.dining.seat4.guardroom",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapons.weapons.opt",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.guardroom",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "coat.single.guardroom",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.guardroom",
+      "family": "guardroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.guardroom",
+      "family": "guardroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "security.single.guardroom",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "sleep.storage.small.storage.small.opt",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.seat2.seat.opt",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "weapons.single.guardroom",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.single.guardroom1",
+      "family": "guardroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.guardroom",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.guardroom",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.guardroom1",
+      "family": "guardroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.seat.opt.guardroom",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.guardroom1",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapons.single.guardroom1",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.guardroom2",
+      "family": "guardroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.guardroom1",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.guardroom",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "sleep.storage.small.opt.guardroom",
+      "family": "guardroom",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.seat.seat.opt",
+      "family": "guardroom",
+      "wall": "none",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "guardroom.medium.a",
+      "family": "guardroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat4.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.weapons.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.guardroom",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "coat.single.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.guardroom",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.guardroom",
+          "kind": "optional"
+        },
+        {
+          "group": "security.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "guardroom.medium.b",
+      "family": "guardroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.storage.small.opt",
+          "kind": "optional",
+          "count": "singles"
+        },
+        {
+          "group": "table.small.seat2.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.guardroom",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "coat.single.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.guardroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "guardroom.medium.c",
+      "family": "guardroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "weapons.single.guardroom",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "desk.seat.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat2.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.guardroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "security.single.guardroom",
+          "kind": "optional"
+        },
+        {
+          "group": "heat.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "guardroom.small.a",
+      "family": "guardroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat2.seat.opt.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.guardroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "coat.single.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.guardroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "guardroom.small.b",
+      "family": "guardroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.guardroom1",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.guardroom1",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.guardroom2",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.guardroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.guardroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.guardroom",
+          "kind": "optional"
+        },
+        {
+          "group": "security.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "guardroom.small.c",
+      "family": "guardroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small.opt.guardroom",
+          "kind": "optional",
+          "count": "singles"
+        },
+        {
+          "group": "table.small.seat.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.guardroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "coat.single.guardroom",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.guardroom",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

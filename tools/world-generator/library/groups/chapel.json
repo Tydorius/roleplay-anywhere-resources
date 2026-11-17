@@ -1,0 +1,1140 @@
+{
+  "groups": [
+    {
+      "id": "altar.lectern.devotion",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.chapel",
+      "family": "chapel",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel1",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.chapel",
+      "family": "chapel",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "devotion.single",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.chapel",
+      "family": "chapel",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "altar.lectern",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel2",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devotion.single.chapel",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel3",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single",
+      "family": "chapel",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.chapel1",
+      "family": "chapel",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "altar.devotion2",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel4",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "lectern.single",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.chapel2",
+      "family": "chapel",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel5",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.chapel",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "altar.lectern.chapel",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel6",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "altar.devotion2.lectern",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel7",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel8",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.chapel1",
+      "family": "chapel",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "altar.seat.long3",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devotion.single.chapel1",
+      "family": "chapel",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.chapel9",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "altar.light.small2",
+      "family": "chapel",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "altar",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "devotion.single.chapel2",
+      "family": "chapel",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "devotion",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "chapel.large.a",
+      "family": "chapel",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "altar.lectern.devotion",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "seat.long.single.chapel",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "light.big.single.chapel",
+          "kind": "repeatable",
+          "count": 2,
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.long.single.chapel1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.chapel1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "devotion.single",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.large.b",
+      "family": "chapel",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "altar.lectern",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel2",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "devotion.single.chapel",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "light.big.single.chapel",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "seat.long.single.chapel3",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single",
+          "kind": "optional"
+        },
+        {
+          "group": "devotion.single",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.chapel1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.large.c",
+      "family": "chapel",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "altar.devotion2",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel4",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "seat.long.single.chapel4",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "lectern.single",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.chapel2",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "seat.long.single.chapel5",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.medium.a",
+      "family": "chapel",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "altar.lectern.chapel",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel6",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "seat.long.single.chapel6",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "light.small.single.chapel2",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.long.single.chapel5",
+          "kind": "optional"
+        },
+        {
+          "group": "devotion.single",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.chapel1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.medium.b",
+      "family": "chapel",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "altar.devotion2.lectern",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel7",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "light.small.single.chapel2",
+          "kind": "required"
+        },
+        {
+          "group": "seat.long.single.chapel8",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.medium.c",
+      "family": "chapel",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "altar.seat.long3",
+          "kind": "anchor"
+        },
+        {
+          "group": "devotion.single.chapel1",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "light.small.single.chapel2",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "light.small.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel1",
+          "kind": "optional"
+        },
+        {
+          "group": "devotion.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.small.a",
+      "family": "chapel",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "altar.lectern.chapel",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel6",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "devotion.single.chapel1",
+          "kind": "optional",
+          "minWealth": "modest"
+        },
+        {
+          "group": "light.small.single.chapel1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.small.b",
+      "family": "chapel",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "altar.devotion2",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.chapel9",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.chapel1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "chapel.small.c",
+      "family": "chapel",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "altar.light.small2",
+          "kind": "anchor"
+        },
+        {
+          "group": "devotion.single.chapel2",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "decor.floor.single.chapel",
+          "kind": "optional"
+        },
+        {
+          "group": "devotion.single",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

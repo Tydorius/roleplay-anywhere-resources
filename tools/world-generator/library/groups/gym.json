@@ -1,0 +1,1021 @@
+{
+  "groups": [
+    {
+      "id": "exercise.single",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.gym",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.gym",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "coat.single.gym",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym1",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.gym",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "screen.single.gym",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym2",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym3",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "weapons.weapons.opt.gym",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.gym1",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym4",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.gym",
+      "family": "gym",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.gym1",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym5",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym6",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym7",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "exercise.single.gym8",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "exercise",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "radio.single",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "radio",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.gym",
+      "family": "gym",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.gym1",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.single.gym",
+      "family": "gym",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.gym",
+      "family": "gym",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.gym1",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "weapons.single.gym",
+      "family": "gym",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.gym1",
+      "family": "gym",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "gym.large.a",
+      "family": "gym",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single",
+          "kind": "anchor",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "storage.small.single.gym",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "exercise.single.gym",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "seat.long.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.gym",
+          "kind": "required"
+        },
+        {
+          "group": "exercise.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single.gym",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.large.b",
+      "family": "gym",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym2",
+          "kind": "anchor"
+        },
+        {
+          "group": "exercise.single.gym3",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "weapons.weapons.opt.gym",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "seat.long.single.gym",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "required"
+        },
+        {
+          "group": "exercise.single.gym4",
+          "kind": "optional"
+        },
+        {
+          "group": "light.big.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.gym1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.large.c",
+      "family": "gym",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym5",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "exercise.single.gym5",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "exercise.single.gym6",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "coat.single.gym",
+          "kind": "required"
+        },
+        {
+          "group": "seat.long.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym7",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym8",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "radio.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.medium.a",
+      "family": "gym",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym5",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "exercise.single.gym",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.gym",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "seat.long.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym7",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single.gym",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.medium.b",
+      "family": "gym",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym6",
+          "kind": "anchor"
+        },
+        {
+          "group": "exercise.single.gym3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "weapons.weapons.opt.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.gym",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym4",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.gym",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.medium.c",
+      "family": "gym",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym3",
+          "kind": "anchor",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "exercise.single.gym5",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym4",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.gym1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.small.a",
+      "family": "gym",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym5",
+          "kind": "anchor"
+        },
+        {
+          "group": "exercise.single.gym",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.gym",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym8",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.gym",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.small.b",
+      "family": "gym",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym6",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "required"
+        },
+        {
+          "group": "exercise.single.gym",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.gym1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "gym.small.c",
+      "family": "gym",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "exercise.single.gym5",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "storage.small.single.gym1",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.gym",
+          "kind": "optional"
+        },
+        {
+          "group": "exercise.single.gym4",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.gym1",
+          "kind": "optional"
+        },
+        {
+          "group": "radio.single",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

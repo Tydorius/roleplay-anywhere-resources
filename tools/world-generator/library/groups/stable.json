@@ -1,0 +1,740 @@
+{
+  "groups": [
+    {
+      "id": "animal.single",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single.stable",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.stable",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.stable",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable1",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.stable1",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "utility.single.stable",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.stable",
+      "family": "stable",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable2",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "utility.single.stable1",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable3",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.material.single.stable",
+      "family": "stable",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.material",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable4",
+      "family": "stable",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "waste.single.stable1",
+      "family": "stable",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.material.single.stable1",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.material",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "animal.animal",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.stable",
+      "family": "stable",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable5",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "animal.single.stable6",
+      "family": "stable",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "stable.large.a",
+      "family": "stable",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "animal.single",
+          "kind": "anchor",
+          "count": 3
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "animal.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.stable",
+          "kind": "optional"
+        },
+        {
+          "group": "animal.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.stable",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.stable",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "stable.large.b",
+      "family": "stable",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "animal.single.stable2",
+          "kind": "anchor",
+          "count": 3
+        },
+        {
+          "group": "animal.single.stable2",
+          "kind": "repeatable",
+          "count": 3
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "animal.single.stable",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "animal.single.stable3",
+          "kind": "optional"
+        },
+        {
+          "group": "animal.single.stable3",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.stable",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "stable.large.c",
+      "family": "stable",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "animal.single.stable4",
+          "kind": "anchor"
+        },
+        {
+          "group": "animal.single.stable2",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "animal.single.stable3",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.stable",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "stable.medium.a",
+      "family": "stable",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "animal.animal",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.stable",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.stable",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "stable.medium.b",
+      "family": "stable",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "animal.single.stable2",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "animal.single.stable5",
+          "kind": "required"
+        },
+        {
+          "group": "utility.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "animal.single.stable3",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.stable",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "stable.medium.c",
+      "family": "stable",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "animal.single.stable6",
+          "kind": "anchor"
+        },
+        {
+          "group": "animal.single.stable2",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.stable",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.tool.single.stable",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.stable1",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.stable",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

@@ -83,9 +83,10 @@ def main(argv=None):
     chk.add_argument("name", help="provider name from providers.json")
     chk.add_argument("--providers", default=None, help="providers.json path (default: repo root)")
     lib = sub.add_parser("library", help="check the room and item libraries and report coverage")
-    lib.add_argument("action", choices=["check", "items"],
+    lib.add_argument("action", choices=["check", "items", "groups"],
                      help="check: validate every room library file; "
-                          "items: validate every library/items file")
+                          "items: validate every library/items file; "
+                          "groups: validate every library/groups file")
     lib.add_argument("--path", default=None, help="library folder (default: library/)")
     lib.add_argument("--coverage", action="store_true",
                      help="also list room slots that no object can fill, or the "
@@ -103,6 +104,19 @@ def main(argv=None):
             print(f"items: {len(items)} items, {len(errors)} error(s)")
             if not errors and args.coverage:
                 item_mod.report(items)
+            return 1 if errors else 0
+        if args.action == "groups":
+            from worldgen import library as library_mod
+            from worldgen import room_groups as groups_mod
+            lb = library_mod.load(args.path or library_mod.LIB_DIR)
+            data = groups_mod.load(os.path.join(args.path, "groups")
+                                   if args.path else None)
+            errors = groups_mod.check(data, lb)
+            for e in errors:
+                print("ERROR " + e)
+            real = [k for k in data["groups"] if not str(k).startswith("!")]
+            print(f"groups: {len(real)} groups, {len(data['recipes'])} recipes, "
+                  f"{len(errors)} error(s)")
             return 1 if errors else 0
         from worldgen import library as library_mod
         lb = library_mod.load(args.path or library_mod.LIB_DIR)

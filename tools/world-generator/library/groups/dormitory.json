@@ -1,0 +1,855 @@
+{
+  "groups": [
+    {
+      "id": "sleep.storage.small2",
+      "family": "dormitory",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.dormitory",
+      "family": "dormitory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat4.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.dormitory",
+      "family": "dormitory",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.dormitory1",
+      "family": "dormitory",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.dormitory1",
+      "family": "dormitory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.fuel.opt",
+      "family": "dormitory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat.long2.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.wash.basin.opt",
+      "family": "dormitory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.seat2",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.dormitory1",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "waste.single.dormitory1",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.dormitory",
+      "family": "dormitory",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.dormitory",
+      "family": "dormitory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2.seat.opt",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.dormitory",
+      "family": "dormitory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "dormitory.large.a",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "storage.big.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat4.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dormitory.large.b",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "heat.fuel.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat.long2.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dormitory",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "coat.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "table.dining.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dormitory.large.c",
+      "family": "dormitory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "storage.big.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.wash.basin.opt",
+          "kind": "required"
+        },
+        {
+          "group": "table.small.seat2",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dormitory",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "coat.single.dormitory1",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dormitory.medium.a",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "light.small.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.dormitory1",
+          "kind": "required"
+        },
+        {
+          "group": "table.small.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dormitory.medium.b",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "table.dining.seat2.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dormitory1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dormitory.medium.c",
+      "family": "dormitory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.storage.small2",
+          "kind": "anchor",
+          "count": "singles"
+        },
+        {
+          "group": "storage.big.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "heat.fuel.opt",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dormitory",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.dormitory1",
+          "kind": "required"
+        },
+        {
+          "group": "seat.long.single.dormitory",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dormitory",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

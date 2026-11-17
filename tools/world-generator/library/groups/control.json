@@ -1,0 +1,1312 @@
+{
+  "groups": [
+    {
+      "id": "control.seat",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.state.table.small.opt",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "computer.seat.opt",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "screen.single.control",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "server.single",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "server",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.control",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "control.single",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "server.single.control",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "server",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat4.seat.opt",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            3
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "control.single.control",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "control.seat.opt",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "computer.single",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.control1",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "server.single.control1",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "server",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "computer.seat.seat.opt",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.control2",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility.single",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "server.single.control2",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "server",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.control",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.state.single",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.control3",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat3.seat.opt",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "computer.single.control",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "screen.single.control1",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "control.seat2",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapons.single.control",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "coat.single.control",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "security.single",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "control.seat.seat.opt",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "control.seat.computer",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "control",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "weapons.single.control1",
+      "family": "control",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.control",
+      "family": "control",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility.single.control",
+      "family": "control",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "control.large.a",
+      "family": "control",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "control.seat",
+          "kind": "anchor",
+          "count": 3
+        },
+        {
+          "group": "seat.state.table.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "computer.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "screen.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "server.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "control.single",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.control",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.large.b",
+      "family": "control",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "table.work.seat4.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "control.single.control",
+          "kind": "anchor"
+        },
+        {
+          "group": "control.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "screen.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "server.single",
+          "kind": "required"
+        },
+        {
+          "group": "computer.single",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.large.c",
+      "family": "control",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "server.single.control1",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "control.single.control",
+          "kind": "anchor"
+        },
+        {
+          "group": "computer.seat.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "screen.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.control2",
+          "kind": "required"
+        },
+        {
+          "group": "utility.single",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.control2",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.control",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.medium.a",
+      "family": "control",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "control.seat",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "seat.state.single",
+          "kind": "required"
+        },
+        {
+          "group": "computer.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "screen.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control3",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.medium.b",
+      "family": "control",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.work.seat3.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "control.single.control",
+          "kind": "anchor"
+        },
+        {
+          "group": "computer.single.control",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "server.single",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single.control1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.medium.c",
+      "family": "control",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "screen.single.control",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "control.seat2",
+          "kind": "anchor"
+        },
+        {
+          "group": "weapons.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control2",
+          "kind": "required"
+        },
+        {
+          "group": "computer.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "coat.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "security.single",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.control",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.small.a",
+      "family": "control",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "control.seat.seat.opt",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "computer.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single.control1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.small.b",
+      "family": "control",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "control.seat.computer",
+          "kind": "anchor"
+        },
+        {
+          "group": "screen.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "weapons.single.control1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.control1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.control",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "control.small.c",
+      "family": "control",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "control.single.control",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.single.control",
+          "kind": "required"
+        },
+        {
+          "group": "computer.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.control",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.control",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

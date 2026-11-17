@@ -1,0 +1,573 @@
+{
+  "groups": [
+    {
+      "id": "decor.feature.single.passage",
+      "family": "passage",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.passage",
+      "family": "passage",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.single.passage",
+      "family": "passage",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "coat.single.passage",
+      "family": "passage",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.passage",
+      "family": "passage",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.passage",
+      "family": "passage",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.passage1",
+      "family": "passage",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.table.small.opt",
+      "family": "passage",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single.passage1",
+      "family": "passage",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.passage",
+      "family": "passage",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "security.single.passage",
+      "family": "passage",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility.single.passage",
+      "family": "passage",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.passage",
+      "family": "passage",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.passage1",
+      "family": "passage",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.passage2",
+      "family": "passage",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.passage1",
+      "family": "passage",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "coat.single.passage1",
+      "family": "passage",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.passage3",
+      "family": "passage",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "passage.large.a",
+      "family": "passage",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "decor.feature.single.passage",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.passage",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "counter.serve.single.passage",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.passage",
+          "kind": "required"
+        },
+        {
+          "group": "light.big.single.passage",
+          "kind": "required"
+        },
+        {
+          "group": "light.big.single.passage",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "decor.floor.single.passage",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.passage1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "passage.medium.a",
+      "family": "passage",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.single.passage",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.table.small.opt",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "coat.single.passage",
+          "kind": "required"
+        },
+        {
+          "group": "decor.feature.single.passage1",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "light.big.single.passage",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.passage",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "passage.medium.b",
+      "family": "passage",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "storage.big.single.passage",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "security.single.passage",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.passage",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.passage",
+          "kind": "required"
+        },
+        {
+          "group": "seat.long.single.passage1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "passage.small.a",
+      "family": "passage",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "light.small.single.passage",
+          "kind": "anchor"
+        },
+        {
+          "group": "decor.floor.single.passage2",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.passage1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.passage1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.passage1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "passage.small.b",
+      "family": "passage",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.table.small.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "decor.floor.single.passage3",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.passage",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "coat.single.passage",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "passage.tiny.a",
+      "family": "passage",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "light.small.single.passage",
+          "kind": "anchor"
+        },
+        {
+          "group": "coat.single.passage1",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

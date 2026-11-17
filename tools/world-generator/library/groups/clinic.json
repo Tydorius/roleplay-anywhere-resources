@@ -1,0 +1,850 @@
+{
+  "groups": [
+    {
+      "id": "med.station.light.big.seat",
+      "family": "clinic",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "modest"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "med.supply.single",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.supply",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.clinic",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.single",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "waste.single.clinic",
+      "family": "clinic",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "med.screen.single",
+      "family": "clinic",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.supply.single.clinic",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.supply",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.bed.single",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.station.med.screen",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.computer.opt",
+      "family": "clinic",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.clinic1",
+      "family": "clinic",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.single.clinic",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.clinic1",
+      "family": "clinic",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat2",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.clinic",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.clinic",
+      "family": "clinic",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.station.seat.light.big.opt",
+      "family": "clinic",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.station.med.screen.opt",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.seat.opt",
+      "family": "clinic",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.clinic2",
+      "family": "clinic",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.station.med.supply.med.screen",
+      "family": "clinic",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "med.supply",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.single.clinic1",
+      "family": "clinic",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "clinic.medium.a",
+      "family": "clinic",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "med.station.light.big.seat",
+          "kind": "anchor"
+        },
+        {
+          "group": "med.supply.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "wash.basin.single.clinic",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.single",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.clinic",
+          "kind": "required"
+        },
+        {
+          "group": "med.screen.single",
+          "kind": "optional"
+        },
+        {
+          "group": "med.supply.single.clinic",
+          "kind": "optional"
+        },
+        {
+          "group": "med.bed.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "clinic.medium.b",
+      "family": "clinic",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "med.station.med.screen",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "med.supply.single",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "desk.seat.computer.opt",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.clinic1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.clinic",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.clinic1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "clinic.medium.c",
+      "family": "clinic",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat2",
+          "kind": "required"
+        },
+        {
+          "group": "med.station.med.screen",
+          "kind": "anchor"
+        },
+        {
+          "group": "med.supply.single",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "wash.basin.single.clinic1",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.clinic",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.clinic1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.clinic",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "clinic.small.a",
+      "family": "clinic",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "med.station.seat.light.big.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "med.supply.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.clinic1",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.clinic1",
+          "kind": "optional"
+        },
+        {
+          "group": "med.screen.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "clinic.small.b",
+      "family": "clinic",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "med.station.med.screen.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "med.supply.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "desk.seat.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.clinic2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "clinic.small.c",
+      "family": "clinic",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "med.station.med.supply.med.screen",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.clinic1",
+          "kind": "required"
+        },
+        {
+          "group": "seat.single.clinic1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.clinic1",
+          "kind": "optional"
+        },
+        {
+          "group": "med.supply.single.clinic",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

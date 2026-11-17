@@ -1,0 +1,1609 @@
+{
+  "groups": [
+    {
+      "id": "table.dining.seat4",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.small.opt",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.dining",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.dining",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat6.seat.state",
+      "family": "dining",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat.long4",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            6,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.single.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.dining1",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.dining1",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            6,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.dining1",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.dining1",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "music.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "music",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat2",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.cold",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "waste.single.dining1",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.dining2",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "screen.single.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.dining2",
+      "family": "dining",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat6.dining",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.dining1",
+      "family": "dining",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.dining1",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat.long2",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.small.opt.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat6.seat.state.dining",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ]
+        },
+        {
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat4.dining",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.dining2",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat.long.seat2",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.dining",
+      "family": "dining",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat.long2.seat.opt",
+      "family": "dining",
+      "wall": "none",
+      "use": [
+        "north",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "dining.large.a",
+      "family": "dining",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat4",
+          "kind": "anchor",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "counter.serve.storage.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dining",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "table.dining.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.big.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.large.b",
+      "family": "dining",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat6.seat.state",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.dining.seat.long4",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.dining",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.big.single.dining1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "table.dining.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "music.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.large.c",
+      "family": "dining",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat2",
+          "kind": "anchor",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "counter.serve.storage.cold",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.dining1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dining",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "table.dining.single.dining2",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.dining2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.medium.a",
+      "family": "dining",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat6.dining",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.big.single.dining",
+          "kind": "required"
+        },
+        {
+          "group": "light.big.single.dining1",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "decor.floor.single.dining1",
+          "kind": "optional",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "light.small.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "heat.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.medium.b",
+      "family": "dining",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat.long2",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "counter.serve.storage.small.opt.dining",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.medium.c",
+      "family": "dining",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat6.seat.state.dining",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.big.single.dining",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.dining",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "heat.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.big.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.small.a",
+      "family": "dining",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat4.dining",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.big.single.dining",
+          "kind": "required"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "heat.single.dining2",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dining1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.small.b",
+      "family": "dining",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat.long.seat2",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dining1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dining.small.c",
+      "family": "dining",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "table.dining.seat.long2.seat.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.dining",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "shelving.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.dining",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

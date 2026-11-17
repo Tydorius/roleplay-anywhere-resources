@@ -1,0 +1,842 @@
+{
+  "groups": [
+    {
+      "id": "laundry.wash.laundry.dry.storage.small",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.work.storage.small.opt.seat.opt",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.laundry",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.laundry",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "utility.single.laundry",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "laundry.wash.single",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "laundry.dry.single",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat.opt.laundry",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.laundry",
+      "family": "laundry",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility.single.laundry1",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.laundry1",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.laundry",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "laundry.wash.wash.basin",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "laundry.dry.single.laundry",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.dry",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.laundry1",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.laundry",
+      "family": "laundry",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "laundry.wash.laundry.dry.storage.small.laundry.dry.opt",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.laundry1",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.storage.small.opt",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "laundry.dry.laundry.dry.opt",
+      "family": "laundry",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "laundry.dry",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "laundry.wash.seat.opt",
+      "family": "laundry",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "laundry.wash",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "laundry.medium.a",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.laundry.dry.storage.small",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "table.work.storage.small.opt.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.laundry",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.laundry",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.laundry",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laundry.medium.b",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.single",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "laundry.dry.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "group": "table.work.seat.opt.laundry",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.laundry",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "utility.single.laundry1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.laundry1",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.laundry",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laundry.medium.c",
+      "family": "laundry",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.wash.basin",
+          "kind": "anchor",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "group": "laundry.dry.single.laundry",
+          "kind": "repeatable",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "group": "table.work.seat.opt.laundry",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.laundry1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "heat.single.laundry",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.laundry",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laundry.small.a",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.laundry.dry.storage.small.laundry.dry.opt",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.work.single.laundry1",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.laundry",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.laundry",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laundry.small.b",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.wash.basin",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.work.storage.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "laundry.dry.laundry.dry.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.laundry1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laundry.small.c",
+      "family": "laundry",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "laundry.wash.seat.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "laundry.dry.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            3
+          ]
+        },
+        {
+          "group": "table.work.single.laundry1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.laundry",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "heat.single.laundry",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.laundry",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

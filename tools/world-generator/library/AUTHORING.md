@@ -255,6 +255,55 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 - The layout is generic. The purpose binds roles to categories, so one workshop layout serves a
   forge and a fabricator bay.
 
+## Groups: `groups/<family>.json`
+
+Furniture groups are the fixed clusters the layouts describe through their `beside:`/`around:`
+anchors — a bed with its bedside tables, a table with its chairs — moving as one piece. Each
+file holds the family's groups and one recipe per layout, naming the groups it needs.
+
+```json
+{
+  "groups": [
+    {
+      "id": "sleep.couple.bedside2",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": ["south"],
+      "pieces": [
+        {"role": "sleep.couple", "size": [2, 2], "at": [1, 0], "back": "north"},
+        {"role": "bedside", "size": [1, 1], "at": [0, 0]},
+        {"role": "bedside", "size": [1, 1], "at": [3, 0]}
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "bedroom.master.small.a",
+      "family": "bedroom.master",
+      "sizeBands": ["small"],
+      "groups": [
+        {"group": "sleep.couple.bedside2", "kind": "anchor", "count": "couples"},
+        {"group": "light.small.single", "kind": "optional"}
+      ]
+    }
+  ]
+}
+```
+
+- **Groups:** `id` is unique across all files. `wall` is `back` (against a wall), `corner`
+  (two walls) or `none` (stands free). `use` lists the sides people stand or sit at. `pieces`
+  never overlap and touch edge to edge as one shape. They are placed north-facing: `at` is a
+  cell offset from the group's top left, `size` is the placed footprint (a piece turned onto
+  the east or west side carries its turned size), and a wall-bound piece backs `north` on
+  row 0. A piece may be `optional` or carry a `minWealth`.
+- **Recipes:** one per layout, with `layout`, `family` and `sizeBands` copied from it. Each
+  entry names a `group` with a `kind` — `anchor` (exactly one, the layout's main piece),
+  `required`, `optional` or `repeatable` (as many as fit) — plus the source slot's `count`
+  and `minWealth` when it had them.
+- The files are generated from the layouts by `library-seed/layouts_to_groups.py` and may be
+  hand-edited afterwards. `python -m worldgen library groups` checks them; the rules above
+  are what it enforces.
+
 ## Purposes: `purposes.json`
 
 ```json
