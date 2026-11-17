@@ -35,6 +35,7 @@ import image_gallery as ig  # noqa: E402
 
 import scenario_checks  # noqa: E402
 import worldgen_editor as wg  # noqa: E402
+import assistant_editor as at  # noqa: E402
 
 STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/editor.js": ("editor.js", "text/javascript; charset=utf-8"),
@@ -48,6 +49,8 @@ STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/refs.js": ("refs.js", "text/javascript; charset=utf-8"),
           "/refsui.js": ("refsui.js", "text/javascript; charset=utf-8"),
           "/worldgen.js": ("worldgen.js", "text/javascript; charset=utf-8"),
+          "/assistant_tools.js": ("assistant_tools.js", "text/javascript; charset=utf-8"),
+          "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
           "/editor.css": ("editor.css", "text/css; charset=utf-8")}
 
 
@@ -115,6 +118,10 @@ class Handler(ig.Handler):
                 return self.send(200, {"drafts": wg.list_drafts()})
             if u.path == "/api/worldgen/draft":
                 return self.send(200, {"draft": wg.get_draft((q.get("id") or [""])[0])})
+            if u.path == "/api/assistant/meta":
+                return self.send(200, at.meta())
+            if u.path == "/api/assistant/job":
+                return self.send(200, {"job": at.job()})
         except (LookupError, ValueError, KeyError, OSError) as e:
             return self.send(400, {"error": str(e)})
         return super().do_GET()
@@ -165,7 +172,14 @@ class Handler(ig.Handler):
                 return self.send(200, {"providers": wg.save_provider(
                     req.get("name"), req.get("base_url"), req.get("api_key"),
                     req.get("model"), req.get("max_tokens"))})
-        except wg.JobBusyError as e:
+            if u.path == "/api/assistant/turn":
+                req = req_json(self.body())
+                return self.send(200, {"job": at.start_turn(
+                    req.get("source"), req.get("provider"), req.get("messages"),
+                    req.get("tools"), req.get("scenarioSummary"), req.get("transcriptId"))})
+            if u.path == "/api/assistant/cancel":
+                return self.send(200, {"ok": True, "job": at.cancel()})
+        except (wg.JobBusyError, at.JobBusyError) as e:
             return self.send(409, {"error": str(e), "busy": True})
         except (LookupError, ValueError, KeyError, OSError) as e:
             return self.send(400, {"error": str(e)})

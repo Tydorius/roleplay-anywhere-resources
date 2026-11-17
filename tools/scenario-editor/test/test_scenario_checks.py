@@ -189,6 +189,16 @@ class Crowds(unittest.TestCase):
                          ["10 sleep in 'Hall': the GM reads them all when the player is in there."])
 
 
+class DefaultTile(unittest.TestCase):
+    def test_a_non_object_default_tile_is_a_problem_not_a_crash(self):
+        scn = scenario([region("r", "Hall", (2, 2), (8, 6))])
+        scn["defaultTile"] = "grass"
+        self.assertTrue(any("The default tile is not an object" in m
+                            for m in msgs(scn, "error")))
+        scn["defaultTile"] = {"ground": "grass"}
+        self.assertFalse([m for m in msgs(scn, "error") if "default tile" in m])
+
+
 class Containers(unittest.TestCase):
     """A hand-authored world whose containers all start empty: an info note (a hand-made world
     may want them empty), only with a few container placements — storage-tagged or carrying a

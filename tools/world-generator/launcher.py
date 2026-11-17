@@ -34,7 +34,7 @@ EXAMPLE_PATH = os.path.join(HERE, "providers.example.json")
 OUT_ROOT = os.path.join(HERE, "out")
 GAME_VERSION = "0.18"
 # provider settings kept when the launcher saves a provider
-OPTIONAL_FIELDS = ("timeout", "rate_limit_wait", "max_output", "extra_body")
+OPTIONAL_FIELDS = ("timeout", "rate_limit_wait", "max_output", "extra_body", "vision")
 
 
 class Launcher:
