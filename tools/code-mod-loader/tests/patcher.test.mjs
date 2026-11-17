@@ -202,6 +202,9 @@ test('install then uninstall on a copy of 1.0, with 0.18 leftovers', { skip: !fs
     // What a 0.18 install leaves behind once Steam updates the game to 1.0.
     fs.writeFileSync(path.join(dist, 'index.html.arpg-orig'), html.replace('index-BrLojUrw', 'index-DSU_zx7g'));
     fs.writeFileSync(path.join(dist, 'assets', 'index-DSU_zx7g.js.arpg-orig'), '// 0.18');
+    // ...and a pack layer with its metadata, both for the bundle the update replaced
+    fs.writeFileSync(path.join(dist, 'assets', 'index-DSU_zx7g.js.arpg-pack'), '// pack');
+    fs.writeFileSync(path.join(dist, 'assets', 'index-DSU_zx7g.js.arpg-pack.json'), '{}');
     const env = { ...process.env, APPDATA: path.join(tmp, 'appdata'), XDG_CONFIG_HOME: path.join(tmp, 'appdata'), HOME: tmp };
     const mods = path.join(tmp, 'appdata', 'Anywhere RPG', 'code-mods');
     for (const m of ['portals', 'memory-add']) {
@@ -214,9 +217,12 @@ test('install then uninstall on a copy of 1.0, with 0.18 leftovers', { skip: !fs
 
     const out = run('install');
     assert.match(out, /Anywhere RPG 1\.0\)/);
-    assert.doesNotMatch(out, /warning/);
+    assert.match(out, /warning: this loader and its mods are for Anywhere RPG 1\.2, not 1\.0/);
     assert.match(out, /skipped: portals/);
     assert.match(out, /stale backup.*index-DSU_zx7g/);
+    assert.match(out, /stale pack layer.*index-DSU_zx7g/);
+    assert.ok(!fs.readdirSync(path.join(dist, 'assets')).some(f => f.startsWith('index-DSU_zx7g')),
+      'the stale backup, pack layer and its metadata are all gone');
     const page = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
     assert.match(page, /arpg-mods\/loader\.js[\s\S]*arpg-mods\/memory-add\.js[\s\S]*index-BrLojUrw/);
     assert.doesNotMatch(page, /portals/);
