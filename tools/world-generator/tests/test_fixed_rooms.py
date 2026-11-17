@@ -35,7 +35,7 @@ class TestChecker(unittest.TestCase):
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
-                piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
+                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
                 piece("storage.big", [1, 2], [4, 0], "storage.big.single",
                       "east"),
             ],
@@ -88,7 +88,7 @@ class TestChecker(unittest.TestCase):
 
     def test_a_clear_stretch_line_is_fine(self):
         room = self.base()
-        room["stretch"] = {"x": [2]}
+        room["stretch"] = {"x": [1]}
         self.assertEqual(self.errors(room), [])
 
     def test_flush_room_with_two_empty_lines_along_a_wall(self):
@@ -116,6 +116,7 @@ class TestChecker(unittest.TestCase):
 
     def test_an_open_room_with_only_the_fillers_buffer_line_checks_clean(self):
         room = self.base(size=[5, 4], style="open")
+        room["pieces"][1]["at"] = [1, 0]
         room["doors"]["west"] = [2, 3]
         room["doors"]["east"] = [2, 3]
         room["filler"] = {"at": [1, 1], "size": [3, 2]}
@@ -155,8 +156,8 @@ class TestChecker(unittest.TestCase):
 
     def test_grand_room_with_a_dead_corner(self):
         """An 11x7 grand room whose furniture hugs the north and the two west
-        corners: the bottom right corner sits more than the grand gap plus
-        one from every piece, so its floor is dead."""
+        corners: the bottom right corner sits more than the grand gap from
+        every piece, so its floor is dead."""
         room = {
             "id": "bedroom.master.hand.dead", "family": "bedroom.master",
             "sizeBand": "large", "clearance": "grand", "style": "flush",
@@ -182,41 +183,58 @@ class TestChecker(unittest.TestCase):
         }
         errors = self.errors(room)
         self.assertEqual(len(errors), 1, errors)
-        self.assertIn("11 dead floor cell(s) (first at 5,6): more than 4 "
+        self.assertIn("20 dead floor cell(s) (first at 4,5): more than 3 "
                       "cells from every piece at grand clearance", errors[0])
 
+    def test_a_free_cell_exactly_one_past_the_gap_is_dead(self):
+        """A 5x3 tight room whose middle column sits exactly gap+1 cells from
+        the bed and the chest: under the tighter floor rule that column is
+        dead — a cell may lean no more than the gap itself against the
+        furniture."""
+        room = self.base(pieces=[
+            piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
+            piece("storage.big", [1, 2], [4, 0], "storage.big.single",
+                  "east"),
+        ], doors={"north": [1, 2, 3], "south": [0, 1, 2, 3, 4],
+                  "west": [2], "east": [2]})
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("3 dead floor cell(s) (first at 2,0): more than 1 "
+                      "cells from every piece at tight clearance", errors[0])
+
     def test_open_filler_and_its_ring_are_not_dead_floor(self):
-        """A 13x11 grand open room whose filler centre is more than the grand
-        gap plus one from every piece: the filler and the ring of cells
-        around it are walkable floor, so the room checks clean — the same
-        room without its filler is the dead-floor room above."""
+        """An 11x11 grand open room whose middle sits more than the grand gap
+        from every piece: the filler and the ring of cells around it are
+        walkable floor, so the room checks clean — the same room without its
+        filler is dead floor in the middle."""
         room = {
             "id": "bedroom.master.hand.ring", "family": "bedroom.master",
             "sizeBand": "large", "clearance": "grand", "style": "open",
-            "wealth": ["wealthy", "elite"], "size": [13, 11],
+            "wealth": ["wealthy", "elite"], "size": [11, 11],
             "sleeps": {"singles": 0, "couples": 1},
             "pieces": [
                 piece("sleep.couple", [2, 2], [0, 0],
                       "sleep.couple.bedside2", "north"),
                 piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
-                piece("storage.big", [2, 1], [3, 0],
+                piece("storage.big", [2, 1], [6, 0],
                       "storage.big.single.bedroom.master", "north"),
-                piece("seat", [1, 1], [12, 0], "seat.single.bedroom.master",
+                piece("seat", [1, 1], [10, 0], "seat.single.bedroom.master",
                       "north"),
-                piece("light.small", [1, 1], [12, 5],
+                piece("light.small", [1, 1], [10, 4],
                       "light.small.single.bedroom.master1"),
+                piece("coat", [1, 1], [0, 5], "coat.single.bedroom.master"),
                 piece("wash.basin", [1, 1], [0, 10], "wash.basin.single",
                       "south"),
                 piece("seat.lounge", [1, 1], [5, 10],
                       "seat.lounge.single.bedroom.master", "south"),
-                piece("heat", [2, 1], [11, 10],
-                      "heat.single.bedroom.master", "south"),
+                piece("seat.lounge", [1, 1], [10, 10],
+                      "seat.lounge.single.bedroom.master", "south"),
             ],
-            "doors": {"north": [5, 6, 7, 8, 9, 10, 11],
-                      "south": [1, 2, 3, 4, 6, 7, 8, 9, 10],
-                      "west": [2, 3, 4, 5, 6, 7, 8, 9],
-                      "east": [1, 2, 3, 4, 6, 7, 8, 9]},
-            "filler": {"at": [5, 4], "size": [3, 3]},
+            "doors": {"north": [3, 4, 5, 8, 9],
+                      "south": [1, 2, 3, 4, 6, 7, 8, 9],
+                      "west": [2, 3, 4, 6, 7, 8, 9],
+                      "east": [1, 2, 3, 5, 6, 7, 8, 9]},
+            "filler": {"at": [3, 3], "size": [5, 4]},
             "stretch": {}, "outdoor": False, "symmetric": False,
             "recipe": "bedroom.master.large.b",
             "description": "A hand-made room around an open middle.",
@@ -226,6 +244,78 @@ class TestChecker(unittest.TestCase):
         flushed = {k: v for k, v in room.items() if k != "filler"}
         flushed["style"] = "flush"
         self.assertTrue(any("dead floor" in e for e in self.errors(flushed)))
+
+    def test_open_filler_over_the_clearance_cap(self):
+        """A 6x5 tight open room whose filler runs 4x3, one cell over the
+        tight cap: nobody lays a rug that big."""
+        room = self.base(size=[6, 5], sizeBand="medium", style="open",
+                         wealth=["poor", "modest"],
+                         pieces=[
+                             piece("sleep", [1, 2], [0, 0], "sleep.bedside",
+                                   "north"),
+                             piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
+                             piece("storage.big", [1, 2], [5, 0],
+                                   "storage.big.single", "east"),
+                         ],
+                         doors={"north": [2, 3, 4],
+                                "south": [0, 1, 2, 3, 4, 5],
+                                "west": [2, 3, 4], "east": [2, 3, 4]})
+        room["filler"] = {"at": [1, 1], "size": [4, 3]}
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("filler 4x3 is over the tight cap 3x3: nobody lays a "
+                      "rug that big", errors[0])
+
+    def test_open_filler_twice_as_long_as_wide_at_most(self):
+        """A 4x7 grand open room whose filler runs 2x5, half a cell over the
+        two-to-one aspect: a rug twice as long as wide at the very most."""
+        room = {
+            "id": "bedroom.master.hand.narrow", "family": "bedroom.master",
+            "sizeBand": "medium", "clearance": "grand", "style": "open",
+            "wealth": ["wealthy", "elite"], "size": [4, 7],
+            "sleeps": {"singles": 0, "couples": 1},
+            "pieces": [
+                piece("sleep.couple", [2, 1], [0, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
+                piece("storage.big", [2, 1], [0, 6],
+                      "storage.big.single.bedroom.master", "south"),
+            ],
+            "doors": {"north": [3], "south": [2, 3],
+                      "west": [2, 3, 4, 5], "east": [0, 1, 2, 3, 4, 5, 6]},
+            "filler": {"at": [1, 1], "size": [2, 5]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.master.large.b",
+            "description": "A runner of a rug.",
+        }
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("filler 2x5 is too narrow: its long side may be at "
+                      "most 2x its short side", errors[0])
+
+    def test_open_filler_must_be_centred(self):
+        """A 7x5 roomy open room whose 3x2 filler hugs the bed side: its
+        distances to the west and east walls differ by two cells, and a rug
+        that size sits in the middle of the floor or not at all."""
+        room = self.base(size=[7, 5], sizeBand="medium", clearance="roomy",
+                         style="open", wealth=["wealthy"],
+                         pieces=[
+                             piece("sleep", [1, 2], [0, 0], "sleep.bedside",
+                                   "north"),
+                             piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
+                             piece("storage.big", [1, 2], [6, 0],
+                                   "storage.big.single", "east"),
+                             piece("light.small", [1, 1], [5, 4],
+                                   "light.small.single.bedroom.master1"),
+                         ],
+                         doors={"north": [2, 3, 4, 5],
+                                "south": [0, 1, 2, 3, 4, 6],
+                                "west": [2, 3, 4], "east": [2, 3, 4]})
+        room["filler"] = {"at": [1, 2], "size": [3, 2]}
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("filler at [1, 2] is off centre: its distances to "
+                      "opposite walls differ by more than 1 cell", errors[0])
 
     def test_sleeps_must_match_the_pieces(self):
         room = self.base(sleeps={"singles": 2, "couples": 0})
@@ -278,13 +368,13 @@ class TestTurning(unittest.TestCase):
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
-                piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
+                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
                 piece("storage.big", [1, 2], [4, 0], "storage.big.single",
                       "east"),
             ],
             "doors": {"north": [2, 3], "south": [0, 1, 2, 3, 4],
                       "west": [2], "east": [2]},
-            "stretch": {"x": [2]}, "outdoor": False, "symmetric": False,
+            "stretch": {"x": [1]}, "outdoor": False, "symmetric": False,
             "recipe": "bedroom.small.a",
             "description": "A hand-made room the tests turn around.",
         }

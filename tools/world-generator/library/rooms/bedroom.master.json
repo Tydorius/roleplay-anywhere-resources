@@ -258,8 +258,8 @@
         "elite"
       ],
       "size": [
-        9,
-        14
+        8,
+        16
       ],
       "sleeps": {
         "singles": 0,
@@ -273,7 +273,7 @@
             1
           ],
           "at": [
-            5,
+            4,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -286,7 +286,7 @@
             2
           ],
           "at": [
-            6,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -300,7 +300,7 @@
             1
           ],
           "at": [
-            8,
+            7,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -313,24 +313,24 @@
             1
           ],
           "at": [
-            5,
+            4,
             1
           ],
           "group": "sleep.couple.bedside2.storage.small",
           "optional": false
         },
         {
-          "role": "table.small",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
+            0,
             2
           ],
-          "group": "table.small.single.bedroom.master",
-          "optional": true
+          "group": "light.small.single.bedroom.master",
+          "optional": false
         },
         {
           "role": "decor.floor",
@@ -339,7 +339,7 @@
             2
           ],
           "at": [
-            2,
+            0,
             6
           ],
           "group": "decor.floor.single.bedroom.master",
@@ -352,7 +352,7 @@
             2
           ],
           "at": [
-            8,
+            7,
             6
           ],
           "group": "storage.big.storage.big.opt.seat.opt",
@@ -366,7 +366,7 @@
             1
           ],
           "at": [
-            7,
+            6,
             7
           ],
           "group": "storage.big.storage.big.opt.seat.opt",
@@ -379,12 +379,38 @@
             2
           ],
           "at": [
-            8,
+            7,
             8
           ],
           "group": "storage.big.storage.big.opt.seat.opt",
           "optional": false,
           "back": "east"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            11
+          ],
+          "group": "seat.lounge.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            13
+          ],
+          "group": "table.small.single.bedroom.master",
+          "optional": true
         },
         {
           "role": "light.big",
@@ -394,36 +420,10 @@
           ],
           "at": [
             0,
-            13
+            15
           ],
           "group": "light.big.single",
           "optional": true
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            13
-          ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            13
-          ],
-          "group": "light.small.single.bedroom.master",
-          "optional": false
         }
       ],
       "doors": {
@@ -431,13 +431,13 @@
           0,
           1,
           2,
-          3,
-          4
+          3
         ],
         "south": [
           1,
           2,
           3,
+          4,
           5,
           6,
           7
@@ -445,17 +445,15 @@
         "west": [
           0,
           1,
-          2,
           3,
           4,
           5,
-          6,
-          7,
           8,
           9,
           10,
-          11,
-          12
+          12,
+          13,
+          14
         ],
         "east": [
           1,
@@ -465,45 +463,33 @@
           5,
           10,
           11,
-          12
+          12,
+          13,
+          14,
+          15
         ]
       },
       "stretch": {
         "x": [
-          1,
           2,
-          4,
-          5,
-          6,
-          8
+          7
         ],
-        "y": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          8,
-          10,
-          11,
-          12,
-          13
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          1,
-          8
+          2,
+          5
         ],
         "size": [
-          7,
+          4,
           5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.a",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a small table in the open middle, a floor rug in the open middle, a wardrobe against the east wall, and open floor in the middle."
+      "description": "A spacious, narrow master bedroom, double bed in the northeast corner, a lamp against the west wall, a floor rug against the west wall, a wardrobe against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.a.roomy.flush",
@@ -722,9 +708,7 @@
           1,
           2,
           3,
-          4,
-          7,
-          8
+          4
         ],
         "y": [
           2,
@@ -752,8 +736,8 @@
         "elite"
       ],
       "size": [
-        8,
-        11
+        13,
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -807,12 +791,25 @@
             2
           ],
           "at": [
-            0,
-            1
+            12,
+            0
           ],
           "group": "storage.big.storage.big.opt.seat.opt",
-          "optional": false,
-          "back": "west"
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "group": "seat.lounge.single.bedroom.master",
+          "optional": false
         },
         {
           "role": "storage.small",
@@ -828,31 +825,31 @@
           "optional": false
         },
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "storage.big.storage.big.opt.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
           "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            3
+            11,
+            1
           ],
           "group": "storage.big.storage.big.opt.seat.opt",
           "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            12,
+            2
+          ],
+          "group": "storage.big.storage.big.opt.seat.opt",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "decor.floor",
@@ -861,50 +858,11 @@
             2
           ],
           "at": [
-            4,
-            5
+            3,
+            4
           ],
           "group": "decor.floor.single.bedroom.master",
           "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            7
-          ],
-          "group": "light.small.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            9
-          ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            9
-          ],
-          "group": "light.big.single",
-          "optional": true
         },
         {
           "role": "table.small",
@@ -914,10 +872,36 @@
           ],
           "at": [
             0,
-            10
+            5
           ],
           "group": "table.small.single.bedroom.master",
           "optional": true
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "light.big.single",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            6
+          ],
+          "group": "light.small.single.bedroom.master",
+          "optional": false
         }
       ],
       "doors": {
@@ -925,34 +909,37 @@
           0,
           1,
           2,
-          3
+          3,
+          8,
+          9,
+          10,
+          11
         ],
         "south": [
+          0,
           1,
           2,
           3,
           4,
           5,
           6,
-          7
+          8,
+          9,
+          11,
+          12
         ],
         "west": [
           0,
-          5,
-          6,
-          8,
-          9
-        ],
-        "east": [
           1,
           2,
           3,
           4,
+          6
+        ],
+        "east": [
+          4,
           5,
-          6,
-          7,
-          8,
-          10
+          6
         ]
       },
       "stretch": {
@@ -960,32 +947,24 @@
           1,
           2,
           3,
-          4,
-          7
+          5
         ],
-        "y": [
-          3,
-          5,
-          7,
-          8,
-          9,
-          10
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          2,
-          1
+          5,
+          2
         ],
         "size": [
-          2,
-          9
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.a",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a wardrobe against the west wall, a floor rug in the open middle, a lamp against the west wall, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed against the north wall, a wardrobe in the northeast corner, an armchair in the open middle, a floor rug in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.a.tight.flush",
@@ -998,8 +977,8 @@
         "modest"
       ],
       "size": [
-        9,
-        6
+        6,
+        9
       ],
       "sleeps": {
         "singles": 0,
@@ -1007,41 +986,13 @@
       },
       "pieces": [
         {
-          "role": "heat",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "heat.seat.lounge.table.small",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "north"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
+            2,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -1054,7 +1005,7 @@
             2
           ],
           "at": [
-            6,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -1068,11 +1019,25 @@
             1
           ],
           "at": [
-            8,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
           "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "heat.seat.lounge.table.small",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "storage.small",
@@ -1081,7 +1046,7 @@
             1
           ],
           "at": [
-            5,
+            2,
             1
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -1095,7 +1060,7 @@
           ],
           "at": [
             0,
-            2
+            3
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false
@@ -1108,22 +1073,9 @@
           ],
           "at": [
             2,
-            2
-          ],
-          "group": "decor.floor.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
             3
           ],
-          "group": "heat.seat.lounge.table.small",
+          "group": "decor.floor.single.bedroom.master",
           "optional": false
         },
         {
@@ -1133,11 +1085,24 @@
             1
           ],
           "at": [
-            8,
+            5,
             3
           ],
           "group": "storage.big.seat.opt.bedroom.master",
           "optional": true
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "heat.seat.lounge.table.small",
+          "optional": false
         },
         {
           "role": "storage.big",
@@ -1146,7 +1111,7 @@
             2
           ],
           "at": [
-            8,
+            5,
             4
           ],
           "group": "storage.big.seat.opt.bedroom.master",
@@ -1161,7 +1126,7 @@
           ],
           "at": [
             0,
-            5
+            6
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
@@ -1174,10 +1139,24 @@
           ],
           "at": [
             3,
-            5
+            7
           ],
           "group": "light.big.single.bedroom.master",
           "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            7
+          ],
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "decor.floor",
@@ -1186,8 +1165,8 @@
             1
           ],
           "at": [
-            5,
-            5
+            0,
+            8
           ],
           "group": "decor.floor.single.bedroom.master1",
           "optional": true
@@ -1195,43 +1174,38 @@
       ],
       "doors": {
         "north": [
-          1,
-          4
+          0,
+          1
         ],
         "south": [
           1,
           2,
-          4,
-          6,
-          7
+          3,
+          4
         ],
         "west": [
-          4
+          0,
+          5,
+          7
         ],
         "east": [
           1,
-          2
+          2,
+          6
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          4,
-          5,
-          6,
-          8
+          5
         ],
         "y": [
-          2,
-          4,
-          6
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.b",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a stove in the northwest corner, a wardrobe against the north wall, and a floor rug in the middle of the room."
+      "description": "A spacious master bedroom, double bed in the northeast corner, a stove against the west wall, a floor rug in the middle of the room, and a wardrobe against the east wall."
     },
     {
       "id": "bedroom.master.large.a.tight.open",
@@ -1245,7 +1219,7 @@
       ],
       "size": [
         9,
-        6
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -1253,27 +1227,13 @@
       },
       "pieces": [
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "storage.big.storage.big.opt.seat.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
+            2,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -1286,7 +1246,7 @@
             2
           ],
           "at": [
-            5,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -1300,11 +1260,25 @@
             1
           ],
           "at": [
-            7,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
           "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "heat.seat.lounge.table.small",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "storage.small",
@@ -1313,25 +1287,11 @@
             1
           ],
           "at": [
-            4,
+            2,
             1
           ],
           "group": "sleep.couple.bedside2.storage.small",
           "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "storage.big.storage.big.opt.seat.opt",
-          "optional": true,
-          "back": "west"
         },
         {
           "role": "seat",
@@ -1340,11 +1300,25 @@
             1
           ],
           "at": [
+            8,
+            1
+          ],
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
             1,
             2
           ],
-          "group": "storage.big.storage.big.opt.seat.opt",
-          "optional": true
+          "at": [
+            8,
+            2
+          ],
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "seat.lounge",
@@ -1353,23 +1327,10 @@
             1
           ],
           "at": [
-            4,
+            0,
             3
           ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            7,
-            3
-          ],
-          "group": "decor.floor.single.bedroom.master",
+          "group": "heat.seat.lounge.table.small",
           "optional": false
         },
         {
@@ -1379,23 +1340,10 @@
             1
           ],
           "at": [
-            1,
-            5
+            5,
+            3
           ],
-          "group": "light.small.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            5
-          ],
-          "group": "light.big.single",
+          "group": "light.small.single.bedroom.master1",
           "optional": true
         },
         {
@@ -1405,67 +1353,113 @@
             1
           ],
           "at": [
+            0,
+            4
+          ],
+          "group": "heat.seat.lounge.table.small",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "decor.floor.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
             5,
             5
           ],
-          "group": "table.small.single.bedroom.master",
+          "group": "light.big.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            8,
+            5
+          ],
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "decor.floor.single.bedroom.master1",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          1,
-          2,
-          3,
-          8
-        ],
-        "south": [
           0,
-          2,
-          4,
+          1,
           6,
           7,
           8
         ],
-        "west": [
-          4,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [
+        "south": [
           1,
           2,
           3,
           4,
           5,
+          6,
           7
         ],
-        "y": [
-          2,
+        "west": [
+          0,
           5
+        ],
+        "east": [
+          0,
+          4
         ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2
+        ],
+        "y": []
       },
       "filler": {
         "at": [
-          2,
-          1
+          3,
+          2
         ],
         "size": [
           2,
-          4
+          2
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.master.large.a",
-      "description": "A spacious master bedroom, double bed against the north wall, a wardrobe in the northwest corner, an armchair in the open middle, a floor rug against the east wall, and open floor in the middle."
+      "recipe": "bedroom.master.large.b",
+      "description": "A spacious master bedroom, double bed against the north wall, a stove against the west wall, a wardrobe against the east wall, a lamp in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.b.grand.flush",
@@ -1750,28 +1744,14 @@
         "elite"
       ],
       "size": [
-        13,
-        11
+        18,
+        9
       ],
       "sleeps": {
         "singles": 0,
         "couples": 1
       },
       "pieces": [
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": false,
-          "back": "west"
-        },
         {
           "role": "bedside",
           "size": [
@@ -1819,12 +1799,12 @@
             2
           ],
           "at": [
-            12,
-            0
+            0,
+            1
           ],
-          "group": "storage.big.single.bedroom.master",
+          "group": "storage.big.seat.opt.bedroom.master",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
           "role": "storage.small",
@@ -1840,27 +1820,14 @@
           "optional": false
         },
         {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": true
-        },
-        {
           "role": "decor.floor",
           "size": [
             2,
             2
           ],
           "at": [
-            5,
-            5
+            12,
+            1
           ],
           "group": "decor.floor.single.bedroom.master",
           "optional": false
@@ -1872,25 +1839,78 @@
             1
           ],
           "at": [
-            12,
-            5
+            17,
+            2
           ],
           "group": "light.big.single.bedroom.master",
           "optional": false
         },
         {
-          "role": "heat",
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            13,
+            6
+          ],
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            17,
+            6
+          ],
+          "group": "decor.floor.single.bedroom.master1",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
           "size": [
             1,
             2
           ],
           "at": [
             0,
-            6
+            7
+          ],
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            8
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false,
-          "back": "west"
+          "back": "south"
         },
         {
           "role": "seat.lounge",
@@ -1899,7 +1919,7 @@
             1
           ],
           "at": [
-            0,
+            7,
             8
           ],
           "group": "heat.seat.lounge.table.small",
@@ -1912,101 +1932,64 @@
             1
           ],
           "at": [
-            0,
-            9
+            8,
+            8
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            9
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            10
-          ],
-          "group": "decor.floor.single.bedroom.master1",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
-          1,
-          2,
-          3,
-          4,
-          9,
-          10,
-          11
-        ],
-        "south": [
           0,
           1,
           2,
           3,
           4,
-          5,
-          7,
-          8,
           9,
           10,
           11,
-          12
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
         ],
-        "west": [
-          3,
-          4,
-          5,
-          10
-        ],
-        "east": [
-          2,
-          3,
-          4,
-          6,
-          7,
-          8,
-          10
-        ]
-      },
-      "stretch": {
-        "x": [
+        "south": [
           1,
           2,
           3,
           4,
-          5,
-          8,
           9,
           10,
           11,
-          12
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
         ],
-        "y": [
-          2,
+        "west": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
           3,
           4,
           5,
-          8,
-          9,
-          10
+          7,
+          8
         ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
       },
       "filler": {
         "at": [
@@ -2014,14 +1997,14 @@
           2
         ],
         "size": [
-          5,
-          8
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.b",
-      "description": "A spacious master bedroom, double bed against the north wall, a wardrobe in the northwest corner, a wardrobe in the northeast corner, a floor rug in the open middle, and open floor in the middle."
+      "description": "A spacious, narrow master bedroom, double bed against the north wall, a wardrobe against the west wall, a floor rug in the open middle, a lamp against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.b.roomy.flush",
@@ -2262,8 +2245,6 @@
       },
       "stretch": {
         "x": [
-          1,
-          2,
           4,
           6
         ],
@@ -2294,8 +2275,8 @@
         "elite"
       ],
       "size": [
-        7,
-        13
+        8,
+        12
       ],
       "sleeps": {
         "singles": 0,
@@ -2309,7 +2290,7 @@
             1
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
@@ -2320,41 +2301,27 @@
           "size": [
             2,
             2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "sleep.couple.bedside2.storage.small",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
           ],
           "at": [
             4,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.couple.bedside2.storage.small",
           "optional": false
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "heat.seat.lounge.table.small",
-          "optional": false,
-          "back": "west"
         },
         {
           "role": "storage.small",
@@ -2363,37 +2330,38 @@
             1
           ],
           "at": [
-            3,
+            1,
             1
           ],
           "group": "sleep.couple.bedside2.storage.small",
           "optional": false
         },
         {
-          "role": "seat.lounge",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
+            7,
+            2
+          ],
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
             3
           ],
-          "group": "heat.seat.lounge.table.small",
-          "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "heat.seat.lounge.table.small",
-          "optional": false
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "decor.floor",
@@ -2402,24 +2370,24 @@
             1
           ],
           "at": [
-            3,
+            0,
             5
           ],
           "group": "decor.floor.single.bedroom.master1",
           "optional": true
         },
         {
-          "role": "seat",
+          "role": "decor.floor",
           "size": [
-            1,
-            1
+            2,
+            2
           ],
           "at": [
-            6,
-            5
+            3,
+            7
           ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": true
+          "group": "decor.floor.single.bedroom.master",
+          "optional": false
         },
         {
           "role": "storage.big",
@@ -2428,10 +2396,10 @@
             2
           ],
           "at": [
-            6,
-            6
+            7,
+            7
           ],
-          "group": "storage.big.seat.opt.bedroom.master",
+          "group": "storage.big.single.bedroom.master",
           "optional": false,
           "back": "east"
         },
@@ -2443,7 +2411,7 @@
           ],
           "at": [
             0,
-            7
+            8
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
@@ -2455,190 +2423,25 @@
             1
           ],
           "at": [
-            3,
-            8
+            1,
+            11
           ],
           "group": "light.big.single.bedroom.master",
           "optional": false
         },
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            6,
-            10
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            11
-          ],
-          "group": "decor.floor.single.bedroom.master",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          2
-        ],
-        "south": [
-          0,
-          1,
-          4,
-          5,
-          6
-        ],
-        "west": [
-          0,
-          5,
-          6,
-          8,
-          9,
-          10,
-          11,
-          12
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          4,
-          8,
-          9,
-          12
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          4,
-          6
-        ],
-        "y": [
-          3,
-          4,
-          5,
-          6,
-          8,
-          9,
-          10
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          1
-        ],
-        "size": [
-          2,
-          10
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.large.b",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a stove against the west wall, a floor rug in the open middle, a wardrobe against the east wall, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.large.b.tight.open",
-      "family": "bedroom.master",
-      "sizeBand": "large",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        6,
-        10
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.couple.bedside2.storage.small",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "sleep.couple.bedside2.storage.small",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.couple.bedside2.storage.small",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small",
-          "optional": false
-        },
-        {
           "role": "heat",
           "size": [
-            1,
-            2
+            2,
+            1
           ],
           "at": [
-            0,
-            2
+            4,
+            11
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false,
-          "back": "west"
+          "back": "south"
         },
         {
           "role": "seat.lounge",
@@ -2647,37 +2450,11 @@
             1
           ],
           "at": [
-            0,
-            4
+            6,
+            11
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            4
-          ],
-          "group": "decor.floor.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": true
         },
         {
           "role": "table.small",
@@ -2686,131 +2463,71 @@
             1
           ],
           "at": [
-            0,
-            5
+            7,
+            11
           ],
           "group": "heat.seat.lounge.table.small",
           "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            5
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            7
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            8
-          ],
-          "group": "light.big.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            8
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            9
-          ],
-          "group": "decor.floor.single.bedroom.master1",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          1
+          5,
+          6,
+          7
         ],
         "south": [
-          1,
+          0,
           2,
-          3,
-          4
+          3
         ],
         "west": [
           0,
           1,
-          6,
-          8
-        ],
-        "east": [
-          1,
           2,
           3,
-          7
+          4,
+          6,
+          7,
+          9,
+          10,
+          11
+        ],
+        "east": [
+          0,
+          1,
+          5,
+          6,
+          9,
+          10
         ]
       },
       "stretch": {
         "x": [
           1,
           2,
-          5
+          6,
+          7
         ],
         "y": [
-          2,
-          4,
-          7,
-          8
+          3
         ]
       },
       "filler": {
         "at": [
-          1,
-          2
+          2,
+          4
         ],
         "size": [
           4,
-          2
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.b",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a stove against the west wall, a floor rug in the open middle, a wardrobe against the east wall, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed against the north wall, a wardrobe against the east wall, a floor rug against the west wall, a floor rug in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.c.grand.flush",
@@ -2823,8 +2540,270 @@
         "elite"
       ],
       "size": [
+        10,
+        14
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "table.small.seat",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "table.small.seat",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            0
+          ],
+          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            9,
+            6
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "light.big.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            7
+          ],
+          "group": "seat.lounge.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            9,
+            8
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            11
+          ],
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            11
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            13
+          ],
+          "group": "wash.basin.single",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3,
+          4,
+          5
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          10,
+          11,
+          12
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9
+        ],
+        "y": [
+          8,
+          10,
+          11,
+          12,
+          13
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.large.c",
+      "description": "A spacious master bedroom, double bed in the northeast corner, a chair against the north wall, a wardrobe against the east wall, and a lamp in the middle of the room."
+    },
+    {
+      "id": "bedroom.master.large.c.grand.open",
+      "family": "bedroom.master",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
         13,
-        9
+        12
       ],
       "sleeps": {
         "singles": 0,
@@ -2872,47 +2851,6 @@
           "optional": false
         },
         {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            11,
-            0
-          ],
-          "group": "table.small.seat",
-          "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            0
-          ],
-          "group": "table.small.seat",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "decor.floor",
           "size": [
             1,
@@ -2926,18 +2864,17 @@
           "optional": false
         },
         {
-          "role": "storage.big",
+          "role": "coat",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
             0,
-            3
+            2
           ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
+          "group": "coat.single.bedroom.master",
+          "optional": true
         },
         {
           "role": "storage.small",
@@ -2953,30 +2890,45 @@
           "optional": true
         },
         {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            12,
+            3
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            12,
+            5
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
           "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            12,
-            4
+            1,
+            7
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            7
-          ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
         },
         {
           "role": "light.big",
@@ -2985,163 +2937,10 @@
             1
           ],
           "at": [
-            8,
+            5,
             7
           ],
           "group": "light.big.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            8
-          ],
-          "group": "wash.basin.single",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            8
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          2,
-          3,
-          8,
-          9,
-          10
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
-        ],
-        "west": [
-          0,
-          5,
-          6,
-          7
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          5,
-          6,
-          7
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13
-        ],
-        "y": [
-          3,
-          5,
-          6,
-          7,
-          8
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.large.c",
-      "description": "A spacious master bedroom, double bed against the north wall, a chair in the northeast corner, a wardrobe against the west wall, and a lamp against the east wall."
-    },
-    {
-      "id": "bedroom.master.large.c.grand.open",
-      "family": "bedroom.master",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        14,
-        9
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
           "optional": false
         },
         {
@@ -3152,91 +2951,10 @@
           ],
           "at": [
             12,
-            0
+            10
           ],
           "group": "table.small.seat",
           "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            13,
-            0
-          ],
-          "group": "table.small.seat",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            3
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            13,
-            4
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
         },
         {
           "role": "seat.lounge",
@@ -3245,23 +2963,10 @@
             1
           ],
           "at": [
-            5,
-            7
+            3,
+            11
           ],
           "group": "seat.lounge.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            7
-          ],
-          "group": "light.big.single.bedroom.master",
           "optional": false
         },
         {
@@ -3271,25 +2976,26 @@
             1
           ],
           "at": [
-            1,
-            8
+            7,
+            11
           ],
           "group": "wash.basin.single",
           "optional": false,
           "back": "south"
         },
         {
-          "role": "coat",
+          "role": "table.small",
           "size": [
             1,
             1
           ],
           "at": [
-            13,
-            8
+            12,
+            11
           ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
+          "group": "table.small.seat",
+          "optional": false,
+          "back": "east"
         }
       ],
       "doors": {
@@ -3298,78 +3004,72 @@
           1,
           2,
           3,
-          4,
-          9,
-          10,
-          11
-        ],
-        "south": [
-          0,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
           8,
           9,
           10,
           11,
           12
         ],
-        "west": [
+        "south": [
           0,
-          5,
-          6,
-          7,
-          8
-        ],
-        "east": [
           1,
           2,
-          3,
-          5,
-          6,
-          7
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
           4,
           5,
           6,
           8,
           9,
           10,
-          11,
-          12,
-          13
+          11
         ],
-        "y": [
+        "west": [
+          0,
+          1,
           3,
+          4,
           5,
           6,
           7,
-          8
+          8,
+          9,
+          10,
+          11
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          7,
+          8,
+          9
+        ]
+      },
+      "stretch": {
+        "x": [
+          4,
+          9,
+          10,
+          11,
+          12
+        ],
+        "y": [
+          5
         ]
       },
       "filler": {
         "at": [
-          1,
+          4,
           4
         ],
         "size": [
-          12,
+          5,
           3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.c",
-      "description": "A spacious master bedroom, double bed against the north wall, a chair in the northeast corner, a wardrobe against the west wall, a lamp against the east wall, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed against the north wall, a coat rack against the west wall, a wardrobe against the east wall, a lamp in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.c.roomy.flush",
@@ -3383,8 +3083,8 @@
         "wealthy"
       ],
       "size": [
-        7,
-        12
+        8,
+        10
       ],
       "sleeps": {
         "singles": 0,
@@ -3398,7 +3098,7 @@
             1
           ],
           "at": [
-            0,
+            1,
             0
           ],
           "group": "seat.lounge.single.bedroom.master",
@@ -3411,7 +3111,7 @@
             1
           ],
           "at": [
-            3,
+            4,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3424,7 +3124,7 @@
             2
           ],
           "at": [
-            4,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3438,7 +3138,7 @@
             1
           ],
           "at": [
-            6,
+            7,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3451,25 +3151,24 @@
             2
           ],
           "at": [
-            3,
+            4,
             1
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
           "optional": false
         },
         {
-          "role": "storage.big",
+          "role": "light.small",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
             0,
             3
           ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
         },
         {
           "role": "storage.small",
@@ -3478,25 +3177,24 @@
             1
           ],
           "at": [
-            3,
+            4,
             3
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
           "optional": true
         },
         {
-          "role": "storage.big",
+          "role": "light.big",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
             0,
-            5
+            6
           ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
+          "group": "light.big.single.bedroom.master",
+          "optional": false
         },
         {
           "role": "coat",
@@ -3512,18 +3210,46 @@
           "optional": true
         },
         {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            8
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
           "role": "wash.basin",
           "size": [
             1,
             1
           ],
           "at": [
-            6,
-            6
+            0,
+            9
           ],
           "group": "wash.basin.single",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
           "role": "table.small",
@@ -3532,38 +3258,12 @@
             1
           ],
           "at": [
-            0,
+            3,
             9
           ],
           "group": "table.small.seat",
           "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            9
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            9
-          ],
-          "group": "light.big.single.bedroom.master",
-          "optional": false
+          "back": "south"
         },
         {
           "role": "seat",
@@ -3572,8 +3272,8 @@
             1
           ],
           "at": [
-            0,
-            10
+            4,
+            9
           ],
           "group": "table.small.seat",
           "optional": false
@@ -3581,35 +3281,31 @@
       ],
       "doors": {
         "north": [
-          1,
-          2
+          0,
+          2,
+          3
         ],
         "south": [
-          0,
           1,
           2,
-          3,
-          4,
           5,
           6
         ],
         "west": [
+          0,
           1,
           2,
+          4,
+          5,
           7,
-          8,
-          11
+          8
         ],
         "east": [
           1,
           2,
           3,
           4,
-          5,
-          7,
-          8,
-          10,
-          11
+          5
         ]
       },
       "stretch": {
@@ -3618,21 +3314,17 @@
           2,
           3,
           4,
-          6
+          5,
+          7
         ],
         "y": [
-          3,
-          5,
-          7,
-          8,
-          9,
-          10
+          8
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.c",
-      "description": "A spacious master bedroom, double bed in the northeast corner, an armchair in the northwest corner, a wardrobe against the west wall, and a coat rack in the middle of the room."
+      "description": "A spacious master bedroom, double bed in the northeast corner, an armchair against the north wall, a lamp against the west wall, and a lamp against the west wall."
     },
     {
       "id": "bedroom.master.large.c.roomy.open",
@@ -3645,8 +3337,8 @@
         "elite"
       ],
       "size": [
-        7,
-        13
+        8,
+        11
       ],
       "sleeps": {
         "singles": 0,
@@ -3654,17 +3346,17 @@
       },
       "pieces": [
         {
-          "role": "seat.lounge",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
+            1,
             0
           ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
         },
         {
           "role": "bedside",
@@ -3673,7 +3365,7 @@
             1
           ],
           "at": [
-            3,
+            4,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3686,7 +3378,7 @@
             2
           ],
           "at": [
-            4,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3700,7 +3392,7 @@
             1
           ],
           "at": [
-            6,
+            7,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -3713,25 +3405,24 @@
             2
           ],
           "at": [
-            3,
+            4,
             1
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
           "optional": false
         },
         {
-          "role": "storage.big",
+          "role": "seat.lounge",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
-            0,
+            1,
             3
           ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
+          "group": "seat.lounge.single.bedroom.master",
+          "optional": false
         },
         {
           "role": "storage.small",
@@ -3740,78 +3431,10 @@
             1
           ],
           "at": [
-            3,
+            4,
             3
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            6
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            6
-          ],
-          "group": "wash.basin.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            9
-          ],
-          "group": "table.small.seat",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            9
-          ],
-          "group": "light.small.single.bedroom.master1",
           "optional": true
         },
         {
@@ -3821,11 +3444,80 @@
             1
           ],
           "at": [
-            6,
-            9
+            1,
+            6
           ],
           "group": "light.big.single.bedroom.master",
           "optional": false
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            8
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "wash.basin.single",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            10
+          ],
+          "group": "table.small.seat",
+          "optional": false,
+          "back": "south"
         },
         {
           "role": "seat",
@@ -3834,7 +3526,7 @@
             1
           ],
           "at": [
-            0,
+            4,
             10
           ],
           "group": "table.small.seat",
@@ -3843,328 +3535,61 @@
       ],
       "doors": {
         "north": [
-          1,
-          2
+          0,
+          2,
+          3
         ],
         "south": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7
+        ],
+        "west": [
           0,
           1,
           2,
           3,
           4,
           5,
-          6
-        ],
-        "west": [
-          1,
-          2,
-          7,
-          8,
-          11,
-          12
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          7,
-          8,
-          10,
-          11,
-          12
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          6
-        ],
-        "y": [
-          3,
-          5,
-          7,
-          8,
-          9
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          1
-        ],
-        "size": [
-          2,
-          11
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.large.c",
-      "description": "A spacious master bedroom, double bed in the northeast corner, an armchair in the northwest corner, a wardrobe against the west wall, a coat rack in the open middle, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.large.c.tight.open",
-      "family": "bedroom.master",
-      "sizeBand": "large",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        6
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            0
-          ],
-          "group": "light.big.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            3
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            5
-          ],
-          "group": "table.small.seat",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            5
-          ],
-          "group": "table.small.seat",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            5
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "wash.basin.single",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            5
-          ],
-          "group": "seat.lounge.single.bedroom.master",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          7
-        ],
-        "south": [
-          0,
-          3,
-          5,
-          7
-        ],
-        "west": [
-          4,
-          5
-        ],
-        "east": [
-          1,
-          2,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
           6,
           7,
-          8
+          8,
+          10
         ],
-        "y": [
+        "east": [
+          1,
+          2,
+          3,
           4,
-          5
+          5,
+          10
         ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          7
+        ],
+        "y": []
       },
       "filler": {
         "at": [
-          4,
-          2
+          2,
+          4
         ],
         "size": [
           4,
-          3
+          2
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.c",
-      "description": "A spacious master bedroom, double bed against the north wall, a wardrobe in the northwest corner, a lamp in the northeast corner, a lamp against the east wall, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed in the northeast corner, a lamp against the north wall, an armchair in the open middle, a lamp in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.d.grand.flush",
@@ -4237,19 +3662,6 @@
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
         },
         {
           "role": "light.small",
@@ -4351,8 +3763,8 @@
         "elite"
       ],
       "size": [
-        10,
-        6
+        9,
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -4360,17 +3772,18 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
+          "role": "storage.big",
           "size": [
-            2,
+            1,
             2
           ],
           "at": [
-            1,
+            0,
             0
           ],
-          "group": "decor.floor.single.bedroom.master2",
-          "optional": true
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "bedside",
@@ -4379,7 +3792,7 @@
             1
           ],
           "at": [
-            6,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -4392,7 +3805,7 @@
             2
           ],
           "at": [
-            7,
+            6,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -4406,23 +3819,36 @@
             1
           ],
           "at": [
-            9,
+            8,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            6,
-            1
+            0,
+            2
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            7,
+            5
+          ],
+          "group": "decor.floor.single.bedroom.master2",
           "optional": true
         },
         {
@@ -4433,99 +3859,61 @@
           ],
           "at": [
             1,
-            5
+            6
           ],
           "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            5,
-            5
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            5
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
+          1,
+          2,
           3,
-          4,
-          5
+          4
         ],
         "south": [
           0,
           2,
           3,
           4,
-          8,
-          9
+          5,
+          6
         ],
         "west": [
-          0,
-          1,
-          2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "east": [
           1,
           2,
           3,
-          4,
-          5
+          4
         ]
       },
       "stretch": {
         "x": [
-          3,
-          4,
-          5,
-          7,
-          9
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "filler": {
-        "at": [
           1,
           2
         ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          2,
+          1
+        ],
         "size": [
-          8,
-          3
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.a",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a floor rug against the north wall, a lamp opposite, a wardrobe opposite, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed in the northeast corner, a wardrobe in the northwest corner, a floor rug in the southeast corner, a lamp opposite, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.d.roomy.flush",
@@ -4697,17 +4085,11 @@
       },
       "stretch": {
         "x": [
-          1,
-          2,
           4,
           6
         ],
         "y": [
           2,
-          3,
-          4,
-          6,
-          7,
           9
         ]
       },
@@ -4727,8 +4109,8 @@
         "elite"
       ],
       "size": [
-        7,
-        10
+        12,
+        6
       ],
       "sleeps": {
         "singles": 0,
@@ -4736,27 +4118,13 @@
       },
       "pieces": [
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "storage.big.storage.small.opt.bedroom.master",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2",
@@ -4769,7 +4137,7 @@
             2
           ],
           "at": [
-            4,
+            2,
             0
           ],
           "group": "sleep.couple.bedside2",
@@ -4783,7 +4151,7 @@
             1
           ],
           "at": [
-            6,
+            4,
             0
           ],
           "group": "sleep.couple.bedside2",
@@ -4796,10 +4164,37 @@
             1
           ],
           "at": [
-            0,
-            2
+            7,
+            0
           ],
           "group": "storage.big.storage.small.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            8,
+            0
+          ],
+          "group": "storage.big.storage.small.opt.bedroom.master",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            3
+          ],
+          "group": "seat.lounge.single.bedroom.master1",
           "optional": true
         },
         {
@@ -4809,8 +4204,8 @@
             1
           ],
           "at": [
-            3,
-            4
+            11,
+            3
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
@@ -4822,12 +4217,12 @@
             2
           ],
           "at": [
-            6,
+            0,
             4
           ],
           "group": "heat.single.bedroom.master",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
           "role": "decor.floor",
@@ -4836,87 +4231,64 @@
             2
           ],
           "at": [
-            2,
-            7
+            4,
+            4
           ],
           "group": "decor.floor.single.bedroom.master2",
-          "optional": true
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            8
-          ],
-          "group": "seat.lounge.single.bedroom.master1",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          1,
-          2
+          0,
+          5,
+          6,
+          10,
+          11
         ],
         "south": [
-          0,
           1,
           2,
           3,
-          4,
-          5,
-          6
-        ],
-        "west": [
-          3,
-          4,
-          5,
           6,
           7,
           8,
-          9
+          9,
+          10,
+          11
         ],
-        "east": [
+        "west": [
+          0,
           1,
           2,
-          3,
-          6,
-          7,
-          9
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          4,
+          5
         ]
       },
       "stretch": {
-        "x": [
-          1,
-          2,
-          4,
-          6
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          6,
-          7
-        ]
+        "x": [],
+        "y": []
       },
       "filler": {
         "at": [
           4,
-          2
+          1
         ],
         "size": [
-          2,
-          7
+          4,
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.b",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a wardrobe in the northwest corner, a lamp in the open middle, a stove against the east wall, and open floor in the middle."
+      "description": "A spacious, narrow master bedroom, double bed against the north wall, a wardrobe against the north wall, an armchair in the open middle, a lamp against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.e.grand.flush",
@@ -5130,7 +4502,7 @@
       ],
       "size": [
         14,
-        7
+        8
       ],
       "sleeps": {
         "singles": 0,
@@ -5138,18 +4510,30 @@
       },
       "pieces": [
         {
-          "role": "storage.big",
+          "role": "decor.floor",
           "size": [
-            1,
+            2,
             2
           ],
           "at": [
             0,
             0
           ],
-          "group": "storage.big.storage.small.opt.bedroom.master",
-          "optional": false,
-          "back": "west"
+          "group": "decor.floor.single.bedroom.master2",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
         },
         {
           "role": "bedside",
@@ -5158,7 +4542,7 @@
             1
           ],
           "at": [
-            5,
+            9,
             0
           ],
           "group": "sleep.couple.bedside2",
@@ -5171,7 +4555,7 @@
             2
           ],
           "at": [
-            6,
+            10,
             0
           ],
           "group": "sleep.couple.bedside2",
@@ -5185,25 +4569,11 @@
             1
           ],
           "at": [
-            8,
+            12,
             0
           ],
           "group": "sleep.couple.bedside2",
           "optional": false
-        },
-        {
-          "role": "heat",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            12,
-            0
-          ],
-          "group": "heat.single.bedroom.master",
-          "optional": false,
-          "back": "north"
         },
         {
           "role": "storage.small",
@@ -5212,37 +4582,25 @@
             1
           ],
           "at": [
-            0,
-            2
+            13,
+            5
           ],
           "group": "storage.big.storage.small.opt.bedroom.master",
           "optional": true
         },
         {
-          "role": "light.small",
+          "role": "storage.big",
           "size": [
             1,
-            1
-          ],
-          "at": [
-            12,
-            4
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
             2
           ],
           "at": [
-            6,
-            5
+            13,
+            6
           ],
-          "group": "decor.floor.single.bedroom.master2",
-          "optional": true
+          "group": "storage.big.storage.small.opt.bedroom.master",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "seat.lounge",
@@ -5251,74 +4609,277 @@
             1
           ],
           "at": [
-            1,
-            6
+            3,
+            7
           ],
           "group": "seat.lounge.single.bedroom.master1",
           "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            7,
+            7
+          ],
+          "group": "heat.single.bedroom.master",
+          "optional": false,
+          "back": "south"
         }
       ],
       "doors": {
         "north": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          13
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6,
+          9,
+          10,
+          11,
+          12
+        ],
+        "west": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          4,
+          5,
+          9,
+          10,
+          12,
+          13
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          5,
+          1
+        ],
+        "size": [
+          4,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.medium.b",
+      "description": "A spacious master bedroom, double bed against the north wall, a floor rug in the northwest corner, a lamp against the north wall, a wardrobe in the southeast corner, and open floor in the middle."
+    },
+    {
+      "id": "bedroom.master.large.e.roomy.open",
+      "family": "bedroom.master",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.couple.bedside2.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "sleep.couple.bedside2.storage.small.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "sleep.couple.bedside2.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "group": "sleep.couple.bedside2.storage.small.opt",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "wash.basin.seat.opt",
+          "optional": true
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "wash.basin.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "light.small.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            9
+          ],
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          1,
+          2
+        ],
+        "west": [
+          0,
           1,
           2,
           3,
           4,
-          9,
-          10,
-          11
-        ],
-        "south": [
-          0,
-          2,
-          3,
-          4,
           5,
-          8,
-          9,
-          10,
-          11,
-          12,
-          13
-        ],
-        "west": [
-          3,
-          4,
-          5,
-          6
+          6,
+          7,
+          8
         ],
         "east": [
           1,
           2,
           3,
           4,
-          5,
-          6
+          7,
+          8
         ]
       },
       "stretch": {
         "x": [],
-        "y": [
-          2,
-          3,
-          4,
-          5
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          1,
-          2
+          2,
+          3
         ],
         "size": [
-          11,
-          3
+          2,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.master.medium.b",
-      "description": "A spacious, narrow master bedroom, double bed against the north wall, a wardrobe in the northwest corner, a stove in the northeast corner, a lamp in the open middle, and open floor in the middle."
+      "recipe": "bedroom.master.medium.c",
+      "description": "A spacious, narrow master bedroom, double bed in the northeast corner, a coat rack in the open middle, a chair against the east wall, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.f.grand.flush",
@@ -5331,8 +4892,8 @@
         "elite"
       ],
       "size": [
-        10,
-        6
+        6,
+        11
       ],
       "sleeps": {
         "singles": 0,
@@ -5346,7 +4907,7 @@
             1
           ],
           "at": [
-            2,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -5359,7 +4920,7 @@
             2
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -5373,63 +4934,10 @@
             1
           ],
           "at": [
-            5,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            0
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            9,
-            4
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "light.small.single.bedroom.master",
           "optional": false
         },
         {
@@ -5439,12 +4947,12 @@
             1
           ],
           "at": [
-            4,
+            0,
             5
           ],
           "group": "wash.basin.seat.opt",
           "optional": false,
-          "back": "south"
+          "back": "west"
         },
         {
           "role": "seat",
@@ -5453,64 +4961,107 @@
             1
           ],
           "at": [
-            5,
-            5
+            0,
+            6
           ],
           "group": "wash.basin.seat.opt",
           "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            6
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            10
+          ],
+          "group": "light.small.single.bedroom.master",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
-          0,
-          1,
-          6,
-          7,
-          8
+          4,
+          5
         ],
         "south": [
-          1,
-          2,
-          3,
-          6,
-          7,
-          8
-        ],
-        "west": [
-          0,
-          1,
           2,
           3,
           4
         ],
-        "east": [
-          1,
-          2,
-          3
-        ]
-      },
-      "stretch": {
-        "x": [
-          0,
+        "west": [
           1,
           2,
           3,
-          5,
-          6,
+          4,
           7,
           8,
           9
         ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9
+        ]
+      },
+      "stretch": {
+        "x": [
+          3,
+          4,
+          5,
+          6
+        ],
         "y": [
           2,
           3,
-          4
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.c",
-      "description": "A spacious master bedroom, double bed against the north wall, a coat rack in the northeast corner, a wardrobe in the southeast corner, and a lamp in the southwest corner."
+      "description": "A spacious master bedroom, double bed in the northwest corner, a washbasin against the west wall, a coat rack against the east wall, and a wardrobe in the southwest corner."
     },
     {
       "id": "bedroom.master.large.f.grand.open",
@@ -5523,8 +5074,8 @@
         "elite"
       ],
       "size": [
-        11,
-        6
+        6,
+        12
       ],
       "sleeps": {
         "singles": 0,
@@ -5538,7 +5089,7 @@
             1
           ],
           "at": [
-            2,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -5551,7 +5102,7 @@
             2
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -5565,63 +5116,10 @@
             1
           ],
           "at": [
-            5,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            0
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            10,
-            4
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "light.small.single.bedroom.master",
           "optional": false
         },
         {
@@ -5631,111 +5129,13 @@
             1
           ],
           "at": [
-            4,
-            5
+            0,
+            6
           ],
           "group": "wash.basin.seat.opt",
           "optional": false,
-          "back": "south"
+          "back": "west"
         },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            5
-          ],
-          "group": "wash.basin.seat.opt",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          6,
-          7,
-          8,
-          10
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          6,
-          7,
-          8,
-          9
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10
-        ],
-        "y": [
-          2,
-          3,
-          4
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          9,
-          3
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.medium.c",
-      "description": "A spacious master bedroom, double bed against the north wall, a coat rack against the north wall, a wardrobe in the southeast corner, a lamp in the southwest corner, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.large.g.grand.flush",
-      "family": "bedroom.master",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "flush",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        6
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
         {
           "role": "seat",
           "size": [
@@ -5744,75 +5144,9 @@
           ],
           "at": [
             0,
-            0
+            7
           ],
-          "group": "seat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
+          "group": "wash.basin.seat.opt",
           "optional": true
         },
         {
@@ -5822,8 +5156,8 @@
             1
           ],
           "at": [
-            1,
-            5
+            4,
+            7
           ],
           "group": "coat.single.bedroom.master",
           "optional": true
@@ -5835,35 +5169,46 @@
             1
           ],
           "at": [
-            5,
-            5
+            0,
+            11
           ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
           "back": "south"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            11
+          ],
+          "group": "light.small.single.bedroom.master",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
-          1,
-          2,
-          3,
-          8
+          4,
+          5
         ],
         "south": [
-          0,
           2,
           3,
-          4,
-          7,
-          8
+          4
         ],
         "west": [
           1,
           2,
           3,
           4,
-          5
+          5,
+          8,
+          9,
+          10
         ],
         "east": [
           0,
@@ -5871,30 +5216,34 @@
           2,
           3,
           4,
-          5
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
         ]
       },
       "stretch": {
         "x": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          7
+          3
         ],
-        "y": [
-          2,
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
           3,
-          4,
           5
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.master.small.b",
-      "description": "A spacious master bedroom, double bed against the north wall, a chair in the northwest corner, a coat rack opposite, and a wardrobe opposite."
+      "recipe": "bedroom.master.medium.c",
+      "description": "A spacious, narrow master bedroom, double bed in the northwest corner, a washbasin against the west wall, a coat rack in the open middle, a wardrobe in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.master.large.g.grand.open",
@@ -5907,8 +5256,8 @@
         "elite"
       ],
       "size": [
-        10,
-        6
+        8,
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -5922,7 +5271,7 @@
             1
           ],
           "at": [
-            5,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
@@ -5935,7 +5284,7 @@
             2
           ],
           "at": [
-            6,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
@@ -5949,7 +5298,7 @@
             1
           ],
           "at": [
-            8,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
@@ -5962,36 +5311,23 @@
             1
           ],
           "at": [
-            1,
-            1
+            7,
+            0
           ],
           "group": "seat.single.bedroom.master",
           "optional": true
         },
         {
-          "role": "bedside",
+          "role": "coat",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
-            1
+            6,
+            5
           ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
+          "group": "coat.single.bedroom.master",
           "optional": true
         },
         {
@@ -6001,75 +5337,51 @@
             1
           ],
           "at": [
-            4,
-            5
+            1,
+            6
           ],
           "group": "storage.big.single.bedroom.master1",
           "optional": true,
           "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            5
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          1,
-          2,
-          3,
           4,
-          9
+          5,
+          6
         ],
         "south": [
           0,
-          1,
-          2,
           3,
+          4,
+          5,
           6,
-          7,
-          8
+          7
         ],
         "west": [
-          0,
           1,
           2,
           3,
           4,
-          5
+          5,
+          6
         ],
         "east": [
-          0,
           1,
           2,
           3,
-          4
+          4,
+          5,
+          6
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
-          6,
-          8,
-          9
+          1
         ],
         "y": [
-          2,
-          3,
-          4,
-          5
+          6
         ]
       },
       "filler": {
@@ -6078,14 +5390,14 @@
           2
         ],
         "size": [
-          8,
-          3
+          5,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.b",
-      "description": "A spacious master bedroom, double bed against the north wall, a chair in the open middle, a wardrobe opposite, a coat rack in the southeast corner, and open floor in the middle."
+      "description": "A spacious master bedroom, double bed in the northwest corner, a chair in the northeast corner, a coat rack in the open middle, a wardrobe opposite, and open floor in the middle."
     },
     {
       "id": "bedroom.master.medium.a.grand.flush",
@@ -6098,7 +5410,7 @@
         "elite"
       ],
       "size": [
-        6,
+        5,
         7
       ],
       "sleeps": {
@@ -6147,57 +5459,18 @@
           "optional": false
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
           "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
             1,
             2
           ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
           "at": [
-            0,
-            6
+            4,
+            5
           ],
           "group": "storage.big.single.bedroom.master1",
           "optional": true,
-          "back": "south"
+          "back": "east"
         },
         {
           "role": "light.small",
@@ -6206,7 +5479,7 @@
             1
           ],
           "at": [
-            5,
+            0,
             6
           ],
           "group": "light.small.single.bedroom.master1",
@@ -6215,13 +5488,12 @@
       ],
       "doors": {
         "north": [
-          0,
-          5
+          0
         ],
         "south": [
+          1,
           2,
-          3,
-          4
+          3
         ],
         "west": [
           0,
@@ -6232,34 +5504,31 @@
           5
         ],
         "east": [
-          0,
           1,
           2,
           3,
-          4,
-          5
+          4
         ]
       },
       "stretch": {
         "x": [
           0,
+          1,
           2,
-          4,
-          5,
-          6
+          4
         ],
         "y": [
           2,
           3,
           4,
           5,
-          6
+          7
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a wardrobe in the southwest corner, and a lamp in the southeast corner."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a wardrobe in the southeast corner, and a lamp in the southwest corner."
     },
     {
       "id": "bedroom.master.medium.a.grand.open",
@@ -6272,7 +5541,7 @@
         "elite"
       ],
       "size": [
-        6,
+        5,
         8
       ],
       "sleeps": {
@@ -6321,43 +5590,18 @@
           "optional": false
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
           "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
             1,
             2
           ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
+          "at": [
+            4,
+            6
+          ],
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
+          "back": "east"
         },
         {
           "role": "light.small",
@@ -6367,33 +5611,17 @@
           ],
           "at": [
             0,
-            6
+            7
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            7
-          ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
-          "back": "south"
         }
       ],
       "doors": {
         "north": [
-          0,
-          5
+          0
         ],
         "south": [
-          0,
           1,
           2,
           3
@@ -6405,16 +5633,14 @@
           3,
           4,
           5,
-          7
+          6
         ],
         "east": [
-          0,
           1,
           2,
           3,
           4,
-          5,
-          6
+          5
         ]
       },
       "stretch": {
@@ -6423,29 +5649,22 @@
           2,
           4
         ],
-        "y": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ]
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          3
+          2
         ],
         "size": [
-          4,
-          4
+          3,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a lamp against the west wall, a wardrobe in the southeast corner, and open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a wardrobe in the southeast corner, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.master.medium.a.roomy.flush",
@@ -6521,19 +5740,6 @@
           "optional": false
         },
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
-        },
-        {
           "role": "light.small",
           "size": [
             1,
@@ -6598,8 +5804,6 @@
       },
       "stretch": {
         "x": [
-          0,
-          2,
           3,
           4,
           5,
@@ -6628,8 +5832,8 @@
         "elite"
       ],
       "size": [
-        9,
-        5
+        8,
+        6
       ],
       "sleeps": {
         "singles": 0,
@@ -6637,17 +5841,18 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
+          "role": "storage.big",
           "size": [
-            2,
+            1,
             2
           ],
           "at": [
             0,
             0
           ],
-          "group": "decor.floor.single.bedroom.master2",
-          "optional": true
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "bedside",
@@ -6690,16 +5895,29 @@
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
-            1
+            0,
+            2
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "storage.big.seat.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            4
+          ],
+          "group": "decor.floor.single.bedroom.master2",
           "optional": true
         },
         {
@@ -6709,94 +5927,60 @@
             1
           ],
           "at": [
-            2,
-            4
+            1,
+            5
           ],
           "group": "light.small.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            4
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
           "optional": true
         }
       ],
       "doors": {
         "north": [
+          1,
           2,
-          3,
-          8
+          3
         ],
         "south": [
           0,
-          1,
+          2,
           3,
           4,
-          8
+          7
         ],
         "west": [
-          2,
           3,
-          4
+          4,
+          5
         ],
         "east": [
-          0,
           1,
           2,
           3,
-          4
+          4,
+          5
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
-          5,
-          7
-        ],
-        "y": [
-          2,
-          3,
-          4
-        ]
-      },
-      "filler": {
-        "at": [
           1,
           2
         ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          2,
+          1
+        ],
         "size": [
-          7,
-          2
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a floor rug in the northwest corner, a lamp opposite, a wardrobe opposite, and open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a wardrobe in the northwest corner, a floor rug opposite, a lamp opposite, and open floor in the middle."
     },
     {
       "id": "bedroom.master.medium.a.tight.flush",
@@ -7001,19 +6185,8 @@
         ]
       },
       "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          6,
-          8
-        ],
-        "y": [
-          2,
-          5,
-          6
-        ]
+        "x": [],
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
@@ -7046,7 +6219,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -7059,7 +6232,7 @@
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
@@ -7073,23 +6246,23 @@
             1
           ],
           "at": [
-            4,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            0,
+            3
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "light.small.single.bedroom.master1",
           "optional": true
         },
         {
@@ -7099,7 +6272,7 @@
             1
           ],
           "at": [
-            0,
+            2,
             4
           ],
           "group": "storage.big.seat.opt.bedroom.master",
@@ -7113,40 +6286,28 @@
             1
           ],
           "at": [
-            2,
-            4
-          ],
-          "group": "storage.big.seat.opt.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
             4,
             4
           ],
-          "group": "light.small.single.bedroom.master1",
+          "group": "storage.big.seat.opt.bedroom.master",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0
+          4
         ],
         "south": [
-          3
+          0,
+          1
         ],
         "west": [
-          0,
           1,
           2,
-          3
+          4
         ],
         "east": [
+          0,
           1,
           2,
           3
@@ -7154,13 +6315,10 @@
       },
       "stretch": {
         "x": [
-          2,
-          4
+          1
         ],
         "y": [
-          2,
-          3,
-          4
+          3
         ]
       },
       "filler": {
@@ -7176,7 +6334,158 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.a",
-      "description": "A mid-sized master bedroom, double bed in the northeast corner, a wardrobe in the southwest corner, a lamp in the southeast corner, and open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, a lamp against the west wall, a wardrobe in the southeast corner, and open floor in the middle."
+    },
+    {
+      "id": "bedroom.master.medium.b.grand.flush",
+      "family": "bedroom.master",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
+          "back": "south"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            5
+          ],
+          "group": "seat.single.bedroom.master",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "y": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.small.b",
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, a coat rack against the east wall, a wardrobe opposite, and a chair in the southeast corner."
     },
     {
       "id": "bedroom.master.medium.b.roomy.flush",
@@ -7239,18 +6548,17 @@
           "optional": false
         },
         {
-          "role": "storage.big",
+          "role": "seat",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
             7,
             0
           ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
+          "group": "wash.basin.seat.opt",
+          "optional": true
         },
         {
           "role": "storage.small",
@@ -7272,24 +6580,24 @@
             1
           ],
           "at": [
-            0,
-            4
+            7,
+            1
           ],
           "group": "wash.basin.seat.opt",
           "optional": false,
-          "back": "south"
+          "back": "east"
         },
         {
-          "role": "seat",
+          "role": "coat",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
+            0,
             4
           ],
-          "group": "wash.basin.seat.opt",
+          "group": "coat.single.bedroom.master",
           "optional": true
         },
         {
@@ -7299,24 +6607,25 @@
             1
           ],
           "at": [
-            4,
+            3,
             4
           ],
           "group": "light.small.single.bedroom.master",
           "optional": false
         },
         {
-          "role": "coat",
+          "role": "storage.big",
           "size": [
-            1,
+            2,
             1
           ],
           "at": [
-            7,
+            6,
             4
           ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
+          "group": "storage.big.single.bedroom.master",
+          "optional": false,
+          "back": "south"
         }
       ],
       "doors": {
@@ -7326,10 +6635,10 @@
           6
         ],
         "south": [
+          1,
           2,
-          3,
-          5,
-          6
+          4,
+          5
         ],
         "west": [
           0,
@@ -7349,8 +6658,7 @@
           2,
           4,
           5,
-          6,
-          7
+          6
         ],
         "y": [
           2,
@@ -7361,7 +6669,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.c",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a wardrobe in the northeast corner, a washbasin in the southwest corner, and a lamp opposite."
+      "description": "A mid-sized master bedroom, double bed against the north wall, a chair in the northeast corner, a coat rack in the southwest corner, and a lamp opposite."
     },
     {
       "id": "bedroom.master.medium.b.roomy.open",
@@ -7374,8 +6682,8 @@
         "elite"
       ],
       "size": [
-        9,
-        5
+        5,
+        6
       ],
       "sleeps": {
         "singles": 0,
@@ -7389,10 +6697,10 @@
             1
           ],
           "at": [
-            2,
+            0,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
           "optional": false
         },
         {
@@ -7402,10 +6710,10 @@
             2
           ],
           "at": [
-            3,
+            1,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
           "optional": false,
           "back": "north"
         },
@@ -7416,65 +6724,25 @@
             1
           ],
           "at": [
-            5,
+            3,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
           "optional": false
         },
         {
           "role": "storage.big",
           "size": [
-            1,
-            2
-          ],
-          "at": [
-            8,
-            0
-          ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
             2,
             1
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
           "at": [
-            1,
-            4
+            0,
+            5
           ],
-          "group": "wash.basin.seat.opt",
-          "optional": false,
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
           "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            4
-          ],
-          "group": "wash.basin.seat.opt",
-          "optional": true
         },
         {
           "role": "light.small",
@@ -7483,65 +6751,44 @@
             1
           ],
           "at": [
-            5,
-            4
+            4,
+            5
           ],
-          "group": "light.small.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            4
-          ],
-          "group": "coat.single.bedroom.master",
+          "group": "light.small.single.bedroom.master1",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          1,
-          6,
-          7
+          4
         ],
         "south": [
-          0,
-          3,
-          4,
-          6,
-          7
+          2,
+          3
         ],
         "west": [
-          0,
           1,
           2,
           3,
           4
         ],
         "east": [
+          0,
+          1,
           2,
-          3
+          3,
+          4
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          5,
-          6,
-          7,
-          8
-        ],
-        "y": [
-          2,
           3,
           4
+        ],
+        "y": [
+          3,
+          4,
+          5
         ]
       },
       "filler": {
@@ -7550,14 +6797,14 @@
           2
         ],
         "size": [
-          7,
-          2
+          3,
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.master.medium.c",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a wardrobe in the northeast corner, a washbasin opposite, a lamp opposite, and open floor in the middle."
+      "recipe": "bedroom.master.small.a",
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, a wardrobe in the southwest corner, a lamp in the southeast corner, and open floor in the middle."
     },
     {
       "id": "bedroom.master.medium.b.tight.flush",
@@ -7570,8 +6817,8 @@
         "modest"
       ],
       "size": [
-        6,
-        8
+        9,
+        5
       ],
       "sleeps": {
         "singles": 0,
@@ -7579,7 +6826,7 @@
       },
       "pieces": [
         {
-          "role": "wash.basin",
+          "role": "coat",
           "size": [
             1,
             1
@@ -7588,7 +6835,33 @@
             0,
             0
           ],
-          "group": "wash.basin.single",
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "table.small.seat",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "table.small.seat",
           "optional": false,
           "back": "north"
         },
@@ -7599,7 +6872,7 @@
             1
           ],
           "at": [
-            2,
+            5,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -7612,7 +6885,7 @@
             2
           ],
           "at": [
-            3,
+            6,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -7626,7 +6899,7 @@
             1
           ],
           "at": [
-            5,
+            8,
             0
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
@@ -7639,52 +6912,11 @@
             2
           ],
           "at": [
-            2,
+            5,
             1
           ],
           "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
           "optional": false
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            3
-          ],
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "storage.big.storage.big",
-          "optional": false,
-          "back": "west"
         },
         {
           "role": "light.small",
@@ -7693,51 +6925,11 @@
             1
           ],
           "at": [
-            2,
-            5
+            0,
+            2
           ],
           "group": "light.small.single.bedroom.master1",
           "optional": true
-        },
-        {
-          "role": "light.big",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            5
-          ],
-          "group": "light.big.single.bedroom.master",
-          "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            7
-          ],
-          "group": "table.small.seat",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            7
-          ],
-          "group": "table.small.seat",
-          "optional": false
         },
         {
           "role": "seat.lounge",
@@ -7747,63 +6939,100 @@
           ],
           "at": [
             3,
-            7
+            2
           ],
           "group": "seat.lounge.single.bedroom.master",
           "optional": false
         },
         {
-          "role": "coat",
+          "role": "light.big",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
-            7
+            0,
+            4
           ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
+          "group": "light.big.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "wash.basin.single",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "storage.big.storage.big",
+          "optional": false,
+          "back": "south"
         }
       ],
       "doors": {
         "north": [
-          1
+          1,
+          4
         ],
         "south": [
-          2,
-          4
+          1,
+          3,
+          8
         ],
         "west": [
           1,
-          6
+          3
         ],
         "east": [
           1,
           2,
           3,
-          4,
-          6
+          4
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          3,
-          5,
+          0,
+          4,
           6
         ],
-        "y": [
-          4,
-          6,
-          7
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.c",
-      "description": "A mid-sized master bedroom, double bed in the northeast corner, a washbasin in the northwest corner, a wardrobe against the west wall, and a lamp in the middle of the room."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a coat rack in the northwest corner, a chair against the north wall, and a lamp against the west wall."
     },
     {
       "id": "bedroom.master.medium.b.tight.open",
@@ -7879,6 +7108,466 @@
           "optional": false
         },
         {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "seat.lounge.single.bedroom.master1",
+          "optional": true
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            3
+          ],
+          "group": "storage.big.storage.small.opt.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "decor.floor.single.bedroom.master2",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "storage.big.storage.small.opt.bedroom.master",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          7
+        ],
+        "south": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          2,
+          2
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.medium.b",
+      "description": "A mid-sized master bedroom, double bed against the north wall, a stove in the northwest corner, an armchair in the open middle, a wardrobe in the southeast corner, and open floor in the middle."
+    },
+    {
+      "id": "bedroom.master.medium.c.roomy.flush",
+      "family": "bedroom.master",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
+          "back": "south"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "light.small.single.bedroom.master1",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          4
+        ],
+        "south": [
+          2,
+          3
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          3,
+          4,
+          5
+        ],
+        "y": [
+          2,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.small.a",
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, a wardrobe in the southwest corner, and a lamp in the southeast corner."
+    },
+    {
+      "id": "bedroom.master.medium.c.roomy.open",
+      "family": "bedroom.master",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "seat.single.bedroom.master",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          4
+        ],
+        "y": [
+          2
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.small.b",
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a wardrobe against the west wall, a coat rack against the east wall, a chair in the southeast corner, and open floor in the middle."
+    },
+    {
+      "id": "bedroom.master.medium.c.tight.flush",
+      "family": "bedroom.master",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "heat.single.bedroom.master",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.couple.bedside2",
+          "optional": false
+        },
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "sleep.couple.bedside2",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "sleep.couple.bedside2",
+          "optional": false
+        },
+        {
           "role": "decor.floor",
           "size": [
             2,
@@ -7911,7 +7600,7 @@
             1
           ],
           "at": [
-            7,
+            6,
             3
           ],
           "group": "storage.big.storage.small.opt.bedroom.master",
@@ -7924,7 +7613,7 @@
             2
           ],
           "at": [
-            7,
+            6,
             4
           ],
           "group": "storage.big.storage.small.opt.bedroom.master",
@@ -7947,16 +7636,14 @@
       ],
       "doors": {
         "north": [
-          2,
-          7
+          2
         ],
         "south": [
           0,
           1,
           2,
           4,
-          5,
-          6
+          5
         ],
         "west": [
           1,
@@ -7964,405 +7651,36 @@
           5
         ],
         "east": [
-          0,
           1,
           2
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
-          6,
-          7
-        ],
-        "y": [
+          0,
           2,
           3
-        ]
-      },
-      "filler": {
-        "at": [
-          4,
-          2
         ],
-        "size": [
-          3,
-          3
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.b",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a stove in the northwest corner, a floor rug against the west wall, an armchair in the open middle, and open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a stove in the northwest corner, a floor rug against the west wall, and an armchair in the middle of the room."
     },
     {
-      "id": "bedroom.master.medium.c.roomy.flush",
+      "id": "bedroom.master.medium.c.tight.open",
       "family": "bedroom.master",
       "sizeBand": "medium",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        6,
-        6
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            2
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            1,
-            5
-          ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            5
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          5
-        ],
-        "south": [
-          0,
-          3,
-          4
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          4,
-          5,
-          6
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.small.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a wardrobe opposite, and a lamp in the southeast corner."
-    },
-    {
-      "id": "bedroom.master.medium.c.roomy.open",
-      "family": "bedroom.master",
-      "sizeBand": "medium",
-      "clearance": "roomy",
+      "clearance": "tight",
       "style": "open",
       "wealth": [
         "wealthy",
         "elite"
       ],
       "size": [
-        6,
-        7
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            2
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            6
-          ],
-          "group": "light.small.single.bedroom.master1",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          5
-        ],
-        "south": [
-          2,
-          3,
-          5
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          4
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5,
-          6
-        ]
-      },
-      "filler": {
-        "at": [
-          2,
-          2
-        ],
-        "size": [
-          3,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.small.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a wardrobe in the southwest corner, a lamp opposite, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.medium.c.tight.flush",
-      "family": "bedroom.master",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        6,
-        7
+        4,
+        8
       ],
       "sleeps": {
         "singles": 0,
@@ -8379,7 +7697,7 @@
             0,
             0
           ],
-          "group": "sleep.couple.bedside2",
+          "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
         },
         {
@@ -8392,7 +7710,7 @@
             1,
             0
           ],
-          "group": "sleep.couple.bedside2",
+          "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false,
           "back": "north"
         },
@@ -8406,60 +7724,20 @@
             3,
             0
           ],
-          "group": "sleep.couple.bedside2",
+          "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
-            1
+            3,
+            4
           ],
-          "group": "storage.big.storage.small.opt.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            2
-          ],
-          "group": "storage.big.storage.small.opt.bedroom.master",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "seat.lounge.single.bedroom.master1",
-          "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            3
-          ],
-          "group": "decor.floor.single.bedroom.master2",
+          "group": "wash.basin.seat.opt",
           "optional": true
         },
         {
@@ -8469,77 +7747,103 @@
             1
           ],
           "at": [
-            0,
+            1,
             5
           ],
-          "group": "light.small.single.bedroom.master1",
+          "group": "light.small.single.bedroom.master",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "wash.basin.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "coat.single.bedroom.master",
           "optional": true
         },
         {
-          "role": "heat",
+          "role": "storage.big",
           "size": [
-            1,
-            2
+            2,
+            1
           ],
           "at": [
-            5,
-            5
+            2,
+            7
           ],
-          "group": "heat.single.bedroom.master",
+          "group": "storage.big.single.bedroom.master",
           "optional": false,
-          "back": "east"
+          "back": "south"
         }
       ],
       "doors": {
-        "north": [
-          4,
-          5
-        ],
+        "north": [],
         "south": [
-          0,
-          1,
-          2,
-          3,
-          4
+          1
         ],
         "west": [
           1,
           2,
+          3,
           4,
+          5,
           6
         ],
         "east": [
-          0,
-          4
+          1,
+          2,
+          3,
+          6
         ]
       },
       "stretch": {
-        "x": [
-          0,
+        "x": [],
+        "y": []
+      },
+      "filler": {
+        "at": [
           1,
-          4,
-          5
+          2
         ],
-        "y": [
+        "size": [
           2,
-          5,
-          7
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.master.medium.b",
-      "description": "A mid-sized master bedroom, double bed in the northwest corner, a wardrobe against the east wall, an armchair against the west wall, and a floor rug in the middle of the room."
+      "recipe": "bedroom.master.medium.c",
+      "description": "A mid-sized, narrow master bedroom, double bed in the northwest corner, a chair against the east wall, a lamp in the open middle, a coat rack in the southwest corner, and open floor in the middle."
     },
     {
-      "id": "bedroom.master.medium.c.tight.open",
+      "id": "bedroom.master.medium.d.roomy.flush",
       "family": "bedroom.master",
       "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
+      "clearance": "roomy",
+      "style": "flush",
       "wealth": [
-        "wealthy",
-        "elite"
+        "poor",
+        "modest",
+        "wealthy"
       ],
       "size": [
         7,
@@ -8557,10 +7861,10 @@
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2",
           "optional": false
         },
         {
@@ -8570,10 +7874,10 @@
             2
           ],
           "at": [
-            4,
+            1,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2",
           "optional": false,
           "back": "north"
         },
@@ -8584,50 +7888,24 @@
             1
           ],
           "at": [
-            6,
+            3,
             0
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2.bedside.opt2",
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            6,
             1
           ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "seat.single.bedroom.master",
           "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            2
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "light.small.single.bedroom.master",
-          "optional": false
         },
         {
           "role": "storage.big",
@@ -8636,15 +7914,15 @@
             1
           ],
           "at": [
-            2,
+            1,
             4
           ],
-          "group": "storage.big.single.bedroom.master",
-          "optional": false,
+          "group": "storage.big.single.bedroom.master1",
+          "optional": true,
           "back": "south"
         },
         {
-          "role": "wash.basin",
+          "role": "coat",
           "size": [
             1,
             1
@@ -8653,234 +7931,44 @@
             5,
             4
           ],
-          "group": "wash.basin.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            4
-          ],
-          "group": "wash.basin.seat.opt",
+          "group": "coat.single.bedroom.master",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          1,
-          2
+          4,
+          5,
+          6
         ],
         "south": [
-          1,
-          4
-        ],
-        "west": [
           0,
-          1,
-          2,
-          3
-        ],
-        "east": [
-          1,
-          2,
-          3
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
+          3,
           4,
           6
         ],
-        "y": [
+        "west": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          2,
           3,
           4
         ]
       },
-      "filler": {
-        "at": [
-          2,
-          2
-        ],
-        "size": [
-          4,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.medium.c",
-      "description": "A mid-sized master bedroom, double bed in the northeast corner, a coat rack in the open middle, a lamp in the southwest corner, a wardrobe opposite, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.medium.d.roomy.flush",
-      "family": "bedroom.master",
-      "sizeBand": "medium",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        8,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "seat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            4
-          ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
-          "back": "south"
-        }
-      ],
-      "doors": {
-        "north": [
+      "stretch": {
+        "x": [
           0,
           1,
-          2,
-          7
-        ],
-        "south": [
-          1,
-          2,
+          3,
+          4,
           5,
           6,
           7
-        ],
-        "west": [
-          0,
-          2,
-          3
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          0,
-          1,
-          2,
-          3,
-          6
         ],
         "y": [
           2,
@@ -8891,192 +7979,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.b",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a coat rack against the west wall, a chair in the southwest corner, and a wardrobe opposite."
-    },
-    {
-      "id": "bedroom.master.medium.d.roomy.open",
-      "family": "bedroom.master",
-      "sizeBand": "medium",
-      "clearance": "roomy",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": false
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "seat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            2,
-            4
-          ],
-          "group": "storage.big.single.bedroom.master1",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            4
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          5,
-          6,
-          8
-        ],
-        "south": [
-          0,
-          1,
-          4,
-          5,
-          7,
-          8
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          4,
-          5,
-          6,
-          7
-        ],
-        "y": [
-          2,
-          3,
-          4
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          7,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.small.b",
-      "description": "A mid-sized master bedroom, double bed against the north wall, a chair against the north wall, a wardrobe opposite, a coat rack opposite, and open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, a chair against the east wall, a wardrobe opposite, and a coat rack opposite."
     },
     {
       "id": "bedroom.master.medium.d.tight.flush",
@@ -9098,6 +8001,19 @@
       },
       "pieces": [
         {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "coat.single.bedroom.master",
+          "optional": true
+        },
+        {
           "role": "bedside",
           "size": [
             1,
@@ -9136,32 +8052,6 @@
           ],
           "group": "sleep.couple.bedside2.storage.small.opt",
           "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "coat.single.bedroom.master",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "group": "sleep.couple.bedside2.storage.small.opt",
-          "optional": true
         },
         {
           "role": "light.small",
@@ -9221,7 +8111,6 @@
       "doors": {
         "north": [
           0,
-          1,
           2
         ],
         "south": [
@@ -9230,6 +8119,7 @@
         ],
         "west": [
           0,
+          1,
           2
         ],
         "east": [
@@ -9239,22 +8129,17 @@
       },
       "stretch": {
         "x": [
-          0,
-          1,
           2,
           4,
           6,
           7
         ],
-        "y": [
-          2,
-          3
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.medium.c",
-      "description": "A mid-sized master bedroom, double bed in the northeast corner, a coat rack against the west wall, a lamp in the southwest corner, and a wardrobe opposite."
+      "description": "A mid-sized master bedroom, double bed in the northeast corner, a coat rack against the north wall, a lamp in the southwest corner, and a wardrobe opposite."
     },
     {
       "id": "bedroom.master.medium.d.tight.open",
@@ -9267,164 +8152,7 @@
         "elite"
       ],
       "size": [
-        7,
-        6
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 1
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            2
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          6
-        ],
-        "south": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [
-          3,
-          5
-        ],
-        "y": [
-          2,
-          3,
-          4
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          3
-        ],
-        "size": [
-          5,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.master.small.a",
-      "description": "A mid-sized master bedroom, double bed against the north wall, open floor in the middle."
-    },
-    {
-      "id": "bedroom.master.medium.e.tight.open",
-      "family": "bedroom.master",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        6,
+        5,
         5
       ],
       "sleeps": {
@@ -9439,7 +8167,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
@@ -9452,7 +8180,7 @@
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
@@ -9466,54 +8194,25 @@
             1
           ],
           "at": [
-            4,
+            3,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2",
           "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          5
+          4
         ],
         "south": [
           0,
           1,
           2,
           3,
-          4,
-          5
+          4
         ],
         "west": [
-          0,
           1,
           2,
           3,
@@ -9528,12 +8227,8 @@
         ]
       },
       "stretch": {
-        "x": [
-          2,
-          4
-        ],
+        "x": [],
         "y": [
-          2,
           3
         ]
       },
@@ -9543,14 +8238,14 @@
           2
         ],
         "size": [
-          4,
+          3,
           2
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.b",
-      "description": "A mid-sized master bedroom, double bed against the north wall, open floor in the middle."
+      "description": "A mid-sized master bedroom, double bed in the northwest corner, open floor in the middle."
     },
     {
       "id": "bedroom.master.small.a.tight.flush",
@@ -9684,7 +8379,6 @@
       },
       "stretch": {
         "x": [
-          0,
           2,
           4,
           5
@@ -9700,18 +8394,18 @@
       "description": "A small master bedroom, double bed in the northeast corner, a wardrobe in the southwest corner, and a lamp in the southeast corner."
     },
     {
-      "id": "bedroom.master.small.b.tight.flush",
+      "id": "bedroom.master.small.a.tight.open",
       "family": "bedroom.master",
       "sizeBand": "small",
       "clearance": "tight",
-      "style": "flush",
+      "style": "open",
       "wealth": [
-        "poor",
-        "modest"
+        "wealthy",
+        "elite"
       ],
       "size": [
-        6,
-        4
+        4,
+        5
       ],
       "sleeps": {
         "singles": 0,
@@ -9725,7 +8419,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
@@ -9738,7 +8432,7 @@
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
@@ -9752,89 +8446,140 @@
             1
           ],
           "at": [
-            4,
+            3,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          3
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.master.small.a",
+      "description": "A small master bedroom, double bed in the northwest corner, open floor in the middle."
+    },
+    {
+      "id": "bedroom.master.small.b.tight.flush",
+      "family": "bedroom.master",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 1
+      },
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
             0
           ],
           "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
           "optional": false
         },
         {
-          "role": "bedside",
+          "role": "sleep.couple",
           "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
+            2,
             2
           ],
+          "at": [
+            1,
+            0
+          ],
           "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
-          "optional": true
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "optional": false
         }
       ],
       "doors": {
-        "north": [
-          0,
-          5
-        ],
+        "north": [],
         "south": [
           0,
           1,
           2,
-          3,
-          4,
-          5
+          3
         ],
         "west": [
-          0,
           1,
-          2,
-          3
+          2
         ],
         "east": [
-          0,
           1,
-          2,
-          3
+          2
         ]
       },
       "stretch": {
-        "x": [
-          2,
-          4
-        ],
+        "x": [],
         "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.a",
-      "description": "A small master bedroom, double bed against the north wall."
+      "description": "A small master bedroom, double bed in the northwest corner."
     },
     {
       "id": "bedroom.master.small.c.tight.flush",

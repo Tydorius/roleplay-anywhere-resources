@@ -1,9 +1,10 @@
 """The generated room library: the shipped bedroom, master bedroom and
 washroom rooms load and check clean, stay inside the family's aspect cap
 with no dead floor, every recipe of those families keeps at least one tight
-flush room, every open room's filler stays off every edge, no room wastes
-more than one line along a wall, the generator comes back the same for the
-same seed, and ids are unique and follow the family.band.letter.clearance
+flush room, every open room's filler stays off every edge and holds its
+clearance cap, the two-to-one aspect and the centre, no room wastes more
+than one line along a wall, the generator comes back the same for the same
+seed, and ids are unique and follow the family.band.letter.clearance
 .style pattern."""
 import importlib.util
 import json
@@ -118,6 +119,31 @@ class TestShippedRooms(unittest.TestCase):
                     self.assertGreater(fy, 0)
                     self.assertLess(fx + fw, w)
                     self.assertLess(fy + fh, h)
+
+    def test_open_fillers_hold_the_cap_aspect_and_centre(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            for room in rooms:
+                if room["style"] != "open":
+                    continue
+                with self.subTest(room=room["id"]):
+                    fx, fy = room["filler"]["at"]
+                    fw, fh = room["filler"]["size"]
+                    w, h = room["size"]
+                    hi, lo = RC.FILLER_MAX[room["clearance"]]
+                    self.assertLessEqual(max(fw, fh), hi,
+                                         f"{fw}x{fh}: over the "
+                                         f"{room['clearance']} cap {hi}x{lo}")
+                    self.assertLessEqual(min(fw, fh), lo)
+                    self.assertLessEqual(max(fw, fh),
+                                         RC.FILLER_ASPECT * min(fw, fh),
+                                         f"{fw}x{fh}: long side over "
+                                         f"{RC.FILLER_ASPECT:g}x the short")
+                    self.assertLessEqual(abs(fx - (w - fx - fw)), 1,
+                                         "west and east wall distances "
+                                         "differ by more than 1")
+                    self.assertLessEqual(abs(fy - (h - fy - fh)), 1,
+                                         "north and south wall distances "
+                                         "differ by more than 1")
 
     def test_no_room_wastes_more_than_one_line_along_a_wall(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms):

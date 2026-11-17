@@ -11,8 +11,8 @@
         "elite"
       ],
       "size": [
-        11,
-        6
+        10,
+        7
       ],
       "sleeps": {
         "singles": 1,
@@ -20,17 +20,18 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
+          "role": "desk",
           "size": [
-            2,
+            1,
             2
           ],
           "at": [
             0,
             0
           ],
-          "group": "decor.floor.single",
-          "optional": true
+          "group": "desk.seat",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "bedside",
@@ -39,7 +40,7 @@
             1
           ],
           "at": [
-            5,
+            4,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -52,7 +53,7 @@
             2
           ],
           "at": [
-            6,
+            5,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -66,52 +67,12 @@
             2
           ],
           "at": [
-            10,
+            9,
             0
           ],
           "group": "storage.big.single",
           "optional": false,
           "back": "east"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "coat.single",
-          "optional": true
-        },
-        {
-          "role": "desk",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            5
-          ],
-          "group": "desk.seat",
-          "optional": false,
-          "back": "south"
         },
         {
           "role": "seat",
@@ -120,11 +81,24 @@
             1
           ],
           "at": [
-            6,
-            5
+            0,
+            2
           ],
           "group": "desk.seat",
           "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            8,
+            5
+          ],
+          "group": "decor.floor.single",
+          "optional": true
         },
         {
           "role": "light.small",
@@ -133,34 +107,47 @@
             1
           ],
           "at": [
-            10,
-            5
+            0,
+            6
           ],
           "group": "light.small.single",
           "optional": false
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "coat.single",
+          "optional": true
         }
       ],
       "doors": {
         "north": [
+          1,
           2,
           3,
-          4,
+          6,
           7,
-          8,
-          9
+          8
         ],
         "south": [
           1,
           2,
           3,
-          7,
-          8,
-          9
+          5,
+          6,
+          7
         ],
         "west": [
-          2,
           3,
-          4
+          4,
+          5
         ],
         "east": [
           2,
@@ -170,27 +157,27 @@
       },
       "stretch": {
         "x": [
-          0,
+          1,
           2,
           3,
           4,
+          5,
           6,
           7,
-          8,
-          9,
-          10
+          8
         ],
         "y": [
           2,
           3,
           4,
-          5
+          5,
+          7
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A spacious single bedroom, bed against the north wall, a floor rug in the northwest corner, a wardrobe in the northeast corner, and a coat rack in the southwest corner."
+      "description": "A spacious single bedroom, bed against the north wall, a desk in the northwest corner, a wardrobe in the northeast corner, and a floor rug in the southeast corner."
     },
     {
       "id": "bedroom.large.a.grand.open",
@@ -203,8 +190,8 @@
         "elite"
       ],
       "size": [
-        12,
-        6
+        7,
+        12
       ],
       "sleeps": {
         "singles": 1,
@@ -212,26 +199,13 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
+            0,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -244,12 +218,25 @@
             2
           ],
           "at": [
-            6,
+            1,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "light.small.single",
+          "optional": false
         },
         {
           "role": "storage.big",
@@ -258,37 +245,24 @@
             2
           ],
           "at": [
-            11,
-            0
+            0,
+            6
           ],
           "group": "storage.big.single",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
-          "role": "storage.small",
+          "role": "decor.floor",
           "size": [
-            1,
-            1
+            2,
+            2
           ],
           "at": [
             5,
-            1
+            6
           ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "coat.single",
+          "group": "decor.floor.single",
           "optional": true
         },
         {
@@ -298,8 +272,8 @@
             1
           ],
           "at": [
-            4,
-            5
+            0,
+            11
           ],
           "group": "desk.seat",
           "optional": false,
@@ -312,24 +286,24 @@
             1
           ],
           "at": [
-            6,
-            5
+            2,
+            11
           ],
           "group": "desk.seat",
           "optional": false
         },
         {
-          "role": "light.small",
+          "role": "coat",
           "size": [
             1,
             1
           ],
           "at": [
-            10,
-            5
+            6,
+            11
           ],
-          "group": "light.small.single",
-          "optional": false
+          "group": "coat.single",
+          "optional": true
         }
       ],
       "doors": {
@@ -337,55 +311,57 @@
           2,
           3,
           4,
-          7,
+          5,
+          6
+        ],
+        "south": [
+          3,
+          4,
+          5
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4,
+          5,
           8,
           9,
           10
         ],
-        "south": [
+        "east": [
+          0,
           1,
           2,
           3,
-          7,
+          4,
+          5,
           8,
           9,
-          11
-        ],
-        "west": [
-          2,
-          3,
-          4
-        ],
-        "east": [
-          2,
-          3,
-          4,
-          5
+          10
         ]
       },
       "stretch": {
         "x": [],
         "y": [
           2,
-          3,
-          4,
-          5
+          3
         ]
       },
       "filler": {
         "at": [
           1,
-          2
+          3
         ],
         "size": [
-          10,
-          3
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A spacious, narrow single bedroom, bed against the north wall, a floor rug in the northwest corner, a wardrobe in the northeast corner, a coat rack in the southwest corner, and open floor in the middle."
+      "description": "A spacious single bedroom, bed in the northwest corner, a lamp in the open middle, a wardrobe against the west wall, a floor rug against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.large.a.roomy.flush",
@@ -576,9 +552,7 @@
         "x": [],
         "y": [
           2,
-          3,
-          4,
-          6
+          3
         ]
       },
       "outdoor": false,
@@ -597,8 +571,8 @@
         "elite"
       ],
       "size": [
-        10,
-        5
+        6,
+        10
       ],
       "sleeps": {
         "singles": 1,
@@ -606,26 +580,13 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
+            0,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -638,39 +599,12 @@
             2
           ],
           "at": [
-            6,
+            1,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            9,
-            0
-          ],
-          "group": "storage.big.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
         },
         {
           "role": "light.small",
@@ -679,11 +613,51 @@
             1
           ],
           "at": [
-            1,
-            4
+            4,
+            1
           ],
           "group": "light.small.single",
           "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.single",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "decor.floor.single",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            8
+          ],
+          "group": "coat.single",
+          "optional": true
         },
         {
           "role": "desk",
@@ -692,8 +666,8 @@
             1
           ],
           "at": [
-            4,
-            4
+            0,
+            9
           ],
           "group": "desk.seat",
           "optional": false,
@@ -706,51 +680,41 @@
             1
           ],
           "at": [
-            6,
-            4
+            2,
+            9
           ],
           "group": "desk.seat",
           "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            4
-          ],
-          "group": "coat.single",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          3,
-          4,
-          7,
-          8
-        ],
-        "south": [
-          0,
           2,
           3,
+          4,
+          5
+        ],
+        "south": [
+          3,
+          4,
+          5
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          6,
           7,
           8
         ],
-        "west": [
+        "east": [
           0,
           1,
           2,
           3,
-          4
-        ],
-        "east": [
-          2,
-          3
+          6,
+          7,
+          9
         ]
       },
       "stretch": {
@@ -758,23 +722,25 @@
         "y": [
           2,
           3,
-          4
+          7,
+          8,
+          9
         ]
       },
       "filler": {
         "at": [
           1,
-          2
+          3
         ],
         "size": [
-          8,
-          2
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A spacious, narrow single bedroom, bed against the north wall, a floor rug against the north wall, a wardrobe in the northeast corner, a lamp opposite, and open floor in the middle."
+      "description": "A spacious single bedroom, bed in the northwest corner, a lamp in the open middle, a wardrobe against the west wall, a floor rug against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.large.b.grand.flush",
@@ -787,374 +753,8 @@
         "elite"
       ],
       "size": [
-        11,
-        6
-      ],
-      "sleeps": {
-        "singles": 1,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            10,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": true
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "table.small.single",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            5
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          2,
-          3,
-          4,
-          7,
-          8,
-          9
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          9,
-          10
-        ],
-        "west": [
-          2,
-          3,
-          4
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [
-          0,
-          2,
-          3,
-          4,
-          5,
-          6,
-          8,
-          9,
-          10,
-          11
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.medium.b",
-      "description": "A spacious single bedroom, bed against the north wall, a floor rug in the northwest corner, a lamp in the northeast corner, and a small table in the southwest corner."
-    },
-    {
-      "id": "bedroom.large.b.grand.open",
-      "family": "bedroom",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        12,
-        6
-      ],
-      "sleeps": {
-        "singles": 1,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            10,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": true
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "table.small.single",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            5
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          2,
-          3,
-          4,
-          7,
-          8,
-          9,
-          11
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          9,
-          10,
-          11
-        ],
-        "west": [
-          2,
-          3,
-          4
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [],
-        "y": [
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          10,
-          3
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.medium.b",
-      "description": "A spacious, narrow single bedroom, bed against the north wall, a floor rug in the northwest corner, a lamp against the north wall, a small table in the southwest corner, and open floor in the middle."
-    },
-    {
-      "id": "bedroom.large.b.roomy.open",
-      "family": "bedroom",
-      "sizeBand": "large",
-      "clearance": "roomy",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
         10,
-        5
+        7
       ],
       "sleeps": {
         "singles": 1,
@@ -1162,13 +762,27 @@
       },
       "pieces": [
         {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
           "role": "storage.small",
           "size": [
             1,
             1
           ],
           "at": [
-            2,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -1181,25 +795,12 @@
             2
           ],
           "at": [
-            3,
+            5,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
           "optional": false,
           "back": "north"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
         },
         {
           "role": "table.small",
@@ -1221,10 +822,23 @@
             1
           ],
           "at": [
-            2,
+            4,
             1
           ],
           "group": "sleep.storage.small.bedside.opt",
+          "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "storage.big.seat.opt",
           "optional": true
         },
         {
@@ -1234,25 +848,164 @@
             2
           ],
           "at": [
-            8,
-            3
+            5,
+            5
           ],
           "group": "decor.floor.single",
           "optional": true
         },
         {
-          "role": "storage.big",
+          "role": "light.small",
           "size": [
-            2,
+            1,
             1
           ],
           "at": [
-            3,
-            4
+            0,
+            6
+          ],
+          "group": "light.small.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "west": [
+          3,
+          4,
+          5
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "y": [
+          2,
+          3,
+          4,
+          5,
+          7
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.medium.b",
+      "description": "A spacious single bedroom, bed against the north wall, a wardrobe in the northwest corner, a small table in the northeast corner, and a floor rug opposite."
+    },
+    {
+      "id": "bedroom.large.b.grand.open",
+      "family": "bedroom",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        11,
+        7
+      ],
+      "sleeps": {
+        "singles": 1,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
           ],
           "group": "storage.big.seat.opt",
           "optional": false,
-          "back": "south"
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false
+        },
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            0
+          ],
+          "group": "table.small.single",
+          "optional": true
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": true
         },
         {
           "role": "seat",
@@ -1261,10 +1014,212 @@
             1
           ],
           "at": [
-            5,
-            4
+            0,
+            2
           ],
           "group": "storage.big.seat.opt",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "decor.floor.single",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "light.small.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "south": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3
+        ],
+        "y": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "filler": {
+        "at": [
+          3,
+          2
+        ],
+        "size": [
+          5,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.medium.b",
+      "description": "A spacious single bedroom, bed against the north wall, a wardrobe in the northwest corner, a small table in the northeast corner, a floor rug opposite, and open floor in the middle."
+    },
+    {
+      "id": "bedroom.large.b.roomy.open",
+      "family": "bedroom",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "sleeps": {
+        "singles": 1,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false
+        },
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "table.small.single",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "light.small.single",
+          "optional": false
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            8
+          ],
+          "group": "decor.floor.single",
           "optional": true
         }
       ],
@@ -1272,51 +1227,51 @@
         "north": [
           0,
           1,
-          4,
-          5,
-          7,
-          8
+          2
         ],
         "south": [
-          0,
-          1,
-          2,
-          6,
-          7
-        ],
-        "west": [
-          0,
-          1,
           2,
           3,
           4
         ],
-        "east": [
+        "west": [
+          0,
           1,
-          2
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          8,
+          9
         ]
       },
       "stretch": {
-        "x": [],
-        "y": [
-          2,
-          3
-        ]
+        "x": [
+          3,
+          4
+        ],
+        "y": []
       },
       "filler": {
         "at": [
-          1,
-          2
+          2,
+          3
         ],
         "size": [
-          7,
-          2
+          2,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.b",
-      "description": "A spacious, narrow single bedroom, bed against the north wall, a lamp against the north wall, a small table in the northeast corner, a floor rug in the southeast corner, and open floor in the middle."
+      "description": "A spacious, narrow single bedroom, bed in the northeast corner, a small table against the west wall, a lamp in the open middle, a wardrobe against the east wall, and open floor in the middle."
     },
     {
       "id": "bedroom.large.c.grand.flush",
@@ -1526,12 +1481,7 @@
           13,
           15
         ],
-        "y": [
-          3,
-          4,
-          5,
-          6
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
@@ -1549,8 +1499,8 @@
         "elite"
       ],
       "size": [
-        16,
-        8
+        10,
+        13
       ],
       "sleeps": {
         "singles": 1,
@@ -1564,7 +1514,7 @@
             1
           ],
           "at": [
-            5,
+            4,
             0
           ],
           "group": "sleep.bedside",
@@ -1577,7 +1527,7 @@
             2
           ],
           "at": [
-            6,
+            5,
             0
           ],
           "group": "sleep.bedside",
@@ -1585,44 +1535,16 @@
           "back": "north"
         },
         {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            10,
-            0
-          ],
-          "group": "storage.big.single",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "desk",
+          "role": "seat.lounge",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
             0,
-            1
-          ],
-          "group": "desk.seat",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            15,
             2
           ],
-          "group": "light.small.single.bedroom",
+          "group": "seat.lounge.single",
           "optional": true
         },
         {
@@ -1632,11 +1554,25 @@
             1
           ],
           "at": [
-            0,
-            3
+            9,
+            2
           ],
           "group": "desk.seat",
           "optional": false
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "desk.seat",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "decor.floor",
@@ -1645,8 +1581,8 @@
             2
           ],
           "at": [
-            14,
-            6
+            0,
+            7
           ],
           "group": "decor.floor.single",
           "optional": true
@@ -1658,11 +1594,38 @@
             1
           ],
           "at": [
-            1,
-            7
+            5,
+            8
           ],
           "group": "coat.single.bedroom",
           "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            9,
+            8
+          ],
+          "group": "storage.big.single",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            12
+          ],
+          "group": "light.small.single.bedroom",
+          "optional": true
         },
         {
           "role": "heat",
@@ -1671,25 +1634,12 @@
             1
           ],
           "at": [
-            5,
-            7
+            4,
+            12
           ],
           "group": "heat.single",
           "optional": false,
           "back": "south"
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            10,
-            7
-          ],
-          "group": "seat.lounge.single",
-          "optional": true
         }
       ],
       "doors": {
@@ -1698,65 +1648,65 @@
           1,
           2,
           3,
-          4,
+          6,
           7,
           8,
-          9,
-          12,
-          13,
-          14,
-          15
+          9
         ],
         "south": [
-          0,
+          1,
           2,
           3,
-          4,
+          6,
           7,
           8,
-          9,
-          11,
-          12,
-          13
+          9
         ],
         "west": [
           0,
+          1,
+          3,
           4,
           5,
           6,
-          7
+          9,
+          10,
+          11
         ],
         "east": [
           0,
           1,
-          3,
-          4,
-          5
+          5,
+          6,
+          7,
+          10,
+          11,
+          12
         ]
       },
       "stretch": {
-        "x": [],
+        "x": [
+          2
+        ],
         "y": [
-          3,
-          4,
-          5,
-          6
+          2,
+          3
         ]
       },
       "filler": {
         "at": [
-          1,
-          2
+          2,
+          4
         ],
         "size": [
-          13,
-          5
+          5,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.c",
-      "description": "A spacious, narrow single bedroom, bed against the north wall, a wardrobe against the north wall, a desk against the west wall, a lamp against the east wall, and open floor in the middle."
+      "description": "A spacious single bedroom, bed against the north wall, an armchair against the west wall, a desk against the east wall, a floor rug against the west wall, and open floor in the middle."
     },
     {
       "id": "bedroom.large.c.roomy.open",
@@ -1769,8 +1719,8 @@
         "elite"
       ],
       "size": [
-        12,
-        7
+        9,
+        10
       ],
       "sleeps": {
         "singles": 1,
@@ -1784,7 +1734,7 @@
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
           "group": "sleep.bedside",
@@ -1797,7 +1747,7 @@
             2
           ],
           "at": [
-            4,
+            1,
             0
           ],
           "group": "sleep.bedside",
@@ -1811,12 +1761,25 @@
             1
           ],
           "at": [
-            7,
+            4,
             0
           ],
           "group": "storage.big.single",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            1
+          ],
+          "group": "seat.lounge.single",
+          "optional": true
         },
         {
           "role": "desk",
@@ -1826,51 +1789,11 @@
           ],
           "at": [
             0,
-            1
+            5
           ],
           "group": "desk.seat",
           "optional": false,
           "back": "west"
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            11,
-            1
-          ],
-          "group": "heat.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "desk.seat",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            4
-          ],
-          "group": "light.small.single.bedroom",
-          "optional": true
         },
         {
           "role": "decor.floor",
@@ -1879,23 +1802,10 @@
             2
           ],
           "at": [
-            4,
+            6,
             5
           ],
           "group": "decor.floor.single",
-          "optional": true
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            11,
-            5
-          ],
-          "group": "seat.lounge.single",
           "optional": true
         },
         {
@@ -1905,79 +1815,113 @@
             1
           ],
           "at": [
-            0,
+            3,
             6
           ],
           "group": "coat.single.bedroom",
           "optional": false
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "desk.seat",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            9
+          ],
+          "group": "heat.single",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            9
+          ],
+          "group": "light.small.single.bedroom",
+          "optional": true
         }
       ],
       "doors": {
         "north": [
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "south": [
           0,
           1,
           2,
           5,
           6,
-          9,
-          10,
-          11
+          8
         ],
-        "south": [
+        "west": [
           1,
           2,
           3,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
-        ],
-        "west": [
-          0,
           4,
-          5
+          8,
+          9
         ],
         "east": [
           0,
+          2,
           3,
           4,
-          6
+          5,
+          6,
+          7,
+          8,
+          9
         ]
       },
       "stretch": {
         "x": [
           1,
-          2,
-          3,
-          4,
-          6,
-          7,
-          9,
-          10,
-          11
+          2
         ],
         "y": [
-          3,
-          4,
-          5
+          2,
+          3
         ]
       },
       "filler": {
         "at": [
-          1,
-          2
+          2,
+          3
         ],
         "size": [
-          7,
+          4,
           3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.c",
-      "description": "A spacious single bedroom, bed against the north wall, a wardrobe against the north wall, a desk against the west wall, a stove against the east wall, and open floor in the middle."
+      "description": "A spacious single bedroom, bed in the northwest corner, a wardrobe against the north wall, an armchair against the east wall, a desk against the west wall, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.a.grand.flush",
@@ -1999,26 +1943,13 @@
       },
       "pieces": [
         {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
+            5,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -2031,25 +1962,12 @@
             2
           ],
           "at": [
-            5,
+            6,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
         },
         {
           "role": "decor.floor",
@@ -2059,10 +1977,23 @@
           ],
           "at": [
             0,
-            4
+            1
           ],
           "group": "decor.floor.single.bedroom",
           "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "light.small.single",
+          "optional": false
         },
         {
           "role": "storage.big",
@@ -2094,26 +2025,24 @@
       ],
       "doors": {
         "north": [
+          0,
           1,
           2,
           3,
-          6
+          4
         ],
         "south": [
-          0,
           1,
           2,
           3
         ],
         "west": [
-          1,
+          0,
           2,
           3,
-          5
+          4
         ],
         "east": [
-          0,
-          1,
           2,
           3,
           4
@@ -2139,7 +2068,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northwest corner, a floor rug against the west wall, and a wardrobe in the southeast corner."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a floor rug against the west wall, a lamp in the southwest corner, and a wardrobe in the southeast corner."
     },
     {
       "id": "bedroom.medium.a.grand.open",
@@ -2152,27 +2081,14 @@
         "elite"
       ],
       "size": [
-        8,
-        6
+        6,
+        8
       ],
       "sleeps": {
         "singles": 1,
         "couples": 0
       },
       "pieces": [
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
         {
           "role": "bedside",
           "size": [
@@ -2201,16 +2117,30 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
-            1
+            0,
+            3
           ],
-          "group": "sleep.bedside.storage.small.opt",
+          "group": "storage.big.seat.opt",
           "optional": true
         },
         {
@@ -2220,99 +2150,76 @@
             1
           ],
           "at": [
-            0,
-            4
+            4,
+            6
           ],
           "group": "decor.floor.single.bedroom",
           "optional": true
         },
         {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            5
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            6,
-            5
+            0,
+            7
           ],
-          "group": "storage.big.seat.opt",
-          "optional": true
+          "group": "light.small.single",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
+          0,
           1,
           2,
-          3,
-          6,
-          7
+          3
         ],
         "south": [
-          0,
-          1,
-          2,
-          3,
-          7
-        ],
-        "west": [
-          1,
-          2,
-          3,
-          5
-        ],
-        "east": [
-          0,
           1,
           2,
           3,
           4,
           5
+        ],
+        "west": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
         ]
       },
       "stretch": {
         "x": [
           1,
-          2,
-          3,
-          4,
-          6
-        ],
-        "y": [
-          2,
-          3,
-          4,
           5
-        ]
+        ],
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
-          6,
-          3
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northwest corner, a floor rug against the west wall, a wardrobe opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug in the open middle, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.a.roomy.flush",
@@ -2335,17 +2242,18 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
+          "role": "storage.big",
           "size": [
-            2,
+            1,
             2
           ],
           "at": [
             0,
             0
           ],
-          "group": "decor.floor.single",
-          "optional": true
+          "group": "storage.big.single",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "bedside",
@@ -2354,7 +2262,7 @@
             1
           ],
           "at": [
-            4,
+            3,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -2367,7 +2275,7 @@
             2
           ],
           "at": [
-            5,
+            4,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -2375,18 +2283,17 @@
           "back": "north"
         },
         {
-          "role": "storage.big",
+          "role": "decor.floor",
           "size": [
-            1,
+            2,
             2
           ],
           "at": [
-            8,
+            7,
             0
           ],
-          "group": "storage.big.single",
-          "optional": false,
-          "back": "east"
+          "group": "decor.floor.single",
+          "optional": true
         },
         {
           "role": "storage.small",
@@ -2395,14 +2302,14 @@
             1
           ],
           "at": [
-            4,
+            3,
             1
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": true
         },
         {
-          "role": "light.small",
+          "role": "coat",
           "size": [
             1,
             1
@@ -2411,8 +2318,8 @@
             0,
             4
           ],
-          "group": "light.small.single",
-          "optional": false
+          "group": "coat.single",
+          "optional": true
         },
         {
           "role": "desk",
@@ -2442,7 +2349,7 @@
           "optional": false
         },
         {
-          "role": "coat",
+          "role": "light.small",
           "size": [
             1,
             1
@@ -2451,16 +2358,16 @@
             8,
             4
           ],
-          "group": "coat.single",
-          "optional": true
+          "group": "light.small.single",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
+          1,
           2,
-          3,
-          6,
-          7
+          5,
+          6
         ],
         "south": [
           1,
@@ -2479,13 +2386,13 @@
       },
       "stretch": {
         "x": [
-          0,
+          1,
           2,
           3,
           5,
           6,
           7,
-          8
+          9
         ],
         "y": [
           2,
@@ -2496,7 +2403,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a floor rug in the northwest corner, a wardrobe in the northeast corner, and a lamp in the southwest corner."
+      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe in the northwest corner, a floor rug in the northeast corner, and a coat rack in the southwest corner."
     },
     {
       "id": "bedroom.medium.a.roomy.open",
@@ -2509,27 +2416,14 @@
         "elite"
       ],
       "size": [
-        7,
-        5
+        5,
+        8
       ],
       "sleeps": {
         "singles": 1,
         "couples": 0
       },
       "pieces": [
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
         {
           "role": "bedside",
           "size": [
@@ -2558,19 +2452,6 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
-        },
-        {
           "role": "decor.floor",
           "size": [
             1,
@@ -2578,24 +2459,10 @@
           ],
           "at": [
             0,
-            3
+            2
           ],
           "group": "decor.floor.single.bedroom",
           "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            4
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
         },
         {
           "role": "seat",
@@ -2604,34 +2471,62 @@
             1
           ],
           "at": [
-            5,
-            4
+            4,
+            5
           ],
           "group": "storage.big.seat.opt",
           "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "light.small.single",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "east"
         }
       ],
       "doors": {
         "north": [
+          0,
           1,
-          2,
-          5,
-          6
+          2
         ],
         "south": [
           0,
           1,
           2,
-          6
+          3
         ],
         "west": [
-          1,
-          2,
-          4
-        ],
-        "east": [
           0,
           1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
           2,
           3,
           4
@@ -2640,14 +2535,10 @@
       "stretch": {
         "x": [
           1,
-          2,
-          3,
-          5
+          4
         ],
         "y": [
-          2,
-          3,
-          4
+          6
         ]
       },
       "filler": {
@@ -2656,14 +2547,14 @@
           2
         ],
         "size": [
-          5,
-          2
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northwest corner, a floor rug against the west wall, a wardrobe opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a floor rug against the west wall, a wardrobe in the southeast corner, a lamp in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.a.tight.flush",
@@ -2676,8 +2567,8 @@
         "modest"
       ],
       "size": [
-        6,
-        5
+        4,
+        8
       ],
       "sleeps": {
         "singles": 1,
@@ -2685,7 +2576,7 @@
       },
       "pieces": [
         {
-          "role": "desk",
+          "role": "storage.big",
           "size": [
             1,
             2
@@ -2694,7 +2585,7 @@
             0,
             0
           ],
-          "group": "desk.seat",
+          "group": "storage.big.single",
           "optional": false,
           "back": "west"
         },
@@ -2726,44 +2617,18 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
+          "role": "desk",
           "size": [
             1,
             2
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "storage.big.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
           ],
           "at": [
             0,
-            2
+            3
           ],
           "group": "desk.seat",
-          "optional": false
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "decor.floor",
@@ -2773,10 +2638,23 @@
           ],
           "at": [
             2,
-            3
+            4
           ],
           "group": "decor.floor.single",
           "optional": true
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "desk.seat",
+          "optional": false
         },
         {
           "role": "light.small",
@@ -2786,7 +2664,7 @@
           ],
           "at": [
             0,
-            4
+            7
           ],
           "group": "light.small.single",
           "optional": false
@@ -2798,8 +2676,8 @@
             1
           ],
           "at": [
-            5,
-            4
+            3,
+            7
           ],
           "group": "coat.single",
           "optional": true
@@ -2807,38 +2685,32 @@
       ],
       "doors": {
         "north": [
-          1,
-          4,
-          5
+          1
         ],
         "south": [
           1,
-          4
+          2
         ],
         "west": [
-          3
+          2,
+          6
         ],
         "east": [
-          0,
-          3
+          2,
+          3,
+          6
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          4,
-          5
+          4
         ],
-        "y": [
-          3,
-          5
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a desk in the northwest corner, a wardrobe against the east wall, and a floor rug opposite."
+      "description": "A mid-sized, narrow single bedroom, bed in the northeast corner, a wardrobe in the northwest corner, a desk against the west wall, and a floor rug against the east wall."
     },
     {
       "id": "bedroom.medium.a.tight.open",
@@ -2851,8 +2723,8 @@
         "elite"
       ],
       "size": [
-        7,
-        5
+        5,
+        8
       ],
       "sleeps": {
         "singles": 1,
@@ -2860,27 +2732,13 @@
       },
       "pieces": [
         {
-          "role": "desk",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "desk.seat",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            2,
+            3,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -2893,25 +2751,12 @@
             2
           ],
           "at": [
-            3,
+            4,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
         },
         {
           "role": "storage.big",
@@ -2920,12 +2765,12 @@
             2
           ],
           "at": [
-            6,
+            0,
             1
           ],
           "group": "storage.big.single",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
           "role": "seat",
@@ -2934,11 +2779,38 @@
             1
           ],
           "at": [
-            0,
-            2
+            4,
+            3
           ],
           "group": "desk.seat",
           "optional": false
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "coat.single",
+          "optional": true
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "desk.seat",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "decor.floor",
@@ -2947,8 +2819,8 @@
             2
           ],
           "at": [
-            2,
-            3
+            1,
+            6
           ],
           "group": "decor.floor.single",
           "optional": true
@@ -2960,63 +2832,46 @@
             1
           ],
           "at": [
-            0,
-            4
+            4,
+            7
           ],
           "group": "light.small.single",
           "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "coat.single",
-          "optional": true
         }
       ],
       "doors": {
         "north": [
+          0,
           1,
-          4,
-          5,
-          6
+          2
         ],
         "south": [
-          1,
-          4,
-          6
-        ],
-        "west": [
+          0,
           3
         ],
-        "east": [
+        "west": [
           0,
           3,
-          4
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          2,
+          6
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          4,
-          5,
-          6
+          4
         ],
-        "y": [
-          3
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          4,
-          1
+          2,
+          2
         ],
         "size": [
           2,
@@ -3026,7 +2881,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a desk in the northwest corner, a wardrobe against the east wall, a floor rug opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a desk against the east wall, a coat rack in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.b.grand.flush",
@@ -3048,26 +2903,13 @@
       },
       "pieces": [
         {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single.bedroom",
-          "optional": true
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
+            0,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -3080,7 +2922,7 @@
             2
           ],
           "at": [
-            5,
+            1,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -3088,16 +2930,16 @@
           "back": "north"
         },
         {
-          "role": "coat",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
-            5
+            6,
+            1
           ],
-          "group": "coat.single",
+          "group": "light.small.single.bedroom",
           "optional": true
         },
         {
@@ -3107,7 +2949,7 @@
             1
           ],
           "at": [
-            4,
+            0,
             5
           ],
           "group": "storage.big.storage.small.opt",
@@ -3121,24 +2963,38 @@
             1
           ],
           "at": [
-            6,
+            2,
             5
           ],
           "group": "storage.big.storage.small.opt",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "coat.single",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          1,
           2,
           3,
+          4,
+          5,
           6
         ],
         "south": [
-          1,
-          2,
-          3
+          3,
+          4,
+          5
         ],
         "west": [
           1,
@@ -3148,7 +3004,6 @@
         ],
         "east": [
           0,
-          1,
           2,
           3,
           4
@@ -3157,10 +3012,10 @@
       "stretch": {
         "x": [
           0,
-          1,
           2,
           3,
           4,
+          5,
           6,
           7
         ],
@@ -3174,7 +3029,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northwest corner, a coat rack in the southwest corner, and a wardrobe in the southeast corner."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a lamp against the east wall, a wardrobe in the southwest corner, and a coat rack in the southeast corner."
     },
     {
       "id": "bedroom.medium.b.grand.open",
@@ -3187,8 +3042,8 @@
         "elite"
       ],
       "size": [
-        8,
-        6
+        6,
+        8
       ],
       "sleeps": {
         "singles": 1,
@@ -3223,14 +3078,41 @@
           "back": "north"
         },
         {
-          "role": "light.small",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.storage.small.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
           "size": [
             1,
             1
           ],
           "at": [
             0,
+            3
+          ],
+          "group": "storage.big.storage.small.opt",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
             1
+          ],
+          "at": [
+            5,
+            6
           ],
           "group": "light.small.single.bedroom",
           "optional": true
@@ -3243,36 +3125,9 @@
           ],
           "at": [
             0,
-            5
+            7
           ],
           "group": "coat.single",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            5
-          ],
-          "group": "storage.big.storage.small.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "storage.big.storage.small.opt",
           "optional": true
         }
       ],
@@ -3281,60 +3136,50 @@
           0,
           1,
           2,
-          3,
-          6,
-          7
+          3
         ],
         "south": [
           1,
           2,
           3,
-          7
+          4,
+          5
         ],
         "west": [
           0,
-          2,
-          3,
-          4
+          4,
+          5,
+          6
         ],
         "east": [
-          0,
-          1,
           2,
           3,
           4,
-          5
+          5,
+          7
         ]
       },
       "stretch": {
         "x": [
           1,
-          2,
-          3,
-          4,
-          6
-        ],
-        "y": [
-          2,
-          3,
-          4,
           5
-        ]
+        ],
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
-          6,
-          3
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp against the west wall, a coat rack in the southwest corner, a wardrobe opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a lamp against the east wall, a coat rack in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.b.roomy.flush",
@@ -3348,8 +3193,8 @@
         "wealthy"
       ],
       "size": [
-        9,
-        5
+        5,
+        8
       ],
       "sleeps": {
         "singles": 1,
@@ -3357,26 +3202,13 @@
       },
       "pieces": [
         {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
           "role": "storage.small",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
+            3,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -3389,12 +3221,39 @@
             2
           ],
           "at": [
-            5,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": true
         },
         {
           "role": "light.small",
@@ -3403,23 +3262,23 @@
             1
           ],
           "at": [
-            8,
-            0
+            4,
+            4
           ],
           "group": "light.small.single",
           "optional": false
         },
         {
-          "role": "bedside",
+          "role": "decor.floor",
           "size": [
-            1,
-            1
+            2,
+            2
           ],
           "at": [
-            4,
-            1
+            0,
+            6
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "decor.floor.single",
           "optional": true
         },
         {
@@ -3429,86 +3288,54 @@
             1
           ],
           "at": [
-            0,
-            4
+            4,
+            7
           ],
           "group": "table.small.single",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            4
-          ],
-          "group": "storage.big.seat.opt",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          2,
-          3,
-          6,
-          7
+          0,
+          1,
+          2
         ],
         "south": [
-          1,
-          2,
-          3,
-          4,
-          8
-        ],
-        "west": [
           2,
           3
         ],
+        "west": [
+          0,
+          4,
+          5
+        ],
         "east": [
-          1,
           2,
           3,
-          4
+          5,
+          6
         ]
       },
       "stretch": {
         "x": [
-          0,
           2,
           3,
           4,
-          5,
-          7,
-          8,
-          9
+          5
         ],
         "y": [
-          2,
           3,
-          4
+          4,
+          5,
+          6,
+          8
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a floor rug in the northwest corner, a lamp in the northeast corner, and a small table in the southwest corner."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a lamp against the east wall, and a floor rug in the southwest corner."
     },
     {
       "id": "bedroom.medium.b.roomy.open",
@@ -3584,6 +3411,19 @@
           "optional": true
         },
         {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "light.small.single.bedroom",
+          "optional": true
+        },
+        {
           "role": "coat",
           "size": [
             1,
@@ -3594,19 +3434,6 @@
             6
           ],
           "group": "coat.single",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            6
-          ],
-          "group": "light.small.single.bedroom",
           "optional": true
         }
       ],
@@ -3619,6 +3446,7 @@
         "south": [
           1,
           2,
+          3,
           4
         ],
         "west": [
@@ -3630,23 +3458,15 @@
           2,
           3,
           4,
-          5,
           6
         ]
       },
       "stretch": {
         "x": [
           1,
-          2,
-          3,
           4
         ],
-        "y": [
-          3,
-          4,
-          5,
-          6
-        ]
+        "y": []
       },
       "filler": {
         "at": [
@@ -3655,13 +3475,13 @@
         ],
         "size": [
           3,
-          5
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a coat rack in the southwest corner, a lamp opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a lamp against the east wall, a coat rack in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.b.tight.flush",
@@ -3674,8 +3494,8 @@
         "modest"
       ],
       "size": [
-        5,
-        5
+        7,
+        4
       ],
       "sleeps": {
         "singles": 1,
@@ -3723,6 +3543,20 @@
           "optional": true
         },
         {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
           "role": "bedside",
           "size": [
             1,
@@ -3736,28 +3570,14 @@
           "optional": true
         },
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "east"
-        },
-        {
           "role": "decor.floor",
           "size": [
             2,
             2
           ],
           "at": [
-            1,
-            3
+            5,
+            2
           ],
           "group": "decor.floor.single",
           "optional": true
@@ -3769,208 +3589,63 @@
             1
           ],
           "at": [
-            4,
-            4
+            1,
+            3
           ],
           "group": "light.small.single",
           "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          3
-        ],
-        "south": [
-          0,
-          3
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          3,
-          4
-        ],
-        "east": [
-          3
-        ]
-      },
-      "stretch": {
-        "x": [
-          3,
-          4
-        ],
-        "y": [
-          3,
-          5
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.medium.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe in the northeast corner, a floor rug opposite, and a lamp in the southeast corner."
-    },
-    {
-      "id": "bedroom.medium.b.tight.open",
-      "family": "bedroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        5,
-        6
-      ],
-      "sleeps": {
-        "singles": 1,
-        "couples": 0
-      },
-      "pieces": [
+        },
         {
-          "role": "storage.small",
+          "role": "table.small",
           "size": [
             1,
             1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false
-        },
-        {
-          "role": "sleep",
-          "size": [
-            1,
-            2
           ],
           "at": [
             3,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": true
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
             3
           ],
-          "group": "storage.big.seat.opt",
+          "group": "table.small.single",
           "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            2,
-            4
-          ],
-          "group": "decor.floor.single",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "light.small.single",
-          "optional": false
         }
       ],
       "doors": {
         "north": [
           0,
-          1,
-          4
+          3
         ],
         "south": [
-          1,
+          0,
+          2,
           4
         ],
         "west": [
           0,
-          4
-        ],
-        "east": [
-          0,
           1,
           2,
-          3,
-          4,
-          5
+          3
+        ],
+        "east": [
+          1
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2
+          2,
+          3,
+          4,
+          5,
+          7
         ],
         "y": [
-          3,
+          2,
           4
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          3,
-          2
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe against the west wall, a floor rug opposite, a lamp in the southwest corner, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe in the northeast corner, a floor rug in the southeast corner, and a lamp opposite."
     },
     {
       "id": "bedroom.medium.c.grand.flush",
@@ -3983,8 +3658,8 @@
         "elite"
       ],
       "size": [
-        7,
-        6
+        6,
+        7
       ],
       "sleeps": {
         "singles": 1,
@@ -3998,7 +3673,7 @@
             1
           ],
           "at": [
-            1,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4011,7 +3686,7 @@
             2
           ],
           "at": [
-            2,
+            5,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4019,16 +3694,30 @@
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            5,
+            5
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "decor.floor.single.bedroom",
           "optional": true
         },
         {
@@ -4038,49 +3727,22 @@
             1
           ],
           "at": [
-            6,
-            1
+            0,
+            6
           ],
           "group": "light.small.single.bedroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "decor.floor.single.bedroom",
           "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          3,
-          4,
-          5,
-          6
+          1,
+          2,
+          3
         ],
         "south": [
+          1,
           2,
           3,
           4,
@@ -4088,39 +3750,38 @@
         ],
         "west": [
           0,
-          1,
-          2,
           3,
-          4
+          4,
+          5
         ],
         "east": [
-          0,
           2,
           3,
-          4
+          4,
+          6
         ]
       },
       "stretch": {
         "x": [
-          0,
+          1,
           2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "y": [
           3,
           4,
           5,
           6,
           7
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp against the east wall, a wardrobe in the southwest corner, and a floor rug in the southeast corner."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug against the east wall, and a lamp in the southwest corner."
     },
     {
       "id": "bedroom.medium.c.grand.open",
@@ -4133,8 +3794,8 @@
         "elite"
       ],
       "size": [
-        8,
-        6
+        6,
+        8
       ],
       "sleeps": {
         "singles": 1,
@@ -4148,7 +3809,7 @@
             1
           ],
           "at": [
-            1,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4161,7 +3822,7 @@
             2
           ],
           "at": [
-            2,
+            5,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4169,16 +3830,30 @@
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            5,
+            6
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "decor.floor.single.bedroom",
           "optional": true
         },
         {
@@ -4188,101 +3863,63 @@
             1
           ],
           "at": [
-            6,
-            1
+            0,
+            7
           ],
           "group": "light.small.single.bedroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "decor.floor.single.bedroom",
           "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          3,
-          4,
-          5,
-          6,
-          7
+          1,
+          2,
+          3
         ],
         "south": [
+          1,
           2,
           3,
           4,
-          5,
-          7
+          5
         ],
         "west": [
           0,
           1,
-          2,
-          3,
-          4
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
           4,
           5,
           6
         ],
-        "y": [
+        "east": [
           2,
           3,
           4,
-          5
+          5,
+          7
         ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          5
+        ],
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
-          6,
-          3
+          4,
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the open middle, a wardrobe in the southwest corner, a floor rug opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug against the east wall, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.c.roomy.flush",
@@ -4305,19 +3942,6 @@
       },
       "pieces": [
         {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
-        {
           "role": "bedside",
           "size": [
             1,
@@ -4345,17 +3969,17 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
+          "role": "light.small",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            0,
             1
           ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
+          "group": "light.small.single",
+          "optional": false
         },
         {
           "role": "decor.floor",
@@ -4365,7 +3989,7 @@
           ],
           "at": [
             0,
-            3
+            4
           ],
           "group": "decor.floor.single.bedroom",
           "optional": true
@@ -4400,19 +4024,19 @@
       ],
       "doors": {
         "north": [
+          0,
           1,
           2,
           5
         ],
         "south": [
-          0,
           1,
           2
         ],
         "west": [
-          1,
+          0,
           2,
-          4
+          3
         ],
         "east": [
           0,
@@ -4439,7 +4063,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.a",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northwest corner, a floor rug against the west wall, and a wardrobe in the southeast corner."
+      "description": "A mid-sized single bedroom, bed against the north wall, a lamp against the west wall, a floor rug in the southwest corner, and a wardrobe in the southeast corner."
     },
     {
       "id": "bedroom.medium.c.roomy.open",
@@ -4452,8 +4076,8 @@
         "elite"
       ],
       "size": [
-        7,
-        5
+        5,
+        7
       ],
       "sleeps": {
         "singles": 1,
@@ -4467,7 +4091,7 @@
             1
           ],
           "at": [
-            1,
+            3,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4480,7 +4104,7 @@
             2
           ],
           "at": [
-            2,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -4488,16 +4112,30 @@
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            4,
+            5
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "decor.floor.single.bedroom",
           "optional": true
         },
         {
@@ -4507,95 +4145,59 @@
             1
           ],
           "at": [
-            5,
-            1
+            0,
+            6
           ],
           "group": "light.small.single.bedroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "decor.floor.single.bedroom",
           "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          3,
-          4,
-          5,
-          6
+          1,
+          2
         ],
         "south": [
+          1,
           2,
           3,
-          4,
-          6
+          4
         ],
         "west": [
           0,
           1,
-          2,
-          3
+          4,
+          5
         ],
         "east": [
-          0,
-          1,
           2,
           3,
-          4
+          4,
+          6
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
-          5
-        ],
-        "y": [
-          2,
-          3,
+          1,
           4
-        ]
+        ],
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
-          5,
-          2
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the open middle, a wardrobe in the southwest corner, a floor rug opposite, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug against the east wall, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.c.tight.flush",
@@ -4644,6 +4246,19 @@
           "back": "north"
         },
         {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "light.small.single.bedroom",
+          "optional": true
+        },
+        {
           "role": "desk",
           "size": [
             1,
@@ -4656,19 +4271,6 @@
           "group": "desk.seat",
           "optional": false,
           "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "light.small.single.bedroom",
-          "optional": true
         },
         {
           "role": "seat",
@@ -4755,8 +4357,7 @@
         "north": [
           0,
           1,
-          4,
-          5
+          4
         ],
         "south": [
           1,
@@ -4767,28 +4368,24 @@
           4
         ],
         "east": [
-          0,
+          1,
           2,
           5
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          3,
           4,
           6
         ],
         "y": [
-          3,
           5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a desk against the west wall, a lamp against the east wall, and a floor rug against the east wall."
+      "description": "A mid-sized single bedroom, bed against the north wall, a lamp in the northeast corner, a desk against the west wall, and a floor rug against the east wall."
     },
     {
       "id": "bedroom.medium.c.tight.open",
@@ -4801,8 +4398,8 @@
         "elite"
       ],
       "size": [
-        6,
-        8
+        5,
+        9
       ],
       "sleeps": {
         "singles": 1,
@@ -4816,7 +4413,7 @@
             1
           ],
           "at": [
-            2,
+            0,
             0
           ],
           "group": "sleep.bedside",
@@ -4829,12 +4426,39 @@
             2
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "sleep.bedside",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "storage.big.single",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "seat.lounge.single",
+          "optional": true
         },
         {
           "role": "desk",
@@ -4844,11 +4468,24 @@
           ],
           "at": [
             0,
-            2
+            4
           ],
           "group": "desk.seat",
           "optional": false,
           "back": "west"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "coat.single.bedroom",
+          "optional": false
         },
         {
           "role": "light.small",
@@ -4857,8 +4494,8 @@
             1
           ],
           "at": [
-            5,
-            2
+            4,
+            5
           ],
           "group": "light.small.single.bedroom",
           "optional": true
@@ -4871,7 +4508,7 @@
           ],
           "at": [
             0,
-            4
+            6
           ],
           "group": "desk.seat",
           "optional": false
@@ -4883,51 +4520,11 @@
             2
           ],
           "at": [
-            4,
-            4
+            3,
+            7
           ],
           "group": "decor.floor.single",
           "optional": true
-        },
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            5
-          ],
-          "group": "seat.lounge.single",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "storage.big.single",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            7
-          ],
-          "group": "coat.single.bedroom",
-          "optional": false
         },
         {
           "role": "heat",
@@ -4936,8 +4533,8 @@
             1
           ],
           "at": [
-            4,
-            7
+            0,
+            8
           ],
           "group": "heat.single",
           "optional": false,
@@ -4946,54 +4543,47 @@
       ],
       "doors": {
         "north": [
-          0,
-          1,
-          4,
-          5
+          2
         ],
         "south": [
-          1,
-          3
+          2
         ],
         "west": [
-          0,
           1,
-          5
+          2,
+          3,
+          7
         ],
         "east": [
-          0,
           1,
+          2,
           3,
+          4,
           6
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          3,
-          4
+          2
         ],
         "y": [
-          2,
-          4,
-          6
+          4
         ]
       },
       "filler": {
         "at": [
           1,
-          2
+          3
         ],
         "size": [
-          3,
-          3
+          2,
+          2
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a desk against the west wall, a lamp against the east wall, a floor rug against the east wall, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a wardrobe in the northeast corner, an armchair in the open middle, a desk against the west wall, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.d.grand.flush",
@@ -5042,31 +4632,31 @@
           "back": "north"
         },
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
           "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            5
+            5,
+            1
           ],
           "group": "seat.single",
           "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "south"
         }
       ],
       "doors": {
@@ -5078,7 +4668,6 @@
         ],
         "south": [
           0,
-          2,
           3,
           4,
           5
@@ -5092,6 +4681,7 @@
         ],
         "east": [
           0,
+          2,
           3,
           4,
           5
@@ -5100,23 +4690,19 @@
       "stretch": {
         "x": [
           0,
-          1,
+          1
+        ],
+        "y": [
           2,
           3,
           4,
           5
-        ],
-        "y": [
-          3,
-          4,
-          5,
-          6
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
-      "description": "A mid-sized single bedroom, bed in the northwest corner, a wardrobe against the east wall, and a chair opposite."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a chair against the east wall, and a wardrobe opposite."
     },
     {
       "id": "bedroom.medium.d.grand.open",
@@ -5138,26 +4724,13 @@
       },
       "pieces": [
         {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.bedside.opt",
-          "optional": true
-        },
-        {
           "role": "sleep",
           "size": [
             1,
             2
           ],
           "at": [
-            2,
+            5,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -5167,16 +4740,16 @@
         {
           "role": "storage.big",
           "size": [
-            2,
-            1
+            1,
+            2
           ],
           "at": [
             0,
-            6
+            2
           ],
           "group": "storage.big.single.bedroom",
           "optional": true,
-          "back": "south"
+          "back": "west"
         },
         {
           "role": "seat",
@@ -5195,11 +4768,14 @@
       "doors": {
         "north": [
           0,
+          1,
+          2,
           3,
-          4,
-          5
+          4
         ],
         "south": [
+          0,
+          1,
           2,
           3,
           4
@@ -5207,14 +4783,11 @@
         "west": [
           0,
           1,
-          2,
-          3,
           4,
-          5
+          5,
+          6
         ],
         "east": [
-          0,
-          1,
           2,
           3,
           4,
@@ -5223,33 +4796,25 @@
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
+          1,
           5
         ],
-        "y": [
-          2,
-          3,
-          4,
-          5,
-          6
-        ]
+        "y": []
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
           4,
-          4
+          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe in the southwest corner, a chair in the southeast corner, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a chair in the southeast corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.d.roomy.flush",
@@ -5263,8 +4828,8 @@
         "wealthy"
       ],
       "size": [
-        5,
-        6
+        6,
+        5
       ],
       "sleeps": {
         "singles": 1,
@@ -5272,27 +4837,13 @@
       },
       "pieces": [
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "storage.big.storage.small.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -5305,12 +4856,39 @@
             2
           ],
           "at": [
-            4,
+            1,
             0
           ],
           "group": "sleep.bedside.opt",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "light.small.single.bedroom",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.storage.small.opt",
+          "optional": false,
+          "back": "south"
         },
         {
           "role": "storage.small",
@@ -5319,8 +4897,8 @@
             1
           ],
           "at": [
-            0,
-            2
+            2,
+            4
           ],
           "group": "storage.big.storage.small.opt",
           "optional": true
@@ -5332,67 +4910,54 @@
             1
           ],
           "at": [
-            0,
-            5
+            5,
+            4
           ],
           "group": "coat.single",
-          "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            5
-          ],
-          "group": "light.small.single.bedroom",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          1,
-          2
-        ],
-        "south": [
-          1,
-          2,
-          4
-        ],
-        "west": [
-          3,
-          4
-        ],
-        "east": [
           2,
           3,
           4,
           5
+        ],
+        "south": [
+          3,
+          4
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          0,
+          2,
+          3
         ]
       },
       "stretch": {
         "x": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "y": [
+          0,
           2,
           3,
           4,
           5,
           6
+        ],
+        "y": [
+          2,
+          3,
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe in the northwest corner, a coat rack in the southwest corner, and a lamp opposite."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a lamp against the east wall, a wardrobe in the southwest corner, and a coat rack in the southeast corner."
     },
     {
       "id": "bedroom.medium.d.roomy.open",
@@ -5420,7 +4985,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -5433,7 +4998,7 @@
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.bedside.opt",
@@ -5443,16 +5008,16 @@
         {
           "role": "storage.big",
           "size": [
-            2,
-            1
+            1,
+            2
           ],
           "at": [
-            0,
-            5
+            4,
+            2
           ],
           "group": "storage.big.single.bedroom",
           "optional": true,
-          "back": "south"
+          "back": "east"
         },
         {
           "role": "seat",
@@ -5461,7 +5026,7 @@
             1
           ],
           "at": [
-            4,
+            0,
             5
           ],
           "group": "seat.single",
@@ -5470,16 +5035,17 @@
       ],
       "doors": {
         "north": [
-          0,
+          2,
           3,
           4
         ],
         "south": [
+          1,
           2,
-          3
+          3,
+          4
         ],
         "west": [
-          0,
           1,
           2,
           3,
@@ -5488,22 +5054,19 @@
         "east": [
           0,
           1,
-          2,
-          3,
-          4
+          4,
+          5
         ]
       },
       "stretch": {
         "x": [
+          1,
           2,
           3,
           4
         ],
         "y": [
-          2,
-          3,
-          4,
-          5
+          4
         ]
       },
       "filler": {
@@ -5519,7 +5082,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
-      "description": "A mid-sized single bedroom, bed against the north wall, a wardrobe in the southwest corner, a chair in the southeast corner, and open floor in the middle."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a wardrobe against the east wall, a chair in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.medium.e.roomy.flush",
@@ -5533,8 +5096,8 @@
         "wealthy"
       ],
       "size": [
-        6,
-        5
+        5,
+        6
       ],
       "sleeps": {
         "singles": 1,
@@ -5548,7 +5111,7 @@
             1
           ],
           "at": [
-            1,
+            3,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -5561,7 +5124,7 @@
             2
           ],
           "at": [
-            2,
+            4,
             0
           ],
           "group": "sleep.storage.small.bedside.opt",
@@ -5569,16 +5132,30 @@
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            4,
+            4
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "decor.floor.single.bedroom",
           "optional": true
         },
         {
@@ -5588,83 +5165,55 @@
             1
           ],
           "at": [
-            5,
-            1
+            0,
+            5
           ],
           "group": "light.small.single.bedroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "decor.floor.single.bedroom",
           "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          3,
-          4,
-          5
+          1,
+          2
         ],
         "south": [
+          1,
           2,
           3,
           4
         ],
         "west": [
           0,
-          1,
-          2,
-          3
+          3,
+          4
         ],
         "east": [
-          0,
           2,
-          3
+          3,
+          5
         ]
       },
       "stretch": {
         "x": [
-          0,
+          1,
           2,
+          3,
+          4,
+          5
+        ],
+        "y": [
           3,
           4,
           5,
           6
-        ],
-        "y": [
-          2,
-          3,
-          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, a lamp against the east wall, a wardrobe in the southwest corner, and a floor rug in the southeast corner."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug against the east wall, and a lamp in the southwest corner."
     },
     {
       "id": "bedroom.medium.f.roomy.flush",
@@ -5714,31 +5263,31 @@
           "back": "north"
         },
         {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            4,
-            1
-          ],
-          "group": "storage.big.single.bedroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
           "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            4
+            4,
+            1
           ],
           "group": "seat.single",
           "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "storage.big.single.bedroom",
+          "optional": true,
+          "back": "south"
         }
       ],
       "doors": {
@@ -5749,7 +5298,6 @@
         ],
         "south": [
           0,
-          2,
           3,
           4
         ],
@@ -5761,6 +5309,7 @@
         ],
         "east": [
           0,
+          2,
           3,
           4
         ]
@@ -5768,21 +5317,18 @@
       "stretch": {
         "x": [
           0,
-          1,
+          1
+        ],
+        "y": [
           2,
           3,
           4
-        ],
-        "y": [
-          3,
-          4,
-          5
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
-      "description": "A mid-sized single bedroom, bed in the northwest corner, a wardrobe against the east wall, and a chair opposite."
+      "description": "A mid-sized single bedroom, bed in the northwest corner, a chair against the east wall, and a wardrobe opposite."
     },
     {
       "id": "bedroom.small.a.roomy.open",
@@ -5858,13 +5404,9 @@
       },
       "stretch": {
         "x": [
-          1,
-          2,
           3
         ],
-        "y": [
-          2
-        ]
+        "y": []
       },
       "filler": {
         "at": [
@@ -5892,8 +5434,8 @@
         "modest"
       ],
       "size": [
-        5,
-        4
+        3,
+        6
       ],
       "sleeps": {
         "singles": 1,
@@ -5907,7 +5449,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
@@ -5920,12 +5462,26 @@
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "west"
         },
         {
           "role": "light.small",
@@ -5934,23 +5490,23 @@
             1
           ],
           "at": [
-            4,
-            0
+            2,
+            3
           ],
           "group": "light.small.single",
           "optional": false
         },
         {
-          "role": "storage.small",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
-            1
+            0,
+            5
           ],
-          "group": "sleep.bedside.storage.small.opt",
+          "group": "storage.big.seat.opt",
           "optional": true
         },
         {
@@ -5960,76 +5516,41 @@
             1
           ],
           "at": [
-            4,
-            2
+            2,
+            5
           ],
           "group": "decor.floor.single.bedroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "storage.big.seat.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            3
-          ],
-          "group": "storage.big.seat.opt",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          3
+          2
         ],
         "south": [
-          3,
-          4
+          1
         ],
         "west": [
-          0,
           1,
           2
         ],
         "east": [
+          0,
           1,
-          3
+          2,
+          4
         ]
       },
       "stretch": {
         "x": [
-          0,
-          2,
-          3,
-          4,
-          5
+          1
         ],
-        "y": [
-          2,
-          3
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.a",
-      "description": "A small single bedroom, bed against the north wall, a lamp in the northeast corner, a floor rug against the east wall, and a wardrobe in the southwest corner."
+      "description": "A small, narrow single bedroom, bed in the northwest corner, a wardrobe in the southwest corner, a lamp against the east wall, and a floor rug in the southeast corner."
     },
     {
       "id": "bedroom.small.a.tight.open",
@@ -6042,8 +5563,8 @@
         "elite"
       ],
       "size": [
-        6,
-        4
+        4,
+        6
       ],
       "sleeps": {
         "singles": 1,
@@ -6051,16 +5572,16 @@
       },
       "pieces": [
         {
-          "role": "bedside",
+          "role": "storage.small",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
+            2,
             0
           ],
-          "group": "sleep.bedside.storage.small.opt",
+          "group": "sleep.storage.small.bedside.opt",
           "optional": false
         },
         {
@@ -6070,52 +5591,26 @@
             2
           ],
           "at": [
-            2,
+            3,
             0
           ],
-          "group": "sleep.bedside.storage.small.opt",
+          "group": "sleep.storage.small.bedside.opt",
           "optional": false,
           "back": "north"
         },
         {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "light.small.single",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            1
-          ],
-          "group": "sleep.bedside.storage.small.opt",
-          "optional": true
-        },
-        {
           "role": "storage.big",
           "size": [
-            2,
-            1
+            1,
+            2
           ],
           "at": [
             0,
-            3
+            1
           ],
           "group": "storage.big.seat.opt",
           "optional": false,
-          "back": "south"
+          "back": "west"
         },
         {
           "role": "seat",
@@ -6124,7 +5619,7 @@
             1
           ],
           "at": [
-            2,
+            0,
             3
           ],
           "group": "storage.big.seat.opt",
@@ -6133,64 +5628,68 @@
         {
           "role": "decor.floor",
           "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "decor.floor.single",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
             1,
             1
           ],
           "at": [
-            4,
-            3
+            0,
+            5
           ],
-          "group": "decor.floor.single.bedroom",
-          "optional": true
+          "group": "light.small.single",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
           0,
-          3,
-          5
+          1
         ],
         "south": [
-          3,
-          5
+          1
         ],
         "west": [
           0,
-          1,
-          2
+          4
         ],
         "east": [
-          0,
-          1,
           2,
           3
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4
+          1,
+          2
         ],
-        "y": [
-          2,
-          3
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          3,
+          1,
           1
         ],
         "size": [
           2,
-          2
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.small.a",
-      "description": "A small single bedroom, bed against the north wall, a lamp against the north wall, a wardrobe in the southwest corner, a floor rug opposite, and open floor in the middle."
+      "recipe": "bedroom.medium.b",
+      "description": "A small single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug in the southeast corner, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.small.b.tight.flush",
@@ -6211,139 +5710,6 @@
         "couples": 0
       },
       "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "sleep.bedside.opt",
-          "optional": true
-        },
-        {
-          "role": "sleep",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "sleep.bedside.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "storage.big.storage.small.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "storage.big.storage.small.opt",
-          "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "coat.single",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1
-        ],
-        "south": [
-          1,
-          2
-        ],
-        "west": [
-          0
-        ],
-        "east": [
-          2
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "y": [
-          3,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "bedroom.small.b",
-      "description": "A small single bedroom, bed in the northeast corner, a wardrobe in the southwest corner, and a coat rack in the southeast corner."
-    },
-    {
-      "id": "bedroom.small.b.tight.open",
-      "family": "bedroom",
-      "sizeBand": "small",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        4,
-        5
-      ],
-      "sleeps": {
-        "singles": 1,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "sleep.bedside.opt",
-          "optional": true
-        },
         {
           "role": "sleep",
           "size": [
@@ -6392,7 +5758,7 @@
             1
           ],
           "at": [
-            0,
+            1,
             3
           ],
           "group": "coat.single",
@@ -6401,63 +5767,52 @@
       ],
       "doors": {
         "north": [
+          0,
           2,
           3
         ],
         "south": [
           0,
+          2
+        ],
+        "west": [
+          0,
           1,
           2,
           3
         ],
-        "west": [
-          1,
-          2,
-          4
-        ],
         "east": [
-          0,
-          4
+          0
         ]
       },
       "stretch": {
         "x": [
-          1,
           2,
           3
         ],
         "y": [
-          2
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
           2,
-          2
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A small single bedroom, bed in the northwest corner, a wardrobe against the east wall, a coat rack against the west wall, and open floor in the middle."
+      "description": "A small single bedroom, bed against the north wall, a wardrobe in the southeast corner, and a coat rack opposite."
     },
     {
-      "id": "bedroom.small.c.tight.flush",
+      "id": "bedroom.small.b.tight.open",
       "family": "bedroom",
       "sizeBand": "small",
       "clearance": "tight",
-      "style": "flush",
+      "style": "open",
       "wealth": [
-        "poor",
-        "modest"
+        "wealthy",
+        "elite"
       ],
       "size": [
         4,
-        3
+        6
       ],
       "sleeps": {
         "singles": 1,
@@ -6465,16 +5820,16 @@
       },
       "pieces": [
         {
-          "role": "storage.small",
+          "role": "bedside",
           "size": [
             1,
             1
           ],
           "at": [
-            1,
+            2,
             0
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "sleep.bedside.storage.small.opt",
           "optional": false
         },
         {
@@ -6484,59 +5839,109 @@
             2
           ],
           "at": [
-            2,
+            3,
             0
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "sleep.bedside.storage.small.opt",
           "optional": false,
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
+            0,
+            3
+          ],
+          "group": "storage.big.seat.opt",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
             1,
             1
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "at": [
+            2,
+            4
+          ],
+          "group": "decor.floor.single.bedroom",
           "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "light.small.single",
+          "optional": false
         }
       ],
       "doors": {
         "north": [
           0,
-          3
+          1
         ],
         "south": [
-          0,
           1,
           2,
           3
         ],
         "west": [
           0,
-          1,
-          2
+          4
         ],
         "east": [
-          0,
-          1,
-          2
+          2,
+          3,
+          4,
+          5
         ]
       },
       "stretch": {
         "x": [
+          1,
           2
         ],
         "y": []
       },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          2,
+          3
+        ]
+      },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.small.c",
-      "description": "A small single bedroom, bed against the north wall."
+      "recipe": "bedroom.small.a",
+      "description": "A small single bedroom, bed in the northeast corner, a wardrobe against the west wall, a floor rug in the open middle, a lamp in the southwest corner, and open floor in the middle."
     },
     {
       "id": "bedroom.small.c.tight.open",
@@ -6558,67 +5963,75 @@
       },
       "pieces": [
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.storage.small.bedside.opt",
-          "optional": false
-        },
-        {
           "role": "sleep",
           "size": [
             1,
             2
           ],
           "at": [
-            2,
+            3,
             0
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "group": "sleep.bedside.opt",
           "optional": false,
           "back": "north"
         },
         {
-          "role": "bedside",
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "storage.big.storage.small.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
           "size": [
             1,
             1
           ],
           "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.storage.small.opt",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
             1,
             1
           ],
-          "group": "sleep.storage.small.bedside.opt",
+          "at": [
+            2,
+            4
+          ],
+          "group": "coat.single",
           "optional": true
         }
       ],
       "doors": {
         "north": [
           0,
-          3
+          1,
+          2
         ],
         "south": [
-          0,
           1,
-          2,
           3
         ],
         "west": [
           0,
-          1,
-          2,
-          3,
-          4
+          1
         ],
         "east": [
-          0,
-          1,
           2,
           3,
           4
@@ -6629,24 +6042,23 @@
           2
         ],
         "y": [
-          2,
-          3
+          4
         ]
       },
       "filler": {
         "at": [
           1,
-          2
+          1
         ],
         "size": [
           2,
-          2
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "bedroom.small.c",
-      "description": "A small single bedroom, bed against the north wall, open floor in the middle."
+      "recipe": "bedroom.small.b",
+      "description": "A small single bedroom, bed in the northeast corner, a wardrobe in the southwest corner, a coat rack opposite, and open floor in the middle."
     },
     {
       "id": "bedroom.small.d.tight.open",
@@ -6677,8 +6089,8 @@
             2,
             0
           ],
-          "group": "sleep.storage.small.opt",
-          "optional": true
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false
         },
         {
           "role": "sleep",
@@ -6690,7 +6102,7 @@
             3,
             0
           ],
-          "group": "sleep.storage.small.opt",
+          "group": "sleep.storage.small.bedside.opt",
           "optional": false,
           "back": "north"
         }
@@ -6719,8 +6131,87 @@
       },
       "stretch": {
         "x": [
+          2
+        ],
+        "y": [
+          2
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.small.c",
+      "description": "A small single bedroom, bed in the northeast corner, open floor in the middle."
+    },
+    {
+      "id": "bedroom.small.e.tight.open",
+      "family": "bedroom",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 1,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.storage.small.opt",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          0,
+          1,
           2,
           3
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
         ],
         "y": [
           2
@@ -6742,7 +6233,7 @@
       "description": "A small single bedroom, bed in the northeast corner, open floor in the middle."
     },
     {
-      "id": "bedroom.small.e.tight.open",
+      "id": "bedroom.small.f.tight.open",
       "family": "bedroom",
       "sizeBand": "small",
       "clearance": "tight",
@@ -6812,8 +6303,7 @@
       },
       "stretch": {
         "x": [
-          2,
-          3
+          2
         ],
         "y": [
           2
@@ -6846,7 +6336,7 @@
         "wealthy"
       ],
       "size": [
-        3,
+        2,
         2
       ],
       "sleeps": {
@@ -6855,26 +6345,13 @@
       },
       "pieces": [
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "sleep.storage.small.opt",
-          "optional": true
-        },
-        {
           "role": "sleep",
           "size": [
             1,
             2
           ],
           "at": [
-            2,
+            1,
             0
           ],
           "group": "sleep.storage.small.opt",
@@ -6887,8 +6364,7 @@
           0
         ],
         "south": [
-          0,
-          1
+          0
         ],
         "west": [
           0,
@@ -6897,9 +6373,7 @@
         "east": []
       },
       "stretch": {
-        "x": [
-          2
-        ],
+        "x": [],
         "y": [
           2
         ]
@@ -6938,8 +6412,8 @@
             0,
             0
           ],
-          "group": "sleep.storage.small.opt",
-          "optional": true
+          "group": "sleep.storage.small.bedside.opt",
+          "optional": false
         },
         {
           "role": "sleep",
@@ -6951,7 +6425,7 @@
             1,
             0
           ],
-          "group": "sleep.storage.small.opt",
+          "group": "sleep.storage.small.bedside.opt",
           "optional": false,
           "back": "north"
         }
@@ -6976,19 +6450,78 @@
         ]
       },
       "stretch": {
-        "x": [
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.small.c",
+      "description": "A cramped single bedroom, bed in the northwest corner."
+    },
+    {
+      "id": "bedroom.tiny.b.tight.flush",
+      "family": "bedroom",
+      "sizeBand": "tiny",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        2,
+        3
+      ],
+      "sleeps": {
+        "singles": 1,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.storage.small.opt",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
           0,
           1
+        ],
+        "west": [
+          0,
+          1,
+          2
+        ],
+        "east": [
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
         ],
         "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.a",
-      "description": "A cramped single bedroom, bed in the northwest corner."
+      "description": "A cramped single bedroom, bed in the northeast corner."
     },
     {
-      "id": "bedroom.tiny.b.tight.flush",
+      "id": "bedroom.tiny.c.tight.flush",
       "family": "bedroom",
       "sizeBand": "tiny",
       "clearance": "tight",
@@ -7007,19 +6540,6 @@
       },
       "pieces": [
         {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "sleep.bedside.opt",
-          "optional": true
-        },
-        {
           "role": "sleep",
           "size": [
             1,
@@ -7036,6 +6556,7 @@
       ],
       "doors": {
         "north": [
+          0,
           2
         ],
         "south": [
@@ -7044,6 +6565,7 @@
           2
         ],
         "west": [
+          0,
           1,
           2
         ],
@@ -7054,16 +6576,13 @@
         ]
       },
       "stretch": {
-        "x": [
-          0,
-          1
-        ],
+        "x": [],
         "y": []
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
-      "description": "A cramped single bedroom, bed in the northwest corner."
+      "description": "A cramped single bedroom, bed against the north wall."
     }
   ]
 }

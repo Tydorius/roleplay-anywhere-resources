@@ -28,6 +28,10 @@ from .library import SIDES
 
 BEAM_WIDTH = 24          # partial rooms kept per placement step
 BEAM_SHAPE_KEEP = 3      # states kept per distinct shape (groups x box)
+# when nothing comes out at the usual width, one wider pass before saying
+# no: a many-group recipe at tight can hold a legal room the narrow beam
+# starves out, and a recipe that fails both passes is honestly impossible
+BEAM_RETRY = (96, 6)     # (width, per-shape keep) of that second pass
 MAX_CANDIDATES = 6       # rooms returned, best first
 OPEN_BASES = 8           # flush rooms the open style grows variants from
 MAX_ROOM_SIDE = 30       # give up on runaway placements
@@ -35,10 +39,18 @@ GAP = {"tight": 1, "roomy": 2, "grand": 3}
 SLACK = (0, 1)           # extra rows on a side no wall-bound group fixed
 OPEN_GROWTH = (0, 1, 2)  # cells per axis the open style may add
 MIN_FILLER = 2           # the open middle, at least 2x2
+# the filler (a rug, a table in the open middle) at most this big, long
+# side first, either orientation, per clearance
+FILLER_MAX = {"tight": (3, 3), "roomy": (4, 3), "grand": (5, 4)}
+FILLER_ASPECT = 2        # a filler's long side at most twice its short
 MAX_ASPECT = 2.0         # long side never above this multiple of the short
 HALL_ASPECT = 2.5        # hall-like families read long, so they get more
 HALL_FAMILIES = ("chapel", "common_room", "dining", "hall", "taproom")
-GRAND_FLOOR = 25         # a grand room is at least a mid-sized room
+# a grand room is at least 19 cells: more than a lone anchor group and its
+# slack rows can ever fill (a bed group tops out at 6x3 = 18), so anything
+# kept at grand carries furniture beyond one group; the dead-floor rule,
+# not this floor, rejects sparse grand rooms
+GRAND_FLOOR = 19
 WEALTH = {"tight": ["poor", "modest"], "roomy": ["wealthy"], "grand": ["elite"]}
 # score weights, lower is better: area dominates, aspect and door sides
 # refine, symmetry earns its bonus where flagged, and at roomy and grand
@@ -48,6 +60,7 @@ SCORE_ASPECT = 5.0
 SCORE_DOOR_SIDE = 3.0
 SCORE_SYMMETRY = 5.0
 SCORE_WALLS_USED = 6.0
+SCORE_OPEN_DEAD = 3.0   # the open beam pays this per dead cell in the box
 
 
 def aspect_cap(family):
@@ -116,6 +129,16 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     if state is None:
         return ([], f"the anchor alone does not fit size band {size_band}")
     states = [state]
+    # an anchor with optional pieces also starts bare: the full form wins on
+    # area wherever it composes, and the bare one is what a tight room of a
+    # sparse recipe is made of (a symmetric room keeps the full form, whose
+    # mirror the parity was computed for)
+    if not symmetric:
+        minimal = _minimal_form(form)
+        if minimal is not None:
+            bare = _anchor_state(minimal, 0, ctx)
+            if bare is not None:
+                states.append(bare)
 
     units = []
     if mx > 1:
@@ -128,48 +151,69 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
                 "repeatable": "repeat"}[e.get("kind")]
         units.append((kind, e["group"], mn, mx))
 
-    for kind, gid, mn, mx in units:
-        states = _unit(states, kind, gid, mn, mx, ctx)
-        if not states:
-            note = f" inside size band {size_band}" if size_band else ""
-            if kind == "one":
-                return ([], f"cannot place required group {gid}{note}")
-            if kind == "repeat":
-                return ([], f"cannot place {mn} copies of {gid}{note}")
-            return ([], f"cannot place {gid}{note}")
+    def _pass(width, keep):
+        """One run of the units over the starting states at a beam width."""
+        ctx["beam_width"], ctx["beam_keep"] = width, keep
+        run = list(states)
+        for kind, gid, mn, mx in units:
+            run = _unit(run, kind, gid, mn, mx, ctx)
+            if not run:
+                note = f" inside size band {size_band}" if size_band else ""
+                if kind == "one":
+                    return ([], f"cannot place required group {gid}{note}")
+                if kind == "repeat":
+                    return ([], f"cannot place {mn} copies of {gid}{note}")
+                return ([], f"cannot place {gid}{note}")
 
-    cands = []
-    for st in states:
-        cands += _finish(st, ctx)
-    cands = _dedup_cands(cands)
-    if ctx["floor"]:
-        floored = [c for c in cands
-                   if c[2]["size"][0] * c[2]["size"][1] >= ctx["floor"]]
-        if not floored and cands:
-            # the recipe composes, but only rooms too small to be grand:
-            # grown to a grand size they would be dead floor end to end
-            return ([], f"{clearance}: too little furniture (dead floor)")
-        cands = floored
-    if not cands:
-        fails = ctx["fails"]
-        if fails.get("dead"):
-            return ([], f"{clearance}: too little furniture (dead floor)")
-        if fails.get("aspect"):
-            return ([], f"{clearance}: every candidate breaks the aspect cap")
-        if size_band:
-            return ([], f"no room fits size band {size_band}")
-        return ([], "no candidate passes the room checks")
-    cands.sort(key=lambda c: (c[0], c[1]))
-    if style == "open":
-        opened = _open(cands[:OPEN_BASES], ctx)
-        if not opened:
-            return ([], f"no open variant keeps a {MIN_FILLER}x{MIN_FILLER} "
-                        f"middle clear of every wall with its wall groups "
-                        f"on the walls")
-        opened.sort(key=lambda c: (c[0], c[1]))
-        cands = opened
-    rooms = _finalize([c[2] for c in cands[:MAX_CANDIDATES]], ctx)
-    return (rooms, None)
+        cands = []
+        for st in run:
+            cands += _finish(st, ctx)
+        cands = _dedup_cands(cands)
+        if ctx["floor"]:
+            floored = [c for c in cands
+                       if c[2]["size"][0] * c[2]["size"][1] >= ctx["floor"]]
+            if not floored and cands:
+                # the recipe composes, but only rooms too small to be
+                # grand: grown to a grand size they would be dead floor
+                # end to end
+                return ([], f"{clearance}: too little furniture (dead floor)")
+            cands = floored
+        if not cands:
+            fails = ctx["fails"]
+            if fails.get("dead"):
+                return ([], f"{clearance}: too little furniture (dead floor)")
+            if fails.get("aspect"):
+                return ([], f"{clearance}: every candidate breaks the "
+                            f"aspect cap")
+            if size_band:
+                return ([], f"no room fits size band {size_band}")
+            return ([], "no candidate passes the room checks")
+        cands.sort(key=lambda c: (c[0], c[1]))
+        if style == "open":
+            # the open style grows only the top bases, and a base whose
+            # walls are already lined is the one that can grow legally
+            # (every wall line keeps a piece except the filler's buffer),
+            # so they come first
+            cands.sort(key=lambda c: (c[0] - _covered(c[2]) * SCORE_WALLS_USED,
+                                      c[1]))
+            opened = _open(cands[:OPEN_BASES], ctx)
+            if not opened:
+                hi, lo = FILLER_MAX[clearance]
+                return ([], f"no open variant keeps a centred {MIN_FILLER}x"
+                            f"{MIN_FILLER} to {hi}x{lo} filler clear of "
+                            f"every wall with its wall groups on the walls")
+            opened.sort(key=lambda c: (c[0], c[1]))
+            cands = opened
+        rooms = _finalize([c[2] for c in cands[:MAX_CANDIDATES]], ctx)
+        return (rooms, None)
+
+    rooms, reason = _pass(BEAM_WIDTH, BEAM_SHAPE_KEEP)
+    if not rooms:
+        wider, wider_reason = _pass(*BEAM_RETRY)
+        if wider:
+            return (wider, None)
+        reason = wider_reason or reason
+    return (rooms, reason)
 
 
 # ------------------------------------------------------ recipes and counting
@@ -263,6 +307,21 @@ def _forms(gdef):
     return out
 
 
+def _minimal_form(form):
+    """The form holding only its required pieces, in the same box it fills
+    (a bed group's optional bed sides and chest stay off). An anchor's
+    optional pieces can make a tight room impossible — they wall the corners
+    off — and the room goes on without them the same way it goes on without
+    an optional group; None when every piece is required."""
+    pieces = [p for p in form["pieces"] if not p.get("optional")]
+    if len(pieces) == len(form["pieces"]):
+        return None
+    return {"gid": form["gid"], "pieces": pieces,
+            "w": max(p["at"][0] + p["size"][0] for p in pieces),
+            "h": max(p["at"][1] + p["size"][1] for p in pieces),
+            "back": form["back"]}
+
+
 def _mirror_form(form):
     """The form mirrored across the vertical axis of its own box."""
     w = form["w"]
@@ -285,14 +344,68 @@ def _self_mirrored(form):
 
 # ------------------------------------------------------------- search states
 
-def _box_score(minx, miny, maxx, maxy, walls, ctx):
+def _lines_covered(placed, minx, miny, maxx, maxy):
+    """How many of the box's four edge lines carry a piece cell (0-4). The
+    open style needs its walls lined — every wall line holds a piece except
+    the one the filler's buffer keeps clear — and no placement rule forces
+    that, so the open search pays for it."""
+    covered = set()
+    for g in placed:
+        for p in g["pieces"]:
+            x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
+            if y == miny:
+                covered.add("north")
+            if y + ph == maxy + 1:
+                covered.add("south")
+            if x == minx:
+                covered.add("west")
+            if x + pw == maxx + 1:
+                covered.add("east")
+    return len(covered)
+
+
+def _covered(room):
+    """How many of the room's four wall lines carry a piece cell (0-4)."""
+    w, h = room["size"]
+    return _lines_covered([{"pieces": room["pieces"]}], 0, 0, w - 1, h - 1)
+
+
+def _dead_in_box(placed, minx, miny, maxx, maxy, gap):
+    """How many cells of the box lie more than ``gap`` (Chebyshev) from every
+    piece — the same dead floor the checker flags on a room. An open style's
+    base must be alive: a base with dead corners only grows into open rooms
+    the checker rejects, so the open search pays for them up front."""
+    dead = 0
+    for cx in range(minx, maxx + 1):
+        for cy in range(miny, maxy + 1):
+            near = False
+            for g in placed:
+                for p in g["pieces"]:
+                    x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
+                    if max(x - cx, 0, cx - (x + pw - 1),
+                           y - cy, 0, cy - (y + ph - 1)) <= gap:
+                        near = True
+                        break
+                if near:
+                    break
+            if not near:
+                dead += 1
+    return dead
+
+
+def _box_score(placed, minx, miny, maxx, maxy, walls, ctx):
     """The beam's partial score: area with the aspect penalty, a heavy
     handicap for boxes past the family's aspect cap (a later group can grow
     the short side and bring such a box back into shape, so it stays in the
-    running, but far behind anything already within the cap), and at roomy
-    and grand a bonus for every wall a wall-bound group has already fixed
+    running, but far behind anything already within the cap), at roomy and
+    grand a bonus for every wall a wall-bound group has already fixed
     (capped at four, one per wall) so the search spreads groups around the
-    room instead of stringing them along one line."""
+    room instead of stringing them along one line, and for the open style a
+    bonus for every edge line already lined with a piece (an open room
+    tolerates no empty wall line beyond the filler's buffer) and a cost for
+    every dead cell, the two together keeping the states that can grow into
+    legal open rooms alive in the beam instead of losing tie-breaks to
+    look-alikes the checker would reject."""
     w, h = maxx - minx + 1, maxy - miny + 1
     aspect = max(w, h) / min(w, h)
     s = w * h * SCORE_AREA + max(0.0, aspect - 2.0) * SCORE_ASPECT
@@ -301,13 +414,17 @@ def _box_score(minx, miny, maxx, maxy, walls, ctx):
     if ctx["gap"] >= 2:
         s -= min(sum(1 for c in walls.values() if c is not None), 4) \
             * SCORE_WALLS_USED
+    if ctx["style"] == "open":
+        s -= _lines_covered(placed, minx, miny, maxx, maxy) * SCORE_WALLS_USED
+        s += _dead_in_box(placed, minx, miny, maxx, maxy,
+                          ctx["gap"]) * SCORE_OPEN_DEAD
     return s
 
 
 def _state(placed, minx, miny, maxx, maxy, walls, ctx):
     return {"placed": placed, "minx": minx, "miny": miny,
             "maxx": maxx, "maxy": maxy, "walls": walls,
-            "score": _box_score(minx, miny, maxx, maxy, walls, ctx),
+            "score": _box_score(placed, minx, miny, maxx, maxy, walls, ctx),
             "tb": ctx["rng"].random(),
             "key": tuple(sorted((g["gid"], g["x"], g["y"], g["w"], g["h"],
                                  tuple(sorted((p["role"], p["at"][0], p["at"][1],
@@ -481,7 +598,8 @@ def _trim(states, ctx):
     floods with variants of one compact shape and starves every other, so a
     shape that is a dead end two groups later (a two-band box that can never
     take the next piece without leaving the aspect cap) takes the whole beam
-    down with it; round-robin keeps the alternatives alive."""
+    down with it; round-robin keeps the alternatives alive. The width and
+    per-shape keep come from the pass (ctx), the retry pass running wider."""
     seen = set()
     stage = []
     for st in states:
@@ -495,13 +613,15 @@ def _trim(states, ctx):
         shape = (len(st["placed"]), st["maxx"] - st["minx"] + 1,
                  st["maxy"] - st["miny"] + 1)
         shapes.setdefault(shape, []).append(st)
+    width = ctx.get("beam_width", BEAM_WIDTH)
+    keep = ctx.get("beam_keep", BEAM_SHAPE_KEEP)
     out = []
-    for layer in range(BEAM_SHAPE_KEEP):
+    for layer in range(keep):
         for shape in shapes:
             sts = shapes[shape]
             if layer < len(sts):
                 out.append(sts[layer])
-                if len(out) == BEAM_WIDTH:
+                if len(out) == width:
                     return out
     return out
 
@@ -646,6 +766,10 @@ def _score(room):
         # at most four) spreads the furniture around the room
         used = len({p["back"] for p in room["pieces"] if p.get("back") in SIDES})
         s -= min(used, 4) * SCORE_WALLS_USED
+    if room.get("style") == "open":
+        # an open room reads right with its walls lined: every wall line
+        # holds a piece except the filler's buffer
+        s -= _covered(room) * SCORE_WALLS_USED
     if room.get("symmetric"):
         s -= SCORE_SYMMETRY
     return s
@@ -721,48 +845,50 @@ def _grown(room, gw, ge, gn, gs):
     return moved
 
 
-def _largest_clear(room):
-    """The largest all-free rectangle at least MIN_FILLER by MIN_FILLER that
-    touches no room edge — the open middle the filler (a rug, a table) goes
-    into, with a clear cell between it and every wall. None when no such
-    rectangle exists (a strip along a wall does not count)."""
+def _largest_clear(room, clearance):
+    """The largest clear rectangle that makes a legal filler at the
+    clearance: at least MIN_FILLER square, within FILLER_MAX (either
+    orientation), its long side at most FILLER_ASPECT times its short, and
+    centred — its distances to the west and east walls differ by at most 1,
+    and the same for north and south. Clear means no piece on it and a
+    clear cell to every wall. None when no such rectangle exists (a strip
+    along a wall does not count; nobody lays a 2x11 rug)."""
     w, h = room["size"]
-    if w < MIN_FILLER + 2 or h < MIN_FILLER + 2:
-        return None
+    hi, lo = FILLER_MAX[clearance]
     occupied = {(x, y) for x in range(w) for y in (0, h - 1)}
     occupied |= {(x, y) for y in range(h) for x in (0, w - 1)}
     for p in room["pieces"]:
         x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
         occupied |= {(cx, cy) for cx in range(x, x + pw)
                      for cy in range(y, y + ph)}
-    heights = [0] * w
     best = None
-    for y in range(h):
-        for x in range(w):
-            heights[x] = 0 if (x, y) in occupied else heights[x] + 1
-        stack = []
-        for x in range(w + 1):
-            hh = heights[x] if x < w else 0
-            start = x
-            while stack and stack[-1][1] > hh:
-                sx, sh = stack.pop()
-                if sh >= MIN_FILLER and x - sx >= MIN_FILLER:
-                    area = sh * (x - sx)
-                    if best is None or area > best[0]:
-                        best = (area, [sx, y - sh + 1], [x - sx, sh])
-                start = sx
-            stack.append((start, hh))
-    return None if best is None else {"at": best[1], "size": best[2]}
+    for fw in range(MIN_FILLER, min(w - 2, hi) + 1):
+        for fh in range(MIN_FILLER, min(h - 2, hi) + 1):
+            if max(fw, fh) > hi or min(fw, fh) > lo \
+                    or max(fw, fh) > FILLER_ASPECT * min(fw, fh):
+                continue
+            # centring leaves at most two positions per axis
+            for fx in {(w - fw) // 2, (w - fw + 1) // 2}:
+                for fy in {(h - fh) // 2, (h - fh + 1) // 2}:
+                    if any((cx, cy) in occupied
+                           for cx in range(fx, fx + fw)
+                           for cy in range(fy, fy + fh)):
+                        continue
+                    key = (fw * fh, min(fw, fh))
+                    if best is None or key > best[0]:
+                        best = (key, {"at": [fx, fy], "size": [fw, fh]})
+    return None if best is None else best[1]
 
 
 def _open(cands, ctx):
     """Open variants of the flush candidates: grow the room 1-2 cells on an
     axis (a symmetric room grows its columns in pairs), the wall-bound
-    groups riding their walls out, and keep the largest clear middle — off
-    every wall, at least MIN_FILLER square — as the filler area. Growth
-    variants that break a rule (an open room tolerates no empty wall line
-    beyond the filler's buffer) or leave the band drop out; when every
-    variant drops, the recipe has no open room."""
+    groups riding their walls out, and keep the largest clear middle that
+    makes a legal filler — within FILLER_MAX at the clearance, at most
+    FILLER_ASPECT to one, centred, off every wall. Growth variants that
+    break a rule (an open room tolerates no empty wall line beyond the
+    filler's buffer) or leave the band drop out; when every variant drops,
+    the recipe has no open room."""
     out = []
     for _, _, room in cands:
         for gx in OPEN_GROWTH:
@@ -774,7 +900,7 @@ def _open(cands, ctx):
                         if gx + gy == 0:
                             continue
                         grown = _grown(room, gw, gx - gw, gn, gy - gn)
-                        fill = _largest_clear(grown)
+                        fill = _largest_clear(grown, ctx["clearance"])
                         if fill is None:
                             continue
                         area = grown["size"][0] * grown["size"][1]

@@ -4,14 +4,17 @@ clearance (tight/roomy/grand) in each style (flush/open), seed 1, keeping
 the best room of each. Two rooms that are the same after any turn or mirror
 are one room; the survivor is the one that comes first in recipe, clearance
 and style order, which is the one with the lower id. Ids are
-<family>.<sizeBand>.<letter>.<clearance>.<style>, stable between runs, the
-letter counting the kept rooms of one family, band, clearance and style.
+<family>.<sizeBand>.<letter>.<clearance>.<style>, stable between runs and
+between regenerations: a room whose shape is already shipped keeps its id,
+and a new room takes the next free letter of its family, band, clearance
+and style.
 
   python library-seed/generate_rooms.py [family ...]
 
 Prints a table (per family: recipes, rooms kept, rooms dropped and why, the
 size range per band) and writes each family's rooms sorted by id with stable
-formatting; running it twice changes nothing.
+formatting; a room whose shape is already shipped keeps its id, so running
+the generator twice changes nothing.
 """
 import json
 import os
@@ -206,10 +209,29 @@ def _finalize(room, rid):
     return out
 
 
+def _shipped_ids(fam):
+    """canonical shape -> id for the family's shipped rooms, so a room that
+    still exists keeps its id across a regeneration (a changed rule drops
+    rooms without renaming the survivors)."""
+    path = os.path.join(ROOMS_DIR, f"{fam}.json")
+    if not os.path.isfile(path):
+        return {}
+    try:
+        with open(path, encoding="utf-8") as fh:
+            rooms = json.load(fh)["rooms"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return {}
+    return {canonical(r): r["id"] for r in rooms
+            if isinstance(r, dict) and isinstance(r.get("id"), str)}
+
+
 def generate(families=FAMILIES, seed=SEED):
     """The families' fixed rooms as ({family: [room, ...]}, drops), the rooms
     sorted by id and passing the fixed-room checker, the drops as
-    (layout, clearance, style, reason) per family. Deterministic per seed."""
+    (layout, clearance, style, reason) per family. A room whose canonical
+    shape is already shipped under the same family, band, clearance and
+    style keeps its shipped id; new rooms take the next free letter.
+    Deterministic per seed."""
     data = RG.load()
     lib = WL.load()
     out, all_drops = {}, {}
@@ -241,14 +263,31 @@ def generate(families=FAMILIES, seed=SEED):
                         continue
                     seen.add(canonical(best))
                     kept.append(best)
-        letters = {}
+        shipped = _shipped_ids(fam)
+        letters = {}        # group -> letters already on this run's ids
+        # an id is <family>.<band>.<letter>.<clearance>.<style>, and the
+        # family itself may hold dots (bedroom.master), so the letter sits
+        # after as many family parts as the family has
+        nparts = len(fam.split("."))
         rooms = []
         for room in kept:
             group = (room["sizeBand"], room["clearance"], room["style"])
-            n = letters.get(group, 0)
-            letters[group] = n + 1
-            rid = f"{fam}.{room['sizeBand']}.{LETTERS[n]}." \
-                  f"{room['clearance']}.{room['style']}"
+            used = letters.setdefault(group, set())
+            rid = shipped.get(canonical(room))
+            if rid is not None:
+                bits = rid.split(".")
+                if len(bits) != nparts + 4 or bits[:nparts] != fam.split(".") \
+                        or bits[nparts] != room["sizeBand"] \
+                        or bits[nparts + 2] != room["clearance"] \
+                        or bits[nparts + 3] != room["style"] \
+                        or bits[nparts + 1] in used \
+                        or bits[nparts + 1] not in LETTERS:
+                    rid = None
+            if rid is None:
+                ch = next(c for c in LETTERS if c not in used)
+                rid = f"{fam}.{room['sizeBand']}.{ch}." \
+                      f"{room['clearance']}.{room['style']}"
+            used.add(rid.split(".")[nparts + 1])
             rooms.append(_finalize(room, rid))
         rooms.sort(key=lambda r: r["id"])
         errors = FR.check(rooms, data, lib)

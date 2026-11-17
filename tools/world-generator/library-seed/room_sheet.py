@@ -1,7 +1,9 @@
 """Draw every room of a family as a grid of small plans in one PNG:
 pieces are colored boxes with a thin line along their back side, the open
 style's filler is hatched, door cells are marked on the walls, and each plan
-carries its id and size underneath.
+carries its id and size underneath on two lines — the family on the first,
+the rest of the id with the size on the second — so no label runs into the
+next plan.
 
   python library-seed/room_sheet.py <family> [--out <png>]
 
@@ -18,7 +20,8 @@ GEN = os.path.dirname(HERE)
 
 CELL = 12               # pixels per room cell
 PAD = 6                 # breathing room around a plan
-CAPTION = 16            # pixels under a plan for the id and size
+CAPTION = 30            # pixels under a plan for the two label lines
+LINE = 13               # pixels per label line
 GAP = 14                # between grid cells
 BORDER = (70, 70, 70)
 FLOOR = (252, 250, 246)
@@ -66,6 +69,16 @@ def _font(size=10):
         return ImageFont.load_default()
 
 
+def _label_lines(room):
+    """The plan's label on two lines: the family on the first, the rest of
+    the id with the size on the second — one line would run into the next
+    plan's label."""
+    parts = room["id"].split(".")
+    fam = ".".join(parts[:-4])
+    rest = ".".join(parts[-4:])
+    return (fam, f"{rest}  {room['size'][0]}x{room['size'][1]}")
+
+
 def _draw_plan(draw, room, ox, oy, font):
     """One room plan at (ox, oy): floor, pieces, filler, doors."""
     w, h = room["size"]
@@ -107,10 +120,10 @@ def _draw_plan(draw, room, ox, oy, font):
                 x = ox - 2 if side == "west" else ox + w * CELL - 3
                 y = oy + c * CELL + CELL // 4
                 draw.rectangle((x, y, x + 4, y + CELL // 2), fill=DOOR)
-    rid = f"{room['id']}  {w}x{h}"
-    tw = draw.textlength(rid, font=font)
-    draw.text((ox + (w * CELL - tw) // 2, oy + h * CELL + 3), rid,
-              font=font, fill=(40, 40, 40))
+    for i, text in enumerate(_label_lines(room)):
+        tw = draw.textlength(text, font=font)
+        draw.text((ox + (w * CELL - tw) // 2, oy + h * CELL + 4 + i * LINE),
+                  text, font=font, fill=(40, 40, 40))
 
 
 def render(family, out):
@@ -119,8 +132,12 @@ def render(family, out):
               encoding="utf-8") as fh:
         rooms = json.load(fh)["rooms"]
     font = _font()
+    labels = [_label_lines(r) for r in rooms]
     plan = max(r["size"][0] for r in rooms) * CELL
-    cell_w = plan + 2 * PAD
+    # a cell is as wide as the plan or the widest label line, whichever is
+    # more, so no label ever runs into the next cell
+    widest = max(font.getlength(t) for ls in labels for t in ls)
+    cell_w = max(plan, widest) + 2 * PAD
     cell_h = (max(r["size"][1] for r in rooms) * CELL
               + 2 * PAD + CAPTION)
     cols = 6
