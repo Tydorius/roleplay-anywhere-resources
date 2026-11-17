@@ -214,7 +214,7 @@ test('install then uninstall on a copy of 1.0, with 0.18 leftovers', { skip: !fs
 
     const out = run('install');
     assert.match(out, /Anywhere RPG 1\.0\)/);
-    assert.doesNotMatch(out, /warning/);
+    assert.match(out, /warning: this loader and its mods are for Anywhere RPG 1\.2, not 1\.0/);
     assert.match(out, /skipped: portals/);
     assert.match(out, /stale backup.*index-DSU_zx7g/);
     const page = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');

@@ -1,12 +1,13 @@
-# Code-mod loader 2.3.0
+# Code-mod loader 2.4.0
 
 Adds JavaScript mods to Anywhere RPG, beyond what config packs can do: for example new GM API
 calls, or changes to the prompts the game builds. It works like BepInEx does for Unity games,
 but for this Electron app. A patcher makes two small changes to the installed renderer bundle and
 loads your mod scripts before the game starts.
 
-**Game version:** built for **Anywhere RPG 1.0** (Steam alpha build 26557354, bundle
-`index-BrLojUrw.js`). The patcher prints the game's version and warns if it isn't 1.0. On another
+**Game version:** built for **Anywhere RPG 1.2** (Steam alpha build 26671108, bundle
+`index-DUXqcKgD.js`); every anchor was also verified on 1.0 (build 26557354, `index-BrLojUrw.js`).
+The patcher prints the game's version and warns if it isn't 1.2. On another
 version it still installs only when every patch anchor matches exactly once; otherwise it stops and
 changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 [`0.18` branch](https://github.com/Tydorius/roleplay-anywhere-resources/tree/0.18) or the
@@ -14,6 +15,7 @@ changes nothing. **Playing 0.18?** Use loader 1.0.0 from the
 
 | Version | Date | Changes |
 |---|---|---|
+| 2.4.0 | 2026-11-15 | Third-party packs: a pack that ships its own replacement game file (SMAQ is the first) is layered *under* the loader's patches instead of fighting over the file, and its config mods go into the game's mods folder (`pack`, `pack-remove`). Two anchors (perception, pointer-hits) also match the shapes SMAQ edits, so its fog and our `onPerceive`/`onHidden` compose. Install now checks for conflicts and reports them (see [Conflict detection](#conflict-detection)). Anchors verified on 1.2. |
 | 2.3.0 | 2026-11-11 | Seven new patches for hidden entities, drawn walls and per-walker doors: `onHidden` takes an entity off screen and out of pointer hits, `onWallRegions` rewrites the regions walls are drawn from (drawing only, never walking), `onDoor` decides per character which doors block walking and door swing (and can gate an unlocked door onto the door list), `onDoorway` filters the GM's doorway list, and `hasMechanic` is the game's own status test. |
 | 2.2.0 | 2026-11-10 | Two new render patches, liquid-canvas and ground-fade, add the `onLiquidCanvas` and `onGroundFade` hooks: mods can repaint a water/road chunk's colour and flow canvases (and override its blur radius) and reshape the fade at a region's ground edges. |
 | 2.1.0 | 2026-11-10 | Two new patches, line-of-sight and sight-blockers, give mods 1.0 stealth's own line-of-sight test (`lineOfSight`, `sightBlockers`) and `planeOf`; wall-aware perception answers with it and region groups never span two floors and take 1.0's doors off the joints between pieces. Both mods are ported to 1.0. |
@@ -48,6 +50,8 @@ The same from a terminal:
 node patch.mjs status              # game version, patched or not, which mods are installed
 node patch.mjs add [mods…]         # copy bundled mods in (none named: all but memory-add), then install
 node patch.mjs remove <mods…>      # take mods out, then install the rest
+node patch.mjs pack <dir> [ids…]   # third-party pack: its game file + config mods (none named: all)
+node patch.mjs pack-remove [ids…]  # take pack mods out (none named: the whole pack)
 node patch.mjs install             # patch (or re-patch) with whatever is in the code-mods folder
 node patch.mjs uninstall           # restore the original files
 ```
@@ -69,6 +73,59 @@ Mods live in a code-mods folder, one folder per mod with a `mod.js` in it:
 
 Put a mod folder there, then run `node patch.mjs install` again. The patcher copies mods into the
 game, so **re-run install after adding, changing or removing a mod**.
+
+## Third-party packs (SMAQ)
+
+Some mod creators ship a whole replacement game file plus config mods that only run through it —
+Sequester's SMAQ is the first. That file and this loader
+patch the same bundle, so copying it in by hand would undo the loader (and vice versa). Instead,
+let the loader layer it:
+
+```bash
+node patch.mjs pack "<extracted SMAQ folder>"                     # every mod the pack ships
+node patch.mjs pack "<extracted SMAQ folder>" passive-slots inventory-tabs   # just these
+node patch.mjs pack-remove inventory-tabs                          # take one mod out
+node patch.mjs pack-remove                                         # the whole pack
+```
+
+What that does:
+
+1. Reads the pack's `MANIFEST.json` and hash-checks its game file against its own manifest and
+   against your installed game (a release for another build is refused, changing nothing).
+2. Keeps the pack's file as a base layer — stock → pack's file → the loader's patches — with the
+   pack's own edits to perception and the pointer still working (its fog answer is the starting
+   answer `onPerceive` hooks see; its hidden entities and `onHidden` stack).
+3. Copies the pack's config mods into the game's own mods folder (`mods`, beside `code-mods`).
+   **Enable them in the game under Options → Mods, then restart** — that list is the game's own.
+4. Nothing is written until every check passes; `status` shows the pack, its version and its mods.
+
+The layer is kept beside the bundle as `index-*.js.arpg-pack` (+ `.json` metadata). `uninstall`
+restores the game's own files and reports the pack's mod folders it left behind (they sit inert
+without the pack's game file; `pack-remove` takes them out). After a game update, run
+`node patch.mjs pack "<the new release>"` with a release matching the new build — the old layer
+is cleared out automatically. Updating SMAQ: just run `pack` again with the new folder.
+
+## Conflict detection
+
+`install`, `pack` and `status` look for trouble before anything is written. **Install refuses and
+changes nothing** when:
+
+- a patch anchor doesn't match exactly once (the game or pack build changed), or
+- a pack's manifest hashes don't match its files, or your game files aren't the build the pack was
+  made from, or the game files changed underneath a recorded pack (an update), or
+- a *second*, different pack is already layered in.
+
+Softer findings are printed as `warning:` lines and install goes ahead:
+
+| Warning | Meaning |
+|---|---|
+| `patch "…" sits beside the pack's own edits` | One of our patches lands next to code the pack changed; both are applied — play-test that area. |
+| `GM call "…" is registered by mods A and B` | Two code mods add the same GM call; the later one wins at runtime. |
+| `api header "…" is added by mods A and B` | Same for the GM's action headers. |
+| `replacing "…" (its files differ)` | A pack mod folder already exists with different content. |
+| `two mods share the title "…"` | Two config-pack folders present the same title in Options → Mods. |
+| `"wall-aware-perception" and "exploration-fog" both change …` | A known code-mod/pack-mod overlap; hooks see the pack's answer first — play-test them together. |
+| `these config mods carry .mjs code … no pack layer is installed` | Pack config mods are present but inert, because the pack's game file isn't layered. |
 
 ## Bundled mods
 
@@ -98,13 +155,16 @@ game, so **re-run install after adding, changing or removing a mod**.
   `scenario.json`. See [its README](examples/lorebooks/README.md) for the format.
   **Works on 1.0.**
 
-Tests: `node --test tests/*.test.mjs` in this folder. One test patches the real 1.0 bundle when it
-finds a copy (set `ARPG_BUNDLE_10` to its path); otherwise it's skipped.
+Tests: `node --test tests/*.test.mjs` in this folder. Two of them patch the real bundles when
+they find copies (set `ARPG_BUNDLE_10`/`ARPG_BUNDLE_12` to the 1.0/1.2 bundle and `ARPG_SMAQ_DIR`
+to an extracted SMAQ release); otherwise they're skipped.
 
 ## After a game update or "Verify integrity"
 
 Steam puts the original files back, so the mods stop loading. Run `node patch.mjs install`
-again, or use the shortcut scripts beside it. Both work from any folder and pass extra arguments
+again, or use the shortcut scripts beside it. With a third-party pack layered in, you need a pack
+release for the new build: run `node patch.mjs pack "<new release folder>"` (the old layer for the
+older build is cleared out automatically). Both work from any folder and pass extra arguments
 such as `--game` through:
 
 - Windows: double-click `reinstall.cmd`. The window stays open so you can read the result.
@@ -116,15 +176,19 @@ updating, and the mods need play-testing on the new version.
 
 ## What the patcher changes
 
-All the original files are kept as `*.arpg-orig` beside the patched ones.
+All the original files are kept as `*.arpg-orig` beside the patched ones; a third-party pack's
+game file is kept as `*.arpg-pack` (+ its `.json` metadata) and layered under the patches.
 
 | File | Change |
 |---|---|
-| `resources/app/dist/assets/index-*.js` | Twenty-one small patches, each found by its content (see the next table). |
+| `resources/app/dist/assets/index-*.js` | Twenty-one small patches, each found by its content (see the next table) — applied over the pack layer when one is installed. |
+| `resources/app/dist/assets/index-*.js.arpg-pack` | The pack's replacement game file, when a pack is layered in (`pack`/`pack-remove` manage it). |
 | `resources/app/dist/index.html` | `<script>` tags for `arpg-mods/loader.js` and each mod, placed before the game bundle. |
 | `resources/app/dist/arpg-mods/` | The loader and the copied mods. |
 
-The bundle patches. Each must match exactly once, or install stops and changes nothing.
+The bundle patches. Each must match exactly once, or install stops and changes nothing. Two of
+them (`perception`, `pointer-hits`) also carry an anchor for the edited shape SMAQ leaves at that
+site, so they match its replacement file too.
 
 | Patch | Where | What mods get |
 |---|---|---|
@@ -136,7 +200,7 @@ The bundle patches. Each must match exactly once, or install stops and changes n
 | `region-destination` | Picking a standing spot inside a region | `__arpg.pieceFor`. |
 | `region-same-room` | The GM prompt's "same walled room as the player" test | `__arpg.sameRegion`. |
 | `sim-tick` | The start of each unpaused simulation step | `onTick`. |
-| `perception` | The straight-line "within notice range" test (14 cells) | `onPerceive`. |
+| `perception` | The straight-line "within notice range" test (14 cells) | `onPerceive`. On SMAQ's file the fog-aware shape matches instead, and the fog answer seeds `onPerceive`. |
 | `line-of-sight` | 1.0 stealth's line-of-sight test through walls and shut doors | `__arpg.lineOfSight`. |
 | `sight-blockers` | The walls and shut doors that test takes | `__arpg.sightBlockers`. |
 | `gm-prompt` | Where the GM prompt's head, sections and tail are built from the world and the context limits | `onPrompt`. |
@@ -144,7 +208,7 @@ The bundle patches. Each must match exactly once, or install stops and changes n
 | `ground-fade` | The region ground fade in the scene's groundOwners() | `onGroundFade`. |
 | `wall-regions` | The wall-edge builder every wall-drawing path uses (walls, wall-caster shadows, door info, the minimap) | `__arpg.wallRegions` (`onWallRegions`): rewrite the regions walls are drawn from. Drawing only — the simulation never calls this builder, so where anyone can walk never changes. |
 | `entity-hidden` | The scene's per-entity sprite sync, at its off-screen cull | `__arpg.hidden` (`onHidden`): take an entity off screen, with its label, shadows and light. |
-| `pointer-hits` | The pointer hit test behind hover, click, select and the context menu | `__arpg.hidden` again: a hidden entity can't be hovered or clicked. |
+| `pointer-hits` | The pointer hit test behind hover, click, select and the context menu | `__arpg.hidden` again: a hidden entity can't be hovered or clicked. Stacks with SMAQ's fog test on its file. |
 | `door-list` | The shared list of doors that may stop someone (only locked doors reach it) | `__arpg.doorGated` (`onDoor`): gate more doors onto the list. |
 | `door-pass-nav` | The per-walker door pass test at the end of the movement grid builder | `__arpg.doorPasses` (`onDoor`): decide, per walker, which doors become blocked edges for walking. |
 | `door-pass-swing` | The door swing test ("does this person hold it open?"; shut doors block sight) | `__arpg.doorPasses` again: the same per-walker say for door swing. |
