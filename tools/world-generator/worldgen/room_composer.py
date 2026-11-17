@@ -5,7 +5,11 @@ group — its parent — at the clearance gap, sliding along the parent so their
 spans overlap (never off a diagonal from it). A wall-bound group landing on
 the bounds edge fixes that edge as a wall and nothing later may cross it.
 The bounding box of the placed groups is the room; a side no group fixed
-gets 0 or 1 slack rows, both as candidates. A small beam search keeps the
+gets 0 or 1 slack rows, both as candidates. The box never leaves the
+family's aspect cap (MAX_ASPECT, looser for hall-like families), a placement
+never seals a placed piece off its use sides, and at roomy and grand the
+score pays for every wall the wall-bound groups spread over, so large rooms
+fill out instead of stringing along one line. A small beam search keeps the
 best partial rooms; a candidate counts only when fixed_rooms.check passes.
 
   compose(recipe, groups, clearance, style, seed, ...) -> (rooms, reason)
@@ -23,6 +27,7 @@ from .fixed_rooms import CLEARANCES, STYLES, SLEEP_COUPLE_ROLE, \
 from .library import SIDES
 
 BEAM_WIDTH = 24          # partial rooms kept per placement step
+BEAM_SHAPE_KEEP = 3      # states kept per distinct shape (groups x box)
 MAX_CANDIDATES = 6       # rooms returned, best first
 OPEN_BASES = 8           # flush rooms the open style grows variants from
 MAX_ROOM_SIDE = 30       # give up on runaway placements
@@ -30,13 +35,27 @@ GAP = {"tight": 1, "roomy": 2, "grand": 3}
 SLACK = (0, 1)           # extra rows on a side no wall-bound group fixed
 OPEN_GROWTH = (0, 1, 2)  # cells per axis the open style may add
 MIN_FILLER = 2           # the open middle, at least 2x2
+MAX_ASPECT = 2.0         # long side never above this multiple of the short
+HALL_ASPECT = 2.5        # hall-like families read long, so they get more
+HALL_FAMILIES = ("chapel", "common_room", "dining", "hall", "taproom")
+GRAND_FLOOR = 25         # a grand room is at least a mid-sized room
 WEALTH = {"tight": ["poor", "modest"], "roomy": ["wealthy"], "grand": ["elite"]}
 # score weights, lower is better: area dominates, aspect and door sides
-# refine, symmetry earns its bonus where flagged
+# refine, symmetry earns its bonus where flagged, and at roomy and grand
+# every wall the wall-bound groups fill earns the spread bonus
 SCORE_AREA = 1.0
 SCORE_ASPECT = 5.0
 SCORE_DOOR_SIDE = 3.0
 SCORE_SYMMETRY = 5.0
+SCORE_WALLS_USED = 6.0
+
+
+def aspect_cap(family):
+    """The most the long side may exceed the short side at any clearance or
+    style: hall-like rooms (a nave, a refectory, a taproom) read long, so
+    their cap is looser; everything else stays near square."""
+    f = family or ""
+    return HALL_ASPECT if f in HALL_FAMILIES or "hall" in f else MAX_ASPECT
 
 
 def compose(recipe, groups, clearance, style, seed, size_band=None,
@@ -72,6 +91,10 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     ctx = {"gap": GAP[clearance], "band": band, "symmetric": symmetric,
            "parity": 0, "clearance": clearance, "style": style,
            "family": family, "layout": layout, "gdefs": gdefs,
+           "cap": aspect_cap(family),
+           "floor": (GRAND_FLOOR if clearance == "grand" and not size_band
+                     else 0),
+           "fails": {},
            "rng": random.Random(seed), "sleepers": sleepers}
 
     # the anchor: one group, placed first, rotation 0 (north-facing); the
@@ -119,7 +142,20 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     for st in states:
         cands += _finish(st, ctx)
     cands = _dedup_cands(cands)
+    if ctx["floor"]:
+        floored = [c for c in cands
+                   if c[2]["size"][0] * c[2]["size"][1] >= ctx["floor"]]
+        if not floored and cands:
+            # the recipe composes, but only rooms too small to be grand:
+            # grown to a grand size they would be dead floor end to end
+            return ([], f"{clearance}: too little furniture (dead floor)")
+        cands = floored
     if not cands:
+        fails = ctx["fails"]
+        if fails.get("dead"):
+            return ([], f"{clearance}: too little furniture (dead floor)")
+        if fails.get("aspect"):
+            return ([], f"{clearance}: every candidate breaks the aspect cap")
         if size_band:
             return ([], f"no room fits size band {size_band}")
         return ([], "no candidate passes the room checks")
@@ -249,16 +285,29 @@ def _self_mirrored(form):
 
 # ------------------------------------------------------------- search states
 
-def _box_score(minx, miny, maxx, maxy):
+def _box_score(minx, miny, maxx, maxy, walls, ctx):
+    """The beam's partial score: area with the aspect penalty, a heavy
+    handicap for boxes past the family's aspect cap (a later group can grow
+    the short side and bring such a box back into shape, so it stays in the
+    running, but far behind anything already within the cap), and at roomy
+    and grand a bonus for every wall a wall-bound group has already fixed
+    (capped at four, one per wall) so the search spreads groups around the
+    room instead of stringing them along one line."""
     w, h = maxx - minx + 1, maxy - miny + 1
-    return (w * h * SCORE_AREA
-            + max(0.0, max(w, h) / min(w, h) - 2.0) * SCORE_ASPECT)
+    aspect = max(w, h) / min(w, h)
+    s = w * h * SCORE_AREA + max(0.0, aspect - 2.0) * SCORE_ASPECT
+    if aspect > ctx["cap"]:
+        s += (aspect - ctx["cap"]) * SCORE_ASPECT * 10 + 10 * SCORE_ASPECT
+    if ctx["gap"] >= 2:
+        s -= min(sum(1 for c in walls.values() if c is not None), 4) \
+            * SCORE_WALLS_USED
+    return s
 
 
 def _state(placed, minx, miny, maxx, maxy, walls, ctx):
     return {"placed": placed, "minx": minx, "miny": miny,
             "maxx": maxx, "maxy": maxy, "walls": walls,
-            "score": _box_score(minx, miny, maxx, maxy),
+            "score": _box_score(minx, miny, maxx, maxy, walls, ctx),
             "tb": ctx["rng"].random(),
             "key": tuple(sorted((g["gid"], g["x"], g["y"], g["w"], g["h"],
                                  tuple(sorted((p["role"], p["at"][0], p["at"][1],
@@ -282,10 +331,58 @@ def _anchor_state(form, ax, ctx):
     return _state(placed, minx, miny, maxx, maxy, walls, ctx)
 
 
+def _beyond_walls(walls, x, y):
+    """The cell lies past a wall some group fixed, so no room built on these
+    walls can ever hold it."""
+    return ((walls["north"] is not None and y < walls["north"])
+            or (walls["south"] is not None and y > walls["south"])
+            or (walls["west"] is not None and x < walls["west"])
+            or (walls["east"] is not None and x > walls["east"]))
+
+
+def _boxes_a_piece(placed, walls):
+    """True when some placed piece can never be used again: every cell on
+    its use sides is under a piece or past a fixed wall. A cell inside the
+    bounds that is free stays free (later groups keep the clearance gap),
+    and a free cell outside the bounds may still join the room when a later
+    group grows the box — unless a fixed wall rules it out, which is what
+    this catches (the bedside sealed in by its own bed, a chest and the
+    walls the search fixed around them)."""
+    occupied = set()
+    for g in placed:
+        for p in g["pieces"]:
+            x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
+            occupied |= {(cx, cy) for cx in range(x, x + pw)
+                         for cy in range(y, y + ph)}
+    for g in placed:
+        for p in g["pieces"]:
+            sides = fixed_rooms.use_sides(p, g["pieces"])
+            if not sides:
+                continue
+            x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
+            cells = []
+            for s in sides:
+                if s == "north":
+                    cells += [(cx, y - 1) for cx in range(x, x + pw)]
+                elif s == "south":
+                    cells += [(cx, y + ph) for cx in range(x, x + pw)]
+                elif s == "west":
+                    cells += [(x - 1, cy) for cy in range(y, y + ph)]
+                else:
+                    cells += [(x + pw, cy) for cy in range(y, y + ph)]
+            if not any(c not in occupied and not _beyond_walls(walls, *c)
+                       for c in cells):
+                return True
+    return False
+
+
 def _try_place(state, form, x, y, ctx, allow_growth=True):
     """One group form at (x, y): a clearance gap to every placed group, no
     crossing of a fixed wall, a wall-bound form flush on the edge it fixes,
-    and the room inside its caps. None when any rule fails."""
+    and no placement sealing a placed piece off its use sides. The box may
+    pass the family's aspect cap mid-search (a later group can grow the
+    short side); the cap is hard on the finished room. None when any rule
+    fails."""
     w, h = form["w"], form["h"]
     minx, miny = min(state["minx"], x), min(state["miny"], y)
     maxx, maxy = max(state["maxx"], x + w - 1), max(state["maxy"], y + h - 1)
@@ -330,6 +427,8 @@ def _try_place(state, form, x, y, ctx, allow_growth=True):
                                  "h": h, "back": form["back"],
                                  "pieces": [dict(p, at=[p["at"][0] + x, p["at"][1] + y])
                                             for p in form["pieces"]]},)
+    if walls != state["walls"] and _boxes_a_piece(placed, walls):
+        return None
     return _state(placed, minx, miny, maxx, maxy, walls, ctx)
 
 
@@ -376,16 +475,35 @@ def _placements(state, form, ctx, allow_growth=True):
 
 
 def _trim(states, ctx):
-    """Dedup by what stands where, then keep the best beam."""
+    """Dedup by what stands where, then keep the best partial rooms — the
+    champion of every distinct shape first (how many groups stand, in what
+    box), then each shape's runner-up, and so on. A plain best-first beam
+    floods with variants of one compact shape and starves every other, so a
+    shape that is a dead end two groups later (a two-band box that can never
+    take the next piece without leaving the aspect cap) takes the whole beam
+    down with it; round-robin keeps the alternatives alive."""
     seen = set()
-    out = []
+    stage = []
     for st in states:
         if st["key"] in seen:
             continue
         seen.add(st["key"])
-        out.append(st)
-    out.sort(key=lambda s: (s["score"], s["tb"]))
-    return out[:BEAM_WIDTH]
+        stage.append(st)
+    stage.sort(key=lambda s: (s["score"], s["tb"]))
+    shapes = {}
+    for st in stage:
+        shape = (len(st["placed"]), st["maxx"] - st["minx"] + 1,
+                 st["maxy"] - st["miny"] + 1)
+        shapes.setdefault(shape, []).append(st)
+    out = []
+    for layer in range(BEAM_SHAPE_KEEP):
+        for shape in shapes:
+            sts = shapes[shape]
+            if layer < len(sts):
+                out.append(sts[layer])
+                if len(out) == BEAM_WIDTH:
+                    return out
+    return out
 
 
 def _unit(states, kind, gid, mn, mx, ctx):
@@ -405,16 +523,28 @@ def _unit(states, kind, gid, mn, mx, ctx):
                 nxt += _placements(st, form, ctx)
         return _trim(nxt, ctx)
     if kind == "opt":
-        allow = ctx["band"] is not None
+        # optional groups may grow the room when a size band was given
+        # (whose slack they fill) and at roomy and grand, where the extra
+        # furniture is what fills the bigger room — but there they only
+        # ever fill: a placement that pushes the box past the aspect cap
+        # is left unmade and the room goes on without the group
+        allow = ctx["band"] is not None or ctx["gap"] >= 2
         nxt = []
         for st in states:
             for form in forms:
                 nxt += _placements(st, form, ctx, allow_growth=allow)
+        if allow and ctx["band"] is None:
+            nxt = [s for s in nxt
+                   if max(s["maxx"] - s["minx"] + 1, s["maxy"] - s["miny"] + 1)
+                   <= ctx["cap"]
+                   * min(s["maxx"] - s["minx"] + 1, s["maxy"] - s["miny"] + 1)]
         return _trim(nxt, ctx) if nxt else states
     # repeatable: copies form rows along walls and grids in the open, each
-    # placed from any parent at the gap; collect every state past mn copies
+    # placed from any parent at the gap; collect every state from mn copies
+    # up (with mn at zero the states before any copy count too — a recipe
+    # asking for one or two copies may rightly stop at one)
     active = states
-    done = []
+    done = list(states) if mn <= 0 else []
     for i in range(mx):
         nxt = []
         for st in active:
@@ -459,12 +589,17 @@ def _slack_variants(state, ctx):
 
 def _build_room(state, sw, se, sn, ss, ctx):
     """The room dict a finished state boxes into, doors derived from its
-    free edge cells (or None when the box leaves the size band)."""
+    free edge cells (or None when the box leaves the size band or the
+    aspect cap)."""
     x0 = state["minx"] - sw
     y0 = state["miny"] - sn
     w = state["maxx"] - state["minx"] + 1 + sw + se
     h = state["maxy"] - state["miny"] + 1 + sn + ss
+    if max(w, h) > ctx["cap"] * min(w, h):
+        ctx["fails"]["aspect"] = ctx["fails"].get("aspect", 0) + 1
+        return None
     if ctx["band"] and not ctx["band"][0] <= w * h <= ctx["band"][1]:
+        ctx["fails"]["band"] = ctx["fails"].get("band", 0) + 1
         return None
     pieces = []
     occupied = set()
@@ -506,6 +641,11 @@ def _score(room):
     s = area * SCORE_AREA
     s += max(0.0, max(w, h) / min(w, h) - 2.0) * SCORE_ASPECT
     s -= sum(1 for side in SIDES if room.get("doors", {}).get(side)) * SCORE_DOOR_SIDE
+    if room.get("clearance") in ("roomy", "grand"):
+        # every wall the wall-bound groups stand on (their pieces' backs,
+        # at most four) spreads the furniture around the room
+        used = len({p["back"] for p in room["pieces"] if p.get("back") in SIDES})
+        s -= min(used, 4) * SCORE_WALLS_USED
     if room.get("symmetric"):
         s -= SCORE_SYMMETRY
     return s
@@ -520,13 +660,20 @@ def _sig(room):
 
 def _finish(state, ctx):
     """Every slack variant of one finished state that checks out, as
-    (score, tie-break, room)."""
+    (score, tie-break, room). Variants the checker rejects are counted by
+    kind (dead floor, aspect cap, other) so compose can say why no room
+    came out."""
     out = []
     for sw, se, sn, ss in _slack_variants(state, ctx):
         room = _build_room(state, sw, se, sn, ss, ctx)
         if room is None:
             continue
-        if fixed_rooms.check([room], {"groups": ctx["gdefs"]}, None):
+        errors = fixed_rooms.check([room], {"groups": ctx["gdefs"]}, None)
+        if errors:
+            for e in errors:
+                kind = ("dead" if "dead floor" in e
+                        else "aspect" if "aspect" in e else "check")
+                ctx["fails"][kind] = ctx["fails"].get(kind, 0) + 1
             continue
         out.append((_score(room), ctx["rng"].random(), room))
     return out

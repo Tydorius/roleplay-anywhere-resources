@@ -70,6 +70,17 @@ def chapel_recipe():
             ]}
 
 
+def one_bed_recipe():
+    """A master bedroom of nothing but the couple bed and its bed sides: it
+    composes at tight and roomy, but a grand room of it would be dead floor
+    end to end."""
+    return {"layout": "bedroom.master.hand.one", "family": "bedroom.master",
+            "groups": [
+                {"group": "sleep.couple.bedside2", "kind": "anchor",
+                 "count": "couples"},
+            ]}
+
+
 class TestCompose(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -186,6 +197,32 @@ class TestCompose(unittest.TestCase):
                                    "flush", 1, size_band="tiny")
         self.assertEqual(rooms, [])
         self.assertTrue(reason)
+
+    def test_a_grand_master_room_spreads_within_the_cap(self):
+        """The master recipe at grand either comes back inside the aspect
+        cap, with no dead floor and its wall groups over at least two
+        walls, or says why not."""
+        rooms, reason = RC.compose(self.data["recipes"]["bedroom.master.medium.b"],
+                                   self.data, "grand", "flush", 1)
+        if not rooms:
+            self.assertTrue(reason)
+            return
+        for room in rooms:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertLessEqual(max(w, h),
+                                     RC.aspect_cap(room["family"]) * min(w, h))
+                self.assertEqual(FR.dead_cells(room), [])
+        backs = {p["back"] for p in rooms[0]["pieces"] if p.get("back")}
+        self.assertGreaterEqual(len(backs), 2, json.dumps(rooms[0]["pieces"]))
+
+    def test_one_bed_at_grand_is_dead_floor(self):
+        rooms, reason = RC.compose(one_bed_recipe(), self.data, "grand",
+                                   "flush", 1)
+        self.assertEqual(rooms, [])
+        self.assertIn("dead floor", reason)
+        self.assertTrue(self.compose(one_bed_recipe()))
+        self.assertTrue(self.compose(one_bed_recipe(), clearance="roomy"))
 
 
 if __name__ == "__main__":

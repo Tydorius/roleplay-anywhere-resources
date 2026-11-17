@@ -1,9 +1,10 @@
 """The generated room library: the shipped bedroom, master bedroom and
-washroom rooms load and check clean, every recipe of those families keeps at
-least one tight flush room, every open room's filler stays off every edge,
-no room wastes more than one line along a wall, the generator comes back the
-same for the same seed, and ids are unique and follow the
-family.band.letter.clearance.style pattern."""
+washroom rooms load and check clean, stay inside the family's aspect cap
+with no dead floor, every recipe of those families keeps at least one tight
+flush room, every open room's filler stays off every edge, no room wastes
+more than one line along a wall, the generator comes back the same for the
+same seed, and ids are unique and follow the family.band.letter.clearance
+.style pattern."""
 import importlib.util
 import json
 import os
@@ -15,6 +16,7 @@ GEN = os.path.dirname(HERE)
 
 from worldgen import fixed_rooms as FR      # noqa: E402
 from worldgen import library as WL          # noqa: E402
+from worldgen import room_composer as RC    # noqa: E402
 from worldgen import room_groups as RG      # noqa: E402
 
 FAMILIES = ("bedroom", "bedroom.master", "washroom")
@@ -72,6 +74,22 @@ class TestShippedRooms(unittest.TestCase):
         rooms = FR.load()
         self.assertGreater(len(rooms), 0)
         self.assertEqual(FR.check(rooms, RG.load(), WL.load()), [])
+
+    def test_every_shipped_room_stays_inside_the_aspect_cap(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            for room in rooms:
+                w, h = room["size"]
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(
+                        max(w, h), RC.aspect_cap(room["family"]) * min(w, h),
+                        f"{w}x{h}: the long side may be at most "
+                        f"{RC.aspect_cap(room['family']):g}x the short side")
+
+    def test_no_shipped_room_has_dead_floor(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            for room in rooms:
+                with self.subTest(room=room["id"]):
+                    self.assertEqual(FR.dead_cells(room), [])
 
     def test_every_recipe_keeps_a_tight_flush_room(self):
         data = RG.load()

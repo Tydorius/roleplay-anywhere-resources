@@ -7,6 +7,8 @@ means no rooms have been generated yet.
   load(path=None)                      -> [room, ...], each carrying "_file"
   check(rooms, groups=None, lib=None)  -> [error, ...], plain sentences
   use_sides(piece, siblings)           -> the sides a piece is used from
+  dead_cells(room)                     -> the free cells too far from every
+                                         piece to be walked on
   instances(room)                      -> the placed group instances as boxes
   rotate(room, quarter_turns, mirror=False) -> the turned room
   stretch_ok(room, axis, line, groups=None, lib=None) -> an error string, or
@@ -22,6 +24,7 @@ from .library import ID_RE, LIB_DIR, SIDES
 
 ROOMS_DIR = os.path.join(LIB_DIR, "rooms")
 CLEARANCES = ("tight", "roomy", "grand")
+CLEARANCE_GAP = {"tight": 1, "roomy": 2, "grand": 3}
 STYLES = ("flush", "open")
 # library.json's sizeBands, measured on the whole room now (there is no wall
 # ring to subtract). The composer labels rooms from this table without loading
@@ -360,6 +363,50 @@ def _side_cells(x, y, w, h, sides, W, H):
     return [c for c in out if 0 <= c[0] < W and 0 <= c[1] < H]
 
 
+def _aspect_cap(family):
+    """The family's cap on long side over short side, from the composer's
+    constant (imported, never copied; the import stays lazy because the
+    composer imports this module)."""
+    from . import room_composer
+    return room_composer.aspect_cap(family)
+
+
+def dead_cells(room):
+    """The room's dead floor: free cells more than the clearance's gap + 1
+    cells (Chebyshev) from every piece — floor nobody walks on between
+    furniture. In an open room the filler and the ring of cells around it
+    are walking floor too (the middle people cross), never dead. A room
+    whose size is broken reports no cells; its error is elsewhere."""
+    size = room.get("size")
+    if not _int_pair(size, 1):
+        return []
+    w, h = size
+    gap = CLEARANCE_GAP.get(room.get("clearance"), 1)
+    rects = [r for r in (_rect(p) for p in room.get("pieces") or []) if r]
+    filler = room.get("filler") if room.get("style") == "open" else None
+    if not (isinstance(filler, dict) and _int_pair(filler.get("at"))
+            and _int_pair(filler.get("size"), 1)):
+        filler = None
+    out = []
+    for x in range(w):
+        for y in range(h):
+            if any(_chebyshev(x, y, r) <= gap + 1 for r in rects):
+                continue
+            if filler is not None and _chebyshev(x, y, (filler["at"][0],
+                                                        filler["at"][1],
+                                                        filler["size"][0],
+                                                        filler["size"][1])) <= 1:
+                continue
+            out.append((x, y))
+    return out
+
+
+def _chebyshev(x, y, rect):
+    """The Chebyshev distance from a cell to a rectangle (0 inside it)."""
+    rx, ry, rw, rh = rect
+    return max(rx - x, 0, x - (rx + rw - 1), ry - y, 0, y - (ry + rh - 1))
+
+
 def _check_room(room, groups, lib, err, check_band=True):
     """Every rule that holds per room, as plain sentences through ``err``.
     ``check_band`` is off while validating a stretch line, where the inserted
@@ -387,6 +434,10 @@ def _check_room(room, groups, lib, err, check_band=True):
         err("size must be [w, h], 1-40 cells")
         return
     w, h = size
+    cap = _aspect_cap(room.get("family"))
+    if max(w, h) > cap * min(w, h):
+        err(f"aspect {w}x{h} is over the family cap {cap:g}: the long side "
+            f"may be at most {cap:g}x the short side")
     for key in ("outdoor", "symmetric"):
         if not isinstance(room.get(key), bool):
             err(f"{key} must be true or false")
@@ -507,6 +558,14 @@ def _check_room(room, groups, lib, err, check_band=True):
             if cell not in reach:
                 err(f"door cell {cell[0]},{cell[1]} is cut off from the "
                     f"other doors")
+    # dead floor: a free cell more than gap + 1 from every piece is floor
+    # nobody walks on (an open room's filler and its ring are walked)
+    dead = dead_cells(room)
+    if dead:
+        gap = CLEARANCE_GAP.get(room.get("clearance"), 1)
+        err(f"{len(dead)} dead floor cell(s) (first at {dead[0][0]},"
+            f"{dead[0][1]}): more than {gap + 1} cells from every piece at "
+            f"{room.get('clearance')} clearance")
     # use sides: a reached cell next to every piece it can be used from
     by_group = {}
     for i in ok:
@@ -659,8 +718,10 @@ def check(rooms, groups=None, lib=None):
     sentences starting with the file and room: pieces inside the room and not
     overlapping, wall-bound pieces flush against their wall, door cells valid
     and on at least two sides, every free cell reached from every door cell,
-    every piece reached on a use side, the open room's filler clear, reached
-    and off every wall, no wall carrying more empty lines than the slack line
+    no dead floor (a free cell more than the clearance's gap + 1 from every
+    piece), the long side within the family's aspect cap, every piece
+    reached on a use side, the open room's filler clear, reached and off
+    every wall, no wall carrying more empty lines than the slack line
     (flush) or the filler's buffer line (open), stretch lines truly
     insertable, sleep counts and size band matching the pieces, symmetry
     where flagged, and ids, families, roles and groups known. ``groups`` is

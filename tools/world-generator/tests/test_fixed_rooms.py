@@ -125,6 +125,108 @@ class TestChecker(unittest.TestCase):
         room = self.base(sizeBand="large")
         self.assertTrue(any("outside size band" in e for e in self.errors(room)))
 
+    def test_room_three_times_as_long_as_wide(self):
+        """A 6x2 bedroom whose only fault is the aspect: the long side is
+        three times the short, over the family cap of two."""
+        room = {
+            "id": "bedroom.hand.aspect", "family": "bedroom",
+            "sizeBand": "small", "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [6, 2],
+            "sleeps": {"singles": 0, "couples": 1},
+            "pieces": [
+                piece("sleep.couple", [2, 1], [0, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
+                piece("storage.big", [2, 1], [3, 0],
+                      "storage.big.single.bedroom.master", "north"),
+                piece("light.small", [1, 1], [5, 0],
+                      "light.small.single.bedroom.master1"),
+            ],
+            "doors": {"north": [], "south": [0, 1, 2, 3, 4, 5],
+                      "west": [1], "east": [1]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room three times as long as wide.",
+        }
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("aspect 6x2 is over the family cap 2: the long side "
+                      "may be at most 2x the short side", errors[0])
+
+    def test_grand_room_with_a_dead_corner(self):
+        """An 11x7 grand room whose furniture hugs the north and the two west
+        corners: the bottom right corner sits more than the grand gap plus
+        one from every piece, so its floor is dead."""
+        room = {
+            "id": "bedroom.master.hand.dead", "family": "bedroom.master",
+            "sizeBand": "large", "clearance": "grand", "style": "flush",
+            "wealth": ["wealthy", "elite"], "size": [11, 7],
+            "sleeps": {"singles": 0, "couples": 1},
+            "pieces": [
+                piece("sleep.couple", [2, 2], [0, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
+                piece("storage.big", [2, 1], [3, 0],
+                      "storage.big.single.bedroom.master", "north"),
+                piece("seat", [1, 1], [10, 0], "seat.single.bedroom.master",
+                      "north"),
+                piece("seat.lounge", [1, 1], [0, 6],
+                      "seat.lounge.single.bedroom.master", "south"),
+            ],
+            "doors": {"north": [5, 6, 7, 8, 9],
+                      "south": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                      "west": [2, 3, 4, 5], "east": [1, 2, 3, 4, 5, 6]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.master.large.b",
+            "description": "A hand-made room with a dead corner.",
+        }
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("11 dead floor cell(s) (first at 5,6): more than 4 "
+                      "cells from every piece at grand clearance", errors[0])
+
+    def test_open_filler_and_its_ring_are_not_dead_floor(self):
+        """A 13x11 grand open room whose filler centre is more than the grand
+        gap plus one from every piece: the filler and the ring of cells
+        around it are walkable floor, so the room checks clean — the same
+        room without its filler is the dead-floor room above."""
+        room = {
+            "id": "bedroom.master.hand.ring", "family": "bedroom.master",
+            "sizeBand": "large", "clearance": "grand", "style": "open",
+            "wealth": ["wealthy", "elite"], "size": [13, 11],
+            "sleeps": {"singles": 0, "couples": 1},
+            "pieces": [
+                piece("sleep.couple", [2, 2], [0, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
+                piece("storage.big", [2, 1], [3, 0],
+                      "storage.big.single.bedroom.master", "north"),
+                piece("seat", [1, 1], [12, 0], "seat.single.bedroom.master",
+                      "north"),
+                piece("light.small", [1, 1], [12, 5],
+                      "light.small.single.bedroom.master1"),
+                piece("wash.basin", [1, 1], [0, 10], "wash.basin.single",
+                      "south"),
+                piece("seat.lounge", [1, 1], [5, 10],
+                      "seat.lounge.single.bedroom.master", "south"),
+                piece("heat", [2, 1], [11, 10],
+                      "heat.single.bedroom.master", "south"),
+            ],
+            "doors": {"north": [5, 6, 7, 8, 9, 10, 11],
+                      "south": [1, 2, 3, 4, 6, 7, 8, 9, 10],
+                      "west": [2, 3, 4, 5, 6, 7, 8, 9],
+                      "east": [1, 2, 3, 4, 6, 7, 8, 9]},
+            "filler": {"at": [5, 4], "size": [3, 3]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.master.large.b",
+            "description": "A hand-made room around an open middle.",
+        }
+        self.assertEqual(self.errors(room), [])
+        self.assertEqual(FR.dead_cells(room), [])
+        flushed = {k: v for k, v in room.items() if k != "filler"}
+        flushed["style"] = "flush"
+        self.assertTrue(any("dead floor" in e for e in self.errors(flushed)))
+
     def test_sleeps_must_match_the_pieces(self):
         room = self.base(sleeps={"singles": 2, "couples": 0})
         self.assertTrue(any("does not match the pieces" in e
