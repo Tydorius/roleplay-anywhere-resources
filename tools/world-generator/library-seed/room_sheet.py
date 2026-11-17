@@ -40,6 +40,7 @@ ROLES = (  # specific prefixes first: _color takes the first match
     ("desk", (163, 117, 61)),
     ("counter", (163, 117, 61)),
     ("light", (230, 195, 76)),
+    ("hearth", (230, 57, 70)),
     ("heat", (211, 84, 0)),
     ("fuel", (211, 84, 0)),
     ("coat", (120, 144, 156)),
