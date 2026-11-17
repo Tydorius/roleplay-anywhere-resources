@@ -339,6 +339,105 @@
       ]
     },
     {
+      "id": "hearth.gas_fireplace",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.7,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "gas fireplace"
+      },
+      "parts": {
+        "surround": "stone",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "modern": {
+          "surround": "metal"
+        }
+      },
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a {pane} front over ceramic coals, its ring of gas flames warming the room at the turn of a tap.",
+        "physical": "Top-down view of a wall {noun}: a {surround.color} {surround} slab along the top wall, a dark firebox behind {pane.color} {pane} with small blue-rimmed gas flames, a slim control strip along the bottom edge."
+      },
+      "aliases": [
+        "gas fire",
+        "gas insert"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hearth.electric_fireplace",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "electric fireplace"
+      },
+      "parts": {
+        "frame": "metal",
+        "beads": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} slim {noun} on the wall, its LED flames rippling over {beads.color} {beads} beads and warm air rising from the vents below.",
+        "physical": "Top-down view of a wall {noun}: a thin {frame.color} {frame} unit flush along the top wall, a wide {beads.color} {beads}-bead firebed with bright LED flames playing across it, a vent line along the bottom edge."
+      },
+      "aliases": [
+        "electric fire",
+        "wall fireplace"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
       "id": "stove.cookfire",
       "category": "stove",
       "size": [

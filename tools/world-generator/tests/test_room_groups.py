@@ -1,8 +1,9 @@
 """The furniture groups: the shipped files check clean, every layout has one
 recipe with one anchor, the hand-authored luxury file loads with its pools
-and stays out of the converter's way, conversion matches hand-checked
-expectations, each check catches its mistake, and converting twice gives
-the same output."""
+(every group declaring a valid luxury kind, the fireplace seating counting
+as both hearth and seating) and stays out of the converter's way,
+conversion matches hand-checked expectations, each check catches its
+mistake, and converting twice gives the same output."""
 import contextlib
 import importlib.util
 import io
@@ -61,6 +62,25 @@ class TestShipped(unittest.TestCase):
             for p in g["pieces"]:
                 with self.subTest(group=gid, piece=p.get("role")):
                     self.assertIn(p.get("minWealth"), ("wealthy", "elite"))
+
+    def test_every_luxury_group_has_a_valid_kind(self):
+        for gid, g in self.data["groups"].items():
+            if not str(gid).startswith("lux."):
+                continue
+            with self.subTest(group=gid):
+                kinds = RG.luxury_kinds(g)
+                self.assertTrue(kinds, "no kind")
+                self.assertTrue(set(kinds) <= set(RG.LUXURY_KINDS), kinds)
+
+    def test_the_fireplace_group_counts_as_hearth_and_seating(self):
+        old = "lux.heat.seat.lounge2.table.small"
+        self.assertNotIn(old, self.data["groups"])
+        g = self.data["groups"]["lux.hearth.seat.lounge2.table.small"]
+        self.assertEqual(RG.luxury_kinds(g), ("hearth", "seating"))
+        self.assertIn("hearth", [p.get("role") for p in g["pieces"]])
+        for fam, entries in self.data["pools"].items():
+            for e in entries:
+                self.assertNotEqual(e["group"], old, (fam, e["group"]))
 
 
 class TestConversion(unittest.TestCase):
@@ -238,10 +258,12 @@ class TestChecker(unittest.TestCase):
 
     def pools(self):
         """The base fixture plus a clean pool: every piece of a pooled
-        group carries minWealth wealthy or elite, or the pool is an error."""
+        group carries minWealth wealthy or elite and the group a valid
+        luxury kind, or the pool is an error."""
         data = self.base()
         for p in data["groups"]["sleep.couple.bedside2"]["pieces"]:
             p["minWealth"] = "wealthy"
+        data["groups"]["sleep.couple.bedside2"]["kind"] = "seating"
         data["pools"] = {"bedroom": [
             {"group": "sleep.couple.bedside2", "bands": ["small"],
              "_file": "bedroom.json"},
@@ -376,6 +398,18 @@ class TestChecker(unittest.TestCase):
         data = self.pools()
         del data["groups"]["sleep.couple.bedside2"]["pieces"][0]["minWealth"]
         self.assertTrue(any("without minWealth" in e for e in self.errors(data)))
+
+    def test_pool_group_without_a_kind_is_an_error(self):
+        data = self.pools()
+        del data["groups"]["sleep.couple.bedside2"]["kind"]
+        self.assertTrue(any("needs a kind" in e for e in self.errors(data)))
+
+    def test_pool_group_with_an_unknown_kind_is_an_error(self):
+        data = self.pools()
+        data["groups"]["sleep.couple.bedside2"]["kind"] = "bed"
+        self.assertTrue(any("needs a kind" in e for e in self.errors(data)))
+        data["groups"]["sleep.couple.bedside2"]["kind"] = ["seating", "bed"]
+        self.assertTrue(any("needs a kind" in e for e in self.errors(data)))
 
     def test_duplicate_id_across_files_is_an_error(self):
         group = self.base()["groups"]["sleep.couple.bedside2"]

@@ -12,8 +12,14 @@ score pays for every wall the wall-bound groups spread over, so large rooms
 fill out instead of stringing along one line. A grand private room
 (PRIVATE_FAMILIES) keeps the roomy gap and spends the space on its luxury
 pool instead: the pool's groups join the recipe's optionals at grand, each
-inside the size bands the pool gives it. A small beam search keeps the
-best partial rooms; a candidate counts only when fixed_rooms.check passes.
+inside the size bands the pool gives it, one group of each luxury kind at
+most (LUXURY_LIMITS, decor two groups and three pieces) and never doubling
+a role the recipe itself already places (EXCLUSIVE_ROLES: no second desk,
+bed or fire). A grand private room also stays inside max_area, the grand
+area cap its caller derives from the roomy sibling (GRAND_AREA_RATIO), so
+optional groups join only while the cap holds. A small beam search keeps
+the best partial rooms; a candidate counts only when fixed_rooms.check
+passes.
 
   compose(recipe, groups, clearance, style, seed, ...) -> (rooms, reason)
 
@@ -28,6 +34,7 @@ from . import fixed_rooms
 from .fixed_rooms import CLEARANCES, STYLES, SLEEP_COUPLE_ROLE, \
     SLEEP_SINGLE_ROLES, TURN
 from .library import SIDES
+from .room_groups import luxury_kinds
 
 BEAM_WIDTH = 24          # partial rooms kept per placement step
 BEAM_SHAPE_KEEP = 3      # states kept per distinct shape (groups x box)
@@ -59,6 +66,23 @@ PRIVATE_FAMILIES = ("bedroom", "bedroom.master", "washroom", "cell", "hut",
 # not this floor, rejects sparse grand rooms
 GRAND_FLOOR = 19
 WEALTH = {"tight": ["poor", "modest"], "roomy": ["wealthy"], "grand": ["elite"]}
+# one of each luxury kind per grand private room: how many pool groups of
+# each kind a room may take (decor two groups), and decor groups together
+# hold at most this many pieces
+LUXURY_LIMITS = {"seating": 1, "hearth": 1, "work": 1, "display": 1,
+                 "books": 1, "storage": 1, "decor": 2}
+LUXURY_DECOR_PIECES = 3
+# a pool group never doubles one of these roles when the recipe itself
+# already places it: no second desk, bed or fire in one room. Heat and
+# hearth are one fire (a recipe with a stove takes no fireplace group), and
+# sleep and sleep.couple one bed.
+EXCLUSIVE_ROLES = ("desk", "sleep", "sleep.couple", "heat", "hearth")
+_EXCLUSIVE_FAMILY = {"desk": "desk", "sleep": "sleep",
+                     "sleep.couple": "sleep", "heat": "fire",
+                     "hearth": "fire"}
+# a grand private room's area stays at most this multiple of its roomy
+# sibling's (same recipe and style), rounded up by the caller
+GRAND_AREA_RATIO = 1.5
 # score weights, lower is better: area dominates, aspect and door sides
 # refine, symmetry earns its bonus where flagged, and at roomy and grand
 # every wall the wall-bound groups fill earns the spread bonus
@@ -89,7 +113,7 @@ def gap_for(family, clearance):
 
 
 def compose(recipe, groups, clearance, style, seed, size_band=None,
-            symmetric=False, sleepers=None):
+            symmetric=False, sleepers=None, max_area=None):
     """Compose ``recipe`` (a recipe dict from room_groups) at ``clearance``
     (tight/roomy/grand) in ``style`` (flush/open) into fixed-room candidates,
     best first and each passing fixed_rooms.check. Returns (rooms, reason):
@@ -97,6 +121,9 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     (singles, couples), defaulting to the family's usual occupancy. With
     ``size_band`` only rooms inside that band come back. ``symmetric`` places
     the anchor on the centre line and every group off it mirrored across it.
+    ``max_area`` caps the room's area: a grand private room stays within
+    GRAND_AREA_RATIO of its roomy sibling, and optional and pool groups join
+    only while that holds (the caller works the cap out; None is no cap).
     Deterministic per seed: the seed breaks ties and nothing else."""
     if clearance not in GAP:
         return ([], f"unknown clearance {clearance!r}")
@@ -126,6 +153,7 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
            "floor": (GRAND_FLOOR if clearance == "grand" and not size_band
                      else 0),
            "lux_bands": {},
+           "max_area": max_area,
            "fails": {},
            "rng": random.Random(seed), "sleepers": sleepers}
 
@@ -205,6 +233,9 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
             if fails.get("aspect"):
                 return ([], f"{clearance}: every candidate breaks the "
                             f"aspect cap")
+            if fails.get("area"):
+                return ([], f"{clearance}: no room fits inside the area cap "
+                            f"of {ctx['max_area']} cells")
             if fails.get("luxband"):
                 return ([], f"{clearance}: no room fits its luxury groups' "
                             f"size bands")
@@ -286,16 +317,28 @@ def _luxury_units(recipe, groups, family, clearance, ctx):
     each pool entry whose size bands meet the recipe's own (a large-only
     fireplace never joins a small recipe) becomes one fill-only group after
     the recipe's own, in pool order — that order is the preference, the
-    fireplace and one seating area before decor. Each entry's bands ride
-    along in ctx and gate the finished room's band in _build_room."""
+    fireplace and one seating area before decor. A group carrying one of
+    EXCLUSIVE_ROLES that the recipe itself already places never joins (no
+    second desk, bed or fire). Each entry's bands ride along in ctx and gate
+    the finished room's band in _build_room."""
     if clearance != "grand" or family not in PRIVATE_FAMILIES:
         return []
     pools = (groups or {}).get("pools") or {}
     recipe_bands = recipe.get("sizeBands")
+    taken = set()
+    for e in recipe.get("groups") or []:
+        for p in (ctx["gdefs"].get(e.get("group")) or {}).get("pieces") or []:
+            if isinstance(p, dict):
+                taken.add(_EXCLUSIVE_FAMILY.get(p.get("role")))
+    taken.discard(None)
     units = []
     for e in pools.get(family) or []:
         gid = e.get("group") if isinstance(e, dict) else None
         if gid not in ctx["gdefs"] or gid in ctx["lux_bands"]:
+            continue
+        pieces = ctx["gdefs"][gid].get("pieces") or []
+        if any(_EXCLUSIVE_FAMILY.get(p.get("role")) in taken
+               for p in pieces if isinstance(p, dict)):
             continue
         bands = e.get("bands") or []
         if recipe_bands and not set(bands) & set(recipe_bands):
@@ -303,6 +346,30 @@ def _luxury_units(recipe, groups, family, clearance, ctx):
         ctx["lux_bands"][gid] = bands
         units.append(("lux", gid, 1, 1))
     return units
+
+
+def _luxury_room_for(state, gid, ctx):
+    """Whether one more luxury group ``gid`` fits the room's luxury limits:
+    at most LUXURY_LIMITS groups of each of its kinds so far, and decor
+    groups together at most LUXURY_DECOR_PIECES pieces."""
+    gdef = ctx["gdefs"][gid]
+    kinds = luxury_kinds(gdef)
+    by, decor_pieces = {}, 0
+    for g in state["placed"]:
+        gk = luxury_kinds(ctx["gdefs"].get(g["gid"]) or {})
+        if not gk:
+            continue
+        for k in gk:
+            by[k] = by.get(k, 0) + 1
+        if "decor" in gk:
+            decor_pieces += len(g["pieces"])
+    if any(by.get(k, 0) + 1 > LUXURY_LIMITS.get(k, 0) for k in kinds):
+        return False
+    if "decor" in kinds \
+            and decor_pieces + len(gdef.get("pieces") or []) \
+            > LUXURY_DECOR_PIECES:
+        return False
+    return True
 
 
 def _inside_lux_bands(gids, band, ctx):
@@ -598,6 +665,9 @@ def _try_place(state, form, x, y, ctx, allow_growth=True):
         return None
     if ctx["band"] and (maxx - minx + 1) * (maxy - miny + 1) > ctx["band"][1]:
         return None
+    if ctx.get("max_area") is not None \
+            and (maxx - minx + 1) * (maxy - miny + 1) > ctx["max_area"]:
+        return None
     placed = state["placed"] + ({"gid": form["gid"], "x": x, "y": y, "w": w,
                                  "h": h, "back": form["back"],
                                  "pieces": [dict(p, at=[p["at"][0] + x, p["at"][1] + y])
@@ -690,7 +760,9 @@ def _unit(states, kind, gid, mn, mx, ctx):
     growing the room unless a size band was given, whose slack they fill),
     a pool group (like an optional one but never growing the room: the
     luxury pool fills the room the recipe's own groups made, it does not
-    balloon it), or a repeatable one (between mn and mx copies)."""
+    balloon it, and a state already at a kind's limit in LUXURY_LIMITS
+    takes no group of that kind), or a repeatable one (between mn and mx
+    copies)."""
     forms = _forms(ctx["gdefs"][gid])
     if kind in ("opt", "lux") and mx < 1:
         return states
@@ -711,6 +783,8 @@ def _unit(states, kind, gid, mn, mx, ctx):
         allow = kind == "opt" and (ctx["band"] is not None or ctx["gap"] >= 2)
         nxt = []
         for st in states:
+            if kind == "lux" and not _luxury_room_for(st, gid, ctx):
+                continue
             for form in forms:
                 nxt += _placements(st, form, ctx, allow_growth=allow)
         if allow and ctx["band"] is None:
@@ -780,6 +854,9 @@ def _build_room(state, sw, se, sn, ss, ctx):
         return None
     if ctx["band"] and not ctx["band"][0] <= w * h <= ctx["band"][1]:
         ctx["fails"]["band"] = ctx["fails"].get("band", 0) + 1
+        return None
+    if ctx.get("max_area") is not None and w * h > ctx["max_area"]:
+        ctx["fails"]["area"] = ctx["fails"].get("area", 0) + 1
         return None
     band = fixed_rooms.band_for_area(w * h)
     if not _inside_lux_bands((g["gid"] for g in state["placed"]), band, ctx):
@@ -976,6 +1053,9 @@ def _open(cands, ctx):
                                 band, ctx):
                             continue
                         if ctx["band"] and not ctx["band"][0] <= area <= ctx["band"][1]:
+                            continue
+                        if ctx.get("max_area") is not None \
+                                and area > ctx["max_area"]:
                             continue
                         grown["sizeBand"] = band
                         grown["style"] = "open"

@@ -1,15 +1,17 @@
 """The generated room library: the shipped bedroom, master bedroom and
 washroom rooms load and check clean, stay inside the family's aspect cap
 with no dead floor, every recipe of those families keeps at least one tight
-flush room, every grand room carries a luxury group from its family's pool,
-has more pieces than its roomy sibling and stays at or under 8 cells of
-floor per piece, every open room's filler stays off every edge and holds its
-clearance cap, the two-to-one aspect and the centre, no room wastes more
-than one line along a wall, the generator comes back the same for the same
-seed, and ids are unique and follow the family.band.letter.clearance
-.style pattern."""
+flush room, every grand room carries a luxury group from its family's pool
+within the per-kind limits, never doubles a desk, bed or fire, has more
+pieces than its roomy sibling and stays at or under 8 cells of floor per
+piece and within the grand area ratio of its roomy sibling, every open
+room's filler stays off every edge and holds its clearance cap, the
+two-to-one aspect and the centre, no room wastes more than one line along
+a wall, the generator comes back the same for the same seed, and ids are
+unique and follow the family.band.letter.clearance.style pattern."""
 import importlib.util
 import json
+import math
 import os
 import re
 import unittest
@@ -121,6 +123,61 @@ class TestShippedRooms(unittest.TestCase):
                         any(p.get("group") in pools.get(fam, ())
                             for p in room["pieces"]),
                         "no piece comes from the family's luxury pool")
+
+    def test_grand_rooms_stay_within_the_luxury_limits(self):
+        data = RG.load()
+        kinds_of = {gid: RG.luxury_kinds(g) for gid, g in data["groups"].items()}
+        pools = {fam: {e["group"] for e in entries}
+                 for fam, entries in (data.get("pools") or {}).items()}
+        for rooms, fam in ((self.bedrooms, "bedroom"),
+                           (self.masters, "bedroom.master"),
+                           (self.washrooms, "washroom")):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                counts, decor_pieces = {}, 0
+                for gid in {p.get("group") for p in room["pieces"]} & pools[fam]:
+                    for kind in kinds_of[gid]:
+                        counts[kind] = counts.get(kind, 0) + 1
+                    if "decor" in kinds_of[gid]:
+                        decor_pieces += sum(1 for p in room["pieces"]
+                                            if p.get("group") == gid)
+                for kind, n in counts.items():
+                    with self.subTest(room=room["id"], kind=kind):
+                        self.assertLessEqual(n, RC.LUXURY_LIMITS[kind],
+                                             f"{n} groups of {kind}")
+                with self.subTest(room=room["id"], kind="decor pieces"):
+                    self.assertLessEqual(decor_pieces, RC.LUXURY_DECOR_PIECES)
+
+    def test_no_room_doubles_a_desk_bed_or_fire(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            for room in rooms:
+                desks = sum(1 for p in room["pieces"] if p["role"] == "desk")
+                beds = sum(1 for p in room["pieces"]
+                           if p["role"] in ("sleep", "sleep.couple"))
+                fires = sum(1 for p in room["pieces"]
+                            if p["role"] in ("heat", "hearth"))
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(desks, 1, f"{desks} desks")
+                    self.assertLessEqual(beds, 1, f"{beds} beds")
+                    self.assertLessEqual(fires, 1, f"{fires} fires")
+
+    def test_grand_rooms_stay_within_the_area_ratio(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            roomy = {(r["recipe"], r["style"]): r["size"][0] * r["size"][1]
+                     for r in rooms if r["clearance"] == "roomy"}
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertIn((room["recipe"], room["style"]), roomy,
+                                  "no roomy sibling to size against")
+                    w, h = room["size"]
+                    cap = math.ceil(RC.GRAND_AREA_RATIO
+                                    * roomy[(room["recipe"], room["style"])])
+                    self.assertLessEqual(w * h, cap,
+                                         f"{w}x{h} = {w * h} cells over the "
+                                         f"cap of {cap}")
 
     def test_every_grand_room_outranks_its_roomy_sibling(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms):

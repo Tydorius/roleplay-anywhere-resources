@@ -679,6 +679,57 @@
       ]
     },
     {
+      "id": "display.curio",
+      "category": "display",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "curio cabinet",
+        "scifi": "showcase cabinet"
+      },
+      "parts": {
+        "frame": "wood",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "decor"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with {pane} shelves front and sides, its small treasures catching the light.",
+        "physical": "Top-down view of a tall {noun} against the top wall: a square {frame.color} {frame} top with a carved cornice, {pane.color} {pane} panels along the front and side edges, tiny objects on the shelves inside."
+      },
+      "aliases": [
+        "whatnot shelf",
+        "cabinet of curiosities"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
       "id": "display.pedestal",
       "category": "display",
       "size": [

@@ -2,10 +2,11 @@
 recipe of the bedroom, master bedroom and washroom families composed at each
 clearance (tight/roomy/grand) in each style (flush/open), seed 1, keeping
 the best room of each. A grand private room keeps the roomy gap, joins its
-family's luxury pool and must carry a luxury group and more pieces than the
-roomy room of the same recipe and style (one placing an elite-only piece is
-tagged elite alone), or it is dropped with a reason. Two rooms that are the
-same after any turn or mirror
+family's luxury pool (one group of each luxury kind at most) and must carry
+a luxury group, more pieces than the roomy room of the same recipe and style
+and an area of at most GRAND_AREA_RATIO times it (one placing an elite-only
+piece is tagged elite alone), or it is dropped with a reason. Two rooms that
+are the same after any turn or mirror
 are one room; the survivor is the one that comes first in recipe, clearance
 and style order, which is the one with the lower id. Ids are
 <family>.<sizeBand>.<letter>.<clearance>.<style>, stable between runs and
@@ -21,6 +22,7 @@ formatting; a room whose shape is already shipped keeps its id, so running
 the generator twice changes nothing.
 """
 import json
+import math
 import os
 import sys
 
@@ -266,11 +268,22 @@ def generate(families=FAMILIES, seed=SEED):
         seen = set()
         drops = []          # (layout, clearance, style, reason)
         for recipe in recipes:
-            roomy_pieces = {}      # style -> pieces of the kept roomy room
+            roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
             for clearance in CLEARANCES:
                 for style in STYLES:
+                    # a grand private room stays within GRAND_AREA_RATIO of
+                    # the roomy room of the same recipe and style: the
+                    # composer adds optional and pool groups only while the
+                    # cap holds
+                    cap = None
+                    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
+                        sibling = roomy_rooms.get(style)
+                        if sibling is not None:
+                            cap = math.ceil(
+                                RC.GRAND_AREA_RATIO * sibling["size"][0]
+                                * sibling["size"][1])
                     rooms, reason = RC.compose(recipe, data, clearance, style,
-                                               seed)
+                                               seed, max_area=cap)
                     if not rooms:
                         drops.append((recipe["layout"], clearance, style,
                                       reason))
@@ -291,13 +304,14 @@ def generate(families=FAMILIES, seed=SEED):
                             drops.append((recipe["layout"], clearance, style,
                                           "grand: no luxury group fits"))
                             continue
-                        sibling = roomy_pieces.get(style)
+                        sibling = roomy_rooms.get(style)
                         if sibling is None:
                             drops.append((recipe["layout"], clearance, style,
                                           "grand: no roomy room to better"))
                             continue
                         rooms = [r for r in rooms
-                                 if len(r["pieces"]) > sibling]
+                                 if len(r["pieces"])
+                                 > len(sibling["pieces"])]
                         if not rooms:
                             drops.append((recipe["layout"], clearance, style,
                                           "grand: no more furniture than the "
@@ -325,7 +339,7 @@ def generate(families=FAMILIES, seed=SEED):
                         continue
                     seen.add(canonical(best))
                     if clearance == "roomy":
-                        roomy_pieces[style] = len(best["pieces"])
+                        roomy_rooms[style] = best
                     kept.append(best)
         shipped = _shipped_ids(fam)
         letters = {}        # group -> letters already on this run's ids

@@ -2,6 +2,7 @@
   "groups": [
     {
       "id": "lux.decor.feature.single",
+      "kind": "decor",
       "family": "bedroom",
       "wall": "corner",
       "use": [],
@@ -22,6 +23,7 @@
     },
     {
       "id": "lux.decor.feature.double",
+      "kind": "decor",
       "family": "bedroom",
       "wall": "none",
       "use": [],
@@ -42,6 +44,7 @@
     },
     {
       "id": "lux.decor.floor.single",
+      "kind": "decor",
       "family": "bedroom",
       "wall": "corner",
       "use": [],
@@ -62,6 +65,7 @@
     },
     {
       "id": "lux.display.single",
+      "kind": "display",
       "family": "bedroom",
       "wall": "back",
       "use": [
@@ -85,6 +89,7 @@
     },
     {
       "id": "lux.books.single",
+      "kind": "books",
       "family": "bedroom",
       "wall": "back",
       "use": [
@@ -108,6 +113,7 @@
     },
     {
       "id": "lux.seat.lounge2.table.small",
+      "kind": "seating",
       "family": "bedroom.master",
       "wall": "none",
       "use": [
@@ -155,6 +161,7 @@
     },
     {
       "id": "lux.seat.long.table.small",
+      "kind": "seating",
       "family": "bedroom.master",
       "wall": "none",
       "use": [
@@ -190,6 +197,7 @@
     },
     {
       "id": "lux.table.dining.seat2",
+      "kind": "seating",
       "family": "bedroom.master",
       "wall": "none",
       "use": [
@@ -236,7 +244,8 @@
       ]
     },
     {
-      "id": "lux.heat.seat.lounge2.table.small",
+      "id": "lux.hearth.seat.lounge2.table.small",
+      "kind": ["hearth", "seating"],
       "family": "bedroom.master",
       "wall": "back",
       "use": [
@@ -244,7 +253,7 @@
       ],
       "pieces": [
         {
-          "role": "heat",
+          "role": "hearth",
           "size": [
             2,
             1
@@ -296,6 +305,7 @@
     },
     {
       "id": "lux.desk.seat",
+      "kind": "work",
       "family": "bedroom",
       "wall": "back",
       "use": [
@@ -331,6 +341,7 @@
     },
     {
       "id": "lux.seat.lounge.light.small",
+      "kind": "seating",
       "family": "bedroom",
       "wall": "corner",
       "use": [
@@ -365,6 +376,7 @@
     },
     {
       "id": "lux.table.small.seat",
+      "kind": "seating",
       "family": "washroom",
       "wall": "back",
       "use": [
@@ -401,6 +413,7 @@
     },
     {
       "id": "lux.seat.lounge.single",
+      "kind": "seating",
       "family": "washroom",
       "wall": "corner",
       "use": [
@@ -423,6 +436,7 @@
     },
     {
       "id": "lux.storage.small.single",
+      "kind": "storage",
       "family": "washroom",
       "wall": "corner",
       "use": [
@@ -445,6 +459,7 @@
     },
     {
       "id": "lux.decor.floor.double",
+      "kind": "decor",
       "family": "bedroom",
       "wall": "corner",
       "use": [],
@@ -477,6 +492,7 @@
     },
     {
       "id": "lux.seat.long.single",
+      "kind": "seating",
       "family": "washroom",
       "wall": "none",
       "use": [
@@ -577,7 +593,7 @@
     ],
     "bedroom.master": [
       {
-        "group": "lux.heat.seat.lounge2.table.small",
+        "group": "lux.hearth.seat.lounge2.table.small",
         "bands": [
           "large"
         ]

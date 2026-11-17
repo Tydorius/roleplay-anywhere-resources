@@ -106,6 +106,15 @@
         "appliance.radiator",
         "appliance.climate_unit"
       ],
+      "hearth": [
+        "hearth.fireplace",
+        "hearth.great_fireplace",
+        "hearth.gas_fireplace",
+        "hearth.electric_fireplace",
+        "hearth.holo_fire",
+        "hearth.brazier",
+        "hearth.woodstove"
+      ],
       "cook": [
         "stove",
         "hearth",
@@ -286,13 +295,46 @@
     }
   },
   "bedroom": {
-    "roles": {}
+    "roles": {
+      "display": [
+        "display.curio",
+        "display.vitrine",
+        "display.pedestal"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ]
+    }
   },
   "master_bedroom": {
-    "roles": {}
+    "roles": {
+      "display": [
+        "display.curio",
+        "display.vitrine",
+        "display.pedestal"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ]
+    }
   },
   "guest_room": {
-    "roles": {}
+    "roles": {
+      "display": [
+        "display.curio",
+        "display.vitrine",
+        "display.pedestal"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ]
+    }
   },
   "nursery": {
     "roles": {
@@ -607,7 +649,18 @@
     }
   },
   "washroom": {
-    "roles": {}
+    "roles": {
+      "display": [
+        "display.curio",
+        "display.vitrine",
+        "display.pedestal"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ]
+    }
   },
   "bathhouse": {
     "roles": {

@@ -18,6 +18,22 @@ from .library import ID_RE, LIB_DIR, SIDES, _size_ok
 GROUPS_DIR = os.path.join(LIB_DIR, "groups")
 WALLS = ("back", "corner", "none")
 KINDS = ("anchor", "required", "optional", "repeatable")
+# the kinds a luxury pool group can count against (room_composer.LUXURY_LIMITS):
+# a group may be two — the fireplace seating is both hearth and seating
+LUXURY_KINDS = ("seating", "hearth", "work", "decor", "display", "books",
+                "storage")
+
+
+def luxury_kinds(group):
+    """The luxury pool kinds a group counts against, as a tuple (a plain
+    string kind is one entry; a list is read as is). () when the group has
+    no usable kind field."""
+    k = (group or {}).get("kind")
+    if isinstance(k, str):
+        return (k,)
+    if isinstance(k, list) and k and all(isinstance(x, str) for x in k):
+        return tuple(k)
+    return ()
 
 
 def load(path=None):
@@ -270,9 +286,11 @@ def _check_recipes(data, lib, errors):
 
 def _check_pools(data, lib, errors):
     """The luxury pools: every pool names a known family, every entry names
-    a shipped group and known size bands, and every piece of a pooled group
+    a shipped group and known size bands, every piece of a pooled group
     carries minWealth wealthy or elite — a pool group is what makes a grand
-    private room grander, so it is furniture of the rich by definition."""
+    private room grander, so it is furniture of the rich by definition — and
+    every pooled group declares a valid luxury kind (what the composer's
+    per-room limits count it against)."""
     families = lib.vocab.get("families", {})
     bands = set(lib.vocab.get("sizeBands", {}))
     pools = data.get("pools") or {}
@@ -304,6 +322,10 @@ def _check_pools(data, lib, errors):
                     or any(b not in bands for b in eb):
                 err(f"bands must list one or more of "
                     f"{', '.join(sorted(bands))}")
+            kinds = luxury_kinds(g)
+            if not kinds or any(k not in LUXURY_KINDS for k in kinds):
+                err(f"group {gid!r} needs a kind: one or more of "
+                    f"{', '.join(LUXURY_KINDS)}")
             for p in g.get("pieces") or []:
                 if isinstance(p, dict) \
                         and p.get("minWealth") not in ("wealthy", "elite"):
@@ -317,7 +339,7 @@ def check(data, lib):
     group fields against the vocabulary, pieces that overlap or float apart,
     wall-bound pieces off the north edge, recipe kinds and counts, exactly
     one anchor per recipe, one recipe per layout, and the luxury pools
-    naming known families, groups, size bands and wealth."""
+    naming known families, groups, size bands, kinds and wealth."""
     errors = []
     _check_groups(data["groups"], lib, errors)
     _check_recipes(data, lib, errors)

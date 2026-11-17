@@ -307,8 +307,11 @@ file holds the family's groups and one recipe per layout, naming the groups it n
   follow the rules above with every piece carrying a `minWealth` of `wealthy` or `elite`, and
   its `pools` map names each private family's groups with the size bands they suit: at grand
   clearance the composer offers the family's pool as extra optional furniture, each group only
-  in the bands its entry lists. The checker holds pools to the same account — the groups must
-  exist, the family and bands must be known, and every piece must carry the wealth.
+  in the bands its entry lists. Every pool group also carries a `kind` — one or more of
+  `seating`, `hearth`, `work`, `decor`, `display`, `books` and `storage` — which the composer's
+  grand-room limits count it against (the fireplace seating is both `hearth` and `seating`).
+  The checker holds pools to the same account — the groups must exist, the family, bands and
+  kind must be known, and every piece must carry the wealth.
 
 ## Rooms: `rooms/<family>.json`
 
@@ -386,7 +389,10 @@ style the composer found a clear layout for.
 
 Every purpose in `library.json` gets an entry. Each role binds to categories in order of
 preference. `*` holds the defaults a purpose inherits. A purpose must bind every role that its
-family's layouts use, directly or through `*`.
+family's layouts use, directly or through `*`. A binding may also name object ids
+(`["hearth.fireplace", "hearth.holo_fire"]`) to pin exact objects: `heat` is any heater (radiator,
+brazier, woodstove) while `hearth` is the fireplace people gather around, bound by id so the
+outdoor fire pits stay out.
 
 ## Suites: `suites/<band>.json`
 
