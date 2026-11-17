@@ -4,7 +4,7 @@ JSON file they can send to someone else, who loads it to run the same world.
 The launcher, the CLI and the Scenario Editor all read and write this format,
 and every generation writes one as ``settings.json`` in its run folder. It
 holds the form (mode, idea, questionnaire answers, notes, residents), the
-build choices (seed, extensions, room library) and, when there is one, the
+build choices (seed, extensions, room library, item library) and, when there is one, the
 approved World Frame, so a re-run can skip framing. The model name is kept as
 a note only. No provider name, URL or API key is ever written.
 
@@ -35,13 +35,15 @@ class SettingsError(ValueError):
 
 
 def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
-         extensions=(), library=True, frame=None, clarify=None, model=None):
+         extensions=(), library=True, item_library=True, frame=None, clarify=None,
+         model=None):
     """A settings dict, checked the same way a loaded file is."""
     data = {"kind": KIND, "version": VERSION,
             "saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "mode": mode, "idea": idea or "", "answers": answers or {},
             "population": population, "notes": notes or "", "seed": seed,
-            "extensions": list(extensions or ()), "library": bool(library)}
+            "extensions": list(extensions or ()), "library": bool(library),
+            "item_library": bool(item_library)}
     if frame:
         data["frame"] = frame
     if clarify:
@@ -51,12 +53,14 @@ def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
     return check(data)
 
 
-def from_run(idea, seed, extensions, library, frame=None, questionnaire=None, model=None):
+def from_run(idea, seed, extensions, library, frame=None, questionnaire=None,
+             item_library=True, model=None):
     """The settings of one generate() call."""
     q = questionnaire or {}
     return make(mode=q.get("mode") or "quick", idea=idea, answers=q.get("answers"),
                 population=q.get("population"), notes=q.get("notes") or "", seed=seed,
-                extensions=extensions, library=library, frame=frame, model=model)
+                extensions=extensions, library=library, item_library=item_library,
+                frame=frame, model=model)
 
 
 def check(data):
@@ -115,7 +119,8 @@ def check(data):
            "population": questions_mod.sanitize_population(data.get("population")),
            "notes": questions_mod.sanitize_notes(data.get("notes")),
            "seed": seed, "extensions": exts,
-           "library": bool(data.get("library", True))}
+           "library": bool(data.get("library", True)),
+           "item_library": bool(data.get("item_library", True))}
     if not (out["idea"] or out["answers"] or frame):
         raise SettingsError("the settings have no idea, no answers and no frame: "
                             "nothing to build a world from")

@@ -11,7 +11,8 @@
     "\"max_output\" is the most output tokens the provider accepts; set it when the",
     "provider rejects big budgets (the catalogue phase asks for 32000 and doubles a",
     "cut-off reply up to 65536). \"extra_body\" holds extra request fields sent with",
-    "every request, such as DeepSeek's \"thinking\".",
+    "every request, such as DeepSeek's \"thinking\". \"vision\": true marks a",
+    "provider whose model accepts image content parts.",
     "Test one with:  python -m worldgen check-provider <name>"
   ],
   "zai": {
@@ -74,5 +75,13 @@
     "model": "your-model",
     "max_tokens": 16000,
     "timeout": 3600
+  },
+  "zai-vision": {
+    "_comment": "z.ai vision model, for calls that send images as content parts (that is what \"vision\": true says).",
+    "base_url": "https://api.z.ai/api/paas/v4",
+    "api_key": "YOUR_API_KEY",
+    "model": "glm-4.6v",
+    "max_tokens": 8192,
+    "vision": true
   }
 }

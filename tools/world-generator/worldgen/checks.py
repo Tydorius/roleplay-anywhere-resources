@@ -5,8 +5,10 @@ unplaced pieces with reasons. With the floors extension: floor areas the
 size of their ground region, storeys sealed (no opening on their outer
 border), portal ends that exist, walkable stairs, upper rooms reachable from
 their stairs, and the 1.0 layout — every storey its own plane east of the
-play area, 24 cells apart. Results go to metrics.json (the pipeline writes
-the dict; run_checks returns it).
+play area, 24 cells apart. A container placement that resolves no pool and
+so ships empty is a warning (one line per building, and one for a whole
+world whose containers all ship empty). Results go to metrics.json (the
+pipeline writes the dict; run_checks returns it).
 
 The walkability model mirrors build_scenario.py exactly: the outer ring of a
 walled region is wall except at door openings, and walkability-0 objects block.
@@ -733,6 +735,39 @@ def _drop_dead_stairs(world):
     return {"dropped": dropped, "ruined": ruined}
 
 
+def _empty_container_warnings(world):
+    """Warning lines for container placements that would ship empty. A
+    container is a placement whose template carries a loot pool of its own or
+    is tagged storage (the room library's containers are, like the game's own
+    storage tag); one that resolves no pool — furniture line, room, building,
+    template default — draws no starting inventory, so it ships empty. One
+    line per building (never per container), plus a single line when a whole
+    world with containers has none that resolves a pool. Warnings never fail
+    a build: they ride map_warnings into the run summary."""
+    from . import loot
+    from .spec_writer import _building_of_room, _loot_map
+    rooms = _loot_map(world)
+    building_of = _building_of_room(world)
+    empty, total, pooled = {}, 0, 0
+    for o in world.objects:
+        t = world.templates.get(o.template)
+        if t is None or not (t.extras.get("lootPool") or "storage" in (t.tags or [])):
+            continue
+        total += 1
+        if loot.resolve_pool(rooms.get(o.region), o.template, {}, world.templates):
+            pooled += 1     # a bound line, room, building or default pool
+            continue
+        b = building_of.get(o.region)
+        label = b.layout.design.name if b is not None else o.region
+        empty[label] = empty.get(label, 0) + 1
+    out = [f"{label}: {empty[label]} container{'' if empty[label] == 1 else 's'} "
+           f"would ship empty" for label in sorted(empty)]
+    if total and not pooled:
+        out.append(f"no container in the whole world ships loot: {total} placed, "
+                   f"none resolves a pool")
+    return out
+
+
 def run_checks(world):
     from . import native
     # no stairs to nowhere first, so every metric below sees the final set
@@ -855,6 +890,9 @@ def run_checks(world):
         "portals": len(getattr(world, "portals", []) or []),
         "issues": _floors_checks(world, blocked) if getattr(world, "floors", None) else [],
     }
+
+    # ---- loot guardrail: a container that would ship empty is a warning
+    world.map_warnings.extend(_empty_container_warnings(world))
 
     dropped = dropped_failures(world.failures)
     dropped_set = set(dropped)

@@ -51,7 +51,8 @@ def _check_extensions(extensions):
 
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
-             emit=None, frame=None, questionnaire=None, cast=True, library=True):
+             emit=None, frame=None, questionnaire=None, cast=True, library=True,
+             item_library=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -68,9 +69,10 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         kwargs = {"providers_path": providers_path} if providers_path else {}
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire,
-                    getattr(client, "model", None), emit)
+                    getattr(client, "model", None), emit, item_library=item_library)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
+                                    item_library=item_library,
                                     progress=progress, cancel=cancel,
                                     frame=frame, questionnaire=questionnaire, cast=cast)
     if extensions:
@@ -85,7 +87,7 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
 
 
 def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
-                    emit=None):
+                    emit=None, item_library=True):
     """settings.json in the run folder, before the first model call, so even a
     run that fails leaves the choices behind for someone to look at. Never
     fails the run."""
@@ -93,7 +95,7 @@ def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnai
     try:
         os.makedirs(out_dir, exist_ok=True)
         data = settings.from_run(idea, seed, extensions, library, frame=frame,
-                                 questionnaire=questionnaire,
+                                 questionnaire=questionnaire, item_library=item_library,
                                  model=model if isinstance(model, str) else None)
         settings.write(os.path.join(out_dir, settings.FILE_NAME), data)
     except (OSError, ValueError) as e:
@@ -215,6 +217,24 @@ def _populations_summary(spec):
     }
 
 
+def _container_counts(spec, plan_data):
+    """{"total", "stocked"} over the built world: a container is a placement
+    whose template has a loot pool of its own (the game's lootPoolIds) or
+    whose library object is one; a stocked placement carries a drawn starting
+    inventory."""
+    library_containers = {t.get("name") for t in plan_data.get("templates", [])
+                          if t.get("container")}
+    total = stocked = 0
+    for t in spec.get("objectTemplates", []):
+        if "lootPool" not in t and t.get("name") not in library_containers:
+            continue
+        for p in t.get("placements", []):
+            total += 1
+            if isinstance(p, dict) and p.get("inventory"):
+                stocked += 1
+    return {"total": total, "stocked": stocked}
+
+
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
@@ -235,7 +255,7 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     sw.write_spec(out_dir, spec)
     from worldgen import checks as checks_mod
     checks_mod.write_metrics(os.path.join(out_dir, "metrics.json"), world.metrics)
-    _summary_text(world, spec, seed, emit)
+    _summary_text(world, spec, seed, emit, plan_data)
 
     _progress(progress, "build", "building and validating the scenario", gen)
     builder = os.path.join(VENDOR_DIR, "build_scenario.py")
@@ -269,6 +289,9 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
         n_art = library_art.attach_sprites(built, plan_data)
         if n_art:
             _emit(emit, f"{n_art} shipped library sprite(s) attached to {built} (re-zipped)")
+        n_items, n_tinted = library_art.attach_item_art(built, plan_data)
+        if n_items:
+            _emit(emit, f"{n_items} shipped item image(s) attached, {n_tinted} recoloured")
     rc_val, val_out = 0, ""
     if rc_build == 0 and os.path.exists(zip_path):
         rc_val, val_out = _run([sys.executable, validator, zip_path], emit)
@@ -327,6 +350,7 @@ def _summary_dict(world, spec, plan_data, seed, zip_path, out_dir, failed,
         "templates": len(plan_data.get("templates", [])),
         "npcs": len(world.characters) - 1,
         "objects_placed": sum(len(t.get("placements", [])) for t in spec["objectTemplates"]),
+        "containers": _container_counts(spec, plan_data),
         "unplaced": len(unplaced), "fallbacks": len(world.fallbacks),
         "dropped": dropped_model,
         "validator_errors": n_err, "validator_warnings": n_warn,
@@ -392,7 +416,7 @@ def _phase_report(client, stats, minutes, emit):
     emit("\n".join(lines))
 
 
-def _summary_text(world, spec, seed, emit):
+def _summary_text(world, spec, seed, emit, plan_data=None):
     """The after-build block the CLI prints (world shape and check totals)."""
     if emit is None:
         return
@@ -403,7 +427,9 @@ def _summary_text(world, spec, seed, emit):
              f"zones {len(world.zones_by_name)}  roads {len(world.roads)}  "
              f"buildings {len(world.buildings)}  regions {len(spec['regions'])}"]
     n_objects = sum(len(t.get('placements', [])) for t in spec['objectTemplates'])
-    lines.append(f"objects placed {n_objects}  characters {len(world.characters)}")
+    containers = _container_counts(spec, plan_data or {})
+    lines.append(f"objects placed {n_objects}  characters {len(world.characters)}  "
+                 f"containers stocked {containers['stocked']}/{containers['total']}")
     lines.append(f"rooms reachable {rooms.get('reachable')}/{rooms.get('total')}  "
                  f"entrances from road {ents.get('reachable_from_road')}/{ents.get('total')}  "
                  f"reachability {world.metrics.get('reachability')}")

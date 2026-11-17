@@ -57,8 +57,9 @@ def _key_hint(key):
 
 
 def providers():
-    """The configured providers as [{name, model, ready, keyHint}], or None when
-    providers.json does not exist yet. The api key never appears in full."""
+    """The configured providers as [{name, model, ready, keyHint, vision}], or
+    None when providers.json does not exist yet. The api key never appears in
+    full."""
     data = _read_providers()
     if data is None:
         return None
@@ -70,7 +71,8 @@ def providers():
         ready = bool(cfg.get("base_url") and cfg.get("model") and key
                      and key != wgllm.PLACEHOLDER_KEY)
         out.append({"name": name, "model": cfg.get("model") or "",
-                    "ready": ready, "keyHint": _key_hint(key)})
+                    "ready": ready, "keyHint": _key_hint(key),
+                    "vision": bool(cfg.get("vision"))})
     return out
 
 
@@ -98,8 +100,8 @@ def save_provider(name, base_url, api_key, model, max_tokens):
              "model": str(model or "").strip(),
              "max_tokens": _int_or(max_tokens, old.get("max_tokens", 16000))}
     # settings this form doesn't show (an output cap, extra request fields,
-    # waits) stay as they were in providers.json
-    for k in ("timeout", "rate_limit_wait", "max_output", "extra_body"):
+    # waits, the vision flag) stay as they were in providers.json
+    for k in ("timeout", "rate_limit_wait", "max_output", "extra_body", "vision"):
         if k in old:
             entry[k] = old[k]
     for k, what in (("base_url", "the base URL"), ("model", "the model"),
@@ -260,7 +262,9 @@ def _fresh_out_dir(label):
 
 def _to_workspace(out_dir, summary, plan_path):
     """Import the built zip as a new editor workspace and copy ``plan_path``
-    beside it, so Re-roll layout works there too. Returns the source id."""
+    beside it, so Re-roll layout works there too. The run's settings.json (the
+    seed, idea, extensions and model) comes along when it wrote one. Returns
+    the source id."""
     zip_name = summary.get("zip") if isinstance(summary, dict) else None
     zip_path = Path(out_dir) / zip_name if zip_name else None
     if not zip_path or not zip_path.is_file():
@@ -268,16 +272,21 @@ def _to_workspace(out_dir, summary, plan_path):
     sid = ig.import_zip(zip_path.read_bytes())
     ws = Path(ig.WORK) / sid[len("work/"):]
     shutil.copyfile(plan_path, ws / "plan.json")
+    settings = Path(out_dir) / "settings.json"
+    if settings.is_file():
+        shutil.copyfile(settings, ws / "settings.json")
     return sid
 
 
 def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionnaire=None,
-                   draft=None, library=True):
+                   draft=None, library=True, item_library=True):
     """Start a full generation (model phases + layout + build) for ``idea``,
     with an approved World Frame and its questionnaire kept on the plan.
     ``draft`` names the saved dialog draft, which records the run.
     ``library`` furnishes rooms from the room library (the default); False is
-    the old method, the model furnishing every room."""
+    the old method, the model furnishing every room. ``item_library`` stocks
+    the containers from the item library (the default); False is the model
+    inventing every item."""
     idea = str(idea or "").strip()
     questionnaire = _checked_questionnaire(questionnaire)
     if not idea and (frame is None and questionnaire is None):
@@ -307,6 +316,7 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
         summary = wgapi.generate(
             idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
             frame=frame, questionnaire=questionnaire, library=bool(library),
+            item_library=bool(item_library),
             progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                       calls=e.get("calls", 0), tokens=e.get("tokens", 0)),
             cancel=lambda: j["cancelRequested"])
@@ -414,7 +424,7 @@ def _merge_draft(draft_id, fields):
 
 # what the page may save; the frame and the run are the server's to write
 _DRAFT_FORM_KEYS = ("mode", "idea", "answers", "notes", "population", "provider", "seed",
-                    "extensions", "library", "summary", "clarifyAnswers")
+                    "extensions", "library", "item_library", "summary", "clarifyAnswers")
 
 
 def save_draft(draft_id, form):
@@ -481,6 +491,7 @@ def export_settings(form):
         answers=form.get("answers"), population=form.get("population"),
         notes=form.get("notes") or "", seed=form.get("seed", 1),
         extensions=form.get("extensions") or [], library=form.get("library", True),
+        item_library=form.get("item_library", True),
         frame=frame if isinstance(frame, dict) else None,
         clarify=form.get("clarifyAnswers"), model=model)
 
@@ -494,7 +505,7 @@ def import_settings(data):
     while (_drafts_dir() / f"{draft_id}.json").exists():
         draft_id, i = f"d-{stamp}-import-{i}", i + 1
     fields = {k: s[k] for k in ("mode", "idea", "answers", "notes", "population", "seed",
-                                "extensions", "library")}
+                                "extensions", "library", "item_library")}
     if s.get("frame"):
         fields.update(frame=s["frame"], framedMode=s["mode"], summary=s["frame"]["summary"])
     if s.get("clarify"):

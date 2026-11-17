@@ -103,6 +103,7 @@ class Templates:
         self.lib = lib
         self.seed = seed
         self.by_key = {}           # (object id, band, tier, condition) -> template dict
+        self.by_name = {}          # template name -> template dict
         self.names = set(taken)    # names already used (P2's own templates included)
         self.sprites = {}          # band -> shipped sprite index
 
@@ -138,13 +139,30 @@ class Templates:
              "libraryId": obj["id"]}
         if obj.get("back"):
             t["back"] = obj["back"]
+        if obj.get("container"):
+            # the plan carries the flag so the run summary can count containers,
+            # and the storage tag so the layout checks know them without the plan
+            t["container"] = True
+            if "storage" not in t["tags"]:
+                t["tags"].append("storage")
         if art:
             t["sprite"] = f"library/sprites/{band}/{obj['id']}.webp"
         self.by_key[key] = t
+        self.by_name[name] = t
         return t
 
     def templates(self):
         return list(self.by_key.values())
+
+    def is_container(self, template_name):
+        """True when the named template's library object is a container
+        (the object's ``container`` flag); a name the registry never made is
+        not one."""
+        t = self.by_name.get(template_name)
+        if t is None:
+            return False
+        obj = self.lib.objects.get(t.get("libraryId")) or {}
+        return bool(obj.get("container"))
 
     def used_ids(self):
         """Object ids with a template already."""
