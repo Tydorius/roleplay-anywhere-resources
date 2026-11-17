@@ -650,7 +650,9 @@ function dropStaleBackups(loc) {
       console.log(`removed a stale pack layer from an older game build: ${f} — re-run "pack <folder>" with a release for the new build to restore it`);
     }
     if (f.endsWith('.js' + PACK + '.json') && !fs.existsSync(path.join(dir, f.slice(0, -'.json'.length)))) {
-      fs.rmSync(path.join(dir, f)); // the bundle's pack backup is gone; its metadata follows it
+      // the bundle's pack backup is gone; its metadata follows it (force: the
+      // branch above may already have removed it, earlier in this same listing)
+      fs.rmSync(path.join(dir, f), { force: true });
     }
   }
 }
