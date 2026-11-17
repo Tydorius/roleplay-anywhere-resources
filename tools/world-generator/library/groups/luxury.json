@@ -1,0 +1,709 @@
+{
+  "groups": [
+    {
+      "id": "lux.decor.feature.single",
+      "family": "bedroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.decor.feature.double",
+      "family": "bedroom",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.decor.floor.single",
+      "family": "bedroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.display.single",
+      "family": "bedroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "display",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy",
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "lux.books.single",
+      "family": "bedroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy",
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "lux.seat.lounge2.table.small",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "north",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.seat.long.table.small",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "north",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.table.dining.seat2",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "north",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "elite"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "elite"
+        },
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "minWealth": "elite"
+        }
+      ]
+    },
+    {
+      "id": "lux.heat.seat.lounge2.table.small",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "minWealth": "wealthy",
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.desk.seat",
+      "family": "bedroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy",
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.seat.lounge.light.small",
+      "family": "bedroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.table.small.seat",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy",
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.seat.lounge.single",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.storage.small.single",
+      "family": "washroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.decor.floor.double",
+      "family": "bedroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "lux.seat.long.single",
+      "family": "washroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    }
+  ],
+  "pools": {
+    "bedroom": [
+      {
+        "group": "lux.seat.lounge2.table.small",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.long.table.small",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.desk.seat",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.lounge.light.small",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.display.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.books.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.feature.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.feature.double",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.double",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      }
+    ],
+    "bedroom.master": [
+      {
+        "group": "lux.heat.seat.lounge2.table.small",
+        "bands": [
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.lounge2.table.small",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.long.table.small",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.table.dining.seat2",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.display.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.books.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.feature.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.feature.double",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.double",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      }
+    ],
+    "washroom": [
+      {
+        "group": "lux.table.small.seat",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.lounge.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.long.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.display.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.storage.small.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.double",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      }
+    ]
+  }
+}

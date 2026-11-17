@@ -1,7 +1,11 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
 recipe of the bedroom, master bedroom and washroom families composed at each
 clearance (tight/roomy/grand) in each style (flush/open), seed 1, keeping
-the best room of each. Two rooms that are the same after any turn or mirror
+the best room of each. A grand private room keeps the roomy gap, joins its
+family's luxury pool and must carry a luxury group and more pieces than the
+roomy room of the same recipe and style (one placing an elite-only piece is
+tagged elite alone), or it is dropped with a reason. Two rooms that are the
+same after any turn or mirror
 are one room; the survivor is the one that comes first in recipe, clearance
 and style order, which is the one with the lower id. Ids are
 <family>.<sizeBand>.<letter>.<clearance>.<style>, stable between runs and
@@ -33,6 +37,9 @@ FAMILIES = ("bedroom", "bedroom.master", "washroom")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
+# a grand private room carries so much furniture that no piece stands over
+# more than this many cells of floor (the shipped grand rooms assert it)
+GRAND_MAX_CELLS_PER_PIECE = 8
 ROOMS_DIR = os.path.join(GEN, "library", "rooms")
 
 # how a role reads in a room's description, the first matching prefix wins
@@ -178,6 +185,19 @@ def wealth_for(clearance, style):
     return ["poor", "modest"] + (["wealthy"] if clearance == "roomy" else [])
 
 
+def _uses_elite_piece(room, gdefs):
+    """Whether the room places a group with an elite-only piece (minWealth
+    elite on any of its pieces): a grand room like that serves the elite
+    alone. Placed pieces carry no minWealth, so the group definitions are
+    the place to look."""
+    for p in room["pieces"]:
+        g = gdefs.get(p.get("group")) or {}
+        if any(isinstance(q, dict) and q.get("minWealth") == "elite"
+               for q in g.get("pieces") or []):
+            return True
+    return False
+
+
 def canonical(room):
     """The room's shape in its lowest-sorting orientation (four turns and
     the mirror), so two rooms equal after any turn or mirror share a key."""
@@ -193,12 +213,14 @@ def canonical(room):
     return min(sigs)
 
 
-def _finalize(room, rid):
+def _finalize(room, rid, elite=False):
     """A room in the shipped field order, with its id, wealth tiers and
-    description."""
+    description. A grand room placing an elite-only piece serves the elite
+    alone."""
     out = {"id": rid, "family": room["family"], "sizeBand": room["sizeBand"],
            "clearance": room["clearance"], "style": room["style"],
-           "wealth": wealth_for(room["clearance"], room["style"]),
+           "wealth": (["elite"] if elite
+                      else wealth_for(room["clearance"], room["style"])),
            "size": room["size"], "sleeps": room["sleeps"],
            "pieces": room["pieces"], "doors": room["doors"],
            "stretch": room["stretch"]}
@@ -234,6 +256,7 @@ def generate(families=FAMILIES, seed=SEED):
     Deterministic per seed."""
     data = RG.load()
     lib = WL.load()
+    gdefs = data["groups"]
     out, all_drops = {}, {}
     for fam in families:
         recipes = sorted((r for r in data["recipes"].values()
@@ -243,6 +266,7 @@ def generate(families=FAMILIES, seed=SEED):
         seen = set()
         drops = []          # (layout, clearance, style, reason)
         for recipe in recipes:
+            roomy_pieces = {}      # style -> pieces of the kept roomy room
             for clearance in CLEARANCES:
                 for style in STYLES:
                     rooms, reason = RC.compose(recipe, data, clearance, style,
@@ -251,6 +275,44 @@ def generate(families=FAMILIES, seed=SEED):
                         drops.append((recipe["layout"], clearance, style,
                                       reason))
                         continue
+                    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
+                        # a grand private room spends its space on furniture:
+                        # it keeps a luxury group and more pieces than the
+                        # roomy room of the same recipe and style (one that
+                        # deduplicates to the roomy room is caught by the
+                        # shape dedup below)
+                        pool = {e.get("group") for e in
+                                (data.get("pools", {}).get(fam) or [])
+                                if isinstance(e, dict)}
+                        rooms = [r for r in rooms
+                                 if any(p.get("group") in pool
+                                        for p in r["pieces"])]
+                        if not rooms:
+                            drops.append((recipe["layout"], clearance, style,
+                                          "grand: no luxury group fits"))
+                            continue
+                        sibling = roomy_pieces.get(style)
+                        if sibling is None:
+                            drops.append((recipe["layout"], clearance, style,
+                                          "grand: no roomy room to better"))
+                            continue
+                        rooms = [r for r in rooms
+                                 if len(r["pieces"]) > sibling]
+                        if not rooms:
+                            drops.append((recipe["layout"], clearance, style,
+                                          "grand: no more furniture than the "
+                                          "roomy room"))
+                            continue
+                        rooms = [r for r in rooms
+                                 if r["size"][0] * r["size"][1]
+                                 <= GRAND_MAX_CELLS_PER_PIECE
+                                 * len(r["pieces"])]
+                        if not rooms:
+                            drops.append((recipe["layout"], clearance, style,
+                                          "grand: more than "
+                                          f"{GRAND_MAX_CELLS_PER_PIECE} cells "
+                                          "of floor per piece"))
+                            continue
                     # the best room of the recipe that no earlier one kept:
                     # two rooms equal after any turn or mirror are one room,
                     # so a recipe whose best is taken falls to its next-best
@@ -262,6 +324,8 @@ def generate(families=FAMILIES, seed=SEED):
                                       "room"))
                         continue
                     seen.add(canonical(best))
+                    if clearance == "roomy":
+                        roomy_pieces[style] = len(best["pieces"])
                     kept.append(best)
         shipped = _shipped_ids(fam)
         letters = {}        # group -> letters already on this run's ids
@@ -288,7 +352,9 @@ def generate(families=FAMILIES, seed=SEED):
                 rid = f"{fam}.{room['sizeBand']}.{ch}." \
                       f"{room['clearance']}.{room['style']}"
             used.add(rid.split(".")[nparts + 1])
-            rooms.append(_finalize(room, rid))
+            elite = (room["clearance"] == "grand"
+                     and _uses_elite_piece(room, gdefs))
+            rooms.append(_finalize(room, rid, elite))
         rooms.sort(key=lambda r: r["id"])
         errors = FR.check(rooms, data, lib)
         if errors:

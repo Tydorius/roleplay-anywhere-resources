@@ -1,7 +1,11 @@
 """The furniture groups: the shipped files check clean, every layout has one
-recipe with one anchor, conversion matches hand-checked expectations, each
-check catches its mistake, and converting twice gives the same output."""
+recipe with one anchor, the hand-authored luxury file loads with its pools
+and stays out of the converter's way, conversion matches hand-checked
+expectations, each check catches its mistake, and converting twice gives
+the same output."""
+import contextlib
 import importlib.util
+import io
 import json
 import os
 import tempfile
@@ -38,6 +42,25 @@ class TestShipped(unittest.TestCase):
                 self.assertIsNotNone(recipe, "no recipe")
                 kinds = [e.get("kind") for e in recipe["groups"]]
                 self.assertEqual(kinds.count("anchor"), 1)
+
+    def test_the_luxury_file_loads_with_its_pools(self):
+        pools = self.data["pools"]
+        self.assertTrue({"bedroom", "bedroom.master", "washroom"} <= set(pools))
+        for fam, entries in pools.items():
+            for e in entries:
+                with self.subTest(family=fam, group=e.get("group")):
+                    self.assertIn(e["group"], self.data["groups"])
+                    self.assertTrue(e["bands"])
+                    for b in e["bands"]:
+                        self.assertIn(b, self.lib.vocab["sizeBands"])
+
+    def test_every_luxury_piece_carries_wealth(self):
+        for gid, g in self.data["groups"].items():
+            if not str(gid).startswith("lux."):
+                continue
+            for p in g["pieces"]:
+                with self.subTest(group=gid, piece=p.get("role")):
+                    self.assertIn(p.get("minWealth"), ("wealthy", "elite"))
 
 
 class TestConversion(unittest.TestCase):
@@ -138,6 +161,43 @@ class TestConversion(unittest.TestCase):
         two = self.mod.convert_all(layouts)
         self.assertEqual(one, two)
 
+    def test_the_converter_never_writes_or_deletes_the_luxury_file(self):
+        """The converter writes one file per layout family and deletes
+        nothing; "luxury" is no layout family, so the hand-authored
+        luxury.json can never be its output."""
+        layout = {"id": "bedroom.hand.a", "family": "bedroom",
+                  "sizeBands": ["small"],
+                  "slots": [
+                      {"id": "bed", "role": "sleep.couple", "size": [2, 2],
+                       "anchor": "wall:far", "back": "wall"},
+                      {"id": "bedsides", "role": "bedside", "size": [1, 1],
+                       "anchor": "beside:bed+symmetric"},
+                  ]}
+        marker = '{"groups": [], "pools": {"bedroom": []}}\n'
+        with tempfile.TemporaryDirectory() as d:
+            os.makedirs(os.path.join(d, "layouts"))
+            os.makedirs(os.path.join(d, "groups"))
+            with open(os.path.join(d, "layouts", "one.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump({"layouts": [layout]}, f)
+            with open(os.path.join(d, "library.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump({"roles": ["sleep.couple", "bedside"]}, f)
+            luxury = os.path.join(d, "groups", "luxury.json")
+            with open(luxury, "w", encoding="utf-8") as f:
+                f.write(marker)
+            old = self.mod.LIBRARY
+            self.mod.LIBRARY = d
+            try:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    self.mod.main()
+            finally:
+                self.mod.LIBRARY = old
+            with open(luxury, encoding="utf-8") as f:
+                self.assertEqual(f.read(), marker)
+            self.assertEqual(sorted(os.listdir(os.path.join(d, "groups"))),
+                             ["bedroom.json", "luxury.json"])
+
 
 class TestChecker(unittest.TestCase):
     @classmethod
@@ -175,6 +235,18 @@ class TestChecker(unittest.TestCase):
         data = self.base()
         mutate(data["recipes"]["bedroom.small.a"])
         return self.errors(data)
+
+    def pools(self):
+        """The base fixture plus a clean pool: every piece of a pooled
+        group carries minWealth wealthy or elite, or the pool is an error."""
+        data = self.base()
+        for p in data["groups"]["sleep.couple.bedside2"]["pieces"]:
+            p["minWealth"] = "wealthy"
+        data["pools"] = {"bedroom": [
+            {"group": "sleep.couple.bedside2", "bands": ["small"],
+             "_file": "bedroom.json"},
+        ]}
+        return data
 
     def test_base_is_clean_apart_from_missing_recipes(self):
         self.assertEqual(self.errors(self.base()), [])
@@ -281,6 +353,29 @@ class TestChecker(unittest.TestCase):
                 f.write('{"groups": [ {"id": "sleep.single",')
             errors = RG.check(RG.load(d), self.lib)
             self.assertTrue(any("cannot be read" in e for e in errors))
+
+    def test_a_clean_pool_checks_clean(self):
+        self.assertEqual(self.errors(self.pools()), [])
+
+    def test_pool_names_no_group(self):
+        data = self.pools()
+        data["pools"]["bedroom"][0]["group"] = "ghost"
+        self.assertTrue(any("names no group" in e for e in self.errors(data)))
+
+    def test_pool_unknown_band(self):
+        data = self.pools()
+        data["pools"]["bedroom"][0]["bands"] = ["huge"]
+        self.assertTrue(any("bands must list" in e for e in self.errors(data)))
+
+    def test_pool_unknown_family(self):
+        data = self.pools()
+        data["pools"]["attic"] = data["pools"].pop("bedroom")
+        self.assertTrue(any("unknown family" in e for e in self.errors(data)))
+
+    def test_pool_group_without_wealth_is_an_error(self):
+        data = self.pools()
+        del data["groups"]["sleep.couple.bedside2"]["pieces"][0]["minWealth"]
+        self.assertTrue(any("without minWealth" in e for e in self.errors(data)))
 
     def test_duplicate_id_across_files_is_an_error(self):
         group = self.base()["groups"]["sleep.couple.bedside2"]

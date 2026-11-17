@@ -24,6 +24,8 @@ from .library import ID_RE, LIB_DIR, SIDES
 
 ROOMS_DIR = os.path.join(LIB_DIR, "rooms")
 CLEARANCES = ("tight", "roomy", "grand")
+# the plain clearance table; the gap a family's rooms actually keep comes
+# from room_composer.gap_for (a grand private room stays roomy)
 CLEARANCE_GAP = {"tight": 1, "roomy": 2, "grand": 3}
 STYLES = ("flush", "open")
 # library.json's sizeBands, measured on the whole room now (there is no wall
@@ -383,17 +385,27 @@ def _filler_limits(clearance):
     return (max(cap), min(cap), room_composer.FILLER_ASPECT)
 
 
+def _gap(family, clearance):
+    """The gap a family's rooms keep between groups at a clearance, from
+    the composer's gap_for (imported, never copied, so the checker and the
+    composer cannot drift; the import stays lazy because the composer
+    imports this module)."""
+    from . import room_composer
+    return room_composer.gap_for(family, clearance)
+
+
 def dead_cells(room):
     """The room's dead floor: free cells more than the clearance's gap
-    cells (Chebyshev) from every piece — floor nobody walks on between
-    furniture. In an open room the filler and the ring of cells around it
+    cells for the room's family (Chebyshev) from every piece — floor nobody
+    walks on between furniture. In an open room the filler and the ring of
+    cells around it
     are walking floor too (the middle people cross), never dead. A room
     whose size is broken reports no cells; its error is elsewhere."""
     size = room.get("size")
     if not _int_pair(size, 1):
         return []
     w, h = size
-    gap = CLEARANCE_GAP.get(room.get("clearance"), 1)
+    gap = _gap(room.get("family"), room.get("clearance"))
     rects = [r for r in (_rect(p) for p in room.get("pieces") or []) if r]
     filler = room.get("filler") if room.get("style") == "open" else None
     if not (isinstance(filler, dict) and _int_pair(filler.get("at"))
@@ -574,7 +586,7 @@ def _check_room(room, groups, lib, err, check_band=True):
     # nobody walks on (an open room's filler and its ring are walked)
     dead = dead_cells(room)
     if dead:
-        gap = CLEARANCE_GAP.get(room.get("clearance"), 1)
+        gap = _gap(room.get("family"), room.get("clearance"))
         err(f"{len(dead)} dead floor cell(s) (first at {dead[0][0]},"
             f"{dead[0][1]}): more than {gap} cells from every piece at "
             f"{room.get('clearance')} clearance")

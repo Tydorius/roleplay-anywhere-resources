@@ -5,8 +5,9 @@ family's groups and one recipe per layout. ``library-seed/layouts_to_groups.py``
 generates the files; they may be hand-edited afterwards. This module loads
 and checks them.
 
-  load(groups_dir)  -> {"groups": {id: group}, "recipes": {layout id: recipe}},
-                       each entry carrying its file in "_file"
+  load(groups_dir)  -> {"groups": {id: group}, "recipes": {layout id: recipe},
+                       "pools": {family: [entry, ...]}}, each entry carrying
+                       its file in "_file"
   check(data, lib)  -> [error, ...], plain sentences starting with the file
 """
 import json
@@ -21,13 +22,14 @@ KINDS = ("anchor", "required", "optional", "repeatable")
 
 def load(path=None):
     """Every ``library/groups/<family>.json`` as {"groups": {id: group},
-    "recipes": {layout id: recipe}}, sorted by file name. A missing folder is
+    "recipes": {layout id: recipe}, "pools": {family: [entry, ...]}}, sorted
+    by file name. A missing folder is
     an empty set (nothing has been generated yet). A file that isn't valid
     JSON becomes a "!<file>" group entry carrying ``_load_error``; the second
     group with an id (or recipe for a layout) keeps a ``_dupe_files`` list on
     the first. Both are reported by ``check``."""
     folder = path or GROUPS_DIR
-    data = {"groups": {}, "recipes": {}}
+    data = {"groups": {}, "recipes": {}, "pools": {}}
     if not os.path.isdir(folder):
         return data
 
@@ -60,6 +62,15 @@ def load(path=None):
         for r in raw.get("recipes") or []:
             if isinstance(r, dict):
                 keep(data["recipes"], r.get("layout"), r, name)
+        pools = raw.get("pools")
+        if isinstance(pools, dict):
+            for fam, entries in pools.items():
+                if isinstance(entries, list):
+                    for e in entries:
+                        if isinstance(e, dict):
+                            e = dict(e)
+                            e["_file"] = name
+                            data["pools"].setdefault(str(fam), []).append(e)
     return data
 
 
@@ -257,12 +268,58 @@ def _check_recipes(data, lib, errors):
         errors.append(f"layout {lid!r} has no recipe")
 
 
+def _check_pools(data, lib, errors):
+    """The luxury pools: every pool names a known family, every entry names
+    a shipped group and known size bands, and every piece of a pooled group
+    carries minWealth wealthy or elite — a pool group is what makes a grand
+    private room grander, so it is furniture of the rich by definition."""
+    families = lib.vocab.get("families", {})
+    bands = set(lib.vocab.get("sizeBands", {}))
+    pools = data.get("pools") or {}
+    for fam in sorted(pools, key=str):
+        entries = pools[fam]
+        files = sorted({e.get("_file") for e in entries
+                        if isinstance(e, dict)})
+        if len(files) > 1:
+            errors.append(f"pool for {fam!r} appears in {' and '.join(files)}")
+        if fam not in families:
+            where = entries[0].get("_file") if entries and \
+                isinstance(entries[0], dict) else "?"
+            errors.append(f"{where}: pool names unknown family {fam!r}")
+            continue
+        for e in entries:
+            if not isinstance(e, dict):
+                continue
+
+            def err(msg, e=e, fam=fam):
+                errors.append(f"{e.get('_file')}: pool for {fam!r}: {msg}")
+
+            gid = e.get("group")
+            g = (data["groups"] or {}).get(gid)
+            if g is None or "_load_error" in g:
+                err(f"names no group {gid!r}")
+                continue
+            eb = e.get("bands")
+            if not isinstance(eb, list) or not eb \
+                    or any(b not in bands for b in eb):
+                err(f"bands must list one or more of "
+                    f"{', '.join(sorted(bands))}")
+            for p in g.get("pieces") or []:
+                if isinstance(p, dict) \
+                        and p.get("minWealth") not in ("wealthy", "elite"):
+                    err(f"group {gid!r} has a {p.get('role')!r} piece "
+                        f"without minWealth wealthy or elite")
+                    break
+
+
 def check(data, lib):
     """Every rule of the group format the code can check, as plain sentences:
     group fields against the vocabulary, pieces that overlap or float apart,
     wall-bound pieces off the north edge, recipe kinds and counts, exactly
-    one anchor per recipe, and one recipe per layout."""
+    one anchor per recipe, one recipe per layout, and the luxury pools
+    naming known families, groups, size bands and wealth."""
     errors = []
     _check_groups(data["groups"], lib, errors)
     _check_recipes(data, lib, errors)
+    _check_pools(data, lib, errors)
     return errors

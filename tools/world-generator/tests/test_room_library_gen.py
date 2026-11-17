@@ -1,7 +1,9 @@
 """The generated room library: the shipped bedroom, master bedroom and
 washroom rooms load and check clean, stay inside the family's aspect cap
 with no dead floor, every recipe of those families keeps at least one tight
-flush room, every open room's filler stays off every edge and holds its
+flush room, every grand room carries a luxury group from its family's pool,
+has more pieces than its roomy sibling and stays at or under 8 cells of
+floor per piece, every open room's filler stays off every edge and holds its
 clearance cap, the two-to-one aspect and the centre, no room wastes more
 than one line along a wall, the generator comes back the same for the same
 seed, and ids are unique and follow the family.band.letter.clearance
@@ -103,6 +105,48 @@ class TestShippedRooms(unittest.TestCase):
         self.assertEqual(recipes - kept, set(),
                          f"recipes without a tight flush room: "
                          f"{sorted(recipes - kept)}")
+
+    def test_every_grand_room_keeps_a_luxury_group(self):
+        data = RG.load()
+        pools = {fam: {e["group"] for e in entries}
+                 for fam, entries in (data.get("pools") or {}).items()}
+        for rooms, fam in ((self.bedrooms, "bedroom"),
+                           (self.masters, "bedroom.master"),
+                           (self.washrooms, "washroom")):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertTrue(
+                        any(p.get("group") in pools.get(fam, ())
+                            for p in room["pieces"]),
+                        "no piece comes from the family's luxury pool")
+
+    def test_every_grand_room_outranks_its_roomy_sibling(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            roomy = {(r["recipe"], r["style"]): len(r["pieces"])
+                     for r in rooms if r["clearance"] == "roomy"}
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertIn((room["recipe"], room["style"]), roomy,
+                                  "no roomy sibling to outdo")
+                    self.assertGreater(
+                        len(room["pieces"]),
+                        roomy[(room["recipe"], room["style"])])
+
+    def test_every_grand_room_stays_under_eight_cells_per_piece(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                w, h = room["size"]
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(
+                        w * h, 8 * len(room["pieces"]),
+                        f"{w * h} cells over {len(room['pieces'])} pieces = "
+                        f"{w * h / len(room['pieces']):.1f} cells per piece")
 
     def test_open_fillers_stay_off_every_edge(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms):

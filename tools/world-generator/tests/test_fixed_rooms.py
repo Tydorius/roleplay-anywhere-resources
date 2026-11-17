@@ -155,9 +155,10 @@ class TestChecker(unittest.TestCase):
                       "may be at most 2x the short side", errors[0])
 
     def test_grand_room_with_a_dead_corner(self):
-        """An 11x7 grand room whose furniture hugs the north and the two west
-        corners: the bottom right corner sits more than the grand gap from
-        every piece, so its floor is dead."""
+        """An 11x7 grand master room whose furniture hugs the north and the
+        two west corners: the bottom right corner sits more than the roomy
+        gap of 2 a private room keeps at grand from every piece, so its
+        floor is dead."""
         room = {
             "id": "bedroom.master.hand.dead", "family": "bedroom.master",
             "sizeBand": "large", "clearance": "grand", "style": "flush",
@@ -182,8 +183,8 @@ class TestChecker(unittest.TestCase):
             "description": "A hand-made room with a dead corner.",
         }
         errors = self.errors(room)
-        self.assertEqual(len(errors), 1, errors)
-        self.assertIn("20 dead floor cell(s) (first at 4,5): more than 3 "
+        self.assertEqual(len(errors), 1)
+        self.assertIn("34 dead floor cell(s) (first at 3,4): more than 2 "
                       "cells from every piece at grand clearance", errors[0])
 
     def test_a_free_cell_exactly_one_past_the_gap_is_dead(self):
@@ -229,11 +230,13 @@ class TestChecker(unittest.TestCase):
                       "seat.lounge.single.bedroom.master", "south"),
                 piece("seat.lounge", [1, 1], [10, 10],
                       "seat.lounge.single.bedroom.master", "south"),
+                piece("decor.floor", [1, 1], [10, 7],
+                      "decor.floor.single.bedroom.master2"),
             ],
             "doors": {"north": [3, 4, 5, 8, 9],
                       "south": [1, 2, 3, 4, 6, 7, 8, 9],
                       "west": [2, 3, 4, 6, 7, 8, 9],
-                      "east": [1, 2, 3, 5, 6, 7, 8, 9]},
+                      "east": [1, 2, 3, 5, 6, 8, 9]},
             "filler": {"at": [3, 3], "size": [5, 4]},
             "stretch": {}, "outdoor": False, "symmetric": False,
             "recipe": "bedroom.master.large.b",

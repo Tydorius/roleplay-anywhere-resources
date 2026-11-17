@@ -303,6 +303,12 @@ file holds the family's groups and one recipe per layout, naming the groups it n
 - The files are generated from the layouts by `library-seed/layouts_to_groups.py` and may be
   hand-edited afterwards. `python -m worldgen library groups` checks them; the rules above
   are what it enforces.
+- `groups/luxury.json` is hand-authored — the converter never writes or deletes it. Its groups
+  follow the rules above with every piece carrying a `minWealth` of `wealthy` or `elite`, and
+  its `pools` map names each private family's groups with the size bands they suit: at grand
+  clearance the composer offers the family's pool as extra optional furniture, each group only
+  in the bands its entry lists. The checker holds pools to the same account — the groups must
+  exist, the family and bands must be known, and every piece must carry the wealth.
 
 ## Rooms: `rooms/<family>.json`
 

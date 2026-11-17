@@ -1,6 +1,8 @@
 """The room composer: the bedroom and master recipes compose rooms that
 pass the fixed-room checker at every clearance, keep the clearance gaps
-between groups, never come out smaller at a higher clearance, and come
+between groups (a grand private room the roomy gap of 2, the shared
+families' grand rooms 3), never come out smaller at a higher clearance,
+and come
 back the same for the same seed; the open style keeps a clear middle, a
 symmetric recipe composes a symmetric chapel, Michael's sketch composes
 at tight, and a recipe that cannot fit its size band says so."""
@@ -71,10 +73,11 @@ def chapel_recipe():
 
 
 def one_bed_recipe():
-    """A master bedroom of nothing but the couple bed and its bed sides: it
-    composes at tight and roomy, but a grand room of it would be dead floor
-    end to end."""
-    return {"layout": "bedroom.master.hand.one", "family": "bedroom.master",
+    """A dormitory of nothing but one couple bed and its bed sides: it
+    composes at tight and roomy, but a grand room of it (a shared family,
+    so no luxury pool and the full gap of 3) would be dead floor end to
+    end."""
+    return {"layout": "dormitory.hand.one", "family": "dormitory",
             "groups": [
                 {"group": "sleep.couple.bedside2", "kind": "anchor",
                  "count": "couples"},
@@ -132,13 +135,37 @@ class TestCompose(unittest.TestCase):
             tight = self.shipped(layout, clearance="tight")[0]
             roomy = self.shipped(layout, clearance="roomy")
             grand = self.shipped(layout, clearance="grand")
-            for rooms, gap in ((roomy, 2), (grand, 3)):
+            # a grand private room (these recipes all are) keeps the roomy
+            # gap of 2, not the shared rooms' 3
+            for rooms, gap in ((roomy, 2), (grand, 2)):
                 with self.subTest(layout=layout, gap=gap):
                     for room in rooms:
                         self.assertTrue(instance_gaps(room))
                         for g in instance_gaps(room):
                             self.assertGreaterEqual(g, gap,
                                                     json.dumps(room["pieces"]))
+
+    def test_a_grand_master_room_keeps_the_roomy_gap_not_three(self):
+        """A grand private room keeps the roomy gap: every pair of groups
+        stays at least 2 cells apart, and some pair sits exactly 2 apart —
+        a room that spread every group to 3 would be the old rule."""
+        rooms = self.shipped("bedroom.master.medium.b", clearance="grand")
+        gaps = [g for room in rooms for g in instance_gaps(room)]
+        self.assertTrue(gaps)
+        self.assertGreaterEqual(min(gaps), 2)
+        self.assertEqual(min(gaps), 2)
+
+    def test_gap_for_keeps_three_for_shared_rooms(self):
+        """gap_for: the grand gap stays 3 for shared rooms and drops to the
+        roomy 2 for private ones."""
+        self.assertEqual(RC.gap_for("dining", "grand"), 3)
+        self.assertEqual(RC.gap_for("common_room", "grand"), 3)
+        self.assertEqual(RC.gap_for("bedroom", "grand"), 2)
+        self.assertEqual(RC.gap_for("bedroom.master", "grand"), 2)
+        self.assertEqual(RC.gap_for("washroom", "grand"), 2)
+        self.assertEqual(RC.gap_for("bedroom", "roomy"), 2)
+        self.assertEqual(RC.gap_for("dining", "roomy"), 2)
+        self.assertEqual(RC.gap_for("bedroom", "tight"), 1)
 
     def test_higher_clearance_never_comes_out_smaller(self):
         for layout in RECIPES:

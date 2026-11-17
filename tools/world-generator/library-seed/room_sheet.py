@@ -27,12 +27,15 @@ BORDER = (70, 70, 70)
 FLOOR = (252, 250, 246)
 FILLER = (150, 150, 150)
 DOOR = (46, 125, 50)
-ROLES = (
+ROLES = (  # specific prefixes first: _color takes the first match
     ("sleep", (196, 106, 84)),
     ("bedside", (222, 158, 138)),
     ("storage", (139, 109, 59)),
     ("wash", (74, 127, 200)),
+    ("seat.lounge", (233, 138, 108)),
+    ("seat.long", (172, 82, 60)),
     ("seat", (184, 134, 11)),
+    ("table.dining", (108, 108, 190)),
     ("table", (163, 117, 61)),
     ("desk", (163, 117, 61)),
     ("counter", (163, 117, 61)),
@@ -41,7 +44,10 @@ ROLES = (
     ("fuel", (211, 84, 0)),
     ("coat", (120, 144, 156)),
     ("waste", (120, 144, 156)),
+    ("decor.feature", (196, 96, 168)),
     ("decor", (156, 127, 176)),
+    ("display", (26, 166, 157)),
+    ("books", (108, 165, 82)),
 )
 DEFAULT_ROLE = (158, 158, 158)
 
