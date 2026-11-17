@@ -13,6 +13,7 @@
     <div class="tabs"><button id="tabMap" class="on">Map</button><button id="tabImages">Images</button></div>
     <label class="inline">Scenario <select id="source"></select></label>
     <button id="newWorld" title="Generate a whole world from a one-line idea (your own model provider and key)">New world…</button>
+    <button id="asToggle" title="Chat with your own model: it edits the open scenario, one undo step per change">Assistant</button>
     <button id="openZip" title="Open a scenario zip as a workspace the game won't touch">Open zip…</button>
     <input type="file" id="zipFile" accept=".zip" hidden>
     <button id="toWork" title="Copy the New Game scenario and its images into a workspace you can edit" hidden>Copy to workspace</button>
@@ -53,6 +54,25 @@
     <div class="coords" id="coords"></div>
     <div class="maphint">Drag empty space to pan · wheel zooms · Space+drag always pans · right-click cancels</div>
   </div>
+  <aside class="assistant" id="assistantPane" hidden>
+    <div class="as-head">
+      <select id="asProvider" title="The model provider the assistant talks to"></select>
+      <span class="as-model" id="asModel"></span>
+      <button id="asClear" class="mini" title="Empty this conversation and its session meter">Clear</button>
+      <button id="asClose" class="mini" title="Hide the assistant pane">×</button>
+    </div>
+    <p class="note as-hint" id="asHint" hidden>No model provider yet — <button type="button" class="linkish" id="asHintOpen">set one up under New world… → Provider settings</button>.</p>
+    <div class="as-log" id="asLog"></div>
+    <div class="as-meter" id="asMeter"></div>
+    <p class="note as-plan" id="asPlanNote" hidden>Rebuild tools need a generated world.</p>
+    <div class="as-compose">
+      <textarea id="asInput" rows="2" placeholder="Ask in your own words — Enter sends, Shift+Enter adds a line"></textarea>
+      <div class="as-btns">
+        <button id="asStop" hidden>Stop</button>
+        <button id="asSend" class="primary">Send</button>
+      </div>
+    </div>
+  </aside>
   <aside class="side right insp" id="inspector"><p class="hint">Click something on the map to see it here.</p></aside>
 </div>
 <iframe id="images" title="Images" hidden></iframe>
@@ -68,6 +88,9 @@
 <script src="/inspector.js"></script>
 <script src="/refsui.js"></script>
 <script src="/worldgen.js"></script>
+<script src="/design.js"></script>
+<script src="/assistant_tools.js"></script>
+<script src="/assistant.js"></script>
 <script src="/mapview.js"></script>
 </body>
 </html>

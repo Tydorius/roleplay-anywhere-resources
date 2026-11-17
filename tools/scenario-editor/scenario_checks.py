@@ -653,7 +653,10 @@ def _regions(scn, regions, by_name, add, mods, resolved=None):
         if len(rs) > 1:
             add("error", f"{len(rs)} regions are named {name!r}; schedules find regions by name, so this is ambiguous.",
                 *[r["id"] for r in rs])
-    for r in [scn.get("defaultTile") or {}] + regions:
+    dt = scn.get("defaultTile")
+    if dt is not None and not isinstance(dt, dict):
+        add("error", "The default tile is not an object like {\"ground\": \"grass\"}.")
+    for r in ([dt if isinstance(dt, dict) else {}] + regions):
         label = f"Region {r.get('name')!r}" if r in regions else "The default tile"
         if r.get("ground") and r["ground"] not in GROUND:
             add("error", f"{label}: ground {r['ground']!r} is not one of {', '.join(sorted(GROUND))}.", r.get("id"))
@@ -865,6 +868,25 @@ def _templates(scn, regions, add):
         if t.get("stance") is not None and t["stance"] not in TEMPLATE_STANCES:
             add("warning", f"{label}: stance {t['stance']!r} isn't {', '.join(sorted(TEMPLATE_STANCES))}.", t.get("id"))
         _sprite(t, label, "error", add)
+    # containers that all start empty: the hand-authored version of a world whose containers drew
+    # no loot. Storage-tagged or pool-carrying object templates with placements, but no entity
+    # anywhere carries an inventory and no template ships money. A hand-made world may want empty
+    # containers, so it is a note, and only once a few of them are placed.
+    ents = [e for e in scn.get("entities", []) if isinstance(e, dict)]
+    tpl = {t.get("id"): t for t in scn.get("objectTemplates", []) if isinstance(t, dict)}
+    boxes, tids = 0, set()
+    for e in ents:
+        if e.get("type") != "object":
+            continue
+        t = tpl.get(e.get("templateId")) or {}
+        if t.get("lootPoolIds") or "storage" in (t.get("tags") or []):
+            boxes += 1
+            if t.get("id"):
+                tids.add(t["id"])
+    stocked = any(e.get("inventory") for e in ents)
+    moneyed = any("money" in t for t in list(tpl.values()) + list(npcs))
+    if boxes >= 3 and not stocked and not moneyed:
+        add("info", "This scenario's containers all start empty.", *sorted(tids))
 
 
 def _sprite(o, label, level, add):

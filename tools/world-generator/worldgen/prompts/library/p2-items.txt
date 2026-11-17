@@ -34,6 +34,7 @@ Reply with ONE JSON object:
   a pharmacy and a forge each get their own). Fill them from the menu. One item
   may sit in many pools. "weights" (item -> relative chance, most 1.0) are
   optional. Use at least 25 different items across all pools.
+${library_purposes_block}
 - variants: a menu item under a new name, with a new colour (red, orange,
   yellow, green, teal, blue, purple, pink, brown, black) and its own sentence.
   Use them for local flavour: a guild's blue ledger, a green potion, a red

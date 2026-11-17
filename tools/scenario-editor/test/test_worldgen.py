@@ -203,6 +203,43 @@ class TestWorldgenEndpoints(unittest.TestCase):
             data.pop("third", None)
             wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
 
+    def test_provider_listings_report_the_vision_flag(self):
+        m = self.get("/api/worldgen/meta")
+        by_name = {p["name"]: p for p in m["providers"]}
+        self.assertIs(by_name["mockp"]["vision"], False)
+        # the flag set by hand in providers.json, like a provider tuned outside the form
+        data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+        data["mockp"]["vision"] = True
+        wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+        try:
+            m = self.get("/api/worldgen/meta")
+            by_name = {p["name"]: p for p in m["providers"]}
+            self.assertIs(by_name["mockp"]["vision"], True)
+        finally:
+            data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+            data["mockp"].pop("vision", None)
+            wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+
+    def test_saving_a_provider_keeps_its_vision_flag(self):
+        wg.save_provider("seer", "http://localhost:8100/v1", "sk-seer-4444aaaa",
+                         "glm-4.6v", 8192)
+        data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+        data["seer"]["vision"] = True
+        wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+        try:
+            r = self.post("/api/worldgen/providers",
+                          {"name": "seer", "base_url": "http://localhost:8100/v1",
+                           "api_key": "", "model": "glm-4.6v", "max_tokens": 4096})
+            seer = next(p for p in r["providers"] if p["name"] == "seer")
+            self.assertIs(seer["vision"], True)
+            saved = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))["seer"]
+            self.assertIs(saved["vision"], True)
+            self.assertEqual(saved["max_tokens"], 4096)
+        finally:
+            data = json.loads(wg.PROVIDERS_JSON.read_text("utf-8"))
+            data.pop("seer", None)
+            wg.PROVIDERS_JSON.write_text(json.dumps(data), "utf-8")
+
     def test_estimate_endpoint(self):
         e = self.get("/api/worldgen/estimate?idea=" + urllib.parse.quote("a fogbound harbour town"))["estimate"]
         self.assertTrue(25 <= e["calls"] <= 35, e)

@@ -3153,6 +3153,16 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
     old_p3 = [b for z in p1["zones"] for b in z["buildings"]
               if not lib or (floors and _check_int(b.get("storeys")) and b["storeys"] > 1)]
     p2_append = _library_fragment("p2-catalogue") if lib and not old_p3 else ""
+    # the library's rooms are chosen by purpose, and the containers the code
+    # places in them draw from pools named after those purposes: the pools are
+    # written by the p2-items call, so both P2 prompts carry the purpose list
+    purposes_block = ""
+    if lib:
+        purposes_block = ("ROOM LIBRARY PURPOSES: the buildings' rooms are furnished from "
+                          "the room library by the purposes below, and a container in one "
+                          "of them draws from the pool named after its room's purpose. "
+                          "Name one loot pool after each of these purposes (it may share "
+                          "items with the others):\n" + library_plan.purpose_line(lib))
     # a home with couples needs a double bed in the catalogue, so P2 is told
     # (the library has doubles of its own)
     needs_double = bool(old_p3) and any(_check_int(b.get("couples")) and b["couples"] > 0
@@ -3177,8 +3187,11 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         if not item_entries:
             stats["dropped"].append(("items", f"the item library has no items for the "
                                               f"{band} band; the model invents every item"))
+    # both items prompts carry the room library's purposes: the pools named
+    # after them stock the containers in library-furnished rooms
     items_tname, items_kw = "p2-items", dict(setting_line=setting_line,
-                                             zone_lines=zone_lines)
+                                             zone_lines=zone_lines,
+                                             library_purposes_block=purposes_block)
     items_validate = check_p2_items_reply
     if item_entries:
         items_tname = "library/p2-items"
@@ -3201,6 +3214,8 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
         stats["dropped"].append(("items", f"{n_menu} from the library, {n_tint} "
                                           f"variants, {n_plot} new (plot)"))
     pool_list = [n for (n, _p) in _pool_entries(stock.get("lootPools")) if _is_str(n)]
+    if purposes_block:
+        p2_append = (p2_append + "\n\n" + purposes_block) if p2_append else purposes_block
     p2 = call("p2", "p2-catalogue", event=("P2", "the prop catalogue"),
               setting_line=setting_line, zone_lines=zone_lines, _append=p2_append,
               pool_names_line=", ".join(pool_list) or "(none)",
@@ -3301,10 +3316,11 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                              units=b.get("units") or False, pools=pool_names,
                              ruined=ruined_building(b))
         library_plan.expand_fitting(lib, registry, design, b, band, genre, world_seed,
-                                    stats["dropped"], ensure_beds=not b.get("units"))
+                                    stats["dropped"], ensure_beds=not b.get("units"),
+                                    pools=pool_names)
         if b.get("units"):
             library_plan.expand_unit(lib, registry, design, b, band, genre, world_seed,
-                                     stats["dropped"])
+                                     stats["dropped"], pools=pool_names)
         for t in registry.templates():
             if t.get("forSleep"):
                 bed_templates[t["name"]] = bed_capacity(tuple(t["size"]))
