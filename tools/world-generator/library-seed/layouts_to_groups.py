@@ -3,6 +3,13 @@
 its beside:/around: anchors, plus one recipe per layout naming the groups it
 needs. Run from anywhere: python library-seed/layouts_to_groups.py
 
+Hand work survives: a group or a whole recipe with "source": "hand" in an
+existing file is kept verbatim (a converted group that would take a hand
+group's id is dropped, with a note), and a recipe entry with
+"source": "hand" is kept on the converted recipe it sat on. luxury.json is
+never written, and its ids, like hand ids, are never handed to a converted
+group.
+
 How a layout becomes groups
 ---------------------------
 * The root of a group is a slot whose anchor has no beside:/around: token;
@@ -485,18 +492,66 @@ def _suffix(g):
     return ".".join(r + (str(n) if n > 1 else "") for r, n in parts)
 
 
-def convert_all(layouts):
+def read_hand(path):
+    """The hand material one existing groups file holds, for the converter
+    to keep: its groups and whole recipes with "source": "hand", verbatim,
+    plus the source-"hand" entries of every other recipe.
+    {"groups": [...], "recipes": {layout: recipe}, "entries": {layout:
+    [entry, ...]}} — or None when the file is missing, unreadable or holds
+    no hand work at all."""
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, "r", encoding="utf-8") as fh:
+            raw = json.load(fh)
+    except ValueError:
+        return None
+    if not isinstance(raw, dict):
+        return None
+    hand = {"groups": [g for g in raw.get("groups") or []
+                       if isinstance(g, dict) and g.get("source") == "hand"],
+            "recipes": {}, "entries": {}}
+    for r in raw.get("recipes") or []:
+        if not isinstance(r, dict):
+            continue
+        lid = r.get("layout")
+        if r.get("source") == "hand":
+            hand["recipes"][lid] = r
+        else:
+            entries = [e for e in (r.get("groups") or [])
+                       if isinstance(e, dict) and e.get("source") == "hand"]
+            if entries:
+                hand["entries"][lid] = entries
+    return hand if any(hand.values()) else None
+
+
+def convert_all(layouts, hand=None, reserved=()):
     """{family: [layout, ...]} -> ({family: file dict}, [notes]). Same-family
     groups with the same wall, use and pieces share an id; a base id taken
-    by another family gets the family appended. Deterministic: families,
-    layouts and pieces are handled in a fixed order."""
+    by another family gets the family appended, and one held by hand work
+    or the luxury file (``reserved``) drops the converted group — a note
+    says so. ``hand`` ({family: what read_hand found}) keeps hand groups and
+    whole hand recipes verbatim and hand entries on the converted recipes
+    they sat on. Deterministic: families, layouts and pieces are handled in
+    a fixed order."""
+    hand = hand or {}
     notes = []
     files = {}
     seen = {}       # group key -> id (within a family)
-    taken = set()   # every id, across all files
+    fixed = set(reserved)   # ids no converted group may take (hand, luxury)
+    for keep in hand.values():
+        for g in (keep or {}).get("groups") or []:
+            if isinstance(g, dict) and g.get("id"):
+                fixed.add(g["id"])
+    taken = set(fixed)      # every id, across all files, hand ones included
     for family in sorted(layouts):
+        keep = hand.get(family) or {}
+        hand_groups = keep.get("groups") or []
+        hand_recipes = keep.get("recipes") or {}
+        hand_entries = keep.get("entries") or {}
         groups_out, recipes_out = [], []
         for layout in sorted(layouts[family], key=lambda l: str(l.get("id"))):
+            lid = layout.get("id")
             r = convert_layout(layout)
             notes += r["notes"]
             ids = []
@@ -506,6 +561,14 @@ def convert_all(layouts):
                     ids.append(seen[key])
                     continue
                 base = f"{g.pieces[0]['role']}.{_suffix(g)}"
+                if base in fixed:
+                    # the id belongs to a hand group (or the luxury file):
+                    # that one stands, this converted one is dropped
+                    notes.append(f"{lid}: converted group {base!r} shares "
+                                 f"a hand group's id; dropped")
+                    seen[key] = base
+                    ids.append(base)
+                    continue
                 gid = base
                 if gid in taken:
                     gid = f"{base}.{family}"
@@ -518,10 +581,18 @@ def convert_all(layouts):
                 ids.append(gid)
                 groups_out.append({"id": gid, "family": g.family, "wall": g.wall,
                                    "use": list(g.use), "pieces": g.pieces})
+            if lid in hand_recipes:
+                recipes_out.append(hand_recipes[lid])    # verbatim, always
+                continue
             recipe = dict(r["recipe"])
             recipe["groups"] = [dict(e, group=ids[e["group"]])
                                 for e in r["recipe"]["groups"]]
+            recipe["groups"] += [dict(e) for e in hand_entries.get(lid) or []]
             recipes_out.append(recipe)
+        groups_out += [dict(g) for g in hand_groups]
+        covered = {l.get("id") for l in layouts[family]}
+        recipes_out += [hand_recipes[l] for l in sorted(hand_recipes, key=str)
+                        if l not in covered]
         files[family] = {"groups": groups_out, "recipes": recipes_out}
     return files, notes
 
@@ -545,21 +616,56 @@ def main():
         if role not in known:
             print(f"WARNING: {role} in the conversion tables names no role")
 
-    files, notes = convert_all(layouts)
+    # the hand work the existing files hold (kept verbatim), and every id
+    # the converter may not hand out: hand groups' and the luxury file's
     groups_dir = os.path.join(LIBRARY, "groups")
+    hand, reserved = {}, set()
+    if os.path.isdir(groups_dir):
+        for name in sorted(os.listdir(groups_dir)):
+            if not name.endswith(".json"):
+                continue
+            path = os.path.join(groups_dir, name)
+            if name == "luxury.json":          # never written, never renamed
+                try:
+                    with open(path, "r", encoding="utf-8") as fh:
+                        raw = json.load(fh)
+                    reserved.update(g.get("id") for g in raw.get("groups") or []
+                                    if isinstance(g, dict))
+                except (OSError, ValueError, AttributeError):
+                    pass
+                continue
+            h = read_hand(path)
+            if h:
+                hand[name[:-5]] = h
+                reserved.update(g.get("id") for g in h["groups"]
+                                if isinstance(g.get("id"), str))
+
+    files, notes = convert_all(layouts, hand, reserved)
     os.makedirs(groups_dir, exist_ok=True)
-    total_g = total_r = 0
+    total_g = total_r = total_hg = total_hr = total_he = 0
     for family in sorted(files):
         path = os.path.join(groups_dir, family + ".json")
-        with open(path, "w", encoding="utf-8") as fh:
+        # newline="\n": the files are LF on every platform, so running the
+        # converter on the shipped files writes their very bytes back
+        with open(path, "w", encoding="utf-8", newline="\n") as fh:
             json.dump(files[family], fh, ensure_ascii=False, indent=2)
             fh.write("\n")
         n, m = len(files[family]["groups"]), len(files[family]["recipes"])
+        hg = len((hand.get(family) or {}).get("groups") or [])
+        hr = len((hand.get(family) or {}).get("recipes") or {})
+        he = sum(len(v) for v in ((hand.get(family) or {}).get("entries")
+                                  or {}).values())
         total_g += n
         total_r += m
-        print(f"{family}: {n} groups, {m} recipes")
+        total_hg += hg
+        total_hr += hr
+        total_he += he
+        print(f"{family}: {n} groups, {m} recipes"
+              + (f" ({hg} hand group(s), {hr} hand recipe(s), "
+                 f"{he} hand entr(ies) kept)" if hg or hr or he else ""))
     print(f"wrote {len(files)} files: {total_g} groups, {total_r} recipes, "
-          f"{len(notes)} note(s)")
+          f"{total_hg} hand group(s), {total_hr} hand recipe(s), "
+          f"{total_he} hand entr(ies), {len(notes)} note(s)")
     for note in notes:
         print("note: " + note)
 

@@ -1,7 +1,8 @@
-"""The role colour palette of the room library, shared by the room sheets
-(library-seed/room_sheet.py) and the Scenario Editor's Rooms tab so the two
-cannot drift. No PIL import: the sheets turn the (r, g, b) tuples into
-pixels, the editor turns them into "#rrggbb" strings.
+"""The role colour palette and the plan label rule of the room library,
+shared by the room sheets (library-seed/room_sheet.py) and the Scenario
+Editor's Rooms tab so the two cannot drift. No PIL import: the sheets turn
+the (r, g, b) tuples into pixels, the editor turns them into "#rrggbb"
+strings; rooms.js carries the same short_role rule in JavaScript.
 """
 
 ROLES = (  # specific prefixes first: color() takes the first match
@@ -41,3 +42,24 @@ def color(role):
 def css(role):
     """The role's colour as "#rrggbb" (the editor's side of the palette)."""
     return "#%02x%02x%02x" % color(role)
+
+
+def short_role(role, roles=None):
+    """The label a plan writes on a piece: the role's most telling word.
+    The first word by default ("sleep.couple" -> "sleep"), but the last word
+    for washroom fixtures ("wash.toilet" -> "toilet": they would all read
+    "wash") and wherever the first word alone is ambiguous — another,
+    different role in the same room shares it ("storage.big" next to
+    "storage.small" -> "big"), so both are told apart by their last word.
+    ``roles`` is the room's roles; without it the label cannot disambiguate
+    and the first word (the wash rule aside) is all it can promise."""
+    words = str(role or "").split(".")
+    last = words[-1] if words else ""
+    if len(words) > 1 and words[0] == "wash":
+        return last
+    if roles is not None:
+        first = words[0] if words else ""
+        for other in set(roles):
+            if other != role and str(other or "").split(".")[0] == first:
+                return last
+    return words[0] if words else ""

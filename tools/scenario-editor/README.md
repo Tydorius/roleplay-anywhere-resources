@@ -199,12 +199,20 @@ room never reaches a file.
   strip under the plan, one for each clearance and style.
 - **Lay out a room by hand** (**Edit**): drag a group and its pieces move together (snapped to
   cells), turn the selected group a quarter (backs turn with it), remove an optional or luxury
-  group, add a group from a recipe or the family's luxury pool, and grow or shrink the room by
-  a row or column on any side (the size band in the id is the limit). The checker runs as you
+  group, and grow or shrink the room by a row or column on any side (the size band in the id is
+  the limit). The checker runs as you
   edit — offending cells are outlined on the plan — and a room that fails it stays a draft in
   the page but cannot be saved. **Duplicate** copies any room under the next free id, **New
   from a recipe** starts from the recipe's anchor group in the smallest room it fits, and both
-  are marked `source: "hand"`: regeneration never changes or removes them.
+  are marked `source: "hand"`: regeneration never changes or removes them. Any layout you keep
+  marks the room `source: "hand"` too.
+- **Add any group** (the layout editor's **Add group…**): the picker lists, under headings, the
+  groups this room has lost since editing began (first place to look when putting one back),
+  the recipe's groups of any kind, the family's luxury pool, and every other group in the
+  library — searchable by id or role, each row showing its own mini plan and the file the group
+  lives in. Picking one places it in the first free spot it fits; when nowhere fits it lands in
+  the top-left corner and the live checker shows the overlap. The room checker takes any known
+  group id, and a room that gains a group outside its recipe is hand work.
 - **Regenerate. This room** composes its recipe at its clearance and style under eight seeds,
   skipping every candidate equal to a shipped room after any turn or mirror; pick one to
   re-lay the room out — same id, same edited fields, now hand work. **This family** runs the
@@ -217,7 +225,22 @@ room never reaches a file.
   and the family must be reloaded.
 - **Groups**, beside the family picker, swaps the plan for the family's recipes: every group as
   a small role-coloured plan with its kind (anchor, required, optional) and count, plus the
-  luxury pool with its size bands and kinds.
+  luxury pool with its size bands and kinds. Click a group anywhere in the view to edit it:
+  the **group editor** shows its pieces on a small plan (the group's own wall drawn as the
+  thick north edge, or corner), each piece's role, size, position, back, optional flag and
+  wealth floor, the wall itself, and the luxury kind for a pool group — the group checker runs
+  live and a draft with errors cannot be saved. Saving writes the file the group lives in
+  (atomically, the previous copy in `library/groups/.backup/`) and lists the stored rooms that
+  still hold the group's old pieces — they keep them until you open a room or regenerate its
+  family; a group save never edits a room file. **Delete…** removes a group nothing uses and
+  says which recipe, pool or room stops it otherwise. **New group…** starts empty or as a copy
+  under a fresh id (refused when the id is taken), saved into the family's group file — or
+  into `luxury.json` with its kind and pool entries when started from the luxury section.
+  Recipes are editable too: add any group in the library as an optional or required entry, or
+  take a non-anchor entry out. Everything a person writes is marked `source: "hand"` — the
+  group, the recipe, or just the entry — and the seed converter keeps hand work verbatim
+  (a converted group that would take a hand group's id is dropped instead), so regenerating
+  the group files from the layouts never sweeps hand edits away.
 
 ## What it does now
 

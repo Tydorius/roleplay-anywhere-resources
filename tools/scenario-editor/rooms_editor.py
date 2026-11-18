@@ -17,6 +17,12 @@ today.
                                and the file's hash for saving
   room(id, turn, mirror)    -> one room turned and mirrored (preview only)
   groups(family)            -> the family's recipes, groups and luxury pool
+  allgroups()               -> every group in the library with its file
+  group(id)                 -> one group, its file and hash, its users
+  check_group(req)          -> the group checker's verdict, nothing written
+  save_group(req)           -> one group written (checker, backup, hash)
+  save_recipe(req)          -> one recipe written the same way
+  delete_group(req)         -> remove a group nothing uses
   look(id, band, turn, mirror) -> per piece the object and sprite the world
                                generator would place, and the sprite's turn
   sprite(band, object)      -> (webp bytes, content type)
@@ -125,7 +131,17 @@ def meta():
             "sizeBands": ({n: list(r) for n, r in fixed_rooms.BANDS.items()}
                           if MODULES else {}),
             "wealthFor": _wealth_for() if MODULES else {},
-            "letters": "abcdefghijklmnopqrstuvwxyz"}
+            "letters": "abcdefghijklmnopqrstuvwxyz",
+            # what the group editor needs: the library's own families,
+            # every role a piece may take, and the group format's fields
+            "libraryFamilies": sorted((_lib().vocab.get("families") or {}))
+            if MODULES else [],
+            "roleNames": sorted((_lib().vocab.get("roles") or {}))
+            if MODULES else [],
+            "sides": list(fixed_rooms.SIDES) if MODULES else [],
+            "walls": list(room_groups.WALLS) if MODULES else [],
+            "kinds": list(room_groups.KINDS) if MODULES else [],
+            "luxuryKinds": list(room_groups.LUXURY_KINDS) if MODULES else []}
 
 
 def _bands():
@@ -299,17 +315,26 @@ def _sprite_rot(piece, obj):
 # ---------------------------------------------------------------- groups
 
 def groups(family):
-    """The family's recipes as loaded, every group those recipes name with
-    its pieces, and the family's luxury pool entries with their size bands
-    and luxury kinds."""
+    """The family's recipes as loaded, every group those recipes or the
+    family's luxury pool names with its pieces, and the pool entries with
+    their size bands and luxury kinds. Each recipe carries the group file
+    it lives in, and ``hashes`` maps every group file to its sha256 — what
+    a recipe save needs for its stale-file guard."""
     _need_modules()
     data = room_groups.load(_groups_dir())
-    recipes = sorted((_plain(r) for r in data["recipes"].values()
-                      if r.get("family") == family),
-                     key=lambda r: str(r.get("layout")))
+    recipes = []
+    for r in sorted((e for e in data["recipes"].values()
+                     if e.get("family") == family),
+                    key=lambda r: str(r.get("layout"))):
+        clean = _plain(r)
+        clean["file"] = r.get("_file")
+        recipes.append(clean)
     named = {e.get("group") for r in recipes for e in (r.get("groups") or [])
              if isinstance(e, dict)}
-    out_groups = {gid: _plain(data["groups"][gid]) for gid in sorted(named, key=str)
+    pooled = {e.get("group") for e in data["pools"].get(family) or []
+              if isinstance(e, dict)}
+    out_groups = {gid: _plain(data["groups"][gid])
+                  for gid in sorted(named | pooled, key=str)
                   if isinstance(data["groups"].get(gid), dict)}
     pool = []
     for e in data["pools"].get(family) or []:
@@ -318,7 +343,367 @@ def groups(family):
         entry["kind"] = list(room_groups.luxury_kinds(g))
         pool.append(entry)
     return {"family": family, "recipes": recipes, "groups": out_groups,
-            "pool": pool}
+            "pool": pool, "hashes": _group_file_hashes()}
+
+
+def _group_file_hashes():
+    """{file: sha256} for every group file, the stale-file guard for group
+    and recipe saves."""
+    out = {}
+    if os.path.isdir(_groups_dir()):
+        for name in sorted(os.listdir(_groups_dir())):
+            path = os.path.join(_groups_dir(), name)
+            if name.endswith(".json") and os.path.isfile(path):
+                out[name] = _file_hash(path)
+    return out
+
+
+def allgroups():
+    """GET /api/rooms/allgroups: every group in the library, sorted by id —
+    its id, the file it lives in, family, wall, use, pieces, its luxury
+    kinds, and the families whose recipes or pools use it."""
+    _need_modules()
+    data = room_groups.load(_groups_dir())
+    users = {}
+    for r in data["recipes"].values():
+        if not isinstance(r, dict):
+            continue
+        for e in (r.get("groups") or []):
+            if isinstance(e, dict):
+                users.setdefault(e.get("group"), set()).add(r.get("family"))
+    for fam, entries in (data.get("pools") or {}).items():
+        for e in entries:
+            if isinstance(e, dict):
+                users.setdefault(e.get("group"), set()).add(fam)
+    out = []
+    for gid, g in sorted(data["groups"].items(), key=lambda kv: str(kv[0])):
+        if not isinstance(g, dict) or "_load_error" in g:
+            continue
+        clean = _plain(g)
+        clean["file"] = g.get("_file")
+        clean["kind"] = list(room_groups.luxury_kinds(g))
+        clean["usedBy"] = sorted(users.get(gid) or (), key=str)
+        out.append(clean)
+    return {"groups": out}
+
+
+# ------------------------------------------------------------ group editing
+
+def group(gid):
+    """GET /api/rooms/group: one group as stored, the file it lives in with
+    that file's hash (the stale-file guard when it is saved), the recipes
+    that name it, the pools that offer it, and the stored rooms whose
+    pieces carry it — an edited group never changes those rooms; they keep
+    the pieces they were composed with."""
+    _need_modules()
+    data = room_groups.load(_groups_dir())
+    g = data["groups"].get(gid)
+    if not isinstance(g, dict) or "_load_error" in g:
+        raise LookupError(f"no group {gid!r}")
+    fname = g.get("_file")
+    path = os.path.join(_groups_dir(), fname or "")
+    if not os.path.isfile(path):
+        raise LookupError(f"no group file {fname!r}")
+    out = _plain(g)
+    out["file"] = fname
+    out["hash"] = _file_hash(path)
+    out["recipes"] = [{"layout": r.get("layout"), "family": r.get("family"),
+                       "kind": e.get("kind")}
+                      for r in sorted(data["recipes"].values(),
+                                      key=lambda r: str(r.get("layout")))
+                      if isinstance(r, dict)
+                      for e in (r.get("groups") or [])
+                      if isinstance(e, dict) and e.get("group") == gid]
+    out["pools"] = [{"family": fam, "bands": list(e.get("bands") or [])}
+                    for fam in sorted((data.get("pools") or {}), key=str)
+                    for e in ((data.get("pools") or {}).get(fam) or [])
+                    if isinstance(e, dict) and e.get("group") == gid]
+    out["rooms"] = _rooms_using(gid)
+    return out
+
+
+def _rooms_using(gid):
+    """The stored rooms whose pieces name the group, [{id, family}] sorted
+    by id — who a group edit has to be told about."""
+    return [{"id": r.get("id"), "family": r.get("family")}
+            for r in fixed_rooms.load(_rooms_dir())
+            if isinstance(r, dict) and any(
+                isinstance(p, dict) and p.get("group") == gid
+                for p in (r.get("pieces") or []))]
+
+
+def _clean_entry(entry):
+    """A group or recipe as it is stored: no bookkeeping keys (the loader's
+    ``_file``), no per-entry errors list, and none of the keys the editor's
+    own replies add (file, hash, the users lists) — the page sends a loaded
+    group straight back, and those must not reach the file."""
+    drop = {"errors", "file", "hash", "recipes", "pools", "rooms", "usedBy"}
+    return {k: v for k, v in entry.items()
+            if not k.startswith("_") and k not in drop}
+
+
+def _pool_entries(pool):
+    """A save or check request's pool entries, normalised to
+    [{"family", "bands"}]: one object or a list of them (a new luxury group
+    can join several families' pools)."""
+    if pool is None:
+        return []
+    if isinstance(pool, dict):
+        pool = [pool]
+    if not isinstance(pool, list):
+        raise ValueError("pool must be an object or a list of objects")
+    out = []
+    for e in pool:
+        if not isinstance(e, dict):
+            raise ValueError("every pool entry must be a JSON object")
+        out.append({"family": e.get("family"),
+                    "bands": list(e.get("bands") or [])})
+    return out
+
+
+def _with_group(req):
+    """The whole library's group data with the request's group in (added,
+    or replacing the group of its id) and its pool entries merged into
+    their families' pools — the data a save would leave behind, and what
+    the group checker runs on. Returns it with the group's cleaned id."""
+    group_ = req.get("group")
+    if not isinstance(group_, dict):
+        raise ValueError("group must be a JSON object")
+    gid = group_.get("id")
+    if not isinstance(gid, str) or not gid:
+        raise ValueError("the group needs an id")
+    data = room_groups.load(_groups_dir())
+    data["groups"][gid] = _clean_entry(group_)
+    for e in _pool_entries(req.get("pool")):
+        fam = e["family"]
+        entries = [p for p in (data["pools"].get(fam) or [])
+                   if not (isinstance(p, dict) and p.get("group") == gid)]
+        entries.append({"group": gid, "bands": e["bands"],
+                        "_file": "luxury.json"})
+        data["pools"][fam] = entries
+    return data, gid
+
+
+def check_group(req):
+    """POST /api/rooms/group/check: the group checker's verdict — the whole
+    library with the request's group and pool entries in, exactly the
+    check ``python -m worldgen library groups`` runs. Nothing is written:
+    a group with errors stays a draft in the page, it just cannot be
+    saved."""
+    _need_modules()
+    data, _gid = _with_group(req)
+    return {"errors": room_groups.check(data, _lib())}
+
+
+def _group_file_name(name):
+    """A groups file name: lower case words separated by dots, .json."""
+    if not isinstance(name, str) \
+            or not re.fullmatch(r"[a-z0-9]+(?:\.[a-z0-9]+)*\.json", name):
+        raise ValueError(f"bad group file name {name!r}")
+    return name
+
+
+def _read_groups_raw(fname):
+    """One groups file as stored, ready to edit and write back."""
+    with open(os.path.join(_groups_dir(), fname), "r", encoding="utf-8") as fh:
+        raw = json.load(fh)
+    if not isinstance(raw, dict):
+        raise ValueError(f"{fname} is not a JSON object")
+    return raw
+
+
+def _write_groups_file(fname, raw):
+    """One groups file written the way the rooms are written: the previous
+    file copied to library/groups/.backup/<file> first (the loaders list
+    only top-level *.json, so the backup folder never loads), then a temp
+    file replaced into place, indent 2, one trailing newline."""
+    path = os.path.join(_groups_dir(), fname)
+    backup = os.path.join(_groups_dir(), ".backup", fname)
+    os.makedirs(os.path.dirname(backup), exist_ok=True)
+    shutil.copyfile(path, backup)
+    fd, tmp = tempfile.mkstemp(dir=_groups_dir(), prefix=".tmp-",
+                               suffix=f"-{fname}")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as fh:
+            json.dump(raw, fh, indent=2, ensure_ascii=False)
+            fh.write("\n")
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    return backup
+
+
+def save_group(req):
+    """POST /api/rooms/group/save: one group written into the file it lives
+    in — a new group into the file the request names (a family's group
+    file, or luxury.json for a group made from the luxury section, whose
+    pool entries travel with it) — only when the whole library passes the
+    group checker with it in, the file on disk is still the one the page
+    loaded, and the id is not another file's. A group made or changed by
+    the save carries "source": "hand" — the converter keeps it as it is.
+    The reply lists the stored
+    rooms that use the group and the room checker's verdict: a group save
+    never edits a room file, and the rooms keep the pieces they were
+    composed with."""
+    _need_modules()
+    group_ = req.get("group")
+    if not isinstance(group_, dict):
+        raise ValueError("group must be a JSON object")
+    gid = group_.get("id")
+    stored = room_groups.load(_groups_dir())
+    existing = stored["groups"].get(gid)
+    if isinstance(existing, dict) and "_load_error" in existing:
+        existing = None
+    if existing is not None:
+        fname = existing.get("_file")
+        target = _group_file_name(req.get("file")) if req.get("file") else fname
+        if target != fname:
+            raise SaveError([f"group {gid!r} already lives in {fname}: a "
+                             "new group cannot take its id"])
+    else:
+        if not isinstance(gid, str) or not gid:
+            raise ValueError("the group needs an id")
+        fname = _group_file_name(req.get("file"))
+    path = os.path.join(_groups_dir(), fname or "")
+    if not os.path.isfile(path):
+        raise LookupError(f"no group file {fname!r}")
+    if req.get("hash") != _file_hash(path):
+        raise SaveError([f"{fname} changed on disk since the page loaded "
+                         "it: reload and save again"])
+    data, gid = _with_group(req)
+    errors = room_groups.check(data, _lib())
+    if errors:
+        raise SaveError(errors)
+    raw = _read_groups_raw(fname)
+    clean = _clean_entry(group_)
+    # A group made or changed here is hand work: it carries the marker the
+    # converter keeps verbatim. An unchanged save keeps what it had.
+    old = next((e for e in (raw.get("groups") or [])
+                if isinstance(e, dict) and e.get("id") == gid), None)
+    bare = {k: v for k, v in clean.items() if k != "source"}
+    old_bare = ({k: v for k, v in old.items() if k != "source"}
+                if isinstance(old, dict) else None)
+    if old_bare != bare:
+        clean["source"] = "hand"
+    groups_list = raw.get("groups")
+    if not isinstance(groups_list, list):
+        raise ValueError(f"{fname} holds no groups list")
+    for i, e in enumerate(groups_list):
+        if isinstance(e, dict) and e.get("id") == gid:
+            groups_list[i] = clean
+            break
+    else:
+        groups_list.append(clean)
+    raw["groups"] = groups_list
+    pools = _pool_entries(req.get("pool"))
+    if pools:
+        raw_pools = raw.get("pools")
+        if not isinstance(raw_pools, dict):
+            raw_pools = {}
+            raw["pools"] = raw_pools
+        for e in pools:
+            entries = [p for p in (raw_pools.get(e["family"]) or [])
+                       if not (isinstance(p, dict) and p.get("group") == gid)]
+            entries.append({"group": gid, "bands": e["bands"]})
+            raw_pools[e["family"]] = entries
+    _write_groups_file(fname, raw)
+    return {"ok": True, "group": gid, "file": fname,
+            "hash": _file_hash(path),
+            "roomsUsing": _rooms_using(gid),
+            "roomErrors": fixed_rooms.check(fixed_rooms.load(_rooms_dir()),
+                                            data, _lib())}
+
+
+def save_recipe(req):
+    """POST /api/rooms/recipe/save: one recipe written into the group file
+    it lives in, only when the whole library passes the group checker with
+    it in and the file on disk is still the one the page loaded. The page
+    marks the hand work: an entry it added carries "source": "hand", and a
+    recipe it changed beyond adding entries is "hand" whole — the converter
+    keeps both."""
+    _need_modules()
+    recipe = req.get("recipe")
+    if not isinstance(recipe, dict):
+        raise ValueError("recipe must be a JSON object")
+    lid = recipe.get("layout")
+    if not isinstance(lid, str) or not lid:
+        raise ValueError("the recipe needs a layout")
+    stored = room_groups.load(_groups_dir())
+    existing = stored["recipes"].get(lid)
+    fname = existing.get("_file") if isinstance(existing, dict) else None
+    if fname is None:
+        fname = _group_file_name(req.get("file"))
+    path = os.path.join(_groups_dir(), fname or "")
+    if not os.path.isfile(path):
+        raise LookupError(f"no group file {fname!r}")
+    if req.get("hash") != _file_hash(path):
+        raise SaveError([f"{fname} changed on disk since the page loaded "
+                         "it: reload and save again"])
+    clean = _clean_entry(recipe)
+    data = dict(stored)
+    data["recipes"] = dict(stored["recipes"], **{lid: clean})
+    errors = room_groups.check(data, _lib())
+    if errors:
+        raise SaveError(errors)
+    raw = _read_groups_raw(fname)
+    recipes_list = raw.get("recipes")
+    if not isinstance(recipes_list, list):
+        raise ValueError(f"{fname} holds no recipes list")
+    for i, e in enumerate(recipes_list):
+        if isinstance(e, dict) and e.get("layout") == lid:
+            recipes_list[i] = clean
+            break
+    else:
+        recipes_list.append(clean)
+    raw["recipes"] = recipes_list
+    _write_groups_file(fname, raw)
+    return {"ok": True, "recipe": lid, "file": fname,
+            "hash": _file_hash(path)}
+
+
+def delete_group(req):
+    """POST /api/rooms/group/delete: remove a group nothing uses. Any
+    recipe, luxury pool or stored room that names it refuses the delete,
+    saying which."""
+    _need_modules()
+    gid = req.get("id")
+    if not isinstance(gid, str) or not gid:
+        raise ValueError("the group id is required")
+    data = room_groups.load(_groups_dir())
+    g = data["groups"].get(gid)
+    if not isinstance(g, dict) or "_load_error" in g:
+        raise LookupError(f"no group {gid!r}")
+    fname = g.get("_file")
+    path = os.path.join(_groups_dir(), fname or "")
+    if not os.path.isfile(path):
+        raise LookupError(f"no group file {fname!r}")
+    users = [f"recipe {r.get('layout')!r} of {r.get('family')!r}"
+             for r in sorted(data["recipes"].values(),
+                             key=lambda r: str(r.get("layout")))
+             if isinstance(r, dict)
+             for e in (r.get("groups") or [])
+             if isinstance(e, dict) and e.get("group") == gid]
+    pools = [f"the luxury pool of {fam!r}"
+             for fam in sorted((data.get("pools") or {}), key=str)
+             for e in ((data.get("pools") or {}).get(fam) or [])
+             if isinstance(e, dict) and e.get("group") == gid]
+    rooms = _rooms_using(gid)
+    if users or pools or rooms:
+        raise SaveError([f"group {gid!r} is used by "
+                         + ", ".join(users + pools
+                                     + [f"room {r.get('id')!r}" for r in rooms])])
+    if req.get("hash") != _file_hash(path):
+        raise SaveError([f"{fname} changed on disk since the page loaded "
+                         "it: reload and delete again"])
+    raw = _read_groups_raw(fname)
+    raw["groups"] = [e for e in (raw.get("groups") or [])
+                     if not (isinstance(e, dict) and e.get("id") == gid)]
+    _write_groups_file(fname, raw)
+    return {"ok": True, "group": gid, "file": fname}
 
 
 # ------------------------------------------------------------------ saving

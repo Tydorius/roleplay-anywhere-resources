@@ -14,3 +14,6 @@ __pycache__/
 
 # Rooms tab saves keep the previous family file here
 tools/world-generator/library/rooms/.backup/
+
+# Groups tab saves keep the previous group file here
+tools/world-generator/library/groups/.backup/

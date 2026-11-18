@@ -395,6 +395,43 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .rm-chgpair canvas { image-rendering: pixelated; }
 .rm-chgpair .arrow { color: var(--muted); }
 
+/* the library of groups (rl-04c): the add-group dialog's sections and
+   search, the groups view's editable recipe cards and pool, and the group
+   editor's fields, piece table and saved panel */
+.rm-gsearch { width: 100%; margin-bottom: 6px; }
+.rm-pick h4 { margin: 8px 0 2px; font-size: 11px; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--muted); }
+.rm-ghead { display: flex; gap: 8px; padding: 4px 0 10px; }
+.rm-gcard { position: relative; cursor: pointer; }
+.rm-gcard:hover { border-color: var(--accent); }
+.rm-gadd { justify-content: center; color: var(--muted); cursor: pointer; }
+.rm-gadd:hover { border-color: var(--accent); color: var(--accent); }
+.rm-x { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; line-height: 16px;
+  padding: 0; font-size: 11px; text-align: center; border-radius: 50%; background: var(--panel); }
+.rm-x:hover { color: var(--bad); border-color: var(--bad); }
+.rm-kbadge.hand { color: var(--accent); border-color: var(--accent); }
+.rm-rsave { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.rm-rsave .note { color: var(--warn); font-size: 11px; }
+.rm-gedit { display: flex; flex-direction: column; gap: 10px; }
+.rm-gfields { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+.rm-gfields label { display: flex; gap: 4px; align-items: center; color: var(--muted); }
+.rm-gfields input, .rm-gfields select { font: inherit; }
+.rm-gplan { image-rendering: pixelated; border: 1px solid var(--line); background: var(--bg); }
+.rm-gpieces { display: flex; flex-direction: column; gap: 6px; }
+.rm-gpieces table { border-collapse: collapse; font-size: 12px; }
+.rm-gpieces th { text-align: left; font-size: 10px; color: var(--muted); font-weight: normal;
+  padding: 0 4px; }
+.rm-gpieces td { padding: 2px 4px; }
+.rm-gpieces td.num input { width: 44px; }
+.rm-gpieces .rm-x { position: static; }
+.rm-chk { display: inline-flex; gap: 3px; align-items: center; color: var(--muted); font-size: 11px; }
+.rm-gpool { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px;
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 12px; }
+.rm-gpool legend { font-size: 10px; color: var(--muted); padding: 0 4px; }
+.rm-gerrs { display: flex; flex-direction: column; gap: 4px; }
+.rm-gerrs .problem { background: var(--bg); border-color: var(--bad); color: var(--bad); }
+.rm-roomsusing { margin: 4px 0; padding-left: 18px; font-size: 12px; }
+
 @media (max-width: 900px) {
   .rm-planwrap { flex: none; height: 60vh; }
 }

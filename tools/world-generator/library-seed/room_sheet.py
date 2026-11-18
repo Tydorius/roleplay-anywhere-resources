@@ -1,6 +1,8 @@
 """Draw every room of a family as a grid of small plans in one PNG:
-pieces are colored boxes with a thin line along their back side, the open
-style's filler is hatched, door cells are marked on the walls, and each plan
+pieces are colored boxes with a thin line along their back side and, when
+the box is big enough for it, the role's plan label (the shared short_role
+rule: the most telling word — "toilet", not "wash"), the open style's
+filler is hatched, door cells are marked on the walls, and each plan
 carries its id and size underneath on two lines — the family on the first,
 the rest of the id with the size on the second — so no label runs into the
 next plan.
@@ -19,14 +21,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
 sys.path.insert(0, GEN)
 
-from worldgen.room_palette import ROLES, DEFAULT_ROLE, color as _color  # noqa: E402
+from worldgen.room_palette import (ROLES, DEFAULT_ROLE, color as _color,  # noqa: E402
+                                   short_role as _short_role)
 
 
-CELL = 12               # pixels per room cell
+CELL = 32               # pixels per room cell (big enough for a piece label)
 PAD = 6                 # breathing room around a plan
 CAPTION = 30            # pixels under a plan for the two label lines
 LINE = 13               # pixels per label line
 GAP = 14                # between grid cells
+LABEL_FONT = 9          # the piece labels' own size, tried against the box
 BORDER = (70, 70, 70)
 FLOOR = (252, 250, 246)
 FILLER = (150, 150, 150)
@@ -59,7 +63,7 @@ def _label_lines(room):
     return (fam, f"{rest}  {room['size'][0]}x{room['size'][1]}")
 
 
-def _draw_plan(draw, room, ox, oy, font):
+def _draw_plan(draw, room, ox, oy, font, lfont):
     """One room plan at (ox, oy): floor, pieces, filler, doors."""
     w, h = room["size"]
     draw.rectangle((ox, oy, ox + w * CELL - 1, oy + h * CELL - 1),
@@ -74,6 +78,7 @@ def _draw_plan(draw, room, ox, oy, font):
         for d in range(0, fw * CELL + fh * CELL, 5):
             draw.line((max(x0, x1 - d), min(y1, y0 + d),
                        min(x1, x0 + d), max(y0, y1 - d)), fill=FILLER)
+    roles = [p.get("role") for p in room["pieces"]]
     for p in room["pieces"]:
         x, y = p["at"]
         pw, ph = p["size"]
@@ -90,6 +95,15 @@ def _draw_plan(draw, room, ox, oy, font):
             draw.rectangle((x0, y0, x0 + lw - 1, y1), fill=_darker(rgb))
         elif back == "east":
             draw.rectangle((x1 - lw + 1, y0, x1, y1), fill=_darker(rgb))
+        # the role's label when the box has room for it (a 1-cell bath
+        # reads "bath"; a piece too small keeps its colour alone)
+        label = _short_role(p["role"], roles)
+        if label:
+            tw = draw.textlength(label, font=lfont)
+            bw, bh = x1 - x0 + 1, y1 - y0 + 1
+            if tw <= bw - 2 and bh >= LABEL_FONT + 1:
+                draw.text((x0 + (bw - tw) // 2, y0 + (bh - LABEL_FONT) // 2),
+                          label, font=lfont, fill=_darker(rgb, 0.35))
     for side, cells in room.get("doors", {}).items():
         for c in cells:
             if side in ("north", "south"):
@@ -112,6 +126,7 @@ def render(family, out):
               encoding="utf-8") as fh:
         rooms = json.load(fh)["rooms"]
     font = _font()
+    lfont = _font(LABEL_FONT)
     labels = [_label_lines(r) for r in rooms]
     plan = max(r["size"][0] for r in rooms) * CELL
     # a cell is as wide as the plan or the widest label line, whichever is
@@ -129,7 +144,7 @@ def render(family, out):
         w, h = room["size"]
         ox = (n % cols) * cell_w + PAD + (plan - w * CELL) // 2
         oy = (n // cols) * cell_h + PAD
-        _draw_plan(draw, room, ox, oy, font)
+        _draw_plan(draw, room, ox, oy, font, lfont)
     os.makedirs(os.path.dirname(out), exist_ok=True)
     img.save(out)
     return len(rooms)

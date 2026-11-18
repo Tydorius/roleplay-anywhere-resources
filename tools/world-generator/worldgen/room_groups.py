@@ -98,6 +98,13 @@ def _int_pair(v, lo=0, hi=40):
                     and lo <= x <= hi for x in v))
 
 
+def _check_source(entry, err):
+    """``source`` marks hand work the converter keeps verbatim: "hand" is
+    the only value it may hold."""
+    if entry.get("source") is not None and entry.get("source") != "hand":
+        err('source must be "hand" or left out')
+
+
 def _check_piece(p, roles, tiers, err):
     if not isinstance(p, dict):
         err("a piece must be a JSON object")
@@ -200,6 +207,7 @@ def _check_groups(groups, lib, errors):
         if not isinstance(gid, str) or not ID_RE.match(gid):
             err("id must be lower case words separated by dots")
             continue
+        _check_source(g, err)
         if g.get("family") not in families:
             err(f"unknown family {g.get('family')!r}")
         if g.get("wall") not in WALLS:
@@ -249,6 +257,7 @@ def _check_recipes(data, lib, errors):
         if files:
             errors.append(f"layout {lid!r} has recipes in "
                           f"{' and '.join(sorted(set(files)))}")
+        _check_source(r, err)
         layout = layouts.get(lid)
         if layout is None:
             err("names no layout in the library")
@@ -270,6 +279,7 @@ def _check_recipes(data, lib, errors):
             gid = e.get("group")
             if gid not in groups:
                 err(f"names no group {gid!r}")
+            _check_source(e, err)
             if e.get("kind") not in KINDS:
                 err(f"kind must be one of {'/'.join(KINDS)}")
             if e.get("kind") == "anchor":
@@ -338,8 +348,9 @@ def check(data, lib):
     """Every rule of the group format the code can check, as plain sentences:
     group fields against the vocabulary, pieces that overlap or float apart,
     wall-bound pieces off the north edge, recipe kinds and counts, exactly
-    one anchor per recipe, one recipe per layout, and the luxury pools
-    naming known families, groups, size bands, kinds and wealth."""
+    one anchor per recipe, one recipe per layout, the luxury pools naming
+    known families, groups, size bands, kinds and wealth, and "hand" as the
+    only source a group, recipe or recipe entry may declare."""
     errors = []
     _check_groups(data["groups"], lib, errors)
     _check_recipes(data, lib, errors)

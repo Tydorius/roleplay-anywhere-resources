@@ -300,3 +300,103 @@ test("removableGids lists the recipe's optional groups and the family's pool", (
                    ["g.lux", "g.lux2"]);
   assert.deepEqual([...R.removableGids(ROOM, {})], []);
 });
+
+test("shortRole takes the last word for washroom fixtures and shared first words", () => {
+  assert.equal(R.shortRole("wash.toilet", ["wash.toilet"]), "toilet");   // never "wash"
+  assert.equal(R.shortRole("wash.basin", ["wash.toilet", "wash.basin"]), "basin");
+  // two storage roles in one room are told apart by their last word
+  assert.equal(R.shortRole("storage.big", ["storage.big", "storage.small"]), "big");
+  assert.equal(R.shortRole("storage.small", ["storage.big", "storage.small"]), "small");
+  // sleep beside sleep.couple: the bare role keeps its only word
+  assert.equal(R.shortRole("sleep", ["sleep", "sleep.couple"]), "sleep");
+  assert.equal(R.shortRole("sleep.couple", ["sleep", "sleep.couple"]), "couple");
+  // the same role twice is not ambiguous
+  assert.equal(R.shortRole("storage.big", ["storage.big", "storage.big"]), "storage");
+  // without the room's roles the wash rule stands, the rest keep the first word
+  assert.equal(R.shortRole("wash.bath"), "bath");
+  assert.equal(R.shortRole("storage.big"), "storage");
+});
+
+test("addGroupSections orders removed, recipe, pool and the rest", () => {
+  const all = [
+    {id: "g.bed", file: "bedroom.json", pieces: []},
+    {id: "g.desk", file: "bedroom.json", pieces: []},
+    {id: "g.fire", file: "bedroom.json", pieces: []},
+    {id: "g.lux", file: "luxury.json", pieces: []},
+    {id: "g.other", file: "washroom.json", pieces: []},
+  ];
+  const groupsData = {
+    recipes: [{layout: "L", groups: [{group: "g.bed", kind: "anchor"},
+                                     {group: "g.desk", kind: "optional"},
+                                     {group: "g.fire", kind: "optional"}]}],
+    pool: [{group: "g.lux", bands: ["medium"]}],
+  };
+  const start = {recipe: "L", pieces: [{group: "g.bed", at: [0, 0]},
+                                       {group: "g.fire", at: [2, 0]}]};
+  const draft = {recipe: "L", pieces: [{group: "g.bed", at: [0, 0]}]};
+  const sections = R.addGroupSections(all, draft, start, groupsData);
+  assert.deepEqual(sections.map(s => s.title),
+                   ["Removed from this room", "The recipe's groups",
+                    "The family's luxury pool", "All other groups"]);
+  assert.deepEqual(sections[0].rows.map(r => r.gid), ["g.fire"]);
+  // groups already in the room stay listed: a second instance is how a
+  // repeatable group gets another go
+  assert.deepEqual(sections[1].rows.map(r => r.gid), ["g.bed", "g.desk"]);
+  assert.deepEqual(sections[2].rows.map(r => r.gid), ["g.lux"]);
+  assert.deepEqual(sections[3].rows.map(r => r.gid), ["g.other"]);
+  assert.deepEqual(sections[1].rows[0].file, "bedroom.json");
+});
+
+test("addGroupSections keeps a group to its first section and drops empty ones", () => {
+  const all = [{id: "g.x", file: "f.json", pieces: []},
+               {id: "g.y", file: "f.json", pieces: []}];
+  const groupsData = {recipes: [{layout: "L", groups: [{group: "g.x", kind: "anchor"}]}],
+                      pool: [{group: "g.x"}]};                    // pool names it too: recipe wins
+  const sections = R.addGroupSections(all, {recipe: "L", pieces: []}, {pieces: []}, groupsData);
+  assert.deepEqual(sections.map(s => s.title), ["The recipe's groups", "All other groups"]);
+  assert.deepEqual(sections[0].rows.map(r => r.gid), ["g.x"]);
+  assert.deepEqual(sections[1].rows.map(r => r.gid), ["g.y"]);
+});
+
+test("firstFreeSpot scans reading order and skips blocked cells", () => {
+  const room = {size: [4, 3], pieces: [
+    {role: "sleep", size: [2, 1], at: [0, 0]},
+    {role: "seat", size: [1, 1], at: [1, 1]},
+  ]};
+  const two = {id: "g", pieces: [{role: "seat", size: [2, 1], at: [0, 0]}]};
+  assert.deepEqual(R.firstFreeSpot(room, two), [2, 0]);           // row 0 after the bed
+  const one = {id: "g", pieces: [{role: "seat", size: [1, 1], at: [0, 0]}]};
+  assert.deepEqual(R.firstFreeSpot(room, one), [2, 0]);
+  assert.deepEqual(R.firstFreeSpot({...room, pieces: [
+    {role: "sleep", size: [4, 1], at: [0, 0]},
+    {role: "sleep", size: [4, 1], at: [0, 2]},
+  ]}, one), [0, 1]);                                              // the middle row
+  assert.deepEqual(R.firstFreeSpot({size: [1, 1], pieces: []}, two), null);   // too small
+  assert.deepEqual(R.firstFreeSpot(room, {id: "g", pieces: []}), null);       // nothing to place
+});
+
+test("filterGroupRows searches the id and the piece roles", () => {
+  const rows = [{gid: "sleep.bed.big", file: "a.json", pieces: [{role: "sleep"}]},
+                {gid: "wash.basin", file: "b.json", pieces: [{role: "wash.basin"}]}];
+  assert.deepEqual(R.filterGroupRows(rows, ""), rows);
+  assert.deepEqual(R.filterGroupRows(rows, "BED"), rows.slice(0, 1));   // id, case-insensitive
+  assert.deepEqual(R.filterGroupRows(rows, "basin"), rows.slice(1));   // the role
+  assert.deepEqual(R.filterGroupRows(rows, "toilet"), []);
+});
+
+test("layoutChanged sees any layout field differ", () => {
+  const a = {size: [3, 3], pieces: [{role: "x"}], doors: {north: [0]}, stretch: {x: [1]}};
+  const same = JSON.parse(JSON.stringify(a));
+  assert.equal(R.layoutChanged(a, same), false);
+  for (const change of [
+    r => r.size = [4, 3],
+    r => r.pieces.push({role: "y"}),
+    r => r.doors = {south: [1]},
+    r => r.stretch = {y: [0]},
+    r => r.filler = {at: [0, 0], size: [1, 1]},
+  ]) {
+    const b = JSON.parse(JSON.stringify(a));
+    change(b);
+    assert.equal(R.layoutChanged(a, b), true);
+  }
+});

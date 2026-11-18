@@ -303,6 +303,10 @@ file holds the family's groups and one recipe per layout, naming the groups it n
 - The files are generated from the layouts by `library-seed/layouts_to_groups.py` and may be
   hand-edited afterwards. `python -m worldgen library groups` checks them; the rules above
   are what it enforces.
+- Hand work carries `"source": "hand"` — on a group, a whole recipe, or a single recipe entry —
+  and the converter keeps whatever bears it verbatim (a converted group that would take a hand
+  group's id is dropped instead), so re-running the seed never sweeps a hand edit away. The
+  checker accepts `hand` and no other source.
 - `groups/luxury.json` is hand-authored — the converter never writes or deletes it. Its groups
   follow the rules above with every piece carrying a `minWealth` of `wealthy` or `elite`, and
   its `pools` map names each private family's groups with the size bands they suit: at grand

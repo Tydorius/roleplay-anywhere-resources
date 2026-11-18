@@ -9,6 +9,7 @@ import importlib.util
 import io
 import json
 import os
+import shutil
 import tempfile
 import unittest
 
@@ -420,6 +421,184 @@ class TestChecker(unittest.TestCase):
             errors = RG.check(RG.load(d), self.lib)
             self.assertTrue(any("appears in a.json and b.json" in e
                                 for e in errors))
+
+
+class TestHandSource(unittest.TestCase):
+    """``source`` marks hand work the converter keeps: "hand" is the only
+    value a group, a whole recipe or a single recipe entry may carry."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+
+    def checked(self, mutate):
+        data = json.loads(json.dumps(RG.load()))
+        mutate(data)
+        return RG.check(data, self.lib)
+
+    def test_hand_is_accepted_on_group_recipe_and_entry(self):
+        gid = next(iter(RG.load()["groups"]))
+        lid = next(iter(RG.load()["recipes"]))
+        self.assertEqual(self.checked(
+            lambda d: d["groups"][gid].update(source="hand")), [])
+        self.assertEqual(self.checked(
+            lambda d: d["recipes"][lid].update(source="hand")), [])
+        self.assertEqual(self.checked(
+            lambda d: d["recipes"][lid]["groups"][0].update(source="hand")), [])
+
+    def test_any_other_source_is_rejected(self):
+        gid = next(iter(RG.load()["groups"]))
+        lid = next(iter(RG.load()["recipes"]))
+        for where, mutate in [
+            ("group", lambda d: d["groups"][gid].update(source="generator")),
+            ("recipe", lambda d: d["recipes"][lid].update(source="seed")),
+            ("entry", lambda d: d["recipes"][lid]["groups"][0].update(
+                source="migrated")),
+        ]:
+            with self.subTest(where=where):
+                errors = self.checked(mutate)
+                self.assertTrue(any('source must be "hand"' in e
+                                    for e in errors))
+
+
+class TestHandConversion(unittest.TestCase):
+    """Hand work survives the seed converter: on a temp library a hand
+    group, a whole hand recipe and a hand recipe entry are kept verbatim, a
+    converted group that would take a hand group's id is dropped with a
+    note, running the converter twice changes nothing, and running it on a
+    copy of the shipped files changes nothing either."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.mod = converter()
+
+    LAYOUT_A = {"id": "bedroom.hand.a", "family": "bedroom",
+                "sizeBands": ["small"],
+                "slots": [
+                    {"id": "bed", "role": "sleep.couple", "size": [2, 2],
+                     "anchor": "wall:far", "back": "wall"},
+                    {"id": "bedsides", "role": "bedside", "size": [1, 1],
+                     "anchor": "beside:bed+symmetric"},
+                ]}
+    LAYOUT_B = {"id": "bedroom.hand.b", "family": "bedroom",
+                "sizeBands": ["medium"],
+                "slots": [
+                    {"id": "bed", "role": "sleep", "size": [1, 2],
+                     "anchor": "wall:far", "back": "wall"},
+                ]}
+
+    def write_library(self, d, groups_file):
+        os.makedirs(os.path.join(d, "layouts"))
+        os.makedirs(os.path.join(d, "groups"))
+        with open(os.path.join(d, "layouts", "one.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump({"layouts": [self.LAYOUT_A, self.LAYOUT_B]}, f)
+        with open(os.path.join(d, "library.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump({"roles": ["sleep.couple", "bedside", "sleep"],
+                       "sizeBands": {"small": [1, 9], "medium": [10, 20]},
+                       "families": {"bedroom": {"purpose": "sleep"}}}, f)
+        with open(os.path.join(d, "groups", "bedroom.json"), "w",
+                  encoding="utf-8") as f:
+            json.dump(groups_file, f, indent=2)
+
+    def run_converter(self, d):
+        old = self.mod.LIBRARY
+        self.mod.LIBRARY = d
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.mod.main()
+        finally:
+            self.mod.LIBRARY = old
+
+    def read_groups(self, d):
+        with open(os.path.join(d, "groups", "bedroom.json"),
+                  encoding="utf-8") as f:
+            return json.load(f)
+
+    def test_hand_group_recipe_and_entry_survive_and_a_clash_drops(self):
+        # the ids the plain conversion would produce
+        files, _notes = self.mod.convert_all(
+            {"bedroom": [self.LAYOUT_A, self.LAYOUT_B]})
+        clashing = files["bedroom"]["groups"][0]["id"]   # sleep.couple.bedside2
+        hand_group = {"id": clashing, "family": "bedroom", "wall": "none",
+                      "use": [], "source": "hand",
+                      "pieces": [{"role": "sleep.couple", "size": [2, 2],
+                                  "at": [0, 0]}]}
+        hand_recipe = {"layout": "bedroom.hand.b", "family": "bedroom",
+                       "sizeBands": ["medium"], "source": "hand",
+                       "groups": [{"group": clashing, "kind": "anchor"}]}
+        hand_entry = {"group": clashing, "kind": "optional",
+                      "source": "hand"}
+        groups_file = {"groups": [hand_group],
+                       "recipes": [hand_recipe,
+                                   {"layout": "bedroom.hand.a",
+                                    "family": "bedroom",
+                                    "sizeBands": ["small"],
+                                    "groups": [hand_entry]}]}
+        with tempfile.TemporaryDirectory() as d:
+            self.write_library(d, groups_file)
+            hand = self.mod.read_hand(os.path.join(d, "groups", "bedroom.json"))
+            self.assertEqual(hand["groups"], [hand_group])
+            self.assertEqual(hand["recipes"], {"bedroom.hand.b": hand_recipe})
+            self.assertEqual(hand["entries"], {"bedroom.hand.a": [hand_entry]})
+            files, notes = self.mod.convert_all(
+                {"bedroom": [self.LAYOUT_A, self.LAYOUT_B]},
+                {"bedroom": hand})
+            # the hand group stands, once, verbatim; the converted group
+            # that would take its id is dropped, with a note
+            self.assertEqual(files["bedroom"]["groups"].count(hand_group), 1)
+            self.assertEqual([g["id"] for g in files["bedroom"]["groups"]
+                              if g["id"] == clashing], [clashing])
+            self.assertTrue(any(f"converted group {clashing!r}" in n
+                                and "hand" in n for n in notes), notes)
+            # the hand recipe stands verbatim; the hand entry rides the
+            # converted recipe it sat on
+            self.assertIn(hand_recipe, files["bedroom"]["recipes"])
+            converted = next(r for r in files["bedroom"]["recipes"]
+                             if r["layout"] == "bedroom.hand.a")
+            self.assertEqual(converted["groups"][-1], hand_entry)
+
+    def test_running_the_converter_twice_changes_nothing(self):
+        clashing = self.mod.convert_all(
+            {"bedroom": [self.LAYOUT_A, self.LAYOUT_B]})[0]["bedroom"][
+            "groups"][0]["id"]
+        groups_file = {"groups": [{"id": clashing, "family": "bedroom",
+                                   "wall": "none", "use": [],
+                                   "source": "hand",
+                                   "pieces": [{"role": "sleep.couple",
+                                               "size": [2, 2], "at": [0, 0]}]}],
+                       "recipes": []}
+        with tempfile.TemporaryDirectory() as d:
+            self.write_library(d, groups_file)
+            self.run_converter(d)
+            first = self.read_groups(d)
+            self.run_converter(d)          # now the file holds hand work
+            self.assertEqual(first, self.read_groups(d))
+
+    def test_the_shipped_files_come_out_unchanged(self):
+        with tempfile.TemporaryDirectory() as d:
+            # binary copies: the test must feed the converter the files'
+            # own bytes, not the platform's idea of a line ending
+            shutil.copyfile(os.path.join(GEN, "library", "library.json"),
+                            os.path.join(d, "library.json"))
+            shutil.copytree(os.path.join(GEN, "library", "layouts"),
+                            os.path.join(d, "layouts"))
+            shutil.copytree(os.path.join(GEN, "library", "groups"),
+                            os.path.join(d, "groups"))
+            self.run_converter(d)
+            out = os.path.join(d, "groups")
+            shipped_dir = os.path.join(GEN, "library", "groups")
+            for name in sorted(os.listdir(shipped_dir)):
+                if not name.endswith(".json"):
+                    continue
+                with self.subTest(file=name):
+                    with open(os.path.join(shipped_dir, name),
+                              "rb") as f:
+                        before = f.read()
+                    with open(os.path.join(out, name), "rb") as f:
+                        after = f.read()
+                    self.assertEqual(before, after)
 
 
 if __name__ == "__main__":

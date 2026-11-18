@@ -39,8 +39,25 @@
       .toString(16).padStart(6, "0");
   }
 
-  /** The short label for a role on the plan: its first word ("sleep.couple" -> "sleep"). */
-  function shortRole(role) { return String(role || "").split(".")[0]; }
+  /** The short label for a role on the plan: its most telling word — the
+   * first ("sleep.couple" -> "sleep"), but the last for washroom fixtures
+   * ("wash.toilet" -> "toilet"; they would all read "wash") and wherever
+   * another, different role in the same room shares the first word
+   * ("storage.big" beside "storage.small" -> "big"). The same rule as
+   * worldgen/room_palette.py's short_role, which the room sheets use. */
+  function shortRole(role, roles) {
+    role = String(role || "");
+    const words = role.split(".");
+    const last = words[words.length - 1];
+    if (words.length > 1 && words[0] === "wash") return last;
+    if (roles !== undefined && roles !== null) {
+      const first = words[0];
+      for (const other of new Set(roles))
+        if (other !== role && String(other || "").split(".")[0] === first)
+          return last;
+    }
+    return words[0];
+  }
 
   /** The rooms the current filters keep: size band, clearance, style, wealth
    * tier (the room serves it) and a case-insensitive search over id and
@@ -393,13 +410,90 @@
     return out;
   }
 
+  /** A room's group ids, each once. */
+  function groupGids(room) {
+    return [...new Set(((room || {}).pieces || []).map(p => p && p.group).filter(Boolean))];
+  }
+
+  /** The add-group dialog's sections, in order: the groups this room has
+   * lost since editing began (the first place to look — putting one back),
+   * the recipe's groups of any kind, the family's luxury pool, and every
+   * other group in the library. A group shows in the first section it fits
+   * and only there; each row carries the file the group lives in. Empty
+   * sections are left out. `startRoom` is the room as editing began (the
+   * stored room), `room` the draft being laid out. */
+  function addGroupSections(all, room, startRoom, groupsData) {
+    const data = groupsData || {};
+    const now = new Set(groupGids(room)), then = new Set(groupGids(startRoom));
+    const recipe = (data.recipes || []).find(r => r.layout === (room || {}).recipe);
+    const info = new Map((all || []).map(g => [g.id, {gid: g.id, file: g.file,
+                                                      pieces: g.pieces || []}]));
+    const sections = [];
+    const seen = new Set();
+    const take = (title, gids) => {
+      const rows = [];
+      for (const gid of gids)
+        if (info.has(gid) && !seen.has(gid)) { seen.add(gid); rows.push(info.get(gid)); }
+      if (rows.length) sections.push({title, rows});
+    };
+    take("Removed from this room",
+         [...info.keys()].filter(gid => then.has(gid) && !now.has(gid)));
+    take("The recipe's groups",
+         (((recipe && recipe.groups) || []).map(e => e.group)).filter(Boolean));
+    take("The family's luxury pool",
+         ((data.pool || []).map(e => e.group)).filter(Boolean));
+    take("All other groups", [...info.keys()]);
+    return sections;
+  }
+
+  /** The rows the add-group dialog's search keeps: the id or any piece
+   * role matches, case-insensitively. */
+  function filterGroupRows(rows, q) {
+    q = String(q || "").trim().toLowerCase();
+    if (!q) return rows || [];
+    return (rows || []).filter(r =>
+      String(r.gid || "").toLowerCase().includes(q)
+      || (r.pieces || []).some(p => String(p.role || "").toLowerCase().includes(q)));
+  }
+
+  /** The first free spot a group definition fits in: the first cell in
+   * reading order where every piece lands inside the room on cells no
+   * piece stands on, or null when no spot fits (the group then lands in
+   * the top-left corner as before and the live checker shows the
+   * overlap). */
+  function firstFreeSpot(room, def) {
+    const pieces = groupForm(def);
+    if (!pieces.length) return null;
+    const [w, h] = ((room || {}).size) || [0, 0];
+    const gw = Math.max(...pieces.map(p => p.at[0] + p.size[0]));
+    const gh = Math.max(...pieces.map(p => p.at[1] + p.size[1]));
+    const taken = [];
+    for (const p of (room || {}).pieces || []) { const r = rectOf(p); if (r) taken.push(r); }
+    const over = (x, y) => pieces.some(p => taken.some(r =>
+      r[0] < x + p.at[0] + p.size[0] && x + p.at[0] < r[0] + r[2]
+      && r[1] < y + p.at[1] + p.size[1] && y + p.at[1] < r[1] + r[3]));
+    for (let y = 0; y + gh <= h; y++)
+      for (let x = 0; x + gw <= w; x++)
+        if (!over(x, y)) return [x, y];
+    return null;
+  }
+
+  /** Whether one of a room's layout fields differs between two states of
+   * the same room — any such edit is hand work: the room is marked source
+   * "hand" so a family regeneration keeps it as it stands. */
+  function layoutChanged(a, b) {
+    const pick = r => ["size", "pieces", "doors", "stretch", "filler"]
+      .map(k => JSON.stringify((r || {})[k] === undefined ? null : (r || {})[k])).join("|");
+    return pick(a) !== pick(b);
+  }
+
   // ------------------------------------------------------------ page wiring
 
   const RM = {meta: null, inited: false, family: "", rooms: [], familyErrors: [],
               hash: "", dirty: false, edit: null, actions: null,
               view: [], sel: null, room: null, turned: null, turn: 0, mirror: 0,
               look: "", lookData: null, sprites: new Map(), groupsMode: false,
-              groupsCache: {}, hover: -1, seq: 0,
+              groupsCache: {}, allCache: null, recipeEdits: {}, hover: -1, seq: 0,
               filters: {band: "", clearance: "", style: "", tier: "", search: ""}};
 
   function page() { return typeof document !== "undefined" && document.getElementById("rmPlan"); }
@@ -640,6 +734,7 @@
     }
     // pieces
     const pieces = room.pieces || [];
+    const pieceRoles = pieces.map(p => p.role);
     const look = (RM.lookData && !RM.edit && RM.lookData.look) || [];
     ctx.font = `${Math.min(11, Math.max(9, cell - 3))}px ui-monospace, Consolas, monospace`;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
@@ -678,7 +773,7 @@
       }
       if (!RM.look && PW >= 30 && PH >= 14) {
         ctx.fillStyle = darker(rgb, .35);
-        ctx.fillText(shortRole(p.role), px + PW / 2, py + PH / 2);
+        ctx.fillText(shortRole(p.role, pieceRoles), px + PW / 2, py + PH / 2);
       }
     }
     // thin group outlines
@@ -893,7 +988,9 @@
     }
   }
 
-  /** A small role-coloured plan on a fresh canvas (siblings, group cards). */
+  /** A small role-coloured plan on a fresh canvas (siblings, group cards).
+   * A group's own wall shows too: "back" is the thick north edge of the
+   * whole group, "corner" the north and west edges. */
   function drawMini(cvs, room) {
     const pieces = (room.pieces || []).map(rectOf).filter(Boolean);
     const w = Math.max(1, ...pieces.map(r => r[0] + r[2]));
@@ -922,6 +1019,12 @@
         else if (p.back === "east") ctx.fillRect(px + PW - lw, py, lw, PH);
       }
     }
+    if (room.wall === "back" || room.wall === "corner") {
+      const lw = Math.max(2, Math.round(cell / 3));
+      ctx.fillStyle = cssVar("--ink", "#3a3934");
+      ctx.fillRect(0, 0, w * cell, lw);
+      if (room.wall === "corner") ctx.fillRect(0, 0, lw, h * cell);
+    }
   }
 
   // ------------------------------------------------------------ groups view
@@ -940,40 +1043,76 @@
   }
 
   async function renderGroups() {
-    if (!RM.groupsCache[RM.family]) {
-      try { RM.groupsCache[RM.family] = await api("/api/rooms/groups?family=" + encodeURIComponent(RM.family)); }
-      catch (e) { toast(e.message); return; }
-    }
-    const d = RM.groupsCache[RM.family];
+    const d = await groupsData();
+    if (!d) return;
     const pageEl = $("rmGroupsPage");
     pageEl.innerHTML = "";
+    const head = document.createElement("div");
+    head.className = "rm-ghead";
+    head.innerHTML = `<button type="button" data-a="new" title="A group written by hand into one of the group files; the converter keeps it">New group…</button>`;
+    head.querySelector('[data-a="new"]').onclick = newGroupDialog;
+    pageEl.appendChild(head);
     const recipes = document.createElement("section");
     recipes.innerHTML = `<h3>Recipes — ${esc(RM.family)}</h3>`;
-    for (const r of d.recipes || []) {
+    for (const r0 of d.recipes || []) {
+      const r = RM.recipeEdits[r0.layout] || r0;
       const card = document.createElement("div");
       card.className = "rm-recipe";
       const bands = (r.sizeBands || []).map(b => `<span class="rm-kbadge">${esc(b)}</span>`).join("");
       card.innerHTML = `<div class="rm-rline"><b>${esc(r.layout || "")}</b>`
         + `<span class="kinds">${bands}</span>`
+        + (r.source === "hand" ? `<span class="rm-hand" title="changed by hand; the converter keeps this recipe as it is">hand</span>` : "")
         + `<span class="note">${(r.groups || []).length} groups</span></div>`;
       const cards = document.createElement("div");
       cards.className = "rm-gcards";
-      for (const e of r.groups || []) {
+      (r.groups || []).forEach((e, i) => {
         const g = (d.groups || {})[e.group];
         const gc = document.createElement("div");
         gc.className = "rm-gcard";
+        gc.title = "Edit this group";
         const badges = [`<span class="rm-kbadge">${esc(e.kind || "?")}</span>`
                         + (e.count !== undefined ? `<span class="rm-kbadge">×${esc(e.count)}</span>` : "")
-                        + (e.minWealth ? `<span class="rm-kbadge">from ${esc(e.minWealth)}</span>` : "")].join("");
+                        + (e.minWealth ? `<span class="rm-kbadge">from ${esc(e.minWealth)}</span>` : "")
+                        + (e.source === "hand" ? `<span class="rm-kbadge hand">hand</span>` : "")].join("");
         gc.innerHTML = `<div class="kinds">${badges}</div><div class="gname">${esc(e.group)}</div>`;
         if (g) {
           const cvs = document.createElement("canvas");
           gc.insertBefore(cvs, gc.firstChild);
-          drawMini(cvs, {pieces: g.pieces || []});
+          drawMini(cvs, {pieces: g.pieces || [], wall: g.wall});
+        }
+        gc.onclick = () => openGroupEditor(e.group);
+        if (e.kind !== "anchor") {
+          const del = document.createElement("button");
+          del.type = "button";
+          del.className = "rm-x";
+          del.title = "Take this group out of the recipe (the anchor stays)";
+          del.textContent = "✕";
+          del.onclick = ev => { ev.stopPropagation(); removeRecipeEntry(r0, i); };
+          gc.appendChild(del);
         }
         cards.appendChild(gc);
-      }
+      });
+      const add = document.createElement("button");
+      add.type = "button";
+      add.className = "rm-gcard rm-gadd";
+      add.textContent = "+ Add group";
+      add.title = "Add any group in the library to this recipe";
+      add.onclick = () => addRecipeEntryDialog(r0);
+      cards.appendChild(add);
       card.appendChild(cards);
+      if (RM.recipeEdits[r0.layout]) {
+        const bar = document.createElement("div");
+        bar.className = "rm-rsave";
+        bar.innerHTML = `<span class="note">unsaved</span>`
+          + `<button type="button" class="primary" data-a="save">Save recipe</button>`
+          + `<button type="button" data-a="undo">Discard</button>`;
+        bar.querySelector('[data-a="save"]').onclick = () => saveRecipe(r0.layout);
+        bar.querySelector('[data-a="undo"]').onclick = () => {
+          delete RM.recipeEdits[r0.layout];
+          renderGroups();
+        };
+        card.appendChild(bar);
+      }
       recipes.appendChild(card);
     }
     pageEl.appendChild(recipes);
@@ -982,13 +1121,392 @@
     for (const e of d.pool || []) {
       const line = document.createElement("div");
       line.className = "rm-poolline";
+      line.title = "Edit this group";
       line.innerHTML = `<span class="gname">${esc(e.group || "")}</span>`
         + (e.kind || []).map(k => `<span class="rm-kbadge luxury">${esc(k)}</span>`).join("")
         + (e.bands || []).map(b => `<span class="rm-kbadge">${esc(b)}</span>`).join("");
+      line.onclick = () => openGroupEditor(e.group);
       pool.appendChild(line);
     }
     if (!(d.pool || []).length) pool.innerHTML += `<p class="note">No luxury groups for this family.</p>`;
     pageEl.appendChild(pool);
+  }
+
+  /** Edit one recipe in the page: the first change forks the recipe into
+   * RM.recipeEdits, the cards render the draft, and Save writes it. */
+  function withRecipeDraft(r0, fn) {
+    const draft = RM.recipeEdits[r0.layout] || (RM.recipeEdits[r0.layout] = deep(r0));
+    fn(draft);
+    renderGroups();
+  }
+
+  /** An entry taken out: the recipe's own hand work, so the whole recipe
+   * is marked "hand" — the converter cannot put the entry back. */
+  function removeRecipeEntry(r0, i) {
+    if (((r0.groups || [])[i] || {}).kind === "anchor")
+      return toast("the recipe's anchor group stays");
+    withRecipeDraft(r0, d => {
+      d.groups.splice(i, 1);
+      d.source = "hand";
+    });
+  }
+
+  /** An entry put in: any group in the library, optional or required. Only
+   * the entry is marked "hand" — the recipe stays the converter's. */
+  async function addRecipeEntryDialog(r0) {
+    const all = await allGroupsData();
+    if (!all) return;
+    const gid = await pickGroupDialog([{title: "Every group",
+                                        rows: all.map(g => ({gid: g.id, file: g.file,
+                                                             pieces: g.pieces || []}))}]);
+    if (!gid) return;
+    const kind = await openDialog(`Add ${gid}`,
+      `<p>What kind of entry in <b>${esc(r0.layout)}</b>?</p>`,
+      [{label: "Optional", value: "optional", primary: true},
+       {label: "Required", value: "required"}]);
+    if (!kind) return;
+    withRecipeDraft(r0, d => {
+      d.groups = [...(d.groups || []),
+                  {group: gid, kind, count: 1, source: "hand"}];
+    });
+  }
+
+  async function saveRecipe(layout) {
+    const draft = RM.recipeEdits[layout];
+    const d = await groupsData();
+    if (!draft || !d) return;
+    try {
+      const out = await api("/api/rooms/recipe/save", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({recipe: draft, hash: (d.hashes || {})[draft.file]})});
+      delete RM.recipeEdits[layout];
+      invalidateGroupCaches();
+      toast(`Recipe ${layout} saved into ${out.file} — the previous file is in library/groups/.backup`);
+      renderGroups();
+    } catch (e) { toast(e.message); }
+  }
+
+  // ---------------------------------------------------------- group editor
+
+  /** A new group, empty or as a copy of one in the library. */
+  async function newGroupDialog() {
+    const choice = await openDialog("New group",
+      `<p>A group written by hand into one of the group files — the converter keeps it as it is.</p>`,
+      [{label: "Empty", value: "empty", primary: true},
+       {label: "Copy a group…", value: "copy"}]);
+    if (choice === "empty") return groupEditorDialog({isNew: true, group: null});
+    if (choice !== "copy") return;
+    const all = await allGroupsData();
+    if (!all) return;
+    const gid = await pickGroupDialog([{title: "Copy which group?",
+                                        rows: all.map(g => ({gid: g.id, file: g.file,
+                                                             pieces: g.pieces || []}))}]);
+    if (!gid) return;
+    let g;
+    try { g = await api("/api/rooms/group?id=" + encodeURIComponent(gid)); }
+    catch (e) { return toast(e.message); }
+    groupEditorDialog({isNew: true, group: g, copyOf: gid});
+  }
+
+  async function openGroupEditor(gid) {
+    let g;
+    try { g = await api("/api/rooms/group?id=" + encodeURIComponent(gid)); }
+    catch (e) { return toast(e.message); }
+    groupEditorDialog({isNew: false, group: g});
+  }
+
+  /** The group editor: a modal over the groups view. The group's pieces
+   * with their roles, sizes, backs and wealth floors; the wall; the luxury
+   * kind; a new group's id, file and pool entries. The group checker runs
+   * live — a draft with errors cannot be saved — and saving writes the
+   * file it lives in (the previous copy in .backup), leaving the stored
+   * rooms untouched but listing them. */
+  async function groupEditorDialog(state) {
+    const dlg = $("dlg");
+    const from = state.group;
+    const isNew = state.isNew;
+    const file0 = isNew ? (from ? from.file : RM.family + ".json") : from.file;
+    const group = deep(from || {});
+    delete group.errors;
+    for (const k of ["file", "hash", "recipes", "pools", "rooms", "usedBy"]) delete group[k];
+    if (isNew) {
+      delete group.id;
+      delete group.source;
+    }
+    const st = {group, file: file0, isNew, hash: null, errors: [], timer: 0, seq: 0,
+                pool: isNew && file0 === "luxury.json" ? {} : null};
+    const hashes = async () => {
+      const d = await groupsData();
+      return (d && d.hashes) || {};
+    };
+    st.hash = (await hashes())[st.file] || "";
+    const walls = RM.meta.walls || ["back", "corner", "none"];
+    const lkinds = RM.meta.luxuryKinds || [];
+    const sides = ["", ...(RM.meta.sides || ["north", "south", "east", "west"])];
+    const wealths = ["", "wealthy", "elite"];
+    const roles = RM.meta.roleNames || [];
+    const fams = (RM.meta.families || []).map(f => f.family);
+    const bands = Object.keys(RM.meta.sizeBands || {});
+
+    const pieceRow = (p, i) => {
+      const sel = (opts, val) => opts.map(o =>
+        `<option value="${esc(o)}"${o === val ? " selected" : ""}>${esc(o || "—")}</option>`).join("");
+      return `<tr data-p="${i}">`
+        + `<td><select data-f="role">${sel(roles, p.role)}</select></td>`
+        + `<td class="num"><input data-f="w" type="number" min="1" max="9" value="${p.size?.[0] ?? 1}"></td>`
+        + `<td class="num"><input data-f="h" type="number" min="1" max="9" value="${p.size?.[1] ?? 1}"></td>`
+        + `<td class="num"><input data-f="x" type="number" min="0" max="30" value="${p.at?.[0] ?? 0}"></td>`
+        + `<td class="num"><input data-f="y" type="number" min="0" max="30" value="${p.at?.[1] ?? 0}"></td>`
+        + `<td><select data-f="back">${sel(sides, p.back || "")}</select></td>`
+        + `<td><label class="rm-chk"><input data-f="optional" type="checkbox"${p.optional ? " checked" : ""}>opt</label></td>`
+        + `<td><select data-f="minWealth">${sel(wealths, p.minWealth || "")}</select></td>`
+        + `<td><button type="button" class="rm-x" data-f="del" title="Take this piece out">✕</button></td>`
+        + `</tr>`;
+    };
+
+    const build = () => {
+      const g = st.group;
+      const lux = st.file === "luxury.json";
+      dlg.innerHTML = `<form><h3>${isNew ? "New group" : "Group " + esc(g.id || "")}</h3>`
+        + `<div class="dlg-body rm-gedit">`
+        + `<div class="rm-gfields">`
+        + `<label>Id <input data-g="id" type="text" value="${esc(g.id || "")}"${isNew ? "" : " readonly"}></label>`
+        + `<label>File <select data-g="file"${isNew ? "" : " disabled"}>`
+        + fams.map(f => `<option value="${esc(f + ".json")}"${st.file === f + ".json" ? " selected" : ""}>${esc(f + ".json")}</option>`).join("")
+        + `<option value="luxury.json"${st.file === "luxury.json" ? " selected" : ""}>luxury.json</option>`
+        + `</select></label>`
+        + `<label>Family <select data-g="family">`
+        + fams.map(f => `<option value="${esc(f)}"${g.family === f ? " selected" : ""}>${esc(f)}</option>`).join("")
+        + `</select></label>`
+        + `<label>Wall <select data-g="wall">`
+        + walls.map(w => `<option value="${esc(w)}"${g.wall === w ? " selected" : ""}>${esc(w)}</option>`).join("")
+        + `</select></label>`
+        + (lux ? `<label>Kind <select data-g="kind"><option value="">—</option>`
+                + lkinds.map(k => `<option value="${esc(k)}"${g.kind === k ? " selected" : ""}>${esc(k)}</option>`).join("")
+                + `</select></label>` : "")
+        + `<span class="note">${esc((g.use || []).join(", "))}</span>`
+        + `<canvas class="rm-gplan"></canvas>`
+        + `</div>`
+        + `<div class="rm-gpieces"><button type="button" data-a="addpiece">+ Add piece</button>`
+        + `<table><thead><tr><th>role</th><th>w</th><th>h</th><th>x</th><th>y</th><th>back</th><th></th><th>from</th><th></th></tr></thead>`
+        + `<tbody>${(g.pieces || []).map(pieceRow).join("")}</tbody></table></div>`
+        + (st.pool ? `<fieldset class="rm-gpool"><legend>Luxury pool</legend>`
+          + fams.map(f => `<label class="rm-chk"><input type="checkbox" data-fam="${esc(f)}"${st.pool[f] ? " checked" : ""}>${esc(f)}</label>`).join("")
+          + `<div class="kinds">bands: `
+          + bands.map(b => `<label class="rm-chk"><input type="checkbox" data-band="${esc(b)}"${bands.length === 1 ? " checked" : ""}>${esc(b)}</label>`).join("")
+          + `</div></fieldset>` : "")
+        + `<div class="rm-gerrs"></div>`
+        + `</div>`
+        + `<div class="dlg-buttons">`
+        + (isNew ? "" : `<button type="button" data-a="delete">Delete…</button>`)
+        + `<span class="spacer"></span>`
+        + `<button type="button" data-btn="cancel">Cancel</button>`
+        + `<button type="button" class="primary" data-a="save" disabled>Save</button>`
+        + `</div></form>`;
+      wire();
+    };
+
+    const errs = msgs => {
+      const box = dlg.querySelector(".rm-gerrs");
+      if (box) box.innerHTML = (msgs || []).map(m => `<div class="problem error">${esc(m)}</div>`).join("");
+      const save = dlg.querySelector('[data-a="save"]');
+      if (save) save.disabled = !!(msgs || []).length || !st.group.id;
+    };
+
+    const draw = () => {
+      const cvs = dlg.querySelector(".rm-gplan");
+      if (cvs) drawMini(cvs, {pieces: st.group.pieces || [], wall: st.group.wall});
+    };
+
+    const collectPool = root => {
+      if (!st.pool) return [];
+      const on = [...root.querySelectorAll("[data-band]")].filter(b => b.checked).map(b => b.dataset.band);
+      return [...root.querySelectorAll("[data-fam]")].filter(f => f.checked)
+        .map(f => ({family: f.dataset.fam, bands: on}));
+    };
+
+    const checkSoon = () => {
+      clearTimeout(st.timer);
+      st.timer = setTimeout(async () => {
+        if (!st.group.id) { st.errors = []; errs([]); return; }
+        const seq = ++st.seq;
+        try {
+          const d = await api("/api/rooms/group/check", {method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({group: st.group, file: st.file, pool: collectPool(dlg)})});
+          if (seq !== st.seq) return;
+          st.errors = d.errors || [];
+          errs(st.errors);
+        } catch (e) { if (seq === st.seq) errs([e.message]); }
+      }, 300);
+    };
+
+    const wire = () => {
+      dlg.querySelectorAll("[data-g]").forEach(el => {
+        const f = el.dataset.g;
+        el.onchange = () => {
+          if (f === "file") {
+            st.file = el.value;
+            st.hash = "";
+            st.pool = st.isNew && st.file === "luxury.json" ? {} : null;
+            if (!st.pool && st.group.kind !== undefined && st.file !== "luxury.json") delete st.group.kind;
+            build();
+            void hashes().then(h => { st.hash = h[st.file] || ""; });
+          } else if (f === "kind") {
+            if (el.value) st.group.kind = el.value; else delete st.group.kind;
+          } else if (f === "id") {
+            st.group.id = el.value.trim();
+          } else {
+            st.group[f] = el.value;
+          }
+          draw();
+          checkSoon();
+        };
+      });
+      dlg.querySelectorAll("[data-p]").forEach(tr => {
+        const p = st.group.pieces[+tr.dataset.p];
+        tr.querySelectorAll("[data-f]").forEach(el => {
+          const f = el.dataset.f;
+          const h = () => {
+            if (f === "role") p.role = el.value;
+            else if (f === "back") { if (el.value) p.back = el.value; else delete p.back; }
+            else if (f === "minWealth") { if (el.value) p.minWealth = el.value; else delete p.minWealth; }
+            else if (f === "optional") { if (el.checked) p.optional = true; else delete p.optional; }
+            else if (f === "w") p.size = [+el.value || 1, p.size?.[1] ?? 1];
+            else if (f === "h") p.size = [p.size?.[0] ?? 1, +el.value || 1];
+            else if (f === "x") p.at = [+el.value || 0, p.at?.[1] ?? 0];
+            else if (f === "y") p.at = [p.at?.[0] ?? 0, +el.value || 0];
+            else if (f === "del") { st.group.pieces.splice(st.group.pieces.indexOf(p), 1); build(); }
+            draw();
+            checkSoon();
+          };
+          if (f === "del") el.onclick = h;
+          else el.onchange = h;
+        });
+      });
+      dlg.querySelector('[data-a="addpiece"]').onclick = () => {
+        st.group.pieces = [...(st.group.pieces || []),
+                           {role: roles[0] || "seat", size: [1, 1], at: [0, 0]}];
+        build();
+        checkSoon();
+      };
+      dlg.querySelector('[data-btn="cancel"]').onclick = () => finish();
+      dlg.querySelector("form").onsubmit = ev => ev.preventDefault();
+      dlg.oncancel = ev => { ev.preventDefault(); finish(); };
+      dlg.querySelector('[data-a="save"]').onclick = saveGroup;
+      const del = dlg.querySelector('[data-a="delete"]');
+      if (del) del.onclick = deleteGroup;
+      draw();
+      errs(st.errors);
+    };
+
+    async function saveGroup() {
+      if (!st.group.id || st.errors.length) return;
+      if (!st.hash) st.hash = ((await hashes())[st.file]) || "";
+      const r = await fetch("/api/rooms/group/save", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({group: st.group, file: st.isNew ? st.file : undefined,
+                              hash: st.hash, pool: collectPool(dlg)})});
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) return errs(body.errors || [body.error || "the save was refused"]);
+      invalidateGroupCaches();
+      RM.recipeEdits = {};
+      savedPanel(body);
+    }
+
+    /** What a save leaves behind: the file and backup line, the stored
+     * rooms still carrying the old pieces (open one, or regenerate its
+     * family) and the room checker's verdict on them. */
+    function savedPanel(body) {
+      const rooms = body.roomsUsing || [];
+      const fams_ = [...new Set(rooms.map(r => r.family))];
+      dlg.innerHTML = `<form><h3>Group saved</h3><div class="dlg-body">`
+        + `<p><b>${esc(body.group)}</b> is in <b>${esc(body.file)}</b> — the previous file is in library/groups/.backup.</p>`
+        + (rooms.length
+          ? `<p>${rooms.length} stored room${rooms.length === 1 ? "" : "s"} still hold${rooms.length === 1 ? "s" : ""} this group's pieces:</p>`
+            + `<ul class="rm-roomsusing">` + rooms.map((r, i) =>
+                `<li><button type="button" class="linkish" data-open="${i}">${esc(r.id)}</button> (${esc(r.family)})</li>`).join("") + `</ul>`
+            + `<p class="note">The rooms keep the pieces they were composed with — regenerate a family to re-lay them out.</p>`
+            + fams_.map(f => `<button type="button" data-regen="${esc(f)}">Regenerate ${esc(f)}</button>`).join(" ")
+          : `<p class="note">No stored room uses this group.</p>`)
+        + ((body.roomErrors || []).length
+          ? `<div class="rm-gerrs">${body.roomErrors.map(m => `<div class="problem error">${esc(m)}</div>`).join("")}</div>` : "")
+        + `</div><div class="dlg-buttons"><button type="button" class="primary" data-btn="close">Close</button></div></form>`;
+      dlg.querySelectorAll("[data-open]").forEach(b =>
+        b.onclick = () => { finish(); openRoomById(rooms[+b.dataset.open].id, rooms[+b.dataset.open].family); });
+      dlg.querySelectorAll("[data-regen]").forEach(b =>
+        b.onclick = async () => { finish(); await openFamily(b.dataset.regen); regenFamily(); });
+      dlg.querySelector('[data-btn="close"]').onclick = () => { finish(); renderGroups(); };
+      dlg.oncancel = ev => { ev.preventDefault(); finish(); renderGroups(); };
+    }
+
+    /** The delete confirm, drawn into the same dialog (there is only the
+     * one): a refusal lists what uses the group and returns to the
+     * editor; a delete drops it from its file. */
+    function deleteGroup() {
+      dlg.innerHTML = `<form><h3>Delete group</h3><div class="dlg-body">`
+        + `<p>Delete <b>${esc(st.group.id)}</b> from <b>${esc(st.file)}</b>?</p>`
+        + `<p class="note">Only a group no recipe, luxury pool or stored room names can go.</p>`
+        + `<div class="rm-gerrs"></div></div>`
+        + `<div class="dlg-buttons"><button type="button" data-btn="back">Keep it</button>`
+        + `<button type="button" class="primary" data-a="yes">Delete</button></div></form>`;
+      const errs2 = msgs => dlg.querySelector(".rm-gerrs").innerHTML =
+        (msgs || []).map(m => `<div class="problem error">${esc(m)}</div>`).join("");
+      dlg.oncancel = ev => { ev.preventDefault(); finish(); renderGroups(); };
+      dlg.querySelector('[data-btn="back"]').onclick = () => { build(); dlg.showModal(); };
+      dlg.querySelector('[data-a="yes"]').onclick = async () => {
+        const btn = dlg.querySelector('[data-a="yes"]');
+        btn.disabled = true;
+        const r = await fetch("/api/rooms/group/delete", {method: "POST",
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({id: st.group.id, hash: st.hash})});
+        const body = await r.json().catch(() => ({}));
+        btn.disabled = false;
+        if (!r.ok) return errs2(body.errors || [body.error || "the delete was refused"]);
+        invalidateGroupCaches();
+        RM.recipeEdits = {};
+        finish();
+        toast(`Group ${st.group.id} deleted from ${body.file}`);
+        renderGroups();
+      };
+    }
+
+    let closed = false;
+    function finish() {
+      clearTimeout(st.timer);
+      st.seq++;
+      if (!closed) { closed = true; if (dlg.open) dlg.close(); }
+      dlg.oncancel = dlg.onclose = null;
+    }
+
+    build();
+    dlg.onclose = () => finish();
+    dlg.showModal();
+    checkSoon();
+  }
+
+  /** Leave the groups view for one stored room: its family, its id. */
+  async function openRoomById(id, family) {
+    if (RM.groupsMode) toggleGroups();
+    if (family && family !== RM.family) {
+      $("rmFamily").value = family;
+      RM.family = family;
+      await loadFamily();
+    }
+    RM.sel = id;
+    renderList();
+    loadRoom();
+  }
+
+  /** Point the family select at `family` and load it (a group save's
+   * "regenerate the family" ends up here). */
+  async function openFamily(family) {
+    if (RM.groupsMode) toggleGroups();
+    if (family && family !== RM.family) {
+      $("rmFamily").value = family;
+      RM.family = family;
+      await loadFamily();
+    }
   }
 
   // ------------------------------------------------------------ hand work
@@ -1076,8 +1594,10 @@
     if (!RM.room || RM.edit) return;
     RM.turn = RM.mirror = 0;
     syncToolbar();
-    RM.edit = {room: deep(RM.room), errors: [], cells: [], timer: 0, seq: 0,
-               sel: -1, drag: null};
+    // RM.room is the stored room; the draft in edit.room diverges from it
+    // until Done, so it doubles as the "as editing began" state
+    RM.edit = {room: deep(RM.room), orig: RM.room, errors: [], cells: [],
+               timer: 0, seq: 0, sel: -1, drag: null};
     $("rmPlan").classList.add("editing");
     $("rmSiblings").hidden = true;
     buildEditOps();
@@ -1097,6 +1617,9 @@
     $("rmPlan").classList.remove("editing");
     $("rmSiblings").hidden = false;
     if (keep) {
+      // a changed layout is hand work: the room is marked source "hand" so
+      // a family regeneration keeps it as it stands
+      if (layoutChanged(edit.orig, edit.room)) edit.room.source = "hand";
       const i = RM.rooms.findIndex(r => r.id === edit.room.id);
       if (i >= 0) RM.rooms[i] = edit.room;
       markDirty();
@@ -1268,50 +1791,54 @@
   async function addGroupDialog() {
     if (!RM.edit) return;
     const d = await groupsData();
-    if (!d) return;
-    const options = [];
-    const seen = new Set();
-    const recipe = (d.recipes || []).find(r => r.layout === RM.edit.room.recipe);
-    for (const e of (recipe && recipe.groups) || [])
-      if (e.kind === "optional" && (d.groups || {})[e.group] && !seen.has(e.group)) {
-        options.push({gid: e.group, why: "optional in the recipe"});
-        seen.add(e.group);
-      }
-    for (const e of d.pool || [])
-      if ((d.groups || {})[e.group] && !seen.has(e.group)) {
-        options.push({gid: e.group, why: "luxury pool"});
-        seen.add(e.group);
-      }
-    if (!options.length) return toast("no optional or luxury group to add for this recipe");
-    const gid = await pickGroupDialog(options, d);
+    const all = await allGroupsData();
+    if (!d || !all) return;
+    const sections = addGroupSections(all, RM.edit.room, RM.edit.orig, d);
+    if (!sections.length) return toast("no group in the library to add");
+    const gid = await pickGroupDialog(sections);
     if (!gid) return;
-    RM.edit.room = addGroup(RM.edit.room, (d.groups || {})[gid], 1, 1);
+    const def = all.find(g => g.id === gid);
+    const spot = firstFreeSpot(RM.edit.room, def) || [1, 1];
+    RM.edit.room = addGroup(RM.edit.room, def, spot[0], spot[1]);
     checkSoon();
     drawPlan();
   }
 
-  /** The add-group picker: rows carry their own mini plan; picking one
-   * places the group in the room's top-left corner to drag from. */
-  function pickGroupDialog(options, d) {
+  /** The add-group picker: the sections in their order under headings, a
+   * search over ids and roles, and every row carrying its own mini plan
+   * and the file the group lives in. Resolves with the picked group id. */
+  function pickGroupDialog(sections) {
     const dlg = $("dlg");
-    dlg.innerHTML = `<form><h3>Add a group</h3><div class="dlg-body"><div class="rm-pick">`
-      + options.map((o, i) => `<button type="button" class="rm-pickrow" data-i="${i}"><canvas></canvas>`
-        + `<span class="gname">${esc(o.gid)}</span><span class="note">${esc(o.why)}</span></button>`).join("")
-      + `</div></div><div class="dlg-buttons"><button type="button" data-btn="cancel">Cancel</button></div></form>`;
+    const row = r => `<button type="button" class="rm-pickrow" data-g="${esc(r.gid)}"><canvas></canvas>`
+      + `<span class="gname">${esc(r.gid)}</span><span class="note">${esc(r.file || "")}</span></button>`;
+    const render = q => {
+      pick.innerHTML = sections.map(s => {
+        const rows = filterGroupRows(s.rows, q);
+        return rows.length ? `<h4>${esc(s.title)}</h4>` + rows.map(row).join("") : "";
+      }).join("");
+      for (const b of pick.querySelectorAll(".rm-pickrow")) {
+        const r = sections.flatMap(s => s.rows).find(x => x.gid === b.dataset.g);
+        drawMini(b.querySelector("canvas"), {pieces: r.pieces});
+        b.onclick = () => finish(b.dataset.g);
+      }
+    };
+    dlg.innerHTML = `<form><h3>Add a group</h3><div class="dlg-body">`
+      + `<input type="search" class="rm-gsearch" placeholder="Search id or role" autocomplete="off">`
+      + `<div class="rm-pick"></div></div>`
+      + `<div class="dlg-buttons"><button type="button" data-btn="cancel">Cancel</button></div></form>`;
+    const pick = dlg.querySelector(".rm-pick");
+    const search = dlg.querySelector(".rm-gsearch");
     return new Promise(resolve => {
       let done = false;
       const finish = v => { if (done) return; done = true; if (dlg.open) dlg.close(); resolve(v); };
-      dlg.querySelectorAll(".rm-pickrow").forEach(b => {
-        const o = options[+b.dataset.i];
-        drawMini(b.querySelector("canvas"),
-                 {pieces: (((d.groups || {})[o.gid] || {}).pieces) || []});
-        b.onclick = () => finish(o.gid);
-      });
+      search.oninput = () => render(search.value);
       dlg.querySelector('[data-btn="cancel"]').onclick = () => finish(null);
       dlg.querySelector("form").onsubmit = ev => { ev.preventDefault(); finish(null); };
       dlg.oncancel = ev => { ev.preventDefault(); finish(null); };
       dlg.onclose = () => finish(null);
+      render("");
       dlg.showModal();
+      search.focus();
     });
   }
 
@@ -1323,6 +1850,23 @@
       } catch (e) { toast(e.message); return null; }
     }
     return RM.groupsCache[RM.family];
+  }
+
+  /** Every group in the library (the allgroups endpoint), cached until a
+   * group or recipe save changes the files. */
+  async function allGroupsData() {
+    if (!RM.allCache) {
+      try { RM.allCache = await api("/api/rooms/allgroups"); }
+      catch (e) { toast(e.message); return null; }
+    }
+    return (RM.allCache && RM.allCache.groups) || [];
+  }
+
+  /** Drop the groups and all-groups caches: a group or recipe save changed
+   * the files, so the next view rebuilds them from disk. */
+  function invalidateGroupCaches() {
+    RM.allCache = null;
+    RM.groupsCache = {};
   }
 
   // ------------------------------------------------------ duplicate and new
@@ -1552,5 +2096,6 @@
           groupBoxes, pieceAt, rectOf, LETTERS, EDITABLE, letterAt, nextLetter, newId,
           cloneRoom, TURN_SIDES, turnGroup, moveGroup, removeGroup, groupForm, addGroup,
           growRoom, shrinkRoom, mergeLayout, setField, resetField, parseCells,
-          removableGids};
+          removableGids, groupGids, addGroupSections, filterGroupRows, firstFreeSpot,
+          layoutChanged};
 });

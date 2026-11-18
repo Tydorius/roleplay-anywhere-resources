@@ -55,6 +55,7 @@ class LibraryTestCase(unittest.TestCase):
     def copy_library(self, with_rooms=True):
         shutil.copyfile(SHIPPED / "library.json", self.dir / "library.json")
         shutil.copytree(SHIPPED / "groups", self.dir / "groups")
+        shutil.copytree(SHIPPED / "layouts", self.dir / "layouts")
         if with_rooms:
             shutil.copytree(SHIPPED / "rooms", self.dir / "rooms")
         rmed.LIBRARY_DIR = self.dir
@@ -331,6 +332,219 @@ class TestSpriteOverHTTP(unittest.TestCase):
         after = {str(p): p.stat().st_mtime_ns
                  for p in SHIPPED.rglob("*") if p.is_file()}
         self.assertEqual(before, after)
+
+
+def _room_group(family="bedroom"):
+    """A group id one of the family's stored rooms is composed of."""
+    for r in rmed.family(family)["rooms"]:
+        for p in r["pieces"]:
+            if p.get("group"):
+                return p["group"], r["id"]
+    raise AssertionError(f"no room of {family!r} names a group")
+
+
+class TestGroupsListing(LibraryTestCase):
+    """The add-group dialog's data: every pool group is in groups() (the
+    rl-04a bug — pool entries had no group), and allgroups() lists the whole
+    library, each group with the file it lives in."""
+
+    def test_groups_returns_every_pool_group(self):
+        rmed.LIBRARY_DIR = SHIPPED
+        for family in FAMILIES:
+            with self.subTest(family=family):
+                d = rmed.groups(family)
+                for e in d["pool"]:
+                    self.assertIn(e["group"], d["groups"])
+
+    def test_allgroups_lists_every_group_with_its_file(self):
+        rmed.LIBRARY_DIR = SHIPPED
+        d = rmed.allgroups()
+        listed = {g["id"] for g in d["groups"]}
+        loaded = rmed.room_groups.load(str(SHIPPED / "groups"))["groups"]
+        self.assertEqual(sorted(g for g in loaded
+                                if "_load_error" not in loaded[g]),
+                         sorted(listed))
+        for g in d["groups"]:
+            with self.subTest(gid=g["id"]):
+                self.assertTrue(g["file"].endswith(".json"))
+                self.assertTrue((SHIPPED / "groups" / g["file"]).is_file())
+
+
+class TestGroupSave(LibraryTestCase):
+    """The group editor's endpoint: a valid edit writes only its own file
+    (the previous copy in .backup) and reports the stored rooms using the
+    group without touching them; a stale hash, a broken group and another
+    file's id are all refused with the file untouched; a new group lands
+    in the file the request names, pool entries and all."""
+
+    def path(self, file):
+        return self.dir / "groups" / file
+
+    def snapshot(self):
+        return {p.name: p.read_bytes()
+                for p in (self.dir / "groups").glob("*.json")}
+
+    def test_a_valid_edit_writes_only_that_file_and_backs_it_up(self):
+        self.copy_library()
+        gid, room_id = _room_group()
+        g = rmed.group(gid)
+        before = self.snapshot()
+        rooms_before = {p.name: p.read_bytes()
+                        for p in (self.dir / "rooms").glob("*.json")}
+        g["pieces"][0] = dict(g["pieces"][0], optional=not g["pieces"][0].get("optional"))
+        out = rmed.save_group({"group": g, "hash": g["hash"]})
+        self.assertTrue(out["ok"], out)
+        self.assertEqual(g["file"], out["file"])
+        after = self.snapshot()
+        self.assertEqual(sorted(k for k in after if after[k] != before[k]),
+                         [g["file"]], "only the group's own file changed")
+        backup = self.dir / "groups" / ".backup" / g["file"]
+        self.assertTrue(backup.is_file())
+        self.assertEqual(backup.read_bytes(), before[g["file"]])
+        self.assertIn(room_id, {r["id"] for r in out["roomsUsing"]})
+        self.assertEqual(rooms_before,
+                         {p.name: p.read_bytes()
+                          for p in (self.dir / "rooms").glob("*.json")},
+                         "a group save never edits a room file")
+        again = rmed.group(gid)
+        self.assertEqual(g["pieces"][0].get("optional"),
+                         again["pieces"][0].get("optional"))
+        self.assertEqual(again["hash"], out["hash"])
+        self.assertEqual(again.get("source"), "hand",
+                         "a changed group carries the hand marker")
+
+    def test_an_unchanged_save_adds_no_hand_marker(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        had = g.get("source")
+        out = rmed.save_group({"group": g, "hash": g["hash"]})
+        self.assertTrue(out["ok"], out)
+        self.assertEqual(rmed.group(gid).get("source"), had)
+
+    def test_a_stale_hash_is_refused(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        before = self.snapshot()
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save_group({"group": g, "hash": "0" * 64})
+        self.assertTrue(any("changed on disk" in e
+                            for e in caught.exception.errors))
+        self.assertEqual(before, self.snapshot())
+        self.assertFalse((self.dir / "groups" / ".backup").exists())
+
+    def test_a_broken_group_is_refused(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        g["pieces"][0] = dict(g["pieces"][0], role="nope.nope")
+        before = self.snapshot()
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save_group({"group": g, "hash": g["hash"]})
+        self.assertTrue(any(gid in e for e in caught.exception.errors))
+        self.assertEqual(before, self.snapshot())
+
+    def test_check_group_reports_the_same_errors_without_writing(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        g["pieces"][0] = dict(g["pieces"][0], role="nope.nope")
+        before = self.snapshot()
+        out = rmed.check_group({"group": g})
+        self.assertTrue(any(gid in e for e in out["errors"]))
+        self.assertEqual(before, self.snapshot())
+
+    def test_a_new_group_lands_where_the_request_says_with_its_pool_entry(self):
+        self.copy_library()
+        g = {"id": "lux.test.seating", "family": "bedroom",
+             "wall": "back", "use": ["north"],
+             "pieces": [{"role": "seat.long", "size": [2, 1],
+                         "at": [0, 0], "back": "north",
+                         "minWealth": "wealthy"}], "kind": "seating"}
+        out = rmed.save_group({"group": g, "file": "luxury.json",
+                               "hash": rmed._group_file_hashes()["luxury.json"],
+                               "pool": {"family": "washroom",
+                                        "bands": ["large"]}})
+        self.assertTrue(out["ok"], out)
+        self.assertEqual("luxury.json", out["file"])
+        pools = rmed.room_groups.load(str(self.dir / "groups"))["pools"]
+        self.assertIn({"group": "lux.test.seating", "bands": ["large"]},
+                      [{"group": e["group"], "bands": e.get("bands")}
+                       for e in pools["washroom"]])
+        d = rmed.groups("washroom")
+        self.assertIn("lux.test.seating", d["groups"], "the pool group is there")
+        self.assertIn("lux.test.seating", [e["group"] for e in d["pool"]])
+
+    def test_a_new_group_cannot_take_another_files_id(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save_group({"group": g, "file": "washroom.json",
+                             "hash": rmed._group_file_hashes()[g["file"]]})
+        self.assertTrue(any("already lives in" in e
+                            for e in caught.exception.errors))
+
+    def test_delete_is_refused_while_anything_uses_the_group(self):
+        self.copy_library()
+        gid, _room = _room_group()
+        g = rmed.group(gid)
+        before = self.snapshot()
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.delete_group({"id": gid, "hash": g["hash"]})
+        self.assertTrue(any("is used by" in e and gid in e
+                            for e in caught.exception.errors))
+        self.assertEqual(before, self.snapshot())
+
+    def test_an_unused_group_deletes(self):
+        self.copy_library()
+        g = {"id": "lux.test.seating", "family": "bedroom",
+             "wall": "back", "use": ["north"],
+             "pieces": [{"role": "seat.long", "size": [2, 1],
+                         "at": [0, 0], "back": "north",
+                         "minWealth": "wealthy"}], "kind": "seating"}
+        rmed.save_group({"group": g, "file": "luxury.json",
+                         "hash": rmed._group_file_hashes()["luxury.json"]})
+        out = rmed.delete_group({"id": "lux.test.seating",
+                                 "hash": rmed._group_file_hashes()["luxury.json"]})
+        self.assertTrue(out["ok"])
+        self.assertNotIn("lux.test.seating",
+                         {x["id"] for x in rmed.allgroups()["groups"]})
+
+
+class TestRecipeSave(LibraryTestCase):
+    """The recipe endpoint: an entry added by hand (source: "hand") is
+    written into the recipe's own file and survives a reload; a broken
+    recipe is refused with the file untouched."""
+
+    def _recipe(self, family="bedroom"):
+        d = rmed.groups(family)
+        return d["recipes"][0], d["hashes"]
+
+    def test_an_added_entry_is_written(self):
+        self.copy_library()
+        r, hashes = self._recipe()
+        entry = {"group": "decor.floor.single", "kind": "optional",
+                 "count": 1, "source": "hand"}
+        r["groups"] = r["groups"] + [entry]
+        out = rmed.save_recipe({"recipe": r, "hash": hashes[r["file"]]})
+        self.assertTrue(out["ok"], out)
+        again = rmed.groups(r["family"])["recipes"]
+        mine = next(x for x in again if x["layout"] == r["layout"])
+        self.assertEqual(entry, mine["groups"][-1])
+
+    def test_a_broken_recipe_is_refused(self):
+        self.copy_library()
+        r, hashes = self._recipe()
+        r["groups"][0] = dict(r["groups"][0], group="nope.nope")
+        before = {p.name: p.read_bytes()
+                  for p in (self.dir / "groups").glob("*.json")}
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save_recipe({"recipe": r, "hash": hashes[r["file"]]})
+        self.assertTrue(any("nope.nope" in e for e in caught.exception.errors))
+        self.assertEqual(before, {p.name: p.read_bytes()
+                                  for p in (self.dir / "groups").glob("*.json")})
 
 
 if __name__ == "__main__":

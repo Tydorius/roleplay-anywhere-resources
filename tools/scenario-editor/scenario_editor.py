@@ -132,6 +132,10 @@ class Handler(ig.Handler):
                                                 (q.get("mirror") or ["0"])[0]))
             if u.path == "/api/rooms/groups":
                 return self.send(200, rmed.groups((q.get("family") or [""])[0]))
+            if u.path == "/api/rooms/allgroups":
+                return self.send(200, rmed.allgroups())
+            if u.path == "/api/rooms/group":
+                return self.send(200, rmed.group((q.get("id") or [""])[0]))
             if u.path == "/api/rooms/look":
                 return self.send(200, rmed.look((q.get("id") or [""])[0],
                                                 (q.get("band") or [""])[0],
@@ -218,6 +222,14 @@ class Handler(ig.Handler):
                 return self.send(200, rb.discard())
             if u.path == "/api/rooms/check":
                 return self.send(200, rmed.check_rooms(req_json(self.body())))
+            if u.path == "/api/rooms/group/check":
+                return self.send(200, rmed.check_group(req_json(self.body())))
+            if u.path == "/api/rooms/group/save":
+                return self.send(200, rmed.save_group(req_json(self.body())))
+            if u.path == "/api/rooms/group/delete":
+                return self.send(200, rmed.delete_group(req_json(self.body())))
+            if u.path == "/api/rooms/recipe/save":
+                return self.send(200, rmed.save_recipe(req_json(self.body())))
             if u.path == "/api/rooms/save":
                 return self.send(200, rmed.save(req_json(self.body())))
             if u.path == "/api/rooms/regenerate":
