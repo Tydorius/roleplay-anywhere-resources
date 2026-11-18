@@ -410,8 +410,65 @@
         if (mm[1] === "x") for (let y = 0; y < h; y++) add(+mm[2], y);
         else for (let x = 0; x < w; x++) add(x, +mm[2]);
       }
+      if ((mm = /access cells (\[\[.*?\]\])/.exec(m))) {
+        try { for (const c of JSON.parse(mm[1])) add(c[0], c[1]); } catch (e) { /* not cells */ }
+      }
     }
     return [...cells].map(s => s.split(",").map(Number));
+  }
+
+  /** The piece a ring cell belongs to: the one it stands nearest (the first
+   * on a tie) — the piece whose limited set a limited mark joins. */
+  function nearestPiece(pieces, x, y) {
+    let best = -1, bd = Infinity;
+    (pieces || []).forEach((p, i) => {
+      const r = rectOf(p);
+      if (!r) return;
+      const dx = Math.max(r[0] - x, 0, x - (r[0] + r[2] - 1));
+      const dy = Math.max(r[1] - y, 0, y - (r[1] + r[3] - 1));
+      if (dx + dy < bd) { bd = dx + dy; best = i; }
+    });
+    return best;
+  }
+
+  /** A ring cell's next state, one click at a time:
+   * none -> mandatory -> limited -> none. */
+  function cycleAccessState(state) {
+    return state === "mandatory" ? "limited"
+      : state === "limited" ? "none" : "mandatory";
+  }
+
+  /** A group's hand ``access`` list as cell marks, {"x,y": "mandatory" |
+   * "limited"}: a constraint needing all its cells is mandatory, one
+   * needing a choice of them limited. */
+  function marksFromAccess(access) {
+    const marks = {};
+    for (const e of access || []) {
+      const kind = (e.need || 1) >= ((e.cells || []).length) ? "mandatory" : "limited";
+      for (const c of e.cells || []) marks[c[0] + "," + c[1]] = kind;
+    }
+    return marks;
+  }
+
+  /** The group's ``access`` list from cell marks: every mandatory mark its
+   * own one-cell constraint, the limited marks of one piece that piece's
+   * limited set (one constraint over them, need 1). */
+  function accessFromMarks(marks, pieces) {
+    const byPiece = new Map();
+    for (const key of Object.keys(marks || {})) {
+      const xy = key.split(",").map(Number);
+      const i = nearestPiece(pieces, xy[0], xy[1]);
+      if (i < 0) continue;
+      if (!byPiece.has(i)) byPiece.set(i, {mandatory: [], limited: []});
+      byPiece.get(i)[marks[key] === "limited" ? "limited" : "mandatory"].push(xy);
+    }
+    const out = [];
+    for (const i of [...byPiece.keys()].sort((a, b) => a - b)) {
+      const m = byPiece.get(i);
+      for (const c of m.mandatory) out.push({cells: [c], need: 1, replaces: [i]});
+      if (m.limited.length) out.push({cells: m.limited, need: 1, replaces: [i]});
+    }
+    return out;
   }
 
   /** The group ids a person may take out of a room of this recipe: the
@@ -793,6 +850,18 @@
         ctx.fillText(shortRole(p.role, pieceRoles), px + PW / 2, py + PH / 2);
       }
     }
+    // access cells, faint: purple where every cell of the constraint is
+    // needed, blue where one of them is enough
+    for (const c of room._access || []) {
+      const mandatory = (c.need || 1) >= ((c.cells || []).length);
+      ctx.globalAlpha = 0.25;
+      ctx.fillStyle = mandatory ? "#8e5bd8" : "#2f6fd8";
+      for (const cc of c.cells || []) {
+        if (cc[0] >= 0 && cc[1] >= 0 && cc[0] < w && cc[1] < h)
+          ctx.fillRect(ox + cc[0] * cell + 2, oy + cc[1] * cell + 2, cell - 4, cell - 4);
+      }
+      ctx.globalAlpha = 1;
+    }
     // thin group outlines
     ctx.strokeStyle = muted;
     ctx.setLineDash([]);
@@ -1010,8 +1079,15 @@
    * whole group, "corner" the north and west edges. */
   function drawMini(cvs, room, box) {
     const pieces = (room.pieces || []).map(rectOf).filter(Boolean);
-    const w = Math.max(1, ...pieces.map(r => r[0] + r[2]));
-    const h = Math.max(1, ...pieces.map(r => r[1] + r[3]));
+    // access cells can sit outside the piece bounds (a front cell one step
+    // out), so the canvas must span them too
+    let minx = 0, miny = 0;
+    for (const c of room.accessCells || [])
+      for (const cc of (c && c.cells) || []) {
+        minx = Math.min(minx, cc[0]); miny = Math.min(miny, cc[1]);
+      }
+    const w = Math.max(1, ...pieces.map(r => r[0] + r[2])) - minx;
+    const h = Math.max(1, ...pieces.map(r => r[1] + r[3])) - miny;
     const [bw, bh, cmax] = box || [116, 64, 12];   // fit box and largest cell
     const cell = Math.min(cmax, Math.max(3, Math.floor(Math.min(bw / w, bh / h))));
     const dpr = window.devicePixelRatio || 1;
@@ -1021,11 +1097,13 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = cssVar("--bg", "#f4f3ef");
     ctx.fillRect(0, 0, w * cell, h * cell);
+    const ox = -minx * cell, oy = -miny * cell;
+    cvs._geom = {cell, minx, miny, w, h};   // for click-to-cell mapping
     for (const p of room.pieces || []) {
       const r = rectOf(p);
       if (!r) continue;
       const rgb = roleColor(RM.meta.roles, p.role);
-      const px = r[0] * cell, py = r[1] * cell, PW = r[2] * cell, PH = r[3] * cell;
+      const px = ox + r[0] * cell, py = oy + r[1] * cell, PW = r[2] * cell, PH = r[3] * cell;
       ctx.fillStyle = rgb;
       ctx.fillRect(px, py, PW, PH);
       if (p.back) {
@@ -1036,6 +1114,16 @@
         else if (p.back === "west") ctx.fillRect(px, py, lw, PH);
         else if (p.back === "east") ctx.fillRect(px + PW - lw, py, lw, PH);
       }
+    }
+    // access cells: purple when every cell of the constraint is needed,
+    // blue when one of several is enough; hand-set solid, derived faint
+    for (const c of room.accessCells || []) {
+      const mandatory = (c.need || 1) >= ((c.cells || []).length);
+      ctx.globalAlpha = c.hand ? 0.9 : 0.3;
+      ctx.fillStyle = mandatory ? "#8e5bd8" : "#2f6fd8";
+      for (const cc of (c && c.cells) || [])
+        ctx.fillRect(ox + cc[0] * cell + 1, oy + cc[1] * cell + 1, cell - 2, cell - 2);
+      ctx.globalAlpha = 1;
     }
     if (room.wall === "back" || room.wall === "corner") {
       const lw = Math.max(2, Math.round(cell / 3));
@@ -1252,7 +1340,9 @@
       delete group.source;
     }
     const st = {group, file: file0, isNew, hash: null, errors: [], timer: 0, seq: 0,
-                pool: isNew && file0 === "luxury.json" ? {} : null};
+                pool: isNew && file0 === "luxury.json" ? {} : null,
+                accessMarks: marksFromAccess(group.access),
+                accessDerived: (from && from.accessDerived) || []};
     const hashes = async () => {
       const d = await groupsData();
       return (d && d.hashes) || {};
@@ -1308,7 +1398,9 @@
         + (lux ? `<label>Kind <select data-g="kind"><option value="">—</option>`
                 + lkinds.map(k => `<option value="${esc(k)}"${g.kind === k ? " selected" : ""}>${esc(k)}</option>`).join("")
                 + `</select></label>` : "")
-        + `<span class="note">${esc((g.use || []).join(", "))}</span>`
+        + `<div class="rm-acclegend"><span class="accchip mandatory"></span>mandatory`
+        + ` <span class="accchip limited"></span>limited`
+        + ` <span class="note">click a ring cell: none → mandatory → limited</span></div>`
         + `<canvas class="rm-gplan"></canvas>`
         + `</div>`
         + `<div class="rm-gpieces"><button type="button" data-a="addpiece">+ Add piece</button>`
@@ -1339,7 +1431,13 @@
 
     const draw = () => {
       const cvs = dlg.querySelector(".rm-gplan");
-      if (cvs) drawMini(cvs, {pieces: st.group.pieces || [], wall: st.group.wall}, [240, 160, 32]);
+      if (!cvs) return;
+      const accessCells = [
+        ...(st.accessDerived || []).map(c => ({cells: c.cells, need: c.need, hand: false})),
+        ...(st.group.access || []).map(c => ({cells: c.cells, need: c.need, hand: true}))
+      ];
+      drawMini(cvs, {pieces: st.group.pieces || [], wall: st.group.wall,
+                     accessCells}, [240, 160, 32]);
     };
 
     const collectPool = root => {
@@ -1360,7 +1458,9 @@
             body: JSON.stringify({group: st.group, file: st.file, pool: collectPool(dlg)})});
           if (seq !== st.seq) return;
           st.errors = d.errors || [];
+          st.accessDerived = d.accessDerived || [];
           errs(st.errors);
+          draw();
         } catch (e) { if (seq === st.seq) errs([e.message]); }
       }, 300);
     };
@@ -1412,6 +1512,29 @@
         st.group.pieces = [...(st.group.pieces || []),
                            {role: roles[0] || "seat", size: [1, 1], at: [0, 0]}];
         build();
+        checkSoon();
+      };
+      // click a ring cell (the group's bounding box grown by one cell, off
+      // its furniture) to cycle it none -> mandatory -> limited; a limited
+      // mark joins the nearest piece's limited set
+      const plan = dlg.querySelector(".rm-gplan");
+      plan.onclick = ev => {
+        const geom = plan._geom;
+        const rects = (st.group.pieces || []).map(rectOf).filter(Boolean);
+        if (!geom || !rects.length) return;
+        const rct = plan.getBoundingClientRect();
+        const cx = Math.floor((ev.clientX - rct.left) / (rct.width / geom.w)) + geom.minx;
+        const cy = Math.floor((ev.clientY - rct.top) / (rct.height / geom.h)) + geom.miny;
+        const minx = Math.min(...rects.map(r => r[0])), miny = Math.min(...rects.map(r => r[1]));
+        const W = Math.max(...rects.map(r => r[0] + r[2])), H = Math.max(...rects.map(r => r[1] + r[3]));
+        if (cx < minx - 1 || cx > W || cy < miny - 1 || cy > H) return;
+        if (rects.some(r => cx >= r[0] && cx < r[0] + r[2] && cy >= r[1] && cy < r[1] + r[3])) return;
+        const next = cycleAccessState(st.accessMarks[cx + "," + cy]);
+        if (next === "none") delete st.accessMarks[cx + "," + cy];
+        else st.accessMarks[cx + "," + cy] = next;
+        const acc = accessFromMarks(st.accessMarks, st.group.pieces);
+        if (acc.length) st.group.access = acc; else delete st.group.access;
+        draw();
         checkSoon();
       };
       dlg.querySelector('[data-btn="cancel"]').onclick = () => finish();
@@ -1766,7 +1889,7 @@
   /** The server's derived fields back into the page's room, in place so
    * the key order (and so the saved file's) stays as the generator's. */
   function takeDerived(room, derived) {
-    for (const k of ["size", "sizeBand", "sleeps", "doors", "stretch"])
+    for (const k of ["size", "sizeBand", "sleeps", "doors", "stretch", "_access"])
       room[k] = derived[k];
   }
 
@@ -2134,5 +2257,5 @@
           cloneRoom, TURN_SIDES, turnGroup, moveGroup, removeGroup, groupForm, addGroup,
           growRoom, shrinkRoom, mergeLayout, setField, resetField, parseCells,
           removableGids, groupGids, addGroupSections, filterGroupRows, firstFreeSpot,
-          layoutChanged};
+          layoutChanged, nearestPiece, cycleAccessState, marksFromAccess, accessFromMarks};
 });

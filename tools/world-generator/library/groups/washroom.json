@@ -342,31 +342,9 @@
       ]
     },
     {
-      "id": "seat.long.single.washroom2",
-      "family": "washroom",
-      "wall": "none",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "optional": true
-        }
-      ]
-    },
-    {
       "id": "wash.bath.decor.floor.seat.opt",
       "family": "washroom",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -401,10 +379,11 @@
             1
           ],
           "at": [
-            0,
-            1
+            2,
+            0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -633,7 +612,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -856,7 +836,7 @@
           "kind": "optional"
         },
         {
-          "group": "seat.long.single.washroom2",
+          "group": "seat.long.single.washroom",
           "kind": "optional"
         }
       ]

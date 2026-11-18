@@ -99,6 +99,19 @@ class TestShippedRooms(unittest.TestCase):
         self.assertGreater(len(rooms), 0)
         self.assertEqual(FR.check(rooms, RG.load(), WL.load()), [])
 
+    def test_every_shipped_room_passes_the_access_rules(self):
+        """Each room on its own: every access constraint keeps its need of
+        cells, no seat faces nothing and every closet has its door."""
+        data, lib = RG.load(), WL.load()
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                with self.subTest(room=room["id"]):
+                    errors = [e for e in FR.check([room], data, lib)
+                              if "access cell" in e or "faces nothing" in e
+                              or "needs a door" in e]
+                    self.assertEqual(errors, [])
+
     def test_every_shipped_room_stays_inside_the_aspect_cap(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms,
                       self.privies, self.baths, self.closets):
@@ -425,6 +438,23 @@ class TestFamilyBandRooms(unittest.TestCase):
             w, h = room["size"]
             with self.subTest(room=room["id"]):
                 self.assertLessEqual(w * h, 9, f"{w}x{h}")
+
+    def test_the_servant_room_is_2x3_with_the_beds_long_side_on_a_wall(self):
+        rooms = [r for r in self.bedrooms if r["recipe"] == "bedroom.servant"]
+        self.assertTrue(rooms, "no servant's room shipped")
+        for room in rooms:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertEqual(sorted(room["size"]), [2, 3], f"{w}x{h}")
+                bed = next(p for p in room["pieces"]
+                           if p["role"] == "sleep")
+                bx, by, bw, bh = bed["at"] + bed["size"]
+                # the bed lies lengthwise, its long side against a wall
+                self.assertGreater(max(bw, bh), min(bw, bh),
+                                   "bed not lying lengthwise")
+                on_wall = ((bw > bh and (by == 0 or by + bh == h))
+                           or (bh > bw and (bx == 0 or bx + bw == w)))
+                self.assertTrue(on_wall, json.dumps(bed))
 
     def test_the_composer_returns_no_room_when_a_band_cannot_be_reached(self):
         # the servant's recipe (a bed, a bedside, a chest) cannot fill a

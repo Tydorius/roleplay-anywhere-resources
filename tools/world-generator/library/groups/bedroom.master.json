@@ -1,7 +1,7 @@
 {
   "groups": [
     {
-      "id": "sleep.couple.bedside2.storage.small",
+      "id": "sleep.couple.bedside2",
       "family": "bedroom.master",
       "wall": "back",
       "use": [
@@ -40,17 +40,6 @@
           "at": [
             3,
             0
-          ]
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
           ]
         }
       ]
@@ -96,10 +85,11 @@
             1
           ],
           "at": [
-            1,
-            1
+            4,
+            0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -158,7 +148,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -207,6 +198,27 @@
       ]
     },
     {
+      "id": "storage.small.single",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
       "id": "storage.big.seat.opt.bedroom.master",
       "family": "bedroom.master",
       "wall": "back",
@@ -236,7 +248,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -368,74 +381,6 @@
       ]
     },
     {
-      "id": "sleep.couple.bedside2.decor.floor.storage.small.opt",
-      "family": "bedroom.master",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ]
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "minWealth": "wealthy"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "optional": true
-        }
-      ]
-    },
-    {
       "id": "storage.big.storage.big",
       "family": "bedroom.master",
       "wall": "back",
@@ -527,6 +472,28 @@
       ]
     },
     {
+      "id": "storage.small.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
       "id": "coat.single.bedroom.master",
       "family": "bedroom.master",
       "wall": "none",
@@ -549,63 +516,27 @@
       ]
     },
     {
-      "id": "sleep.couple.bedside2.storage.small.opt",
+      "id": "decor.floor.single.bedroom.master2",
       "family": "bedroom.master",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
+      "wall": "none",
+      "use": [],
       "pieces": [
         {
-          "role": "sleep.couple",
+          "role": "decor.floor",
           "size": [
             2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
             1
           ],
           "at": [
             0,
             0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
           ],
-          "at": [
-            3,
-            0
-          ]
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "optional": true
+          "minWealth": "wealthy"
         }
       ]
     },
     {
-      "id": "decor.floor.single.bedroom.master2",
+      "id": "decor.floor.single.bedroom.master3",
       "family": "bedroom.master",
       "wall": "none",
       "use": [],
@@ -621,50 +552,6 @@
             0
           ],
           "optional": true
-        }
-      ]
-    },
-    {
-      "id": "sleep.couple.bedside2",
-      "family": "bedroom.master",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ]
         }
       ]
     },
@@ -742,7 +629,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -776,31 +664,18 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
     {
-      "id": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+      "id": "bedside.single",
       "family": "bedroom.master",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
+      "wall": "none",
+      "use": [],
       "pieces": [
         {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
           "role": "bedside",
           "size": [
             1,
@@ -809,52 +684,6 @@
           "at": [
             0,
             0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
           ],
           "optional": true
         }
@@ -884,74 +713,6 @@
       ]
     },
     {
-      "id": "sleep.couple.bedside2.bedside.opt2",
-      "family": "bedroom.master",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "sleep.couple",
-          "size": [
-            2,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ]
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "optional": true
-        },
-        {
-          "role": "bedside",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "optional": true
-        }
-      ]
-    },
-    {
       "id": "seat.single.bedroom.master",
       "family": "bedroom.master",
       "wall": "corner",
@@ -969,7 +730,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     }
@@ -983,7 +745,7 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.storage.small",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
@@ -1014,6 +776,10 @@
         {
           "group": "table.small.single.bedroom.master",
           "kind": "optional"
+        },
+        {
+          "group": "storage.small.single",
+          "kind": "required"
         }
       ]
     },
@@ -1025,7 +791,7 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.storage.small",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
@@ -1060,6 +826,10 @@
         {
           "group": "decor.floor.single.bedroom.master1",
           "kind": "optional"
+        },
+        {
+          "group": "storage.small.single",
+          "kind": "required"
         }
       ]
     },
@@ -1071,7 +841,7 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.decor.floor.storage.small.opt",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
@@ -1098,12 +868,21 @@
           "minWealth": "elite"
         },
         {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
           "group": "light.small.single.bedroom.master1",
           "kind": "optional"
         },
         {
           "group": "coat.single.bedroom.master",
           "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master2",
+          "kind": "required",
+          "minWealth": "wealthy"
         }
       ]
     },
@@ -1115,7 +894,7 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
@@ -1124,11 +903,15 @@
           "kind": "required"
         },
         {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
           "group": "light.small.single.bedroom.master1",
           "kind": "optional"
         },
         {
-          "group": "decor.floor.single.bedroom.master2",
+          "group": "decor.floor.single.bedroom.master3",
           "kind": "optional"
         }
       ]
@@ -1163,7 +946,7 @@
           "kind": "optional"
         },
         {
-          "group": "decor.floor.single.bedroom.master2",
+          "group": "decor.floor.single.bedroom.master3",
           "kind": "optional"
         }
       ]
@@ -1176,7 +959,7 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.storage.small.opt",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
@@ -1194,6 +977,10 @@
           "minWealth": "modest"
         },
         {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
           "group": "coat.single.bedroom.master",
           "kind": "optional"
         }
@@ -1207,12 +994,20 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.bedside.opt2.storage.small.opt",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
         {
+          "group": "bedside.single",
+          "kind": "optional"
+        },
+        {
           "group": "storage.big.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.bedroom.master",
           "kind": "optional"
         },
         {
@@ -1229,12 +1024,16 @@
       ],
       "groups": [
         {
-          "group": "sleep.couple.bedside2.bedside.opt2",
+          "group": "sleep.couple.bedside2",
           "kind": "anchor",
           "count": "couples"
         },
         {
           "group": "storage.big.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "bedside.single",
           "kind": "optional"
         },
         {

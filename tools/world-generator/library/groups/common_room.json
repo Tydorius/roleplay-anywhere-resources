@@ -291,8 +291,8 @@
             1
           ],
           "at": [
-            0,
-            1
+            3,
+            0
           ],
           "minWealth": "elite"
         }
@@ -648,7 +648,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         },
         {
           "role": "seat.lounge",
@@ -659,7 +660,8 @@
           "at": [
             4,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -1056,7 +1058,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -1146,7 +1149,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -1216,7 +1220,7 @@
       ]
     },
     {
-      "id": "heat.seat.lounge2.fuel.opt",
+      "id": "heat.seat.lounge2",
       "family": "common_room",
       "wall": "back",
       "use": [
@@ -1256,18 +1260,6 @@
             3,
             0
           ]
-        },
-        {
-          "role": "fuel",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "optional": true
         }
       ]
     },
@@ -1289,6 +1281,28 @@
             0,
             0
           ]
+        }
+      ]
+    },
+    {
+      "id": "fuel.single",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
         }
       ]
     },
@@ -1721,7 +1735,7 @@
       ],
       "groups": [
         {
-          "group": "heat.seat.lounge2.fuel.opt",
+          "group": "heat.seat.lounge2",
           "kind": "anchor"
         },
         {
@@ -1734,6 +1748,10 @@
         },
         {
           "group": "decor.floor.single.common_room2",
+          "kind": "optional"
+        },
+        {
+          "group": "fuel.single",
           "kind": "optional"
         },
         {

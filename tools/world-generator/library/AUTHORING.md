@@ -304,6 +304,61 @@ reach-in needs no door cell and no free floor at all — its pieces are used fro
 - The layout is generic. The purpose binds roles to categories, so one workshop layout serves a
   forge and a fabricator bay.
 
+## Access: `library.json` → `roleAccess`
+
+A piece of furniture is only furniture if a person can stand somewhere to use it. Each role
+carries an access rule in `library.json`'s `roleAccess` table, and the rules resolve to
+**access cells** — the cells someone must be able to reach to use the piece:
+
+- `both-long` — every long side needs its own cell (all four sides when the piece is square
+  and stands free): a double bed standing free.
+- `one-long` — one of the long sides is enough: single beds, child beds, sickbeds, cell beds.
+- `front` — the side opposite the piece's `back`; any one side when it has no back: seats,
+  chests, wardrobes, shelves, displays, bedides.
+- `any` — any one side: tables and desks.
+- `none` — nothing: lights, decor and optional pieces (an optional piece is never a
+  constraint, whatever its role).
+
+Every role in `roles` must carry one of the five; `library check` and `library groups` flag a
+missing entry. A rule may carry a `relax` — `{"wealth": ["poor"], "clearance": ["tight"],
+"to": "one-long"}` — that applies only when a room's `wealth` is exactly the relax's tiers
+and its clearance one of its own (a room for poor and modest must satisfy modest). The
+shipped relax is `sleep.couple` (both-long) dropping to one-long for a poor, tight room.
+
+The rules resolve to constraints of cells, each `{"cells": [[x, y], ...], "need": n}`:
+
+- A **mandatory** constraint is one cell with `need` 1 — that cell must stand free and
+  reached. A **limited** constraint is a choice of cells with `need` 1 — one of them is
+  enough.
+- Each side contributes one cell: the side's **foot end**, the end away from the piece's
+  `back` (a bed is entered at the foot); the side's middle cell when there is no back — of
+  two middle cells the lower-left one, the western of a horizontal pair, the southern of a
+  vertical. `front` uses the middle cell of the side opposite the back.
+- **A bed lying lengthwise** — its `back` on one of its long sides — is used from the
+  opposite long side alone, one limited constraint over that side's cells, whatever its
+  rule says. A double bed lying lengthwise keeps this at every wealth.
+- **A bedside locks a bed side:** a bedside standing beside a one-long bed's head on one
+  long side makes that side's foot cell mandatory and drops the constraint on the other long
+  side entirely (each sleeper gets in on their own side).
+- **Seats:** a seat's front is its access cell, and a seat whose own group holds no table,
+  desk, counter, game table, work surface or control to face must `back` a wall — the
+  checker rejects a lone seat facing nothing.
+- Cells covered by a piece of the same group drop out of a constraint; a constraint emptied
+  that way stays and fails — the group would be blocking its own use.
+
+A room's checker needs each constraint to keep its `need` of cells inside the room, free of
+furniture and the open style's filler, and reached from a door. Access cells are
+constraints, not space: they may overlap another group's access cells, the clearance gap
+between groups and the ring around an open filler — but never furniture, walls or the
+filler itself. The composer works the same rule from its own side: a candidate placement
+that breaks a constraint is rejected the way an unreachable piece is.
+
+**Reach-in closets** turn the rule around: their pieces' access cells lie outside the room,
+and those cells — all on one side — are the closet's door cells. `derive()` writes them into
+`doors`, the checker requires at least one door cell for every closet (reach-in and walk-in
+alike), and every shelf, store and utility piece in a reach-in backs the wall opposite its
+door.
+
 ## Groups: `groups/<family>.json`
 
 Furniture groups are the fixed clusters the layouts describe through their `beside:`/`around:`
@@ -345,6 +400,13 @@ file holds the family's groups and one recipe per layout, naming the groups it n
   cell offset from the group's top left, `size` is the placed footprint (a piece turned onto
   the east or west side carries its turned size), and a wall-bound piece backs `north` on
   row 0. A piece may be `optional` or carry a `minWealth`.
+- **Access:** a group's usability derives from its pieces' roles (see the Access section);
+  a hand group may also carry `"access"` — a list of `{"cells": [[x, y], ...], "need": n,
+  "replaces": [piece indexes]}` entries in group coordinates standing in for the derived
+  constraints of the pieces `replaces` names. The cells must lie in the ring around the
+  group (its bounding box grown by one cell on every side), off its own furniture and off
+  the walls its `wall` stands on, and `need` may not top the cell count. Only hand work may
+  carry `access` — the group needs `"source": "hand"` — and the converter never writes one.
 - **Recipes:** one per layout, with `layout`, `family` and `sizeBands` copied from it. Each
   entry names a `group` with a `kind` — `anchor` (exactly one, the layout's main piece),
   `required`, `optional` or `repeatable` (as many as fit) — plus the source slot's `count`
@@ -410,9 +472,10 @@ style the composer found a clear layout for.
 - **Pieces:** each is a group's piece placed into the room — `role`, `size` and `at`
   cell, `back` on a wall-bound piece (flush against that edge, facing in), `group` naming
   the group it came from, `optional` when the room still works without it. Pieces never
-  overlap, and every piece keeps a reached free cell beside it on a side it can be used
-  from: a bed a long side, a seat the side facing away from its table, a wall-bound piece
-  its front. Lights, decor and optional fillers need none.
+  overlap, and every piece keeps its access constraints satisfied — each needs its `need`
+  of cells (from the role's `roleAccess` rule, or the group's hand `access` list) inside
+  the room, free of furniture and reached from a door. Lights, decor and optional pieces
+  carry no constraints.
 - **Doors:** per side, the cell offsets along that wall that can take one — free edge
   cells only, on at least two sides, every door opening into one connected free area.
 - **Stretch:** `x` columns and `y` rows where an empty line can be inserted to grow the

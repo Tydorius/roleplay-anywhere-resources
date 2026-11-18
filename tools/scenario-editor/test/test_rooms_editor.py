@@ -92,7 +92,7 @@ class TestMeta(LibraryTestCase):
         m = rmed.meta()
         # the families with their own tables carry them in table order;
         # every other family shares sizeBands and holds no entry
-        self.assertEqual(["narrow", "tiny", "small", "medium", "large"],
+        self.assertEqual(["narrow", "tiny", "small", "medium", "large", "servant"],
                          [b["name"] for b in m["familySizeBands"]["bedroom"]])
         self.assertEqual({"name": "narrow", "cells": [8, 14],
                           "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
@@ -138,7 +138,15 @@ class TestRoom(LibraryTestCase):
     def test_turn_one_is_fixed_rooms_rotate(self):
         rmed.LIBRARY_DIR = SHIPPED
         stored = json.loads((SHIPPED / "rooms" / "bedroom.json").read_text("utf-8"))["rooms"][0]
-        self.assertEqual(fixed_rooms.rotate(stored, 1), rmed.room(stored["id"], 1))
+        r = rmed.room(stored["id"], 1)
+        # the room endpoint adds the access constraints for the plan to
+        # draw faintly; everything else is exactly the generator's rotation
+        access = r.pop("_access")
+        self.assertEqual(fixed_rooms.rotate(stored, 1), r)
+        self.assertTrue(access, "the turned room carries its access cells")
+        for c in access:
+            self.assertIn("cells", c)
+            self.assertIn("need", c)
 
 
 class TestLook(LibraryTestCase):
@@ -483,6 +491,31 @@ class TestGroupSave(LibraryTestCase):
         out = rmed.check_group({"group": g})
         self.assertTrue(any(gid in e for e in out["errors"]))
         self.assertEqual(before, self.snapshot())
+
+    def test_an_access_override_needs_hand_work_and_saves_when_it_has_it(self):
+        self.copy_library()
+        gid, _ = _room_group()
+        g = rmed.group(gid)
+        # a ring cell just past the group's south edge, under its west end
+        minx = min(p["at"][0] for p in g["pieces"])
+        H = max(p["at"][1] + p["size"][1] for p in g["pieces"])
+        g["access"] = [{"cells": [[minx, H]], "need": 1, "replaces": [0]}]
+        out = rmed.check_group({"group": g})
+        self.assertTrue(any("access is hand work" in e for e in out["errors"]),
+                        out["errors"])
+        # the same entry on hand work checks, saves and reloads
+        g["source"] = "hand"
+        self.assertEqual(rmed.check_group({"group": g})["errors"], [])
+        saved = rmed.save_group({"group": g, "hash": g["hash"]})
+        self.assertTrue(saved["ok"], saved)
+        again = rmed.group(gid)
+        self.assertEqual(again.get("access"), g["access"])
+        self.assertEqual(again.get("source"), "hand")
+        # a cell outside the ring around the group is refused
+        again["access"] = [{"cells": [[minx, H + 5]], "need": 1,
+                            "replaces": [0]}]
+        self.assertTrue(any("outside the ring" in e
+                            for e in rmed.check_group({"group": again})["errors"]))
 
     def test_a_new_group_lands_where_the_request_says_with_its_pool_entry(self):
         self.copy_library()

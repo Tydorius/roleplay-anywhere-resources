@@ -206,10 +206,12 @@
       ]
     },
     {
-      "id": "table.dining.seat6.seat.state",
+      "id": "table.dining.seat5.seat.state",
       "family": "dining",
       "wall": "back",
-      "use": [],
+      "use": [
+        "west"
+      ],
       "pieces": [
         {
           "role": "table.dining",
@@ -274,17 +276,6 @@
           ],
           "at": [
             5,
-            0
-          ]
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
             0
           ]
         },
@@ -940,7 +931,7 @@
       ]
     },
     {
-      "id": "table.dining.seat6.seat.state.dining",
+      "id": "table.dining.seat6.seat.state",
       "family": "dining",
       "wall": "none",
       "use": [
@@ -1204,7 +1195,7 @@
       ]
     },
     {
-      "id": "table.dining.seat.long2.seat.opt",
+      "id": "table.dining.seat.long2.dining",
       "family": "dining",
       "wall": "none",
       "use": [
@@ -1244,7 +1235,17 @@
             3,
             0
           ]
-        },
+        }
+      ]
+    },
+    {
+      "id": "seat.single.dining",
+      "family": "dining",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
         {
           "role": "seat",
           "size": [
@@ -1253,9 +1254,10 @@
           ],
           "at": [
             0,
-            2
+            0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     }
@@ -1311,7 +1313,7 @@
       ],
       "groups": [
         {
-          "group": "table.dining.seat6.seat.state",
+          "group": "table.dining.seat5.seat.state",
           "kind": "anchor"
         },
         {
@@ -1487,7 +1489,7 @@
       ],
       "groups": [
         {
-          "group": "table.dining.seat6.seat.state.dining",
+          "group": "table.dining.seat6.seat.state",
           "kind": "anchor"
         },
         {
@@ -1583,7 +1585,7 @@
       ],
       "groups": [
         {
-          "group": "table.dining.seat.long2.seat.opt",
+          "group": "table.dining.seat.long2.dining",
           "kind": "anchor"
         },
         {
@@ -1597,6 +1599,10 @@
         },
         {
           "group": "shelving.single.dining",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.dining",
           "kind": "optional"
         },
         {

@@ -67,7 +67,7 @@ def chapel_recipe():
             "sizeBands": ["medium"],
             "groups": [
                 {"group": "altar.devotion2", "kind": "anchor"},
-                {"group": "seat.long.single.chapel7", "kind": "repeatable",
+                {"group": "seat.long.single.chapel5", "kind": "repeatable",
                  "count": [1, 2]},
             ]}
 

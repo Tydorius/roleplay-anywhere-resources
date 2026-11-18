@@ -523,7 +523,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -586,7 +587,7 @@
     {
       "id": "seat.long.single.dormitory",
       "family": "dormitory",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -601,7 +602,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     }

@@ -488,7 +488,7 @@
     {
       "id": "seat.single.gym",
       "family": "gym",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -502,7 +502,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -544,7 +545,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -588,7 +590,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     }

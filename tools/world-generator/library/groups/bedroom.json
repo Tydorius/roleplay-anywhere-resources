@@ -38,8 +38,8 @@
             1
           ],
           "at": [
-            0,
-            1
+            2,
+            0
           ],
           "optional": true
         }
@@ -236,7 +236,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -357,7 +358,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -546,7 +548,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -616,6 +619,29 @@
             0,
             0
           ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "sleep.lying.single",
+      "family": "bedroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
         }
       ],
       "source": "hand"
@@ -858,7 +884,7 @@
       "layout": "bedroom.servant",
       "family": "bedroom",
       "sizeBands": [
-        "tiny"
+        "servant"
       ],
       "source": "hand",
       "wealth": [
@@ -867,16 +893,12 @@
       ],
       "groups": [
         {
-          "group": "sleep.bedside.opt",
+          "group": "sleep.lying.single",
           "kind": "anchor"
         },
         {
-          "group": "storage.small.single.bedroom",
+          "group": "storage.big.single",
           "kind": "required"
-        },
-        {
-          "group": "light.small.single.bedroom",
-          "kind": "optional"
         }
       ]
     },

@@ -271,10 +271,15 @@ def _turn_mirror(turn, mirror):
 def room(room_id, turn=0, mirror=0):
     """One room turned ``turn`` quarter turns (and mirrored first when set)
     through the generator's own fixed_rooms.rotate — never a copy of its
-    maths. Preview only: nothing is stored."""
+    maths. Preview only: nothing is stored. The room carries ``_access``,
+    its derived access constraints, for the plan to draw faintly."""
     _need_modules()
     t, m = _turn_mirror(turn, mirror)
-    return fixed_rooms.rotate(_find_room(room_id), t, m)
+    r = fixed_rooms.rotate(_find_room(room_id), t, m)
+    groups = room_groups.load(_groups_dir())
+    r["_access"] = fixed_rooms.access_constraints(
+        r.get("pieces") or [], r, _lib(), groups)
+    return r
 
 
 # ---------------------------------------------------------------- look
@@ -444,6 +449,10 @@ def group(gid):
                     for e in ((data.get("pools") or {}).get(fam) or [])
                     if isinstance(e, dict) and e.get("group") == gid]
     out["rooms"] = _rooms_using(gid)
+    # the rule-derived constraints on their own (the hand ``access`` list
+    # stays in the group itself): what the group editor draws faintly
+    out["accessDerived"] = fixed_rooms.group_constraints(
+        {"pieces": g.get("pieces") or []}, _lib())
     return out
 
 
@@ -462,7 +471,8 @@ def _clean_entry(entry):
     ``_file``), no per-entry errors list, and none of the keys the editor's
     own replies add (file, hash, the users lists) — the page sends a loaded
     group straight back, and those must not reach the file."""
-    drop = {"errors", "file", "hash", "recipes", "pools", "rooms", "usedBy"}
+    drop = {"errors", "file", "hash", "recipes", "pools", "rooms", "usedBy",
+            "accessDerived"}
     return {k: v for k, v in entry.items()
             if not k.startswith("_") and k not in drop}
 
@@ -522,7 +532,10 @@ def check_group(req):
     saved."""
     _need_modules()
     data, _gid = _with_group(req)
-    return {"errors": room_groups.check(data, _lib())}
+    group_ = req.get("group") or {}
+    return {"errors": room_groups.check(data, _lib()),
+            "accessDerived": fixed_rooms.group_constraints(
+                {"pieces": group_.get("pieces") or []}, _lib())}
 
 
 def _group_file_name(name):
@@ -810,8 +823,16 @@ def check_rooms(req):
     if not isinstance(rooms, list):
         rooms = [req["room"]] if isinstance(req.get("room"), dict) else []
     groups, lib = room_groups.load(_groups_dir()), _lib()
-    derived = [fixed_rooms.derive(_clean_room(r), groups, lib)
-               for r in rooms if isinstance(r, dict)]
+    derived = []
+    for r in rooms if isinstance(rooms, list) else []:
+        if not isinstance(r, dict):
+            continue
+        d = fixed_rooms.derive(_clean_room(r), groups, lib)
+        # the room's access constraints ride along for the plan to draw
+        # faintly; the underscore keeps them out of any saved file
+        d["_access"] = fixed_rooms.access_constraints(
+            d.get("pieces") or [], d, lib, groups)
+        derived.append(d)
     return {"errors": fixed_rooms.check(derived, groups, lib), "derived": derived}
 
 

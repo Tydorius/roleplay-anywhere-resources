@@ -475,6 +475,66 @@ def _check_suite(lib, s, err, warn):
         warn(f"{where}: nobody lives here but it has bedrooms")
 
 
+ACCESS_RULES = ("both-long", "one-long", "front", "any", "none")
+ACCESS_CLEARANCES = ("tight", "roomy", "grand")
+
+
+def role_access(vocab, role):
+    """The access rule a role carries from library.json's ``roleAccess`` — one
+    of ACCESS_RULES — with its relax entry ({"wealth", "clearance", "to"}) or
+    None: a role is a bare rule string or {"rule": ..., "relax": {...}}.
+    Unknown roles and a missing table read as None."""
+    entry = (vocab.get("roleAccess") or {}).get(role) if isinstance(vocab, dict) else None
+    if isinstance(entry, dict):
+        entry = entry.get("rule")
+    return entry if entry in ACCESS_RULES else None
+
+
+def check_role_access(vocab):
+    """[error, ...] for library.json's ``roleAccess`` table: every role in
+    ``roles`` must carry one of ACCESS_RULES, nothing else may sit in the
+    table, and a relax entry names known wealth tiers, clearances and a known
+    rule to relax to. Shared by ``library check`` and the group checker."""
+    if not isinstance(vocab, dict):
+        return []
+    errors = []
+    table = vocab.get("roleAccess")
+    roles = vocab.get("roles") or {}
+    if not isinstance(table, dict):
+        return [f"library.json: missing roleAccess"]
+    for role in sorted(roles):
+        if role not in table:
+            errors.append(f"library.json: roleAccess has no entry for role {role!r}")
+    wealth = vocab.get("wealth") or []
+    for role, entry in sorted(table.items()):
+        if role not in roles:
+            errors.append(f"library.json: roleAccess entry {role!r} names no role")
+            continue
+        relax = None
+        if isinstance(entry, dict):
+            relax = entry.get("relax")
+            entry = entry.get("rule")
+        if entry not in ACCESS_RULES:
+            errors.append(f"library.json: roleAccess[{role!r}] must be one of "
+                          f"{ACCESS_RULES}, not {entry!r}")
+            continue
+        if relax is None:
+            continue
+        if not isinstance(relax, dict):
+            errors.append(f"library.json: roleAccess[{role!r}] relax must be an object")
+            continue
+        if relax.get("to") not in ACCESS_RULES:
+            errors.append(f"library.json: roleAccess[{role!r}] relax names unknown "
+                          f"rule {relax.get('to')!r}")
+        for key, known in (("wealth", wealth), ("clearance", ACCESS_CLEARANCES)):
+            tiers = relax.get(key)
+            if not isinstance(tiers, list) or not tiers or \
+                    any(t not in known for t in tiers):
+                errors.append(f"library.json: roleAccess[{role!r}] relax {key} must "
+                              f"be a non-empty list from {known}")
+    return errors
+
+
 def check(lib, sources_path=SOURCES_PATH):
     """(errors, warnings) for the whole library."""
     errors, warnings = list(lib.load_errors), []
@@ -484,6 +544,7 @@ def check(lib, sources_path=SOURCES_PATH):
                 "families", "purposes", "anchors", "sizeBands"):
         if key not in lib.vocab:
             err(f"library.json: missing {key}")
+    errors += check_role_access(lib.vocab)
     for p, fam in lib.vocab.get("purposes", {}).items():
         if fam not in lib.vocab.get("families", {}):
             err(f"library.json: purpose {p} names unknown family {fam!r}")

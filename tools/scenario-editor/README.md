@@ -186,7 +186,9 @@ room never reaches a file.
   bands instead of the shared ones.
 - **Preview:** the plan canvas draws the floor grid, pieces in the role colours with a thicker
   line on the side that faces its wall (the room sheets' own palette), thin group outlines, the
-  open style's hatched filler, green door marks and dashed stretch lines. **↺ ↻ Turn** and
+  open style's hatched filler, green door marks, dashed stretch lines and — faintly — the
+  room's access cells: purple where every cell of a constraint is needed, blue where one of
+  them is enough. **↺ ↻ Turn** and
   **Mirror** re-fetch the room through the generator's own rotate, preview only. Hover a piece
   for its role, group, size and object.
 - **Look:** switch from Plan colours to an art band (medieval, modern…) to see the sprite the
@@ -231,7 +233,13 @@ room never reaches a file.
   the **group editor** shows its pieces on a small plan (the group's own wall drawn as the
   thick north edge, or corner), each piece's role, size, position, back, optional flag and
   wealth floor, the wall itself, and the luxury kind for a pool group — the group checker runs
-  live and a draft with errors cannot be saved. Saving writes the file the group lives in
+  live and a draft with errors cannot be saved. The plan also draws the group's access cells:
+  the ones its roles derive, faintly, and any hand ones solidly — purple where every cell of
+  a constraint is needed, blue where one of them is enough. Clicking a cell in the ring
+  around the group cycles it none → mandatory → limited (a limited mark joins the piece it
+  stands nearest), and saving writes the marks as the group's hand `access` list — which
+  marks the group `source: "hand"`. The live check calls the same checker function the room
+  check and the generator's CLI do. Saving writes the file the group lives in
   (atomically, the previous copy in `library/groups/.backup/`) and lists the stored rooms that
   still hold the group's old pieces — they keep them until you open a room or regenerate its
   family; a group save never edits a room file. **Delete…** removes a group nothing uses and

@@ -13,10 +13,25 @@ import shutil
 import tempfile
 import unittest
 
+from worldgen import fixed_rooms as FR
 from worldgen import library as WL
 from worldgen import room_groups as RG
 
 GEN = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def shipped_layouts():
+    """Every layout in library/layouts, keyed by family as the converter
+    takes them."""
+    layouts = {}
+    layouts_dir = os.path.join(GEN, "library", "layouts")
+    for name in sorted(os.listdir(layouts_dir)):
+        if not name.endswith(".json"):
+            continue
+        with open(os.path.join(layouts_dir, name), encoding="utf-8") as fh:
+            for layout in json.load(fh)["layouts"]:
+                layouts.setdefault(layout["family"], []).append(layout)
+    return layouts
 
 
 def converter():
@@ -36,6 +51,19 @@ class TestShipped(unittest.TestCase):
 
     def test_shipped_files_check_clean(self):
         self.assertEqual(RG.check(self.data, self.lib), [])
+
+    def test_roleaccess_covers_every_role(self):
+        self.assertEqual(WL.check_role_access(self.lib.vocab), [])
+        vocab = json.loads(json.dumps(self.lib.vocab))
+        del vocab["roleAccess"]["sleep"]
+        self.assertTrue(any("roleAccess has no entry for role 'sleep'"
+                            in e for e in WL.check_role_access(vocab)))
+        vocab["roleAccess"]["sleep"] = "sometimes"
+        self.assertTrue(any("roleAccess['sleep'] must be one of"
+                            in e for e in WL.check_role_access(vocab)))
+        vocab["roleAccess"]["ghost"] = "any"
+        self.assertTrue(any("roleAccess entry 'ghost' names no role"
+                            in e for e in WL.check_role_access(vocab)))
 
     def test_every_layout_has_one_recipe_with_one_anchor(self):
         for lid in self.lib.layouts:
@@ -170,17 +198,23 @@ class TestConversion(unittest.TestCase):
         ])
 
     def test_converting_twice_gives_equal_output(self):
-        layouts = {}
-        layouts_dir = os.path.join(GEN, "library", "layouts")
-        for name in sorted(os.listdir(layouts_dir)):
-            if not name.endswith(".json"):
-                continue
-            with open(os.path.join(layouts_dir, name), encoding="utf-8") as fh:
-                for layout in json.load(fh)["layouts"]:
-                    layouts.setdefault(layout["family"], []).append(layout)
+        layouts = shipped_layouts()
         one = self.mod.convert_all(layouts)
         two = self.mod.convert_all(layouts)
         self.assertEqual(one, two)
+
+    def test_the_converter_never_blocks_a_mandatory_access_cell(self):
+        """Every converted group keeps its derived constraints alive: a
+        piece the converter attached to its anchor may cover a limited
+        constraint's spare cells but never its last cell — an emptied
+        constraint is a mandatory access cell the group blocks itself."""
+        lib = WL.load()
+        for fam, doc in sorted(self.mod.convert_all(shipped_layouts())[0].items()):
+            for g in doc["groups"]:
+                with self.subTest(group=g["id"]):
+                    for c in FR.group_constraints(g, lib):
+                        self.assertTrue(c["cells"],
+                                        json.dumps(c, sort_keys=True))
 
     def test_the_converter_never_writes_or_deletes_the_luxury_file(self):
         """The converter writes one file per layout family and deletes
@@ -421,6 +455,44 @@ class TestChecker(unittest.TestCase):
             errors = RG.check(RG.load(d), self.lib)
             self.assertTrue(any("appears in a.json and b.json" in e
                                 for e in errors))
+
+    def hand_access(self, **entry):
+        """The base group as hand work with one access entry replacing the
+        bed's derived cells: the south cell (1, 2) stands in the ring."""
+        def mut(g):
+            g["source"] = "hand"
+            g["access"] = [dict({"cells": [[1, 2]], "need": 1,
+                                 "replaces": [0]}, **entry)]
+        return mut
+
+    def test_a_hand_access_entry_replacing_the_bed_checks_clean(self):
+        self.assertEqual(self.errors(self.base()), [])
+        data = self.base()
+        self.hand_access()(data["groups"]["sleep.couple.bedside2"])
+        self.assertEqual(self.errors(data), [])
+
+    def test_access_on_a_converted_group_is_rejected(self):
+        def mut(g):
+            self.hand_access()(g)
+            del g["source"]     # the same entry, but on converted work
+        errors = self.broken_group(mut)
+        self.assertTrue(any('access is hand work' in e for e in errors),
+                        errors)
+
+    def test_bad_access_entries_are_rejected(self):
+        for name, mutate in [
+            ("no cells", self.hand_access(cells=None)),
+            ("outside the ring", self.hand_access(cells=[[6, 0]])),
+            ("on its own furniture", self.hand_access(cells=[[1, 0]])),
+            ("on the wall it backs", self.hand_access(cells=[[1, -1]])),
+            ("need over the cell count", self.hand_access(
+                cells=[[0, 2], [1, 2]], need=3)),
+            ("replaces nothing", self.hand_access(replaces=[])),
+            ("replaces no piece", self.hand_access(replaces=[7])),
+        ]:
+            with self.subTest(fault=name):
+                errors = self.broken_group(mutate)
+                self.assertTrue(errors, name)
 
 
 class TestFamilyBands(unittest.TestCase):

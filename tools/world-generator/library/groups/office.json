@@ -47,7 +47,7 @@
     {
       "id": "seat.single.office",
       "family": "office",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -61,7 +61,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -143,7 +144,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -536,7 +538,7 @@
       ]
     },
     {
-      "id": "desk.seat.storage.big.waste.opt",
+      "id": "desk.seat.storage.big.office",
       "family": "office",
       "wall": "back",
       "use": [
@@ -577,18 +579,6 @@
             0
           ],
           "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "optional": true
         }
       ]
     },
@@ -926,7 +916,7 @@
       ],
       "groups": [
         {
-          "group": "desk.seat.storage.big.waste.opt",
+          "group": "desk.seat.storage.big.office",
           "kind": "anchor"
         },
         {
@@ -948,6 +938,10 @@
         },
         {
           "group": "decor.floor.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.office",
           "kind": "optional"
         }
       ]

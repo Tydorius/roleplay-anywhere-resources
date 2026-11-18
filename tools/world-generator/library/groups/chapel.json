@@ -38,8 +38,8 @@
             1
           ],
           "at": [
-            0,
-            1
+            4,
+            0
           ]
         }
       ]
@@ -61,7 +61,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -102,7 +103,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -204,7 +206,7 @@
     {
       "id": "seat.long.single.chapel2",
       "family": "chapel",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -218,7 +220,8 @@
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         }
       ]
     },
@@ -246,7 +249,7 @@
     {
       "id": "seat.long.single.chapel3",
       "family": "chapel",
-      "wall": "none",
+      "wall": "back",
       "use": [
         "south"
       ],
@@ -261,7 +264,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -429,7 +433,8 @@
             0,
             0
           ],
-          "optional": true
+          "optional": true,
+          "back": "north"
         }
       ]
     },
@@ -485,125 +490,6 @@
             0,
             0
           ]
-        }
-      ]
-    },
-    {
-      "id": "seat.long.single.chapel6",
-      "family": "chapel",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        }
-      ]
-    },
-    {
-      "id": "altar.devotion2.lectern",
-      "family": "chapel",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "altar",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "devotion",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        },
-        {
-          "role": "devotion",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ]
-        },
-        {
-          "role": "lectern",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ]
-        }
-      ]
-    },
-    {
-      "id": "seat.long.single.chapel7",
-      "family": "chapel",
-      "wall": "none",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            3,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        }
-      ]
-    },
-    {
-      "id": "seat.long.single.chapel8",
-      "family": "chapel",
-      "wall": "none",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            3,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "optional": true
         }
       ]
     },
@@ -693,27 +579,6 @@
           "role": "devotion",
           "size": [
             1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ]
-        }
-      ]
-    },
-    {
-      "id": "seat.long.single.chapel9",
-      "family": "chapel",
-      "wall": "none",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            2,
             1
           ],
           "at": [
@@ -951,12 +816,12 @@
           "kind": "anchor"
         },
         {
-          "group": "seat.long.single.chapel6",
+          "group": "seat.long.single.chapel4",
           "kind": "repeatable",
           "count": 2
         },
         {
-          "group": "seat.long.single.chapel6",
+          "group": "seat.long.single.chapel4",
           "kind": "repeatable",
           "count": 2
         },
@@ -987,11 +852,11 @@
       ],
       "groups": [
         {
-          "group": "altar.devotion2.lectern",
+          "group": "altar.devotion2",
           "kind": "anchor"
         },
         {
-          "group": "seat.long.single.chapel7",
+          "group": "seat.long.single.chapel",
           "kind": "repeatable",
           "count": 2
         },
@@ -1000,7 +865,7 @@
           "kind": "required"
         },
         {
-          "group": "seat.long.single.chapel8",
+          "group": "seat.long.single.chapel1",
           "kind": "optional"
         },
         {
@@ -1010,6 +875,10 @@
         {
           "group": "decor.floor.single.chapel1",
           "kind": "optional"
+        },
+        {
+          "group": "lectern.single",
+          "kind": "required"
         }
       ]
     },
@@ -1060,7 +929,7 @@
           "kind": "anchor"
         },
         {
-          "group": "seat.long.single.chapel6",
+          "group": "seat.long.single.chapel4",
           "kind": "repeatable",
           "count": [
             1,
@@ -1094,7 +963,7 @@
           "kind": "anchor"
         },
         {
-          "group": "seat.long.single.chapel9",
+          "group": "seat.long.single.chapel4",
           "kind": "optional"
         },
         {

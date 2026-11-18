@@ -1,9 +1,9 @@
 """The fixed rooms: a hand-made room checks clean, every check catches its
 own hand-broken copy, the hand-work fields (retired, edited, source) check
 by their own rules and active() drops the retired, derive() reproduces the
-worked-out fields of every shipped room, the use-side table matches the
-design, turning four times returns the same room while every turn and
-mirror still checks, and the shipped rooms folder loads clean."""
+worked-out fields of every shipped room, the access rules derive the cells
+a piece is used from, turning four times returns the same room while every
+turn and mirror still checks, and the shipped rooms folder loads clean."""
 import json
 import os
 import tempfile
@@ -28,8 +28,9 @@ class TestChecker(unittest.TestCase):
         cls.data = RG.load()
 
     def base(self, **over):
-        """A 5x3 bedroom: a bed with its bedside in the top left corner and a
-        tall chest against the east wall, one slack row along the south."""
+        """A 5x3 bedroom: a bed in the top left corner, its bedside beside
+        the bed's side, and a tall chest against the east wall, one slack
+        row along the south."""
         room = {
             "id": "bedroom.hand.a", "family": "bedroom", "sizeBand": "small",
             "clearance": "tight", "style": "flush",
@@ -37,7 +38,7 @@ class TestChecker(unittest.TestCase):
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
-                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
+                piece("bedside", [1, 1], [2, 1], "sleep.bedside"),
                 piece("storage.big", [1, 2], [4, 0], "storage.big.single",
                       "east"),
             ],
@@ -69,19 +70,19 @@ class TestChecker(unittest.TestCase):
     def test_pocket_of_free_cells(self):
         room = self.base()
         del room["doors"]["north"]
-        room["pieces"] += [piece("storage.small", [1, 1], [2, 1],
+        room["pieces"] += [piece("storage.small", [1, 1], [1, 1],
                                  "storage.big.single"),
                            piece("storage.small", [1, 1], [3, 1],
                                  "storage.big.single")]
         self.assertTrue(any("cannot be reached" in e for e in self.errors(room)))
 
-    def test_piece_with_no_free_use_side(self):
+    def test_a_piece_with_no_free_reached_access_cell(self):
         room = self.base()
         room["doors"]["north"] = [2]
         room["pieces"].append(piece("storage.small", [1, 2], [3, 0],
-                                    "storage.big.single"))
-        self.assertTrue(any("no reached cell on its use sides" in e
-                            for e in self.errors(room)))
+                                    "storage.small.single"))
+        self.assertTrue(any("has no free reached cell among its access "
+                            "cells" in e for e in self.errors(room)))
 
     def test_bad_stretch_line(self):
         room = self.base()
@@ -117,10 +118,13 @@ class TestChecker(unittest.TestCase):
                             for e in self.errors(room)))
 
     def test_an_open_room_with_only_the_fillers_buffer_line_checks_clean(self):
-        room = self.base(size=[5, 4], style="open")
-        room["pieces"][1]["at"] = [1, 0]
-        room["doors"]["west"] = [2, 3]
-        room["doors"]["east"] = [2, 3]
+        room = self.base(size=[5, 4], style="open", pieces=[
+            piece("sleep", [2, 1], [0, 0], "sleep.bedside", "north"),
+            piece("bedside", [1, 1], [2, 0], "sleep.bedside"),
+            piece("storage.big", [1, 2], [4, 2], "storage.big.single",
+                  "east"),
+        ], doors={"north": [3, 4], "south": [0, 1, 2, 3],
+                  "west": [1, 2, 3], "east": [0, 1]})
         room["filler"] = {"at": [1, 1], "size": [3, 2]}
         self.assertEqual(self.errors(room), [])
 
@@ -179,9 +183,9 @@ class TestChecker(unittest.TestCase):
             "wealth": ["wealthy", "elite"], "size": [11, 7],
             "sleeps": {"singles": 0, "couples": 1},
             "pieces": [
-                piece("sleep.couple", [2, 2], [0, 0],
+                piece("bedside", [1, 1], [0, 0], "sleep.couple.bedside2"),
+                piece("sleep.couple", [2, 2], [1, 0],
                       "sleep.couple.bedside2", "north"),
-                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
                 piece("storage.big", [2, 1], [3, 0],
                       "storage.big.single.bedroom.master", "north"),
                 piece("seat", [1, 1], [10, 0], "seat.single.bedroom.master",
@@ -198,7 +202,7 @@ class TestChecker(unittest.TestCase):
         }
         errors = self.errors(room)
         self.assertEqual(len(errors), 1)
-        self.assertIn("34 dead floor cell(s) (first at 3,4): more than 2 "
+        self.assertIn("33 dead floor cell(s) (first at 3,4): more than 2 "
                       "cells from every piece at grand clearance", errors[0])
 
     def test_a_free_cell_exactly_one_past_the_gap_is_dead(self):
@@ -228,9 +232,9 @@ class TestChecker(unittest.TestCase):
             "wealth": ["wealthy", "elite"], "size": [11, 11],
             "sleeps": {"singles": 0, "couples": 1},
             "pieces": [
-                piece("sleep.couple", [2, 2], [0, 0],
+                piece("bedside", [1, 1], [0, 0], "sleep.couple.bedside2"),
+                piece("sleep.couple", [2, 2], [1, 0],
                       "sleep.couple.bedside2", "north"),
-                piece("bedside", [1, 1], [2, 0], "sleep.couple.bedside2"),
                 piece("storage.big", [2, 1], [6, 0],
                       "storage.big.single.bedroom.master", "north"),
                 piece("seat", [1, 1], [10, 0], "seat.single.bedroom.master",
@@ -266,17 +270,16 @@ class TestChecker(unittest.TestCase):
         """A 6x5 tight open room whose filler runs 4x3, one cell over the
         tight cap: nobody lays a rug that big."""
         room = self.base(size=[6, 5], sizeBand="medium", style="open",
-                         wealth=["poor", "modest"],
                          pieces=[
-                             piece("sleep", [1, 2], [0, 0], "sleep.bedside",
+                             piece("sleep", [2, 1], [0, 0], "sleep.bedside",
                                    "north"),
-                             piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
-                             piece("storage.big", [1, 2], [5, 0],
+                             piece("bedside", [1, 1], [2, 0], "sleep.bedside"),
+                             piece("storage.big", [1, 2], [5, 3],
                                    "storage.big.single", "east"),
                          ],
-                         doors={"north": [2, 3, 4],
-                                "south": [0, 1, 2, 3, 4, 5],
-                                "west": [2, 3, 4], "east": [2, 3, 4]})
+                         doors={"north": [3, 4, 5],
+                                "south": [0, 1, 2, 3, 4],
+                                "west": [1, 2, 3, 4], "east": [0, 1, 2]})
         room["filler"] = {"at": [1, 1], "size": [4, 3]}
         errors = self.errors(room)
         self.assertEqual(len(errors), 1, errors)
@@ -465,7 +468,8 @@ class TestFamilyBands(unittest.TestCase):
 
     def test_a_family_with_a_table_uses_only_its_own_bands(self):
         self.assertEqual([b["name"] for b in FR.family_bands("bedroom")],
-                         ["narrow", "tiny", "small", "medium", "large"])
+                         ["narrow", "tiny", "small", "medium", "large",
+                          "servant"])
         self.assertEqual([b["name"] for b in FR.family_bands("privy")],
                          ["stall", "small"])
         self.assertEqual([b["name"] for b in FR.family_bands("closet")],
@@ -539,16 +543,21 @@ class TestFamilyBands(unittest.TestCase):
             "description": "A hand-made closet.",
         }
 
-    def test_a_reach_in_closet_needs_no_free_floor(self):
-        # 2x1 fully lined: both cells are pieces, so no door cell exists and
-        # no piece has a free cell beside it — fine for a reach-in
+    def test_a_reach_in_closet_gets_its_door_cells_from_access(self):
+        # 2x1 fully lined: both cells are pieces, so the door cells are the
+        # access cells outside the room — derive() lands them on the south
+        # side, and a reach-in with no door side at all is an error
         room = self._closet("reach", [2, 1], [
             piece("utility", [1, 1], [0, 0],
                   "utility.storage.small.opt.closet", "north"),
             piece("storage.small", [1, 1], [1, 0],
                   "utility.storage.small.opt.closet", "north"),
         ], {"north": [], "south": [], "west": [], "east": []})
-        self.assertEqual(self.errors(room), [])
+        self.assertTrue(any("a closet needs a door on one side" in e
+                            for e in self.errors(room)))
+        derived = FR.derive(room, self.data, self.lib)
+        self.assertEqual(derived["doors"]["south"], [0, 1])
+        self.assertEqual(self.errors(derived), [])
 
     def test_a_walk_in_closet_needs_a_door_on_one_side(self):
         room = self._closet("walkin", [2, 2], [
@@ -559,10 +568,10 @@ class TestFamilyBands(unittest.TestCase):
         ], {"north": [], "south": [0, 1], "west": [], "east": []})
         self.assertEqual(self.errors(room), [])
         room["doors"]["south"] = []
-        self.assertTrue(any("a walk-in closet needs a door on one side"
+        self.assertTrue(any("a closet needs a door on one side"
                             in e for e in self.errors(room)))
 
-    def test_a_walk_in_piece_no_free_use_side_reaches_is_an_error(self):
+    def test_a_walk_in_piece_no_free_reached_access_cell_is_an_error(self):
         # the door reaches only the east column; the piece on the west side
         # is used from a cell nothing reaches
         room = self._closet("walkin", [2, 2], [
@@ -572,8 +581,8 @@ class TestFamilyBands(unittest.TestCase):
                   "utility.storage.small.opt.closet", "south"),
         ], {"north": [1], "south": [], "west": [], "east": []})
         errors = self.errors(room)
-        self.assertTrue(any("no reached cell on its use sides" in e
-                            for e in errors), errors)
+        self.assertTrue(any("no free reached cell among its access cells"
+                            in e for e in errors), errors)
 
     def test_max_floor_per_piece_rejects_a_roomy_single_toilet_privy(self):
         # 4x4 with one toilet: 15 free cells over one piece is far past the
@@ -615,7 +624,7 @@ class TestHandFields(unittest.TestCase):
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
-                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
+                piece("bedside", [1, 1], [2, 1], "sleep.bedside"),
                 piece("storage.big", [1, 2], [4, 0], "storage.big.single",
                       "east"),
             ],
@@ -711,7 +720,7 @@ class TestTurning(unittest.TestCase):
             "sleeps": {"singles": 1, "couples": 0},
             "pieces": [
                 piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
-                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
+                piece("bedside", [1, 1], [2, 1], "sleep.bedside"),
                 piece("storage.big", [1, 2], [4, 0], "storage.big.single",
                       "east"),
             ],
@@ -766,47 +775,234 @@ class TestTurning(unittest.TestCase):
                             json.dumps(turned, indent=1))
 
 
-class TestUseSides(unittest.TestCase):
-    def p(self, role, size=(1, 1), at=(0, 0), **kw):
-        return dict({"role": role, "size": list(size), "at": list(at)}, **kw)
+class TestAccessCells(unittest.TestCase):
+    """The access rules every piece is used through (library.json's
+    roleAccess, read as cells): a bed standing free is used from its long
+    sides at the foot end — both of them for a double bed, one for the
+    rest — a bedside beside a one-long bed's head locks that side, a lone
+    seat must back a wall, and a hand access list replaces the cells a
+    group would derive."""
 
-    def test_beds_use_a_long_side(self):
-        self.assertEqual(FR.use_sides(self.p("sleep", (1, 2))),
-                         ("east", "west"))
-        self.assertEqual(FR.use_sides(self.p("sleep.couple", (2, 1))),
-                         ("north", "south"))
-        self.assertEqual(FR.use_sides(self.p("sleep.child", (2, 2))),
-                         ("north", "east", "south", "west"))
-        self.assertEqual(FR.use_sides(self.p("med.bed", (1, 1))),
-                         ("north", "east", "south", "west"))
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+        cls.data = RG.load()
 
-    def test_seats_face_away_from_their_table(self):
-        table = self.p("table.dining", (2, 1), (2, 0))
-        self.assertEqual(FR.use_sides(self.p("seat"), (table,)), ("west",))
-        desk = self.p("desk", (1, 2), (0, 2))
-        self.assertEqual(FR.use_sides(self.p("seat", at=(0, 0)), (desk,)),
-                         ("north",))
+    def p(self, role, size=(1, 1), at=(0, 0), group="group.hand", **kw):
+        return piece(role, list(size), list(at), group,
+                     kw.pop("back", None), **kw)
+
+    def cons(self, pieces, room=None):
+        """The constraints as plain tuples, so the assertions read as the
+        cells themselves."""
+        return [{"cells": [tuple(cc) for cc in c["cells"]],
+                 "need": c["need"], "piece": c["piece"]}
+                for c in FR.access_constraints(pieces, room, self.lib)]
+
+    def errors(self, room):
+        return FR.check([room], self.data, self.lib)
+
+    def test_beds_use_their_long_sides_at_the_foot_end(self):
+        # one long side is enough: one limited constraint over the foot
+        # cells of both long sides (a bed at the origin reaches outside
+        # the room on the west; the checker drops those cells)
+        self.assertEqual(self.cons([self.p("sleep", (1, 2))]),
+                         [{"cells": [(1, 1), (-1, 1)], "need": 1,
+                           "piece": 0}])
+        # both long sides: one mandatory cell each
+        self.assertEqual(self.cons([self.p("sleep.couple", (2, 1))]),
+                         [{"cells": [(0, -1)], "need": 1, "piece": 0},
+                          {"cells": [(0, 1)], "need": 1, "piece": 0}])
+        # a square bed with no back uses all four sides, one of them enough
+        self.assertEqual(self.cons([self.p("sleep.child", (2, 2))]),
+                         [{"cells": [(0, -1), (2, 1), (0, 2), (-1, 1)],
+                           "need": 1, "piece": 0}])
+        self.assertEqual(self.cons([self.p("med.bed")]),
+                         [{"cells": [(0, -1), (1, 0), (0, 1), (-1, 0)],
+                           "need": 1, "piece": 0}])
+
+    def test_a_bed_lying_lengthwise_uses_the_opposite_side_alone(self):
+        # back north and wider than tall: the south row is the only
+        # constraint, whatever the rule says
+        self.assertEqual(
+            self.cons([self.p("sleep.couple", (2, 1), back="north")]),
+            [{"cells": [(0, 1), (1, 1)], "need": 1, "piece": 0}])
+
+    def test_a_bedside_locks_one_long_side_of_a_one_long_bed(self):
+        bed = self.p("sleep", (1, 2), back="north")
+        bedside = self.p("bedside", (1, 1), (1, 0))
+        # the bedside covers the bed's east head cell: the east foot cell
+        # becomes mandatory and the west side carries nothing
+        self.assertEqual(self.cons([bed, bedside])[0],
+                         {"cells": [(1, 1)], "need": 1, "piece": 0})
+
+    def test_seats_are_not_used_from_their_tables_side(self):
+        seat = self.p("seat")
+        table = self.p("table.dining", (2, 1), (1, 0))
+        self.assertEqual(self.cons([seat, table])[0],
+                         {"cells": [(0, -1), (0, 1), (-1, 0)],
+                          "need": 1, "piece": 0})
 
     def test_a_lone_seats_front_when_it_backs_a_wall_else_any_side(self):
-        seat = self.p("seat", back="north")
-        self.assertEqual(FR.use_sides(seat), ("south",))
-        self.assertEqual(FR.use_sides(self.p("seat")),
-                         ("north", "east", "south", "west"))
+        self.assertEqual(self.cons([self.p("seat", back="north")]),
+                         [{"cells": [(0, 1)], "need": 1, "piece": 0}])
+        self.assertEqual(self.cons([self.p("seat")]),
+                         [{"cells": [(0, -1), (1, 0), (0, 1), (-1, 0)],
+                           "need": 1, "piece": 0}])
 
     def test_a_backed_pieces_front(self):
-        chest = self.p("storage.big", back="east")
-        self.assertEqual(FR.use_sides(chest), ("west",))
+        self.assertEqual(self.cons([self.p("storage.big", back="east")]),
+                         [{"cells": [(-1, 0)], "need": 1, "piece": 0}])
 
     def test_tables_desks_and_defaults_any_side(self):
         for role in ("table.dining", "table.small", "desk", "chest",
                      "coat.rack", "basin"):
-            self.assertEqual(FR.use_sides(self.p(role)),
-                             ("north", "east", "south", "west"), role)
+            self.assertEqual(self.cons([self.p(role, (2, 1))]),
+                             [{"cells": [(0, -1), (2, 0), (0, 1), (-1, 0)],
+                               "need": 1, "piece": 0}], role)
 
-    def test_lights_decor_and_optionals_none(self):
-        self.assertEqual(FR.use_sides(self.p("light.small")), ())
-        self.assertEqual(FR.use_sides(self.p("decor.floor", (2, 2))), ())
-        self.assertEqual(FR.use_sides(self.p("chest", optional=True)), ())
+    def test_lights_decor_and_optionals_hold_no_constraints(self):
+        self.assertEqual(self.cons([self.p("light.small"),
+                                    self.p("decor.floor", (2, 2), (2, 0)),
+                                    dict(self.p("chest"),
+                                         optional=True)]), [])
+
+    def _relax_room(self, wealth):
+        """A 5x3 bedroom whose double bed's east foot cell is blocked by a
+        chest of another group: both-long needs both feet, one-long makes
+        do with the free west one."""
+        return {
+            "id": "bedroom.hand.relax", "family": "bedroom",
+            "sizeBand": "small", "clearance": "tight", "style": "flush",
+            "wealth": wealth, "size": [5, 3],
+            "sleeps": {"singles": 0, "couples": 1},
+            "pieces": [
+                piece("sleep.couple", [2, 2], [1, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("storage.small", [1, 1], [3, 1],
+                      "storage.small.single"),
+            ],
+            "doors": {"north": [3, 4], "south": [0, 1, 2, 3, 4],
+                      "west": [1, 2], "east": [1, 2]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room the tests relax on purpose.",
+        }
+
+    def test_a_double_bed_one_side_blocked_relaxes_at_poor_tight(self):
+        # sleep.couple relaxes to one-long for a poor tight room: the free
+        # west foot cell is enough
+        self.assertEqual(self.errors(self._relax_room(["poor"])), [])
+        # at modest the relax is off: both feet are mandatory
+        errors = self.errors(self._relax_room(["poor", "modest"]))
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("has no free reached cell among its access cells "
+                      "[[3, 1]] (needs 1)", errors[0])
+
+    def test_a_single_bed_against_the_wall_checks_clean(self):
+        room = {
+            "id": "bedroom.hand.wall", "family": "bedroom",
+            "sizeBand": "tiny", "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [2, 3],
+            "sleeps": {"singles": 1, "couples": 0},
+            "pieces": [piece("sleep", [1, 2], [0, 0], "sleep.bedside",
+                             "north")],
+            "doors": {"north": [1], "south": [0, 1], "west": [2],
+                      "east": [0, 1, 2]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room with a bed against the wall.",
+        }
+        self.assertEqual(self.errors(room), [])
+
+    def _lock_room(self, blocked):
+        """A 3x2 bedroom: the bedside beside the bed's head locks the east
+        side, so the bed is used from (1, 1) alone — blocked or not."""
+        pieces = [
+            piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
+            piece("bedside", [1, 1], [1, 0], "sleep.bedside"),
+        ]
+        if blocked:
+            pieces.append(piece("storage.small", [1, 1], [1, 1],
+                                "storage.small.single"))
+        return {
+            "id": "bedroom.hand.lock", "family": "bedroom",
+            "sizeBand": "tiny", "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [3, 2],
+            "sleeps": {"singles": 1, "couples": 0},
+            "pieces": pieces,
+            "doors": {"north": [2], "south": [2], "west": [],
+                      "east": [0, 1]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room with a locked bed side.",
+        }
+
+    def test_a_bedside_locked_beds_foot_cell_blocked_is_an_error(self):
+        self.assertEqual(self.errors(self._lock_room(False)), [])
+        errors = self.errors(self._lock_room(True))
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("has no free reached cell among its access cells "
+                      "[[1, 1]] (needs 1)", errors[0])
+
+    def test_a_lone_seat_facing_nothing_is_an_error(self):
+        room = {
+            "id": "bedroom.hand.seat", "family": "bedroom",
+            "sizeBand": "tiny", "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [2, 2],
+            "sleeps": {"singles": 0, "couples": 0},
+            "pieces": [piece("seat", [1, 1], [0, 0],
+                             "seat.single.bedroom.master")],
+            "doors": {"north": [1], "south": [0, 1], "west": [1],
+                      "east": [1]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room with a lone seat.",
+        }
+        errors = self.errors(room)
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("faces nothing: a seat with no table, desk or counter "
+                      "in its group must back a wall", errors[0])
+
+    def test_access_cells_of_different_groups_may_overlap(self):
+        room = {
+            "id": "bedroom.hand.share", "family": "bedroom",
+            "sizeBand": "tiny", "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [3, 2],
+            "sleeps": {"singles": 0, "couples": 0},
+            "pieces": [
+                piece("storage.big", [1, 1], [0, 0], "storage.big.single",
+                      "west"),
+                piece("storage.small", [1, 1], [2, 0],
+                      "storage.small.single", "east"),
+            ],
+            "doors": {"north": [1], "south": [0, 1, 2], "west": [1],
+                      "east": [1]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room with shared access cells.",
+        }
+        # both chests are used from (1, 0) alone — the same cell
+        self.assertEqual(self.cons(room["pieces"]),
+                         [{"cells": [(1, 0)], "need": 1, "piece": 0},
+                          {"cells": [(1, 0)], "need": 1, "piece": 1}])
+        self.assertEqual(self.errors(room), [])
+
+    def test_a_hand_access_list_replaces_the_derived_cells(self):
+        gdef = {
+            "pieces": [{"role": "storage.big", "size": [1, 1], "at": [0, 0],
+                        "back": "east"}],
+            "access": [{"cells": [[2, 1]], "need": 1, "replaces": [0]}],
+        }
+        # derived alone the chest is used from its front (-1, 0); the hand
+        # list stands in its place
+        self.assertEqual(FR.group_constraints(gdef, self.lib),
+                         [{"cells": [[2, 1]], "need": 1, "piece": 0}])
+        placed = [dict(gdef["pieces"][0], at=[4, 4], group="hand.share")]
+        self.assertEqual(
+            FR.access_constraints(placed, None, self.lib,
+                                  {"groups": {"hand.share": gdef}}),
+            [{"cells": [[6, 5]], "need": 1, "piece": 0}])
 
 
 class TestShipped(unittest.TestCase):

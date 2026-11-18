@@ -37,6 +37,12 @@ How a layout becomes groups
   optional pieces (carrying any minWealth); other grow entries become
   one-piece optional groups. Offsets are normalised so each group's bounding
   box starts at (0, 0).
+* A piece is never attached where it would block its group's use: a spot is
+  free only when no access constraint of the placed pieces (or of the piece
+  itself) falls below its need there — the worldgen derivation decides, the
+  same one the checkers run. A lone seat (its group holds no table, desk or
+  counter) backs a wall instead: it moves to the group's north edge with
+  back "north", and a free-standing group binds itself to that wall.
 
 use, kinds, ids
 ---------------
@@ -60,6 +66,10 @@ use, kinds, ids
 """
 import json
 import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from worldgen import fixed_rooms as _fixed    # noqa: E402
 
 SEED = os.path.dirname(os.path.abspath(__file__))
 LIBRARY = os.path.join(SEED, "..", "library")
@@ -151,12 +161,42 @@ class _Group:
         p = self.pieces[i]
         return p["at"][0], p["at"][1], p["size"][0], p["size"][1]
 
-    def free(self, x, y, w, h):
+    def free(self, x, y, w, h, role=None, back=None):
         for i in range(len(self.pieces)):
             px, py, pw, ph = self.rect(i)
             if x < px + pw and px < x + w and y < py + ph and py < y + h:
                 return False
-        return True
+        return not self.breaks_access(x, y, w, h, role, back)
+
+    def breaks_access(self, x, y, w, h, role=None, back=None):
+        """True when a piece of ``role`` at (x, y, w, h) would leave an
+        access constraint — of the pieces already placed, or its own —
+        below its need: a chest on the foot cell a bed is climbed into
+        from, a bench on the front cell a wash basin is used from. The
+        converter never attaches a piece where it would block its anchor's
+        use; it looks further out instead, and drops the piece (a note)
+        when no such spot exists. ``back`` models a back the piece will
+        carry once placed (the lone seat's north)."""
+        cand = {"role": role or "", "size": [w, h], "at": [x, y]}
+        if back:
+            cand["back"] = back
+        pieces = self.pieces + [cand]
+        minx = min(p["at"][0] for p in pieces)
+        miny = min(p["at"][1] for p in pieces)
+
+        def walled(c):
+            return ((self.wall in ("back", "corner") and c[1] == miny - 1)
+                    or (self.wall == "corner" and c[0] == minx - 1))
+
+        for i, p in enumerate(pieces):
+            rule = _fixed._access_rule(p, None, None)
+            if rule == "none":
+                continue
+            for c in _fixed._piece_constraints(i, p, pieces, rule):
+                usable = [cell for cell in c["cells"] if not walled(cell)]
+                if len(usable) < (c.get("need") or 1):
+                    return True
+        return False
 
     def add(self, role, size, x, y, back=False, optional=False, min_wealth=None):
         p = {"role": role, "size": list(size), "at": [x, y]}
@@ -197,9 +237,19 @@ def _name(entry):
     return entry.get("id") or entry.get("role")
 
 
+def _touches(g, x, y, w, h):
+    """A rect at (x, y, w, h) shares an edge with some placed piece (an
+    empty group touches: the piece is the group)."""
+    return not g.pieces or any(
+        _fixed._touch((x, y, w, h), g.rect(i))
+        for i in range(len(g.pieces)))
+
+
 def _place_beside(g, t_idx, child, t_slot, notes, lid):
     """One or two children touching the target's left and right, stacking
-    down the group when a side is taken. Returns (first piece, placed)."""
+    down the group when a side is taken. A spot is free only when the
+    piece touches the group and blocks no access constraint. Returns
+    (first piece, placed)."""
     tx, ty, tw, th = g.rect(t_idx)
     wall_child = child.get("back") == "wall"
     sw, sh = child.get("size") or [1, 1]
@@ -218,10 +268,18 @@ def _place_beside(g, t_idx, child, t_slot, notes, lid):
         if placed >= n:
             break
         x = tx - cw if side == "west" else tx + tw
-        ys = (0,) if wall_child else range(ty, ty + max(
-            p["at"][1] + p["size"][1] for p in g.pieces) + 2)
+        if wall_child:
+            ys = (0,)
+        else:
+            # every row the piece could touch the group in, the rows from
+            # the target downward first (the old reading)
+            lo = min(q["at"][1] for q in g.pieces)
+            hi = max(q["at"][1] + q["size"][1] for q in g.pieces)
+            ys = sorted(range(lo - ch + 1, hi),
+                        key=lambda v: (0 if v >= ty else 1, abs(v - ty), v))
         for y in ys:
-            if g.free(x, y, cw, ch):
+            if g.free(x, y, cw, ch, child["role"]) \
+                    and _touches(g, x, y, cw, ch):
                 i = g.add(child["role"], [cw, ch], x, y, back=wall_child,
                           optional=bool(child.get("_grow")),
                           min_wealth=child.get("minWealth"))
@@ -270,7 +328,7 @@ def _place_around(g, t_idx, child, t_slot, notes, lid):
         spots += [("west", tx - sh, ty + y, sh, sw) for y in range(0, th - sw + 1)]
     by_side = {}
     for s in spots:
-        if g.free(s[1], s[2], s[3], s[4]):
+        if g.free(s[1], s[2], s[3], s[4], child["role"]):
             by_side.setdefault(s[0], []).append(s)
     if not by_side:
         notes.append(f"{lid}: {_name(child)} has no free side around "
@@ -290,6 +348,10 @@ def _place_around(g, t_idx, child, t_slot, notes, lid):
         cand = by_side[side]
         for i in _spread(len(cand), take[side]):
             _, x, y, w, h = cand[i]
+            # re-check against the group as it now stands: the spots were
+            # surveyed before this child's earlier siblings went down
+            if not g.free(x, y, w, h, child["role"]):
+                continue
             pi = g.add(child["role"], [w, h], x, y,
                        optional=bool(child.get("_grow")),
                        min_wealth=child.get("minWealth"))
@@ -347,6 +409,45 @@ def _normalise(g):
         p["at"] = [p["at"][0] - min_x, p["at"][1] - min_y]
 
 
+def _fix_lone_seats(g, notes, lid):
+    """Give every seat of a group with nothing to face (no table, desk,
+    counter or the other pieces people sit at — fixed_rooms.seat_facing)
+    a back on the wall: the seat takes back "north" and moves to the
+    group's north edge — the side away from the group's centre — when it
+    does not sit there already (or its front cell is blocked where it
+    sits), and a free-standing group binds itself to that wall. Returns
+    how many seats were fixed."""
+    if any(_fixed.seat_facing(p.get("role")) for p in g.pieces):
+        return 0
+    fixed = 0
+    for p in list(g.pieces):
+        if p.get("role") not in _fixed.SEAT_ROLES or p.get("back"):
+            continue
+        sw, sh = p["size"]
+        idx = g.pieces.index(p)
+        del g.pieces[idx]
+        spot = p["at"][0] if p["at"][1] == 0 else None
+        if spot is None or not g.free(spot, 0, sw, sh, p["role"], "north") \
+                or not _touches(g, spot, 0, sw, sh):
+            maxx = max(q["at"][0] + q["size"][0] for q in g.pieces) \
+                if g.pieces else 0
+            spot = next((x for x in sorted(range(-sw + 1, maxx + 1),
+                                           key=lambda v: (abs(v - p["at"][0]), v))
+                         if g.free(x, 0, sw, sh, p["role"], "north")
+                         and _touches(g, x, 0, sw, sh)), None)
+        g.pieces.insert(idx, p)
+        if spot is None:
+            notes.append(f"{lid}: lone {p['role']} has no free spot on the "
+                         f"group's north edge; left without a back")
+            continue
+        p["at"] = [spot, 0]
+        p["back"] = "north"
+        fixed += 1
+    if fixed and g.wall == "none":
+        g.wall = "back"
+    return fixed
+
+
 def convert_layout(layout):
     """One layout -> {"groups": [...], "recipe": {...}, "notes": [...]}.
     Groups are complete except for "id" (assigned by convert_all, which
@@ -388,7 +489,7 @@ def convert_layout(layout):
     if anchor and anchor.get("optional"):
         notes.append(f"{lid}: optional slot {anchor['id']} anchors the recipe")
 
-    groups, piece_of = [], {}
+    groups, piece_of, standalone = [], {}, []
     for rid in order:
         root = by_id[rid]
         members = children.get(rid) or []
@@ -399,12 +500,21 @@ def convert_layout(layout):
             kind, tsid = _target(child)
             if tsid not in piece_of:
                 notes.append(f"{lid}: {_name(child)} points at {tsid!r}, "
-                             f"which placed no piece; dropped")
+                             f"which placed no piece; it stands as its own "
+                             f"group")
+                standalone.append(child)
                 continue
             placer = _place_beside if kind == "beside" else _place_around
             first, _n = placer(g, piece_of[tsid], child, by_id[tsid], notes, lid)
             if first is not None:
                 piece_of[child["id"]] = first
+            else:
+                # nothing beside the target keeps the target usable: the
+                # piece stands as its own group instead of dropping
+                notes.append(f"{lid}: {_name(child)} stands as its own group "
+                             f"(no spot beside {_name(by_id[tsid])} keeps it "
+                             f"usable)")
+                standalone.append(child)
         g.use = _use(g)
         _normalise(g)
         groups.append(g)
@@ -429,7 +539,11 @@ def convert_layout(layout):
         g = groups[group_index[rid]]
         entry = dict(entry, _grow=True)
         placer = _place_beside if t[0] == "beside" else _place_around
-        placer(g, piece_of.get(t[1], 0), entry, by_id[t[1]], notes, lid)
+        first, _n = placer(g, piece_of.get(t[1], 0), entry, by_id[t[1]],
+                           notes, lid)
+        if first is None and entry.get("role") not in (None, ""):
+            grow_alone.append({k: v for k, v in entry.items()
+                               if k != "_grow"})
         g.use = _use(g)
         _normalise(g)
     for entry in grow_alone:
@@ -440,6 +554,27 @@ def convert_layout(layout):
         g.use = _use(g)
         _normalise(g)
         groups.append(g)
+
+    # member pieces that could not join their target's group stand alone
+    for slot in standalone:
+        g = _Group(family, _group_wall(slot, []))
+        g.add(slot["role"], _root_size(slot), 0, 0,
+              back=slot.get("back") == "wall",
+              optional=bool(slot.get("optional")),
+              min_wealth=slot.get("minWealth"))
+        g.use = _use(g)
+        _normalise(g)
+        groups.append(g)
+
+    # every group complete: a lone seat backs a wall, and the use list and
+    # frame follow the fix
+    seat_fixes = 0
+    for g in groups:
+        seat_fixes += _fix_lone_seats(g, notes, lid)
+        g.use = _use(g)
+        _normalise(g)
+    if seat_fixes:
+        notes.append(f"{lid}: gave {seat_fixes} lone seat(s) a wall to back")
 
     def kind_of(slot):
         if slot is anchor:
@@ -466,6 +601,14 @@ def convert_layout(layout):
         e = {"group": len(order) + j, "kind": "optional"}
         if entry.get("minWealth"):
             e["minWealth"] = entry["minWealth"]
+        entries.append(e)
+    for k, slot in enumerate(standalone):
+        e = {"group": len(order) + len(grow_alone) + k,
+             "kind": kind_of(slot)}
+        if slot.get("count", 1) != 1:
+            e["count"] = slot["count"]
+        if slot.get("minWealth"):
+            e["minWealth"] = slot["minWealth"]
         entries.append(e)
     recipe = {"layout": lid, "family": family,
               "sizeBands": list(layout.get("sizeBands") or []), "groups": entries}

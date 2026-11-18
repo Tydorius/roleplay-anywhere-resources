@@ -13,7 +13,8 @@ and checks them.
 import json
 import os
 
-from .library import ID_RE, LIB_DIR, SIDES, _size_ok
+from . import fixed_rooms
+from .library import ID_RE, LIB_DIR, SIDES, _size_ok, check_role_access
 
 GROUPS_DIR = os.path.join(LIB_DIR, "groups")
 WALLS = ("back", "corner", "none")
@@ -190,6 +191,100 @@ def _check_placement(pieces, wall, err):
                 f"north edge")
 
 
+def _check_group_access(g, lib, err):
+    """The group's own access, in its own frame: a hand group's ``access``
+    entries sit in the ring of cells around the group, off its own
+    furniture and off the walls its ``wall`` stands on (the north ring of a
+    wall-bound group, the north and west of a corner one), and every
+    constraint — derived from the roles or handed in — keeps its need of
+    cells usable: not covered by the group's own pieces, not walled. A seat
+    with no table, desk or counter in the group must back a wall."""
+    raw = g.get("pieces") or []
+    if not all(isinstance(p, dict) for p in raw):
+        return
+    pieces = raw
+    rects = _rects(pieces)
+    if rects is None:
+        return
+    minx = min(r[0] for r in rects)
+    miny = min(r[1] for r in rects)
+    W = max(r[0] + r[2] for r in rects)
+    H = max(r[1] + r[3] for r in rects)
+    wall = g.get("wall")
+    furniture = {(cx, cy) for (x, y, w, h) in rects
+                 for cx in range(x, x + w) for cy in range(y, y + h)}
+
+    def walled(c):
+        return ((wall in ("back", "corner") and c[1] == miny - 1)
+                or (wall == "corner" and c[0] == minx - 1))
+
+    def cell_ok(c):
+        return (isinstance(c, list) and len(c) == 2
+                and all(isinstance(v, int) and not isinstance(v, bool)
+                        for v in c))
+
+    access = g.get("access")
+    if access is not None:
+        if g.get("source") != "hand":
+            err('access is hand work: the group must carry "source": "hand"')
+        if not isinstance(access, list):
+            err("access must be a list of {cells, need, replaces} entries")
+            access = []
+        for entry in access:
+            if not isinstance(entry, dict):
+                err(f"an access entry must be a JSON object, not {entry!r}")
+                continue
+            cells = entry.get("cells")
+            if not (isinstance(cells, list) and cells
+                    and all(cell_ok(c) for c in cells)):
+                err("an access entry needs cells: [[x, y], ...]")
+                continue
+            need = entry.get("need")
+            if not (isinstance(need, int) and not isinstance(need, bool)
+                    and 1 <= need <= len(cells)):
+                err(f"access need must be 1 to {len(cells)} (its cell count), "
+                    f"not {need!r}")
+            for c in cells:
+                if not (minx - 1 <= c[0] <= W and miny - 1 <= c[1] <= H):
+                    err(f"access cell {c} lies outside the ring of cells "
+                        f"around the group")
+                elif tuple(c) in furniture:
+                    err(f"access cell {c} sits on the group's own furniture")
+                elif walled(tuple(c)):
+                    err(f"access cell {c} sits on the wall the group "
+                        f"{'backs' if wall == 'back' else 'corners'}")
+            repl = entry.get("replaces")
+            if not isinstance(repl, list) or not repl or not all(
+                    isinstance(k, int) and not isinstance(k, bool)
+                    and 0 <= k < len(pieces) for k in repl):
+                err("an access entry must replace the piece indexes it "
+                    f"stands for, not {repl!r}")
+    for c in fixed_rooms.group_constraints(g, lib):
+        cells = [(cc[0], cc[1]) for cc in c["cells"]]
+        i = c.get("piece")
+        p = pieces[i] if isinstance(i, int) and 0 <= i < len(pieces) else None
+        named = (f"piece {p.get('role')!r} at {p['at']}" if p
+                 else "a piece of the group")
+        usable = [cc for cc in cells if not walled(cc)]
+        if len(usable) < (c.get("need") or 1):
+            if not cells:
+                err(f"{named} has no access cell left: its own group covers "
+                    f"them all")
+            else:
+                listed = "[" + ", ".join(f"[{cc[0]}, {cc[1]}]"
+                                         for cc in cells) + "]"
+                err(f"{named} has no usable access cell among {listed}: the "
+                    f"wall or its own furniture blocks them")
+    for p in pieces:
+        if p.get("role") not in fixed_rooms.SEAT_ROLES \
+                or p.get("back") in SIDES:
+            continue
+        if any(fixed_rooms.seat_facing(q.get("role")) for q in pieces):
+            continue
+        err(f"piece {p.get('role')!r} at {p['at']} faces nothing: a seat "
+            f"with no table, desk or counter in its group must back a wall")
+
+
 def _check_groups(groups, lib, errors):
     families = lib.vocab.get("families", {})
     roles = lib.vocab.get("roles", {})
@@ -223,6 +318,7 @@ def _check_groups(groups, lib, errors):
         for p in pieces:
             _check_piece(p, roles, lib.tiers, err)
         _check_placement(pieces, g.get("wall"), err)
+        _check_group_access(g, lib, err)
 
 
 def _check_count(e, group, err):
@@ -444,7 +540,10 @@ def _check_pools(data, lib, errors):
 def check(data, lib):
     """Every rule of the group format the code can check, as plain sentences:
     group fields against the vocabulary, pieces that overlap or float apart,
-    wall-bound pieces off the north edge, recipe kinds and counts, exactly
+    wall-bound pieces off the north edge, every group's access cells usable
+    (a hand group's ``access`` entries in the ring around it and off its own
+    furniture, and no seat facing nothing without a wall behind it),
+    roleAccess covering every role, recipe kinds and counts, exactly
     one anchor per recipe, one recipe per layout (a hand recipe may name a
     layout of its own family without matching the layout's sizeBands, or no
     layout at all), every recipe's sizeBands naming bands of its own family,
@@ -453,6 +552,7 @@ def check(data, lib):
     only source a group, recipe or recipe entry may declare."""
     errors = []
     _check_family_bands(lib, errors)
+    errors += check_role_access(lib.vocab)
     _check_groups(data["groups"], lib, errors)
     _check_recipes(data, lib, errors)
     _check_pools(data, lib, errors)

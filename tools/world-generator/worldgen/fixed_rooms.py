@@ -17,7 +17,11 @@ means no rooms have been generated yet.
   max_floor_per_piece(family, band, lib=None) -> the free floor cells per
                                          placed piece the family or band
                                          caps, or None
-  use_sides(piece, siblings)           -> the sides a piece is used from
+  access_constraints(pieces, room, lib, groups, skip)
+                                       -> the cells a person needs to stand
+                                         in to use the pieces
+  group_constraints(gdef, lib)         -> a group definition's own access
+                                         constraints, overrides applied
   dead_cells(room)                     -> the free cells too far from every
                                          piece to be walked on
   instances(room)                      -> the placed group instances as boxes
@@ -38,7 +42,7 @@ import json
 import os
 from collections import Counter
 
-from .library import ID_RE, LIB_DIR, SIDES
+from .library import ACCESS_RULES, ID_RE, LIB_DIR, SIDES
 
 ROOMS_DIR = os.path.join(LIB_DIR, "rooms")
 CLEARANCES = ("tight", "roomy", "grand")
@@ -57,9 +61,19 @@ SLEEP_SINGLE_ROLES = ("sleep", "sleep.child", "med.bed", "cell.bed")
 SLEEP_COUPLE_ROLE = "sleep.couple"
 SEAT_ROLES = ("seat", "seat.long", "seat.lounge", "seat.state")
 # what a seat is placed at, inside the same group: it is used from the side
-# facing away from these
-BELONG_ROLES = ("desk", "counter.serve", "counter.prep")
-FREE_TABLE_ROLES = ("desk",)      # plus every role starting "table."
+# facing away from these — a table, desk or counter, and the other pieces
+# the layouts seat people at (workbenches, consoles, computers, screens,
+# altars, hearths and game tables)
+BELONG_ROLES = ("desk", "counter.serve", "counter.prep", "game", "control",
+                "computer", "med.station", "altar", "heat", "teach",
+                "lectern", "screen", "radio", "music")
+
+
+def seat_facing(role):
+    """True when a piece of this role is one a seat faces: the seat is
+    used from the side facing away from it, so it needs no wall behind."""
+    r = role or ""
+    return r.startswith(("table.", "work.")) or r in BELONG_ROLES
 # the wash families' fixture rules, one table for check and the generator:
 # the roles a room of the family always holds at least one of and the roles
 # it never holds. A washroom needs all three fixtures; the privy and the
@@ -218,105 +232,361 @@ def max_floor_per_piece(family, band_name, lib=None):
     return cap if isinstance(cap, int) and not isinstance(cap, bool) else None
 
 
-# ------------------------------------------------------------- the use table
+# --------------------------------------------------------------- access cells
 
-def use_sides(piece, siblings=()):
-    """The sides people stand or sit at to use one piece — the table the
-    reachability check runs on: a piece needs a free, reached cell on one of
-    these sides. ``siblings`` are the room's pieces of the same group, the
-    seat's table among them.
+def _vocab(lib):
+    """The vocabulary dict a Library (or plain dict, or None) carries; None
+    when there is none to read, which leaves unknown rules to their
+    fallback."""
+    if isinstance(lib, dict):
+        return lib
+    if lib is not None:
+        vocab = getattr(lib, "vocab", None)
+        if isinstance(vocab, dict):
+            return vocab
+    shipped = _shipped_lib()
+    return shipped.vocab if shipped else None
 
-      beds (sleep, sleep.couple, sleep.child,   a long side (all of them
-      med.bed, cell.bed)                         when the bed is square)
-      seats (seat, seat.long, seat.lounge,      the side facing away from
-      seat.state)                                the table, desk or counter
-                                                in the same group (unless
-                                                its own group's pieces
-                                                cover that side — a seat
-                                                wedged beside the table —
-                                                then like a lone seat); a
-                                                lone seat's front when it
-                                                backs a wall, else any side
-      a piece with a back                       its front
-      free-standing tables and desks            any side
-      lights, decor, optional pieces            none
-      anything else (chest, coat rack, basin)   any side
-    """
+
+def _access_rule(piece, room, lib):
+    """The access rule one piece carries: its role's entry in library.json's
+    ``roleAccess``, none for an optional piece or a light or decor role. A
+    rule may relax for a room whose wealth is exactly the relax's tiers and
+    whose clearance is one of its own (a room for poor and modest must
+    satisfy modest). An unknown role falls back to any — the library's own
+    check flags the missing entry."""
     role = piece.get("role") or ""
-    if piece.get("optional"):
-        return ()
-    if role.startswith("light") or role.startswith("decor"):
-        return ()
-    if role in SLEEP_SINGLE_ROLES or role == SLEEP_COUPLE_ROLE:
-        w, h = piece.get("size") or (1, 1)
-        long = tuple(s for s in SIDES
-                     if (s in ("north", "south") and w >= 2)
-                     or (s in ("east", "west") and h >= 2))
-        return long or SIDES
-    if role in SEAT_ROLES:
-        away = _away_side(piece, siblings)
-        if away and not _side_covered(piece, away, siblings):
-            return (away,)
-        back = piece.get("back")
-        return (OPPOSITE[back],) if back in OPPOSITE else SIDES
-    back = piece.get("back")
-    if back in OPPOSITE:
-        return (OPPOSITE[back],)
-    if role.startswith("table.") or role in FREE_TABLE_ROLES:
-        return SIDES
-    return SIDES
+    if piece.get("optional") or role.startswith("light") or role.startswith("decor"):
+        return "none"
+    vocab = _vocab(lib)
+    entry = (vocab.get("roleAccess") or {}).get(role) if vocab else None
+    rule, relax = entry, None
+    if isinstance(entry, dict):
+        rule, relax = entry.get("rule"), entry.get("relax")
+    if rule not in ACCESS_RULES:
+        return "any"
+    if isinstance(relax, dict) and room is not None:
+        wealth = room.get("wealth")
+        tiers = relax.get("wealth")
+        if isinstance(wealth, list) and isinstance(tiers, list) \
+                and set(wealth) == set(tiers) \
+                and room.get("clearance") in (relax.get("clearance") or []):
+            rule = relax.get("to")
+    return rule if rule in ACCESS_RULES else "any"
 
 
-def _away_side(piece, siblings):
-    """The side of a seat facing away from the table-like piece it belongs
-    to, or None when its group has none."""
-    x, y = piece.get("at") or (0, 0)
-    w, h = piece.get("size") or (1, 1)
-    best = None
-    best_d = None
-    for o in siblings:
-        if o is piece:
-            continue
-        role = o.get("role") or ""
-        if not (role.startswith("table.") or role in BELONG_ROLES):
-            continue
-        ox, oy = o.get("at") or (0, 0)
-        ow, oh = o.get("size") or (1, 1)
-        dx = ox + ow / 2 - (x + w / 2)
-        dy = oy + oh / 2 - (y + h / 2)
-        d = abs(dx) + abs(dy)
-        if best_d is None or d < best_d:
-            best_d = d
-            if abs(dx) >= abs(dy):
-                best = "west" if dx > 0 else "east"
-            else:
-                best = "north" if dy > 0 else "south"
-    return best
-
-
-def _side_covered(piece, side, siblings):
-    """Whether every cell on one side of a piece is covered by another piece
-    of its own group — a seat wedged between its table and another piece."""
-    x, y = piece.get("at") or (0, 0)
-    w, h = piece.get("size") or (1, 1)
+def _side_cells_of(x, y, w, h, side):
+    """The cells along one side of a rect: north and south west to east,
+    east and west north to south."""
     if side == "north":
-        cells = [(cx, y - 1) for cx in range(x, x + w)]
-    elif side == "south":
-        cells = [(cx, y + h) for cx in range(x, x + w)]
-    elif side == "west":
-        cells = [(x - 1, cy) for cy in range(y, y + h)]
-    else:
-        cells = [(x + w, cy) for cy in range(y, y + h)]
-    for o in siblings:
-        if o is piece:
-            continue
+        return [(cx, y - 1) for cx in range(x, x + w)]
+    if side == "south":
+        return [(cx, y + h) for cx in range(x, x + w)]
+    if side == "west":
+        return [(x - 1, cy) for cy in range(y, y + h)]
+    return [(x + w, cy) for cy in range(y, y + h)]
+
+
+def _mid_cell(cells, side):
+    """A side's middle cell — of two middle cells the lower-left one: the
+    western of a horizontal pair, the southern of a vertical."""
+    n = len(cells)
+    if not n:
+        return None
+    return cells[(n - 1) // 2 if side in ("north", "south") else n // 2]
+
+
+def _end_cell(cells, side, back):
+    """The cell of a side at its end away from ``back`` (a bed's foot end);
+    the middle cell when the piece has no back."""
+    if back is None:
+        return _mid_cell(cells, side)
+    if side in ("east", "west"):
+        return cells[-1] if back == "north" else \
+            cells[0] if back == "south" else _mid_cell(cells, side)
+    return cells[-1] if back == "west" else \
+        cells[0] if back == "east" else _mid_cell(cells, side)
+
+
+def _head_cell(cells, side, back):
+    """The cell of a side at its end against ``back`` (where a bedside
+    stands); None when the back picks out no end of that side."""
+    if back is None:
+        return None
+    if side in ("east", "west"):
+        return cells[0] if back == "north" else \
+            cells[-1] if back == "south" else None
+    return cells[0] if back == "west" else \
+        cells[-1] if back == "east" else None
+
+
+def _covered_by(cell, pieces):
+    for o in pieces:
         ox, oy = o.get("at") or (0, 0)
         ow, oh = o.get("size") or (1, 1)
-        cells = [c for c in cells
-                 if not (ox <= c[0] < ox + ow and oy <= c[1] < oy + oh)]
-        if not cells:
+        if ox <= cell[0] < ox + ow and oy <= cell[1] < oy + oh:
             return True
-    return not cells
+    return False
+
+
+def _piece_constraints(i, piece, siblings, rule):
+    """The access constraints of one piece under ``rule``, each
+    {"cells": [(x, y), ...], "need": n, "piece": i}: a mandatory constraint
+    (one cell, need 1) or a limited one (several cells, need 1). Cells
+    covered by a piece of the same group are dropped; a constraint emptied
+    that way stays and fails its check, because the group then blocks its
+    own use. ``siblings`` are the piece's group's own pieces.
+
+    The rules, in short: a bed standing free is used from its long sides —
+    both of them (both-long) or one (one-long), at the foot end, the end
+    away from the bed's back. A bed lying lengthwise (its back on a long
+    side) is used from the opposite side alone, one limited constraint over
+    that side, whatever its rule says — a double bed lying lengthwise keeps
+    this at every wealth. A bedside beside a one-long bed's head locks that
+    side: its foot cell becomes mandatory and the other long side needs
+    nothing. A backed piece is used from its front's middle cell; anything
+    else from one of the four sides' middle cells."""
+    x, y = piece.get("at") or (0, 0)
+    w, h = piece.get("size") or (1, 1)
+    back = piece.get("back") if piece.get("back") in SIDES else None
+
+    def add(cells, need=1):
+        kept = [c for c in cells if not _covered_by(c, siblings)]
+        # a constraint emptied by the drop rule stays and fails its check:
+        # the group then blocks its own use
+        out.append({"cells": kept, "need": need, "piece": i})
+
+    out = []
+    if rule in ("both-long", "one-long"):
+        if (back in ("north", "south") and w > h) or \
+                (back in ("east", "west") and h > w):
+            # lying lengthwise: the opposite long side, one limited
+            # constraint over all its cells, whatever the rule says
+            add(_side_cells_of(x, y, w, h, OPPOSITE[back]))
+            return out
+        if back in ("north", "south"):
+            longs = ("east", "west")
+        elif back in ("east", "west"):
+            longs = ("north", "south")
+        elif w > h:
+            longs = ("north", "south")
+        elif h > w:
+            longs = ("east", "west")
+        else:
+            longs = SIDES
+        sides = {s: _side_cells_of(x, y, w, h, s) for s in longs}
+        locked = []
+        if rule == "one-long":
+            # a bedside beside the bed's head on one long side locks that
+            # side: its foot end becomes mandatory and the other long side
+            # carries no constraint at all (you get in on your own side)
+            for s, cells in sides.items():
+                head = _head_cell(cells, s, back)
+                if head is not None and any(
+                        o.get("role") == "bedside" and _covered_by(head, [o])
+                        for o in siblings):
+                    locked.append(s)
+        if locked:
+            for s in locked:
+                add([_end_cell(sides[s], s, back)])
+        elif rule == "both-long":
+            for s in longs:
+                add([_end_cell(sides[s], s, back)])
+        else:
+            add([_end_cell(sides[s], s, back) for s in longs])
+    elif rule == "front":
+        if back is not None:
+            front = OPPOSITE[back]
+            add([_mid_cell(_side_cells_of(x, y, w, h, front), front)])
+        else:
+            add([_mid_cell(_side_cells_of(x, y, w, h, s), s) for s in SIDES])
+    elif rule == "any":
+        add([_mid_cell(_side_cells_of(x, y, w, h, s), s) for s in SIDES])
+    return out
+
+
+def group_constraints(gdef, lib=None):
+    """A group definition's own access constraints in its own frame: the
+    derived ones for every piece its ``access`` list does not replace, plus
+    the ``access`` entries themselves (hand work — a list of
+    {"cells": [[x, y], ...], "need": n, "replaces": [piece indexes]} in
+    group coordinates). An entry's constraints carry the first piece its
+    ``replaces`` names, or None, as their piece."""
+    pieces = [p for p in (gdef.get("pieces") or []) if isinstance(p, dict)]
+    overrides = [e for e in (gdef.get("access") or []) if isinstance(e, dict)]
+    replaced = set()
+    for entry in overrides:
+        replaced.update(k for k in (entry.get("replaces") or [])
+                        if isinstance(k, int) and not isinstance(k, bool))
+    out = []
+    for i, p in enumerate(pieces):
+        if i in replaced:
+            continue
+        rule = _access_rule(p, None, lib)
+        if rule != "none":
+            out += _piece_constraints(i, p, pieces, rule)
+    for entry in overrides:
+        cells = [c for c in (entry.get("cells") or [])
+                 if isinstance(c, list) and len(c) == 2
+                 and all(isinstance(v, int) and not isinstance(v, bool)
+                         for v in c)]
+        if not cells:
+            continue
+        piece = next((k for k in (entry.get("replaces") or [])
+                      if isinstance(k, int) and not isinstance(k, bool)), None)
+        out.append({"cells": cells, "need": entry.get("need") or 1,
+                    "piece": piece})
+    return out
+
+
+def _turn_pieces(pieces, W, H):
+    out = []
+    for p in pieces:
+        x, y = p.get("at") or [0, 0]
+        w, h = p.get("size") or [0, 0]
+        q = dict(p)
+        q["at"] = [H - y - h, x]
+        q["size"] = [h, w]
+        if q.get("back") in TURN:
+            q["back"] = TURN[q["back"]]
+        out.append(q)
+    return out
+
+
+def _mirror_pieces(pieces, W):
+    out = []
+    for p in pieces:
+        x, y = p.get("at") or [0, 0]
+        w, h = p.get("size") or [0, 0]
+        q = dict(p)
+        q["at"] = [W - x - w, y]
+        if q.get("back") in FLIP_EW:
+            q["back"] = FLIP_EW[q["back"]]
+        out.append(q)
+    return out
+
+
+def _group_box_size(pieces):
+    return (max((p.get("at") or [0, 0])[0] + (p.get("size") or [0, 0])[0]
+                for p in pieces),
+            max((p.get("at") or [0, 0])[1] + (p.get("size") or [0, 0])[1]
+                for p in pieces))
+
+
+def _form_pieces(pieces, mirror, turns):
+    """The group's pieces under ``mirror`` (across the vertical axis) and
+    ``turns`` quarter turns, in the fresh north-facing box."""
+    cur = [dict(p) for p in pieces]
+    W, H = _group_box_size(cur)
+    if mirror:
+        cur = _mirror_pieces(cur, W)
+    for _ in range(turns):
+        cur = _turn_pieces(cur, W, H)
+        W, H = H, W
+    return cur
+
+
+def _map_point(mirror, turns, W, H, x, y):
+    """A group-frame cell carried through the same mirror and quarter turns
+    its pieces take (``W`` and ``H`` the group's own box)."""
+    if mirror:
+        x = W - 1 - x
+    for _ in range(turns):
+        x, y = H - 1 - y, x
+        W, H = H, W
+    return x, y
+
+
+def _piece_sig(p):
+    return (p.get("role"), tuple(p.get("size") or ()), p.get("back"),
+            tuple(p.get("at") or ()))
+
+
+def _placed_group_constraints(gdef, inst, pieces, room, lib):
+    """The constraints of a placed instance of a hand group carrying its own
+    ``access`` list, carried from the group's frame into the placed one: the
+    placed pieces are matched against the group's eight turn-and-mirror
+    forms (same roles, sizes, backs and relative cells — the composer may
+    drop optional pieces, so a form matches when it holds every placed
+    piece), and the matching form's point map moves the cells. No form
+    matching (a room whose pieces have left their group) derives the
+    constraints from the placed pieces as they stand."""
+    base = [p for p in (gdef.get("pieces") or [])
+            if isinstance(p, dict) and _rect(p) is not None]
+    cons = group_constraints(gdef, lib)
+    if not cons or not base:
+        return []
+    W, H = _group_box_size(base)
+    bx, by = inst["box"][0], inst["box"][1]
+    placed = []
+    for i in inst["indices"]:
+        q = dict(pieces[i])
+        at = q.get("at") or [0, 0]
+        q["at"] = [at[0] - bx, at[1] - by]
+        placed.append(q)
+    for mirror in (False, True):
+        for turns in range(4):
+            form = _form_pieces(base, mirror, turns)
+            if not (Counter(_piece_sig(p) for p in placed)
+                    <= Counter(_piece_sig(p) for p in form)):
+                continue
+            # map group piece indexes to the room's, for the messages
+            index_map = {}
+            used = [False] * len(placed)
+            for j, fp in enumerate(form):
+                for m, q in enumerate(placed):
+                    if not used[m] and _piece_sig(fp) == _piece_sig(q):
+                        used[m] = True
+                        index_map[j] = inst["indices"][m]
+                        break
+            out = []
+            for c in cons:
+                cells = []
+                for cx, cy in c["cells"]:
+                    mx, my = _map_point(mirror, turns, W, H, cx, cy)
+                    cells.append([mx + bx, my + by])
+                out.append({"cells": cells, "need": c["need"],
+                            "piece": index_map.get(c["piece"])})
+            return out
+    sibs = [pieces[i] for i in inst["indices"]]
+    out = []
+    for i in inst["indices"]:
+        rule = _access_rule(pieces[i], room, lib)
+        if rule != "none":
+            out += _piece_constraints(i, pieces[i], sibs, rule)
+    return out
+
+
+def access_constraints(pieces, room=None, lib=None, groups=None, skip=()):
+    """The access constraints of placed pieces — the cells a person must be
+    able to stand in to use them: each {"cells": [[x, y], ...], "need": n,
+    "piece": i}, needing ``need`` of its cells free of furniture, inside the
+    room and reached from a door (a reach-in closet's pieces are used from
+    their doorway instead: their cells outside the room are its doors).
+    Derived piece by piece from each role's rule in library.json's
+    roleAccess; a group instance whose group carries a hand ``access`` list
+    gets that list instead, carried into the placed frame. ``pieces`` are a
+    room's pieces or a group's own; ``room`` relaxes rules by wealth and
+    clearance; ``skip`` names pieces to pass over (invalid ones)."""
+    skip = set(skip)
+    gmap = (groups or {}).get("groups") if isinstance(groups, dict) else None
+    if not isinstance(gmap, dict):
+        gmap = None
+    out = []
+    for inst in instances({"pieces": pieces}):
+        idxs = [i for i in inst["indices"] if i not in skip]
+        if not idxs:
+            continue
+        gdef = gmap.get(inst["gid"]) if gmap else None
+        if isinstance(gdef, dict) and gdef.get("access"):
+            out += _placed_group_constraints(gdef, inst, pieces, room, lib)
+            continue
+        sibs = [pieces[i] for i in idxs]
+        for i in idxs:
+            rule = _access_rule(pieces[i], room, lib)
+            if rule != "none":
+                out += _piece_constraints(i, pieces[i], sibs, rule)
+    return out
 
 
 # ----------------------------------------------------------------- instances
@@ -480,20 +750,6 @@ def _int_pair(v, lo=0, hi=MAX_SIDE):
 def _cells(rect):
     x, y, w, h = rect
     return [(cx, cy) for cx in range(x, x + w) for cy in range(y, y + h)]
-
-
-def _side_cells(x, y, w, h, sides, W, H):
-    out = []
-    for s in sides:
-        if s == "north":
-            out += [(cx, y - 1) for cx in range(x, x + w)]
-        elif s == "south":
-            out += [(cx, y + h) for cx in range(x, x + w)]
-        elif s == "west":
-            out += [(x - 1, cy) for cy in range(y, y + h)]
-        else:
-            out += [(x + w, cy) for cy in range(y, y + h)]
-    return [c for c in out if 0 <= c[0] < W and 0 <= c[1] < H]
 
 
 def _aspect_cap(family):
@@ -684,6 +940,8 @@ def _check_room(room, groups, lib, err, check_band=True):
             err(f"piece {pieces[i].get('role')!r} backs {back} off the room's "
                 f"{back} edge")
     # doors: free edge cells that can take one, on at least two sides
+    closet = fam == "closet"
+    reach_in = closet and room.get("sizeBand") == "reach"
     doors = room.get("doors")
     if not isinstance(doors, dict):
         doors = {}
@@ -712,24 +970,25 @@ def _check_room(room, groups, lib, err, check_band=True):
                 cell = {"north": (k, 0), "south": (k, h - 1),
                         "west": (0, k), "east": (w - 1, k)}[side]
                 if cell in occupied:
-                    err(f"door cell {side} {k} is blocked by a piece")
+                    # a reach-in's doors stand right on its lined pieces —
+                    # the cells outside them are the doorway — so only a
+                    # walk-in's or a room's door cell must be free
+                    if not reach_in:
+                        err(f"door cell {side} {k} is blocked by a piece")
                 else:
                     door_cells.append(cell)
-    # a closet's doors sit on one side only, and a walk-in one needs that
-    # side; a reach-in closet may have no door cell at all (a fully lined
-    # cupboard has no free edge cell)
-    closet = fam == "closet"
-    reach_in = closet and room.get("sizeBand") == "reach"
+    # a closet's doors sit on one side only, and every closet needs one: a
+    # walk-in keeps a free edge cell, a reach-in's door cells are its
+    # pieces' access cells outside the room, all on the side they face
     if closet and sides_with > 1:
         err(f"door cells on {sides_with} sides; a closet keeps its doors "
             f"on one side only")
-    elif sides_with < (1 if closet else 2) and not reach_in:
-        if closet:
-            err(f"door cells on {sides_with} side(s); a walk-in closet "
-                f"needs a door on one side")
-        else:
-            err(f"door cells on {sides_with} side(s); at least two sides "
-                f"need one")
+    elif closet and sides_with < 1:
+        err(f"door cells on {sides_with} side(s); a closet needs a door "
+            f"on one side")
+    elif not closet and sides_with < 2:
+        err(f"door cells on {sides_with} side(s); at least two sides "
+            f"need one")
     # reachability: one free area, reached from every door cell
     free = {(x, y) for x in range(w) for y in range(h)} - occupied
     reach = set()
@@ -760,22 +1019,90 @@ def _check_room(room, groups, lib, err, check_band=True):
         err(f"{len(dead)} dead floor cell(s) (first at {dead[0][0]},"
             f"{dead[0][1]}): more than {gap} cells from every piece at "
             f"{room.get('clearance')} clearance")
-    # use sides: a reached cell next to every piece it can be used from —
-    # except a reach-in closet, which is used from its doorway: no floor
-    # inside, so no use-side cells either
+    # access cells: every constraint needs its need of cells inside the
+    # room, free of furniture (the open middle's filler is floor nobody
+    # uses a piece from) and reached from a door. A reach-in closet is
+    # used from its doorway instead: each of its pieces faces a cell
+    # outside the room, and those cells, all on one side, are its doors
     by_group = {}
     for i in ok:
         by_group.setdefault(pieces[i].get("group"), []).append(pieces[i])
+    fset = set()
+    if room.get("style") == "open" and isinstance(room.get("filler"), dict) \
+            and _int_pair(room["filler"].get("at")) \
+            and _int_pair(room["filler"].get("size"), 1):
+        fset = set(_cells((room["filler"]["at"][0], room["filler"]["at"][1],
+                           room["filler"]["size"][0], room["filler"]["size"][1])))
+    # a seat with no table, desk or counter in its own group faces nothing:
+    # it must back a wall (the flush rule then pins it there)
     for i in ok:
         p = pieces[i]
-        sides = use_sides(p, by_group.get(p.get("group")) or [])
-        if not sides or reach_in:
-            continue
-        x, y, pw, ph = rects[i]
-        if not any(c in reach for c
-                   in _side_cells(x, y, pw, ph, sides, w, h)):
-            err(f"piece {p.get('role')!r} at {p['at']} has no reached cell "
-                f"on its use sides {'/'.join(sides)}")
+        if p.get("role") in SEAT_ROLES and p.get("back") not in SIDES:
+            sibs = by_group.get(p.get("group")) or []
+            if not any(seat_facing(q.get("role")) for q in sibs):
+                err(f"piece {p.get('role')!r} at {p['at']} of group "
+                    f"{p.get('group')!r} faces nothing: a seat with no "
+                    f"table, desk or counter in its group must back a wall")
+    skip = set(range(len(pieces))) - set(ok)
+    cons = access_constraints(pieces, room, lib, groups, skip=skip)
+    for c in cons:
+        i = c.get("piece")
+        p = pieces[i] if isinstance(i, int) and 0 <= i < len(pieces) \
+            and isinstance(pieces[i], dict) else None
+        cells = [(cc[0], cc[1]) for cc in c["cells"]]
+        named = (f"piece {p.get('role')!r} at {p['at']}" if p
+                 else "a placed piece")
+        gid = (p or {}).get("group")
+        of = f" of group {gid!r}" if gid else ""
+        if reach_in:
+            outside = [cc for cc in cells
+                       if not (0 <= cc[0] < w and 0 <= cc[1] < h)]
+            if not outside:
+                if cells:
+                    err(f"{named}{of} has no cell outside the room: a "
+                        f"reach-in's pieces face their door")
+                else:
+                    err(f"{named}{of} has no access cell left: its own "
+                        f"group covers them all")
+        elif not cells:
+            err(f"{named}{of} has no access cell left: its own group "
+                f"covers them all")
+        else:
+            good = [cc for cc in cells
+                    if 0 <= cc[0] < w and 0 <= cc[1] < h
+                    and cc not in occupied and cc not in fset and cc in reach]
+            if len(good) < c["need"]:
+                listed = "[" + ", ".join(f"[{cc[0]}, {cc[1]}]"
+                                         for cc in cells) + "]"
+                err(f"{named}{of} has no free reached cell among its "
+                    f"access cells {listed} (needs {c['need']})")
+    if reach_in:
+        # the doors a reach-in's outside access cells name, and the sides
+        # they lie on
+        door_sides = {}
+        for c in cons:
+            for cc in c["cells"]:
+                cc = (cc[0], cc[1])
+                if 0 <= cc[0] < w and 0 <= cc[1] < h:
+                    continue
+                side = ("north" if cc[1] < 0 else "south" if cc[1] >= h
+                        else "west" if cc[0] < 0 else "east")
+                door_sides.setdefault(side, set()).add(
+                    cc[0] if side in ("north", "south") else cc[1])
+        if len(door_sides) > 1:
+            err(f"its pieces' access cells outside the room lie on "
+                f"{' and '.join(sorted(door_sides))}; a reach-in's door "
+                f"cells must all lie on one side")
+        elif door_sides:
+            side = next(iter(door_sides))
+            want = {s: (sorted(door_sides[side]) if s == side else [])
+                    for s in SIDES}
+            have = {s: sorted(doors.get(s) or []) for s in SIDES}
+            if have != want:
+                held = " ".join(f"{s} {offs}" for s, offs in have.items()
+                                if offs) or "no side"
+                err(f"doors must be {side} {want[side]}, the cells its "
+                    f"pieces are used from, not {held}")
     # sleep counts match the pieces
     if sleeps is not None:
         ns = sum(1 for i in ok if pieces[i].get("role") in SLEEP_SINGLE_ROLES)
@@ -956,11 +1283,14 @@ def check(rooms, groups=None, lib=None):
     sentences starting with the file and room: pieces inside the room and not
     overlapping, wall-bound pieces flush against their wall, door cells valid
     and on at least two sides (a closet keeps its doors on one side only,
-    and a reach-in closet may have none), every free cell reached from every
-    door cell, no dead floor (a free cell more than the clearance's gap from
-    every piece), the long side within the family's aspect cap (a band with
-    its own aspect range may stretch past it), every piece reached on a use
-    side (not a reach-in closet, used from its doorway), the open room's
+    and every closet needs one — a reach-in's door cells are its pieces'
+    access cells outside the room, the side they face), every free cell
+    reached from every door cell, no dead floor (a free cell more than the
+    clearance's gap from every piece), the long side within the family's
+    aspect cap (a band with its own aspect range may stretch past it), every
+    piece's access cells free of furniture and reached from a door (a
+    reach-in closet's pieces are used from their doorway outside the room),
+    no seat facing nothing (a lone seat must back a wall), the open room's
     filler clear, reached, off every wall, within its cap and aspect, and
     centred, no wall carrying more empty lines than the slack line
     (flush) or the filler's buffer line (open), stretch lines truly
@@ -1034,10 +1364,33 @@ def derive(room, groups=None, lib=None, stretch=True):
                      if family_bands(r.get("family"), lib)
                      else band_for_area(w * h, _bands(lib)))
     if r.get("family") == "closet":
-        # a closet's doors sit on one side only: the side with the most
-        # free edge cells (first of north/east/south/west on a tie)
-        side = max(SIDES, key=lambda s: len(r["doors"][s]))
-        r["doors"] = {s: (r["doors"][s] if s == side else []) for s in SIDES}
+        # a closet's doors sit on one side only. A walk-in's is the side
+        # with the most free edge cells (first of north/east/south/west on
+        # a tie); a reach-in's door cells are its pieces' access cells
+        # outside the room — the side they face — falling back on the free
+        # edge cells while a draft is still broken (the checker says why)
+        if r.get("sizeBand") == "reach":
+            sides = {}
+            for c in access_constraints(r["pieces"], r, lib, groups):
+                for cc in c["cells"]:
+                    cc = (cc[0], cc[1])
+                    if 0 <= cc[0] < w and 0 <= cc[1] < h:
+                        continue
+                    side = ("north" if cc[1] < 0 else "south" if cc[1] >= h
+                            else "west" if cc[0] < 0 else "east")
+                    sides.setdefault(side, set()).add(
+                        cc[0] if side in ("north", "south") else cc[1])
+            if len(sides) == 1:
+                side = next(iter(sides))
+                r["doors"] = {s: (sorted(sides[side]) if s == side else [])
+                              for s in SIDES}
+            else:
+                side = max(SIDES, key=lambda s: len(r["doors"][s]))
+                r["doors"] = {s: (r["doors"][s] if s == side else [])
+                              for s in SIDES}
+        else:
+            side = max(SIDES, key=lambda s: len(r["doors"][s]))
+            r["doors"] = {s: (r["doors"][s] if s == side else []) for s in SIDES}
     if stretch:
         r["stretch"] = {
             "x": [c for c in range(w + 1)

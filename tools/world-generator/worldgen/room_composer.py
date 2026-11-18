@@ -595,39 +595,36 @@ def _beyond_walls(walls, x, y):
             or (walls["east"] is not None and x > walls["east"]))
 
 
-def _boxes_a_piece(placed, walls):
-    """True when some placed piece can never be used again: every cell on
-    its use sides is under a piece or past a fixed wall. A cell inside the
-    bounds that is free stays free (later groups keep the clearance gap),
-    and a free cell outside the bounds may still join the room when a later
-    group grows the box — unless a fixed wall rules it out, which is what
-    this catches (the bedside sealed in by its own bed, a chest and the
-    walls the search fixed around them)."""
+def _boxes_a_piece(placed, walls, gdefs=None):
+    """True when some placed piece can never be used again: one of its
+    access constraints has no cell left that is free and inside the walls
+    the search fixed. Access cells are constraints, not space — a candidate
+    may never cover one, but the room grows no box and keeps no gap for
+    them (they may overlap another group's cells); a cell inside the bounds
+    that is free stays free (later groups keep the clearance gap), and a
+    free cell outside the bounds may still join the room when a later group
+    grows the box — unless a fixed wall rules it out, which is what this
+    catches (the bedside sealed in by its own bed, a chest and the walls
+    the search fixed around them)."""
     occupied = set()
+    flat = []
     for g in placed:
         for p in g["pieces"]:
+            flat.append(p)
             x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
             occupied |= {(cx, cy) for cx in range(x, x + pw)
                          for cy in range(y, y + ph)}
-    for g in placed:
-        for p in g["pieces"]:
-            sides = fixed_rooms.use_sides(p, g["pieces"])
-            if not sides:
-                continue
-            x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
-            cells = []
-            for s in sides:
-                if s == "north":
-                    cells += [(cx, y - 1) for cx in range(x, x + pw)]
-                elif s == "south":
-                    cells += [(cx, y + ph) for cx in range(x, x + pw)]
-                elif s == "west":
-                    cells += [(x - 1, cy) for cy in range(y, y + ph)]
-                else:
-                    cells += [(x + pw, cy) for cy in range(y, y + ph)]
-            if not any(c not in occupied and not _beyond_walls(walls, *c)
-                       for c in cells):
-                return True
+    groups = {"groups": gdefs} if isinstance(gdefs, dict) else None
+    for c in fixed_rooms.access_constraints(flat, None, None, groups):
+        good = 0
+        for cc in c["cells"]:
+            cc = (cc[0], cc[1])
+            if cc not in occupied and not _beyond_walls(walls, *cc):
+                good += 1
+                if good >= (c.get("need") or 1):
+                    break
+        if good < (c.get("need") or 1):
+            return True
     return False
 
 
@@ -685,7 +682,7 @@ def _try_place(state, form, x, y, ctx, allow_growth=True):
                                  "h": h, "back": form["back"],
                                  "pieces": [dict(p, at=[p["at"][0] + x, p["at"][1] + y])
                                             for p in form["pieces"]]},)
-    if walls != state["walls"] and _boxes_a_piece(placed, walls):
+    if walls != state["walls"] and _boxes_a_piece(placed, walls, ctx["gdefs"]):
         return None
     return _state(placed, minx, miny, maxx, maxy, walls, ctx)
 
@@ -995,14 +992,20 @@ def _grown(room, gw, ge, gn, gs):
     return moved
 
 
-def _largest_clear(room, clearance):
-    """The largest clear rectangle that makes a legal filler at the
-    clearance: at least MIN_FILLER square, within FILLER_MAX (either
+def _largest_clear(room, clearance, gdefs=None):
+    """The clear rectangles that make a legal filler at the clearance, best
+    first: at least MIN_FILLER square, within FILLER_MAX (either
     orientation), its long side at most FILLER_ASPECT times its short, and
     centred — its distances to the west and east walls differ by at most 1,
-    and the same for north and south. Clear means no piece on it and a
-    clear cell to every wall. None when no such rectangle exists (a strip
-    along a wall does not count; nobody lays a 2x11 rug)."""
+    and the same for north and south. Clear means no piece on it and no
+    access constraint it would break (the filler counts as furniture: it
+    may cover a limited constraint's spare cells, but every constraint
+    keeps its need of free cells) and a clear cell to every wall. A
+    rectangle covering no constraint cell at all ranks ahead of a larger
+    one that covers spare cells (the open middle is floor nobody uses a
+    piece from); the caller tries them in order until a room check passes.
+    Empty when none exists (a strip along a wall does not count; nobody
+    lays a 2x11 rug)."""
     w, h = room["size"]
     hi, lo = FILLER_MAX[clearance]
     occupied = {(x, y) for x in range(w) for y in (0, h - 1)}
@@ -1011,7 +1014,9 @@ def _largest_clear(room, clearance):
         x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
         occupied |= {(cx, cy) for cx in range(x, x + pw)
                      for cy in range(y, y + ph)}
-    best = None
+    groups = {"groups": gdefs} if isinstance(gdefs, dict) else None
+    cons = fixed_rooms.access_constraints(room["pieces"], room, None, groups)
+    out = []
     for fw in range(MIN_FILLER, min(w - 2, hi) + 1):
         for fh in range(MIN_FILLER, min(h - 2, hi) + 1):
             if max(fw, fh) > hi or min(fw, fh) > lo \
@@ -1020,14 +1025,21 @@ def _largest_clear(room, clearance):
             # centring leaves at most two positions per axis
             for fx in {(w - fw) // 2, (w - fw + 1) // 2}:
                 for fy in {(h - fh) // 2, (h - fh + 1) // 2}:
-                    if any((cx, cy) in occupied
-                           for cx in range(fx, fx + fw)
-                           for cy in range(fy, fy + fh)):
+                    fill = {(cx, cy) for cx in range(fx, fx + fw)
+                            for cy in range(fy, fy + fh)}
+                    if any(c in occupied for c in fill):
                         continue
-                    key = (fw * fh, min(fw, fh))
-                    if best is None or key > best[0]:
-                        best = (key, {"at": [fx, fy], "size": [fw, fh]})
-    return None if best is None else best[1]
+                    spare = [cc for c in cons for cc in c["cells"]
+                             if (cc[0], cc[1]) in fill]
+                    if any(sum(1 for cc in c["cells"]
+                               if (cc[0], cc[1]) not in occupied
+                               and (cc[0], cc[1]) not in fill)
+                           < (c.get("need") or 1) for c in cons):
+                        continue
+                    out.append(((0 if not spare else 1, -fw * fh, -min(fw, fh)),
+                                {"at": [fx, fy], "size": [fw, fh]}))
+    out.sort(key=lambda e: e[0])
+    return [e[1] for e in out]
 
 
 def _open(cands, ctx):
@@ -1050,9 +1062,6 @@ def _open(cands, ctx):
                         if gx + gy == 0:
                             continue
                         grown = _grown(room, gw, gx - gw, gn, gy - gn)
-                        fill = _largest_clear(grown, ctx["clearance"])
-                        if fill is None:
-                            continue
                         area = grown["size"][0] * grown["size"][1]
                         # _grown derived the family-aware band already
                         band = grown["sizeBand"]
@@ -1071,10 +1080,17 @@ def _open(cands, ctx):
                             continue
                         grown["sizeBand"] = band
                         grown["style"] = "open"
-                        grown["filler"] = fill
-                        if fixed_rooms.check([grown], {"groups": ctx["gdefs"]}, None):
-                            continue
-                        out.append((_score(grown), ctx["rng"].random(), grown))
+                        # fillers in rank order until one passes the room
+                        # check (a filler may cover spare access cells, but
+                        # only the check knows if the room stays walkable)
+                        for fill in _largest_clear(grown, ctx["clearance"],
+                                                   ctx["gdefs"]):
+                            grown["filler"] = fill
+                            if fixed_rooms.check([grown], {"groups": ctx["gdefs"]}, None):
+                                continue
+                            out.append((_score(grown), ctx["rng"].random(),
+                                        grown))
+                            break
     return _dedup_cands(out)
 
 

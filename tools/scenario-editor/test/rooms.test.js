@@ -275,13 +275,14 @@ test("parseCells outlines the cells the checker's messages name", () => {
   const cells = R.parseCells(room, [
     "3 dead floor cell(s) (first at 2,0): more than 1 cells from every piece",
     "room 'bedroom.small.a.tight.flush': door cell west 1 blocked by a piece",
-    "room 'bedroom.small.a.tight.flush': piece 'sleep' at [0, 0] has no reached cell on its use sides",
+    "room 'bedroom.small.a.tight.flush': piece 'sleep' at [0, 0] of group 'sleep.bedside' has no free reached cell among its access cells [[3, 2], [4, 1]] (needs 1)",
     "room 'bedroom.small.a.tight.flush': filler at [1, 1] is off centre",
     "room 'bedroom.small.a.tight.flush': stretch x 2 runs through a piece",
     "room 'bedroom.small.a.tight.flush': 9 dead floor cell(s) (first at 9,9)",
   ]);
   const want = [[0, 0], [0, 1],          // the bed piece at 0,0, door cell west 1
                 [1, 1], [2, 1],          // the filler at 1,1
+                [3, 2], [4, 1],          // the named access cells
                 [2, 0], [2, 2]];         // dead floor at 2,0, the stretch column x 2
   const got = cells.map(c => c.join(",")).sort();
   assert.deepEqual(got, want.map(c => c.join(",")).sort());
@@ -399,4 +400,33 @@ test("layoutChanged sees any layout field differ", () => {
     change(b);
     assert.equal(R.layoutChanged(a, b), true);
   }
+});
+
+test("a ring cell's mark cycles none -> mandatory -> limited", () => {
+  assert.equal(R.cycleAccessState(undefined), "mandatory");
+  assert.equal(R.cycleAccessState("none"), "mandatory");
+  assert.equal(R.cycleAccessState("mandatory"), "limited");
+  assert.equal(R.cycleAccessState("limited"), "none");
+});
+
+test("marksFromAccess and accessFromMarks round-trip hand access entries", () => {
+  const access = [
+    {cells: [[1, 2]], need: 1, replaces: [0]},           // one cell: mandatory
+    {cells: [[0, 3], [1, 3]], need: 1, replaces: [0]},   // a choice: limited
+  ];
+  const marks = R.marksFromAccess(access);
+  assert.deepEqual(marks, {"1,2": "mandatory",
+                           "0,3": "limited", "1,3": "limited"});
+  const pieces = [{role: "sleep", size: [2, 2], at: [0, 0]}];
+  assert.deepEqual(R.accessFromMarks(marks, pieces), access);
+});
+
+test("accessFromMarks joins each mark to the piece it stands nearest", () => {
+  const pieces = [{role: "sleep", size: [2, 2], at: [0, 0]},
+                  {role: "seat", size: [1, 1], at: [3, 0]}];
+  assert.deepEqual(R.accessFromMarks({"2,1": "limited", "4,1": "mandatory"}, pieces), [
+    {cells: [[2, 1]], need: 1, replaces: [0]},   // leans on the bed
+    {cells: [[4, 1]], need: 1, replaces: [1]},   // leans on the seat
+  ]);
+  assert.deepEqual(R.accessFromMarks({}, pieces), []);
 });

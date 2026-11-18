@@ -416,7 +416,12 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .rm-gfields { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-size: 12px; }
 .rm-gfields label { display: flex; gap: 4px; align-items: center; color: var(--muted); }
 .rm-gfields input, .rm-gfields select { font: inherit; }
-.rm-gplan { image-rendering: pixelated; border: 1px solid var(--line); background: var(--bg); }
+.rm-gplan { image-rendering: pixelated; border: 1px solid var(--line); background: var(--bg);
+  cursor: pointer; }
+.rm-acclegend { display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); }
+.accchip { display: inline-block; width: 10px; height: 10px; border-radius: 2px; }
+.accchip.mandatory { background: #8e5bd8; }
+.accchip.limited { background: #2f6fd8; }
 .rm-gpieces { display: flex; flex-direction: column; gap: 6px; }
 .rm-gpieces table { border-collapse: collapse; font-size: 12px; }
 .rm-gpieces th { text-align: left; font-size: 10px; color: var(--muted); font-weight: normal;

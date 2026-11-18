@@ -1,109 +1,6 @@
 {
   "rooms": [
     {
-      "id": "closet.reach.a.roomy.flush",
-      "family": "closet",
-      "sizeBand": "reach",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        1,
-        2
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "utility",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "utility.storage.small.opt.closet",
-          "optional": false,
-          "back": "north"
-        }
-      ],
-      "doors": {
-        "north": [],
-        "east": [
-          1
-        ],
-        "south": [],
-        "west": []
-      },
-      "stretch": {
-        "x": [],
-        "y": []
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "closet.broom",
-      "description": "A reach-in, narrow closet, utility stand in the northwest corner."
-    },
-    {
-      "id": "closet.reach.a.tight.flush",
-      "family": "closet",
-      "sizeBand": "reach",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        2,
-        1
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "utility",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "utility.storage.small.opt.closet",
-          "optional": false,
-          "back": "north"
-        }
-      ],
-      "doors": {
-        "north": [
-          1
-        ],
-        "east": [],
-        "south": [],
-        "west": []
-      },
-      "stretch": {
-        "x": [],
-        "y": []
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "closet.broom",
-      "description": "A reach-in, narrow closet, utility stand in the northwest corner."
-    },
-    {
       "id": "closet.reach.b.roomy.flush",
       "family": "closet",
       "sizeBand": "reach",
@@ -130,7 +27,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "shelving.row.closet",
@@ -139,11 +36,11 @@
         }
       ],
       "doors": {
-        "north": [
+        "north": [],
+        "east": [],
+        "south": [
           0
         ],
-        "east": [],
-        "south": [],
         "west": []
       },
       "stretch": {
@@ -153,7 +50,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "closet.linen",
-      "description": "A reach-in, narrow closet, shelf in the northeast corner."
+      "description": "A reach-in, narrow closet, shelf in the northwest corner."
     },
     {
       "id": "closet.reach.b.tight.flush",
@@ -192,14 +89,14 @@
       "doors": {
         "north": [],
         "east": [],
-        "south": [],
+        "south": [
+          0
+        ],
         "west": []
       },
       "stretch": {
         "x": [],
-        "y": [
-          1
-        ]
+        "y": []
       },
       "outdoor": false,
       "symmetric": false,
@@ -207,7 +104,7 @@
       "description": "A reach-in, narrow closet, wardrobe in the northwest corner."
     },
     {
-      "id": "closet.reach.c.roomy.flush",
+      "id": "closet.reach.d.roomy.flush",
       "family": "closet",
       "sizeBand": "reach",
       "clearance": "roomy",
@@ -216,6 +113,165 @@
         "poor",
         "modest",
         "wealthy"
+      ],
+      "size": [
+        2,
+        1
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "utility.storage.small.opt.closet",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "east": [],
+        "south": [
+          1
+        ],
+        "west": []
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "closet.broom",
+      "description": "A reach-in, narrow closet, utility stand in the northeast corner."
+    },
+    {
+      "id": "closet.reach.d.tight.flush",
+      "family": "closet",
+      "sizeBand": "reach",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "shelving.row.closet",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "east": [],
+        "south": [
+          0
+        ],
+        "west": []
+      },
+      "stretch": {
+        "x": [
+          0,
+          1
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "closet.linen",
+      "description": "A reach-in closet, shelf in the northwest corner."
+    },
+    {
+      "id": "closet.reach.e.tight.flush",
+      "family": "closet",
+      "sizeBand": "reach",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        1,
+        1
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "utility.storage.small.opt.closet",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "east": [],
+        "south": [
+          0
+        ],
+        "west": []
+      },
+      "stretch": {
+        "x": [
+          0,
+          1
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "closet.broom",
+      "description": "A reach-in closet, utility stand in the northwest corner."
+    },
+    {
+      "id": "closet.reach.f.tight.flush",
+      "family": "closet",
+      "sizeBand": "reach",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
       ],
       "size": [
         2,
@@ -258,60 +314,9 @@
       "doors": {
         "north": [],
         "east": [],
-        "south": [],
-        "west": []
-      },
-      "stretch": {
-        "x": [],
-        "y": [
-          1
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "closet.pantry",
-      "description": "A reach-in, narrow closet, shelf in the northwest corner."
-    },
-    {
-      "id": "closet.reach.c.tight.flush",
-      "family": "closet",
-      "sizeBand": "reach",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        1,
-        2
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "shelving",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "shelving.row.closet",
-          "optional": false,
-          "back": "north"
-        }
-      ],
-      "doors": {
-        "north": [],
-        "east": [
-          1
+        "south": [
+          0
         ],
-        "south": [],
         "west": []
       },
       "stretch": {
@@ -320,62 +325,8 @@
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "closet.linen",
-      "description": "A reach-in, narrow closet, shelf in the northwest corner."
-    },
-    {
-      "id": "closet.reach.d.tight.flush",
-      "family": "closet",
-      "sizeBand": "reach",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        1,
-        1
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "shelving",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "shelving.row.closet",
-          "optional": false,
-          "back": "north"
-        }
-      ],
-      "doors": {
-        "north": [],
-        "east": [],
-        "south": [],
-        "west": []
-      },
-      "stretch": {
-        "x": [
-          0,
-          1
-        ],
-        "y": [
-          1
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
       "recipe": "closet.pantry",
-      "description": "A reach-in closet, shelf in the northwest corner."
+      "description": "A reach-in, narrow closet, shelf in the northwest corner."
     },
     {
       "id": "closet.walkin.a.roomy.flush",
