@@ -777,6 +777,16 @@
    "physical": "Seen from above at a steep three-quarter angle: a free-standing folding screen of three tall panels standing in a zigzag, each panel madder-red dyed linen in a thick mid-brown ash frame, dark iron hinges between them, the zigzag of the panel tops clearly visible.",
    "reviewed": true
   },
+  "decor.vase": {
+   "template": "Glazed earthenware urn [decor.vase]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "glazed earthenware"
+   },
+   "physical": "Top-down view straight down onto the open mouth of a large urn: a wide circle of dark brown glazed earthenware with a thick rim, a dark shadowed opening in the middle with a few dried stems and seed heads fanning out of it.",
+   "reviewed": true
+  },
   "desk.plain": {
    "template": "Beech clerk's table [desk.plain]",
    "tier": "modest",
@@ -796,6 +806,17 @@
     "top": "cherrywood"
    },
    "physical": "Top-down view of a broad writing desk: a reddish-brown cherrywood top with an inset chestnut tooled leather panel, an inkwell and quill, a row of pigeonholes along the top edge.",
+   "reviewed": true
+  },
+  "display.curio": {
+   "template": "Oak curio cabinet [display.curio]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "oak",
+    "pane": "leaded glass"
+   },
+   "physical": "Top-down view of a small square curio cabinet against the top wall: a dark golden-brown oak top with a carved border, a strip of green leaded glass along the bottom edge showing small trinkets, a bowl and a carved figure inside.",
    "reviewed": true
   },
   "display.pedestal": {

@@ -969,6 +969,16 @@
    "physical": "Seen from above at a steep three-quarter angle: a free-standing folding screen of three tall panels standing in a zigzag, each a thick honey varnished pine frame filled with black wool serge, brass hinges between them, the zigzag of the panel tops clearly visible.",
    "reviewed": true
   },
+  "decor.vase": {
+   "template": "Stoneware floor vase [decor.vase]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "stoneware"
+   },
+   "physical": "Top-down view straight down onto the open mouth of a large floor vase: a wide circle of deep green glazed stoneware with a thick rim, a dark shadowed opening in the middle with a few dried stems and seed heads fanning out of it.",
+   "reviewed": true
+  },
   "desk.plain": {
    "template": "Stained beech clerk's desk [desk.plain]",
    "tier": "modest",
@@ -1010,6 +1020,17 @@
     "pane": "pressed glass"
    },
    "physical": "Top-down view of a display case two cells wide: thin honey bentwood border around a clear pressed glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.curio": {
+   "template": "Varnished mahogany curio cabinet [display.curio]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished mahogany",
+    "pane": "bevelled glass"
+   },
+   "physical": "Top-down view of a small square curio cabinet against the top wall: a deep red varnished mahogany top with a moulded border, a strip of bevelled glass along the bottom edge showing small trinkets, a clock and a porcelain figure inside.",
    "reviewed": true
   },
   "display.mannequin": {
@@ -1248,6 +1269,17 @@
     "surround": "slate"
    },
    "physical": "Top-down view of a wall fireplace: a blue-grey slate hearth slab jutting from the top edge, a dark firebox against the back wall with a grey sheet steel grate of burning logs, a raised hearthstone along the bottom.",
+   "reviewed": true
+  },
+  "hearth.gas_fireplace": {
+   "template": "Pressed glass gas fireplace [hearth.gas_fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pane": "pressed glass",
+    "surround": "slate"
+   },
+   "physical": "Top-down view of a gas fireplace two cells wide against the top wall: a dark blue-grey slate surround along the top edge, a black firebox in front of it with a row of blue-and-orange gas flames over ceramic coals, a brass rail along the bottom edge.",
    "reviewed": true
   },
   "hearth.great_fireplace": {

@@ -826,6 +826,16 @@
    "physical": "Top-down view of the partition screen: three grey duralloy panels in a shallow zigzag line from left to right, grey polycarbonate between the hinges.",
    "reviewed": true
   },
+  "decor.vase": {
+   "template": "Polycarbonate display vase [decor.vase]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "polycarbonate"
+   },
+   "physical": "Top-down view straight down onto the open mouth of a large display vase: a wide circle of glossy deep violet tinted polycarbonate with a thin glowing teal rim, a dark opening in the middle with a few dried stems fanning out of it.",
+   "reviewed": true
+  },
   "desk.executive": {
    "template": "Electrochromic glass command desk [desk.executive]",
    "tier": "wealthy",
@@ -877,6 +887,17 @@
     "pane": "aluminium glass"
    },
    "physical": "Top-down view of a sealed display case two cells wide: thin blue-grey anodised alloy border around a clear aluminium glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.curio": {
+   "template": "Polished chromalloy showcase cabinet [display.curio]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "polished chromalloy",
+    "pane": "electrochromic glass"
+   },
+   "physical": "Top-down view of a small square showcase cabinet against the top wall: a dark gunmetal chromalloy top with a thin blue light strip, a strip of blue-tinted glass along the bottom edge showing small alien artefacts inside.",
    "reviewed": true
   },
   "display.mannequin": {

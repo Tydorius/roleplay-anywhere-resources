@@ -1039,6 +1039,16 @@
    "physical": "Top-down view of the folding screen: three light brown beech-effect laminate panels in a shallow zigzag line from left to right, charcoal microfibre between the hinges.",
    "reviewed": true
   },
+  "decor.vase": {
+   "template": "Glazed tile floor vase [decor.vase]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "glazed tile"
+   },
+   "physical": "Top-down view straight down onto the open mouth of a large floor vase: a wide circle of cobalt blue glazed tile mosaic with a thick rim, a dark shadowed opening in the middle with a few dried pampas stems fanning out of it.",
+   "reviewed": true
+  },
   "desk.executive": {
    "template": "Birch plywood executive desk [desk.executive]",
    "tier": "wealthy",
@@ -1090,6 +1100,17 @@
     "pane": "frosted glass"
    },
    "physical": "Top-down view of a display case two cells wide: thin chrome-plated steel border around a clear frosted glass top, small items visible inside on dark cloth, a lock plate on the top edge (the keeper's side).",
+   "reviewed": true
+  },
+  "display.curio": {
+   "template": "Solid oak curio cabinet [display.curio]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "solid oak",
+    "pane": "smoked glass"
+   },
+   "physical": "Top-down view of a small square curio cabinet against the top wall: a dark honey oak top with a plain border, a strip of bronze smoked glass along the bottom edge showing small collectibles, a model car and a figurine inside.",
    "reviewed": true
   },
   "display.mannequin": {
@@ -1328,6 +1349,17 @@
    "physical": "Top-down view of a weight bench: a narrow white melamine padded bench, a powder-coated steel rack at the top with a barbell laid across it, weight plates at both ends of the bar.",
    "reviewed": true
   },
+  "hearth.electric_fireplace": {
+   "template": "Frosted glass electric fireplace [hearth.electric_fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "beads": "frosted glass",
+    "frame": "powder-coated steel"
+   },
+   "physical": "Top-down view of an electric fireplace two cells wide against the top wall: a slim matte black steel unit along the top edge, a long trough of amber-tinted frosted glass beads in front of it lit by orange LED flames, a dark vent line along the bottom edge.",
+   "reviewed": true
+  },
   "hearth.fire_barrel": {
    "template": "Galvanised steel fire barrel [hearth.fire_barrel]",
    "tier": "poor",
@@ -1347,6 +1379,17 @@
     "surround": "cultured stone"
    },
    "physical": "Top-down view of a wall fireplace: a beige cultured stone hearth slab jutting from the top edge, a dark firebox against the back wall with a matt grey aluminium grate of burning logs, a raised hearthstone along the bottom.",
+   "reviewed": true
+  },
+  "hearth.gas_fireplace": {
+   "template": "Float glass gas fireplace [hearth.gas_fireplace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "pane": "float glass",
+    "surround": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a gas fireplace two cells wide against the top wall: a dark smoky chrome-plated steel surround along the top edge, a black firebox in front of it with a row of blue-and-orange gas flames over dark stones, a thin brushed steel trim along the bottom edge.",
    "reviewed": true
   },
   "hearth.great_fireplace": {
