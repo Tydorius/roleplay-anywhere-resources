@@ -173,6 +173,29 @@ The dialog's steps:
   as a new workspace; the old one stays untouched. A framed world keeps its frame: the plan
   carries it, so the re-roll never asks the questionnaire again.
 
+## Rooms tab
+
+The third tab (it stays hidden until the generator's room library ships) browses that library
+read-only — nothing behind it writes a file.
+
+- **Browse:** pick a family (bedroom, bedroom.master, washroom), narrow the list by size band,
+  clearance, style, wealth tier or a search over ids and descriptions; a red `!` marks a room
+  the library's own checker flags, and the arrow keys walk the list.
+- **Preview:** the plan canvas draws the floor grid, pieces in the role colours with a thicker
+  line on the side that faces its wall (the room sheets' own palette), thin group outlines, the
+  open style's hatched filler, green door marks and dashed stretch lines. **↺ ↻ Turn** and
+  **Mirror** re-fetch the room through the generator's own rotate, preview only. Hover a piece
+  for its role, group, size and object.
+- **Look:** switch from Plan colours to an art band (medieval, modern…) to see the sprite the
+  world generator would place for each piece, turned so its back faces the wall; a piece with
+  no sprite in the band stays a colour block.
+- **Details** on the right: id, recipe, size, clearance, style, wealth, sleeps, symmetric,
+  outdoor, the description and the checker's messages. Rooms of the same recipe sit in a strip
+  under the plan, one for each clearance and style.
+- **Groups**, beside the family picker, swaps the plan for the family's recipes: every group as
+  a small role-coloured plan with its kind (anchor, required, optional) and count, plus the
+  luxury pool with its size bands and kinds.
+
 ## What it does now
 
 - **Open** a scenario zip as a workspace (**Open zip…**), or copy the game's current New Game into

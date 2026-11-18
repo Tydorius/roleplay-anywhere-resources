@@ -34,6 +34,20 @@ def size_band(lib, interior):
     return "large"
 
 
+def purpose_for_family(lib, family):
+    """The purpose the world generator furnishes a family's rooms with
+    ("bedroom" -> "bedroom", "bedroom.master" -> "master_bedroom", the room
+    P3 asks for): the purpose named like the family, else the one whose
+    underscored words reversed name it (library.json maps purpose ->
+    family; this is that map walked the other way). None when no purpose
+    maps to the family."""
+    vocab = lib.vocab.get("purposes") or {}
+    if family in vocab:
+        return family
+    flipped = "_".join(reversed(str(family).split(".")))
+    return flipped if flipped in vocab else None
+
+
 def pick_layout(lib, purpose, interior, rng):
     """A layout of the purpose's family that fits the interior: one whose
     min-max range holds it, else the largest whose minimum fits (its grow

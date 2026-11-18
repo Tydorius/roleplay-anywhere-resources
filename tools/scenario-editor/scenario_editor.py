@@ -35,6 +35,7 @@ import image_gallery as ig  # noqa: E402
 
 import scenario_checks  # noqa: E402
 import worldgen_editor as wg  # noqa: E402
+import rooms_editor as rmed  # noqa: E402
 import assistant_editor as at  # noqa: E402
 import rebuild_editor as rb  # noqa: E402
 
@@ -50,6 +51,7 @@ STATIC = {"/": ("editor.html", "text/html; charset=utf-8"),
           "/refs.js": ("refs.js", "text/javascript; charset=utf-8"),
           "/refsui.js": ("refsui.js", "text/javascript; charset=utf-8"),
           "/worldgen.js": ("worldgen.js", "text/javascript; charset=utf-8"),
+          "/rooms.js": ("rooms.js", "text/javascript; charset=utf-8"),
           "/design.js": ("design.js", "text/javascript; charset=utf-8"),
           "/assistant_tools.js": ("assistant_tools.js", "text/javascript; charset=utf-8"),
           "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
@@ -120,6 +122,25 @@ class Handler(ig.Handler):
                 return self.send(200, {"drafts": wg.list_drafts()})
             if u.path == "/api/worldgen/draft":
                 return self.send(200, {"draft": wg.get_draft((q.get("id") or [""])[0])})
+            if u.path == "/api/rooms/meta":
+                return self.send(200, rmed.meta())
+            if u.path == "/api/rooms/family":
+                return self.send(200, rmed.family((q.get("family") or [""])[0]))
+            if u.path == "/api/rooms/room":
+                return self.send(200, rmed.room((q.get("id") or [""])[0],
+                                                (q.get("turn") or ["0"])[0],
+                                                (q.get("mirror") or ["0"])[0]))
+            if u.path == "/api/rooms/groups":
+                return self.send(200, rmed.groups((q.get("family") or [""])[0]))
+            if u.path == "/api/rooms/look":
+                return self.send(200, rmed.look((q.get("id") or [""])[0],
+                                                (q.get("band") or [""])[0],
+                                                (q.get("turn") or ["0"])[0],
+                                                (q.get("mirror") or ["0"])[0]))
+            if u.path == "/api/rooms/sprite":
+                data, ctype = rmed.sprite((q.get("band") or [""])[0],
+                                          (q.get("object") or [""])[0])
+                return self.send(200, data, ctype)
             if u.path == "/api/assistant/meta":
                 return self.send(200, at.meta())
             if u.path == "/api/assistant/job":

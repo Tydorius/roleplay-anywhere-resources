@@ -17,6 +17,10 @@ from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 GEN = os.path.dirname(HERE)
+sys.path.insert(0, GEN)
+
+from worldgen.room_palette import ROLES, DEFAULT_ROLE, color as _color  # noqa: E402
+
 
 CELL = 12               # pixels per room cell
 PAD = 6                 # breathing room around a plan
@@ -27,37 +31,6 @@ BORDER = (70, 70, 70)
 FLOOR = (252, 250, 246)
 FILLER = (150, 150, 150)
 DOOR = (46, 125, 50)
-ROLES = (  # specific prefixes first: _color takes the first match
-    ("sleep", (196, 106, 84)),
-    ("bedside", (222, 158, 138)),
-    ("storage", (139, 109, 59)),
-    ("wash", (74, 127, 200)),
-    ("seat.lounge", (233, 138, 108)),
-    ("seat.long", (172, 82, 60)),
-    ("seat", (184, 134, 11)),
-    ("table.dining", (108, 108, 190)),
-    ("table", (163, 117, 61)),
-    ("desk", (163, 117, 61)),
-    ("counter", (163, 117, 61)),
-    ("light", (230, 195, 76)),
-    ("hearth", (230, 57, 70)),
-    ("heat", (211, 84, 0)),
-    ("fuel", (211, 84, 0)),
-    ("coat", (120, 144, 156)),
-    ("waste", (120, 144, 156)),
-    ("decor.feature", (196, 96, 168)),
-    ("decor", (156, 127, 176)),
-    ("display", (26, 166, 157)),
-    ("books", (108, 165, 82)),
-)
-DEFAULT_ROLE = (158, 158, 158)
-
-
-def _color(role):
-    for prefix, rgb in ROLES:
-        if role == prefix or role.startswith(prefix + "."):
-            return rgb
-    return DEFAULT_ROLE
 
 
 def _darker(rgb, f=0.55):

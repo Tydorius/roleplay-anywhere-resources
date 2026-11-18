@@ -329,7 +329,8 @@ function setTab(t, find) {
   if (t === S.tab) return;
   S.tab = t;
   $("tabMap").classList.toggle("on", t === "map"); $("tabImages").classList.toggle("on", t === "images");
-  $("mapView").hidden = t !== "map"; $("images").hidden = t !== "images";
+  $("tabRooms").classList.toggle("on", t === "rooms");
+  $("mapView").hidden = t !== "map"; $("images").hidden = t !== "images"; $("roomsView").hidden = t !== "rooms";
   if (t === "images") showImages(find); else { $("images").src = "about:blank"; refreshMedia().catch(() => {}); draw(); }
 }
 $("tabMap").onclick = () => setTab("map");
