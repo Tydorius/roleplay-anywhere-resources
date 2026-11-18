@@ -549,6 +549,8 @@ def convert_all(layouts, hand=None, reserved=()):
         hand_groups = keep.get("groups") or []
         hand_recipes = keep.get("recipes") or {}
         hand_entries = keep.get("entries") or {}
+        own_hand = {g["id"] for g in hand_groups
+                    if isinstance(g, dict) and g.get("id")}   # not yet claimed
         groups_out, recipes_out = [], []
         for layout in sorted(layouts[family], key=lambda l: str(l.get("id"))):
             lid = layout.get("id")
@@ -561,21 +563,26 @@ def convert_all(layouts, hand=None, reserved=()):
                     ids.append(seen[key])
                     continue
                 base = f"{g.pieces[0]['role']}.{_suffix(g)}"
-                if base in fixed:
-                    # the id belongs to a hand group (or the luxury file):
-                    # that one stands, this converted one is dropped
-                    notes.append(f"{lid}: converted group {base!r} shares "
-                                 f"a hand group's id; dropped")
-                    seen[key] = base
-                    ids.append(base)
-                    continue
+                # Allocate the id as if this family's unclaimed hand groups
+                # were not there, so every converted id comes out as it did
+                # before the hand edit; an id that lands on one of them
+                # belongs to that hand group: it stands, this converted one
+                # is dropped (and nothing after it shifts).
+                blocked = lambda i: i in taken and i not in own_hand
                 gid = base
-                if gid in taken:
+                if blocked(gid):
                     gid = f"{base}.{family}"
                     extra = 0
-                    while gid in taken:
+                    while blocked(gid):
                         extra += 1
                         gid = f"{base}.{family}{extra}"
+                if gid in own_hand:
+                    own_hand.discard(gid)
+                    notes.append(f"{lid}: converted group {gid!r} shares "
+                                 f"a hand group's id; dropped")
+                    seen[key] = gid
+                    ids.append(gid)
+                    continue
                 seen[key] = gid
                 taken.add(gid)
                 ids.append(gid)

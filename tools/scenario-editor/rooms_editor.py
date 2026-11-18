@@ -473,7 +473,12 @@ def _with_group(req):
     if not isinstance(gid, str) or not gid:
         raise ValueError("the group needs an id")
     data = room_groups.load(_groups_dir())
-    data["groups"][gid] = _clean_entry(group_)
+    old = data["groups"].get(gid) or {}
+    entry = _clean_entry(group_)
+    # name the file in the checker's messages: the file it lives in, else
+    # the one the request saves it to
+    entry["_file"] = old.get("_file") or req.get("file") or "new group"
+    data["groups"][gid] = entry
     for e in _pool_entries(req.get("pool")):
         fam = e["family"]
         entries = [p for p in (data["pools"].get(fam) or [])

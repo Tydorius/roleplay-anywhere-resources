@@ -991,11 +991,12 @@
   /** A small role-coloured plan on a fresh canvas (siblings, group cards).
    * A group's own wall shows too: "back" is the thick north edge of the
    * whole group, "corner" the north and west edges. */
-  function drawMini(cvs, room) {
+  function drawMini(cvs, room, box) {
     const pieces = (room.pieces || []).map(rectOf).filter(Boolean);
     const w = Math.max(1, ...pieces.map(r => r[0] + r[2]));
     const h = Math.max(1, ...pieces.map(r => r[1] + r[3]));
-    const cell = Math.min(12, Math.max(3, Math.floor(Math.min(116 / w, 64 / h))));
+    const [bw, bh, cmax] = box || [116, 64, 12];   // fit box and largest cell
+    const cell = Math.min(cmax, Math.max(3, Math.floor(Math.min(bw / w, bh / h))));
     const dpr = window.devicePixelRatio || 1;
     cvs.width = Math.round(w * cell * dpr); cvs.height = Math.round(h * cell * dpr);
     cvs.style.width = w * cell + "px"; cvs.style.height = h * cell + "px";
@@ -1315,7 +1316,7 @@
 
     const draw = () => {
       const cvs = dlg.querySelector(".rm-gplan");
-      if (cvs) drawMini(cvs, {pieces: st.group.pieces || [], wall: st.group.wall});
+      if (cvs) drawMini(cvs, {pieces: st.group.pieces || [], wall: st.group.wall}, [240, 160, 32]);
     };
 
     const collectPool = root => {
@@ -1809,6 +1810,7 @@
    * and the file the group lives in. Resolves with the picked group id. */
   function pickGroupDialog(sections) {
     const dlg = $("dlg");
+    let finish = () => {};   // set once the promise exists; the row buttons call it
     const row = r => `<button type="button" class="rm-pickrow" data-g="${esc(r.gid)}"><canvas></canvas>`
       + `<span class="gname">${esc(r.gid)}</span><span class="note">${esc(r.file || "")}</span></button>`;
     const render = q => {
@@ -1830,7 +1832,7 @@
     const search = dlg.querySelector(".rm-gsearch");
     return new Promise(resolve => {
       let done = false;
-      const finish = v => { if (done) return; done = true; if (dlg.open) dlg.close(); resolve(v); };
+      finish = v => { if (done) return; done = true; if (dlg.open) dlg.close(); resolve(v); };
       search.oninput = () => render(search.value);
       dlg.querySelector('[data-btn="cancel"]').onclick = () => finish(null);
       dlg.querySelector("form").onsubmit = ev => { ev.preventDefault(); finish(null); };

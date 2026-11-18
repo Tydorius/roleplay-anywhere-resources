@@ -600,6 +600,41 @@ class TestHandConversion(unittest.TestCase):
                         after = f.read()
                     self.assertEqual(before, after)
 
+    def test_a_hand_edit_of_a_suffixed_id_shifts_no_other_id(self):
+        # A hand edit of a group whose id carries a family suffix and
+        # counter: the converter must drop its converted twin, not hand the
+        # twin the next counter and push every later id along (recipes and
+        # stored rooms name groups by id).
+        gid = "light.small.single.bedroom.master"
+        with tempfile.TemporaryDirectory() as d:
+            shutil.copyfile(os.path.join(GEN, "library", "library.json"),
+                            os.path.join(d, "library.json"))
+            shutil.copytree(os.path.join(GEN, "library", "layouts"),
+                            os.path.join(d, "layouts"))
+            shutil.copytree(os.path.join(GEN, "library", "groups"),
+                            os.path.join(d, "groups"))
+            path = os.path.join(d, "groups", "bedroom.master.json")
+            with open(path, encoding="utf-8") as f:
+                before = json.load(f)
+            edited = json.loads(json.dumps(before))
+            g = next(g for g in edited["groups"] if g["id"] == gid)
+            g["pieces"].append({"role": "light.small", "size": [1, 1],
+                                "at": [1, 0]})
+            g["source"] = "hand"
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(edited, f, indent=2)
+            self.run_converter(d)
+            with open(path, encoding="utf-8") as f:
+                after = json.load(f)
+            ids = lambda doc: sorted(x["id"] for x in doc["groups"])
+            self.assertEqual(ids(before), ids(after))
+            self.assertIn(g, after["groups"])
+            self.assertEqual(before["recipes"], after["recipes"])
+            first = after
+            self.run_converter(d)
+            with open(path, encoding="utf-8") as f:
+                self.assertEqual(first, json.load(f))
+
 
 if __name__ == "__main__":
     unittest.main()
