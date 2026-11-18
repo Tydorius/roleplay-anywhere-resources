@@ -330,7 +330,7 @@ function setTab(t, find) {
   S.tab = t;
   $("tabMap").classList.toggle("on", t === "map"); $("tabImages").classList.toggle("on", t === "images");
   $("mapView").hidden = t !== "map"; $("images").hidden = t !== "images";
-  if (t === "images") showImages(find); else { $("images").src = "about:blank"; refreshMedia().catch(() => {}); draw(); }
+  if (t === "images") showImages(find); else { $("images").src = "about:blank"; if (S.fitPending) fit(); refreshMedia().catch(() => {}); draw(); }
 }
 $("tabMap").onclick = () => setTab("map");
 $("tabImages").onclick = () => setTab("images");

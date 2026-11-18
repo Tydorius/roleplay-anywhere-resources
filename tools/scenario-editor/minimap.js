@@ -74,6 +74,7 @@
       const c = this.canvas, dpr = globalThis.devicePixelRatio || 1;
       const w = c.clientWidth, h = c.clientHeight;
       const bw = Math.round(w * dpr), bh = Math.round(h * dpr);
+      if (!bw || !bh) return;   // hidden (another tab is showing): nothing to draw into
       if (c.width !== bw || c.height !== bh) { c.width = bw; c.height = bh; this.dirty = true; }
       const ctx = c.getContext("2d");
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
