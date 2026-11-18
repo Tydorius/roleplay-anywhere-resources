@@ -6,6 +6,10 @@ means no rooms have been generated yet.
 
   load(path=None)                      -> [room, ...], each carrying "_file"
   check(rooms, groups=None, lib=None)  -> [error, ...], plain sentences
+  active(rooms)                        -> the rooms with "retired" not set
+  derive(room, groups=None, lib=None)  -> the room with size, sizeBand,
+                                         sleeps, doors and stretch worked
+                                         out from its pieces
   use_sides(piece, siblings)           -> the sides a piece is used from
   dead_cells(room)                     -> the free cells too far from every
                                          piece to be walked on
@@ -14,6 +18,13 @@ means no rooms have been generated yet.
   stretch_ok(room, axis, line, groups=None, lib=None) -> an error string, or
                                           None when an empty line inserted
                                           there keeps the room valid
+
+Three keys mark hand work on a room: "retired" (true: the room stays in its
+file so its id is never reused, but world generation and the assembler skip
+it — ``active`` drops it), "edited" (the fields a person set by hand, from
+EDITABLE_FIELDS, which the generator keeps on regeneration) and "source"
+("hand": a room a person made or re-laid out, which the generator never
+changes or removes).
 """
 import copy
 import json
@@ -44,6 +55,9 @@ TURN = {"north": "east", "east": "south", "south": "west", "west": "north"}
 FLIP_EW = {"east": "west", "west": "east"}
 FLIP_NS = {"north": "south", "south": "north"}
 MAX_SIDE = 40
+# the fields a person may set by hand on a stored room (its "edited" list);
+# everything else about a room is worked out from its pieces or its id
+EDITABLE_FIELDS = ("wealth", "description", "symmetric", "retired")
 
 
 def load(path=None):
@@ -465,6 +479,15 @@ def _check_room(room, groups, lib, err, check_band=True):
     for key in ("outdoor", "symmetric"):
         if not isinstance(room.get(key), bool):
             err(f"{key} must be true or false")
+    if room.get("retired") is not None and not isinstance(room.get("retired"), bool):
+        err("retired must be true or false")
+    edited = room.get("edited")
+    if edited is not None and (not isinstance(edited, list)
+            or any(not isinstance(f, str) or f not in EDITABLE_FIELDS
+                   for f in edited)):
+        err(f"edited must list fields among {'/'.join(EDITABLE_FIELDS)}")
+    if room.get("source") is not None and not isinstance(room.get("source"), str):
+        err("source must be a name")
     if not isinstance(room.get("recipe"), str) or not room["recipe"]:
         err("recipe must name the source recipe")
     if not isinstance(room.get("description"), str) or not room["description"].strip():
@@ -785,6 +808,55 @@ def check(rooms, groups=None, lib=None):
             else:
                 seen[rid] = file
     return errors
+
+
+# ---------------------------------------------------------------- hand work
+
+def active(rooms):
+    """The rooms a world may place: ``rooms`` without the retired ones (a
+    retired room stays in its file so its id is never reused, but world
+    generation and the assembler skip it)."""
+    return [r for r in (rooms or [])
+            if not (isinstance(r, dict) and r.get("retired"))]
+
+
+def derive(room, groups=None, lib=None, stretch=True):
+    """The room with every worked-out field — size, sizeBand, sleeps, doors
+    and stretch — recomputed from its pieces: the one derivation the composer,
+    the generator and the editor share, so none of them can drift from the
+    others. The room's own ``size`` stands when it is valid (growing and
+    shrinking a room is the editor's to do); a room without one is sized to
+    its pieces' span from the origin. ``stretch`` is off on the composer's
+    mid-search path, where the lines are finalized later."""
+    r = copy.deepcopy({k: v for k, v in room.items() if not k.startswith("_")})
+    rects = [t for t in (_rect(p) for p in r.get("pieces") or []) if t]
+    if _int_pair(r.get("size"), 1):
+        w, h = r["size"]
+    elif rects:
+        w = max(x + rw for x, _y, rw, _rh in rects)
+        h = max(y + rh for _x, y, _rw, rh in rects)
+        r["size"] = [w, h]
+    else:
+        return r
+    occupied = {c for t in rects for c in _cells(t)}
+    r["doors"] = {"north": [x for x in range(w) if (x, 0) not in occupied],
+                  "south": [x for x in range(w) if (x, h - 1) not in occupied],
+                  "west": [y for y in range(h) if (0, y) not in occupied],
+                  "east": [y for y in range(h) if (w - 1, y) not in occupied]}
+    r["sleeps"] = {"singles": sum(1 for p in r["pieces"]
+                                  if isinstance(p, dict)
+                                  and p.get("role") in SLEEP_SINGLE_ROLES),
+                   "couples": sum(1 for p in r["pieces"]
+                                  if isinstance(p, dict)
+                                  and p.get("role") == SLEEP_COUPLE_ROLE)}
+    r["sizeBand"] = band_for_area(w * h, _bands(lib))
+    if stretch:
+        r["stretch"] = {
+            "x": [c for c in range(w + 1)
+                  if stretch_ok(r, "x", c, groups, lib) is None],
+            "y": [c for c in range(h + 1)
+                  if stretch_ok(r, "y", c, groups, lib) is None]}
+    return r
 
 
 # ------------------------------------------------------------------- stretch

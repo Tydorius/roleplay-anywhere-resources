@@ -370,6 +370,12 @@ style the composer found a clear layout for.
   hand-edited afterwards. `python -m worldgen library rooms` checks them; the rules above
   are what it enforces. `worldgen.fixed_rooms.rotate` turns a stored room to any side —
   four quarter turns return it unchanged.
+- **Hand work:** a room may carry `"source": "hand"` (a person made or re-laid it out),
+  `"edited": [...]` (the fields of `wealth`, `description`, `symmetric`, `retired` a person
+  set, kept on regeneration) and `"retired": true` (out of use but kept in the file, so its
+  id's letter is never reused). Regenerating a family keeps a hand or retired room exactly as
+  it stands and drops any generated room equal to it after a turn or mirror; world generation
+  and the assembler skip retired rooms (`worldgen.fixed_rooms.active`).
 
 ## Purposes: `purposes.json`
 

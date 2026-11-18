@@ -1,7 +1,9 @@
 """The fixed rooms: a hand-made room checks clean, every check catches its
-own hand-broken copy, the use-side table matches the design, turning four
-times returns the same room while every turn and mirror still checks, and
-the shipped rooms folder loads clean."""
+own hand-broken copy, the hand-work fields (retired, edited, source) check
+by their own rules and active() drops the retired, derive() reproduces the
+worked-out fields of every shipped room, the use-side table matches the
+design, turning four times returns the same room while every turn and
+mirror still checks, and the shipped rooms folder loads clean."""
 import json
 import os
 import tempfile
@@ -355,6 +357,108 @@ class TestChecker(unittest.TestCase):
         self.assertEqual(self.errors(room), [])
         room["pieces"].pop()
         self.assertTrue(any("flagged symmetric" in e for e in self.errors(room)))
+
+
+class TestHandFields(unittest.TestCase):
+    """The hand-work fields: retired, edited and source are checked by their
+    own rules (the editable fields are wealth, description, symmetric and
+    retired), and active() is the rooms a world may place."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+        cls.data = RG.load()
+
+    def base(self, **over):
+        """The TestChecker bedroom again: the same 5x3 room, so the hand-work
+        rules are tested on a room that checks clean without them."""
+        room = {
+            "id": "bedroom.hand.a", "family": "bedroom", "sizeBand": "small",
+            "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [5, 3],
+            "sleeps": {"singles": 1, "couples": 0},
+            "pieces": [
+                piece("sleep", [1, 2], [0, 0], "sleep.bedside", "north"),
+                piece("bedside", [1, 1], [1, 1], "sleep.bedside"),
+                piece("storage.big", [1, 2], [4, 0], "storage.big.single",
+                      "east"),
+            ],
+            "doors": {"north": [2, 3], "south": [0, 1, 2, 3, 4],
+                      "west": [2], "east": [2]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.small.a",
+            "description": "A hand-made room the tests break on purpose.",
+        }
+        room.update(over)
+        return room
+
+    def errors(self, room):
+        return FR.check([room], self.data, self.lib)
+
+    def test_retired_edited_and_source_are_accepted(self):
+        room = self.base(retired=True, source="hand",
+                         edited=["wealth", "description", "symmetric",
+                                 "retired"])
+        room["wealth"] = ["modest"]
+        room["description"] = "A hand-made room taken out of use."
+        self.assertEqual(self.errors(room), [])
+
+    def test_edited_must_list_editable_fields(self):
+        self.assertTrue(any("edited must list fields among" in e
+                            for e in self.errors(self.base(edited=["size"]))))
+
+    def test_retired_must_be_true_or_false(self):
+        self.assertTrue(any("retired must be true or false" in e
+                            for e in self.errors(self.base(retired="yes"))))
+
+    def test_active_drops_the_retired_rooms(self):
+        up = self.base()
+        down = self.base(id="bedroom.hand.b", retired=True)
+        back = self.base(id="bedroom.hand.c", retired=False)
+        self.assertEqual([r["id"] for r in FR.active([up, down, back])],
+                         ["bedroom.hand.a", "bedroom.hand.c"])
+        self.assertEqual(FR.active([]), [])
+        self.assertEqual(FR.active(None), [])
+
+
+class TestDerive(unittest.TestCase):
+    """derive(): the one derivation of the worked-out fields — size, sizeBand,
+    sleeps, doors and stretch recomputed from the pieces, matching every
+    shipped room (whose own size stands: a room's floor may run past its
+    pieces' span)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+        cls.data = RG.load()
+
+    def test_derive_reproduces_every_shipped_room(self):
+        rooms = FR.load()
+        self.assertGreater(len(rooms), 0)
+        for room in rooms:
+            with self.subTest(room=room["id"]):
+                bare = {k: v for k, v in room.items()
+                        if k not in ("sizeBand", "sleeps", "doors", "stretch")}
+                derived = FR.derive(bare, self.data, self.lib)
+                for field in ("size", "sizeBand", "sleeps", "doors",
+                              "stretch"):
+                    self.assertEqual(derived[field], room[field], field)
+
+    def test_a_room_without_a_size_is_sized_to_its_pieces(self):
+        room = FR.derive({
+            "id": "bedroom.hand.bare", "family": "bedroom", "sizeBand": "tiny",
+            "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "pieces": [
+                piece("sleep.couple", [2, 1], [0, 0],
+                      "sleep.couple.bedside2", "north"),
+                piece("bedside", [1, 1], [2, 1], "sleep.couple.bedside2"),
+            ],
+        }, self.data, self.lib)
+        self.assertEqual(room["size"], [3, 2])
+        self.assertEqual(room["sizeBand"], "tiny")
+        self.assertEqual(room["sleeps"], {"singles": 0, "couples": 1})
+        self.assertEqual(room["doors"], {"north": [2], "south": [0, 1],
+                                         "west": [1], "east": [0]})
 
 
 class TestTurning(unittest.TestCase):

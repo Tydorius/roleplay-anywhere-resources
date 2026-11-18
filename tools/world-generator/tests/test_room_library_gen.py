@@ -8,12 +8,18 @@ piece and within the grand area ratio of its roomy sibling, every open
 room's filler stays off every edge and holds its clearance cap, the
 two-to-one aspect and the centre, no room wastes more than one line along
 a wall, the generator comes back the same for the same seed, and ids are
-unique and follow the family.band.letter.clearance.style pattern."""
+unique and follow the family.band.letter.clearance.style pattern. Hand
+work in a temp copy of the files survives regeneration: a hand room is
+kept as it stands with its letter taken, its generated duplicate dropped,
+a surviving room's edited description kept, and a second run changes
+nothing."""
 import importlib.util
 import json
 import math
 import os
 import re
+import shutil
+import tempfile
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -282,6 +288,99 @@ class TestGenerator(unittest.TestCase):
         self.assertEqual(json.dumps(rooms, sort_keys=True),
                          json.dumps(again, sort_keys=True))
         self.assertEqual(drops, drops_again)
+
+
+class TestHandRooms(unittest.TestCase):
+    """Hand work in a temp copy of the shipped rooms: a "source": "hand"
+    room survives a regeneration unchanged with its id's letter taken, a
+    generated room equal to it after any turn or mirror is dropped in its
+    favour, a generated room whose id survives keeps the fields in its
+    "edited" list, and regenerating the generated files changes nothing."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.rooms_dir = os.path.join(tmp.name, "rooms")
+        os.makedirs(self.rooms_dir)
+        for fam in FAMILIES:
+            shutil.copyfile(
+                os.path.join(GEN, "library", "rooms", f"{fam}.json"),
+                os.path.join(self.rooms_dir, f"{fam}.json"))
+
+    def shipped(self, fam):
+        with open(os.path.join(self.rooms_dir, f"{fam}.json"),
+                  encoding="utf-8") as fh:
+            return json.load(fh)["rooms"]
+
+    def write(self, fam, rooms):
+        with open(os.path.join(self.rooms_dir, f"{fam}.json"), "w",
+                  encoding="utf-8", newline="\n") as fh:
+            json.dump({"rooms": rooms}, fh, indent=2, ensure_ascii=False)
+            fh.write("\n")
+
+    def hand_copy(self, rooms):
+        """The family's first shipped room as a hand room under a free letter
+        of its own band, clearance and style."""
+        hand = json.loads(json.dumps(rooms[0]))
+        bits = hand["id"].split(".")
+        bits[2] = "z"
+        hand["id"] = ".".join(bits)
+        hand["source"] = "hand"
+        hand["description"] = "A hand-made room."
+        return hand
+
+    def test_a_hand_room_survives_unchanged_and_keeps_its_letter(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        by_id = {r["id"]: r for r in out["bedroom"]}
+        self.assertIn(hand["id"], by_id)
+        self.assertEqual(by_id[hand["id"]], hand)
+        group = (hand["sizeBand"], hand["clearance"], hand["style"])
+        zs = [r for r in out["bedroom"]
+              if (r["sizeBand"], r["clearance"], r["style"]) == group
+              and r["id"].split(".")[2] == "z"]
+        self.assertEqual(len(zs), 1, "another room took the hand room's letter")
+
+    def test_a_generated_duplicate_of_a_hand_room_is_dropped(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        shape = generate_rooms.canonical(hand)
+        alike = [r["id"] for r in out["bedroom"]
+                 if generate_rooms.canonical(r) == shape]
+        self.assertEqual(alike, [hand["id"]])
+
+    def test_a_surviving_room_keeps_its_edited_description(self):
+        rooms = self.shipped("bedroom")
+        target = json.loads(json.dumps(rooms[0]))
+        target["edited"] = ["description"]
+        target["description"] = "Described by hand."
+        rooms[0] = target
+        self.write("bedroom", rooms)
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        by_id = {r["id"]: r for r in out["bedroom"]}
+        self.assertIn(target["id"], by_id)
+        self.assertEqual(by_id[target["id"]]["description"],
+                         "Described by hand.")
+        self.assertEqual(by_id[target["id"]]["edited"], ["description"])
+
+    def test_generating_the_generated_files_changes_nothing(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        first, _drops = generate_rooms.generate(["bedroom"],
+                                                rooms_dir=self.rooms_dir)
+        self.write("bedroom", first["bedroom"])
+        second, _drops_again = generate_rooms.generate(["bedroom"],
+                                                       rooms_dir=self.rooms_dir)
+        self.assertEqual(json.dumps(first, sort_keys=True),
+                         json.dumps(second, sort_keys=True))
 
 
 if __name__ == "__main__":

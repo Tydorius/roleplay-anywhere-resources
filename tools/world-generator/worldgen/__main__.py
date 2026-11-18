@@ -131,7 +131,10 @@ def main(argv=None):
             errors = rooms_mod.check(rooms, gdata, lb)
             for e in errors:
                 print("ERROR " + e)
-            print(f"rooms: {len(rooms)} rooms, {len(errors)} error(s)")
+            retired = len(rooms) - len(rooms_mod.active(rooms))
+            print(f"rooms: {len(rooms)} rooms ({retired} retired, "
+                  f"{len(rooms_mod.active(rooms))} active), "
+                  f"{len(errors)} error(s)")
             return 1 if errors else 0
         from worldgen import library as library_mod
         lb = library_mod.load(args.path or library_mod.LIB_DIR)

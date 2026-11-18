@@ -176,7 +176,8 @@ The dialog's steps:
 ## Rooms tab
 
 The third tab (it stays hidden until the generator's room library ships) browses that library
-read-only — nothing behind it writes a file.
+and works its rooms by hand — every save runs the library's own checker first, so a broken
+room never reaches a file.
 
 - **Browse:** pick a family (bedroom, bedroom.master, washroom), narrow the list by size band,
   clearance, style, wealth tier or a search over ids and descriptions; a red `!` marks a room
@@ -189,9 +190,31 @@ read-only — nothing behind it writes a file.
 - **Look:** switch from Plan colours to an art band (medieval, modern…) to see the sprite the
   world generator would place for each piece, turned so its back faces the wall; a piece with
   no sprite in the band stays a colour block.
-- **Details** on the right: id, recipe, size, clearance, style, wealth, sleeps, symmetric,
-  outdoor, the description and the checker's messages. Rooms of the same recipe sit in a strip
-  under the plan, one for each clearance and style.
+- **Details** on the right: id, recipe, size, clearance, style, sleeps, symmetric, outdoor and
+  the description, plus the editable fields — **wealth** (the tiers a room serves, by tick
+  box), **description**, **symmetric** and **retired**. Changing one flags it `edited`, so the
+  generator keeps the value on regeneration; a **reset** link beside it drops the flag, and the
+  value returns to what a fresh generation would write. **Retired** rooms stay in their file
+  (their id is never reused) but no world is built with them. Rooms of the same recipe sit in a
+  strip under the plan, one for each clearance and style.
+- **Lay out a room by hand** (**Edit**): drag a group and its pieces move together (snapped to
+  cells), turn the selected group a quarter (backs turn with it), remove an optional or luxury
+  group, add a group from a recipe or the family's luxury pool, and grow or shrink the room by
+  a row or column on any side (the size band in the id is the limit). The checker runs as you
+  edit — offending cells are outlined on the plan — and a room that fails it stays a draft in
+  the page but cannot be saved. **Duplicate** copies any room under the next free id, **New
+  from a recipe** starts from the recipe's anchor group in the smallest room it fits, and both
+  are marked `source: "hand"`: regeneration never changes or removes them.
+- **Regenerate. This room** composes its recipe at its clearance and style under eight seeds,
+  skipping every candidate equal to a shipped room after any turn or mirror; pick one to
+  re-lay the room out — same id, same edited fields, now hand work. **This family** runs the
+  generator itself in the background and shows the diff by id (rooms added, removed, changed,
+  before and after); nothing is written until **Apply**, and **Discard** throws it away.
+- **Saving** (the toolbar's **Save**) writes the family sorted by id in the generator's own
+  formatting, only after the whole family passes the checker, through a temp file replaced into
+  place. The file it replaces is copied to `library/rooms/.backup/<family>.json` first — one
+  backup per family. If the file changed on disk since the page loaded it, the save is refused
+  and the family must be reloaded.
 - **Groups**, beside the family picker, swaps the plan for the family's recipes: every group as
   a small role-coloured plan with its kind (anchor, required, optional) and count, plus the
   luxury pool with its size bands and kinds.

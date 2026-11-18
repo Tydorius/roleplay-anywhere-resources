@@ -863,7 +863,6 @@ def _build_room(state, sw, se, sn, ss, ctx):
         ctx["fails"]["luxband"] = ctx["fails"].get("luxband", 0) + 1
         return None
     pieces = []
-    occupied = set()
     for g in state["placed"]:
         for p in g["pieces"]:
             x, y = p["at"][0] - x0, p["at"][1] - y0
@@ -871,26 +870,18 @@ def _build_room(state, sw, se, sn, ss, ctx):
             pieces.append({"role": p["role"], "size": [pw, ph], "at": [x, y],
                            "group": g["gid"], "optional": p["optional"],
                            **({"back": p["back"]} if p["back"] else {})})
-            occupied |= {(cx, cy) for cx in range(x, x + pw)
-                         for cy in range(y, y + ph)}
     pieces.sort(key=lambda p: (p["at"][1], p["at"][0], p["role"]))
-    doors = {"north": [x for x in range(w) if (x, 0) not in occupied],
-             "south": [x for x in range(w) if (x, h - 1) not in occupied],
-             "west": [y for y in range(h) if (0, y) not in occupied],
-             "east": [y for y in range(h) if (w - 1, y) not in occupied]}
-    singles = sum(1 for p in pieces if p["role"] in SLEEP_SINGLE_ROLES)
-    couples = sum(1 for p in pieces if p["role"] == SLEEP_COUPLE_ROLE)
     # draft id/description keep the mid-search check happy; _finalize writes
-    # the real ones and checks again
+    # the real ones and checks again. sizeBand, sleeps, doors and the draft's
+    # empty stretch all come from fixed_rooms.derive — the one derivation.
     room = {"id": ctx["family"] + ".draft", "family": ctx["family"],
-            "sizeBand": band,
             "clearance": ctx["clearance"], "style": "flush",
             "wealth": WEALTH[ctx["clearance"]], "size": [w, h],
-            "sleeps": {"singles": singles, "couples": couples},
-            "pieces": pieces, "doors": doors,
-            "stretch": {"x": [], "y": []}, "outdoor": False,
+            "pieces": pieces, "outdoor": False,
             "symmetric": ctx["symmetric"], "recipe": ctx["layout"],
             "description": "draft"}
+    room = fixed_rooms.derive(room, stretch=False)
+    room["stretch"] = {"x": [], "y": []}
     if room["sizeBand"] is None:
         return None
     return room
@@ -971,17 +962,8 @@ def _grown(room, gw, ge, gn, gs):
         for i in inst["indices"]:
             p = moved["pieces"][i]
             p["at"] = [p["at"][0] + dx, p["at"][1] + dy]
-    occupied = set()
-    for p in moved["pieces"]:
-        x, y, pw, ph = p["at"][0], p["at"][1], p["size"][0], p["size"][1]
-        occupied |= {(cx, cy) for cx in range(x, x + pw)
-                     for cy in range(y, y + ph)}
-    w, h = moved["size"]
     moved["pieces"].sort(key=lambda p: (p["at"][1], p["at"][0], p["role"]))
-    moved["doors"] = {"north": [x for x in range(w) if (x, 0) not in occupied],
-                      "south": [x for x in range(w) if (x, h - 1) not in occupied],
-                      "west": [y for y in range(h) if (0, y) not in occupied],
-                      "east": [y for y in range(h) if (w - 1, y) not in occupied]}
+    moved = fixed_rooms.derive(moved, stretch=False)
     moved["stretch"] = {"x": [], "y": []}
     return moved
 
@@ -1073,17 +1055,12 @@ def _finalize(rooms, ctx):
     order. The stretch lines are the gap lanes: every position where
     inserting an empty line keeps the room valid."""
     for i, room in enumerate(rooms, 1):
-        w, h = room["size"]
         style = ".open" if room["style"] == "open" else ""
         room["id"] = f"{ctx['family']}.{room['sizeBand']}.{i}." \
                      f"{ctx['clearance']}{style}"
-        room["stretch"] = {
-            "x": [c for c in range(w + 1)
-                  if fixed_rooms.stretch_ok(room, "x", c,
-                                            {"groups": ctx["gdefs"]}, None) is None],
-            "y": [r for r in range(h + 1)
-                  if fixed_rooms.stretch_ok(room, "y", r,
-                                            {"groups": ctx["gdefs"]}, None) is None]}
+        # the gap lanes come from fixed_rooms.derive with everything else:
+        # every position where inserting an empty line keeps the room valid
+        room.update(fixed_rooms.derive(room, {"groups": ctx["gdefs"]}, None))
         shape = f"{room['size'][0]}x{room['size'][1]}"
         room["description"] = (f"A {room['sizeBand']} {ctx['family']} room "
                                f"({shape}) of {len(fixed_rooms.instances(room))} "

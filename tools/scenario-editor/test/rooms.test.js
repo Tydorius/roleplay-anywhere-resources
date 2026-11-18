@@ -105,3 +105,198 @@ test("pieceAt finds the topmost piece on a cell", () => {
   assert.equal(R.pieceAt(room, 5, 5), -1);
   assert.equal(R.pieceAt({}, 0, 0), -1);
 });
+
+
+// ------------------------------------------------------------- hand work (rl-04b)
+
+const ROOM = {
+  id: "bedroom.small.a.tight.flush", family: "bedroom", sizeBand: "small",
+  clearance: "tight", style: "flush", wealth: ["poor", "modest"],
+  size: [5, 3], sleeps: {singles: 1, couples: 0},
+  pieces: [
+    {role: "sleep", size: [1, 2], at: [0, 0], group: "g.bed", back: "north"},
+    {role: "bedside", size: [1, 1], at: [1, 0], group: "g.bed"},
+    {role: "storage.big", size: [1, 2], at: [4, 0], group: "g.chest", back: "east"},
+  ],
+  doors: {north: [2, 3], south: [0, 1, 2, 3, 4], west: [2], east: [2]},
+  stretch: {}, outdoor: false, symmetric: false,
+  recipe: "bedroom.small.a", description: "A room.",
+};
+
+test("letterAt finds a room id's letter after the family parts and the band", () => {
+  assert.equal(R.letterAt("bedroom.small.a.tight.flush", 1), "a");
+  assert.equal(R.letterAt("bedroom.master.small.b.tight.flush", 2), "b");
+  assert.equal(R.letterAt("bedroom.master.small.a.tight.flush", 1), null);  // wrong part count
+  assert.equal(R.letterAt("", 1), null);
+  assert.equal(R.letterAt(null, 1), null);
+});
+
+test("nextLetter takes the first free letter, newId the next free id of a group", () => {
+  assert.equal(R.nextLetter(["a", "b"]), "c");
+  assert.equal(R.nextLetter([]), "a");
+  assert.equal(R.nextLetter("abcdefghijklmnopqrstuvwxyz".split("")), null);
+  const ids = ["bedroom.master.small.a.tight.flush",
+               "bedroom.master.small.b.tight.flush",
+               "bedroom.master.large.a.tight.flush",     // another band: not this group
+               "bedroom.small.a.tight.flush"];           // another family: never counted
+  assert.equal(R.newId("bedroom.master", "small", "tight", "flush", ids),
+               "bedroom.master.small.c.tight.flush");
+  assert.equal(R.newId("bedroom", "small", "tight", "flush",
+                       ["bedroom.small.a.tight.flush"]),
+               "bedroom.small.b.tight.flush");
+});
+
+test("cloneRoom copies a room under a new id as hand work, without bookkeeping", () => {
+  const copy = R.cloneRoom({...ROOM, errors: ["room 'x': something"]},
+                           "bedroom.small.z.tight.flush");
+  const want = JSON.parse(JSON.stringify(ROOM));
+  want.id = "bedroom.small.z.tight.flush";
+  want.source = "hand";                 // and no errors key: the bookkeeping is gone
+  assert.deepEqual(copy, want);
+});
+
+test("turnGroup turns one group a clockwise quarter about its own box", () => {
+  const out = R.turnGroup(ROOM, 0);                   // the bed and its bedside
+  assert.deepEqual(out.pieces[0], {role: "sleep", size: [2, 1], at: [0, 0],
+                                   group: "g.bed", back: "east"});
+  assert.deepEqual(out.pieces[1], {role: "bedside", size: [1, 1], at: [1, 1],
+                                   group: "g.bed"});
+  assert.deepEqual(out.pieces[2], ROOM.pieces[2], "the chest keeps its place");
+  assert.deepEqual(R.turnGroup(ROOM, 9).pieces, ROOM.pieces);   // no such group: unchanged
+  assert.notEqual(out, ROOM, "a new room, not a mutation");
+  assert.deepEqual(ROOM.pieces[0].size, [1, 2], "the input stands");
+});
+
+test("moveGroup shifts one group whole, removeGroup takes its pieces out", () => {
+  const moved = R.moveGroup(ROOM, 0, 2, 1);
+  assert.deepEqual(moved.pieces[0].at, [2, 1]);
+  assert.deepEqual(moved.pieces[1].at, [3, 1]);
+  assert.deepEqual(moved.pieces[2].at, [4, 0], "the chest stays");
+  assert.deepEqual(ROOM.pieces[0].at, [0, 0], "the input stands");
+  const gone = R.removeGroup(ROOM, 1);
+  assert.deepEqual(gone.pieces.map(p => p.group), ["g.bed", "g.bed"]);
+  assert.deepEqual(R.removeGroup(ROOM, 0).pieces.map(p => p.group), ["g.chest"]);
+});
+
+test("groupForm shifts a definition to the origin keeping sizes, backs and optionals", () => {
+  const form = R.groupForm({pieces: [
+    {role: "seat", size: [2, 1], at: [3, 4], back: "north"},
+    {role: "table.small", size: [1, 1], at: [4, 5], optional: true},
+  ]});
+  assert.deepEqual(form, [
+    {role: "seat", size: [2, 1], at: [0, 0], back: "north"},
+    {role: "table.small", size: [1, 1], at: [1, 1], optional: true},
+  ]);
+  assert.deepEqual(R.groupForm({}), []);
+  assert.deepEqual(R.groupForm({pieces: [{role: "x", size: [1, 1], at: [2, 2]}]}),
+                   [{role: "x", size: [1, 1], at: [0, 0]}]);
+});
+
+test("addGroup stamps a definition's pieces in at x, y under its group id", () => {
+  const out = R.addGroup(ROOM, {id: "g.seat", pieces: [
+    {role: "seat", size: [2, 1], at: [3, 4], back: "north"},
+  ]}, 2, 2);
+  assert.equal(out.pieces.length, 4);
+  assert.deepEqual(out.pieces[3], {role: "seat", size: [2, 1], at: [2, 2],
+                                   back: "north", group: "g.seat"});
+  assert.deepEqual(ROOM.pieces.length, 3, "the input stands");
+});
+
+test("growRoom rides wall-bound groups out and shifts the rest", () => {
+  const north = R.growRoom(ROOM, "north", 1);
+  assert.deepEqual(north.size, [5, 4]);
+  assert.deepEqual(north.pieces[0].at, [0, 0], "the north-backed bed rides its wall");
+  assert.deepEqual(north.pieces[1].at, [1, 1]);
+  assert.deepEqual(north.pieces[2].at, [4, 1], "the east-backed chest shifts with the far wall");
+  const south = R.growRoom(ROOM, "south", 1);
+  assert.deepEqual(south.size, [5, 4]);
+  assert.deepEqual(south.pieces.map(p => p.at), ROOM.pieces.map(p => p.at));
+  const west = R.growRoom(ROOM, "west", 2);
+  assert.deepEqual(west.size, [7, 3]);
+  assert.deepEqual(west.pieces.map(p => p.at),
+                   [[2, 0], [3, 0], [6, 0]], "nothing backs west: everything shifts");
+});
+
+test("shrinkRoom refuses a line a piece or the filler stands on", () => {
+  const south = R.shrinkRoom(ROOM, "south", 1);
+  assert.deepEqual(south.size, [5, 2]);
+  assert.deepEqual(south.pieces.map(p => p.at), ROOM.pieces.map(p => p.at));
+  assert.equal(R.shrinkRoom(ROOM, "east", 1), null);   // the chest hugs the east wall
+  assert.equal(R.shrinkRoom(ROOM, "north", 1), null);  // the bed hugs the north wall
+  const rug = JSON.parse(JSON.stringify(ROOM));
+  rug.filler = {at: [1, 2], size: [2, 1]};
+  assert.equal(R.shrinkRoom(rug, "south", 1), null);   // the filler stands on the south line
+  const low = JSON.parse(JSON.stringify(ROOM));        // one piece off every wall
+  low.pieces = [{role: "seat", size: [1, 1], at: [1, 1], group: "g.s", back: "north"}];
+  const north = R.shrinkRoom(low, "north", 1);
+  assert.deepEqual(north.size, [5, 2]);
+  assert.deepEqual(north.pieces[0].at, [1, 0], "the rest shifts up with the wall");
+  const west = R.shrinkRoom(low, "west", 1);
+  assert.deepEqual(west.size, [4, 3]);
+  assert.deepEqual(west.pieces[0].at, [0, 1]);
+});
+
+test("mergeLayout takes a candidate's layout but keeps the id and edited fields", () => {
+  const room = {...JSON.parse(JSON.stringify(ROOM)),
+                edited: ["description"], description: "Mine, not the generator's."};
+  const cand = {size: [6, 4], sizeBand: "small",
+                sleeps: {singles: 0, couples: 1}, pieces: [], doors: {}, stretch: {},
+                wealth: ["wealthy", "elite"], description: "A generated room."};
+  const out = R.mergeLayout(room, cand);
+  assert.equal(out.id, ROOM.id);
+  assert.deepEqual(out.size, [6, 4]);
+  assert.deepEqual(out.sleeps, {singles: 0, couples: 1});
+  assert.deepEqual(out.wealth, ["wealthy", "elite"], "an unedited field follows the candidate");
+  assert.equal(out.description, "Mine, not the generator's.", "an edited field keeps its hand value");
+  assert.equal(out.source, "hand");
+  assert.equal(out.errors, undefined);
+  const fresh = R.mergeLayout(ROOM, cand);
+  assert.equal(fresh.description, "A generated room.", "with no edits the candidate's text lands");
+});
+
+test("setField flags a hand field edited, resetField drops the flag", () => {
+  const room = JSON.parse(JSON.stringify(ROOM));
+  R.setField(room, "retired", true);
+  assert.equal(room.retired, true);
+  assert.deepEqual(room.edited, ["retired"]);
+  R.setField(room, "description", "By hand.");
+  R.setField(room, "description", "By hand, again.");   // no double flag
+  assert.deepEqual(room.edited, ["retired", "description"]);
+  R.resetField(room, "retired");
+  assert.deepEqual(room.edited, ["description"]);
+  assert.equal(room.retired, true, "the value stands until regeneration");
+  R.resetField(room, "description");
+  assert.equal(room.edited, undefined);
+});
+
+test("parseCells outlines the cells the checker's messages name", () => {
+  const room = JSON.parse(JSON.stringify(ROOM));
+  room.filler = {at: [1, 1], size: [2, 1]};
+  const cells = R.parseCells(room, [
+    "3 dead floor cell(s) (first at 2,0): more than 1 cells from every piece",
+    "room 'bedroom.small.a.tight.flush': door cell west 1 blocked by a piece",
+    "room 'bedroom.small.a.tight.flush': piece 'sleep' at [0, 0] has no reached cell on its use sides",
+    "room 'bedroom.small.a.tight.flush': filler at [1, 1] is off centre",
+    "room 'bedroom.small.a.tight.flush': stretch x 2 runs through a piece",
+    "room 'bedroom.small.a.tight.flush': 9 dead floor cell(s) (first at 9,9)",
+  ]);
+  const want = [[0, 0], [0, 1],          // the bed piece at 0,0, door cell west 1
+                [1, 1], [2, 1],          // the filler at 1,1
+                [2, 0], [2, 2]];         // dead floor at 2,0, the stretch column x 2
+  const got = cells.map(c => c.join(",")).sort();
+  assert.deepEqual(got, want.map(c => c.join(",")).sort());
+  assert.deepEqual(R.parseCells(ROOM, []), []);
+  assert.deepEqual(R.parseCells(ROOM, null), []);
+});
+
+test("removableGids lists the recipe's optional groups and the family's pool", () => {
+  const data = {recipes: [{layout: "bedroom.small.a", groups: [
+    {group: "g.bed", kind: "anchor"},
+    {group: "g.desk", kind: "optional"},
+    {group: "g.bed2", kind: "repeatable"},
+  ]}], pool: [{group: "g.lux"}, {group: "g.lux2"}]};
+  assert.deepEqual([...R.removableGids(ROOM, data)], ["g.desk", "g.lux", "g.lux2"]);
+  assert.deepEqual([...R.removableGids({...ROOM, recipe: "no.such"}, data)],
+                   ["g.lux", "g.lux2"]);
+  assert.deepEqual([...R.removableGids(ROOM, {})], []);
+});

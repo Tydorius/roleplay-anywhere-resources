@@ -1,10 +1,14 @@
 "use strict";
-// The Rooms tab: browse the generator's fixed-room library read-only (rl-04a).
-// The plan canvas, list, filters, look sprites and the groups page live here;
-// every fetch goes to rooms_editor.py's /api/rooms/* endpoints, which never
-// write a file. Pure helpers (no DOM) are exported for node --test; the page
-// wiring at the bottom runs only in a browser. Plan coordinates match the
-// stored rooms: [0,0] is the north-west cell, x grows east, y grows south.
+// The Rooms tab: browse the generator's fixed-room library (rl-04a) and work
+// rooms by hand (rl-04b) — edit flags in the details panel, lay a room out
+// by dragging whole groups, duplicate or new rooms, and regenerate one room
+// or a whole family. The plan canvas, list, filters, look sprites and the
+// groups page live here; every fetch goes to rooms_editor.py's /api/rooms/*
+// endpoints, which check before they write (a family is saved only when it
+// passes fixed_rooms.check; layout edits are never saved while they fail).
+// Pure helpers (no DOM) are exported for node --test; the page wiring at the
+// bottom runs only in a browser. Plan coordinates match the stored rooms:
+// [0,0] is the north-west cell, x grows east, y grows south.
 
 (function (root, factory) {
   if (typeof module === "object" && module.exports) module.exports = factory();
@@ -134,9 +138,265 @@
     return -1;
   }
 
+  // ------------------------------------------------------------ hand work
+
+  const LETTERS = "abcdefghijklmnopqrstuvwxyz";
+  // the fields a person may set by hand (fixed_rooms.EDITABLE_FIELDS)
+  const EDITABLE = ["wealth", "description", "symmetric", "retired"];
+  // which side a piece's back faces after one clockwise quarter turn
+  // (fixed_rooms.TURN); the server's fixed_rooms.rotate stays the only full
+  // room turn — this map just turns one group's backs in the layout editor
+  const TURN_SIDES = {north: "east", east: "south", south: "west", west: "north"};
+
+  function deep(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+  /** A room id's letter — its bit after the family parts and the band
+   * ("bedroom.master.small.a.tight.flush" with 2 family parts -> "a"), or
+   * null when the id is not shaped that way. */
+  function letterAt(id, nparts) {
+    const bits = String(id || "").split(".");
+    if (bits.length !== nparts + 4) return null;
+    return bits[nparts + 1];
+  }
+
+  /** The first letter of LETTERS not already used. */
+  function nextLetter(used) {
+    const taken = new Set(used || []);
+    for (const c of LETTERS) if (!taken.has(c)) return c;
+    return null;
+  }
+
+  /** The next free id of a family's band, clearance and style, given the
+   * family's room ids (a hand room never reuses a shipped letter). */
+  function newId(family, band, clearance, style, ids) {
+    const nparts = String(family || "").split(".").length;
+    const used = (ids || []).filter(id => {
+      const bits = String(id || "").split(".");
+      return bits.length === nparts + 4 && bits.slice(0, nparts).join(".") === family
+        && bits[nparts] === band && bits[nparts + 2] === clearance
+        && bits[nparts + 3] === style;
+    }).map(id => letterAt(id, nparts));
+    const ch = nextLetter(used);
+    return ch ? `${family}.${band}.${ch}.${clearance}.${style}` : null;
+  }
+
+  /** A hand copy of a room under a new id: everything carried over as it
+   * stands (its edited flags too — the values came with it), the source
+   * marked "hand" so regeneration never touches it again. */
+  function cloneRoom(room, id) {
+    const copy = deep(room);
+    copy.id = id;
+    copy.source = "hand";
+    delete copy.errors;
+    return copy;
+  }
+
+  /** The group instance gi turned a clockwise quarter about its own box
+   * (backs turn with it); the turned box keeps its north-west corner, so a
+   * non-square group may now reach past the room — the live checker says
+   * so and the user drags it back. */
+  function turnGroup(room, gi) {
+    const out = deep(room);
+    const groups = groupBoxes(out);
+    const g = groups[gi];
+    if (!g) return out;
+    const [bx, by, bw, bh] = g.box;
+    for (const i of g.indices) {
+      const p = out.pieces[i];
+      const [x, y, pw, ph] = rectOf(p);
+      p.at = [bx + (bh - (y - by) - ph), by + (x - bx)];
+      p.size = [ph, pw];
+      if (p.back) p.back = TURN_SIDES[p.back] || p.back;
+    }
+    return out;
+  }
+
+  /** The group instance gi shifted whole by (dx, dy) cells. */
+  function moveGroup(room, gi, dx, dy) {
+    const out = deep(room);
+    const g = groupBoxes(out)[gi];
+    if (!g) return out;
+    for (const i of g.indices) {
+      const p = out.pieces[i];
+      p.at = [p.at[0] + dx, p.at[1] + dy];
+    }
+    return out;
+  }
+
+  /** The room without the group instance gi's pieces. */
+  function removeGroup(room, gi) {
+    const out = deep(room);
+    const g = groupBoxes(out)[gi];
+    if (!g) return out;
+    out.pieces = out.pieces.filter((_, i) => !g.indices.includes(i));
+    return out;
+  }
+
+  /** A group definition's pieces in minimal integer form: shifted so the
+   * top-left piece cell is [0, 0], sizes and backs kept. */
+  function groupForm(def) {
+    const pieces = ((def || {}).pieces || []).map(rectOf).filter(Boolean);
+    if (!pieces.length) return [];
+    const x0 = Math.min(...pieces.map(r => r[0])), y0 = Math.min(...pieces.map(r => r[1]));
+    return deep(((def || {}).pieces) || []).map(p => {
+      const q = {role: p.role, size: [...(p.size || [1, 1])],
+                 at: [(p.at || [0, 0])[0] - x0, (p.at || [0, 0])[1] - y0]};
+      if (p.back) q.back = p.back;
+      if (p.optional) q.optional = true;
+      return q;
+    });
+  }
+
+  /** The room with a group definition's pieces placed (top-left at [x, y]),
+   * their group id stamped on. */
+  function addGroup(room, def, x, y) {
+    const out = deep(room);
+    const gid = def.id || def.group;
+    for (const p of groupForm(def))
+      out.pieces.push(Object.assign({}, p,
+                                    {group: gid, at: [p.at[0] + (x || 0), p.at[1] + (y || 0)]}));
+    return out;
+  }
+
+  /** The room grown by n lines on one side: wall-bound groups ride their
+   * walls out (the composer's own _grown rule), everything else shifts with
+   * the far wall, and the filler moves with the middle. */
+  function growRoom(room, side, n) {
+    const out = deep(room);
+    const axis = side === "north" || side === "south" ? 1 : 0;
+    out.size[axis] += n;
+    const shift = side === "north" || side === "west";
+    if (shift) {
+      for (const p of out.pieces || []) {
+        const rides = p.back === side && p.at[axis] === 0;
+        if (!rides) p.at[axis] += n;
+      }
+      if (out.filler && out.filler.at) out.filler.at[axis] += n;
+    }
+    return out;
+  }
+
+  /** The room shrunk by n lines on one side, or null when a piece or the
+   * filler stands on the lines that would go. */
+  function shrinkRoom(room, side, n) {
+    const [w, h] = (room || {}).size || [1, 1];
+    const axis = side === "north" || side === "south" ? 1 : 0;
+    if ((room.size || [1, 1])[axis] - n < 1) return null;
+    for (const p of (room || {}).pieces || []) {
+      const r = rectOf(p);
+      if (!r) continue;
+      if (side === "north" && r[1] < n) return null;
+      if (side === "south" && r[1] + r[3] > h - n) return null;
+      if (side === "west" && r[0] < n) return null;
+      if (side === "east" && r[0] + r[2] > w - n) return null;
+    }
+    const f = (room || {}).filler;
+    if (f && f.at && f.size) {
+      if (side === "north" && f.at[1] < n) return null;
+      if (side === "south" && f.at[1] + f.size[1] > h - n) return null;
+      if (side === "west" && f.at[0] < n) return null;
+      if (side === "east" && f.at[0] + f.size[0] > w - n) return null;
+    }
+    const out = deep(room);
+    out.size[axis] -= n;
+    const shift = side === "north" || side === "west";
+    if (shift) {
+      for (const p of out.pieces || []) p.at[axis] -= n;
+      if (out.filler && out.filler.at) out.filler.at[axis] -= n;
+    }
+    return out;
+  }
+
+  /** The room re-laid out from a regeneration candidate: the layout fields
+   * come from the candidate, the identity stays, and the fields in the
+   * room's edited list keep their hand values (the generator's own rule for
+   * surviving rooms). The room is marked source "hand" from here on. */
+  function mergeLayout(room, cand) {
+    const out = deep(room);
+    const edited = new Set(out.edited || []);
+    for (const k of ["size", "sizeBand", "sleeps", "pieces", "doors", "stretch"]) {
+      if (cand[k] !== undefined) out[k] = deep(cand[k]);
+      else delete out[k];
+    }
+    if (cand.filler) out.filler = deep(cand.filler);
+    else delete out.filler;
+    for (const k of EDITABLE)
+      if (!edited.has(k) && cand[k] !== undefined) out[k] = deep(cand[k]);
+    out.source = "hand";
+    delete out.errors;
+    return out;
+  }
+
+  /** Set one hand field and flag it edited. */
+  function setField(room, field, value) {
+    room[field] = value;
+    if (!(room.edited || []).includes(field)) room.edited = [...(room.edited || []), field];
+    return room;
+  }
+
+  /** Drop a field's hand flag: the value itself stands until the family is
+   * next regenerated. */
+  function resetField(room, field) {
+    room.edited = (room.edited || []).filter(f => f !== field);
+    if (!room.edited.length) delete room.edited;
+    return room;
+  }
+
+  /** The checker messages' offending cells, to outline on the plan: dead
+   * floor ("first at x,y"), blocked or cut-off door cells, a piece nobody
+   * can reach ("piece 'role' at [x, y]"), the filler ("filler at [x, y]")
+   * and stretch lines that break. Only cells inside the room are kept. */
+  function parseCells(room, msgs) {
+    const [w, h] = ((room || {}).size) || [0, 0];
+    const cells = new Set();
+    const add = (x, y) => { if (x >= 0 && y >= 0 && x < w && y < h) cells.add(x + "," + y); };
+    for (const m of msgs || []) {
+      let mm;
+      if ((mm = /\(first at (\d+),(\d+)\)/.exec(m))) add(+mm[1], +mm[2]);
+      if ((mm = /door cell (north|south|east|west) (\d+)/.exec(m))) {
+        const k = +mm[2];
+        if (mm[1] === "north") add(k, 0);
+        else if (mm[1] === "south") add(k, h - 1);
+        else if (mm[1] === "west") add(0, k);
+        else add(w - 1, k);
+      }
+      if ((mm = /piece '[^']*' at \[(\d+), (\d+)\]/.exec(m))) {
+        const p = (room.pieces || []).find(q => {
+          const r = rectOf(q);
+          return r && r[0] === +mm[1] && r[1] === +mm[2];
+        });
+        const r = p && rectOf(p);
+        if (r) for (let x = r[0]; x < r[0] + r[2]; x++) for (let y = r[1]; y < r[1] + r[3]; y++) add(x, y);
+      }
+      if ((mm = /filler at \[(\d+), (\d+)\]/.exec(m)) && room.filler && room.filler.size) {
+        for (let x = +mm[1]; x < +mm[1] + room.filler.size[0]; x++)
+          for (let y = +mm[2]; y < +mm[2] + room.filler.size[1]; y++) add(x, y);
+      }
+      if ((mm = /stretch ([xy]) (\d+)/.exec(m))) {
+        if (mm[1] === "x") for (let y = 0; y < h; y++) add(+mm[2], y);
+        else for (let x = 0; x < w; x++) add(x, +mm[2]);
+      }
+    }
+    return [...cells].map(s => s.split(",").map(Number));
+  }
+
+  /** The group ids a person may take out of a room of this recipe: the
+   * recipe's optional groups and the family's luxury pool (an anchor,
+   * required or repeatable group is the recipe's business). */
+  function removableGids(room, groupsData) {
+    const data = groupsData || {};
+    const recipe = (data.recipes || []).find(r => r.layout === (room || {}).recipe);
+    const out = new Set();
+    for (const e of (recipe && recipe.groups) || [])
+      if (e.kind === "optional") out.add(e.group);
+    for (const e of data.pool || []) out.add(e.group);
+    return out;
+  }
+
   // ------------------------------------------------------------ page wiring
 
   const RM = {meta: null, inited: false, family: "", rooms: [], familyErrors: [],
+              hash: "", dirty: false, edit: null, actions: null,
               view: [], sel: null, room: null, turned: null, turn: 0, mirror: 0,
               look: "", lookData: null, sprites: new Map(), groupsMode: false,
               groupsCache: {}, hover: -1, seq: 0,
@@ -159,7 +419,15 @@
     const fams = RM.meta.families || [];
     $("rmFamily").innerHTML = fams.map(f =>
       `<option value="${esc(f.family)}">${esc(f.family)} (${f.rooms} room${f.rooms === 1 ? "" : "s"}${f.errors ? `, ${f.errors} error${f.errors === 1 ? "" : "s"}` : ""})</option>`).join("");
-    $("rmFamily").onchange = () => { RM.family = $("rmFamily").value; RM.filters.band = ""; loadFamily(); };
+    $("rmFamily").onchange = async () => {
+      const next = $("rmFamily").value;
+      if (next === RM.family) return;
+      if (!await guardDirty()) { $("rmFamily").value = RM.family; return; }
+      if (RM.edit) endEdit(false);
+      RM.family = next;
+      RM.filters.band = "";
+      loadFamily();
+    };
     $("rmLook").innerHTML = `<option value="">Plan colours</option>`
       + (RM.meta.bands || []).map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
     $("rmLook").onchange = () => { RM.look = $("rmLook").value; loadRoom(); };
@@ -187,10 +455,14 @@
     });
     const plan = $("rmPlan");
     plan.onmousemove = onHover;
+    plan.onmousedown = onPlanDown;
     plan.onmouseleave = () => { RM.hover = -1; $("rmTip").hidden = true; drawPlan(); };
+    document.addEventListener("mousemove", onPlanMove);
+    document.addEventListener("mouseup", onPlanUp);
     if (typeof ResizeObserver !== "undefined")
       new ResizeObserver(() => drawPlan()).observe(plan.parentElement);
     window.addEventListener("resize", drawPlan);
+    buildActions();
     RM.family = fams.length ? fams[0].family : "";
     $("rmFamily").value = RM.family;
     loadFamily();
@@ -213,6 +485,7 @@
       if (seq !== RM.seq) return;
       RM.rooms = d.rooms || [];
       RM.familyErrors = d.errors || [];
+      RM.hash = d.hash || "";
       const bands = [...new Set(RM.rooms.map(r => r.sizeBand).filter(Boolean))];
       $("rmBand").innerHTML = `<option value="">All bands</option>`
         + bands.map(b => `<option value="${esc(b)}">${esc(b)}</option>`).join("");
@@ -231,9 +504,12 @@
       ? `<div class="rm-errs">${RM.familyErrors.map(m =>
           `<div class="problem error">${esc(m)}</div>`).join("")}</div>` : "")
       + (RM.view.length ? RM.view.map(r =>
-          `<button type="button" class="rm-row${r.id === RM.sel ? " on" : ""}" data-id="${esc(r.id)}" title="${esc(r.id)}">`
+          `<button type="button" class="rm-row${r.id === RM.sel ? " on" : ""}${r.retired ? " rm-isretired" : ""}" data-id="${esc(r.id)}" title="${esc(r.id)}">`
           + `<span class="id">${esc(r.id)}</span>`
-          + `<span class="meta">${r.size ? r.size[0] + "×" + r.size[1] : "?"} · ${(r.pieces || []).length}</span>`
+          + `<span class="meta">${r.size ? r.size[0] + "×" + r.size[1] : "?"} · ${(r.pieces || []).length}`
+          + (r.source === "hand" ? ` · <span class="rm-hand" title="laid out or edited by hand; regeneration keeps it as it is">hand</span>` : "")
+          + (r.retired ? ` · <span class="rm-retired" title="retired: skipped by world generation, its id never reused">retired</span>` : "")
+          + `</span>`
           + ((r.errors || []).length ? `<span class="bad" title="${(r.errors || []).length} checker message${(r.errors || []).length === 1 ? "" : "s"}">!</span>` : "")
           + `</button>`).join("")
         : `<p class="rm-norooms">No rooms match these filters.</p>`);
@@ -243,8 +519,19 @@
 
   async function loadRoom() {
     syncToolbar();
+    syncActions();
     if (!RM.sel) {
       RM.room = RM.turned = RM.lookData = null;
+      drawPlan(); renderDetails(); renderSiblings();
+      return;
+    }
+    // unturned and unmirrored, the page's own copy is the room to draw —
+    // it may hold unsaved hand work the server has not seen yet
+    if (!RM.turn && !RM.mirror && !RM.edit) {
+      RM.room = RM.rooms.find(r => r.id === RM.sel) || null;
+      RM.turned = RM.room;
+      RM.lookData = null;
+      if (RM.look && !RM.dirty) await fetchLook();
       drawPlan(); renderDetails(); renderSiblings();
       return;
     }
@@ -256,13 +543,25 @@
       RM.turned = turned;
       RM.room = RM.rooms.find(r => r.id === RM.sel) || turned;
       RM.lookData = null;
-      if (RM.look) {
+      if (RM.look && !RM.dirty) {
         const lk = await api(`/api/rooms/look?${qs}&band=${encodeURIComponent(RM.look)}`);
         if (seq !== RM.seq) return;
         RM.lookData = lk;
         for (const e of lk.look || []) if (e) spriteImg(e.object);
       }
       drawPlan(); renderDetails(); renderSiblings();
+    } catch (e) { toast(e.message); }
+  }
+
+  async function fetchLook() {
+    const seq = RM.seq;
+    const qs = `id=${encodeURIComponent(RM.sel)}&turn=0&mirror=0`;
+    try {
+      const lk = await api(`/api/rooms/look?${qs}&band=${encodeURIComponent(RM.look)}`);
+      if (seq !== RM.seq || RM.sel !== lk.room) return;
+      RM.lookData = lk;
+      for (const e of lk.look || []) if (e) spriteImg(e.object);
+      drawPlan();
     } catch (e) { toast(e.message); }
   }
 
@@ -275,7 +574,9 @@
   function syncToolbar() {
     $("rmTurns").textContent = RM.turn * 90 + "°";
     $("rmMirror").classList.toggle("on", !!RM.mirror);
-    for (const id of ["rmTurnL", "rmTurnR", "rmMirror"]) $(id).disabled = !RM.sel;
+    // the preview turn applies to the stored room, so it stays off while a
+    // layout is being edited
+    for (const id of ["rmTurnL", "rmTurnR", "rmMirror"]) $(id).disabled = !RM.sel || !!RM.edit;
   }
 
   function spriteImg(oid) {
@@ -306,8 +607,8 @@
     const ctx = cvs.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, cw, ch);
-    if (!RM.turned) return;
-    const room = RM.turned;
+    const room = RM.edit ? RM.edit.room : RM.turned;
+    if (!room) return;
     const [w, h] = room.size || [1, 1];
     const {cell, ox, oy} = fitPlan(w, h, cw, ch, 26);
     const line = cssVar("--line", "#dddbd3"), muted = cssVar("--muted", "#6b6a64");
@@ -339,7 +640,7 @@
     }
     // pieces
     const pieces = room.pieces || [];
-    const look = (RM.lookData && RM.lookData.look) || [];
+    const look = (RM.lookData && !RM.edit && RM.lookData.look) || [];
     ctx.font = `${Math.min(11, Math.max(9, cell - 3))}px ui-monospace, Consolas, monospace`;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (let i = 0; i < pieces.length; i++) {
@@ -417,25 +718,51 @@
         ctx.strokeRect(ox + r[0] * cell - 1, oy + r[1] * cell - 1, r[2] * cell + 2, r[3] * cell + 2);
       }
     }
+    // the layout editor: offending cells the checker named, outlined red,
+    // and the selected group picked out
+    if (RM.edit) {
+      ctx.strokeStyle = "#c92a2a";
+      ctx.lineWidth = 2;
+      for (const c of RM.edit.cells) {
+        ctx.strokeRect(ox + c[0] * cell + .5, oy + c[1] * cell + .5, cell - 1, cell - 1);
+      }
+      const g = RM.edit.sel >= 0 ? groupBoxes(room)[RM.edit.sel] : null;
+      if (g) {
+        ctx.strokeStyle = cssVar("--sel", "#e0a100");
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(ox + g.box[0] * cell - 2, oy + g.box[1] * cell - 2,
+                       g.box[2] * cell + 4, g.box[3] * cell + 4);
+      }
+    }
   }
 
-  function onHover(e) {
-    if (!RM.turned) return;
+  /** The plan cell under an event, or null off the room. */
+  function planCell(e) {
+    const room = RM.edit ? RM.edit.room : RM.turned;
+    if (!room) return null;
     const cvs = $("rmPlan");
     const rect = cvs.getBoundingClientRect();
     const cw = cvs.clientWidth, ch = cvs.clientHeight;
-    const [w, h] = RM.turned.size || [1, 1];
+    const [w, h] = room.size || [1, 1];
     const {cell, ox, oy} = fitPlan(w, h, cw, ch, 26);
     const x = Math.floor((e.clientX - rect.left - ox) / cell);
     const y = Math.floor((e.clientY - rect.top - oy) / cell);
-    const i = (x >= 0 && y >= 0 && x < w && y < h) ? pieceAt(RM.turned, x, y) : -1;
+    return (x >= 0 && y >= 0 && x < w && y < h) ? {x, y} : null;
+  }
+
+  function onHover(e) {
+    if (RM.edit && RM.edit.drag) return;
+    const room = RM.edit ? RM.edit.room : RM.turned;
+    if (!room) return;
+    const c = planCell(e);
+    const i = c ? pieceAt(room, c.x, c.y) : -1;
     RM.hover = i;
     drawPlan();
     const tip = $("rmTip");
     if (i < 0) { tip.hidden = true; return; }
-    const p = RM.turned.pieces[i];
+    const p = room.pieces[i];
     const r = rectOf(p);
-    const entry = RM.lookData && RM.lookData.look[i];
+    const entry = RM.lookData && !RM.edit && RM.lookData.look[i];
     tip.innerHTML =
       `<b>${esc(p.role || "?")}</b>${p.optional ? " · optional" : ""}<br>`
       + (p.group ? `${esc(p.group)}<br>` : "")
@@ -455,30 +782,92 @@
 
   function renderDetails() {
     const box = $("rmDetails");
-    if (!RM.room) { box.innerHTML = `<p class="hint">Pick a room on the left.</p>`; return; }
-    const r = RM.room;
+    if (!RM.room && !RM.edit) { box.innerHTML = `<p class="hint">Pick a room on the left.</p>`; return; }
+    const r = RM.edit ? RM.edit.room : RM.room;
+    if (!r) { box.innerHTML = `<p class="hint">Pick a room on the left.</p>`; return; }
     const dt = (k, v) => v === undefined || v === null || v === "" ? "" : `<dt>${k}</dt><dd>${v}</dd>`;
     const sleeps = r.sleeps
       ? [r.sleeps.singles ? `${r.sleeps.singles} single${r.sleeps.singles === 1 ? "" : "s"}` : "",
          r.sleeps.couples ? `${r.sleeps.couples} couple${r.sleeps.couples === 1 ? "" : "s"}` : ""]
           .filter(Boolean).join(" · ") || "nobody" : "";
-    const errs = r.errors || [];
+    const edited = r.edited || [];
+    const reset = field => edited.includes(field)
+      ? `<button type="button" class="linkish rm-reset" data-reset="${field}" `
+        + `title="Drop the hand flag: the generated value returns at the next regeneration">reset</button>`
+      : `<span class="rm-reset-off" title="not hand-set"></span>`;
+    const errs = RM.edit ? RM.edit.errors : (r.errors || []);
     box.innerHTML =
       `<h3>${esc(r.id || "")}</h3>`
+      + `<p class="rm-flags">`
+      + (r.source === "hand" ? `<span class="rm-hand" title="laid out or edited by hand; regeneration keeps it as it is">hand</span>` : "")
+      + (r.retired ? ` <span class="rm-retired" title="retired: skipped by world generation, its id never reused">retired</span>` : "")
+      + (edited.length ? ` <span class="rm-editflag" title="hand-set fields kept on regeneration: ${esc(edited.join(", "))}">edited: ${esc(edited.join(", "))}</span>` : "")
+      + `</p>`
       + `<dl class="rm-facts">`
       + dt("Recipe", esc(r.recipe || ""))
       + dt("Size", r.size ? `${r.size[0]}×${r.size[1]}${r.sizeBand ? ` (${esc(r.sizeBand)})` : ""}` : "")
       + dt("Clearance", esc(r.clearance || ""))
       + dt("Style", esc(r.style || ""))
-      + dt("Wealth", esc((r.wealth || []).join(" · ")))
       + dt("Sleeps", esc(sleeps))
-      + dt("Symmetric", r.symmetric ? "yes" : "no")
       + dt("Outdoor", r.outdoor ? "yes" : "no")
       + dt("Family", esc(r.family || ""))
       + `</dl>`
-      + (r.description ? `<p class="rm-desc">${esc(r.description)}</p>` : "")
+      + `<div class="rm-editfields">`
+      + `<div class="rm-field"><span class="k">Wealth ${reset("wealth")}</span><span class="v">`
+      + (RM.meta.tiers || []).map(t =>
+          `<label class="inline"><input type="checkbox" data-tier="${esc(t)}"${(r.wealth || []).includes(t) ? " checked" : ""}>${esc(t)}</label>`).join("")
+      + `</span></div>`
+      + `<div class="rm-field"><span class="k">Description ${reset("description")}</span><span class="v">`
+      + `<textarea data-fld="description" rows="3" spellcheck="false">${esc(r.description || "")}</textarea>`
+      + `</span></div>`
+      + `<div class="rm-field"><span class="k">Symmetric ${reset("symmetric")}</span><span class="v">`
+      + `<label class="inline"><input type="checkbox" data-flag="symmetric"${r.symmetric ? " checked" : ""}> pieces mirror across a centre line</label>`
+      + `</span></div>`
+      + `<div class="rm-field"><span class="k">Retired ${reset("retired")}</span><span class="v">`
+      + `<label class="inline"><input type="checkbox" data-flag="retired"${r.retired ? " checked" : ""}> keep the id, skip the room in world generation</label>`
+      + `</span></div>`
+      + `</div>`
       + (errs.length ? `<div class="rm-errs">${errs.map(m =>
-          `<div class="problem error">${esc(m)}</div>`).join("")}</div>` : "");
+          `<div class="problem error">${esc(m)}</div>`).join("")}</div>`
+        : (RM.edit ? `<p class="note">This layout passes the checker.</p>` : ""))
+      + (RM.edit && RM.edit.drag ? `<p class="note">Dragging…</p>` : "");
+    wireDetails(r);
+  }
+
+  /** The details panel's own inputs: wealth tick boxes, the description,
+   * the symmetric and retired flags, and each field's reset link. */
+  function wireDetails(r) {
+    const box = $("rmDetails");
+    for (const cb of box.querySelectorAll("[data-tier]")) {
+      cb.onchange = () => {
+        const tiers = [...box.querySelectorAll("[data-tier]")].filter(c => c.checked)
+          .map(c => c.dataset.tier);
+        setField(r, "wealth", tiers);
+        markDirty();
+        if (RM.edit) checkSoon();
+      };
+    }
+    const ta = box.querySelector('[data-fld="description"]');
+    if (ta) ta.onchange = () => {
+      setField(r, "description", ta.value);
+      markDirty();
+      if (RM.edit) checkSoon();
+    };
+    for (const cb of box.querySelectorAll("[data-flag]")) {
+      cb.onchange = () => {
+        setField(r, cb.dataset.flag, cb.checked);
+        markDirty();
+        renderList();
+        if (RM.edit) checkSoon();
+      };
+    }
+    for (const b of box.querySelectorAll("[data-reset]")) {
+      b.onclick = () => {
+        resetField(r, b.dataset.reset);
+        markDirty();
+        renderDetails();
+      };
+    }
   }
 
   // ------------------------------------------------------------ siblings
@@ -542,6 +931,7 @@
     $("rmGroupsBtn").classList.toggle("on", RM.groupsMode);
     $("rmGroupsBtn").setAttribute("aria-pressed", RM.groupsMode ? "true" : "false");
     $("rmToolbar").hidden = RM.groupsMode;
+    if (RM.actions) RM.actions.hidden = RM.groupsMode;
     $("rmPlan").parentElement.hidden = RM.groupsMode;
     $("rmSiblings").hidden = RM.groupsMode;
     $("rmGroupsPage").hidden = !RM.groupsMode;
@@ -601,6 +991,566 @@
     pageEl.appendChild(pool);
   }
 
+  // ------------------------------------------------------------ hand work
+
+  /** The action bar above the plan: save (with the unsaved chip), the
+   * layout editor, duplicate, new, and the two regenerations. */
+  function buildActions() {
+    const bar = document.createElement("div");
+    bar.className = "rm-actions";
+    bar.innerHTML =
+      `<button type="button" class="primary" data-act="save" title="Write this family's rooms (checked first; the previous file is backed up)" disabled>Save</button>`
+      + `<span class="rm-dirty" hidden>Unsaved changes</span>`
+      + `<span class="spacer"></span>`
+      + `<button type="button" data-act="edit" title="Move, turn, add or remove groups and resize the room">Edit layout</button>`
+      + `<button type="button" data-act="dup" title="A hand copy of this room under the next free id">Duplicate</button>`
+      + `<button type="button" data-act="new" title="A hand room starting from a recipe's anchor group">New…</button>`
+      + `<button type="button" data-act="regen" title="Compose this room's recipe again (seeds 1-8) and pick a new layout">Regenerate…</button>`
+      + `<button type="button" data-act="regenfam" title="Run the generator on this family and review the diff before anything is written">Regenerate family</button>`
+      + `<span class="rm-job" hidden></span>`;
+    $("rmToolbar").after(bar);
+    RM.actions = bar;
+    const act = (name, fn) => bar.querySelector(`[data-act="${name}"]`).onclick = () => fn();
+    act("save", saveFamily);
+    act("edit", startEdit);
+    act("dup", duplicateRoom);
+    act("new", newRoomDialog);
+    act("regen", regenerateRoom);
+    act("regenfam", regenFamily);
+    syncActions();
+  }
+
+  function syncActions() {
+    if (!RM.actions) return;
+    RM.actions.querySelector(".rm-dirty").hidden = !RM.dirty;
+    RM.actions.querySelector('[data-act="save"]').disabled = !RM.dirty;
+    const editing = !!RM.edit;
+    for (const name of ["edit", "dup", "regen", "regenfam"])
+      RM.actions.querySelector(`[data-act="${name}"]`).disabled = editing || !RM.sel;
+    RM.actions.querySelector('[data-act="new"]').disabled = editing;
+    $("rmGroupsBtn").disabled = editing;
+  }
+
+  /** Ask before unsaved hand work is left behind (a family switch or a
+   * regeneration); on discard the family reloads from disk. */
+  async function guardDirty() {
+    if (!RM.dirty) return true;
+    const choice = await openDialog("Unsaved changes",
+      `<p><b>${esc(RM.family)}</b> has unsaved hand work. Leave without saving?</p>`,
+      [{label: "Stay", value: "stay", primary: true},
+       {label: "Discard changes", value: "discard"}]);
+    if (choice !== "discard") return false;
+    RM.dirty = false;
+    await loadFamily();
+    return true;
+  }
+
+  async function saveFamily() {
+    if (!RM.dirty || !RM.family) return;
+    try {
+      const r = await fetch("/api/rooms/save", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({family: RM.family, hash: RM.hash, rooms: RM.rooms})});
+      const body = await r.json().catch(() => ({}));
+      if (!r.ok) { saveRefused(body); return; }
+      RM.dirty = false;
+      toast(`Saved ${body.rooms} rooms — the previous file is in library/rooms/.backup`);
+      await loadFamily();
+    } catch (e) { toast(e.message); }
+    syncActions();
+  }
+
+  function saveRefused(body) {
+    const errs = body && body.errors || [];
+    openDialog("Not saved",
+      `<p class="problem error">${esc((body && body.error) || "the save was refused")}</p>`
+      + (errs.length > 1
+        ? `<div class="rm-errs">${errs.map(m => `<div class="problem error">${esc(m)}</div>`).join("")}</div>`
+        : ""),
+      [{label: "Close", value: "close", primary: true}]);
+  }
+
+  // ------------------------------------------------------------ edit mode
+
+  function startEdit() {
+    if (!RM.room || RM.edit) return;
+    RM.turn = RM.mirror = 0;
+    syncToolbar();
+    RM.edit = {room: deep(RM.room), errors: [], cells: [], timer: 0, seq: 0,
+               sel: -1, drag: null};
+    $("rmPlan").classList.add("editing");
+    $("rmSiblings").hidden = true;
+    buildEditOps();
+    renderDetails();
+    drawPlan();
+    syncActions();
+    checkSoon();
+  }
+
+  function endEdit(keep) {
+    const edit = RM.edit;
+    if (!edit) return;
+    clearTimeout(edit.timer);
+    RM.edit = null;
+    const ops = $("rmEditOps");
+    if (ops) ops.remove();
+    $("rmPlan").classList.remove("editing");
+    $("rmSiblings").hidden = false;
+    if (keep) {
+      const i = RM.rooms.findIndex(r => r.id === edit.room.id);
+      if (i >= 0) RM.rooms[i] = edit.room;
+      markDirty();
+      toast((edit.errors || []).length
+        ? "kept as a draft in the page — it does not check yet, so it cannot be saved"
+        : "layout kept — save to write it");
+    }
+    renderList();
+    loadRoom();
+    syncActions();
+  }
+
+  function markDirty() {
+    RM.dirty = true;
+    syncActions();
+  }
+
+  /** The layout editor's own bar, under the toolbar: group operations, the
+   * four sides' grow/shrink, and Done/Cancel. */
+  function buildEditOps() {
+    const bar = document.createElement("div");
+    bar.className = "rm-editops";
+    bar.id = "rmEditOps";
+    const side = (s, label, title, fn) =>
+      `<button type="button" data-side="${s}${label < 0 ? "-" : "+"}" title="${title}">${s.toUpperCase()}${label < 0 ? "−" : "+"}</button>`;
+    bar.innerHTML =
+      `<button type="button" data-e="turn" title="Turn the selected group a clockwise quarter (its backs turn)">Turn group ⟳</button>`
+      + `<button type="button" data-e="del" title="Remove the selected optional or luxury group">Remove group</button>`
+      + `<button type="button" data-e="add" title="Add one of the recipe's optional groups or a luxury pool group">Add group…</button>`
+      + `<span class="rm-eosep"></span>`
+      + side("n", -1, "Shrink one row on the north") + side("n", 1, "Grow one row on the north")
+      + side("w", -1, "Shrink one column on the west") + side("w", 1, "Grow one column on the west")
+      + side("e", -1, "Shrink one column on the east") + side("e", 1, "Grow one column on the east")
+      + side("s", -1, "Shrink one row on the south") + side("s", 1, "Grow one row on the south")
+      + `<span class="spacer"></span>`
+      + `<button type="button" class="primary" data-e="done">Done</button>`
+      + `<button type="button" data-e="cancel">Cancel</button>`;
+    $("rmToolbar").after(bar);
+    bar.querySelector('[data-e="turn"]').onclick = turnSelGroup;
+    bar.querySelector('[data-e="del"]').onclick = removeSelGroup;
+    bar.querySelector('[data-e="add"]').onclick = addGroupDialog;
+    for (const b of bar.querySelectorAll("[data-side]")) {
+      const [s, sign] = [b.dataset.side[0], b.dataset.side.endsWith("-")];
+      b.onclick = () => (sign ? shrinkSide : growSide)(s);
+    }
+    bar.querySelector('[data-e="done"]').onclick = () => endEdit(true);
+    bar.querySelector('[data-e="cancel"]').onclick = () => endEdit(false);
+    syncEditOps();
+  }
+
+  function syncEditOps() {
+    const ops = $("rmEditOps");
+    if (!ops || !RM.edit) return;
+    const g = RM.edit.sel >= 0 ? groupBoxes(RM.edit.room)[RM.edit.sel] : null;
+    ops.querySelector('[data-e="turn"]').disabled = !g;
+    ops.querySelector('[data-e="del"]').disabled = !g
+      || !removableGids(RM.edit.room, RM.groupsCache[RM.family] || {}).has(
+          (RM.edit.room.pieces || [])[g.indices[0]]?.group);
+  }
+
+  function onPlanDown(e) {
+    if (!RM.edit || e.button !== 0) return;
+    const c = planCell(e);
+    if (!c) return;
+    const i = pieceAt(RM.edit.room, c.x, c.y);
+    if (i < 0) { RM.edit.sel = -1; drawPlan(); syncEditOps(); return; }
+    const gi = groupBoxes(RM.edit.room).findIndex(g => g.indices.includes(i));
+    if (gi < 0) return;
+    e.preventDefault();
+    RM.edit.sel = gi;
+    RM.edit.drag = {gi, from: c, orig: deep(RM.edit.room)};
+    drawPlan();
+    syncEditOps();
+  }
+
+  function onPlanMove(e) {
+    const d = RM.edit && RM.edit.drag;
+    if (!d) return;
+    const c = planCell(e);
+    if (!c) return;
+    const dx = c.x - d.from.x, dy = c.y - d.from.y;
+    RM.edit.room = moveGroup(d.orig, d.gi, dx, dy);
+    drawPlan();
+  }
+
+  function onPlanUp() {
+    if (RM.edit && RM.edit.drag) {
+      RM.edit.drag = null;
+      renderDetails();
+      checkSoon();
+    }
+  }
+
+  /** The live checker, debounced: derive the room's worked-out fields on
+   * the server (the one derivation), outline the cells its messages name. */
+  function checkSoon() {
+    if (!RM.edit) return;
+    clearTimeout(RM.edit.timer);
+    RM.edit.timer = setTimeout(runCheck, 250);
+  }
+
+  async function runCheck() {
+    if (!RM.edit) return;
+    const seq = ++RM.edit.seq;
+    try {
+      const d = await api("/api/rooms/check", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({rooms: [RM.edit.room]})});
+      if (!RM.edit || seq !== RM.edit.seq) return;
+      RM.edit.errors = d.errors || [];
+      const derived = (d.derived || [])[0];
+      if (derived) takeDerived(RM.edit.room, derived);
+      RM.edit.cells = parseCells(RM.edit.room, RM.edit.errors);
+      syncEditOps();
+      renderDetails();
+      drawPlan();
+    } catch (e) { toast(e.message); }
+  }
+
+  /** The server's derived fields back into the page's room, in place so
+   * the key order (and so the saved file's) stays as the generator's. */
+  function takeDerived(room, derived) {
+    for (const k of ["size", "sizeBand", "sleeps", "doors", "stretch"])
+      room[k] = derived[k];
+  }
+
+  function growSide(s) {
+    if (!RM.edit) return;
+    const room = RM.edit.room;
+    const band = (RM.meta.sizeBands || {})[room.sizeBand];
+    const [w, h] = room.size || [1, 1];
+    const ns = s === "n" || s === "s";
+    const area = (w + (ns ? 0 : 1)) * (h + (ns ? 1 : 0));
+    if (band && area > band[1])
+      return toast(`that would leave the ${room.sizeBand} band (${band[0]}-${band[1]} cells)`);
+    RM.edit.room = growRoom(room, {n: "north", w: "west", e: "east", s: "south"}[s], 1);
+    checkSoon(); drawPlan();
+  }
+
+  function shrinkSide(s) {
+    if (!RM.edit) return;
+    const room = RM.edit.room;
+    const band = (RM.meta.sizeBands || {})[room.sizeBand];
+    const [w, h] = room.size || [1, 1];
+    if (w < 2 || h < 2) return toast("the room cannot shrink further");
+    const ns = s === "n" || s === "s";
+    const area = (w - (ns ? 0 : 1)) * (h - (ns ? 1 : 0));
+    if (band && area < band[0])
+      return toast(`that would leave the ${room.sizeBand} band (${band[0]}-${band[1]} cells)`);
+    const next = shrinkRoom(room, {n: "north", w: "west", e: "east", s: "south"}[s], 1);
+    if (!next) return toast("something stands on that edge");
+    RM.edit.room = next;
+    checkSoon(); drawPlan();
+  }
+
+  function turnSelGroup() {
+    if (!RM.edit || RM.edit.sel < 0) return;
+    RM.edit.room = turnGroup(RM.edit.room, RM.edit.sel);
+    checkSoon(); drawPlan();
+  }
+
+  function removeSelGroup() {
+    if (!RM.edit || RM.edit.sel < 0) return;
+    RM.edit.room = removeGroup(RM.edit.room, RM.edit.sel);
+    RM.edit.sel = -1;
+    checkSoon(); drawPlan(); syncEditOps();
+  }
+
+  async function addGroupDialog() {
+    if (!RM.edit) return;
+    const d = await groupsData();
+    if (!d) return;
+    const options = [];
+    const seen = new Set();
+    const recipe = (d.recipes || []).find(r => r.layout === RM.edit.room.recipe);
+    for (const e of (recipe && recipe.groups) || [])
+      if (e.kind === "optional" && (d.groups || {})[e.group] && !seen.has(e.group)) {
+        options.push({gid: e.group, why: "optional in the recipe"});
+        seen.add(e.group);
+      }
+    for (const e of d.pool || [])
+      if ((d.groups || {})[e.group] && !seen.has(e.group)) {
+        options.push({gid: e.group, why: "luxury pool"});
+        seen.add(e.group);
+      }
+    if (!options.length) return toast("no optional or luxury group to add for this recipe");
+    const gid = await pickGroupDialog(options, d);
+    if (!gid) return;
+    RM.edit.room = addGroup(RM.edit.room, (d.groups || {})[gid], 1, 1);
+    checkSoon();
+    drawPlan();
+  }
+
+  /** The add-group picker: rows carry their own mini plan; picking one
+   * places the group in the room's top-left corner to drag from. */
+  function pickGroupDialog(options, d) {
+    const dlg = $("dlg");
+    dlg.innerHTML = `<form><h3>Add a group</h3><div class="dlg-body"><div class="rm-pick">`
+      + options.map((o, i) => `<button type="button" class="rm-pickrow" data-i="${i}"><canvas></canvas>`
+        + `<span class="gname">${esc(o.gid)}</span><span class="note">${esc(o.why)}</span></button>`).join("")
+      + `</div></div><div class="dlg-buttons"><button type="button" data-btn="cancel">Cancel</button></div></form>`;
+    return new Promise(resolve => {
+      let done = false;
+      const finish = v => { if (done) return; done = true; if (dlg.open) dlg.close(); resolve(v); };
+      dlg.querySelectorAll(".rm-pickrow").forEach(b => {
+        const o = options[+b.dataset.i];
+        drawMini(b.querySelector("canvas"),
+                 {pieces: (((d.groups || {})[o.gid] || {}).pieces) || []});
+        b.onclick = () => finish(o.gid);
+      });
+      dlg.querySelector('[data-btn="cancel"]').onclick = () => finish(null);
+      dlg.querySelector("form").onsubmit = ev => { ev.preventDefault(); finish(null); };
+      dlg.oncancel = ev => { ev.preventDefault(); finish(null); };
+      dlg.onclose = () => finish(null);
+      dlg.showModal();
+    });
+  }
+
+  async function groupsData() {
+    if (!RM.groupsCache[RM.family]) {
+      try {
+        RM.groupsCache[RM.family] = await api("/api/rooms/groups?family="
+                                              + encodeURIComponent(RM.family));
+      } catch (e) { toast(e.message); return null; }
+    }
+    return RM.groupsCache[RM.family];
+  }
+
+  // ------------------------------------------------------ duplicate and new
+
+  function duplicateRoom() {
+    if (!RM.room) return;
+    const id = newId(RM.family, RM.room.sizeBand, RM.room.clearance,
+                     RM.room.style, RM.rooms.map(r => r.id));
+    if (!id) return toast("no free id letter for this band, clearance and style");
+    const copy = cloneRoom(RM.room, id);
+    RM.rooms.push(copy);
+    RM.rooms.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    RM.sel = id;
+    markDirty();
+    renderList();
+    loadRoom();
+    toast("duplicated as a hand room");
+  }
+
+  async function newRoomDialog() {
+    const d = await groupsData();
+    if (!d) return;
+    const recipes = (d.recipes || []).filter(r => {
+      const anchor = (r.groups || [])[0];
+      return anchor && (d.groups || {})[anchor.group];
+    });
+    if (!recipes.length) return toast("no recipe with a placeable anchor group");
+    const body =
+      `<p class="note">A hand room starts from a recipe's anchor group alone, in the
+       smallest room that holds it; everything else is yours to add.</p>`
+      + `<div class="rm-form"><label class="inline">Recipe <select id="rmNewRecipe">`
+      + recipes.map(r => `<option value="${esc(r.layout)}">${esc(r.layout)}</option>`).join("")
+      + `</select></label>`
+      + `<label class="inline">Clearance <select id="rmNewClearance">`
+      + (RM.meta.clearances || []).map(c => `<option value="${esc(c)}">${esc(c)}</option>`).join("")
+      + `</select></label>`
+      + `<label class="inline">Style <select id="rmNewStyle">`
+      + (RM.meta.styles || []).map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("")
+      + `</select></label></div>`;
+    if ((await openDialog("New hand room", body,
+                          [{label: "Create", value: "ok", primary: true},
+                           {label: "Cancel", value: null}])) !== "ok") return;
+    const recipe = recipes.find(r => r.layout === $("rmNewRecipe").value);
+    const clearance = $("rmNewClearance").value;
+    const style = $("rmNewStyle").value;
+    if (!recipe || !clearance || !style) return;
+    const anchor = (d.groups || {})[(recipe.groups || [])[0].group];
+    const room = roomFromAnchor(anchor, recipe, clearance, style);
+    if (!room) return toast("the anchor group has no pieces");
+    if (RM.edit) endEdit(false);
+    RM.rooms.push(room);
+    RM.rooms.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    RM.sel = room.id;
+    markDirty();
+    renderList();
+    loadRoom();
+    startEdit();
+    toast("new hand room — drag the group, grow the room, add more");
+  }
+
+  /** The smallest starting room for an anchor group: its pieces as they
+   * stand plus one free row and column, with every field the format needs
+   * (the worked-out ones are placeholders until the first live check
+   * derives them). */
+  function roomFromAnchor(anchor, recipe, clearance, style) {
+    const pieces = groupForm(anchor).map(p => Object.assign({}, p, {group: anchor.id}));
+    if (!pieces.length) return null;
+    const rects = pieces.map(rectOf).filter(Boolean);
+    const w = Math.max(...rects.map(r => r[0] + r[2])) + 1;
+    const h = Math.max(...rects.map(r => r[1] + r[3])) + 1;
+    const bands = RM.meta.sizeBands || {};
+    let band = null;
+    for (const [name, rng] of Object.entries(bands))
+      if (rng[0] <= w * h && w * h <= rng[1]) { band = name; break; }
+    if (!band) band = w * h <= 11 ? "tiny" : w * h <= 24 ? "small" : w * h <= 48 ? "medium" : "large";
+    const id = newId(RM.family, band, clearance, style, RM.rooms.map(r => r.id));
+    if (!id) { toast("no free id letter for this band, clearance and style"); return null; }
+    const wealth = ((RM.meta.wealthFor || {})[clearance] || {})[style] || (RM.meta.tiers || []).slice(0, 2);
+    return {id, family: RM.family, sizeBand: band, clearance, style,
+            wealth: [...wealth], size: [w, h],
+            sleeps: {singles: 0, couples: 0}, pieces,
+            doors: {north: [], south: [], west: [], east: []},
+            stretch: {x: [], y: []}, outdoor: false, symmetric: false,
+            recipe: recipe.layout || "", description: "A hand room.",
+            source: "hand"};
+  }
+
+  // ------------------------------------------------------------ regenerate
+
+  async function regenerateRoom() {
+    if (!RM.room) return;
+    if (RM.dirty && !(await guardDirty())) return;
+    toast("composing candidates…");
+    let d;
+    try {
+      d = await api("/api/rooms/regenerate", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({id: RM.sel})});
+    } catch (e) { return toast(e.message); }
+    const cands = d.candidates || [];
+    if (!cands.length)
+      return toast("no new layout for this recipe: every candidate duplicates a shipped room");
+    const pick = await pickDialog(cands);
+    if (pick === null || pick === undefined) return;
+    const merged = mergeLayout(RM.room, cands[pick]);
+    const i = RM.rooms.findIndex(r => r.id === merged.id);
+    if (i >= 0) RM.rooms[i] = merged;
+    markDirty();
+    renderList();
+    loadRoom();
+    toast("layout replaced — the room is a hand room now; save to write it");
+  }
+
+  /** The candidate picker: small plans; a click picks, Cancel (or Esc)
+   * keeps the room as it is. */
+  function pickDialog(cands) {
+    const dlg = $("dlg");
+    dlg.innerHTML = `<form><h3>Pick a new layout</h3><div class="dlg-body"><div class="rm-cands">`
+      + cands.map((c, i) => `<button type="button" class="rm-cand" data-i="${i}" title="${esc(c.description || "")}"></button>`).join("")
+      + `</div></div><div class="dlg-buttons"><button type="button" data-btn="cancel">Cancel</button></div></form>`;
+    return new Promise(resolve => {
+      let done = false;
+      const finish = v => { if (done) return; done = true; if (dlg.open) dlg.close(); resolve(v); };
+      dlg.querySelectorAll(".rm-cand").forEach(b => {
+        const c = cands[+b.dataset.i];
+        const cvs = document.createElement("canvas");
+        b.appendChild(cvs);
+        drawMini(cvs, c);
+        const small = document.createElement("small");
+        small.textContent = `${c.size[0]}×${c.size[1]} · ${(c.pieces || []).length} pieces`;
+        b.appendChild(small);
+        b.onclick = () => finish(+b.dataset.i);
+      });
+      dlg.querySelector('[data-btn="cancel"]').onclick = () => finish(null);
+      dlg.querySelector("form").onsubmit = ev => { ev.preventDefault(); finish(null); };
+      dlg.oncancel = ev => { ev.preventDefault(); finish(null); };
+      dlg.onclose = () => finish(null);
+      dlg.showModal();
+    });
+  }
+
+  async function regenFamily() {
+    if (!RM.family) return;
+    if (RM.dirty && !(await guardDirty())) return;
+    if (RM.edit) endEdit(false);
+    let started;
+    try {
+      started = await api("/api/rooms/regenerate/family", {method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({family: RM.family})});
+    } catch (e) { return toast(e.message); }
+    const chip = RM.actions.querySelector(".rm-job");
+    const btn = RM.actions.querySelector('[data-act="regenfam"]');
+    btn.disabled = true;
+    chip.hidden = false;
+    chip.textContent = `regenerating ${RM.family}…`;
+    try {
+      let job = (started && started.job) || null;
+      for (;;) {
+        if (!job || job.status !== "running") break;
+        await new Promise(r => setTimeout(r, 1000));
+        const d = await api("/api/rooms/job");
+        job = d.job;
+      }
+      chip.hidden = true;
+      if (!job) return;
+      if (job.status === "error") return toast("regeneration failed: " + (job.error || "?"));
+      await showFamilyDiff(job);
+    } catch (e) {
+      chip.hidden = true;
+      toast(e.message);
+    } finally {
+      btn.disabled = false;
+      syncActions();
+    }
+  }
+
+  /** The diff of a family regeneration, before/after plans per id; Apply
+   * writes it (through the save path: checker, backup, atomic write),
+   * Discard throws it away — nothing is written before Apply. */
+  async function showFamilyDiff(job) {
+    const diff = job.diff || [];
+    const counts = {added: 0, removed: 0, changed: 0};
+    for (const e of diff) counts[e.op] = (counts[e.op] || 0) + 1;
+    const body =
+      `<p class="note">${counts.added} added · ${counts.removed} removed · ${counts.changed} changed`
+      + (RM.dirty ? ` — you have unsaved changes; applying reloads the family from disk` : "")
+      + `. Hand rooms are kept as they are.</p>`
+      + (diff.length ? `<div class="rm-diff">` + diff.map((e, i) =>
+          `<div class="rm-diffrow ${e.op}"><span class="rm-op">${e.op}</span>`
+          + `<span class="id" title="${esc(e.id)}">${esc(e.id)}</span>`
+          + `<span class="rm-chgpair" data-i="${i}"></span></div>`).join("") + `</div>`
+        : `<p class="note">Nothing changes: the family regenerates to exactly what it holds.</p>`);
+    const choice = await openDialog(`Regenerate ${job.family}`, body,
+      [{label: "Apply", value: "apply", primary: true},
+       {label: "Discard", value: "discard"}],
+      dlg => {
+        const mini = room => {
+          const cvs = document.createElement("canvas");
+          drawMini(cvs, room);
+          return cvs;
+        };
+        dlg.querySelectorAll(".rm-chgpair").forEach(el => {
+          const e = diff[+el.dataset.i];
+          if (e.before) el.appendChild(mini(e.before));
+          if (e.before && e.after) el.appendChild(Object.assign(document.createElement("span"),
+                                                   {className: "arrow", textContent: "→"}));
+          if (e.after) el.appendChild(mini(e.after));
+        });
+      });
+    if (choice === "apply") {
+      try {
+        const r = await api("/api/rooms/regenerate/apply", {method: "POST",
+          headers: {"Content-Type": "application/json"}, body: "{}"});
+        toast(`regenerated ${r.rooms} rooms written (previous file backed up)`);
+        RM.dirty = false;
+        await loadFamily();
+      } catch (e) { toast(e.message); }
+    } else {
+      try { await api("/api/rooms/regenerate/discard", {method: "POST",
+        headers: {"Content-Type": "application/json"}, body: "{}"}); }
+      catch (e) { /* the job is gone either way for the page */ }
+    }
+  }
+
   return {roleColor, darker, shortRole, filterRooms, fitPlan, doorCells, stretchLines,
-          groupBoxes, pieceAt, rectOf};
+          groupBoxes, pieceAt, rectOf, LETTERS, EDITABLE, letterAt, nextLetter, newId,
+          cloneRoom, TURN_SIDES, turnGroup, moveGroup, removeGroup, groupForm, addGroup,
+          growRoom, shrinkRoom, mergeLayout, setField, resetField, parseCells,
+          removableGids};
 });

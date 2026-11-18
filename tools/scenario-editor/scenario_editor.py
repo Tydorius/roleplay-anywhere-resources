@@ -141,6 +141,8 @@ class Handler(ig.Handler):
                 data, ctype = rmed.sprite((q.get("band") or [""])[0],
                                           (q.get("object") or [""])[0])
                 return self.send(200, data, ctype)
+            if u.path == "/api/rooms/job":
+                return self.send(200, {"job": rmed.job()})
             if u.path == "/api/assistant/meta":
                 return self.send(200, at.meta())
             if u.path == "/api/assistant/job":
@@ -214,8 +216,25 @@ class Handler(ig.Handler):
                 return self.send(200, rb.apply_staged())
             if u.path == "/api/assistant/rebuild/discard":
                 return self.send(200, rb.discard())
-        except (wg.JobBusyError, at.JobBusyError, rb.JobBusyError) as e:
+            if u.path == "/api/rooms/check":
+                return self.send(200, rmed.check_rooms(req_json(self.body())))
+            if u.path == "/api/rooms/save":
+                return self.send(200, rmed.save(req_json(self.body())))
+            if u.path == "/api/rooms/regenerate":
+                return self.send(200, rmed.regenerate(
+                    req_json(self.body()).get("id")))
+            if u.path == "/api/rooms/regenerate/family":
+                return self.send(200, {"job": rmed.start_regen_family(
+                    req_json(self.body()).get("family"))})
+            if u.path == "/api/rooms/regenerate/apply":
+                return self.send(200, rmed.apply_regen())
+            if u.path == "/api/rooms/regenerate/discard":
+                return self.send(200, rmed.discard_regen())
+        except (wg.JobBusyError, at.JobBusyError, rb.JobBusyError,
+                rmed.JobBusyError) as e:
             return self.send(409, {"error": str(e), "busy": True})
+        except rmed.SaveError as e:
+            return self.send(400, {"error": str(e), "errors": e.errors})
         except (LookupError, ValueError, KeyError, OSError) as e:
             return self.send(400, {"error": str(e)})
         return super().do_POST()

@@ -14,6 +14,15 @@ between regenerations: a room whose shape is already shipped keeps its id,
 and a new room takes the next free letter of its family, band, clearance
 and style.
 
+Hand work survives regeneration: a room with "source": "hand" (one a person
+made or re-laid out) or "retired": true (one a person took out of use; it
+stays so its id is never reused) is kept exactly as it stands, its id's
+letter stays taken and a generated room equal to it after any turn or mirror
+is dropped in its favour; a generated room whose id survives keeps the
+values of the fields in its "edited" list (wealth, description, symmetric,
+retired). With no hand work in the files the output is exactly what a fresh
+generation writes.
+
   python library-seed/generate_rooms.py [family ...]
 
 Prints a table (per family: recipes, rooms kept, rooms dropped and why, the
@@ -187,7 +196,7 @@ def wealth_for(clearance, style):
     return ["poor", "modest"] + (["wealthy"] if clearance == "roomy" else [])
 
 
-def _uses_elite_piece(room, gdefs):
+def uses_elite_piece(room, gdefs):
     """Whether the room places a group with an elite-only piece (minWealth
     elite on any of its pieces): a grand room like that serves the elite
     alone. Placed pieces carry no minWealth, so the group definitions are
@@ -233,100 +242,113 @@ def _finalize(room, rid, elite=False):
     return out
 
 
-def _shipped_ids(fam):
-    """canonical shape -> id for the family's shipped rooms, so a room that
-    still exists keeps its id across a regeneration (a changed rule drops
-    rooms without renaming the survivors)."""
-    path = os.path.join(ROOMS_DIR, f"{fam}.json")
+def _shipped_rooms(fam, rooms_dir=None):
+    """The family's stored rooms as shipped (only rooms with a readable id):
+    the hand and retired ones the generator keeps verbatim, and the ones
+    whose edited fields it preserves."""
+    path = os.path.join(rooms_dir or ROOMS_DIR, f"{fam}.json")
     if not os.path.isfile(path):
-        return {}
+        return []
     try:
         with open(path, encoding="utf-8") as fh:
             rooms = json.load(fh)["rooms"]
     except (OSError, ValueError, KeyError, TypeError):
-        return {}
-    return {canonical(r): r["id"] for r in rooms
-            if isinstance(r, dict) and isinstance(r.get("id"), str)}
+        return []
+    return [r for r in rooms
+            if isinstance(r, dict) and isinstance(r.get("id"), str)]
 
 
-def generate(families=FAMILIES, seed=SEED):
+def _shipped_ids(fam, rooms_dir=None):
+    """canonical shape -> id for the family's shipped generated rooms (hand
+    and retired rooms keep their ids by being kept, so a generated room never
+    takes one), so a room that still exists keeps its id across a
+    regeneration (a changed rule drops rooms without renaming the
+    survivors)."""
+    return {canonical(r): r["id"] for r in _shipped_rooms(fam, rooms_dir)
+            if r.get("source") != "hand" and not r.get("retired")}
+
+
+def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None):
+    """One recipe composed at a clearance and style under this generator's
+    own rules: the grand-private area cap from the roomy sibling (``roomy``),
+    then the luxury-pool, more-furniture and cells-per-piece filters. Returns
+    (rooms, reason), ``reason`` naming the rule that left nothing. The
+    editor's "regenerate this room" calls this, so its candidates come from
+    the same rules a full generation runs."""
+    cap = None
+    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES and roomy is not None:
+        cap = math.ceil(RC.GRAND_AREA_RATIO * roomy["size"][0] * roomy["size"][1])
+    rooms, reason = RC.compose(recipe, data, clearance, style, seed, max_area=cap)
+    if not rooms:
+        return rooms, reason
+    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
+        # a grand private room spends its space on furniture: it keeps a
+        # luxury group and more pieces than the roomy room of the same
+        # recipe and style (one that deduplicates to the roomy room is
+        # caught by the shape dedup in generate)
+        pool = {e.get("group") for e in (data.get("pools", {}).get(fam) or [])
+                if isinstance(e, dict)}
+        rooms = [r for r in rooms
+                 if any(p.get("group") in pool for p in r["pieces"])]
+        if not rooms:
+            return rooms, "grand: no luxury group fits"
+        if roomy is None:
+            return [], "grand: no roomy room to better"
+        rooms = [r for r in rooms if len(r["pieces"]) > len(roomy["pieces"])]
+        if not rooms:
+            return rooms, "grand: no more furniture than the roomy room"
+        rooms = [r for r in rooms
+                 if r["size"][0] * r["size"][1]
+                 <= GRAND_MAX_CELLS_PER_PIECE * len(r["pieces"])]
+        if not rooms:
+            return rooms, ("grand: more than "
+                           f"{GRAND_MAX_CELLS_PER_PIECE} cells of floor per piece")
+    return rooms, None
+
+
+def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
+             lib_dir=None):
     """The families' fixed rooms as ({family: [room, ...]}, drops), the rooms
     sorted by id and passing the fixed-room checker, the drops as
     (layout, clearance, style, reason) per family. A room whose canonical
     shape is already shipped under the same family, band, clearance and
-    style keeps its shipped id; new rooms take the next free letter.
-    Deterministic per seed."""
-    data = RG.load()
-    lib = WL.load()
+    style keeps its shipped id; new rooms take the next free letter. Rooms
+    marked "source": "hand" or "retired" are kept verbatim (their letters
+    staying taken, generated duplicates of them dropped), and a surviving
+    generated room keeps the fields in its "edited" list. The folder
+    arguments default to the shipped library; the editor points them at its
+    own. Deterministic per seed."""
+    data = RG.load(groups_dir)
+    lib = WL.load(lib_dir or WL.LIB_DIR)
     gdefs = data["groups"]
     out, all_drops = {}, {}
     for fam in families:
         recipes = sorted((r for r in data["recipes"].values()
                           if r.get("family") == fam),
                          key=lambda r: str(r.get("layout")))
+        shipped = _shipped_rooms(fam, rooms_dir)
+        # hand and retired rooms are kept exactly as they stand: never
+        # regenerated, never removed, their ids' letters staying taken and
+        # their shapes ahead of every generated duplicate
+        keep = [r for r in shipped
+                if r.get("source") == "hand" or r.get("retired")]
+        edits = {r["id"]: r for r in shipped
+                 if r.get("edited") and r.get("source") != "hand"
+                 and not r.get("retired")}
         kept = []
-        seen = set()
+        seen = {canonical(r) for r in keep}
         drops = []          # (layout, clearance, style, reason)
         for recipe in recipes:
             roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
             for clearance in CLEARANCES:
                 for style in STYLES:
-                    # a grand private room stays within GRAND_AREA_RATIO of
-                    # the roomy room of the same recipe and style: the
-                    # composer adds optional and pool groups only while the
-                    # cap holds
-                    cap = None
-                    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
-                        sibling = roomy_rooms.get(style)
-                        if sibling is not None:
-                            cap = math.ceil(
-                                RC.GRAND_AREA_RATIO * sibling["size"][0]
-                                * sibling["size"][1])
-                    rooms, reason = RC.compose(recipe, data, clearance, style,
-                                               seed, max_area=cap)
+                    rooms, reason = compose_recipe(recipe, fam, data,
+                                                   clearance, style, seed,
+                                                   roomy=roomy_rooms.get(style))
                     if not rooms:
                         drops.append((recipe["layout"], clearance, style,
                                       reason))
                         continue
-                    if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
-                        # a grand private room spends its space on furniture:
-                        # it keeps a luxury group and more pieces than the
-                        # roomy room of the same recipe and style (one that
-                        # deduplicates to the roomy room is caught by the
-                        # shape dedup below)
-                        pool = {e.get("group") for e in
-                                (data.get("pools", {}).get(fam) or [])
-                                if isinstance(e, dict)}
-                        rooms = [r for r in rooms
-                                 if any(p.get("group") in pool
-                                        for p in r["pieces"])]
-                        if not rooms:
-                            drops.append((recipe["layout"], clearance, style,
-                                          "grand: no luxury group fits"))
-                            continue
-                        sibling = roomy_rooms.get(style)
-                        if sibling is None:
-                            drops.append((recipe["layout"], clearance, style,
-                                          "grand: no roomy room to better"))
-                            continue
-                        rooms = [r for r in rooms
-                                 if len(r["pieces"])
-                                 > len(sibling["pieces"])]
-                        if not rooms:
-                            drops.append((recipe["layout"], clearance, style,
-                                          "grand: no more furniture than the "
-                                          "roomy room"))
-                            continue
-                        rooms = [r for r in rooms
-                                 if r["size"][0] * r["size"][1]
-                                 <= GRAND_MAX_CELLS_PER_PIECE
-                                 * len(r["pieces"])]
-                        if not rooms:
-                            drops.append((recipe["layout"], clearance, style,
-                                          "grand: more than "
-                                          f"{GRAND_MAX_CELLS_PER_PIECE} cells "
-                                          "of floor per piece"))
-                            continue
                     # the best room of the recipe that no earlier one kept:
                     # two rooms equal after any turn or mirror are one room,
                     # so a recipe whose best is taken falls to its next-best
@@ -341,17 +363,24 @@ def generate(families=FAMILIES, seed=SEED):
                     if clearance == "roomy":
                         roomy_rooms[style] = best
                     kept.append(best)
-        shipped = _shipped_ids(fam)
+        shipped_ids = _shipped_ids(fam, rooms_dir)
         letters = {}        # group -> letters already on this run's ids
         # an id is <family>.<band>.<letter>.<clearance>.<style>, and the
         # family itself may hold dots (bedroom.master), so the letter sits
         # after as many family parts as the family has
         nparts = len(fam.split("."))
+        # a kept room's letter stays taken in its band, clearance and style
+        for r in keep:
+            bits = r["id"].split(".")
+            if len(bits) == nparts + 4 and bits[nparts + 1] in LETTERS:
+                letters.setdefault((bits[nparts], bits[nparts + 2],
+                                    bits[nparts + 3]), set()).add(
+                    bits[nparts + 1])
         rooms = []
         for room in kept:
             group = (room["sizeBand"], room["clearance"], room["style"])
             used = letters.setdefault(group, set())
-            rid = shipped.get(canonical(room))
+            rid = shipped_ids.get(canonical(room))
             if rid is not None:
                 bits = rid.split(".")
                 if len(bits) != nparts + 4 or bits[:nparts] != fam.split(".") \
@@ -367,8 +396,17 @@ def generate(families=FAMILIES, seed=SEED):
                       f"{room['clearance']}.{room['style']}"
             used.add(rid.split(".")[nparts + 1])
             elite = (room["clearance"] == "grand"
-                     and _uses_elite_piece(room, gdefs))
-            rooms.append(_finalize(room, rid, elite))
+                     and uses_elite_piece(room, gdefs))
+            out_room = _finalize(room, rid, elite)
+            old = edits.get(rid)
+            if old is not None:
+                # a surviving room keeps the fields a person set on it
+                for f in old["edited"]:
+                    if f in old:
+                        out_room[f] = old[f]
+                out_room["edited"] = list(old["edited"])
+            rooms.append(out_room)
+        rooms.extend(keep)
         rooms.sort(key=lambda r: r["id"])
         errors = FR.check(rooms, data, lib)
         if errors:

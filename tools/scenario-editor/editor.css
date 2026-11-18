@@ -343,6 +343,58 @@ dialog#dlg h3 { margin: 0; padding: 14px 18px 8px; font-size: 16px; }
 .rm-errs { display: flex; flex-direction: column; gap: 4px; }
 .rm-errs .problem { background: var(--bg); border-color: var(--bad); color: var(--bad); }
 
+/* hand work (rl-04b): the action bar, the layout editor's ops bar, the
+   details panel's editable fields, and the pickers' candidate grids */
+.rm-actions { display: flex; gap: 8px; align-items: center; padding: 8px 12px;
+  background: var(--panel); border-bottom: 1px solid var(--line); }
+.rm-actions .spacer { flex: 1; }
+.rm-dirty { color: var(--warn); font-size: 12px; white-space: nowrap; }
+.rm-job { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.rm-editops { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 6px 12px;
+  background: var(--panel); border-bottom: 1px solid var(--line); }
+.rm-editops .spacer { flex: 1; }
+.rm-eosep { width: 1px; align-self: stretch; background: var(--line); margin: 0 4px; }
+#rmPlan.editing { cursor: grab; }
+.rm-hand, .rm-retired, .rm-editflag { font-size: 10px; padding: 1px 6px; border-radius: 999px;
+  border: 1px solid var(--line); white-space: nowrap; }
+.rm-hand { color: var(--accent); border-color: var(--accent); }
+.rm-retired { color: var(--bad); border-color: var(--bad); }
+.rm-editflag { color: var(--muted); }
+.rm-isretired .id { text-decoration: line-through; }
+#rmDetails .rm-flags { margin: -4px 0 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+.rm-editfields { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+.rm-field { display: grid; grid-template-columns: 96px 1fr; gap: 4px 8px; font-size: 12px; }
+.rm-field .k { color: var(--muted); }
+.rm-field .v { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
+.rm-field textarea { width: 100%; min-height: 48px; resize: vertical; }
+.rm-reset { font-size: 11px; }
+.rm-reset-off { display: inline-block; width: 1px; }
+.rm-cands { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; }
+.rm-cand { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.rm-cand:hover { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.rm-cand canvas { image-rendering: pixelated; }
+.rm-cand small { font-size: 11px; color: var(--muted); }
+.rm-pick { display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow: auto; }
+.rm-pickrow { display: flex; gap: 10px; align-items: center; text-align: left; padding: 4px 8px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
+.rm-pickrow:hover { border-color: var(--accent); }
+.rm-pickrow canvas { image-rendering: pixelated; }
+.rm-pickrow .gname { font-size: 12px; }
+.rm-pickrow .note { margin-left: auto; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.rm-form { display: flex; flex-direction: column; gap: 8px; }
+.rm-diff { display: flex; flex-direction: column; gap: 2px; max-height: 55vh; overflow: auto; }
+.rm-diffrow { display: flex; gap: 8px; align-items: center; font-size: 12px; padding: 2px 0; }
+.rm-diffrow .rm-op { min-width: 62px; font-size: 10px; text-transform: uppercase; letter-spacing: .05em;
+  padding: 1px 6px; border-radius: 999px; border: 1px solid var(--line); text-align: center; }
+.rm-diffrow.added .rm-op { color: #2f9e44; border-color: #2f9e44; }
+.rm-diffrow.removed .rm-op { color: var(--bad); border-color: var(--bad); }
+.rm-diffrow.changed .rm-op { color: var(--warn); border-color: var(--warn); }
+.rm-diffrow .id { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rm-chgpair { display: flex; gap: 4px; align-items: center; }
+.rm-chgpair canvas { image-rendering: pixelated; }
+.rm-chgpair .arrow { color: var(--muted); }
+
 @media (max-width: 900px) {
   .rm-planwrap { flex: none; height: 60vh; }
 }

@@ -1,17 +1,23 @@
-"""The Rooms tab's read-only endpoints (rl-04a): present() against the shipped
-library and a temp copy without rooms, the meta listing of the three families,
-one family's rooms with their checker errors (a hand-broken room in a temp
-library reports its error against its own id and none on the others), the
-turned room going through fixed_rooms.rotate, the look's per-piece objects in
-the modern band (each null or an object id with a shipped sprite file), the
-sprite endpoint over HTTP (webp bytes, 400 for ../, slashes and unknown ids)
-and that no GET changes any file under the library.
+"""The Rooms tab's endpoints: present() against the shipped library and a
+temp copy without rooms, the meta listing of the three families, one family's
+rooms with their checker errors (a hand-broken room in a temp library reports
+its error against its own id and none on the others), the turned room going
+through fixed_rooms.rotate, the look's per-piece objects in the modern band
+(each null or an object id with a shipped sprite file), the sprite endpoint
+over HTTP (webp bytes, 400 for ../, slashes and unknown ids) and that no GET
+changes any file under the library. The hand-work endpoints (rl-04b): a valid
+edit writes and reloads clean, a broken room is refused with the file
+untouched, a stale file hash is refused, an unchanged save writes identical
+bytes, the previous file lands in .backup, regenerate-one returns
+checker-passing candidates equal to no shipped room, and a family
+regeneration writes nothing until it is applied.
 """
 import json
 import shutil
 import sys
 import tempfile
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.parse
@@ -136,6 +142,131 @@ class TestLook(LibraryTestCase):
                 self.assertTrue(sprite.is_file(), f"piece {i}: no sprite file {sprite}")
                 seen_object = True
         self.assertTrue(seen_object, "at least one piece found a modern sprite")
+
+
+class TestSave(LibraryTestCase):
+    """POST /api/rooms/save against a temp copy of the library: the checker
+    gates every write, the stale-file guard refuses a file that changed under
+    the page, an unchanged save is byte-identical and the previous file is
+    backed up."""
+
+    def path(self, family="bedroom"):
+        return self.dir / "rooms" / f"{family}.json"
+
+    def test_a_valid_edit_writes_and_reloads_clean(self):
+        self.copy_library()
+        d = rmed.family("bedroom")
+        d["rooms"][0]["description"] = "Described by hand."
+        d["rooms"][0]["edited"] = ["description"]
+        out = rmed.save({"family": "bedroom", "rooms": d["rooms"],
+                         "hash": d["hash"]})
+        self.assertTrue(out["ok"])
+        self.assertEqual(out["rooms"], len(d["rooms"]))
+        again = rmed.family("bedroom")
+        self.assertEqual(again["errors"], [])
+        for r in again["rooms"]:
+            self.assertEqual([], r["errors"])
+        self.assertEqual(again["hash"], out["hash"])
+        by_id = {r["id"]: r for r in again["rooms"]}
+        self.assertEqual(by_id[d["rooms"][0]["id"]]["description"],
+                         "Described by hand.")
+        self.assertEqual(by_id[d["rooms"][0]["id"]]["edited"],
+                         ["description"])
+
+    def test_a_broken_room_is_refused_and_the_file_stands(self):
+        self.copy_library()
+        d = rmed.family("bedroom")
+        d["rooms"][0]["pieces"].append(dict(d["rooms"][0]["pieces"][0],
+                                            role="storage"))   # two on one cell
+        before = self.path().read_bytes()
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save({"family": "bedroom", "rooms": d["rooms"],
+                       "hash": d["hash"]})
+        self.assertTrue(caught.exception.errors, "the refusal says why")
+        self.assertEqual(before, self.path().read_bytes())
+        self.assertFalse((self.dir / "rooms" / ".backup").exists(),
+                         "a refused save backs nothing up")
+
+    def test_a_stale_file_hash_is_refused(self):
+        self.copy_library()
+        d = rmed.family("bedroom")
+        on_disk = json.loads(self.path().read_text("utf-8"))
+        on_disk["rooms"][0]["description"] = "changed on disk"
+        self.path().write_text(json.dumps(on_disk), "utf-8")
+        with self.assertRaises(rmed.SaveError) as caught:
+            rmed.save({"family": "bedroom", "rooms": d["rooms"],
+                       "hash": d["hash"]})
+        self.assertTrue(any("changed on disk" in e
+                            for e in caught.exception.errors))
+
+    def test_an_unchanged_save_writes_identical_bytes(self):
+        self.copy_library()
+        d = rmed.family("bedroom")
+        before = self.path().read_bytes()
+        out = rmed.save({"family": "bedroom", "rooms": d["rooms"],
+                         "hash": d["hash"]})
+        self.assertTrue(out["ok"])
+        self.assertEqual(before, self.path().read_bytes())
+
+    def test_the_previous_file_lands_in_the_backup(self):
+        self.copy_library()
+        d = rmed.family("bedroom")
+        before = self.path().read_bytes()
+        d["rooms"][0]["description"] = "Described by hand."
+        rmed.save({"family": "bedroom", "rooms": d["rooms"], "hash": d["hash"]})
+        backup = self.dir / "rooms" / ".backup" / "bedroom.json"
+        self.assertTrue(backup.is_file())
+        self.assertEqual(backup.read_bytes(), before)
+
+
+class TestRegenerateOne(LibraryTestCase):
+
+    def test_candidates_check_clean_and_duplicate_nothing(self):
+        self.copy_library()
+        room = rmed.family("bedroom")["rooms"][0]
+        out = rmed.regenerate(room["id"])
+        self.assertEqual(out["room"], room["id"])
+        self.assertTrue(out["candidates"], "at least one candidate")
+        self.assertEqual([], rmed.check_rooms({"rooms": out["candidates"]})["errors"])
+        gen = rmed._generate_rooms_mod()
+        existing = {gen.canonical(r) for r in fixed_rooms.load(rmed._rooms_dir())
+                    if r.get("family") == "bedroom"}
+        seen = set()
+        for cand in out["candidates"]:
+            with self.subTest(candidate=cand["id"]):
+                self.assertEqual(cand["sizeBand"], room["sizeBand"])
+                key = gen.canonical(cand)
+                self.assertNotIn(key, existing, "equals a shipped room")
+                self.assertNotIn(key, seen, "another candidate's equal")
+                seen.add(key)
+
+
+class TestRegenerateFamily(LibraryTestCase):
+
+    def test_nothing_is_written_until_the_job_is_applied(self):
+        self.copy_library()
+        before = self.path().read_bytes()
+        j = rmed.start_regen_family("bedroom")
+        self.assertEqual(j["status"], "running")
+        for _ in range(600):                      # the page polls; so does the test
+            j = rmed.job()
+            if j["status"] != "running":
+                break
+            time.sleep(0.5)
+        self.assertEqual(j["status"], "done", j.get("error"))
+        self.assertEqual(j["family"], "bedroom")
+        self.assertEqual(before, self.path().read_bytes(),
+                         "the finished job wrote nothing by itself")
+        out = rmed.apply_regen()
+        self.assertTrue(out["ok"])
+        self.assertEqual(out["rooms"],
+                         len(json.loads(self.path().read_text("utf-8"))["rooms"]))
+        self.assertEqual(before, self.path().read_bytes(),
+                         "an unmodified family regenerates to the same bytes")
+        self.assertIsNone(rmed.job(), "applying clears the job")
+
+    def path(self, family="bedroom"):
+        return self.dir / "rooms" / f"{family}.json"
 
 
 class TestSpriteOverHTTP(unittest.TestCase):
