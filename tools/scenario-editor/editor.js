@@ -331,7 +331,8 @@ function setTab(t, find) {
   $("tabMap").classList.toggle("on", t === "map"); $("tabImages").classList.toggle("on", t === "images");
   $("tabRooms").classList.toggle("on", t === "rooms");
   $("mapView").hidden = t !== "map"; $("images").hidden = t !== "images"; $("roomsView").hidden = t !== "rooms";
-  if (t === "images") showImages(find); else { $("images").src = "about:blank"; refreshMedia().catch(() => {}); draw(); }
+  if (t === "images") showImages(find);
+  else { $("images").src = "about:blank"; if (t === "map") { if (S.fitPending) fit(); refreshMedia().catch(() => {}); draw(); } }
 }
 $("tabMap").onclick = () => setTab("map");
 $("tabImages").onclick = () => setTab("images");
