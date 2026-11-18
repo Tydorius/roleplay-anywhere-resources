@@ -1,0 +1,171 @@
+{
+  "groups": [
+    {
+      "id": "wash.bath.wash.basin",
+      "family": "bath",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "wash.bath.wash.basin.wash.bath.opt",
+      "family": "bath",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "bath.large.a",
+      "family": "bath",
+      "sizeBands": [
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.washroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "seat.long.single.washroom1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "decor.floor.single.washroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bath.medium.a",
+      "family": "bath",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.bath.wash.basin",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.washroom1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.washroom",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.washroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bath.small.a",
+      "family": "bath",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.bath.wash.basin",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.washroom1",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}

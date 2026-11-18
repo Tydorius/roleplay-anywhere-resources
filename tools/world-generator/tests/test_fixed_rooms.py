@@ -128,6 +128,18 @@ class TestChecker(unittest.TestCase):
         room = self.base(sizeBand="large")
         self.assertTrue(any("outside size band" in e for e in self.errors(room)))
 
+    def test_washroom_without_a_bath_is_rejected(self):
+        room = self.base()
+        room["family"] = "washroom"
+        room["recipe"] = "washroom.small.b"
+        errors = self.errors(room)
+        self.assertTrue(any("holds no wash.bath piece: a washroom needs one"
+                            in e for e in errors), errors)
+        self.assertTrue(any("holds no wash.toilet piece: a washroom needs one"
+                            in e for e in errors), errors)
+        self.assertTrue(any("holds no wash.basin piece: a washroom needs one"
+                            in e for e in errors), errors)
+
     def test_room_three_times_as_long_as_wide(self):
         """A 6x2 bedroom whose only fault is the aspect: the long side is
         three times the short, over the family cap of two."""
@@ -357,6 +369,81 @@ class TestChecker(unittest.TestCase):
         self.assertEqual(self.errors(room), [])
         room["pieces"].pop()
         self.assertTrue(any("flagged symmetric" in e for e in self.errors(room)))
+
+
+class TestWashFamilyRules(unittest.TestCase):
+    """The wash families' fixture pairings (WASH_FAMILY_RULES): a washroom
+    needs a toilet, a bath and a basin, a privy holds the toilet and never a
+    bath, and a bath room the bath and never a toilet. The rooms come from
+    the shipped files, broken by hand one fixture at a time."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+        cls.data = RG.load()
+        cls.shipped = [r for r in FR.load()
+                       if r.get("family") in ("washroom", "privy", "bath")]
+
+    def errors(self, room):
+        return FR.check([room], self.data, self.lib)
+
+    def _a_shipped(self, family, role=None, without=None):
+        for room in self.shipped:
+            if room["family"] != family:
+                continue
+            roles = {p["role"] for p in room["pieces"]}
+            if role is not None and role not in roles:
+                continue
+            if without is not None and without in roles:
+                continue
+            return json.loads(json.dumps(room))
+        self.fail(f"no shipped {family} room "
+                  f"{'with' if role else 'without'} {role or without}")
+
+    def _free_spot(self, room, pw, ph):
+        w, h = room["size"]
+        taken = {(x, y) for p in room["pieces"]
+                 for x in range(p["at"][0], p["at"][0] + p["size"][0])
+                 for y in range(p["at"][1], p["at"][1] + p["size"][1])}
+        for y in range(h - ph + 1):
+            for x in range(w - pw + 1):
+                if not any((cx, cy) in taken
+                           for cx in range(x, x + pw)
+                           for cy in range(y, y + ph)):
+                    return [x, y]
+        self.fail(f"no free {pw}x{ph} spot in {room['id']}")
+
+    def test_the_shipped_wash_rooms_check_clean(self):
+        self.assertEqual(FR.check(self.shipped, self.data, self.lib), [])
+
+    def test_a_washroom_without_its_bath_is_rejected(self):
+        room = self._a_shipped("washroom", role="wash.bath")
+        room["pieces"] = [p for p in room["pieces"]
+                          if p["role"] != "wash.bath"]
+        self.assertTrue(any("holds no wash.bath piece: a washroom needs one"
+                            in e for e in self.errors(room)))
+
+    def test_a_privy_with_a_bath_is_rejected(self):
+        room = self._a_shipped("privy")
+        room["pieces"].append(piece("wash.bath", [1, 2],
+                                    self._free_spot(room, 1, 2),
+                                    "wash.bath.wash.basin"))
+        self.assertTrue(any("holds a wash.bath piece, which a privy never "
+                            "does" in e for e in self.errors(room)))
+
+    def test_a_bath_room_with_a_toilet_is_rejected(self):
+        room = self._a_shipped("bath")
+        room["pieces"].append(piece("wash.toilet", [1, 1],
+                                    self._free_spot(room, 1, 1),
+                                    "wash.toilet.single.privy"))
+        self.assertTrue(any("holds a wash.toilet piece, which a bath never "
+                            "does" in e for e in self.errors(room)))
+
+    def test_privies_and_bath_rooms_pass_as_they_stand(self):
+        for room in self.shipped:
+            if room["family"] in ("privy", "bath"):
+                with self.subTest(room=room["id"]):
+                    self.assertEqual(self.errors(room), [])
 
 
 class TestHandFields(unittest.TestCase):

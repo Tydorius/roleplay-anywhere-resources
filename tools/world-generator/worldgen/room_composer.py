@@ -58,8 +58,8 @@ HALL_ASPECT = 2.5        # hall-like families read long, so they get more
 HALL_FAMILIES = ("chapel", "common_room", "dining", "hall", "taproom")
 # one household's or one person's room: a grand private room keeps the roomy
 # gap and spends the space on furniture (a pool group) instead of floor
-PRIVATE_FAMILIES = ("bedroom", "bedroom.master", "washroom", "cell", "hut",
-                    "office")
+PRIVATE_FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath",
+                    "cell", "hut", "office")
 # a grand room is at least 19 cells: more than a lone anchor group and its
 # slack rows can ever fill (a bed group tops out at 6x3 = 18), so anything
 # kept at grand carries furniture beyond one group; the dead-floor rule,

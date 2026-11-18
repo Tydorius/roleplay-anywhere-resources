@@ -1,5 +1,5 @@
 """The Rooms tab's endpoints: present() against the shipped library and a
-temp copy without rooms, the meta listing of the three families, one family's
+temp copy without rooms, the meta listing of the shipped families, one family's
 rooms with their checker errors (a hand-broken room in a temp library reports
 its error against its own id and none on the others), the turned room going
 through fixed_rooms.rotate, the look's per-piece objects in the modern band
@@ -33,7 +33,7 @@ import scenario_editor as se                           # noqa: E402
 from worldgen import fixed_rooms                       # noqa: E402
 
 SHIPPED = Path(rmed.LIBRARY_DIR)                       # the real library, before any test swaps it
-FAMILIES = ("bedroom", "bedroom.master", "washroom")
+FAMILIES = ("bath", "bedroom", "bedroom.master", "privy", "washroom")
 
 
 def room_ids(family):
@@ -75,7 +75,7 @@ class TestPresent(LibraryTestCase):
 
 class TestMeta(LibraryTestCase):
 
-    def test_three_families_with_counts_and_no_errors(self):
+    def test_every_family_with_counts_and_no_errors(self):
         rmed.LIBRARY_DIR = SHIPPED
         m = rmed.meta()
         self.assertTrue(m["present"])

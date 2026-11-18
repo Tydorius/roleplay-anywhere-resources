@@ -223,6 +223,8 @@
     "storage": "goods stored: pantry, cellar, store room, warehouse bay",
     "office": "desk work",
     "washroom": "washing and toilets",
+    "privy": "a toilet on its own: an outhouse, latrine, garderobe or water closet",
+    "bath": "bathing: a tub or shower, a basin and a bench, no toilet",
     "workshop": "a trade's work stations: smithy, carpentry, tailor, fabricator bay",
     "chapel": "worship: altar and seats facing it",
     "classroom": "teaching: desks facing a board",
@@ -311,7 +313,13 @@
     "mill": "workshop",
     "barn": "storage",
     "scullery": "kitchen",
-    "vestry": "storage"
+    "vestry": "storage",
+    "privy": "privy",
+    "outhouse": "privy",
+    "latrine": "privy",
+    "garderobe": "privy",
+    "water_closet": "privy",
+    "bath": "bath"
   },
   "anchors": {
     "_readme": "Combine with +, e.g. wall:far+corner. far/side/near are relative to the room's main door.",

@@ -720,6 +720,62 @@
           "large"
         ]
       }
+    ],
+    "bath": [
+      {
+        "group": "lux.table.small.seat",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.lounge.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.seat.long.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.display.single",
+        "bands": [
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.storage.small.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.single",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      },
+      {
+        "group": "lux.decor.floor.double",
+        "bands": [
+          "small",
+          "medium",
+          "large"
+        ]
+      }
     ]
   }
 }

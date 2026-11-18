@@ -44,7 +44,7 @@ from worldgen import library as WL          # noqa: E402
 from worldgen import room_composer as RC    # noqa: E402
 from worldgen import room_groups as RG      # noqa: E402
 
-FAMILIES = ("bedroom", "bedroom.master", "washroom")
+FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
@@ -85,13 +85,13 @@ NOUNS = (
     ("decor", "decoration"),
 )
 FAMILY_NOUNS = {"bedroom": "bedroom", "bedroom.master": "master bedroom",
-                "washroom": "washroom"}
+                "washroom": "washroom", "privy": "privy", "bath": "bath room"}
 BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
                    "large": "spacious"}
 # the roles a family is about: an instance of these is the instance's name
 # (the bed and its bedside read as "bed") and is mentioned first
 FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
-                "washroom": ("wash",)}
+                "washroom": ("wash",), "privy": ("wash",), "bath": ("wash",)}
 MAX_MENTIONS = 4      # furniture groups named in one description
 LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
@@ -306,6 +306,25 @@ def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None):
     return rooms, None
 
 
+def _guaranteed_roles(recipe, groups):
+    """The roles a recipe always places: every non-optional piece of its
+    anchor and required groups, and of repeatables whose count starts above
+    zero. Optional groups never place at tight, so they guarantee nothing."""
+    roles = set()
+    for e in recipe.get("groups") or []:
+        if not isinstance(e, dict) or e.get("kind") == "optional":
+            continue
+        count = e.get("count", 1)
+        if e.get("kind") == "repeatable" and not (
+                isinstance(count, int) and count >= 1
+                or isinstance(count, list) and count and count[0] >= 1):
+            continue
+        for p in (groups.get(e.get("group")) or {}).get("pieces") or []:
+            if isinstance(p, dict) and not p.get("optional"):
+                roles.add(p.get("role"))
+    return roles
+
+
 def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
              lib_dir=None):
     """The families' fixed rooms as ({family: [room, ...]}, drops), the rooms
@@ -339,6 +358,17 @@ def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
         seen = {canonical(r) for r in keep}
         drops = []          # (layout, clearance, style, reason)
         for recipe in recipes:
+            # a wash family's recipe must be able to give the room its
+            # fixtures (fixed_rooms.WASH_FAMILY_RULES); the old
+            # toilet-and-basin washroom tinies now belong to the privy
+            need = FR.WASH_FAMILY_RULES.get(fam, ((), ()))[0]
+            missing = set(need) - _guaranteed_roles(recipe, gdefs)
+            if missing:
+                names = ", ".join(sorted(missing))
+                drops.append((recipe["layout"], None, None,
+                              f"a {fam} needs a toilet, a bath and a basin "
+                              f"(see privy); this recipe gives no {names}"))
+                continue
             roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
             for clearance in CLEARANCES:
                 for style in STYLES:

@@ -249,6 +249,11 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 - **Sleep:** bedroom layouts use `sleep` with `"singles"`, `bedroom.master` uses one
   `sleep.couple` with `"couples"`, dormitories use rows of `sleep` with `"singles"`. Kitchens,
   dining rooms and common rooms never have sleep slots. A `hut` has one sleeping corner.
+- **Wash:** a `washroom` holds all three fixtures — toilet, bath and basin — a `privy` is the
+  toilet alone (it may keep a basin, never a bath) and a `bath` room the bath (never a toilet);
+  `fixed_rooms.py` checks the pairing. The privy family is also the outhouse: a latrine, a
+  garderobe, a water closet — the assembler places those as outbuildings later, by era and
+  wealth.
 - **Variety:** 2–4 layouts per size band a family really uses (a dormitory has no tiny band, a
   washroom no large one). Make variants genuinely different: a different wall for the main
   piece, a centred versus a wall-hugging arrangement, an L versus a straight run.

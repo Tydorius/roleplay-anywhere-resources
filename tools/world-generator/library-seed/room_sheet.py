@@ -132,7 +132,7 @@ def render(family, out):
     # a cell is as wide as the plan or the widest label line, whichever is
     # more, so no label ever runs into the next cell
     widest = max(font.getlength(t) for ls in labels for t in ls)
-    cell_w = max(plan, widest) + 2 * PAD
+    cell_w = int(max(plan, widest)) + 2 * PAD
     cell_h = (max(r["size"][1] for r in rooms) * CELL
               + 2 * PAD + CAPTION)
     cols = 6

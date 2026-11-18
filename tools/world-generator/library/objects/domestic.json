@@ -2072,6 +2072,53 @@
       ]
     },
     {
+      "id": "toilet.privy_seat",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "privy seat"
+      },
+      "parts": {
+        "plank": "wood",
+        "lid": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "toilet",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {plank} {noun} with a round hole and a hinged {lid} lid, the bare bench of an outhouse or garderobe.",
+        "physical": "Top-down view of a {noun}: a squat {plank.color} {plank} bench with a round hole near the back edge, a small {lid.color} {lid} disc over the hole, thick plank edges on every side."
+      },
+      "aliases": [
+        "outhouse seat",
+        "garderobe seat",
+        "latrine seat"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
       "id": "toilet.water_closet",
       "category": "toilet",
       "size": [

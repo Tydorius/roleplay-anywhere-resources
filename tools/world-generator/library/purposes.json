@@ -669,6 +669,35 @@
       ]
     }
   },
+  "privy": {
+    "roles": {}
+  },
+  "outhouse": {
+    "roles": {}
+  },
+  "latrine": {
+    "roles": {}
+  },
+  "garderobe": {
+    "roles": {}
+  },
+  "water_closet": {
+    "roles": {}
+  },
+  "bath": {
+    "roles": {
+      "display": [
+        "display.curio",
+        "display.vitrine",
+        "display.pedestal"
+      ],
+      "decor.feature": [
+        "statue",
+        "decor",
+        "plant"
+      ]
+    }
+  },
   "workshop": {
     "roles": {}
   },

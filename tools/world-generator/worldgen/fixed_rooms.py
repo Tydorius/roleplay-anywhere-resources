@@ -50,6 +50,15 @@ SEAT_ROLES = ("seat", "seat.long", "seat.lounge", "seat.state")
 # facing away from these
 BELONG_ROLES = ("desk", "counter.serve", "counter.prep")
 FREE_TABLE_ROLES = ("desk",)      # plus every role starting "table."
+# the wash families' fixture rules, one table for check and the generator:
+# the roles a room of the family always holds at least one of and the roles
+# it never holds. A washroom needs all three fixtures; the privy and the
+# bath room split the pairings it allows (a privy is also the outhouse).
+WASH_FAMILY_RULES = {
+    "washroom": (("wash.toilet", "wash.bath", "wash.basin"), ()),
+    "privy": (("wash.toilet",), ("wash.bath",)),
+    "bath": (("wash.bath",), ("wash.toilet",)),
+}
 OPPOSITE = {"north": "south", "south": "north", "east": "west", "west": "east"}
 TURN = {"north": "east", "east": "south", "south": "west", "west": "north"}
 FLIP_EW = {"east": "west", "west": "east"}
@@ -538,6 +547,16 @@ def _check_room(room, groups, lib, err, check_band=True):
             if xi < xj + wj and xj < xi + wi and yi < yj + hj and yj < yi + hi:
                 err(f"pieces {pieces[i].get('role')!r} and "
                     f"{pieces[j].get('role')!r} overlap")
+    # the wash families' fixtures: what a room of the family must hold and
+    # what it may never hold
+    need, forbid = WASH_FAMILY_RULES.get(fam, ((), ()))
+    held = {p.get("role") for p in pieces if isinstance(p, dict)}
+    for role in need:
+        if role not in held:
+            err(f"holds no {role} piece: a {fam} needs one")
+    for role in forbid:
+        if role in held:
+            err(f"holds a {role} piece, which a {fam} never does")
     # wall-bound pieces: flush against the wall they back
     for i in ok:
         back = pieces[i].get("back")

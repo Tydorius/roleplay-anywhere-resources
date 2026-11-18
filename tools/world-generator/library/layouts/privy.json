@@ -1,0 +1,46 @@
+{
+  "layouts": [
+    {
+      "id": "privy.tiny.a",
+      "family": "privy",
+      "sizeBands": ["tiny"],
+      "minInterior": [2, 2],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "light.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    },
+    {
+      "id": "privy.tiny.b",
+      "family": "privy",
+      "sizeBands": ["tiny"],
+      "minInterior": [2, 3],
+      "maxInterior": [3, 3],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:toilet", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"}
+      ]
+    },
+    {
+      "id": "privy.small.a",
+      "family": "privy",
+      "sizeBands": ["small"],
+      "minInterior": [3, 4],
+      "maxInterior": [4, 5],
+      "slots": [
+        {"id": "toilet", "role": "wash.toilet", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:toilet", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"role": "storage.small", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

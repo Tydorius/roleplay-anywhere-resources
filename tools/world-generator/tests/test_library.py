@@ -98,6 +98,38 @@ class TestShippedLibrary(unittest.TestCase):
                                                      "heat", None, band, tier)}
                 self.assertIn("appliance.radiator", ids)
 
+    def test_the_privy_and_bath_families_and_purposes_load(self):
+        families = self.lib.vocab["families"]
+        self.assertIn("privy", families)
+        self.assertIn("bath", families)
+        purposes = self.lib.vocab["purposes"]
+        for purpose, family in (("privy", "privy"), ("outhouse", "privy"),
+                                ("latrine", "privy"), ("garderobe", "privy"),
+                                ("water_closet", "privy"), ("bath", "bath")):
+            with self.subTest(purpose=purpose):
+                self.assertEqual(purposes.get(purpose), family)
+        self.assertTrue(self.lib.layouts_for("privy"))
+        self.assertTrue(self.lib.layouts_for("bath"))
+
+    def test_the_privy_seat_object_loads_and_furnishes(self):
+        o = self.lib.objects["toilet.privy_seat"]
+        self.assertEqual(o["category"], "toilet")
+        self.assertEqual(o["wealth"], ["poor", "modest"])
+        self.assertEqual(o["bands"], ["medieval", "industrial"])
+        self.assertEqual(o["sources"], ["claude-authored"])
+        self.assertTrue(o["text"]["physical"])
+        for band in ("medieval", "industrial"):
+            for tier in ("poor", "modest"):
+                with self.subTest(band=band, tier=tier):
+                    ids = {c["id"] for c in L.candidates(
+                        self.lib, "washroom", "wash.toilet", None, band, tier)}
+                    self.assertIn("toilet.privy_seat", ids)
+
+    def test_purpose_for_family_finds_the_privy_and_bath(self):
+        from worldgen.library_rooms import purpose_for_family
+        self.assertEqual(purpose_for_family(self.lib, "privy"), "privy")
+        self.assertEqual(purpose_for_family(self.lib, "bath"), "bath")
+
 
 def tiny():
     """A one-object library to break on purpose."""

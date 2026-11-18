@@ -1,0 +1,2116 @@
+{
+  "rooms": [
+    {
+      "id": "bath.large.a.grand.flush",
+      "family": "bath",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            6
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            9
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            9
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            9
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3,
+          4
+        ],
+        "south": [
+          0,
+          3,
+          4
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          1,
+          2,
+          4,
+          5,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.large.a",
+      "description": "A spacious bath room, bathtub against the north wall, a washbasin in the northeast corner, a chest against the east wall, and a bench against the west wall."
+    },
+    {
+      "id": "bath.large.a.grand.open",
+      "family": "bath",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false
+        },
+        {
+          "role": "display",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "lux.display.single",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            9
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          2,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          3,
+          4,
+          7,
+          8
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          3,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A spacious, narrow bath room, bathtub in the northeast corner, a stove against the west wall, a small table against the west wall, a bench against the east wall, and open floor in the middle."
+    },
+    {
+      "id": "bath.large.a.roomy.open",
+      "family": "bath",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        10,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            8,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            4
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          4,
+          5,
+          9
+        ],
+        "south": [
+          0,
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          2,
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          3,
+          1
+        ],
+        "size": [
+          3,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.large.a",
+      "description": "A spacious, narrow bath room, bathtub against the north wall, a washbasin in the southeast corner, a floor rug in the northwest corner, a stove against the north wall, and open floor in the middle."
+    },
+    {
+      "id": "bath.medium.a.grand.flush",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "lux.seat.lounge.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          4,
+          5
+        ],
+        "south": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "y": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A mid-sized bath room, bathtub against the north wall, a bench in the northeast corner, a stove in the southwest corner, and a chest opposite."
+    },
+    {
+      "id": "bath.medium.a.roomy.flush",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        9,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          2,
+          3,
+          6,
+          7
+        ],
+        "west": [
+          0,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "y": [
+          2,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.large.a",
+      "description": "A mid-sized bath room, bathtub against the north wall, a washbasin in the northeast corner, a floor rug against the west wall, and a stove opposite."
+    },
+    {
+      "id": "bath.medium.a.roomy.open",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          0,
+          2,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          4
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A mid-sized bath room, bathtub in the northeast corner, a chest against the west wall, a bench in the southeast corner, a stove opposite, and open floor in the middle."
+    },
+    {
+      "id": "bath.medium.a.tight.flush",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        5,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3
+        ],
+        "south": [
+          1,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          2
+        ],
+        "east": [
+          1,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4
+        ],
+        "y": [
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.large.a",
+      "description": "A mid-sized bath room, bathtub against the north wall, a washbasin in the northeast corner, a stove against the east wall, and a bench in the southwest corner."
+    },
+    {
+      "id": "bath.medium.a.tight.open",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            7
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          4
+        ],
+        "south": [
+          1,
+          4
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          4,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          2
+        ]
+      },
+      "filler": {
+        "at": [
+          2,
+          2
+        ],
+        "size": [
+          2,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.large.a",
+      "description": "A mid-sized bath room, bathtub against the north wall, a washbasin against the east wall, a washbasin against the east wall, a floor rug in the open middle, and open floor in the middle."
+    },
+    {
+      "id": "bath.medium.b.roomy.flush",
+      "family": "bath",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          1,
+          2
+        ],
+        "west": [
+          0,
+          2,
+          3
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "y": [
+          2,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A mid-sized bath room, bathtub in the northeast corner, a stove against the west wall, a chest in the southwest corner, and a bench in the southeast corner."
+    },
+    {
+      "id": "bath.small.a.roomy.flush",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        3
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          2
+        ],
+        "east": [
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.small.a",
+      "description": "A small bath room, bathtub in the northeast corner, a bench in the northwest corner."
+    },
+    {
+      "id": "bath.small.a.roomy.open",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          0,
+          1
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "y": [
+          2
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.small.a",
+      "description": "A small bath room, bathtub in the northeast corner, a bench in the southwest corner, and open floor in the middle."
+    },
+    {
+      "id": "bath.small.a.tight.flush",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          2
+        ],
+        "south": [
+          0,
+          2
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3
+        ],
+        "y": [
+          2,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A small bath room, bathtub in the northwest corner, a bench in the northeast corner, a chest opposite, and a stove in the southeast corner."
+    },
+    {
+      "id": "bath.small.a.tight.open",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1
+        ],
+        "south": [
+          1,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          4
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          2,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.medium.a",
+      "description": "A small bath room, bathtub in the northeast corner, a bench against the west wall, a chest in the southwest corner, a stove opposite, and open floor in the middle."
+    },
+    {
+      "id": "bath.small.b.tight.flush",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [
+          1
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "west": [
+          2
+        ],
+        "east": [
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          4
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.small.a",
+      "description": "A small bath room, bathtub in the northeast corner, a bench in the northwest corner."
+    },
+    {
+      "id": "bath.small.b.tight.open",
+      "family": "bath",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.basin",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1
+        ],
+        "south": [
+          1,
+          2,
+          3
+        ],
+        "west": [
+          0,
+          1
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": [
+          2
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          1
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bath.small.a",
+      "description": "A small bath room, bathtub in the northeast corner, a bench in the southwest corner, and open floor in the middle."
+    }
+  ]
+}
