@@ -39,6 +39,8 @@ function fit() {
   if (!S.scn) return;
   syncLevel();
   const r = cv.getBoundingClientRect(), [x0, y0, x1, y1] = MapOps.levelExtent(S.scn, S.level);   // the level's plane
+  if (!r.width || !r.height) { S.fitPending = true; return; }   // map hidden: fit when it shows again
+  S.fitPending = false;
   const w = x1 - x0 + 1, h = y1 - y0 + 1;
   S.view.s = Math.max(1, Math.min((r.width - 20) / w, (r.height - 20) / h));
   S.view.ox = (r.width - w * S.view.s) / 2 - x0 * S.view.s;
