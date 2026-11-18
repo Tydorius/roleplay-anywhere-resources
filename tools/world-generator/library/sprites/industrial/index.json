@@ -2439,6 +2439,17 @@
    "physical": "Top-down view of a boxy commode: a square mid-brown stained beech chest with a hinged lid along the back edge, a grey flannel cushion on top, a carrying handle on each side.",
    "reviewed": true
   },
+  "toilet.privy_seat": {
+   "template": "Stained beech privy seat [toilet.privy_seat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "stained beech",
+    "plank": "varnished pine"
+   },
+   "physical": "Top-down view of a privy seat against the top wall: a squat bench of dark stained beech boards filling the cell, a round dark hole near the top edge covered by a hinged round beech lid with a small iron handle, a worn pale patch around the hole, plank edges on every side.",
+   "reviewed": true
+  },
   "toilet.water_closet": {
    "template": "Majolica water closet [toilet.water_closet]",
    "tier": "wealthy",

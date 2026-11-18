@@ -1859,6 +1859,17 @@
    "physical": "Top-down view of a boxy close stool: a square tawny elm chest with a hinged lid along the back edge, a green wool cushion on top, a carrying handle on each side.",
    "reviewed": true
   },
+  "toilet.privy_seat": {
+   "template": "Ash privy seat [toilet.privy_seat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "ash",
+    "plank": "beech"
+   },
+   "physical": "Top-down view of a privy seat against the top wall: a squat bench of rough weathered pale grey ash planks filling the cell, a round dark hole near the top edge with a small round ash lid leaning beside it, thick plank edges and iron nail heads on every side.",
+   "reviewed": true
+  },
   "utility.ladder": {
    "template": "Elm ladder [utility.ladder]",
    "tier": "modest",
