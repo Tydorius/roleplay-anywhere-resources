@@ -11,3 +11,6 @@ __pycache__/
 # world generator local state
 /tools/world-generator/providers.json
 /tools/world-generator/out/
+
+# Rooms tab saves keep the previous family file here
+tools/world-generator/library/rooms/.backup/
