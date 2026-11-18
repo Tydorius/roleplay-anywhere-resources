@@ -196,6 +196,48 @@ colours. A material name is a short phrase that reads well before a noun ("rough
 
 One adjective per material class and condition, with `*` as the fallback. `kept` is always `""`.
 
+## Size bands per family: `library.json` → `familySizeBands`
+
+```json
+{
+  "bedroom": {
+    "bands": [
+      {"name": "narrow", "cells": [8, 14], "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
+      {"name": "tiny",   "cells": [1, 11]},
+      {"name": "small",  "cells": [12, 24]},
+      {"name": "medium", "cells": [25, 48]},
+      {"name": "large",  "cells": [49, 400]}
+    ]
+  },
+  "privy": {
+    "maxFloorPerPiece": 2,
+    "bands": [
+      {"name": "stall", "cells": [2, 4]},
+      {"name": "small", "cells": [5, 8]}
+    ]
+  }
+}
+```
+
+- A family listed here uses **only its own bands** — in layouts' and recipes' `sizeBands`, in room
+  ids (`bedroom.narrow.a.tight.flush`) and in every check. Every other family shares `sizeBands`.
+- A room's band is the **first entry whose cell range — and aspect range, when given — holds it**,
+  so list the pickier band first: a 5×2 bedroom (10 cells, 5:2) reads `narrow`, not `tiny`.
+- **`aspect`** is `[lo, hi]` (hi at most 4): the long side may read `lo`–`hi` times the short. A
+  band's own window may stretch past the family's usual 2-to-1 cap — that is how a 5:2 servants'
+  room stands — but only inside the band.
+- **`maxFloorPerPiece`** (the family's, or a band's overriding it) caps a room's free floor cells
+  per placed piece at any clearance: a privy with one toilet and 15 free cells is rejected.
+- The composer **never pads a room up to a band**. A recipe that cannot reach its band at a
+  clearance ships no room there and the generator prints why.
+- Recipes (and luxury pool entries) must name bands **of their own family** — a bedroom recipe
+  naming `stall` is an error, and so is a bedroom recipe still naming `tiny` after the family's
+  table drops it.
+
+**Closets** (`closet` family) follow the reach-in rule on top: bands `reach` (1–2 cells, a lined
+cupboard) and `walkin` (3–4); doors on **one side only**; a walk-in needs a door on that side, a
+reach-in needs no door cell and no free floor at all — its pieces are used from the doorway.
+
 ## Layouts: `layouts/<family>.json`
 
 ```json
@@ -225,7 +267,9 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 
 - **`id`** is `<family>.<size band>.<letter>`, unique.
 - **`family`** is the file's family from `library.json`. **`sizeBands`** are the bands the layout
-  serves (`library.json` → `sizeBands`, by interior area).
+  serves, always from the shared `library.json` → `sizeBands` table (a family's own bands — see
+  [Size bands per family](#size-bands-per-family-libraryjson--familysizebands) — belong to its
+  recipes and rooms, not its layouts).
 - **`minInterior`** and **`maxInterior`** are the interior `[w, h]` it works in, the wall ring
   excluded. The layout must work at `minInterior` with the door on any wall.
 - **Slots:**

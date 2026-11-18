@@ -59,6 +59,23 @@
     return words[0];
   }
 
+  /** The size bands a family uses, as {name: {cells: [lo, hi], aspect:
+   * [lo, hi] or null}} in table order (a room's band is the first entry
+   * that holds it): the family's own familySizeBands table when the meta
+   * has one for it, else the shared sizeBands. */
+  function familyBands(meta, family) {
+    const own = ((meta || {}).familySizeBands || {})[family];
+    if (own && own.length) {
+      const out = {};
+      for (const b of own) out[b.name] = {cells: b.cells, aspect: b.aspect || null};
+      return out;
+    }
+    const shared = {};
+    for (const [name, rng] of Object.entries((meta || {}).sizeBands || {}))
+      shared[name] = {cells: rng, aspect: null};
+    return shared;
+  }
+
   /** The rooms the current filters keep: size band, clearance, style, wealth
    * tier (the room serves it) and a case-insensitive search over id and
    * description. Empty filter values keep everything. */
@@ -1247,7 +1264,13 @@
     const wealths = ["", "wealthy", "elite"];
     const roles = RM.meta.roleNames || [];
     const fams = (RM.meta.families || []).map(f => f.family);
-    const bands = Object.keys(RM.meta.sizeBands || {});
+    // a pool entry's bands belong to its own family's table, so offer the
+    // shared bands plus every family band name; the live check flags a
+    // combination a family does not have
+    const bands = [...new Set([
+      ...Object.keys(RM.meta.sizeBands || {}),
+      ...Object.values(RM.meta.familySizeBands || {}).flat().map(b => b && b.name)
+    ])].filter(Boolean).sort();
 
     const pieceRow = (p, i) => {
       const sel = (opts, val) => opts.map(o =>
@@ -1750,12 +1773,12 @@
   function growSide(s) {
     if (!RM.edit) return;
     const room = RM.edit.room;
-    const band = (RM.meta.sizeBands || {})[room.sizeBand];
+    const band = familyBands(RM.meta, room.family)[room.sizeBand];
     const [w, h] = room.size || [1, 1];
     const ns = s === "n" || s === "s";
     const area = (w + (ns ? 0 : 1)) * (h + (ns ? 1 : 0));
-    if (band && area > band[1])
-      return toast(`that would leave the ${room.sizeBand} band (${band[0]}-${band[1]} cells)`);
+    if (band && area > band.cells[1])
+      return toast(`that would leave the ${room.sizeBand} band (${band.cells[0]}-${band.cells[1]} cells)`);
     RM.edit.room = growRoom(room, {n: "north", w: "west", e: "east", s: "south"}[s], 1);
     checkSoon(); drawPlan();
   }
@@ -1763,13 +1786,13 @@
   function shrinkSide(s) {
     if (!RM.edit) return;
     const room = RM.edit.room;
-    const band = (RM.meta.sizeBands || {})[room.sizeBand];
+    const band = familyBands(RM.meta, room.family)[room.sizeBand];
     const [w, h] = room.size || [1, 1];
     if (w < 2 || h < 2) return toast("the room cannot shrink further");
     const ns = s === "n" || s === "s";
     const area = (w - (ns ? 0 : 1)) * (h - (ns ? 1 : 0));
-    if (band && area < band[0])
-      return toast(`that would leave the ${room.sizeBand} band (${band[0]}-${band[1]} cells)`);
+    if (band && area < band.cells[0])
+      return toast(`that would leave the ${room.sizeBand} band (${band.cells[0]}-${band.cells[1]} cells)`);
     const next = shrinkRoom(room, {n: "north", w: "west", e: "east", s: "south"}[s], 1);
     if (!next) return toast("something stands on that edge");
     RM.edit.room = next;
@@ -1939,11 +1962,23 @@
     const rects = pieces.map(rectOf).filter(Boolean);
     const w = Math.max(...rects.map(r => r[0] + r[2])) + 1;
     const h = Math.max(...rects.map(r => r[1] + r[3])) + 1;
-    const bands = RM.meta.sizeBands || {};
+    // the family's own bands decide first (cells and, when a band has one,
+    // aspect — first match wins); a family with own bands whose table holds
+    // the room falls to its last band, others to the shared ladder
+    const bands = familyBands(RM.meta, RM.family);
+    const names = Object.keys(bands);
+    const short0 = Math.min(w, h), long0 = Math.max(w, h);
     let band = null;
-    for (const [name, rng] of Object.entries(bands))
-      if (rng[0] <= w * h && w * h <= rng[1]) { band = name; break; }
-    if (!band) band = w * h <= 11 ? "tiny" : w * h <= 24 ? "small" : w * h <= 48 ? "medium" : "large";
+    for (const name of names) {
+      const b = bands[name];
+      const a = b.aspect;
+      if (b.cells[0] <= w * h && w * h <= b.cells[1]
+          && (!a || (a[0] * short0 <= long0 && long0 <= a[1] * short0)))
+        { band = name; break; }
+    }
+    if (!band)
+      band = names.length ? names[names.length - 1]
+        : w * h <= 11 ? "tiny" : w * h <= 24 ? "small" : w * h <= 48 ? "medium" : "large";
     const id = newId(RM.family, band, clearance, style, RM.rooms.map(r => r.id));
     if (!id) { toast("no free id letter for this band, clearance and style"); return null; }
     const wealth = ((RM.meta.wealthFor || {})[clearance] || {})[style] || (RM.meta.tiers || []).slice(0, 2);
@@ -2094,7 +2129,7 @@
     }
   }
 
-  return {roleColor, darker, shortRole, filterRooms, fitPlan, doorCells, stretchLines,
+  return {roleColor, darker, shortRole, filterRooms, familyBands, fitPlan, doorCells, stretchLines,
           groupBoxes, pieceAt, rectOf, LETTERS, EDITABLE, letterAt, nextLetter, newId,
           cloneRoom, TURN_SIDES, turnGroup, moveGroup, removeGroup, groupForm, addGroup,
           growRoom, shrinkRoom, mergeLayout, setField, resetField, parseCells,

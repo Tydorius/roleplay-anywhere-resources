@@ -153,7 +153,7 @@
       "layout": "privy.tiny.a",
       "family": "privy",
       "sizeBands": [
-        "tiny"
+        "stall"
       ],
       "source": "hand",
       "groups": [
@@ -175,7 +175,8 @@
       "layout": "privy.tiny.b",
       "family": "privy",
       "sizeBands": [
-        "tiny"
+        "stall",
+        "small"
       ],
       "source": "hand",
       "groups": [

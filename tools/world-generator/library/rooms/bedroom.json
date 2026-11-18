@@ -4842,6 +4842,93 @@
       "description": "A mid-sized single bedroom, bed in the northwest corner, a chair against the east wall, and a wardrobe opposite."
     },
     {
+      "id": "bedroom.narrow.a.tight.flush",
+      "family": "bedroom",
+      "sizeBand": "narrow",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        5,
+        2
+      ],
+      "sleeps": {
+        "singles": 2,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "sleep.pair.storage.small",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "sleep.pair.storage.small",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "sleep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "sleep.pair.storage.small",
+          "optional": false,
+          "back": "north"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          1
+        ],
+        "east": [
+          1
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.servants",
+      "description": "A narrow bedroom, bed in the northwest corner."
+    },
+    {
       "id": "bedroom.small.a.roomy.open",
       "family": "bedroom",
       "sizeBand": "small",
@@ -6094,6 +6181,79 @@
       "symmetric": false,
       "recipe": "bedroom.tiny.b",
       "description": "A cramped single bedroom, bed against the north wall."
+    },
+    {
+      "id": "bedroom.tiny.d.tight.flush",
+      "family": "bedroom",
+      "sizeBand": "tiny",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        2,
+        4
+      ],
+      "sleeps": {
+        "singles": 1,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "sleep.bedside.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.small.single.bedroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          1
+        ],
+        "west": [
+          0,
+          1,
+          2
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "bedroom.servant",
+      "description": "A cramped, narrow single bedroom, bed in the northeast corner, a chest in the southwest corner."
     }
   ]
 }

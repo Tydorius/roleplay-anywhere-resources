@@ -549,6 +549,76 @@
           "optional": true
         }
       ]
+    },
+    {
+      "id": "sleep.pair.storage.small",
+      "family": "bedroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "sleep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "sleep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.small.single.bedroom",
+      "family": "bedroom",
+      "wall": "corner",
+      "use": [
+        "south",
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [
@@ -780,6 +850,54 @@
         },
         {
           "group": "seat.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.servant",
+      "family": "bedroom",
+      "sizeBands": [
+        "tiny"
+      ],
+      "source": "hand",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "groups": [
+        {
+          "group": "sleep.bedside.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.bedroom",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.bedroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.servants",
+      "family": "bedroom",
+      "sizeBands": [
+        "narrow"
+      ],
+      "source": "hand",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "groups": [
+        {
+          "group": "sleep.pair.storage.small",
+          "kind": "anchor"
+        },
+        {
+          "group": "light.small.single.bedroom",
           "kind": "optional"
         }
       ]

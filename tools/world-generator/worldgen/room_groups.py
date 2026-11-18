@@ -245,6 +245,75 @@ def _check_count(e, group, err):
         err(f"bad count {count!r}")
 
 
+def _check_family_bands(lib, errors):
+    """library.json's familySizeBands table: every entry a known family, band
+    names unique within it, sane cell and aspect ranges (a room never reads
+    longer than 4 to 1) and maxFloorPerPiece counting cells when given."""
+    families = lib.vocab.get("families", {})
+    for fam in sorted((lib.vocab.get("familySizeBands") or {}), key=str):
+        if fam.startswith("_"):
+            continue
+        spec = (lib.vocab.get("familySizeBands") or {}).get(fam)
+
+        def err(msg, fam=fam):
+            errors.append(f"library.json: familySizeBands {fam!r}: {msg}")
+
+        if fam not in families:
+            err(f"names unknown family {fam!r}")
+        if not (isinstance(spec, dict) and isinstance(spec.get("bands"), list)
+                and spec["bands"]):
+            err("needs a bands list with at least one band")
+            continue
+        mfp = spec.get("maxFloorPerPiece")
+        if mfp is not None and not (isinstance(mfp, int)
+                                    and not isinstance(mfp, bool) and mfp >= 0):
+            err(f"maxFloorPerPiece must count floor cells, not {mfp!r}")
+        names = set()
+        for b in spec["bands"]:
+            if not isinstance(b, dict) or not isinstance(b.get("name"), str):
+                err(f"band {b!r} needs a name")
+                continue
+            name = b["name"]
+            if name in names:
+                err(f"band name {name!r} repeats")
+            names.add(name)
+            cells = b.get("cells")
+            if not (isinstance(cells, list) and len(cells) == 2
+                    and all(isinstance(x, int) and not isinstance(x, bool)
+                            and 1 <= x <= 1600 for x in cells)
+                    and cells[0] <= cells[1]):
+                err(f"band {name!r} cells must be [lo, hi] with "
+                    f"1 <= lo <= hi <= 1600, not {cells!r}")
+            aspect = b.get("aspect")
+            if aspect is not None:
+                if not (isinstance(aspect, list) and len(aspect) == 2
+                        and all(isinstance(x, (int, float))
+                                and not isinstance(x, bool) and x > 0
+                                for x in aspect)
+                        and aspect[0] <= aspect[1]):
+                    err(f"band {name!r} aspect must be [lo, hi] with "
+                        f"0 < lo <= hi, not {aspect!r}")
+                elif aspect[1] > 4:
+                    err(f"band {name!r} aspect {aspect[1]:g} is over the "
+                        f"4 to 1 a room may read at most")
+            mfp = b.get("maxFloorPerPiece")
+            if mfp is not None and not (isinstance(mfp, int)
+                                        and not isinstance(mfp, bool)
+                                        and mfp >= 0):
+                err(f"band {name!r} maxFloorPerPiece must count floor "
+                    f"cells, not {mfp!r}")
+
+
+def _family_band_names(lib, family):
+    """The family's own band names from familySizeBands, or [] when the
+    family shares the sizeBands table."""
+    spec = (lib.vocab.get("familySizeBands") or {}).get(family)
+    if not isinstance(spec, dict):
+        return []
+    return [b.get("name") for b in spec.get("bands") or []
+            if isinstance(b, dict) and isinstance(b.get("name"), str)]
+
+
 def _check_recipes(data, lib, errors):
     groups, recipes, layouts = data["groups"], data["recipes"], lib.layouts
     for r in sorted(recipes.values(), key=lambda r: str(r.get("layout"))):
@@ -258,15 +327,41 @@ def _check_recipes(data, lib, errors):
             errors.append(f"layout {lid!r} has recipes in "
                           f"{' and '.join(sorted(set(files)))}")
         _check_source(r, err)
+        hand = r.get("source") == "hand"
         layout = layouts.get(lid)
-        if layout is None:
+        if layout is None and not hand:
             err("names no layout in the library")
-        else:
+        if layout is not None:
             if r.get("family") != layout.get("family"):
                 err(f"family {r.get('family')!r} doesn't match the layout's "
                     f"{layout.get('family')!r}")
-            if r.get("sizeBands") != layout.get("sizeBands"):
+            # a hand recipe may retag a layout's bands (the privy recipes
+            # name the family's own bands), so its sizeBands need not equal
+            # the layout's
+            if not hand and r.get("sizeBands") != layout.get("sizeBands"):
                 err(f"sizeBands must be the layout's {layout.get('sizeBands')}")
+        # every recipe's sizeBands name bands of its own family: the
+        # familySizeBands table when the family has one, else the shared
+        # sizeBands
+        fam = r.get("family")
+        own = _family_band_names(lib, fam)
+        pool = set(own) if own else set(lib.vocab.get("sizeBands", {}))
+        bands = r.get("sizeBands")
+        if bands is not None:
+            if not isinstance(bands, list) or not bands:
+                err(f"sizeBands must list one or more of "
+                    f"{', '.join(sorted(pool))}")
+            else:
+                for b in bands:
+                    if b not in pool:
+                        err(f"sizeBands names {b!r}, which is not a band of "
+                            f"family {fam!r} "
+                            f"(one of: {', '.join(sorted(pool))})")
+        wealth = r.get("wealth")
+        if wealth is not None:
+            if not isinstance(wealth, list) or not wealth \
+                    or any(t not in lib.tiers for t in wealth):
+                err(f"wealth must list one or more of {', '.join(lib.tiers)}")
         entries = r.get("groups")
         if not isinstance(entries, list) or not entries:
             err("groups must be a list with at least one entry")
@@ -296,15 +391,17 @@ def _check_recipes(data, lib, errors):
 
 def _check_pools(data, lib, errors):
     """The luxury pools: every pool names a known family, every entry names
-    a shipped group and known size bands, every piece of a pooled group
-    carries minWealth wealthy or elite — a pool group is what makes a grand
-    private room grander, so it is furniture of the rich by definition — and
-    every pooled group declares a valid luxury kind (what the composer's
-    per-room limits count it against)."""
+    a shipped group and bands of that family — its own when it has a table,
+    else the shared sizeBands — every piece of a pooled group carries
+    minWealth wealthy or elite — a pool group is what makes a grand private
+    room grander, so it is furniture of the rich by definition — and every
+    pooled group declares a valid luxury kind (what the composer's per-room
+    limits count it against)."""
     families = lib.vocab.get("families", {})
-    bands = set(lib.vocab.get("sizeBands", {}))
     pools = data.get("pools") or {}
     for fam in sorted(pools, key=str):
+        own = _family_band_names(lib, fam)
+        bands = set(own) if own else set(lib.vocab.get("sizeBands", {}))
         entries = pools[fam]
         files = sorted({e.get("_file") for e in entries
                         if isinstance(e, dict)})
@@ -348,10 +445,14 @@ def check(data, lib):
     """Every rule of the group format the code can check, as plain sentences:
     group fields against the vocabulary, pieces that overlap or float apart,
     wall-bound pieces off the north edge, recipe kinds and counts, exactly
-    one anchor per recipe, one recipe per layout, the luxury pools naming
+    one anchor per recipe, one recipe per layout (a hand recipe may name a
+    layout of its own family without matching the layout's sizeBands, or no
+    layout at all), every recipe's sizeBands naming bands of its own family,
+    the familySizeBands table itself, the luxury pools naming
     known families, groups, size bands, kinds and wealth, and "hand" as the
     only source a group, recipe or recipe entry may declare."""
     errors = []
+    _check_family_bands(lib, errors)
     _check_groups(data["groups"], lib, errors)
     _check_recipes(data, lib, errors)
     _check_pools(data, lib, errors)

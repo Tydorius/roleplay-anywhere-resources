@@ -59,7 +59,7 @@ HALL_FAMILIES = ("chapel", "common_room", "dining", "hall", "taproom")
 # one household's or one person's room: a grand private room keeps the roomy
 # gap and spends the space on furniture (a pool group) instead of floor
 PRIVATE_FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath",
-                    "cell", "hut", "office")
+                    "closet", "cell", "hut", "office")
 # a grand room is at least 19 cells: more than a lone anchor group and its
 # slack rows can ever fill (a bed group tops out at 6x3 = 18), so anything
 # kept at grand carries furniture beyond one group; the dead-floor rule,
@@ -119,7 +119,11 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     best first and each passing fixed_rooms.check. Returns (rooms, reason):
     reason is a plain sentence when no room could be made. ``sleepers`` is
     (singles, couples), defaulting to the family's usual occupancy. With
-    ``size_band`` only rooms inside that band come back. ``symmetric`` places
+    ``size_band`` only rooms inside that band come back — a family's own band
+    by that name when it has one (its aspect range, when the band has one,
+    may stretch past the family's aspect cap), else a shared band. A band no
+    room of the recipe's furniture can reach produces no room: the room is
+    never padded to reach it. ``symmetric`` places
     the anchor on the centre line and every group off it mirrored across it.
     ``max_area`` caps the room's area: a grand private room stays within
     GRAND_AREA_RATIO of its roomy sibling, and optional and pool groups join
@@ -141,15 +145,24 @@ def compose(recipe, groups, clearance, style, seed, size_band=None,
     if sleepers is None:
         sleepers = _default_sleepers(recipe, gdefs)
     sleepers = (sleepers[0], sleepers[1])
-    band = fixed_rooms.BANDS.get(size_band) if size_band else None
+    own = next((b for b in fixed_rooms.family_bands(family)
+                if b["name"] == size_band), None) if size_band else None
+    band = (own["cells"] if own else fixed_rooms.BANDS.get(size_band)) \
+        if size_band else None
     if size_band and band is None:
         return ([], f"unknown size band {size_band!r}")
+    cap = aspect_cap(family)
+    if own is not None and own["aspect"] is not None:
+        # a band's own aspect range may stretch past the family cap; free
+        # composition (no size_band) stays at the family cap
+        cap = max(cap, own["aspect"][1])
     layout = recipe.get("layout") or "hand"
     ctx = {"gap": gap_for(family, clearance), "band": band,
+           "size_band": size_band,
            "symmetric": symmetric,
            "parity": 0, "clearance": clearance, "style": style,
            "family": family, "layout": layout, "gdefs": gdefs,
-           "cap": aspect_cap(family),
+           "cap": cap,
            "floor": (GRAND_FLOOR if clearance == "grand" and not size_band
                      else 0),
            "lux_bands": {},
@@ -792,6 +805,12 @@ def _unit(states, kind, gid, mn, mx, ctx):
                    if max(s["maxx"] - s["minx"] + 1, s["maxy"] - s["miny"] + 1)
                    <= ctx["cap"]
                    * min(s["maxx"] - s["minx"] + 1, s["maxy"] - s["miny"] + 1)]
+        if allow and ctx["band"] is not None:
+            # a band was asked for: the group fills slack, it never pads the
+            # room up to the band — so the states without it stay in the beam
+            # (a placement at the gap would balloon a small room past the
+            # band's reach, and the bare room is the band's best fit)
+            nxt = nxt + list(states)
         return _trim(nxt, ctx) if nxt else states
     # repeatable: copies form rows along walls and grids in the open, each
     # placed from any parent at the gap; collect every state from mn copies
@@ -858,7 +877,9 @@ def _build_room(state, sw, se, sn, ss, ctx):
     if ctx.get("max_area") is not None and w * h > ctx["max_area"]:
         ctx["fails"]["area"] = ctx["fails"].get("area", 0) + 1
         return None
-    band = fixed_rooms.band_for_area(w * h)
+    band = (fixed_rooms.band_for(ctx["family"], w, h)
+            if fixed_rooms.family_bands(ctx["family"])
+            else fixed_rooms.band_for_area(w * h))
     if not _inside_lux_bands((g["gid"] for g in state["placed"]), band, ctx):
         ctx["fails"]["luxband"] = ctx["fails"].get("luxband", 0) + 1
         return None
@@ -883,6 +904,12 @@ def _build_room(state, sw, se, sn, ss, ctx):
     room = fixed_rooms.derive(room, stretch=False)
     room["stretch"] = {"x": [], "y": []}
     if room["sizeBand"] is None:
+        return None
+    # a requested band is a name, not a cell range: a room whose own band
+    # comes out different (a 4x2 room is no narrow bedroom) is no room for
+    # this request
+    if ctx["size_band"] and room["sizeBand"] != ctx["size_band"]:
+        ctx["fails"]["band"] = ctx["fails"].get("band", 0) + 1
         return None
     return room
 
@@ -1027,7 +1054,8 @@ def _open(cands, ctx):
                         if fill is None:
                             continue
                         area = grown["size"][0] * grown["size"][1]
-                        band = fixed_rooms.band_for_area(area)
+                        # _grown derived the family-aware band already
+                        band = grown["sizeBand"]
                         if band is None:
                             continue
                         if not _inside_lux_bands(
@@ -1035,6 +1063,8 @@ def _open(cands, ctx):
                                 band, ctx):
                             continue
                         if ctx["band"] and not ctx["band"][0] <= area <= ctx["band"][1]:
+                            continue
+                        if ctx["size_band"] and band != ctx["size_band"]:
                             continue
                         if ctx.get("max_area") is not None \
                                 and area > ctx["max_area"]:

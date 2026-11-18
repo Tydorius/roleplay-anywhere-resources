@@ -181,7 +181,9 @@ room never reaches a file.
 
 - **Browse:** pick a family (bedroom, bedroom.master, washroom), narrow the list by size band,
   clearance, style, wealth tier or a search over ids and descriptions; a red `!` marks a room
-  the library's own checker flags, and the arrow keys walk the list.
+  the library's own checker flags, and the arrow keys walk the list. A family with its own
+  `familySizeBands` table (bedroom, privy, closet) filters, resizes and drafts against those
+  bands instead of the shared ones.
 - **Preview:** the plan canvas draws the floor grid, pieces in the role colours with a thicker
   line on the side that faces its wall (the room sheets' own palette), thin group outlines, the
   open style's hatched filler, green door marks and dashed stretch lines. **↺ ↻ Turn** and

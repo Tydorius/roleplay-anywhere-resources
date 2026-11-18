@@ -423,6 +423,113 @@ class TestChecker(unittest.TestCase):
                                 for e in errors))
 
 
+class TestFamilyBands(unittest.TestCase):
+    """The familySizeBands table: a family listed there uses only its own
+    bands, so a recipe (or a pool entry) of that family naming a shared band
+    it no longer has — or another family's band — is an error, while a hand
+    recipe may name no layout at all; the table itself must name known
+    families, keep its band names unique and stay inside the 4 to 1 aspect
+    a room may read at most."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+
+    def base(self):
+        """A clean bedroom recipe against the shipped table (its sizeBands
+        name the family's own bands)."""
+        group = {"id": "sleep.single.hand", "family": "bedroom",
+                 "wall": "back", "use": ["south"],
+                 "pieces": [{"role": "sleep", "size": [2, 1], "at": [0, 0],
+                             "back": "north"}], "_file": "bedroom.json"}
+        recipe = {"layout": "bedroom.hand", "family": "bedroom",
+                  "sizeBands": ["tiny"], "source": "hand",
+                  "groups": [{"group": "sleep.single.hand", "kind": "anchor"}],
+                  "_file": "bedroom.json"}
+        return {"groups": {"sleep.single.hand": group},
+                "recipes": {"bedroom.hand": recipe}}
+
+    def errors(self, data, lib=None):
+        return [e for e in RG.check(data, lib or self.lib)
+                if not e.startswith("layout ")]
+
+    def lib_with(self, mutate):
+        """The shipped library with familySizeBands mutated."""
+        vocab = json.loads(json.dumps(self.lib.vocab))
+        mutate(vocab["familySizeBands"])
+        with tempfile.TemporaryDirectory() as d:
+            with open(os.path.join(d, "library.json"), "w",
+                      encoding="utf-8") as f:
+                json.dump(vocab, f)
+            return WL.load(d)
+
+    def test_the_shipped_table_checks_clean(self):
+        # an empty library leaves only the "layout has no recipe" notes the
+        # other tests filter out too; the table itself adds nothing
+        table = [e for e in RG.check(self.no_data(), self.lib)
+                 if not e.startswith("layout ")]
+        self.assertEqual(table, [])
+
+    def no_data(self):
+        """An empty library (no groups, recipes or pools) to check the
+        familySizeBands table on its own."""
+        return {"groups": {}, "recipes": {}, "pools": {}}
+
+    def test_table_names_unknown_family(self):
+        lib = self.lib_with(
+            lambda t: t.update(attic={"bands": [{"name": "tiny",
+                                                 "cells": [1, 4]}]}))
+        self.assertTrue(any("names unknown family 'attic'" in e
+                            for e in RG.check(self.no_data(), lib)))
+
+    def test_table_band_name_repeats(self):
+        lib = self.lib_with(lambda t: t["bedroom"]["bands"].append(
+            {"name": "tiny", "cells": [30, 40]}))
+        self.assertTrue(any("band name 'tiny' repeats" in e
+                            for e in RG.check(self.no_data(), lib)))
+
+    def test_table_aspect_over_four_is_rejected(self):
+        lib = self.lib_with(
+            lambda t: t["bedroom"]["bands"][0].update(aspect=[2.5, 5]))
+        self.assertTrue(any("over the 4 to 1" in e
+                            for e in RG.check(self.no_data(), lib)))
+
+    def test_table_bad_cells_range(self):
+        lib = self.lib_with(
+            lambda t: t["bedroom"]["bands"][0].update(cells=[14, 8]))
+        self.assertTrue(any("cells must be [lo, hi]" in e
+                            for e in RG.check(self.no_data(), lib)))
+
+    def test_hand_recipe_needing_no_layout_is_clean(self):
+        self.assertEqual(self.errors(self.base()), [])
+
+    def test_recipe_naming_another_familys_band(self):
+        # a bedroom recipe may not name the privy's 'stall' — nor may a privy
+        # recipe keep the shared 'tiny' the privy's own table replaced
+        data = self.base()
+        data["recipes"]["bedroom.hand"]["sizeBands"] = ["stall"]
+        self.assertTrue(any("sizeBands names 'stall'" in e
+                            for e in self.errors(data)))
+        privy = json.loads(json.dumps(self.base()))
+        privy["groups"]["sleep.single.hand"]["family"] = "privy"
+        privy["recipes"]["bedroom.hand"].update(family="privy",
+                                                sizeBands=["tiny"])
+        self.assertTrue(any("sizeBands names 'tiny'" in e
+                            for e in self.errors(privy)))
+
+    def test_pool_entry_naming_a_band_the_family_lacks(self):
+        data = self.base()
+        for p in data["groups"]["sleep.single.hand"]["pieces"]:
+            p["minWealth"] = "wealthy"
+        data["groups"]["sleep.single.hand"]["kind"] = "seating"
+        data["pools"] = {"bedroom": [
+            {"group": "sleep.single.hand", "bands": ["narrow"],
+             "_file": "bedroom.json"}]}
+        self.assertEqual(self.errors(data), [])
+        data["pools"]["bedroom"][0]["bands"] = ["stall"]
+        self.assertTrue(any("bands must list" in e for e in self.errors(data)))
+
+
 class TestHandSource(unittest.TestCase):
     """``source`` marks hand work the converter keeps: "hand" is the only
     value a group, a whole recipe or a single recipe entry may carry."""

@@ -1,0 +1,265 @@
+{
+  "groups": [
+    {
+      "id": "storage.big.single.closet",
+      "family": "closet",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "coat.single.closet",
+      "family": "closet",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.row.closet",
+      "family": "closet",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.small.single.closet",
+      "family": "closet",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.cold.single.closet",
+      "family": "closet",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.bulk.single.closet",
+      "family": "closet",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "utility.storage.small.opt.closet",
+      "family": "closet",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "closet.clothes",
+      "family": "closet",
+      "sizeBands": [
+        "reach",
+        "walkin"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.big.single.closet",
+          "kind": "anchor"
+        },
+        {
+          "group": "coat.single.closet",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "closet.broom",
+      "family": "closet",
+      "sizeBands": [
+        "reach",
+        "walkin"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "utility.storage.small.opt.closet",
+          "kind": "anchor"
+        }
+      ]
+    },
+    {
+      "layout": "closet.linen",
+      "family": "closet",
+      "sizeBands": [
+        "reach",
+        "walkin"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "shelving.row.closet",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.closet",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "closet.pantry",
+      "family": "closet",
+      "sizeBands": [
+        "reach",
+        "walkin"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "shelving.row.closet",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.single.closet",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.closet",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

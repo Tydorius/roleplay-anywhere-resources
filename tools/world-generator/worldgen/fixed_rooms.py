@@ -10,6 +10,13 @@ means no rooms have been generated yet.
   derive(room, groups=None, lib=None)  -> the room with size, sizeBand,
                                          sleeps, doors and stretch worked
                                          out from its pieces
+  family_bands(family, lib=None)       -> the family's own size bands, []
+                                         when it shares the sizeBands table
+  band_for(family, w, h, lib=None)     -> the family's own band a w x h room
+                                         falls into, or None
+  max_floor_per_piece(family, band, lib=None) -> the free floor cells per
+                                         placed piece the family or band
+                                         caps, or None
   use_sides(piece, siblings)           -> the sides a piece is used from
   dead_cells(room)                     -> the free cells too far from every
                                          piece to be walked on
@@ -41,7 +48,10 @@ CLEARANCE_GAP = {"tight": 1, "roomy": 2, "grand": 3}
 STYLES = ("flush", "open")
 # library.json's sizeBands, measured on the whole room now (there is no wall
 # ring to subtract). The composer labels rooms from this table without loading
-# the library; check() always prefers the library's own bands.
+# the library; check() always prefers the library's own bands. A family with
+# an entry in familySizeBands never reads this table (see family_bands, which
+# loads the shipped library once); BANDS is the fallback when even that
+# cannot be read.
 BANDS = {"tiny": (1, 11), "small": (12, 24), "medium": (25, 48), "large": (49, 400)}
 SLEEP_SINGLE_ROLES = ("sleep", "sleep.child", "med.bed", "cell.bed")
 SLEEP_COUPLE_ROLE = "sleep.couple"
@@ -108,6 +118,104 @@ def band_for_area(area, bands=None):
         if rng[0] <= area <= rng[1]:
             return name
     return None
+
+
+# ------------------------------------------------------------ family bands
+
+_SHIPPED = None
+
+
+def _shipped_lib():
+    """The shipped library, loaded once for readers with no Library of their
+    own (the composer labels rooms mid-search without loading one); None
+    when it cannot be read, which leaves those readers the shared BANDS."""
+    global _SHIPPED
+    if _SHIPPED is None:
+        try:
+            from .library import load as _load
+            _SHIPPED = _load() or False
+        except Exception:
+            _SHIPPED = False
+    return _SHIPPED or None
+
+
+def _family_spec(family, lib):
+    if lib is None:
+        lib = _shipped_lib()
+    vocab = lib.vocab if hasattr(lib, "vocab") else lib
+    if not isinstance(vocab, dict):
+        return None
+    spec = (vocab.get("familySizeBands") or {}).get(family)
+    return spec if isinstance(spec, dict) else None
+
+
+def family_bands(family, lib=None):
+    """The family's own size bands from library.json's familySizeBands, as an
+    ordered list of {"name", "cells" (lo, hi), "aspect" (lo, hi) or None,
+    "maxFloorPerPiece" or None} — a family listed there uses only these;
+    every other family returns [] and shares the sizeBands table. ``lib``
+    defaults to the shipped library, so readers without one still see the
+    family bands."""
+    spec = _family_spec(family, lib)
+    if spec is None:
+        return []
+    out = []
+    for b in spec.get("bands") or []:
+        aspect = b.get("aspect") if isinstance(b, dict) else None
+        if not (isinstance(aspect, list) and len(aspect) == 2
+                and all(isinstance(v, (int, float))
+                        and not isinstance(v, bool) and v > 0
+                        for v in aspect)):
+            aspect = None
+        mfp = b.get("maxFloorPerPiece")
+        if not (isinstance(b, dict) and isinstance(b.get("name"), str)
+                and _int_pair(b.get("cells"), 1, 9999)):
+            continue
+        out.append({"name": b["name"], "cells": tuple(b["cells"]),
+                    "aspect": tuple(aspect) if aspect else None,
+                    "maxFloorPerPiece": (mfp if isinstance(mfp, int)
+                                         and not isinstance(mfp, bool)
+                                         else None)})
+    return out
+
+
+def _band_entry(family, name, lib=None):
+    """The family's own band by that name, or None (a family without bands
+    of its own, or a name that is not one of them)."""
+    for b in family_bands(family, lib):
+        if b["name"] == name:
+            return b
+    return None
+
+
+def band_for(family, w, h, lib=None):
+    """The name of the family's own size band a w x h room falls into: the
+    first of its bands whose cell range — and aspect range, when it has one —
+    holds it (list order decides, so the pickier band is listed first). None
+    when the family has no bands of its own or none holds the room; such a
+    family shares sizeBands (see band_for_area)."""
+    m, M = min(w, h), max(w, h)
+    for b in family_bands(family, lib):
+        lo, hi = b["cells"]
+        if not lo <= w * h <= hi:
+            continue
+        a = b["aspect"]
+        if a is not None and not a[0] * m <= M <= a[1] * m:
+            continue
+        return b["name"]
+    return None
+
+
+def max_floor_per_piece(family, band_name, lib=None):
+    """The most free floor cells per placed piece a room of this family's
+    band may hold — the band's own cap over the family's — or None when
+    neither caps it."""
+    band = _band_entry(family, band_name, lib)
+    if band is not None and band["maxFloorPerPiece"] is not None:
+        return band["maxFloorPerPiece"]
+    spec = _family_spec(family, lib)
+    cap = spec.get("maxFloorPerPiece") if spec else None
+    return cap if isinstance(cap, int) and not isinstance(cap, bool) else None
 
 
 # ------------------------------------------------------------- the use table
@@ -482,8 +590,15 @@ def _check_room(room, groups, lib, err, check_band=True):
         return
     w, h = size
     cap = _aspect_cap(room.get("family"))
+    whose = "family"
+    band = _band_entry(fam, room.get("sizeBand"), lib)
+    if band is not None and band["aspect"] is not None \
+            and band["aspect"][1] > cap:
+        # a band's own aspect range may stretch past the family cap
+        cap = band["aspect"][1]
+        whose = f"size band {band['name']}"
     if max(w, h) > cap * min(w, h):
-        err(f"aspect {w}x{h} is over the family cap {cap:g}: the long side "
+        err(f"aspect {w}x{h} is over the {whose} cap {cap:g}: the long side "
             f"may be at most {cap:g}x the short side")
     for key in ("outdoor", "symmetric"):
         if not isinstance(room.get(key), bool):
@@ -600,8 +715,21 @@ def _check_room(room, groups, lib, err, check_band=True):
                     err(f"door cell {side} {k} is blocked by a piece")
                 else:
                     door_cells.append(cell)
-    if sides_with < 2:
-        err(f"door cells on {sides_with} side(s); at least two sides need one")
+    # a closet's doors sit on one side only, and a walk-in one needs that
+    # side; a reach-in closet may have no door cell at all (a fully lined
+    # cupboard has no free edge cell)
+    closet = fam == "closet"
+    reach_in = closet and room.get("sizeBand") == "reach"
+    if closet and sides_with > 1:
+        err(f"door cells on {sides_with} sides; a closet keeps its doors "
+            f"on one side only")
+    elif sides_with < (1 if closet else 2) and not reach_in:
+        if closet:
+            err(f"door cells on {sides_with} side(s); a walk-in closet "
+                f"needs a door on one side")
+        else:
+            err(f"door cells on {sides_with} side(s); at least two sides "
+                f"need one")
     # reachability: one free area, reached from every door cell
     free = {(x, y) for x in range(w) for y in range(h)} - occupied
     reach = set()
@@ -632,14 +760,16 @@ def _check_room(room, groups, lib, err, check_band=True):
         err(f"{len(dead)} dead floor cell(s) (first at {dead[0][0]},"
             f"{dead[0][1]}): more than {gap} cells from every piece at "
             f"{room.get('clearance')} clearance")
-    # use sides: a reached cell next to every piece it can be used from
+    # use sides: a reached cell next to every piece it can be used from —
+    # except a reach-in closet, which is used from its doorway: no floor
+    # inside, so no use-side cells either
     by_group = {}
     for i in ok:
         by_group.setdefault(pieces[i].get("group"), []).append(pieces[i])
     for i in ok:
         p = pieces[i]
         sides = use_sides(p, by_group.get(p.get("group")) or [])
-        if not sides:
+        if not sides or reach_in:
             continue
         x, y, pw, ph = rects[i]
         if not any(c in reach for c
@@ -653,15 +783,43 @@ def _check_room(room, groups, lib, err, check_band=True):
         if (ns, nc) != (sleeps.get("singles", 0), sleeps.get("couples", 0)):
             err(f"sleeps {dict((k, sleeps.get(k, 0)) for k in ('singles', 'couples'))} "
                 f"does not match the pieces ({ns} singles, {nc} couples)")
-    # size band fits the whole room's area
+    # size band fits the whole room: a family with bands of its own is
+    # checked against them (cells and, when the band has one, aspect),
+    # every other family against the shared table
     if check_band:
-        bands = _bands(lib)
-        rng = bands.get(room.get("sizeBand"))
-        if rng is None:
-            err(f"unknown sizeBand {room.get('sizeBand')!r}")
-        elif not rng[0] <= w * h <= rng[1]:
-            err(f"area {w * h} is outside size band {room.get('sizeBand')} "
-                f"({rng[0]}-{rng[1]})")
+        fbands = family_bands(fam, lib)
+        entry = _band_entry(fam, room.get("sizeBand"), lib)
+        if fbands and entry is None:
+            err(f"unknown sizeBand {room.get('sizeBand')!r} for family "
+                f"{fam!r}; one of its own: "
+                f"{', '.join(b['name'] for b in fbands)}")
+        elif fbands:
+            lo, hi = entry["cells"]
+            if not lo <= w * h <= hi:
+                err(f"area {w * h} is outside size band {entry['name']} "
+                    f"({lo}-{hi})")
+            a = entry["aspect"]
+            if a is not None:
+                m, M = min(w, h), max(w, h)
+                if not a[0] * m <= M <= a[1] * m:
+                    err(f"aspect {w}x{h} is outside size band "
+                        f"{entry['name']} (its long side may be {a[0]:g}-"
+                        f"{a[1]:g}x its short side)")
+        else:
+            bands = _bands(lib)
+            rng = bands.get(room.get("sizeBand"))
+            if rng is None:
+                err(f"unknown sizeBand {room.get('sizeBand')!r}")
+            elif not rng[0] <= w * h <= rng[1]:
+                err(f"area {w * h} is outside size band {room.get('sizeBand')} "
+                    f"({rng[0]}-{rng[1]})")
+    # a family or band with maxFloorPerPiece caps the free floor per piece
+    floor_cap = max_floor_per_piece(fam, room.get("sizeBand"), lib)
+    if floor_cap is not None and ok:
+        free = w * h - sum(rects[i][2] * rects[i][3] for i in ok)
+        if free > floor_cap * len(ok):
+            err(f"{free} free cells over {len(ok)} piece(s) is over the "
+                f"{floor_cap} floor cells per piece cap")
     # a symmetric room mirrors across one centre line
     if room.get("symmetric") and not _mirror_symmetric(pieces, rects, ok, w, h):
         err("flagged symmetric but its pieces do not mirror across either "
@@ -797,14 +955,18 @@ def check(rooms, groups=None, lib=None):
     """Every rule of the fixed-room format the code can check, as plain
     sentences starting with the file and room: pieces inside the room and not
     overlapping, wall-bound pieces flush against their wall, door cells valid
-    and on at least two sides, every free cell reached from every door cell,
-    no dead floor (a free cell more than the clearance's gap from every
-    piece), the long side within the family's aspect cap, every piece
-    reached on a use side, the open room's filler clear, reached, off every
-    wall, within its cap and aspect, and centred, no wall carrying more
-    empty lines than the slack line
+    and on at least two sides (a closet keeps its doors on one side only,
+    and a reach-in closet may have none), every free cell reached from every
+    door cell, no dead floor (a free cell more than the clearance's gap from
+    every piece), the long side within the family's aspect cap (a band with
+    its own aspect range may stretch past it), every piece reached on a use
+    side (not a reach-in closet, used from its doorway), the open room's
+    filler clear, reached, off every wall, within its cap and aspect, and
+    centred, no wall carrying more empty lines than the slack line
     (flush) or the filler's buffer line (open), stretch lines truly
-    insertable, sleep counts and size band matching the pieces, symmetry
+    insertable, sleep counts and size band matching the pieces (a family
+    with bands of its own is checked against them, and against its
+    maxFloorPerPiece free floor cells per piece), symmetry
     where flagged, and ids, families, roles and groups known. ``groups`` is
     room_groups.load() data and ``lib`` a Library; either may be None to
     skip its checks."""
@@ -868,7 +1030,14 @@ def derive(room, groups=None, lib=None, stretch=True):
                    "couples": sum(1 for p in r["pieces"]
                                   if isinstance(p, dict)
                                   and p.get("role") == SLEEP_COUPLE_ROLE)}
-    r["sizeBand"] = band_for_area(w * h, _bands(lib))
+    r["sizeBand"] = (band_for(r.get("family"), w, h, lib)
+                     if family_bands(r.get("family"), lib)
+                     else band_for_area(w * h, _bands(lib)))
+    if r.get("family") == "closet":
+        # a closet's doors sit on one side only: the side with the most
+        # free edge cells (first of north/east/south/west on a tie)
+        side = max(SIDES, key=lambda s: len(r["doors"][s]))
+        r["doors"] = {s: (r["doors"][s] if s == side else []) for s in SIDES}
     if stretch:
         r["stretch"] = {
             "x": [c for c in range(w + 1)

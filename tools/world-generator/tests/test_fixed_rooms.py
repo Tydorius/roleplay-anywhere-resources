@@ -446,6 +446,155 @@ class TestWashFamilyRules(unittest.TestCase):
                     self.assertEqual(self.errors(room), [])
 
 
+class TestFamilyBands(unittest.TestCase):
+    """Size bands per family (library.json's familySizeBands): a family with
+    a table uses only its own bands — band_for reads cells and aspect, the
+    first match winning — while every other family keeps the shared table;
+    a band's aspect may stretch a room past the family cap, a band or family
+    maxFloorPerPiece caps the free floor per piece, and a closet follows its
+    own door rules (one side only, a walk-in needing that side, a reach-in
+    needing no floor at all)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = WL.load()
+        cls.data = RG.load()
+
+    def errors(self, room):
+        return FR.check([room], self.data, self.lib)
+
+    def test_a_family_with_a_table_uses_only_its_own_bands(self):
+        self.assertEqual([b["name"] for b in FR.family_bands("bedroom")],
+                         ["narrow", "tiny", "small", "medium", "large"])
+        self.assertEqual([b["name"] for b in FR.family_bands("privy")],
+                         ["stall", "small"])
+        self.assertEqual([b["name"] for b in FR.family_bands("closet")],
+                         ["reach", "walkin"])
+        # a family without a table shares sizeBands and holds no band
+        self.assertEqual(FR.family_bands("bath"), [])
+        self.assertEqual(FR.band_for("bath", 5, 5), None)
+        self.assertEqual(FR.band_for_area(25), "medium")
+
+    def test_band_lookup_holds_cells_and_aspect(self):
+        # first match wins: 10 cells at 5x2 read narrow, not tiny
+        self.assertEqual(FR.band_for("bedroom", 5, 2), "narrow")
+        self.assertEqual(FR.band_for("bedroom", 3, 3), "tiny")
+        self.assertEqual(FR.band_for("bedroom", 6, 2), "narrow")
+        self.assertEqual(FR.band_for("privy", 1, 2), "stall")
+        self.assertEqual(FR.band_for("privy", 2, 3), "small")
+        self.assertEqual(FR.band_for("closet", 1, 2), "reach")
+        self.assertEqual(FR.band_for("closet", 2, 2), "walkin")
+        self.assertEqual(FR.band_for("closet", 1, 3), "walkin")
+        # 2x3 is six cells but no closet band holds it
+        self.assertEqual(FR.band_for("closet", 2, 3), None)
+        self.assertEqual(FR.max_floor_per_piece("privy", "stall"), 2)
+        self.assertEqual(FR.max_floor_per_piece("bedroom", "narrow"), 2)
+        self.assertIsNone(FR.max_floor_per_piece("bedroom", "tiny"))
+        self.assertIsNone(FR.max_floor_per_piece("bath", "small"))
+
+    def _servants(self, size_band="narrow"):
+        """A 5x2 servants' bedroom: two single beds lying lengthwise against
+        the north wall with a chest between them, the south row clear."""
+        return {
+            "id": "bedroom.hand.narrow", "family": "bedroom",
+            "sizeBand": size_band, "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [5, 2],
+            "sleeps": {"singles": 2, "couples": 0},
+            "pieces": [
+                piece("sleep", [2, 1], [0, 0], "sleep.pair.storage.small",
+                      "north"),
+                piece("storage.small", [1, 1], [2, 0],
+                      "sleep.pair.storage.small", "north"),
+                piece("sleep", [2, 1], [3, 0], "sleep.pair.storage.small",
+                      "north"),
+            ],
+            "doors": {"north": [], "south": [0, 1, 2, 3, 4],
+                      "west": [1], "east": [1]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "bedroom.servants",
+            "description": "A hand-made servants' room.",
+        }
+
+    def test_a_narrow_bedroom_passes_the_family_cap(self):
+        # 5x2 reads 2.5:1, past the family cap of 2: the narrow band's own
+        # aspect window is what lets it stand
+        self.assertEqual(self.errors(self._servants()), [])
+
+    def test_the_same_room_outside_narrow_fails_the_family_cap(self):
+        # 10 cells sit inside tiny too, but tiny has no aspect of its own,
+        # so the family cap of 2 applies again
+        errors = self.errors(self._servants(size_band="tiny"))
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("aspect 5x2 is over the family cap 2", errors[0])
+
+    def _closet(self, size_band, size, pieces, doors):
+        return {
+            "id": "closet.hand.a", "family": "closet", "sizeBand": size_band,
+            "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": size,
+            "sleeps": {"singles": 0, "couples": 0},
+            "pieces": pieces, "doors": doors,
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "closet.broom",
+            "description": "A hand-made closet.",
+        }
+
+    def test_a_reach_in_closet_needs_no_free_floor(self):
+        # 2x1 fully lined: both cells are pieces, so no door cell exists and
+        # no piece has a free cell beside it — fine for a reach-in
+        room = self._closet("reach", [2, 1], [
+            piece("utility", [1, 1], [0, 0],
+                  "utility.storage.small.opt.closet", "north"),
+            piece("storage.small", [1, 1], [1, 0],
+                  "utility.storage.small.opt.closet", "north"),
+        ], {"north": [], "south": [], "west": [], "east": []})
+        self.assertEqual(self.errors(room), [])
+
+    def test_a_walk_in_closet_needs_a_door_on_one_side(self):
+        room = self._closet("walkin", [2, 2], [
+            piece("utility", [1, 1], [0, 0],
+                  "utility.storage.small.opt.closet", "north"),
+            piece("storage.small", [1, 1], [1, 0],
+                  "utility.storage.small.opt.closet", "north"),
+        ], {"north": [], "south": [0, 1], "west": [], "east": []})
+        self.assertEqual(self.errors(room), [])
+        room["doors"]["south"] = []
+        self.assertTrue(any("a walk-in closet needs a door on one side"
+                            in e for e in self.errors(room)))
+
+    def test_a_walk_in_piece_no_free_use_side_reaches_is_an_error(self):
+        # the door reaches only the east column; the piece on the west side
+        # is used from a cell nothing reaches
+        room = self._closet("walkin", [2, 2], [
+            piece("utility", [1, 1], [0, 0],
+                  "utility.storage.small.opt.closet", "north"),
+            piece("storage.small", [1, 1], [1, 1],
+                  "utility.storage.small.opt.closet", "south"),
+        ], {"north": [1], "south": [], "west": [], "east": []})
+        errors = self.errors(room)
+        self.assertTrue(any("no reached cell on its use sides" in e
+                            for e in errors), errors)
+
+    def test_max_floor_per_piece_rejects_a_roomy_single_toilet_privy(self):
+        # 4x4 with one toilet: 15 free cells over one piece is far past the
+        # privy's 2 floor cells per piece
+        room = {
+            "id": "privy.hand.a", "family": "privy", "sizeBand": "small",
+            "clearance": "tight", "style": "flush",
+            "wealth": ["poor", "modest"], "size": [4, 4],
+            "sleeps": {"singles": 0, "couples": 0},
+            "pieces": [piece("wash.toilet", [1, 1], [0, 0],
+                             "wash.toilet.single.privy", "north")],
+            "doors": {"north": [1, 2, 3], "south": [0, 1, 2, 3],
+                      "west": [1, 2], "east": [1, 2]},
+            "stretch": {}, "outdoor": False, "symmetric": False,
+            "recipe": "privy.tiny.a",
+            "description": "A hand-made privy, far too much floor.",
+        }
+        self.assertTrue(any("floor cells per piece cap" in e
+                            for e in self.errors(room)))
+
+
 class TestHandFields(unittest.TestCase):
     """The hand-work fields: retired, edited and source are checked by their
     own rules (the editable fields are wealth, description, symmetric and

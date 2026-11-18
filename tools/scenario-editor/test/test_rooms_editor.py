@@ -33,7 +33,7 @@ import scenario_editor as se                           # noqa: E402
 from worldgen import fixed_rooms                       # noqa: E402
 
 SHIPPED = Path(rmed.LIBRARY_DIR)                       # the real library, before any test swaps it
-FAMILIES = ("bath", "bedroom", "bedroom.master", "privy", "washroom")
+FAMILIES = ("bath", "bedroom", "bedroom.master", "closet", "privy", "washroom")
 
 
 def room_ids(family):
@@ -86,6 +86,23 @@ class TestMeta(LibraryTestCase):
         self.assertIn("*", m["roles"])                 # the default role colour
         self.assertIn("modern", m["bands"])            # art bands, not size bands
         self.assertTrue(m["clearances"] and m["styles"] and m["tiers"])
+
+    def test_family_size_bands_come_per_family(self):
+        rmed.LIBRARY_DIR = SHIPPED
+        m = rmed.meta()
+        # the families with their own tables carry them in table order;
+        # every other family shares sizeBands and holds no entry
+        self.assertEqual(["narrow", "tiny", "small", "medium", "large"],
+                         [b["name"] for b in m["familySizeBands"]["bedroom"]])
+        self.assertEqual({"name": "narrow", "cells": [8, 14],
+                          "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
+                         m["familySizeBands"]["bedroom"][0])
+        self.assertEqual(["stall", "small"],
+                         [b["name"] for b in m["familySizeBands"]["privy"]])
+        self.assertEqual({"name": "reach", "cells": [1, 2]},
+                         m["familySizeBands"]["closet"][0])
+        for fam in ("bath", "washroom", "bedroom.master"):
+            self.assertNotIn(fam, m["familySizeBands"])
 
 
 class TestFamily(LibraryTestCase):
@@ -240,6 +257,18 @@ class TestRegenerateOne(LibraryTestCase):
                 self.assertNotIn(key, existing, "equals a shipped room")
                 self.assertNotIn(key, seen, "another candidate's equal")
                 seen.add(key)
+
+    def test_a_hand_room_regenerates_inside_its_band(self):
+        self.copy_library()
+        # a hand recipe of a family with its own band table composes with
+        # the band pinned (the generator's own rule), so its candidates
+        # stay in the room's band — the 5x2 servants' room would break the
+        # family aspect cap composed unpinned
+        out = rmed.regenerate("bedroom.narrow.a.tight.flush")
+        self.assertTrue(out["candidates"], "at least one candidate")
+        for cand in out["candidates"]:
+            self.assertEqual(cand["sizeBand"], "narrow")
+        self.assertEqual([], rmed.check_rooms({"rooms": out["candidates"]})["errors"])
 
 
 class TestRegenerateFamily(LibraryTestCase):

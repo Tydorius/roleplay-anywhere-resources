@@ -1,7 +1,11 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
-recipe of the bedroom, master bedroom and washroom families composed at each
-clearance (tight/roomy/grand) in each style (flush/open), seed 1, keeping
-the best room of each. A grand private room keeps the roomy gap, joins its
+recipe of the bedroom, master bedroom, washroom, privy, bath and closet
+families composed at each clearance (tight/roomy/grand) in each style
+(flush/open), seed 1, keeping the best room of each. A hand recipe of a
+family with its own familySizeBands table composes once per band it names,
+the band pinned (a band its furniture cannot reach produces no room — the
+composer never pads a room up to one), and its optional "wealth" list
+overrides the clearance's tiers. A grand private room keeps the roomy gap, joins its
 family's luxury pool (one group of each luxury kind at most) and must carry
 a luxury group, more pieces than the roomy room of the same recipe and style
 and an area of at most GRAND_AREA_RATIO times it (one placing an elite-only
@@ -44,7 +48,7 @@ from worldgen import library as WL          # noqa: E402
 from worldgen import room_composer as RC    # noqa: E402
 from worldgen import room_groups as RG      # noqa: E402
 
-FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath")
+FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
@@ -63,6 +67,10 @@ NOUNS = (
     ("bedside", None),
     ("storage.big", "wardrobe"),
     ("storage.small", "chest"),
+    ("storage.cold", "icebox"),
+    ("storage.bulk", "sack"),
+    ("shelving", "shelf"),
+    ("utility", "utility stand"),
     ("wash.bath", "bathtub"),
     ("wash.basin", "washbasin"),
     ("wash.toilet", "privy"),
@@ -85,13 +93,16 @@ NOUNS = (
     ("decor", "decoration"),
 )
 FAMILY_NOUNS = {"bedroom": "bedroom", "bedroom.master": "master bedroom",
-                "washroom": "washroom", "privy": "privy", "bath": "bath room"}
+                "washroom": "washroom", "privy": "privy", "bath": "bath room",
+                "closet": "closet"}
 BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
-                   "large": "spacious"}
+                   "large": "spacious", "stall": "stall", "reach": "reach-in",
+                   "walkin": "walk-in"}
 # the roles a family is about: an instance of these is the instance's name
 # (the bed and its bedside read as "bed") and is mentioned first
 FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
-                "washroom": ("wash",), "privy": ("wash",), "bath": ("wash",)}
+                "washroom": ("wash",), "privy": ("wash",), "bath": ("wash",),
+                "closet": ("storage", "shelving", "utility")}
 MAX_MENTIONS = 4      # furniture groups named in one description
 LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
@@ -227,11 +238,13 @@ def canonical(room):
 def _finalize(room, rid, elite=False):
     """A room in the shipped field order, with its id, wealth tiers and
     description. A grand room placing an elite-only piece serves the elite
-    alone."""
+    alone. A recipe's "wealth" override (stashed on the room as "_wealth")
+    beats the clearance's tiers."""
+    wealth = room.pop("_wealth", None) or wealth_for(room["clearance"],
+                                                     room["style"])
     out = {"id": rid, "family": room["family"], "sizeBand": room["sizeBand"],
            "clearance": room["clearance"], "style": room["style"],
-           "wealth": (["elite"] if elite
-                      else wealth_for(room["clearance"], room["style"])),
+           "wealth": (["elite"] if elite else wealth),
            "size": room["size"], "sleeps": room["sleeps"],
            "pieces": room["pieces"], "doors": room["doors"],
            "stretch": room["stretch"]}
@@ -268,17 +281,21 @@ def _shipped_ids(fam, rooms_dir=None):
             if r.get("source") != "hand" and not r.get("retired")}
 
 
-def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None):
+def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None,
+                   size_band=None):
     """One recipe composed at a clearance and style under this generator's
     own rules: the grand-private area cap from the roomy sibling (``roomy``),
     then the luxury-pool, more-furniture and cells-per-piece filters. Returns
-    (rooms, reason), ``reason`` naming the rule that left nothing. The
-    editor's "regenerate this room" calls this, so its candidates come from
-    the same rules a full generation runs."""
+    (rooms, reason), ``reason`` naming the rule that left nothing.
+    ``size_band`` pins the composition to one band (a hand recipe's own). A
+    recipe's "wealth" list rides the rooms out as "_wealth" for _finalize.
+    The editor's "regenerate this room" calls this, so its candidates come
+    from the same rules a full generation runs."""
     cap = None
     if clearance == "grand" and fam in RC.PRIVATE_FAMILIES and roomy is not None:
         cap = math.ceil(RC.GRAND_AREA_RATIO * roomy["size"][0] * roomy["size"][1])
-    rooms, reason = RC.compose(recipe, data, clearance, style, seed, max_area=cap)
+    rooms, reason = RC.compose(recipe, data, clearance, style, seed,
+                               max_area=cap, size_band=size_band)
     if not rooms:
         return rooms, reason
     if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
@@ -303,6 +320,10 @@ def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None):
         if not rooms:
             return rooms, ("grand: more than "
                            f"{GRAND_MAX_CELLS_PER_PIECE} cells of floor per piece")
+    wealth = recipe.get("wealth")
+    if wealth:
+        for r in rooms:
+            r["_wealth"] = list(wealth)
     return rooms, None
 
 
@@ -369,38 +390,50 @@ def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
                               f"a {fam} needs a toilet, a bath and a basin "
                               f"(see privy); this recipe gives no {names}"))
                 continue
+            # a hand recipe of a family with its own band table composes
+            # once per band it names, the band pinned (no padding to reach
+            # it); every other recipe composes as before, its band wherever
+            # the furniture lands
+            hand_bands = (recipe.get("sizeBands") or []) \
+                if recipe.get("source") == "hand" and FR.family_bands(fam) \
+                else [None]
             roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
-            for clearance in CLEARANCES:
-                for style in STYLES:
-                    rooms, reason = compose_recipe(recipe, fam, data,
-                                                   clearance, style, seed,
-                                                   roomy=roomy_rooms.get(style))
-                    if not rooms:
-                        drops.append((recipe["layout"], clearance, style,
-                                      reason))
-                        continue
-                    # the best room of the recipe that no earlier one kept:
-                    # two rooms equal after any turn or mirror are one room,
-                    # so a recipe whose best is taken falls to its next-best
-                    best = next((r for r in rooms if canonical(r) not in seen),
-                                None)
-                    if best is None:
-                        drops.append((recipe["layout"], clearance, style,
-                                      "every candidate duplicates an earlier "
-                                      "room"))
-                        continue
-                    seen.add(canonical(best))
-                    if clearance == "roomy":
-                        roomy_rooms[style] = best
-                    kept.append(best)
+            for band in hand_bands:
+                for clearance in CLEARANCES:
+                    for style in STYLES:
+                        rooms, reason = compose_recipe(recipe, fam, data,
+                                                       clearance, style, seed,
+                                                       roomy=roomy_rooms.get(style),
+                                                       size_band=band)
+                        if not rooms:
+                            drops.append((recipe["layout"], clearance, style,
+                                          reason))
+                            continue
+                        # the best room of the recipe that no earlier one kept:
+                        # two rooms equal after any turn or mirror are one room,
+                        # so a recipe whose best is taken falls to its next-best
+                        best = next((r for r in rooms if canonical(r) not in seen),
+                                    None)
+                        if best is None:
+                            drops.append((recipe["layout"], clearance, style,
+                                          "every candidate duplicates an earlier "
+                                          "room"))
+                            continue
+                        seen.add(canonical(best))
+                        if clearance == "roomy":
+                            roomy_rooms[style] = best
+                        kept.append(best)
         shipped_ids = _shipped_ids(fam, rooms_dir)
         letters = {}        # group -> letters already on this run's ids
         # an id is <family>.<band>.<letter>.<clearance>.<style>, and the
         # family itself may hold dots (bedroom.master), so the letter sits
         # after as many family parts as the family has
         nparts = len(fam.split("."))
-        # a kept room's letter stays taken in its band, clearance and style
-        for r in keep:
+        # every shipped room's letter stays taken in its band, clearance and
+        # style — kept, hand, retired or dropped alike — so a new room (a new
+        # recipe's, or one a changed rule remade) takes the next free letter
+        # and never shifts a shipped id onto a different room
+        for r in shipped:
             bits = r["id"].split(".")
             if len(bits) == nparts + 4 and bits[nparts + 1] in LETTERS:
                 letters.setdefault((bits[nparts], bits[nparts + 2],
@@ -412,12 +445,13 @@ def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
             used = letters.setdefault(group, set())
             rid = shipped_ids.get(canonical(room))
             if rid is not None:
+                # its own shipped letter is in ``used`` (seeded above); what
+                # would disqualify the id is any other part drifting
                 bits = rid.split(".")
                 if len(bits) != nparts + 4 or bits[:nparts] != fam.split(".") \
                         or bits[nparts] != room["sizeBand"] \
                         or bits[nparts + 2] != room["clearance"] \
                         or bits[nparts + 3] != room["style"] \
-                        or bits[nparts + 1] in used \
                         or bits[nparts + 1] not in LETTERS:
                     rid = None
             if rid is None:
@@ -455,13 +489,18 @@ def _drop_reasons(drops):
     return sum(reasons.values()), sorted(reasons.items(), key=lambda kv: -kv[1])
 
 
-def _band_ranges(rooms):
-    """Each band's size range, as 'band w0xh0-w1xh1' sorted smallest first."""
+def _band_ranges(rooms, fam=None):
+    """Each band's size range, as 'band w0xh0-w1xh1' sorted smallest first:
+    a family with its own band table in table order, else the shared bands
+    by area."""
     bands = {}
     for r in rooms:
         bands.setdefault(r["sizeBand"], []).append(tuple(r["size"]))
+    order = [b["name"] for b in FR.family_bands(fam)]
     out = []
-    for band in sorted(bands, key=lambda b: FR.BANDS.get(b, (0, 0))[0]):
+    for band in sorted(bands, key=(lambda b: order.index(b) if b in order
+                                   else len(order)) if order
+                       else lambda b: FR.BANDS.get(b, (0, 0))[0]):
         sizes = sorted(set(bands[band]))
         lo = "x".join(str(n) for n in min(sizes))
         hi = "x".join(str(n) for n in max(sizes))
@@ -481,7 +520,7 @@ def report(families, generated, drops_by_family):
                       if r.get("family") == fam)
         total, reasons = _drop_reasons(drops_by_family[fam])
         why = "; ".join(f"{n} {reason}" for n, reason in reasons) or "-"
-        ranges = ", ".join(_band_ranges(generated[fam])) or "-"
+        ranges = ", ".join(_band_ranges(generated[fam], fam)) or "-"
         print(f"{fam:<{widths[0]}} {recipes:>{widths[1]}} "
               f"{len(generated[fam]):>{widths[2]}} {total:>{widths[3]}}  {ranges}")
         if total:

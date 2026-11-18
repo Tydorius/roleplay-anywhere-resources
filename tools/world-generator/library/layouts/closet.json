@@ -1,0 +1,17 @@
+{
+  "layouts": [
+    {
+      "id": "closet.clothes",
+      "family": "closet",
+      "sizeBands": ["tiny"],
+      "minInterior": [3, 2],
+      "maxInterior": [4, 2],
+      "slots": [
+        {"id": "rail", "role": "storage.big", "size": [2, 1], "anchor": "wall:far", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "coat", "size": [1, 1], "anchor": "corner"}
+      ]
+    }
+  ]
+}

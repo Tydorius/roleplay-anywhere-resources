@@ -130,6 +130,9 @@ def meta():
             "tiers": list(_lib().tiers) if MODULES else [],
             "sizeBands": ({n: list(r) for n, r in fixed_rooms.BANDS.items()}
                           if MODULES else {}),
+            # the bands a family uses instead of the shared sizeBands, in
+            # table order (a family absent here shares sizeBands)
+            "familySizeBands": _family_size_bands(),
             "wealthFor": _wealth_for() if MODULES else {},
             "letters": "abcdefghijklmnopqrstuvwxyz",
             # what the group editor needs: the library's own families,
@@ -147,6 +150,28 @@ def meta():
 def _bands():
     """The item-art bands that ship a sprite index (sorted)."""
     return sorted(os.path.basename(os.path.dirname(p)) for p in _sprite_indexes())
+
+
+def _family_size_bands():
+    """{family: [band, ...]} for every family with its own band table in
+    library.json's familySizeBands, each band {name, cells, aspect?,
+    maxFloorPerPiece?} in table order ({}) when the modules are absent."""
+    if not MODULES:
+        return {}
+    lib = _lib()
+    out = {}
+    for fam in (lib.vocab.get("familySizeBands") or {}):
+        if fam.startswith("_"):
+            continue
+        bands = fixed_rooms.family_bands(fam, lib)
+        if bands:
+            out[fam] = [{"name": b["name"], "cells": list(b["cells"]),
+                         **({"aspect": list(b["aspect"])}
+                            if b["aspect"] else {}),
+                         **({"maxFloorPerPiece": b["maxFloorPerPiece"]}
+                            if b["maxFloorPerPiece"] is not None else {})}
+                        for b in bands]
+    return out
 
 
 def _sprite_indexes():
@@ -852,15 +877,23 @@ def regenerate(room_id):
     if not isinstance(recipe, dict):
         raise LookupError(f"no recipe {room.get('recipe')!r}")
     roomy = None
+    # a hand recipe of a family with its own band table composes with the
+    # band pinned (the generator's own rule), so its candidates are composed
+    # that way too; every other recipe composes as before, band unpinned
+    band = (room.get("sizeBand")
+            if recipe.get("source") == "hand"
+            and fixed_rooms.family_bands(fam, _lib()) else None)
     if clearance == "grand" and fam in room_composer.PRIVATE_FAMILIES:
-        sibs, _ = g.compose_recipe(recipe, fam, data, "roomy", style, 1)
+        sibs, _ = g.compose_recipe(recipe, fam, data, "roomy", style, 1,
+                                   size_band=band)
         roomy = sibs[0] if sibs else None
     seen = {g.canonical(r) for r in fixed_rooms.load(_rooms_dir())
             if isinstance(r, dict) and r.get("family") == fam}
     out = []
     for seed in range(1, REGEN_SEEDS + 1):
         cands, _reason = g.compose_recipe(recipe, fam, data, clearance,
-                                          style, seed, roomy=roomy)
+                                          style, seed, roomy=roomy,
+                                          size_band=band)
         for cand in cands:
             key = g.canonical(cand)
             if key in seen or cand.get("sizeBand") != room.get("sizeBand"):

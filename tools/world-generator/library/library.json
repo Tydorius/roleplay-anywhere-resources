@@ -72,6 +72,32 @@
       400
     ]
   },
+  "familySizeBands": {
+    "_readme": "size bands a family uses instead of the shared sizeBands: a room's band is the first entry whose cell range (and aspect range, when given) holds it, so put the pickier band first; maxFloorPerPiece caps a room's free floor cells per placed piece, a band's own value overriding the family's",
+    "bedroom": {
+      "bands": [
+        {"name": "narrow", "cells": [8, 14], "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
+        {"name": "tiny", "cells": [1, 11]},
+        {"name": "small", "cells": [12, 24]},
+        {"name": "medium", "cells": [25, 48]},
+        {"name": "large", "cells": [49, 400]}
+      ]
+    },
+    "privy": {
+      "maxFloorPerPiece": 2,
+      "bands": [
+        {"name": "stall", "cells": [2, 4]},
+        {"name": "small", "cells": [5, 8]}
+      ]
+    },
+    "closet": {
+      "maxFloorPerPiece": 2,
+      "bands": [
+        {"name": "reach", "cells": [1, 2]},
+        {"name": "walkin", "cells": [3, 4], "aspect": [1, 4]}
+      ]
+    }
+  },
   "categories": {
     "bed": "anything people sleep on: pallets, bedrolls, beds, bunks, hammocks, cots, sleep pods",
     "crib": "a cot or cradle for a baby",
@@ -225,6 +251,7 @@
     "washroom": "washing and toilets",
     "privy": "a toilet on its own: an outhouse, latrine, garderobe or water closet",
     "bath": "bathing: a tub or shower, a basin and a bench, no toilet",
+    "closet": "a small closed store room: a clothes, linen, broom or pantry closet",
     "workshop": "a trade's work stations: smithy, carpentry, tailor, fabricator bay",
     "chapel": "worship: altar and seats facing it",
     "classroom": "teaching: desks facing a board",
@@ -319,7 +346,11 @@
     "latrine": "privy",
     "garderobe": "privy",
     "water_closet": "privy",
-    "bath": "bath"
+    "bath": "bath",
+    "closet": "closet",
+    "clothes_closet": "closet",
+    "linen_closet": "closet",
+    "broom_closet": "closet"
   },
   "anchors": {
     "_readme": "Combine with +, e.g. wall:far+corner. far/side/near are relative to the room's main door.",
