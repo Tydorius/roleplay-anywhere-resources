@@ -222,6 +222,84 @@
         }
       ],
       "source": "hand"
+    },
+    {
+      "id": "machine.machine2",
+      "family": "barn",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "machine.machine",
+      "family": "barn",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [
@@ -316,6 +394,52 @@
         },
         {
           "group": "storage.bulk.storage.hay",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "barn.machine_shed.a",
+      "family": "barn",
+      "sizeBands": [
+        "small",
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "machine.machine2",
+          "kind": "anchor"
+        },
+        {
+          "group": "work.tool.work.tool",
+          "kind": "required"
+        },
+        {
+          "group": "storage.hay.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "barn.machine_shed.b",
+      "family": "barn",
+      "sizeBands": [
+        "small",
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "machine.machine",
+          "kind": "anchor"
+        },
+        {
+          "group": "work.tool.work.tool",
+          "kind": "required"
+        },
+        {
+          "group": "storage.hay.single",
           "kind": "optional"
         }
       ]

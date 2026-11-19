@@ -1,6 +1,121 @@
 {
   "rooms": [
     {
+      "id": "dairy.medium.a.roomy.flush",
+      "family": "dairy",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "dairy",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "dairy.parlour.dairy",
+          "optional": false
+        },
+        {
+          "role": "dairy",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "dairy.parlour.dairy",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          4
+        ],
+        "west": [
+          2,
+          3
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "dairy.parlour.b",
+      "description": "A mid-sized dairy, churn in the northwest corner, a shelf in the southwest corner."
+    },
+    {
       "id": "dairy.medium.a.tight.flush",
       "family": "dairy",
       "sizeBand": "medium",
@@ -377,6 +492,121 @@
       "symmetric": false,
       "recipe": "dairy.parlour.a",
       "description": "A mid-sized dairy, churn in the northwest corner, a table in the northeast corner, and a shelf in the southeast corner."
+    },
+    {
+      "id": "dairy.medium.c.tight.flush",
+      "family": "dairy",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        5,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "dairy",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "dairy.parlour.dairy",
+          "optional": false
+        },
+        {
+          "role": "dairy",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "dairy.parlour.dairy",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "storage.cold.dairy",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0
+        ],
+        "west": [
+          2,
+          3
+        ],
+        "east": [
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          3,
+          5
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "dairy.parlour.b",
+      "description": "A mid-sized dairy, churn in the northwest corner, a shelf in the southeast corner."
     },
     {
       "id": "dairy.small.a.roomy.flush",

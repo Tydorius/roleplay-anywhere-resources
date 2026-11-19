@@ -5,7 +5,11 @@ now names the barn family. rl-14b lands the farm families' own rooms: every
 band of each family's table has a stored room, a barn holds the farm pieces
 rather than a cellar of sacks, a hayloft is hay and never beds, and the barn
 gap is closed on both furnishing paths (the assembler's stored rooms and the
-old P3 layouts)."""
+old P3 layouts). rl-14c adds the industrial and modern equipment: every new
+object loads and binds, the horse-drawn medieval set is reused by the
+industrial band (an industrial look where the material changes), the
+machine shed and milking parlour recipes have stored rooms whose machine
+slots only the new equipment fills, and no medieval room changed."""
 import json
 import random
 import unittest
@@ -15,6 +19,28 @@ from worldgen import fixed_rooms as FR
 from worldgen import library as L
 from worldgen import room_groups as RG
 from worldgen.library_rooms import Templates, compile_room, pick_layout
+
+# the medieval set the industrial band reuses (everything but the dovecote
+# and the straw skep the frame beehive replaces); churn, plough, harrow and
+# the hurdle also change material class for their industrial look
+INDUSTRIAL_REUSE = {
+    "pen.hurdle": {"wattle": "wood"},
+    "pen.gate": {},
+    "coop.henhouse": {},
+    "coop.hutch": {},
+    "feed.hay_rack": {},
+    "feed.rick": {},
+    "feed.loft_stack": {},
+    "dairy.churn": {"churn": "metal"},
+    "dairy.milk_cans": {},
+    "dairy.butter_worker": {},
+    "granary.bin": {},
+    "farm_machine.plough": {"beam": "metal"},
+    "farm_machine.harrow": {"frame": "metal"},
+    "farm_machine.cart": {},
+    "farm_machine.wagon": {},
+    "muck.heap": {},
+}
 
 # (id, category, size, back, wealth)
 MEDIEVAL_FARM_OBJECTS = (
@@ -112,7 +138,11 @@ class TestFarmObjects(unittest.TestCase):
                 self.assertEqual(o["size"], size)
                 self.assertEqual(o["back"], back)
                 self.assertEqual(o["wealth"], wealth)
-                self.assertEqual(o["bands"], ["medieval"])
+                # the industrial band reuses all but the dovecote and skep
+                self.assertEqual(
+                    o["bands"],
+                    ["medieval", "industrial"] if oid in INDUSTRIAL_REUSE
+                    else ["medieval"])
                 self.assertEqual(o["sources"], ["claude-authored"])
                 self.assertTrue(o["text"]["physical"])
 
@@ -349,6 +379,212 @@ class TestTheBarnOnTheOldLayoutPath(unittest.TestCase):
         names = {f.template for f in room.furniture}
         self.assertTrue(any(is_farm_template(n, self.farm) for n in names),
                         names)
+
+
+# (id, category, size, back, wealth)
+INDUSTRIAL_FARM_OBJECTS = (
+    ("dairy.separator", "dairy", [1, 1], None, ["modest", "wealthy", "elite"]),
+    ("farm_machine.seed_drill", "farm_machine", [3, 2], None,
+     ["modest", "wealthy", "elite"]),
+    ("farm_machine.reaper", "farm_machine", [3, 2], None,
+     ["modest", "wealthy", "elite"]),
+    ("farm_machine.thresher", "farm_machine", [2, 2], None,
+     ["modest", "wealthy", "elite"]),
+    ("farm_machine.traction_engine", "farm_machine", [3, 3], None,
+     ["wealthy", "elite"]),
+    ("coop.beehive", "coop", [1, 1], None, ["modest", "wealthy", "elite"]),
+    ("farm_machine.hay_rake", "farm_machine", [2, 1], None, ["poor", "modest"]),
+    ("farm_machine.muck_spreader", "farm_machine", [2, 2], None,
+     ["poor", "modest"]),
+    ("utility.wind_pump", "utility", [2, 2], None, ["poor", "modest"]),
+)
+
+MODERN_FARM_OBJECTS = (
+    ("farm_machine.tractor", "farm_machine", [2, 3], None, ["poor", "modest"]),
+    ("farm_machine.combine", "farm_machine", [4, 3], None, ["wealthy", "elite"]),
+    ("dairy.parlour_stalls", "dairy", [3, 2], None, ["poor", "modest"]),
+    ("dairy.milk_tank", "dairy", [2, 1], "north", ["poor", "modest"]),
+    ("granary.silo", "granary", [2, 2], None, ["poor", "modest"]),
+    ("feed.tube_feeder", "feed", [1, 1], None, ["poor", "modest"]),
+    ("coop.perch_rack", "coop", [2, 1], "north", ["poor", "modest"]),
+    ("coop.nest_box", "coop", [1, 1], "north", ["poor", "modest"]),
+    ("farm_machine.baler", "farm_machine", [2, 2], None, ["poor", "modest"]),
+    ("farm_machine.drill_modern", "farm_machine", [3, 2], None,
+     ["poor", "modest"]),
+    ("pen.panel", "pen", [2, 1], "north", ["poor", "modest"]),
+    ("granary.hopper_bin", "granary", [2, 2], None, ["poor", "modest"]),
+)
+
+# each farm category's own purpose and role (the wind pump serves any yard
+# through the wildcard purpose's utility role)
+FARM_PURPOSE_ROLE = {
+    "dairy": ("dairy", "dairy"),
+    "farm_machine": ("barn", "machine"),
+    "coop": ("byre", "animal"),
+    "feed": ("byre", "animal"),
+    "pen": ("paddock", "animal.pen"),
+    "granary": ("granary", "storage.bulk"),
+    "utility": ("*", "utility"),
+}
+
+
+class TestIndustrialModernFarmObjects(unittest.TestCase):
+    """rl-14c: the 9 industrial and 12 modern objects load with their band,
+    wealth and top-down text, every one binds to a farm purpose role in its
+    band, and the medieval set the industrial band reuses carries its
+    industrial look where the material class changes."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = L.load(L.LIB_DIR)
+
+    def test_every_new_farm_object_loads(self):
+        for table, band in ((INDUSTRIAL_FARM_OBJECTS, "industrial"),
+                            (MODERN_FARM_OBJECTS, "modern")):
+            for oid, category, size, back, wealth in table:
+                with self.subTest(object=oid):
+                    o = self.lib.objects[oid]
+                    self.assertEqual(o["category"], category)
+                    self.assertEqual(o["size"], size)
+                    self.assertEqual(o["back"], back)
+                    self.assertEqual(o["wealth"], wealth)
+                    self.assertEqual(o["bands"], [band])
+                    self.assertEqual(o["sources"], ["claude-authored"])
+                    self.assertTrue(o["text"]["physical"])
+
+    def test_every_new_object_binds_to_a_farm_purpose_role(self):
+        for table, band in ((INDUSTRIAL_FARM_OBJECTS, "industrial"),
+                            (MODERN_FARM_OBJECTS, "modern")):
+            for oid, category, *_ in table:
+                purpose, role = FARM_PURPOSE_ROLE[category]
+                ids = set()
+                for tier in self.lib.tiers:
+                    ids |= {o["id"] for o in L.candidates(
+                        self.lib, purpose, role, None, band, tier)}
+                with self.subTest(object=oid, purpose=purpose, role=role):
+                    self.assertIn(oid, ids, f"no {band} binding for {oid}")
+
+    def test_the_medieval_set_is_reused_by_the_industrial_band(self):
+        for oid, look in INDUSTRIAL_REUSE.items():
+            o = self.lib.objects[oid]
+            with self.subTest(object=oid):
+                self.assertEqual(o["bands"], ["medieval", "industrial"])
+                # the look changes only where the material class does
+                self.assertEqual(o["partsByBand"],
+                                 {"industrial": look} if look else {})
+        for oid in ("coop.dovecote", "coop.skep"):
+            with self.subTest(object=oid):
+                self.assertEqual(self.lib.objects[oid]["bands"], ["medieval"])
+        # the reused pieces really do furnish the industrial band: the
+        # butter worker and the churn fill a dairy's slots
+        for role_size, want in (((2, 1), "dairy.butter_worker"),
+                                ((1, 1), "dairy.churn")):
+            with self.subTest(reused=want):
+                ids = {o["id"] for o in L.candidates(
+                    self.lib, "dairy", "dairy", list(role_size),
+                    "industrial", "modest")}
+                self.assertIn(want, ids)
+
+
+def _piece_sizes(room, role):
+    """The role's piece sizes as sorted (w, h) pairs, orientation-free."""
+    return {tuple(sorted(p["size"])) for p in room["pieces"] if p["role"] == role}
+
+
+class TestMachineShedAndParlourRooms(unittest.TestCase):
+    """rl-14c: the machine shed and milking parlour recipes have stored
+    rooms whose machine slots only the new equipment fills — the industrial
+    sheds hold the traction engine and thresher, the modern ones the tractor
+    and combine, the parlour the stalls and bulk tank — while every room
+    that shipped before rl-14c stands unchanged."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = L.load(L.LIB_DIR)
+        by_family = {}
+        for r in FR.load():
+            if not r.get("retired"):
+                by_family.setdefault(r["family"], []).append(r)
+        cls.rooms = by_family
+
+    def test_the_machine_sheds_hold_their_era_machines(self):
+        sheds = [r for r in self.rooms["barn"]
+                 if r["recipe"] in ("barn.machine_shed.a", "barn.machine_shed.b")]
+        self.assertTrue(sheds, "no machine shed room was stored")
+        cases = (
+            ("barn.machine_shed.a", (3, 3), "industrial", "wealthy",
+             "farm_machine.traction_engine"),
+            ("barn.machine_shed.a", (2, 2), "industrial", "modest",
+             "farm_machine.thresher"),
+            ("barn.machine_shed.b", (2, 3), "modern", "poor",
+             "farm_machine.tractor"),
+            ("barn.machine_shed.b", (3, 4), "modern", "wealthy",
+             "farm_machine.combine"),
+        )
+        for recipe, shape, band, tier, want in cases:
+            rooms = [r for r in sheds if r["recipe"] == recipe
+                     and shape in _piece_sizes(r, "machine")]
+            with self.subTest(recipe=recipe, machine=want):
+                self.assertTrue(rooms, f"no {recipe} room holds a {shape} machine")
+                ids = {o["id"] for o in L.candidates(
+                    self.lib, "machine_shed", "machine", list(shape), band, tier)}
+                self.assertIn(want, ids)
+
+    def test_the_parlour_holds_the_modern_machines(self):
+        parlours = [r for r in self.rooms["dairy"]
+                    if r["recipe"] == "dairy.parlour.b"]
+        self.assertTrue(parlours, "no milking parlour room was stored")
+        for shape, want in (((2, 3), "dairy.parlour_stalls"),
+                            ((1, 2), "dairy.milk_tank")):
+            rooms = [r for r in parlours if shape in _piece_sizes(r, "dairy")]
+            with self.subTest(machine=want):
+                self.assertTrue(rooms, f"no parlour room holds a {shape} dairy piece")
+                ids = {o["id"] for o in L.candidates(
+                    self.lib, "dairy", "dairy", list(shape), "modern", "poor")}
+                self.assertIn(want, ids)
+
+    def test_the_industrial_dairy_separates_in_its_stored_rooms(self):
+        """The dairy rooms rl-14b shipped need no new recipe: their dairy
+        slots take the separator at the industrial band."""
+        dairies = [r for r in self.rooms["dairy"] if r["recipe"] != "dairy.parlour.b"]
+        self.assertTrue(dairies)
+        self.assertTrue(any((1, 1) in _piece_sizes(r, "dairy") for r in dairies),
+                        [(r["id"], sorted(_piece_sizes(r, "dairy")))
+                         for r in dairies])
+        ids = {o["id"] for o in L.candidates(
+            self.lib, "dairy", "dairy", [1, 1], "industrial", "modest")}
+        self.assertIn("dairy.separator", ids)
+
+    def test_no_room_that_shipped_before_rl_14c_changed(self):
+        for rid, recipe, size, pieces in PRE_RL14C_ROOMS:
+            with self.subTest(room=rid):
+                room = next((r for fam in self.rooms.values() for r in fam
+                             if r["id"] == rid), None)
+                self.assertIsNotNone(room, f"{rid} was dropped")
+                self.assertEqual(room["recipe"], recipe)
+                self.assertEqual(room["size"], size)
+                self.assertEqual(len(room["pieces"]), pieces)
+
+
+# the barn and dairy rooms as rl-14b shipped them: (id, recipe, size, pieces)
+PRE_RL14C_ROOMS = (
+    ("barn.large.a.grand.flush", "barn.hayloft.a", [7, 10], 6),
+    ("barn.large.a.roomy.flush", "barn.hayloft.a", [6, 9], 6),
+    ("barn.large.a.tight.flush", "barn.hayloft.a", [6, 9], 6),
+    ("barn.large.b.roomy.open", "barn.large.a", [15, 8], 14),
+    ("barn.large.c.grand.flush", "barn.large.a", [7, 17], 14),
+    ("barn.large.c.roomy.flush", "barn.large.a", [8, 12], 14),
+    ("barn.large.c.tight.flush", "barn.large.a", [7, 10], 14),
+    ("barn.small.a.roomy.flush", "barn.shed.a", [9, 5], 6),
+    ("barn.small.a.tight.flush", "barn.hayloft.a", [8, 5], 6),
+    ("barn.small.a.tight.open", "barn.shed.a", [8, 6], 7),
+    ("barn.small.b.tight.flush", "barn.shed.a", [8, 5], 6),
+    ("barn.small.c.tight.flush", "barn.small.a", [7, 6], 7),
+    ("dairy.medium.a.tight.flush", "dairy.creamery.a", [8, 4], 12),
+    ("dairy.medium.b.tight.flush", "dairy.parlour.a", [6, 4], 9),
+    ("dairy.small.a.roomy.flush", "dairy.small.a", [4, 4], 6),
+    ("dairy.small.a.tight.flush", "dairy.small.a", [5, 3], 6),
+)
 
 
 if __name__ == "__main__":

@@ -133,6 +133,40 @@
         }
       ],
       "source": "hand"
+    },
+    {
+      "id": "dairy.parlour.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "dairy",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "dairy",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [
@@ -208,6 +242,28 @@
             1,
             2
           ]
+        }
+      ]
+    },
+    {
+      "layout": "dairy.parlour.b",
+      "family": "dairy",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "dairy.parlour.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.dairy",
+          "kind": "optional"
         }
       ]
     }
