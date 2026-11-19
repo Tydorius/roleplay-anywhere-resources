@@ -1264,7 +1264,8 @@
         "bench"
       ],
       "animal": [
-        "feed"
+        "feed",
+        "rack.hitching_rail"
       ]
     }
   },

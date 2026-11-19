@@ -1451,6 +1451,53 @@
       ]
     },
     {
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "onlyGenres": [],
+      "partsByBand": {},
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "rack.hitching_rail",
+      "category": "rack",
+      "size": [
+        2,
+        1
+      ],
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "names": {
+        "*": "hitching rail"
+      },
+      "parts": {
+        "rail": "wood"
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "horses"
+      ],
+      "text": {
+        "description": "{A:condition} {rail} {noun} worn smooth by reins, a water bucket at one post.",
+        "physical": "Top-down view of a long {noun}: a single {rail.color} {rail} beam on two thick posts, a few iron rings along it, a wooden water bucket beside one post, hoof-churned mud along the front."
+      },
+      "aliases": [
+        "tethering rail",
+        "horse rail"
+      ]
+    },
+    {
       "id": "bookcase.standard",
       "category": "bookcase",
       "size": [
