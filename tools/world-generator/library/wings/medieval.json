@@ -190,16 +190,37 @@
       "id": "farm.house",
       "purpose": "common_rooms",
       "kinds": ["farmstead", "farmhouse", "grange", "homestead", "farm"],
-      "bands": ["medieval"],
+      "bands": ["medieval", "industrial"],
       "storeys": 1,
       "entry": "south",
       "rooms": [
         {"name": "Hall",        "purpose": "living_room", "share": "medium"},
         {"name": "Kitchen",     "purpose": "kitchen",     "share": "small"},
-        {"name": "Dairy",       "purpose": "pantry",      "share": "small"},
+        {"name": "Dairy",       "purpose": "dairy",       "share": "small"},
         {"name": "Bedchamber",  "purpose": "bedroom",     "share": "small"}
       ],
       "connections": [["Hall", "Kitchen"], ["Kitchen", "Dairy"], ["Hall", "Bedchamber"]],
+      "entrance": {"room": "Hall"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "farm.longhouse",
+      "purpose": "common_rooms",
+      "kinds": ["longhouse", "long house", "byre house", "byre-house", "farmhouse"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "south",
+      "rooms": [
+        {"name": "Hall",       "purpose": "living_room", "share": "medium"},
+        {"name": "Kitchen",    "purpose": "kitchen",     "share": "small"},
+        {"name": "Bedchamber", "purpose": "bedroom",     "share": "small"},
+        {"name": "Byre",       "purpose": "byre",        "share": "medium"},
+        {"name": "Barn",       "purpose": "barn",        "share": "small"},
+        {"name": "Hayloft",    "purpose": "hayloft",     "share": "small"}
+      ],
+      "connections": [["Hall", "Kitchen"], ["Hall", "Bedchamber"], ["Hall", "Byre"],
+                      ["Byre", "Barn"], ["Byre", "Hayloft"]],
       "entrance": {"room": "Hall"},
       "sleeps": "residents",
       "wealth": "building"

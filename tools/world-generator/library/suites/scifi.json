@@ -1447,6 +1447,69 @@
       "entrance": {
         "room": "Shrine"
       }
+    },
+    {
+      "id": "farm.agridome",
+      "kinds": [
+        "agri dome",
+        "crop deck",
+        "grow deck",
+        "food module"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        0,
+        0
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Grow bay",
+          "purpose": "hydroponics_bay",
+          "share": "large"
+        },
+        {
+          "name": "Vat farm",
+          "purpose": "vat_farm",
+          "share": "medium"
+        },
+        {
+          "name": "Seed lab",
+          "purpose": "laboratory",
+          "share": "small"
+        },
+        {
+          "name": "Nutrient store",
+          "purpose": "storage",
+          "share": "small"
+        }
+      ],
+      "connections": [
+        [
+          "Grow bay",
+          "Vat farm"
+        ],
+        [
+          "Grow bay",
+          "Seed lab"
+        ],
+        [
+          "Grow bay",
+          "Nutrient store"
+        ]
+      ],
+      "entrance": {
+        "room": "Grow bay"
+      }
     }
   ]
 }

@@ -1,0 +1,22 @@
+{
+  "wings": [
+    {
+      "id": "farm.sheds.industrial",
+      "purpose": "stables",
+      "kinds": ["barn", "threshing barn", "granary", "dairy", "steading", "farm sheds"],
+      "bands": ["industrial"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Threshing barn", "purpose": "barn",    "share": "large"},
+        {"name": "Granary",        "purpose": "granary", "share": "medium"},
+        {"name": "Dairy",          "purpose": "dairy",   "share": "small"},
+        {"name": "Hayloft",        "purpose": "hayloft", "share": "small"}
+      ],
+      "connections": [["Threshing barn", "Granary"], ["Threshing barn", "Dairy"],
+                      ["Threshing barn", "Hayloft"]],
+      "entrance": {"room": "Threshing barn"},
+      "sleeps": "none"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "buildings": [
+    {
+      "id": "farmstead.industrial",
+      "kinds": ["farmstead", "farm", "farmhouse", "ranch", "grange", "dairy farm",
+                "homestead"],
+      "bands": ["industrial"],
+      "shape": "l",
+      "wings": [
+        {"wing": "farm.house",            "side": "south", "main": "Hall"},
+        {"wing": "farm.sheds.industrial", "side": "east"}
+      ],
+      "outdoor": [{"name": "Farmyard", "purpose": "farmyard", "between": "wings"}],
+      "entrance": {"wing": "farm.house"}
+    }
+  ]
+}

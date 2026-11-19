@@ -355,6 +355,25 @@
       ],
       "connections": [["Cloakroom", "Schoolroom"], ["Schoolroom", "Master's study"]],
       "entrance": {"room": "Cloakroom"}
+    },
+    {
+      "id": "farm.mixed",
+      "kinds": ["mixed farm", "dairy farm", "farm dairy", "steading", "farm steading"],
+      "bands": ["industrial"],
+      "sizeClasses": ["medium", "large"],
+      "residents": [3, 10],
+      "wealth": ["modest", "wealthy"],
+      "rooms": [
+        {"name": "Parlour",    "purpose": "living_room",    "share": "medium"},
+        {"name": "Kitchen",    "purpose": "kitchen",        "share": "small"},
+        {"name": "Bedchamber", "purpose": "master_bedroom", "share": "small"},
+        {"name": "Dairy",      "purpose": "dairy",          "share": "small"},
+        {"name": "Barn",       "purpose": "barn",           "share": "large"},
+        {"name": "Granary",    "purpose": "granary",        "share": "medium"}
+      ],
+      "connections": [["Parlour", "Kitchen"], ["Parlour", "Bedchamber"],
+                      ["Parlour", "Dairy"], ["Dairy", "Barn"], ["Barn", "Granary"]],
+      "entrance": {"room": "Parlour"}
     }
   ]
 }

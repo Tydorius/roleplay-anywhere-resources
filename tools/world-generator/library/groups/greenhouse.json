@@ -673,6 +673,74 @@
           "optional": true
         }
       ]
+    },
+    {
+      "id": "grow.machine",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "machine.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [
@@ -1072,6 +1140,83 @@
         },
         {
           "group": "work.material.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.vat_farm.a",
+      "family": "greenhouse",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "anchor"
+        },
+        {
+          "group": "grow.machine",
+          "kind": "required"
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.vat_farm.b",
+      "family": "greenhouse",
+      "sizeBands": [
+        "medium",
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "grow.machine",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "machine.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.cold.single.greenhouse",
           "kind": "optional"
         }
       ]

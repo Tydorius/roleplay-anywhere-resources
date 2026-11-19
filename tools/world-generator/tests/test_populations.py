@@ -1,12 +1,15 @@
 """Anywhere RPG 1.0 native populations on a generated world: the game's own
 nameless livestock, vermin, crowds and patrols ride the spec by home region
 name and ship as npcTemplates (one per kind, its homes resolved to the ids
-the build assigned). Livestock graze a pasture-matched region 2-5 strong,
-vermin nest 2-3 in the cellars and stores and crows settle the crop plots,
-townsfolk cross a market or square of an urban or town zone 3-5 strong and the
-town watch walks the main street of a town the cast does not already guard —
-nothing spawns where the player starts, the whole world holds twenty
-creatures, and the choice is deterministic given the run's seed."""
+the build assigned). Livestock graze a pasture-matched region 2-5 strong and
+stand in the rooms the farm buildings give them — horses in the stable, oxen
+in the byre, pigs in the pigsty, chickens in the henhouse — vermin nest 2-3
+in the cellars and stores and crows settle the crop plots, townsfolk cross a
+market or square of an urban or town zone 3-5 strong and the town watch walks
+the main street of a town the cast does not already guard, a scifi world
+grows vats instead of keeping stock and homes none of it — nothing spawns
+where the player starts, the whole world holds twenty creatures, and the
+choice is deterministic given the run's seed."""
 import json
 import os
 import shutil
@@ -125,13 +128,110 @@ class TestLivestock(unittest.TestCase):
     def test_a_farmyard_gets_yard_stock(self):
         zone = Zone(name="Harrow Farm", kind="farm")
         field = worldgen.RegionOut("Harrow Farm", Rect(0, 0, 30, 30), "zone")
-        yard = worldgen.RegionOut("Harrow Farmyard", Rect(4, 4, 8, 6), "yard",
-                                  parent="Harrow Farm")
+        yard = worldgen.RegionOut("Harrow Farmyard", Rect(4, 4, 8, 6),
+                                  "yard", parent="Harrow Farm")
         pops = populations.choose(_world(field, yard), _plan(zone))
         self.assertEqual(len(pops), 1)
         self.assertIn(pops[0]["name"], populations.YARD_KINDS)
         self.assertEqual(pops[0]["stance"], "skittish")
         self.assertEqual(pops[0]["homes"][0]["region"], "Harrow Farmyard")
+
+
+def _stock_world():
+    """A medieval farm: a barn with its byre and stable, a pigsty and a
+    henhouse by the house, and a paddock."""
+    zone = Zone(name="Harrow Farm", kind="farm")
+    ground = worldgen.RegionOut("Harrow Farm", Rect(0, 0, 40, 40), "zone")
+    barn = worldgen.RegionOut("Harrow Grain Barn", Rect(2, 2, 12, 10),
+                              "building", parent="Harrow Farm", wall="wood")
+    byre = worldgen.RegionOut("Harrow Grain Barn Byre", Rect(2, 2, 6, 6),
+                              "room", parent="Harrow Grain Barn", wall="wood")
+    stable = worldgen.RegionOut("Harrow Grain Barn Stable", Rect(8, 2, 6, 6),
+                                "room", parent="Harrow Grain Barn", wall="wood")
+    pigsty = worldgen.RegionOut("Harrow Farm Pigsty", Rect(2, 14, 4, 4),
+                                "room", parent="Harrow Farm", wall="wood")
+    henhouse = worldgen.RegionOut("Harrow Farm Henhouse", Rect(8, 14, 4, 4),
+                                  "room", parent="Harrow Farm", wall="wood")
+    paddock = worldgen.RegionOut("Harrow Farm Paddock", Rect(16, 2, 10, 10),
+                                 "yard", parent="Harrow Farm")
+    return _world(ground, barn, byre, stable, pigsty, henhouse, paddock), \
+        _plan(zone)
+
+
+class TestStockRooms(unittest.TestCase):
+    """rl-14f: stock homed in the buildings that serve it, by the words of
+    the region's own name — horses in the stable or livery, oxen in the byre
+    or cowshed, pigs in the pigsty, chickens in the henhouse — while the
+    caps hold, and a scifi world (vats, not animals) homes no stock at all."""
+
+    def test_the_byre_stable_pigsty_and_henhouse_home_their_stock(self):
+        pops = populations.choose(*_stock_world())
+        got = {p["name"]: p["homes"] for p in pops}
+        self.assertEqual(got["Oxen"], [{"region": "Harrow Grain Barn Byre",
+                                        "count": 2}])
+        self.assertEqual(got["Horses"], [{"region": "Harrow Grain Barn Stable",
+                                          "count": 2}])
+        self.assertEqual(got["Pigs"], [{"region": "Harrow Farm Pigsty",
+                                        "count": 2}])
+        self.assertEqual(got["Chickens"], [{"region": "Harrow Farm Henhouse",
+                                            "count": 2}])
+        paddock = next(p for p in pops if any(h["region"] == "Harrow Farm Paddock"
+                                              for h in p["homes"]))
+        self.assertIn(paddock["name"], populations.GRAZING_KINDS)
+        self.assertEqual(paddock["homes"], [{"region": "Harrow Farm Paddock",
+                                             "count": 3}])
+        for p in pops:
+            self.assertEqual(p["stance"], "skittish")
+
+    def test_the_horses_and_oxen_play_sprites_the_game_knows(self):
+        pops = {p["name"]: p for p in populations.choose(*_stock_world())}
+        self.assertEqual(pops["Horses"]["animationId"], "horse")
+        self.assertEqual(pops["Oxen"]["animationId"], "cow")
+
+    def test_a_livery_building_homes_horses_by_its_own_name(self):
+        zone = Zone(name="Weffling", kind="village")
+        ground = worldgen.RegionOut("Weffling", Rect(0, 0, 30, 30), "zone")
+        stables = worldgen.RegionOut("The Livery Stables", Rect(4, 4, 10, 8),
+                                     "building", parent="Weffling", wall="wood")
+        pops = populations.choose(_world(ground, stables), _plan(zone))
+        self.assertEqual([p["name"] for p in pops], ["Horses"])
+        self.assertEqual(pops[0]["homes"], [{"region": "The Livery Stables",
+                                             "count": 4}])
+
+    def test_many_stock_rooms_still_hold_the_cap(self):
+        zone = Zone(name="Out Farms", kind="farmland")
+        regions = [worldgen.RegionOut("Out Farms", Rect(0, 0, 80, 40), "zone")]
+        for i in range(10):
+            regions.append(worldgen.RegionOut(
+                f"Out Farm {i} Byre", Rect(2 + (i % 5) * 16, 22 + (i // 5) * 8,
+                                           6, 14),
+                "room", parent=f"Out Farm {i}", wall="wood"))
+        pops = populations.choose(_world(*regions, grid=(80, 40)), _plan(zone))
+        self.assertEqual(populations.creature_count(pops), populations.CAP)
+        for p in pops:
+            for h in p["homes"]:
+                self.assertGreaterEqual(h["count"], 1,
+                                        "a trimmed region keeps at least one")
+
+    def test_a_scifi_world_homes_no_stock_at_all(self):
+        for setting in ({"band": "scifi"}, {"era": "the far future",
+                                            "technology": "fusion reactors"}):
+            with self.subTest(setting=setting):
+                world, plan = _stock_world()
+                plan.setting = dict(setting)
+                self.assertEqual(populations.choose(world, plan), [],
+                                 "no horses, oxen, pigs or paddock stock")
+
+    def test_a_scifi_world_still_homes_its_vermin(self):
+        zone = Zone(name="Relay", kind="station deck")
+        ground = worldgen.RegionOut("Relay", Rect(0, 0, 30, 30), "zone")
+        store = worldgen.RegionOut("Relay Stores", Rect(4, 4, 6, 6), "room",
+                                   parent="Relay", wall="steel")
+        plan = _plan(zone)
+        plan.setting["band"] = "scifi"
+        self.assertEqual([p["name"] for p in
+                          populations.choose(_world(ground, store), plan)],
+                         ["Rats"])
 
 
 class TestVermin(unittest.TestCase):

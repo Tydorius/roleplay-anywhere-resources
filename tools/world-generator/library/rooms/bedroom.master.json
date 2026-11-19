@@ -3092,7 +3092,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.large.a",
-      "description": "A spacious, narrow master bedroom, double bed in the northeast corner, a hearth against the west wall, a wardrobe against the east wall, and a decoration in the middle of the room."
+      "description": "A spacious, narrow master bedroom, double bed in the northeast corner, a hearth against the west wall, a wardrobe against the east wall, and a centrepiece in the middle of the room."
     },
     {
       "id": "bedroom.master.large.g.grand.open",
@@ -6926,7 +6926,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.master.small.b",
-      "description": "A spacious master bedroom, double bed in the northeast corner, a decoration against the west wall, a floor rug against the west wall, and a wardrobe against the east wall."
+      "description": "A spacious master bedroom, double bed in the northeast corner, a centrepiece against the west wall, a floor rug against the west wall, and a wardrobe against the east wall."
     },
     {
       "id": "bedroom.master.medium.d.roomy.open",

@@ -1,7 +1,7 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
 recipe of the bedroom, master bedroom, washroom, privy, bath, closet,
-courtyard, garden, yard, barn, dairy, granary, pigsty and henhouse
-families composed at each clearance
+courtyard, garden, yard, barn, dairy, granary, pigsty, henhouse and
+greenhouse families composed at each clearance
 (tight/roomy/grand) in each style the family takes (flush/open; the outdoor
 families flush alone, their rooms having no walls to open against), seed 1,
 keeping the best room of each. The bedroom family also
@@ -56,7 +56,7 @@ from worldgen import room_groups as RG      # noqa: E402
 
 FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet",
             "courtyard", "garden", "yard", "barn", "dairy", "granary",
-            "pigsty", "henhouse")
+            "pigsty", "henhouse", "greenhouse")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
@@ -118,7 +118,7 @@ FAMILY_NOUNS = {"bedroom": "bedroom", "bedroom.master": "master bedroom",
                 "closet": "closet", "courtyard": "courtyard",
                 "garden": "garden", "yard": "yard", "barn": "barn",
                 "dairy": "dairy", "granary": "granary", "pigsty": "pigsty",
-                "henhouse": "hen house"}
+                "henhouse": "hen house", "greenhouse": "greenhouse"}
 BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
                    "large": "spacious", "stall": "stall", "reach": "reach-in",
                    "walkin": "walk-in"}
@@ -131,7 +131,8 @@ FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
                 "yard": ("animal", "storage"),
                 "barn": ("machine", "storage.hay"),
                 "dairy": ("dairy",), "granary": ("storage.bulk",),
-                "pigsty": ("animal",), "henhouse": ("animal",)}
+                "pigsty": ("animal",), "henhouse": ("animal",),
+                "greenhouse": ("grow",)}
 MAX_MENTIONS = 4      # furniture groups named in one description
 LETTERS = "abcdefghijklmnopqrstuvwxyz"
 

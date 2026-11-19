@@ -1941,6 +1941,89 @@
       "entrance": {
         "room": "Barricade"
       }
+    },
+    {
+      "id": "farm.ranch",
+      "kinds": [
+        "farmhouse",
+        "ranch",
+        "farm",
+        "feedlot",
+        "homestead",
+        "farmstead"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "sizeClasses": [
+        "medium",
+        "large"
+      ],
+      "residents": [
+        3,
+        8
+      ],
+      "wealth": [
+        "modest",
+        "wealthy"
+      ],
+      "rooms": [
+        {
+          "name": "Living room",
+          "purpose": "living_room",
+          "share": "large"
+        },
+        {
+          "name": "Kitchen",
+          "purpose": "kitchen",
+          "share": "medium"
+        },
+        {
+          "name": "Master bedroom",
+          "purpose": "master_bedroom",
+          "share": "medium"
+        },
+        {
+          "name": "Bedroom",
+          "purpose": "bedroom",
+          "share": "small"
+        },
+        {
+          "name": "Washroom",
+          "purpose": "washroom",
+          "share": "small"
+        },
+        {
+          "name": "Machine shed",
+          "purpose": "machine_shed",
+          "share": "large"
+        }
+      ],
+      "connections": [
+        [
+          "Living room",
+          "Kitchen"
+        ],
+        [
+          "Living room",
+          "Master bedroom"
+        ],
+        [
+          "Living room",
+          "Bedroom"
+        ],
+        [
+          "Living room",
+          "Washroom"
+        ],
+        [
+          "Living room",
+          "Machine shed"
+        ]
+      ],
+      "entrance": {
+        "room": "Living room"
+      }
     }
   ]
 }

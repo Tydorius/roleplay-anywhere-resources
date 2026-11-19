@@ -13,6 +13,19 @@
         {"wing": "station.quarters",  "side": "north"}
       ],
       "entrance": {"wing": "station.entry"}
+    },
+    {
+      "id": "agri.station",
+      "kinds": ["agri-dome", "farm module", "hydroponics station", "vertical farm"],
+      "bands": ["scifi"],
+      "shape": "spine",
+      "wings": [
+        {"wing": "agri.dome",         "side": "south", "main": "Grow bay"},
+        {"wing": "agri.dome",         "side": "north"},
+        {"wing": "station.quarters",  "side": "north"}
+      ],
+      "outdoor": [{"name": "Grow terrace", "purpose": "garden", "between": "all"}],
+      "entrance": {"wing": "agri.dome"}
     }
   ]
 }
