@@ -1,0 +1,17 @@
+{
+  "layouts": [
+    {
+      "id": "granary.small.a",
+      "family": "granary",
+      "sizeBands": ["small"],
+      "minInterior": [4, 3],
+      "maxInterior": [6, 4],
+      "slots": [
+        {"id": "bins", "role": "storage.bulk", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "sack", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:bins", "optional": true},
+        {"id": "scale", "role": "table.work", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "weight", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:scale", "optional": true}
+      ]
+    }
+  ]
+}

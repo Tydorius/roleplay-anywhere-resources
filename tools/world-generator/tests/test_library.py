@@ -10,11 +10,6 @@ from worldgen import library as L
 CORE = ("bedroom", "master_bedroom", "dormitory", "kitchen", "dining", "common_room",
         "shop", "storage", "office", "washroom", "workshop")
 
-# the farming families (rl-14a) ship as vocabulary only: like the outdoor
-# families they never take P3 layouts, and their groups, recipes and stored
-# rooms land with rl-14b
-FARM_FAMILIES = ("barn", "dairy", "granary", "pigsty", "henhouse")
-
 
 def shipped():
     return L.load(L.LIB_DIR)
@@ -40,10 +35,6 @@ class TestShippedLibrary(unittest.TestCase):
             # layouts on purpose: their groups and recipes are hand-authored,
             # and their rooms compose from those like any other family's
             if fam in self.lib.outdoor_families():
-                continue
-            # the farming families are the same but walled (rl-14a declares
-            # them; rl-14b lands their groups, recipes and rooms)
-            if fam in FARM_FAMILIES:
                 continue
             self.assertTrue(self.lib.layouts_for(fam), fam)
 

@@ -1,0 +1,17 @@
+{
+  "layouts": [
+    {
+      "id": "pigsty.small.a",
+      "family": "pigsty",
+      "sizeBands": ["small"],
+      "minInterior": [3, 3],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "trough", "role": "animal", "size": [2, 1], "anchor": "wall:far", "back": "wall", "optional": true},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "beside:trough", "optional": true},
+        {"id": "muck", "role": "waste", "size": [1, 1], "anchor": "corner"},
+        {"id": "hut", "role": "animal", "size": [2, 1], "anchor": "beside:muck", "optional": true}
+      ]
+    }
+  ]
+}

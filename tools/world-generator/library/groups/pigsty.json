@@ -1,0 +1,162 @@
+{
+  "groups": [
+    {
+      "id": "animal.storage.bulk",
+      "family": "pigsty",
+      "wall": "corner",
+      "use": [
+        "south",
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "hut.shelter",
+      "family": "pigsty",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "waste.animal",
+      "family": "pigsty",
+      "wall": "corner",
+      "use": [
+        "south",
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "pigsty.small.a",
+      "family": "pigsty",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "animal.storage.bulk",
+          "kind": "anchor"
+        },
+        {
+          "group": "waste.animal",
+          "kind": "required"
+        },
+        {
+          "group": "hut.shelter",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "pigsty.a",
+      "family": "pigsty",
+      "sizeBands": [
+        "tiny"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "animal.storage.bulk",
+          "kind": "anchor"
+        },
+        {
+          "group": "waste.animal",
+          "kind": "required"
+        },
+        {
+          "group": "hut.shelter",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "pigsty.run.a",
+      "family": "pigsty",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "hut.shelter",
+          "kind": "anchor"
+        },
+        {
+          "group": "animal.storage.bulk",
+          "kind": "required"
+        },
+        {
+          "group": "animal.storage.bulk",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "waste.animal",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}

@@ -1287,6 +1287,10 @@
         "plant",
         "hydroponics"
       ],
+      "work.primary": [
+        "press",
+        "workbench"
+      ],
       "decor.feature": [
         "statue",
         "plant",
@@ -1321,10 +1325,14 @@
     "roles": {
       "animal": [
         "feed",
+        "coop",
         "crate"
       ],
       "animal.pen": [
         "pen"
+      ],
+      "storage.hay": [
+        "feed"
       ],
       "storage.bulk": [
         "barrel",
@@ -1496,6 +1504,9 @@
       "work.tool": [
         "rack",
         "chest"
+      ],
+      "storage.hay": [
+        "feed"
       ]
     }
   },
@@ -1511,6 +1522,9 @@
       "storage.bulk": [
         "crate",
         "sack"
+      ],
+      "storage.hay": [
+        "feed"
       ]
     }
   },
@@ -1522,6 +1536,9 @@
       "storage.bulk": [
         "feed",
         "sack"
+      ],
+      "machine": [
+        "farm_machine"
       ]
     }
   },
@@ -1669,6 +1686,9 @@
         "coop",
         "feed"
       ],
+      "storage.hay": [
+        "feed"
+      ],
       "waste": [
         "muck",
         "bin"
@@ -1681,6 +1701,9 @@
         "coop",
         "feed"
       ],
+      "storage.hay": [
+        "feed"
+      ],
       "waste": [
         "muck",
         "bin"
@@ -1691,6 +1714,9 @@
     "roles": {
       "animal": [
         "coop",
+        "feed"
+      ],
+      "storage.hay": [
         "feed"
       ],
       "waste": [

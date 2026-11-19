@@ -1,0 +1,176 @@
+{
+  "rooms": [
+    {
+      "id": "pigsty.small.a.tight.flush",
+      "family": "pigsty",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "animal.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "hut.shelter",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "waste",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "waste.animal",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            2
+          ],
+          "group": "hut.shelter",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          2
+        ],
+        "south": [
+          2
+        ],
+        "west": [
+          1
+        ],
+        "east": []
+      },
+      "stretch": {
+        "x": [
+          0,
+          2,
+          3
+        ],
+        "y": [
+          2,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "pigsty.small.a",
+      "description": "A small pigsty, trough in the northwest corner, a trough in the northeast corner, and a waste bucket in the southwest corner."
+    },
+    {
+      "id": "pigsty.tiny.a.tight.flush",
+      "family": "pigsty",
+      "sizeBand": "tiny",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        2,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "animal.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "waste",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "waste.animal",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [],
+        "west": [
+          1
+        ],
+        "east": [
+          1
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          2
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "pigsty.a",
+      "description": "A cramped, narrow pigsty, trough in the northwest corner, a waste bucket in the southwest corner."
+    }
+  ]
+}

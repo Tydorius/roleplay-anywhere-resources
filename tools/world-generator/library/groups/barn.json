@@ -1,0 +1,351 @@
+{
+  "groups": [
+    {
+      "id": "machine.single",
+      "family": "barn",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.hay.single",
+      "family": "barn",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.bulk.storage.hay",
+      "family": "barn",
+      "wall": "corner",
+      "use": [
+        "south",
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "work.tool.work.tool",
+      "family": "barn",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "threshing.open",
+      "family": "barn",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "animal.storage.hay",
+      "family": "barn",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "barn.large.a",
+      "family": "barn",
+      "sizeBands": [
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "threshing.open",
+          "kind": "anchor"
+        },
+        {
+          "group": "machine.single",
+          "kind": "required"
+        },
+        {
+          "group": "animal.storage.hay",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.storage.hay",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.hay.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.tool.work.tool",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "barn.small.a",
+      "family": "barn",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.bulk.storage.hay",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.hay.single",
+          "kind": "required"
+        },
+        {
+          "group": "machine.single",
+          "kind": "required"
+        },
+        {
+          "group": "work.tool.work.tool",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "barn.hayloft.a",
+      "family": "barn",
+      "sizeBands": [
+        "small",
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.hay.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.hay.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.storage.hay",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "barn.shed.a",
+      "family": "barn",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "machine.single",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "work.tool.work.tool",
+          "kind": "required"
+        },
+        {
+          "group": "storage.hay.single",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.storage.hay",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

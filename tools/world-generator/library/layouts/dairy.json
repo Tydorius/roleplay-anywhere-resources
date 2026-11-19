@@ -1,0 +1,19 @@
+{
+  "layouts": [
+    {
+      "id": "dairy.small.a",
+      "family": "dairy",
+      "sizeBands": ["small"],
+      "minInterior": [4, 4],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "churn", "role": "dairy", "size": [1, 1], "anchor": "wall:far+corner", "back": "wall", "optional": true},
+        {"id": "cans", "role": "dairy", "size": [1, 1], "anchor": "beside:churn", "optional": true},
+        {"id": "butter", "role": "table.work", "size": [2, 1], "anchor": "wall:far", "back": "wall"},
+        {"id": "crock", "role": "dairy", "size": [1, 1], "anchor": "beside:butter", "optional": true},
+        {"id": "cold", "role": "storage.cold", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "jug", "role": "dairy", "size": [1, 1], "anchor": "beside:cold", "optional": true}
+      ]
+    }
+  ]
+}
