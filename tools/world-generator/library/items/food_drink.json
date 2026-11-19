@@ -355,7 +355,7 @@
         {"key": "pot", "bands": ["*"], "physical": "A clay pot of golden honey sealed with a waxed cloth cover"}
       ],
       "tags": ["food", "sweet"],
-      "aliases": ["Honey pot", "Jar of Honey", "Strained Honey Pot", "Honey", "Honeycomb"],
+      "aliases": ["Honey pot", "Jar of Honey", "Strained Honey Pot", "Honey"],
       "sources": ["harvest"]
     },
     {
@@ -851,6 +851,57 @@
       ],
       "tags": ["drink", "water", "military"],
       "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "food.honeycomb",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "comb of honey"},
+      "description": {"*": "A broken comb of honey, wax and all, straight from the hive."},
+      "looks": [
+        {"key": "comb", "bands": ["*"], "physical": "A broken slab of honeycomb with hexagonal wax cells oozing golden honey"}
+      ],
+      "tags": ["food", "sweet"],
+      "aliases": ["Honeycomb", "Comb of honey"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "food.mutton",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "mutton joint"},
+      "description": {"*": "A joint of mutton, strong-flavoured and best slow-cooked."},
+      "looks": [
+        {"key": "joint", "bands": ["*"], "physical": "A butchered leg of mutton with a fatted bone end and butcher's string around the shank"}
+      ],
+      "tags": ["food", "meat"],
+      "aliases": ["Mutton", "Mutton joint", "Leg of mutton"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "food.fresh_cheese",
+      "category": "food",
+      "type": "consumable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "fresh cheese"},
+      "description": {"*": "A soft fresh cheese, made this week and gone by the next."},
+      "looks": [
+        {"key": "soft", "bands": ["*"], "physical": "A small round of soft white cheese on a wilted green leaf"}
+      ],
+      "tags": ["food"],
+      "aliases": ["Fresh cheese", "Soft cheese", "Curds and whey"],
       "sources": ["authored"]
     }
   ]

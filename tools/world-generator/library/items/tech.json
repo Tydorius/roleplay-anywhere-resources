@@ -544,6 +544,57 @@
       "tags": ["tech", "signal", "military"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "tech.nutrient_cartridge",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "nutrient cartridge"},
+      "description": {"*": "A sealed nutrient cartridge, the grow bay's ration for a month."},
+      "looks": [
+        {"key": "sealed", "bands": ["*"], "physical": "A transparent cartridge of pale green nutrient fluid with a foil seal and a quick-connect base"}
+      ],
+      "tags": ["tech", "farm"],
+      "aliases": ["Nutrient cartridge", "Feed cartridge"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.seed_vial",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "seed vial"},
+      "description": {"*": "A chilled seed vial from the gene bank, one crop's whole future in glass."},
+      "looks": [
+        {"key": "chilled", "bands": ["*"], "physical": "A slim clear glass vial holding three dark seeds above a frost-blue coolant base"}
+      ],
+      "tags": ["tech", "farm"],
+      "aliases": ["Seed vial", "Seed stock vial"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tech.soil_probe",
+      "category": "tech",
+      "type": "misc",
+      "bands": ["scifi"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "soil probe"},
+      "description": {"*": "A soil probe, reading the grow bed an inch at a time."},
+      "looks": [
+        {"key": "probe", "bands": ["*"], "physical": "A slender soil probe with a graduated steel spike, a knurled grip and a small amber readout"}
+      ],
+      "tags": ["tech", "farm"],
+      "aliases": ["Soil probe", "Growth probe"],
+      "sources": ["authored"]
     }
   ]
 }
