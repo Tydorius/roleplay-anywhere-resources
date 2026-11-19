@@ -1823,6 +1823,142 @@
       ]
     },
     {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.stave_tub",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "names": {
+        "*": "stave tub"
+      },
+      "parts": {
+        "tub": "wood",
+        "hoops": "metal"
+      },
+      "text": {
+        "description": "{A:condition} long {tub} {noun} bound with {hoops} hoops, filled a bucket at a time and emptied the same way.",
+        "physical": "Top-down view of a long oval {noun}: plain {tub.color} {tub} staves bound with two dark {hoops} hoops, grey water inside, a wooden bucket beside one end."
+      },
+      "aliases": [
+        "bathing tub",
+        "washing tub"
+      ]
+    },
+    {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.tin_bath",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "names": {
+        "*": "tin bath"
+      },
+      "parts": {
+        "tub": "metal"
+      },
+      "text": {
+        "description": "{A:condition} long {tub} {noun} with a handle at each end, hung on a nail outside when it is not in use.",
+        "physical": "Top-down view of a long {noun}: a shallow oval {tub.color} {tub} tub with a rolled rim and a small handle at each end, soapy water inside, a folded towel over one end."
+      },
+      "aliases": [
+        "zinc bath",
+        "galvanised bath"
+      ]
+    },
+    {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.hygiene_pod",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "names": {
+        "*": "hygiene pod"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "lid": "glass"
+      },
+      "text": {
+        "description": "{A:condition} {shell} {noun}: lie down, close the {lid} lid and it mists, scrubs and dries you in under a minute.",
+        "physical": "Top-down view of a long capsule-shaped {noun}: a rounded {shell.color} {shell} shell with a clear {lid.color} {lid} lid over most of its length, a small control panel glowing at the end nearest the top edge."
+      },
+      "aliases": [
+        "wash pod",
+        "cleansing pod"
+      ]
+    },
+    {
       "id": "bath.bathtub",
       "category": "bath",
       "size": [
