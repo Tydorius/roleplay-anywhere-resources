@@ -1082,6 +1082,9 @@
       "grow": [
         "plant",
         "hydroponics"
+      ],
+      "machine": [
+        "farm_machine"
       ]
     }
   },
@@ -1822,6 +1825,14 @@
       "grow": [
         "hydroponics",
         "plant"
+      ],
+      "machine": [
+        "farm_machine"
+      ],
+      "storage.bulk": [
+        "granary",
+        "sack",
+        "crate"
       ]
     }
   },
