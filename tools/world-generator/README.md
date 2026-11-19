@@ -330,16 +330,24 @@ A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes t
   furniture nested in its rooms, too many starting items, residents on a unit
   building. Code also writes the couples' `partner` fields from the cast.
 
-## Extensions (all off by default)
+## Extensions (floors on by default, the rest off)
 
 The default path needs **no game mods**: the zip imports and plays in the
-unmodded game. Each extension opts in with `--ext <id>` (repeatable); the
-ones that need the matching mods from `../code-mod-loader` (this repository)
-installed in the game say so:
+unmodded game. `floors` is **on by default** (Anywhere RPG 1.0 has floors of
+its own, so even the default world may be multi-storey); turn it off with
+`--no-floors` on `generate` and `layout`, `floors=False` on the API, or by
+unticking it in the Scenario Editor's world-generation form (it starts
+ticked). A settings file's `extensions` list is the authority for a
+`--settings` run: floors runs only when the list (or `--ext floors`) says
+so, and `--no-floors` always wins. A plan.json that records its extensions
+keeps exactly what it recorded; one from before the default (no
+`extensions` key) re-rolls with floors on. Every other extension opts in
+with `--ext <id>` (repeatable); the ones that need the matching mods from
+`../code-mod-loader` (this repository) installed in the game say so:
 
 | Extension | What it adds | Game mods needed |
 |---|---|---|
-| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded | none |
+| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded. **On by default** | none |
 | `region-groups` | A zone may wrap around the map and still act as one region | `region-groups` |
 | `lights` | Each light source gets a kind (candle, torch, hearth fire, ember, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour, written as `arpgMods.lights` | `lights` |
 | `secret-passages` | Now and then a hidden door (a priest hole, a smuggler's den, or one interior doorway in a castle, keep or manor), known to the building's key holders and found in play, written as `arpgMods.secretPassages` | `secret-passages` |

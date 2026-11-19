@@ -423,12 +423,12 @@ def _resolve_plan(design, templates):
 def building_footprint(design, templates):
     """The (w, h) the layout will give this design — one place so the map,
     the zone packer and the layout itself agree."""
-    if getattr(design, "units", None):
-        return units_footprint(design, templates)
     from . import assembler
     placed = assembler.footprint(design, templates)
     if placed is not None:
         return placed
+    if getattr(design, "units", None):
+        return units_footprint(design, templates)
     return _resolve_plan(design, templates)[:2]
 
 
@@ -768,13 +768,13 @@ def layout_rooms(design, rect, rng, templates=None, furniture=None):
 
 def layout_building(design, origin, rng, templates=None):
     """Place a building's rooms. origin is the bottom-left cell of its footprint."""
-    if getattr(design, "units", None):
-        w, h = units_footprint(design, templates)
-        return layout_units(design, Rect(origin[0], origin[1], w, h), rng, templates)
     from . import assembler
     placed = assembler.build(design, origin, templates)
     if placed is not None:
         return placed
+    if getattr(design, "units", None):
+        w, h = units_footprint(design, templates)
+        return layout_units(design, Rect(origin[0], origin[1], w, h), rng, templates)
     if templates:
         w, h, design, furniture, dropped, needs = _resolve_plan(design, templates)
     else:

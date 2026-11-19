@@ -101,7 +101,10 @@ class TestUnitsAndAnOutdoorCatalogue(unittest.TestCase):
         c = client()
         p1 = copy.deepcopy(CANNED_P1)
         mill = next(b for z in p1["zones"] for b in z["buildings"] if b["name"] == "The Old Mill")
-        mill["units"] = {"name": "Guest room", "count": 3, "residents": 1}
+        # not a lodging name: floors on by default sends a lodging of three
+        # or more beds upstairs, and upstairs buildings take the old P3 with
+        # its model catalogue (TestAnInnGoesUpstairs covers that path)
+        mill["units"] = {"name": "Servants' room", "count": 3, "residents": 1}
         c._queue[0] = _dump(p1)
         c.reply = dict(LIB_P3, unit={
             "rooms": [{"name": "Guest room", "share": "medium", "use": "guest_room",

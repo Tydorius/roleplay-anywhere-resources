@@ -31,9 +31,14 @@ def _generate_args(args):
         s = settings_mod.read(args.settings)
         print(f"settings: {args.settings} ({s['mode']} form"
               f"{', with its World Frame' if s.get('frame') else ''})")
+        extensions = tuple(sorted(set(s["extensions"]) | set(args.ext)))
         return {"idea": args.idea if args.idea is not None else s["idea"],
                 "seed": args.seed if args.seed is not None else s["seed"],
-                "extensions": tuple(sorted(set(s["extensions"]) | set(args.ext))),
+                "extensions": extensions,
+                # the settings file's list is the authority: floors runs only
+                # when it (or --ext floors) says so, unless --no-floors wins
+                "floors": "floors" in extensions
+                and not getattr(args, "no_floors", False),
                 "library": s["library"] if args.library is None else args.library,
                 "item_library": (s["item_library"] if args.item_library is None
                                  else args.item_library),
@@ -45,7 +50,10 @@ def _generate_args(args):
     if not args.idea:
         raise ValueError("give --idea, or --settings with a world settings file")
     return {"idea": args.idea, "seed": 1 if args.seed is None else args.seed,
-            "extensions": args.ext, "library": args.library is not False,
+            "extensions": args.ext,
+            # getattr: callers may build their Namespace by hand (old tests)
+            "floors": not getattr(args, "no_floors", False),
+            "library": args.library is not False,
             "item_library": args.item_library is not False,
             "room_assembler": bool(getattr(args, "room_assembler", None))}
 
@@ -58,12 +66,17 @@ def main(argv=None):
     lay.add_argument("--out", required=True)
     lay.add_argument("--seed", type=int, default=1)
     lay.add_argument("--ext", action="append", default=[], choices=list(IDS),
-                     help="enable an extension, off by default (repeatable; "
-                          "also read from plan.json)")
+                     help="enable an extension (repeatable; also read from "
+                          "plan.json)")
+    lay.add_argument("--no-floors", action="store_true", default=False,
+                     help="turn the floors extension off (it is on by default; "
+                          "a plan that records its extensions keeps what it "
+                          "recorded unless this is given)")
     lay.add_argument("--room-assembler", dest="room_assembler", action="store_true",
                      default=False,
-                     help="place one-storey library buildings from the room library's "
-                          "own rooms (the old footprint method otherwise)")
+                     help="place library buildings from the room library's "
+                          "own rooms, upper storeys included (the old "
+                          "footprint method otherwise)")
     gen = sub.add_parser("generate", help="run the model phases on an idea and build the scenario")
     gen.add_argument("--idea", default=None,
                      help="the world in one line (or give --settings)")
@@ -84,12 +97,17 @@ def main(argv=None):
                      help="the model invents every item (the old method) instead of "
                           "stocking containers from the item library")
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
-                     help="enable an extension, off by default (repeatable; "
-                          "recorded in plan.json)")
+                     help="enable an extension (repeatable; recorded in "
+                          "plan.json)")
+    gen.add_argument("--no-floors", action="store_true", default=False,
+                     help="turn the floors extension off (it is on by default; "
+                          "with --settings the file's list rules unless this "
+                          "is given)")
     gen.add_argument("--room-assembler", dest="room_assembler", action="store_true",
                      default=None,
-                     help="place one-storey library buildings from the room library's "
-                          "own rooms (also read from a --settings file; off otherwise)")
+                     help="place library buildings from the room library's "
+                          "own rooms, upper storeys included (also read from a "
+                          "--settings file; off otherwise)")
     chk = sub.add_parser("check-provider",
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")
@@ -188,7 +206,8 @@ def main(argv=None):
         if args.command == "layout":
             summary = api.relayout(args.plan, seed=args.seed, extensions=args.ext,
                                    out_dir=args.out, progress=_print_event, emit=print,
-                                   room_assembler=args.room_assembler)
+                                   room_assembler=args.room_assembler,
+                                   floors=not args.no_floors)
         else:
             summary = api.generate(provider=args.provider, out_dir=args.out,
                                    progress=_print_event, providers_path=args.providers,

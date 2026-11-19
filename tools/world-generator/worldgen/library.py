@@ -413,6 +413,31 @@ def _check_purposes(lib, err, warn):
                 err(f"purposes.{p}: role {role} (layout {l.get('id')}) is not bound")
 
 
+def _check_purposefit(lib, err):
+    vocab_purposes = lib.vocab.get("purposes", {})
+    roles = lib.vocab.get("roles", {})
+    for p, entry in (lib.vocab.get("purposeFit") or {}).items():
+        if p.startswith("_"):
+            continue
+        if p not in vocab_purposes:
+            err(f"purposeFit: unknown purpose {p!r}")
+            continue
+        if not isinstance(entry, dict):
+            err(f"purposeFit.{p}: needs an object of requires/forbids")
+            continue
+        for key in entry:
+            if key not in ("requires", "forbids"):
+                err(f"purposeFit.{p}.{key}: not a known key")
+        for key in ("requires", "forbids"):
+            listed = entry.get(key) or []
+            if not isinstance(listed, list):
+                err(f"purposeFit.{p}.{key}: needs a list of roles")
+                continue
+            for role in listed:
+                if role not in roles:
+                    err(f"purposeFit.{p}.{key}: unknown role {role!r}")
+
+
 def _check_suite(lib, s, err, warn):
     sid = s.get("id")
     where = f"suite {sid}"
@@ -563,6 +588,7 @@ def check(lib, sources_path=SOURCES_PATH):
             warn(f"layout {l.get('id')}: family {l.get('family')} in "
                  f"{os.path.basename(lib.layout_files[l['id']])}")
     _check_purposes(lib, err, warn)
+    _check_purposefit(lib, err)
     for s in lib.suites.values():
         _check_suite(lib, s, err, warn)
     for fam in lib.vocab.get("families", {}):

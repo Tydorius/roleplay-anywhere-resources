@@ -1032,7 +1032,8 @@ def _record_furniture(out, b):
     note = assembler.fallback_note(b.layout.design.name)
     if note is not None:
         out.fallbacks.append(note)
-    out.notes.extend(assembler.spot_notes(b.layout.design.name))
+    out.notes.extend(assembler.spot_notes(b.layout.design.name,
+                                          b.layout.entrance_side))
     for (t, room_name) in b.layout.dropped:
         out.failures.append((f"piece {t} in {room_name}", "dropped: over the 28x22 building cap"))
     for name in getattr(b.layout, "unit_dropped", []) or []:

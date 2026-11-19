@@ -298,7 +298,7 @@ class Launcher:
         self.out("")
         self.out("Extensions add features. Some need code mods from")
         self.out("../code-mod-loader installed in the game; others need no mod.")
-        self.out("All off makes a world for the plain game.")
+        self.out("Floors is on by default; everything else starts off.")
         chosen = set(given)
         for e in REGISTRY:
             if e.id in expand(chosen):
@@ -310,7 +310,8 @@ class Launcher:
                          f"{e.as_dict()['withoutMod']}.")
             else:
                 self.out("    No game mod needed.")
-            if self.yes(f"  Turn on {e.title}?"):
+            # the registry's default is the prompt's default (floors: on)
+            if self.yes(f"  Turn on {e.title}?", e.default):
                 chosen.add(e.id)
         return sorted(expand(chosen))
 
@@ -422,7 +423,8 @@ class Launcher:
             idea, provider=provider, extensions=exts, seed=seed, out_dir=out_dir,
             progress=progress, providers_path=self.providers_path, client=self.client,
             emit=emit, frame=frame, library=library, item_library=item_library,
-            questionnaire=questionnaire), out_dir)
+            questionnaire=questionnaire,
+            floors="floors" in exts), out_dir)   # the answer rules, not the default
 
     def _pick_provider(self):
         """The provider for a run (setting one up when none is), or False."""

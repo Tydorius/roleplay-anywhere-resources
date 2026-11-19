@@ -159,10 +159,10 @@ function wgFormHtml(drafts) {
             "Containers are stocked from the generator's item library of reviewed item art: the model fills loot pools from a menu, recolours variants for local flavour, and only plot items get a picture of their own. Untick and the model invents every item.")}
     <div class="wg-exts">
       <span class="wg-exts-title">Extensions</span>
-      <span class="note">All off: the plain world imports and plays in the unmodded game.</span>
+      <span class="note">Floors is on by default (Anywhere RPG 1.0's own floors, no mod); untick it for a single-storey world. The rest start off: without them the world imports and plays in the unmodded game.</span>
       ${wgMeta.extensions.map(e => `
-        <label class="check"><input type="checkbox" data-ext="${esc(e.id)}"> ${esc(e.title)}</label>
-        <span class="note">needs ${e.mods.map(m => `<b>${esc(m)}</b>`).join(" + ")} game mod${e.mods.length > 1 ? "s" : ""} — ${esc(e.withoutMod)}</span>`).join("")}
+        <label class="check"><input type="checkbox" data-ext="${esc(e.id)}"${e.default ? " checked" : ""}> ${esc(e.title)}</label>
+        <span class="note">${e.mods.length ? `needs ${e.mods.map(m => `<b>${esc(m)}</b>`).join(" + ")} game mod${e.mods.length > 1 ? "s" : ""} — ` : ""}${esc(e.withoutMod)}</span>`).join("")}
     </div>
     <div class="wg-framebar">
       <button type="button" id="wgFrameBtn">Frame it</button>

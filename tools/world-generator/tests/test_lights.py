@@ -98,7 +98,8 @@ class TestLightsBuilds(unittest.TestCase):
 
     def test_lights_writes_arpg_mods_and_lights_every_kind(self):
         summary, scn = self.build("village.json", ("lights",))
-        self.assertEqual(summary["extensions"], ["lights"])
+        # floors ships too: it is on by default, the lights tick adds to it
+        self.assertEqual(summary["extensions"], ["floors", "lights"])
         self.assertEqual(scn["arpgMods"], {"lights": {"templates": {
             "Clay hearth": "fire", "Stone forge": {"kind": "fire", "color": "#ff5522"}}}})
         light = {t["name"]: t.get("light") for t in scn["objectTemplates"]}

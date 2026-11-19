@@ -317,6 +317,7 @@ def start_generate(idea, provider, extensions=(), seed=1, frame=None, questionna
             idea, provider=entry["name"], extensions=exts, seed=seed, out_dir=str(out_dir),
             frame=frame, questionnaire=questionnaire, library=bool(library),
             item_library=bool(item_library),
+            floors="floors" in exts,   # the form's tick is the choice, not the default
             progress=lambda e: update(phase=e.get("phase"), label=e.get("label"),
                                       calls=e.get("calls", 0), tokens=e.get("tokens", 0)),
             cancel=lambda: j["cancelRequested"])

@@ -167,7 +167,10 @@ class TestWorldgenEndpoints(unittest.TestCase):
         # the portals extension is retired: floors writes 1.0's native floors
         # and stairs, needs no game mod and turns on nothing else
         self.assertEqual(set(exts), {"floors", "region-groups", "lights", "secret-passages"})
-        self.assertFalse(any(e["default"] for e in exts.values()))
+        # floors is on by default (1.0's own floors, no mod); the rest start off
+        self.assertEqual([e["default"] for e in exts.values()],
+                         [True, False, False, False],
+                         "only floors defaults on")
         self.assertEqual(exts["floors"]["mods"], [])
         self.assertEqual(exts["floors"]["requires"], [])
         code, raw = self.request("GET", "/api/worldgen/meta")

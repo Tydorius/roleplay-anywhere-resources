@@ -419,6 +419,12 @@
     "linen_closet": "closet",
     "broom_closet": "closet"
   },
+  "purposeFit": {
+    "_readme": "Which recipes and stored rooms a purpose may take, by role: requires lists roles at least one of which a fit must carry; forbids lists roles a fit must carry none of. A purpose with no entry here is free to use any recipe.",
+    "living_room": { "forbids": ["counter.serve", "storage.bulk"] },
+    "lounge": { "forbids": ["counter.serve", "storage.bulk"] },
+    "taproom": { "requires": ["counter.serve"] }
+  },
   "anchors": {
     "_readme": "Combine with +, e.g. wall:far+corner. far/side/near are relative to the room's main door.",
     "wall:<north|south|east|west|any|far|side|near>": "stands against that wall",
