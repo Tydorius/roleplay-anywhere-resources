@@ -2,15 +2,28 @@
 rooms — one storey or a simple rectangle of two or three.
 
 A qualifying design (every room of every storey carrying a library ``use``
-that maps to a family, not a compound part; a unit building only when its
-copies all fit upstairs over shared ground rooms) is assembled instead of
-cut from a footprint: each room is an active stored room of its family (or,
-for a family with none stored, composed live the way the room generator
-does), picked for the building's wealth, the room's share and its assigned
-sleepers. Rooms are placed along the connection tree — the entrance room
-first, every child against a free side of its parent with a door candidate
-of each lining up across the shared wall — then the outline is closed to a
-rectangle with stretch lines and filler rooms.
+that maps to a family — a compound part qualifies the same way; a unit
+building only when its copies all fit upstairs over shared ground rooms) is
+assembled instead of cut from a footprint: each room is an active stored
+room of its family (or, for a family with none stored, composed live the
+way the room generator does), picked for the building's wealth, the room's
+share and its assigned sleepers. Rooms are placed along the connection
+tree — the entrance room first, every child against a free side of its
+parent with a door candidate of each lining up across the shared wall —
+then the outline is closed to a rectangle with stretch lines and filler
+rooms.
+
+A wing ask (``wing_footprint`` / ``wing_build``) assembles the same design
+inside a target rectangle instead of its natural one: the placement search
+stays inside the target, the leaves closest to filling it close first, and
+the strip between the rooms and the target's edge is a hole the closers
+fill like any other. Doors may be pinned to the target's ring — the
+entrance to a side and offset, extra outward doors wherever another wing
+or a courtyard will meet this one — and the pins are resolved before the
+rooms furnish, so no piece stands on a pinned cell or blocks its approach.
+A pin no room can open falls the entrance back to the free pick (recorded)
+or the whole ask back to the caller (the reason recorded); a target the
+closers cannot meet reports the rectangle the wing grew to instead.
 
 A multi-storey design reserves its ground stair cell first (the stairs room
 when the plan names one, else the entrance room), then partitions each
@@ -74,7 +87,20 @@ STOREY_LEAF_TRIES = MAX_LEAVES
 
 
 class _Fallback(Exception):
-    """Assembly failed: the building goes back to the old method."""
+    """Assembly failed: the building goes back to the old method. A pinned
+    door that cannot be honoured raises with ``pinned`` set, so a run whose
+    every leaf fails says why the pin was refused, not why one leaf's
+    outline could not close."""
+
+    pinned = False
+
+
+def _pin_refused(msg):
+    """A _Fallback that names a pinned door the ask cannot honour."""
+    fail = _Fallback(msg)
+    fail.pinned = True
+    return fail
+
 
 
 class _Placed:
@@ -126,6 +152,46 @@ class _Assembly:
                                     # until the building stands
 
 
+def _pin_of(target, pin):
+    """A pinned door as (side, offset): given that way, or as an exact
+    (x, y) cell on the target's ring (a corner cell cannot open a door and
+    is the caller's mistake to ask for)."""
+    side = pin[0]
+    if isinstance(side, str):
+        return (side, int(pin[1]))
+    x, y = pin
+    w, h = target
+    if y == 0 and 0 < x < w - 1:
+        return ("north", x - 1)
+    if y == h - 1 and 0 < x < w - 1:
+        return ("south", x - 1)
+    if x == 0 and 0 < y < h - 1:
+        return ("west", y - 1)
+    if x == w - 1 and 0 < y < h - 1:
+        return ("east", y - 1)
+    raise ValueError(f"door pin {pin} is not on the target ring")
+
+
+class _Wing:
+    """One wing ask: the target rectangle the rooms must tile, and the doors
+    pinned to its ring — the entrance (side, offset) plus any extra outward
+    doors where another wing or a courtyard will meet this one. ``None``
+    entrance pins a free pick; the pins are absolute cells of the target
+    rect once resolved."""
+
+    def __init__(self, target, entrance=None, doors=()):
+        self.target = (int(target[0]), int(target[1]))
+        self.entrance = _pin_of(self.target, entrance) if entrance else None
+        self.doors = tuple(_pin_of(self.target, d) for d in doors)
+
+    def key(self):
+        """The cache's wing half: same design and sides, different ask."""
+        return (self.target, self.entrance, self.doors)
+
+    def ring(self):
+        return Rect(0, 0, self.target[0], self.target[1])
+
+
 class _Context:
     """Everything one build needs: the library, the world's template registry
     and the assembled buildings, cached per entrance side so the map's
@@ -144,13 +210,15 @@ class _Context:
         self.world_templates = world_templates
         self.pool_names = set(plan.loot_pools or {})
         self.zone_of = {b.name: z for z in plan.zones for b in z.buildings}
-        parts = set()
+        parts = {}
         for c in getattr(plan, "compounds", None) or []:
+            cname = c.get("name") if isinstance(c, dict) else getattr(c, "name", "")
             for p in getattr(c, "parts", None) or []:
-                name = p.get("name") if isinstance(p, dict) else getattr(p, "name", "")
-                if name:
-                    parts.add(name)
-        self.compound_parts = parts
+                name = (p.get("building") if isinstance(p, dict)
+                        else getattr(p, "building", ""))
+                if name and cname:
+                    parts[name] = cname
+        self.compound_of = parts   # part building name -> its compound's
         self.registry = library_rooms.Templates(
             self.lib, world_seed,
             taken={t["name"] for t in plan_data.get("templates", [])
@@ -165,7 +233,9 @@ class _Context:
                 self.registry.by_key[tuple(key)] = t
                 self.registry.by_name[t["name"]] = t
                 self.registry.names.add(t["name"])
-        self.cache = {}          # (name, entrance_side) -> _Assembly | None
+        self.cache = {}          # (name, entrance_side, compound, wing) ->
+                                  # _Assembly | None; the wing half is None for
+                                  # a plain assembly, else its target and pins
         self.fallbacks = {}      # building name -> reason
         self.spot_built = {}     # building name -> [(room name, note)]
         self.storey_notes = {}   # (name, entrance_side) -> [(room, note)] the
@@ -221,6 +291,32 @@ def build(design, origin, templates=None):
     return _building_layout(asm, origin)
 
 
+def wing_footprint(design, target, entrance=None, doors=(), templates=None):
+    """The (w, h) the design takes assembled inside the target rectangle
+    (w, h) — the target itself when the closers fill it, the smaller
+    rectangle the wing grew to when they cannot (a note says so; the caller
+    decides whether the rectangle it got is one it can use) — or None with
+    the reason recorded. ``entrance`` and each of ``doors`` pin a door to
+    the target's ring: (side, offset), or an exact (x, y) cell."""
+    asm = _assembly_for(design, wing=_Wing(target, entrance, doors))
+    if asm is None:
+        return None
+    _inject_templates(templates)
+    box = _bbox(asm.rooms)   # the rooms need not touch the target's origin
+    return (box.w, box.h)
+
+
+def wing_build(design, origin, target, entrance=None, doors=(), templates=None):
+    """The assembled BuildingLayout at ``origin``, inside the target
+    rectangle with its pinned doors opened — or None, the reason recorded,
+    the caller falling back to its own method."""
+    asm = _assembly_for(design, wing=_Wing(target, entrance, doors))
+    if asm is None:
+        return None
+    _inject_templates(templates)
+    return _building_layout(asm, origin)
+
+
 def fallback_note(name):
     """(label, reason) when a building fell back to the old method."""
     if _context is None or name not in _context.fallbacks:
@@ -247,13 +343,15 @@ def spot_notes(name, side=None):
 def _qualifies(design):
     """Whether the assembler takes this design: a simple rectangle of one to
     three storeys whose every room — the ground's and each upper storey's —
-    carries a library ``use`` that maps to a family, and not a compound
-    part. A unit building qualifies when its copies all fit upstairs over
-    its shared ground rooms (rl-06b): the assembler lays the ground and the
-    floors extension stamps the unit storeys over it."""
+    carries a library ``use`` that maps to a family. A compound part
+    qualifies the same way (the compound's own code lays it out through
+    ``layout_building`` like any building); a unit building qualifies when
+    its copies all fit upstairs over its shared ground rooms (rl-06b): the
+    assembler lays the ground and the floors extension stamps the unit
+    storeys over it."""
     if _context is None:
         return False
-    if design.name in _context.compound_parts or not design.rooms:
+    if not design.rooms:
         return False
     storey_rooms = [(1, r) for r in design.rooms] + \
                    [(getattr(s, "storey", i + 2), r)
@@ -285,19 +383,27 @@ def _qualifies(design):
     return False
 
 
-def _assembly_for(design):
-    """The cached assembly for this design and entrance side, or None with
-    the reason recorded: one per building, whatever asks first (the map's
-    measurement or the placement itself)."""
+def _assembly_for(design, wing=None):
+    """The cached assembly for this design and entrance side — a wing's
+    target and pins are part of the key, so one building can stand as a
+    plain assembly and as wings of different asks — or None with the reason
+    recorded: one per ask, whatever asks first (the map's measurement or
+    the placement itself)."""
     if not _qualifies(design):
         return None
     ctx = _context
-    key = (design.name, design.entrance_side)
+    if wing is not None and wing.entrance is not None \
+            and wing.entrance[0] != design.entrance_side:
+        # the pin says which side the wing is entered from: assemble the
+        # design turned that way, the way the compound turns its parts
+        design = dataclasses.replace(design, entrance_side=wing.entrance[0])
+    key = (design.name, design.entrance_side, ctx.compound_of.get(design.name),
+           wing.key() if wing is not None else None)
     if key in ctx.cache:
         return ctx.cache[key]
     asm, reason = None, None
     try:
-        asm = _assemble(ctx, design)
+        asm = _assemble(ctx, design, wing)
     except _Fallback as e:
         reason = str(e)
     except Exception as e:             # a bug never fails the world build
@@ -688,11 +794,13 @@ def _seam_cells(parent, child, side, op, oc):
 
 
 def _candidates(placed, entry, side_s, parent, pool, allow_slivers=False,
-                limit=CANDIDATES_PER_ROOM):
+                limit=CANDIDATES_PER_ROOM, bounds=None):
     """Every way one room can stand against its parent — variant,
     orientation, side and door-candidate pairing — best first: smallest
     footprint growth, then the fewest hole cells left beside it, then the
-    most sides standing against something. [(key, child, seam)]."""
+    most sides standing against something. [(key, child, seam)]. A wing
+    passes its target as ``bounds``: a room that spills out of it is no
+    candidate at all."""
     out = []
     for variant in pool:
         for crm in _orientations(variant):
@@ -712,6 +820,8 @@ def _candidates(placed, entry, side_s, parent, pool, allow_slivers=False,
                         else:
                             x, y = parent.rect.x - w - 2, parent.rect.y + op - oc
                         rect = Rect(x, y, w + 2, h + 2)
+                        if bounds is not None and not bounds.contains_rect(rect):
+                            continue
                         if _overlaps(placed, rect):
                             continue
                         if entry is not None and \
@@ -788,11 +898,12 @@ def _passage_room(length, horizontal=False):
                       "west": list(range(length)), "east": list(range(length))}}
 
 
-def _passage_candidates(placed, entry, side_s, parent, pool,
+def _passage_candidates(placed, entry, side_s, parent, pool, bounds=None,
                         limit=PASSAGE_CANDIDATES):
     """The last resort for one room: a 1-cell passage out of the parent and
     the child on its far end, best first. [(key, [passage, child], [seam,
-    seam])]."""
+    seam])]. A wing's target bounds the passage and the room on its far end
+    the same way."""
     out = []
     for length in (1, 2, 3):
         for side in ("south", "east", "north", "west"):
@@ -808,6 +919,8 @@ def _passage_candidates(placed, entry, side_s, parent, pool,
                 else:
                     x, y = parent.rect.x - w - 2, parent.rect.y + op
                 prect = Rect(x, y, w + 2, h + 2)
+                if bounds is not None and not bounds.contains_rect(prect):
+                    continue
                 if _overlaps(placed, prect):
                     continue
                 if entry is not None and \
@@ -818,7 +931,7 @@ def _passage_candidates(placed, entry, side_s, parent, pool,
                 if seam is None:
                     continue
                 for hit in _candidates(placed + [passage], entry, side_s,
-                                       passage, pool, limit=1):
+                                       passage, pool, bounds=bounds, limit=1):
                     bbox = _bbox(placed + [passage, hit[1]])
                     covered = sum(q.rect.w * q.rect.h
                                   for q in placed + [passage]) \
@@ -831,7 +944,7 @@ def _passage_candidates(placed, entry, side_s, parent, pool,
 
 # ------------------------------------------------------------------ assembling
 
-def _assemble(ctx, design):
+def _assemble(ctx, design, wing=None):
     rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}")
     ctx.sleepers = library_plan._sleepers(
         ctx.lib, [{"name": r.name, "use": r.use} for r in design.rooms],
@@ -861,17 +974,23 @@ def _assemble(ctx, design):
     for r in range(8):
         for variant in pools[root]:
             o = _orientations(variant)[r]
-            if _side_offsets(o, design.entrance_side):
-                turns.append(o)
+            if not _side_offsets(o, design.entrance_side):
+                continue
+            if wing is not None and (o["size"][0] + 2 > wing.target[0]
+                                     or o["size"][1] + 2 > wing.target[1]):
+                continue    # the entrance room alone spills out of the target
+            turns.append(o)
         if len(turns) >= 12:
             break
     if not turns:
         raise _Fallback(f"no {root} room with a door on its "
-                        f"{design.entrance_side} wall")
+                        f"{design.entrance_side} wall"
+                        + (f" that fits a {wing.target[0]}x{wing.target[1]} "
+                           f"target" if wing is not None else ""))
     for e0 in turns[:12]:
         try:
             asm = _place_rooms(ctx, design, pools, children, root, e0,
-                               tier, cond)
+                               tier, cond, wing)
             if design.upper:
                 _build_uppers(ctx, design, asm, tier, cond)
             # the storey notes belong to the assembly this entrance side
@@ -885,7 +1004,26 @@ def _assemble(ctx, design):
     raise _Fallback(failures[0] if failures else "no assembly")
 
 
-def _place_rooms(ctx, design, pools, children, root, entry_room, tier, cond):
+def _wing_bounds(wing, entry_rect, side):
+    """The target's frame around an entry room placed at (0, 0): flush with
+    the target's entrance-side edge — the search's entrance line keeps every
+    other room on the inward side of it — and centred along that edge, so
+    the rooms can grow both ways along it the way the plain search grows
+    around the entry."""
+    tw, th = wing.target
+    if side in ("north", "south"):
+        ex = (tw - entry_rect.w) // 2
+        if side == "south":
+            return Rect(-ex, -(th - entry_rect.h), tw, th)
+        return Rect(-ex, 0, tw, th)
+    ey = (th - entry_rect.h) // 2
+    if side == "east":
+        return Rect(-(tw - entry_rect.w), -ey, tw, th)
+    return Rect(0, -ey, tw, th)
+
+
+def _place_rooms(ctx, design, pools, children, root, entry_room, tier, cond,
+                 wing=None):
     """Place every room of the tree from a given entrance-room orientation,
     close the outline, and furnish: the finished _Assembly.
 
@@ -894,10 +1032,15 @@ def _place_rooms(ctx, design, pools, children, root, entry_room, tier, cond):
     against its parent (a 1-cell corridor only when none fits), the complete
     placements that surface first are the tightest ones, and the outline
     closes on them until one closes clean — a greedy placement would happily
-    paint a later room into a corner, or leave a strip nothing can fill."""
+    paint a later room into a corner, or leave a strip nothing can fill. A
+    wing bounds the whole search by its target rectangle and closes the
+    leaves that fill it first; a pinned entrance is honoured strictly first
+    (a leaf that cannot open it fails) and only then relaxed to the free
+    pick, so a pin one leaf cannot serve does not hide one that can."""
     side = design.entrance_side
     entry = _Placed(root, entry_room,
                     Rect(0, 0, entry_room["size"][0] + 2, entry_room["size"][1] + 2))
+    bounds = _wing_bounds(wing, entry.rect, side) if wing is not None else None
 
     def holes_of(placed):
         bbox = _bbox(placed)
@@ -908,7 +1051,14 @@ def _place_rooms(ctx, design, pools, children, root, entry_room, tier, cond):
         holes, area = holes_of(placed)
         touching = sum(_contact(placed[:i], p, _bbox(placed[:i + 1]))
                        for i, p in enumerate(placed) if i)
-        return (holes, area, -touching)
+        # a wing's closest leaves first: the closers can fill a hole inside
+        # the target, but no closer grows a wing onto the target's edge —
+        # a constant 0 for the plain assembly, whose order stands
+        miss = 0
+        if wing is not None:
+            bb = _bbox(placed)
+            miss = 0 if (bb.w, bb.h) == wing.target else 1
+        return (miss, holes, area, -touching)
 
     # (holes, footprint, counter): the counter keeps the sort from comparing
     # the payloads, and pops equal placements in insertion order. The queue
@@ -938,35 +1088,48 @@ def _place_rooms(ctx, design, pools, children, root, entry_room, tier, cond):
                        if n == _parent_of(children, name, root)), None)
         if parent is None:
             continue
-        cands = _candidates(placed, entry, side, parent, pools[name])
+        cands = _candidates(placed, entry, side, parent, pools[name],
+                            bounds=bounds)
         expanded += 1
         for (_ck, child, seam) in cands:
             push(placed + [child], pairs + [seam], names + [name], rest)
         if cands:
             continue    # the corridor is the last resort, not a sibling branch
         for (_pk, rooms, seams) in _passage_candidates(placed, entry, side,
-                                                       parent, pools[name]):
+                                                       parent, pools[name],
+                                                       bounds=bounds):
             push(placed + rooms, pairs + seams, names + [None, name], rest)
     if not leaves:
         first = children[root][0] if children[root] else "?"
         raise _Fallback(f"room {first}: no placement against {root}")
     leaves.sort(key=lambda l: l[0])
-    reasons = []
-    for (_key, placed, pairs, names) in leaves[:STOREY_LEAF_TRIES
-                                               if design.upper else LEAF_TRIES]:
-        try:
-            return _finish_assembly(ctx, design, side, placed, pairs, names,
-                                    tier, cond, pools)
-        except _Fallback as e:
-            reasons.append(str(e))
-    raise _Fallback(reasons[0] if reasons else "no placement closed cleanly")
+    reasons, pin_reasons = [], []
+    tries = leaves[:STOREY_LEAF_TRIES if design.upper else LEAF_TRIES]
+    relaxations = ((False, True) if wing is not None and wing.entrance
+                   else (False,))
+    for relax in relaxations:
+        for (_key, placed, pairs, names) in tries:
+            try:
+                return _finish_assembly(ctx, design, side, placed, pairs,
+                                        names, tier, cond, pools, wing=wing,
+                                        relax_entrance=relax)
+            except _Fallback as e:
+                # a pin no leaf honoured is the ask's own failure; an
+                # outline that would not close is one leaf's
+                (pin_reasons if e.pinned else reasons).append(str(e))
+    raise _Fallback(pin_reasons[0] if pin_reasons else
+                    (reasons[0] if reasons else "no placement closed cleanly"))
 
 
 def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
-                     pools=None):
+                     pools=None, wing=None, relax_entrance=False):
     """Close one complete placement to a rectangle, open its doors and
     furnish it: the finished _Assembly. Works on copies of the placed rooms:
-    a leaf that fails after stretching must not bend the ones after it."""
+    a leaf that fails after stretching must not bend the ones after it. A
+    wing closes against its target rectangle and opens its pinned doors on
+    the target's ring before anything furnishes; ``relax_entrance`` is the
+    second pass over the leaves, where an entrance pin no leaf honoured
+    takes the free pick and says so."""
     asm = _Assembly(design, side)
     placed = [_Placed(n, p.room, p.rect, p.synthetic)
               for (p, n) in zip(placed, names)]
@@ -979,10 +1142,16 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
     # the search may hang rooms north or west of the entrance room (a room
     # taller than it cannot stand beside it without crossing its entrance
     # wall): shift the whole assembly to (0, 0) before anything derives
-    # from the coordinates
-    box = _bbox(placed)
-    if box.x or box.y:
+    # from the coordinates. A wing shifts its target frame there instead —
+    # the rooms stand somewhere inside it, and the pins and the closing
+    # address the frame's own cells
+    if wing is not None:
+        frame = _wing_bounds(wing, entry.rect, side)
+        dx, dy = -frame.x, -frame.y
+    else:
+        box = _bbox(placed)
         dx, dy = -box.x, -box.y
+    if dx or dy:
         for p in placed:
             p.rect = Rect(p.rect.x + dx, p.rect.y + dy, p.rect.w, p.rect.h)
         asm.pairs = [[(cx + dx, cy + dy) for (cx, cy) in pair]
@@ -999,21 +1168,59 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
                 owner.doors.add(cell)
 
     # ---- close the outline to a rectangle: stretch lines first, then
-    # filler rooms for whatever is left
-    _bbox_, holes = _holes(placed)
-    if holes:
-        _stretch_close(placed, entry, side, holes)
-        _bbox_, holes = _holes(placed)
-    if holes and pools:
-        _variant_close(placed, entry, side, holes, pools, tier,
-                       {r.name: _fit_rules(ctx, r.use) for r in design.rooms})
-        _bbox_, holes = _holes(placed)
-    if holes:
-        _fill_holes(ctx, asm, placed, holes)
-        _bbox_, holes = _holes(placed)
+    # filler rooms for whatever is left. A wing closes against its target
+    # first — the strip between the rooms and the target's edge is a hole
+    # like any other — and only when the target cannot be met closes what
+    # the rooms do cover to their own bounding box, saying which rectangle
+    # that is: the caller decides whether the one it got is one it can use
+    target = wing.ring() if wing is not None else None
+
+    def close(box):
+        _bbox_, holes = _holes(placed, box)
+        if holes:
+            _stretch_close(placed, entry, side, holes)
+            _bbox_, holes = _holes(placed, box)
+        if holes and pools:
+            _variant_close(placed, entry, side, holes, pools, tier,
+                           {r.name: _fit_rules(ctx, r.use)
+                            for r in design.rooms})
+            _bbox_, holes = _holes(placed, box)
+        if holes:
+            _fill_holes(ctx, asm, placed, holes)
+            _bbox_, holes = _holes(placed, box)
+        return _bbox_, holes
+
+    _bbox_, holes = close(target)
+    if target is not None:
+        # the closers are a pass each over moving ground: a hole that cannot
+        # seam against its strict-walled neighbours seams fine against a
+        # filler the pass before placed, so the passes repeat while they
+        # still close cells of the target
+        for _ in range(3):
+            if not holes:
+                break
+            _bbox_, left = close(target)
+            if not left or len(left) >= len(holes):
+                holes = left
+                break
+            holes = left
+        if holes:
+            # the target cannot be met: close what the rooms do cover
+            # instead — the wing reports the rectangle it grew to, and the
+            # caller decides whether the one it got is one it can use
+            _bbox_, holes = close(None)
     if holes:
         raise _Fallback(f"{len(holes)} hole cell(s) left that no stretch or "
                         f"filler closes")
+    if target is not None:
+        # the salvage pass may have finished the target after all (its
+        # fillers stand on covered ground): say the wing missed only when a
+        # cell of the target is truly still open
+        _tbox, open_cells = _holes(placed, target)
+        if open_cells:
+            asm.notes.append((design.entrance_room,
+                              f"the wing fills {_bbox_.w}x{_bbox_.h} of the "
+                              f"{target.w}x{target.h} target"))
 
     # ---- the door cells the fillers' seams opened (the search's own were
     # recorded before the closers ran), and the entrance itself
@@ -1025,16 +1232,59 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
     for p in placed:
         if not p.doors and p is not entry:
             raise _Fallback(f"room {p.name} ended up with no door")
-    offsets = _side_offsets(entry.room, side)
-    if not offsets:
-        raise _Fallback(f"the entrance room's {side} wall has no free cell")
-    if side in ("north", "south"):
-        mid = (_bbox_.w - 1) // 2
+    if wing is None:
+        offsets = _side_offsets(entry.room, side)
+        if not offsets:
+            raise _Fallback(f"the entrance room's {side} wall has no free cell")
+        if side in ("north", "south"):
+            mid = (_bbox_.w - 1) // 2
+        else:
+            mid = (_bbox_.h - 1) // 2
+        k = min(offsets, key=lambda k: abs(k - mid))
+        asm.entrance = _ring_cell(entry.rect, side, k)
+        entry.doors.add(asm.entrance)
     else:
-        mid = (_bbox_.h - 1) // 2
-    k = min(offsets, key=lambda k: abs(k - mid))
-    asm.entrance = _ring_cell(entry.rect, side, k)
-    entry.doors.add(asm.entrance)
+        # a wing's doors sit on the target's ring and are opened before
+        # anything furnishes, so no piece stands on a pinned cell or blocks
+        # the walkway in front of it; every pin must land in a room a walk
+        # from the entrance reaches, or this leaf cannot serve the ask
+        reached = _reached_rooms(placed, asm.pairs, entry)
+        if wing.entrance is not None:
+            pside, pk = wing.entrance
+            cell = _ring_cell(wing.ring(), pside, pk)
+            owner = _pin_owner(placed, cell)
+            if owner is not None and owner in reached:
+                asm.entrance = cell
+                owner.doors.add(cell)
+            elif relax_entrance:
+                pick = _free_entrance(placed, wing.ring(), side)
+                if pick is None:
+                    raise _Fallback(f"the {side} wall has no room that can "
+                                    f"open the wing's entrance")
+                asm.entrance, owner = pick
+                owner.doors.add(asm.entrance)
+                asm.notes.append((design.entrance_room,
+                                  f"the pinned {pside} entrance at offset "
+                                  f"{pk} could not be opened; the free pick "
+                                  f"at {asm.entrance} stands"))
+            else:
+                raise _pin_refused(f"the pinned entrance on the {pside} wall "
+                                   f"at offset {pk} has no room that can "
+                                   f"open it")
+        else:
+            pick = _free_entrance(placed, wing.ring(), side)
+            if pick is None:
+                raise _Fallback(f"the {side} wall has no room that can open "
+                                f"the wing's entrance")
+            asm.entrance, owner = pick
+            owner.doors.add(asm.entrance)
+        for (dside, dk) in wing.doors:
+            cell = _ring_cell(wing.ring(), dside, dk)
+            owner = _pin_owner(placed, cell)
+            if owner is None or owner not in reached:
+                raise _pin_refused(f"the pinned {dside} door at offset {dk} "
+                                   f"has no room that can open it")
+            owner.doors.add(cell)
 
     # ---- the ground stair the upper storeys grow from (design 8.1f: the
     # stair sits inside the hall, corridor or entrance room, never on an
@@ -1076,6 +1326,59 @@ def _ring_cell(rect, side, k):
     if side == "west":
         return (rect.x, rect.y + 1 + k)
     return (rect.x1, rect.y + 1 + k)
+
+
+def _pin_owner(placed, cell):
+    """The room whose ring holds a pinned door cell and has a door candidate
+    there, or None: a pin is only honoured on a cell the room can open."""
+    for p in placed:
+        if not _owns_ring(p, cell):
+            continue
+        s, k = _offset_of(p, cell)
+        if s is not None and k in _side_offsets(p.room, s):
+            return p
+    return None
+
+
+def _free_entrance(placed, ring, side):
+    """A wing's free entrance pick: the door candidate nearest the middle of
+    the target's entrance-side edge, on whatever room stands there (the
+    entrance room usually, a filler when the wing closed one in front of
+    it). (cell, owner), or None when no room on the edge can open one."""
+    mid = (ring.w - 1) // 2 if side in ("north", "south") \
+        else (ring.h - 1) // 2
+    best = None
+    for p in placed:
+        at_edge = (p.rect.y == ring.y if side == "north"
+                   else p.rect.y1 == ring.y1 if side == "south"
+                   else p.rect.x == ring.x if side == "west"
+                   else p.rect.x1 == ring.x1)
+        if not at_edge:
+            continue
+        for k in _side_offsets(p.room, side):
+            cell = _ring_cell(p.rect, side, k)
+            at = cell[0] if side in ("north", "south") else cell[1]
+            key = (abs(at - mid), cell[0], cell[1])
+            if best is None or key < best[0]:
+                best = (key, cell, p)
+    return None if best is None else (best[1], best[2])
+
+
+def _reached_rooms(placed, pairs, entry):
+    """The rooms a walk from the entrance room reaches over the open door
+    pairs — a pinned door that lands anywhere else opens into dead space."""
+    seen, queue = {id(entry)}, [entry]
+    while queue:
+        p = queue.pop()
+        for pair in pairs:
+            if not (_owns_ring(p, pair[0]) or _owns_ring(p, pair[1])):
+                continue
+            for q in placed:
+                if q is not p and id(q) not in seen \
+                        and (_owns_ring(q, pair[0]) or _owns_ring(q, pair[1])):
+                    seen.add(id(q))
+                    queue.append(q)
+    return {p for p in placed if id(p) in seen}
 
 
 def _free_name(asm, base):
@@ -2015,8 +2318,8 @@ def _building_layout(asm, origin):
     partitions (``upper_asm``) and the ground stair cell with them, for the
     floors extension to collect when it runs."""
     ox, oy = origin
-    w = max(p.rect.x1 for p in asm.rooms) + 1
-    h = max(p.rect.y1 for p in asm.rooms) + 1
+    box = _bbox(asm.rooms)   # a wing's rooms need not touch the target's origin
+    w, h = box.w, box.h
     design = dataclasses.replace(asm.design, furniture=list(asm.lines))
     b = BuildingLayout(design, Rect(ox, oy, w, h))
     b.assembled = True

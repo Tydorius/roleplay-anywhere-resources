@@ -10,7 +10,18 @@ bedroom picked for two residents sleeps two. A fixed family with no stored
 fit composes its room on the spot (noted in the run's notes, never a
 fallback); a share whose band gives nothing takes the family's next band one
 step larger first; the live run's tenant cottage assembles, its children's
-loft sleeping two."""
+loft sleeping two.
+
+rl-09 adds the wing mode: the same design asked to fill a target rectangle
+(``wing_footprint`` / ``wing_build``) fills it exactly with its entrance
+and outward doors pinned to the ring, no piece on a pinned cell and every
+room still reached; a target the closers cannot meet still assembles and
+reports the rectangle it grew to; a door pin no room can honour falls the
+ask back with the reason, an entrance pin takes the free pick and says so.
+A compound's parts are buildings like any other — the ashvale fixture's
+parts, given library uses, qualify: the barracks assembles with every door
+the compound opens clear of furniture and the checks clean, the parts that
+cannot say why, and the use keys change nothing with the switch off."""
 import json
 import os
 import tempfile
@@ -517,3 +528,260 @@ class TestABarnGetsAHayloft(unittest.TestCase):
                           if t_by_name[f["template"]].get("forSleep")]
         self.assertFalse(sleep_upstairs, sleep_upstairs)
         self.assertTrue(upper[0].get("furniture"), "the loft shipped empty")
+
+
+WING_PLAN = {
+    "name": "Wingmere", "worldBackground": "A keep wing.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "normal", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Wingmere", "kind": "village", "sizeClass": "small",
+        "description": "The green.", "ground": "grass",
+        "adjacentTo": ["The Ford"], "outdoor": [], "buildings": [
+            {"name": "Wing Hall", "kind": "house", "sizeClass": "small",
+             "purpose": "a wing", "residents": 4, "yard": None}],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }, {
+        "name": "The Ford", "kind": "farmland", "sizeClass": "medium",
+        "description": "Meadows.", "ground": "grass",
+        "adjacentTo": ["Wingmere"], "outdoor": [], "buildings": [],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }],
+    "roads": [{"from": "Wingmere", "to": "The Ford", "kind": "dirt"}],
+    "templates": [],
+    "buildings": [
+        {"name": "Wing Hall", "wall": "wood", "ground": "wood",
+         "residents": 4, "couples": 2, "wealth": "modest", "condition": "kept",
+         "rooms": [
+             {"name": "Hall", "share": "medium", "use": "lobby",
+              "purpose": "the door"},
+             {"name": "Main Room", "share": "medium", "use": "living_room",
+              "purpose": "hearth and table"},
+             {"name": "Bedroom", "share": "small", "use": "master_bedroom",
+              "purpose": "the bed"},
+             {"name": "Pantry", "share": "small", "use": "cellar",
+              "purpose": "stores"}],
+         "connections": [["Hall", "Main Room"], ["Main Room", "Bedroom"],
+                         ["Hall", "Pantry"]],
+         "entrance": {"room": "Hall", "side": "south"},
+         "furniture": [], "yard": None},
+    ],
+    "npcs": [],
+    "player": {"name": "The Wanderer", "gender": "female", "role": "traveller",
+               "home": "Wing Hall", "work": "Wingmere",
+               "description": "Passing through.", "physicalDescription":
+               "cloaked"},
+}
+
+# the ashvale parts' rooms mapped to library purposes, so the fixture's
+# model plan qualifies where its purposes are ones the library knows
+ASHVALE_USES = {
+    "Northwest Tower": {"Guard Room": "guardroom", "Watch Room": "guardroom",
+                        "Lookout": "guardroom"},
+    "Northeast Tower": {"Guard Room": "guardroom", "Watch Room": "guardroom",
+                        "Lookout": "guardroom"},
+    "Southeast Tower": {"Guard Room": "guardroom", "Watch Room": "guardroom",
+                        "Lookout": "guardroom"},
+    "Southwest Tower": {"Guard Room": "guardroom", "Watch Room": "guardroom",
+                        "Lookout": "guardroom"},
+    "Gatehouse": {"Gate Passage": "hallway", "Gate Chamber": "guardroom",
+                  "Gate Watch": "guardroom"},
+    "Ashvale Keep": {"Great Hall": "great_hall", "Lord's Chamber":
+                     "master_bedroom", "Solar": "master_bedroom"},
+    "Garrison Barracks": {"Barracks Floor": "barracks", "Store": "cellar"},
+}
+
+
+def wing_plan():
+    return json.loads(json.dumps(WING_PLAN))
+
+
+class TestAWingFillsItsTarget(unittest.TestCase):
+    """rl-09: the assembler's wing mode. A four-room design asked to fill a
+    target rectangle does — its entrance and one outward door pinned to the
+    ring, both honoured, no piece on a pinned cell, every room reached, and
+    no fallback or note anywhere."""
+
+    def setUp(self):
+        from worldgen import assembler, model
+        self.plan = wing_plan()
+        self.parsed = model.parse_plan(self.plan)
+        self.design = next(d for d in self.parsed.zones[0].buildings
+                           if d.name == "Wing Hall")
+        self.ctx = assembler.activate(self.parsed, self.plan, "s", {})
+        self.addCleanup(assembler.deactivate)
+
+    def furniture_cells(self, bl):
+        cells = set()
+        for room in bl.rooms:
+            for (tname, pos) in room.furniture.placements:
+                tw, th = self.ctx.world_templates[tname].size
+                cells |= {(pos[0] + dx, pos[1] + dy)
+                          for dx in range(tw) for dy in range(th)}
+        return cells
+
+    def rooms_reached(self, bl):
+        """The rooms a walk from the entrance reaches over the door pairs."""
+        rooms = bl.rooms
+        entry = next(r for r in rooms if r.rect.contains_cell(bl.entrance_door))
+        seen, queue = {id(entry)}, [entry]
+        while queue:
+            room = queue.pop()
+            for (a, b) in bl.door_pairs:
+                nxt = None
+                if room.rect.contains_cell(a):
+                    nxt = next((q for q in rooms if q is not room
+                                and q.rect.contains_cell(b)), None)
+                elif room.rect.contains_cell(b):
+                    nxt = next((q for q in rooms if q is not room
+                                and q.rect.contains_cell(a)), None)
+                if nxt is not None and id(nxt) not in seen:
+                    seen.add(id(nxt))
+                    queue.append(nxt)
+        return {r.base_name for r in rooms if id(r) in seen}
+
+    def test_four_rooms_fill_the_target_with_two_pinned_doors(self):
+        from worldgen import assembler
+        bl = assembler.wing_build(self.design, (0, 0), (18, 12),
+                                  entrance=("south", 6), doors=[("east", 5)])
+        self.assertIsNotNone(bl, assembler.fallback_note("Wing Hall"))
+        self.assertTrue(getattr(bl, "assembled", False))
+        # the footprint is the target, and nothing fell back or was noted
+        self.assertEqual((bl.rect.w, bl.rect.h), (18, 12),
+                         (bl.rect, [r.base_name for r in bl.rooms]))
+        self.assertIsNone(assembler.fallback_note("Wing Hall"))
+        self.assertEqual(assembler.spot_notes("Wing Hall", "south"), [])
+        # the pinned entrance: south offset 6 of an 18-wide target
+        self.assertEqual(bl.entrance_door, (7, 11))
+        # the pinned east door at offset 5, opened by exactly one room
+        pin = (17, 6)
+        owners = [r for r in bl.rooms if pin in r.doors]
+        self.assertEqual(len(owners), 1, [(r.base_name, sorted(r.doors))
+                                          for r in bl.rooms])
+        # every room of the wing is reached from the entrance, the pin's
+        # owner among them
+        reached = self.rooms_reached(bl)
+        self.assertEqual(reached, {r.base_name for r in bl.rooms}, reached)
+        self.assertIn(owners[0].base_name, reached)
+        # no piece stands on a pinned door cell
+        cells = self.furniture_cells(bl)
+        self.assertNotIn(bl.entrance_door, cells)
+        self.assertNotIn(pin, cells)
+
+    def test_an_over_large_target_reports_the_rectangle_it_grew_to(self):
+        from worldgen import assembler
+        fp = assembler.wing_footprint(self.design, (22, 14))
+        self.assertIsNotNone(fp, assembler.fallback_note("Wing Hall"))
+        self.assertEqual(fp, (21, 14))
+        notes = assembler.spot_notes("Wing Hall", "south")
+        self.assertTrue(any("fills 21x14 of the 22x14 target" in note
+                            for (_label, note) in notes), notes)
+
+    def test_a_door_pin_no_room_can_honour_falls_back_with_the_reason(self):
+        from worldgen import assembler
+        # the target's corner cell can never open a door
+        fp = assembler.wing_footprint(self.design, (18, 12),
+                                      doors=[("south", 16)])
+        self.assertIsNone(fp)
+        note = assembler.fallback_note("Wing Hall")
+        self.assertIsNotNone(note)
+        self.assertIn("the pinned south door at offset 16", note[1])
+
+    def test_an_entrance_pin_no_room_can_honour_takes_the_free_pick(self):
+        from worldgen import assembler
+        bl = assembler.wing_build(self.design, (0, 0), (18, 12),
+                                  entrance=("south", 16))
+        self.assertIsNotNone(bl, assembler.fallback_note("Wing Hall"))
+        self.assertNotEqual(bl.entrance_door, (17, 11))
+        notes = assembler.spot_notes("Wing Hall", "south")
+        self.assertTrue(any("could not be opened" in note
+                            for (_label, note) in notes), notes)
+
+
+class TestCompoundPartsAssemble(unittest.TestCase):
+    """rl-09: a compound's parts are buildings like any other — the
+    assembler no longer refuses them by name. The ashvale fixture's parts,
+    given library uses, qualify: the barracks assembles through the
+    compound's own layout path with every door the compound opens between
+    parts clear of furniture and the checks clean, and the parts whose
+    storeys the partition cannot fit say why."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(FIXTURES, "ashvale-compound.plan.json"),
+                  encoding="utf-8") as f:
+            cls.base = json.load(f)
+
+    def plan_with_uses(self):
+        data = json.loads(json.dumps(self.base))
+        for b in data["buildings"]:
+            uses = ASHVALE_USES.get(b["name"])
+            if not uses:
+                continue
+            for r in b["rooms"]:
+                r["use"] = uses[r["name"]]
+            for s in b.get("upper") or []:
+                for r in s["rooms"]:
+                    r["use"] = uses[r["name"]]
+        return data
+
+    def test_the_qualifying_parts_assemble_with_the_compound_doors_clear(self):
+        world = worldgen.run(self.plan_with_uses(), seed=1,
+                             room_assembler=True)
+        m = world.metrics
+        self.assertEqual(m["region_overlaps"], [])
+        self.assertEqual(m["object_overlaps"], [])
+        self.assertEqual(m["reachability"], 1.0)
+        self.assertTrue(m["doors_clear"])
+        self.assertTrue(m["walkways_clear"])
+        made = sorted(b.layout.design.name for b in world.buildings
+                      if b.compound and getattr(b.layout, "assembled", False))
+        self.assertIn("Garrison Barracks", made, world.fallbacks)
+        # every door the compound opened on an assembled part: no piece on
+        # the cell, and it opened in exactly one of the part's rooms
+        for comp in world.compounds:
+            for b in comp.parts:
+                if not getattr(b.layout, "assembled", False):
+                    continue
+                cells = set()
+                for room in b.layout.rooms:
+                    for (tname, pos) in room.furniture.placements:
+                        tw, th = world.templates[tname].size
+                        cells |= {(pos[0] + dx, pos[1] + dy)
+                                  for dx in range(tw) for dy in range(th)}
+                extra = getattr(b.layout, "extra_doors", None) or []
+                self.assertTrue(extra, b.layout.design.name)
+                for door in extra:
+                    self.assertNotIn(door, cells,
+                                     (b.layout.design.name, door))
+                    owners = [r for r in b.layout.rooms if door in r.doors]
+                    self.assertEqual(len(owners), 1,
+                                     (b.layout.design.name, door))
+        # the parts that cannot assemble say why, each in its own words
+        # (the run's fallbacks also carry the old method's own furniture
+        # notes for the parts it took back — only the building labels count)
+        fell = {label[len("building "):] for (label, _reason)
+                in world.fallbacks if label.startswith("building ")}
+        for name in ("Northwest Tower", "Northeast Tower", "Southeast Tower",
+                     "Southwest Tower", "Gatehouse", "Ashvale Keep"):
+            self.assertIn(name, fell, (name, world.fallbacks))
+        by_part = {label[len("building "):]: reason for (label, reason)
+                   in world.fallbacks if label.startswith("building ")}
+        self.assertIn("no room of the storey fits any slot",
+                      by_part["Northwest Tower"])
+        self.assertIn("hole cell(s) left", by_part["Ashvale Keep"])
+
+    def test_the_use_keys_change_nothing_with_the_switch_off(self):
+        with open(os.path.join(DATA, "compound-off-ashvale.json"),
+                  encoding="utf-8") as f:
+            want = json.load(f)["spec"]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "ashvale.plan.json")
+            with open(path, "w", encoding="utf-8", newline="\n") as f:
+                json.dump(self.plan_with_uses(), f)
+            api.relayout(path, seed=1, out_dir=os.path.join(tmp, "off"),
+                         room_assembler=False)
+            with open(os.path.join(tmp, "off", "spec.py"),
+                      encoding="utf-8", newline="") as f:
+                self.assertEqual(f.read(), want)
