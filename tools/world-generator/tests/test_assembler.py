@@ -220,3 +220,33 @@ class TestFallbacksAndSeeds(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestAnEndOnBathFindsAnObject(unittest.TestCase):
+    """The shipped washrooms set their bath end-on to the wall (a 2x1 piece
+    backing west), while every bath object backs on its long side: no object
+    faces that way, so one that covers the piece's cells must do, or every
+    such washroom falls back."""
+
+    def test_a_bath_backing_on_its_short_side_picks_an_object(self):
+        import random
+        from worldgen import assembler, model
+        for era, band in (("modern", "modern"), ("scifi", "scifi")):
+            plan_data = {"name": "c", "setting": {"era": era, "technology": "iron",
+                                                  "density": "normal", "climate": "mild"},
+                         "zones": [{"name": "Z", "kind": "village", "sizeClass": "medium",
+                                    "adjacentTo": [], "outdoor": [], "buildings": [],
+                                    "dressing": {"paths": "dirt", "props": [], "filler": []}}],
+                         "roads": [], "templates": [], "buildings": [], "npcs": [],
+                         "player": {"name": "x"}}
+            ctx = assembler.activate(model.parse_plan(plan_data), plan_data, "c", {})
+            try:
+                self.assertEqual(ctx.band, band)
+                piece = {"role": "wash.bath", "size": [2, 1], "at": [0, 0], "back": "west"}
+                obj, _rot, _tier, why = assembler._pick_for(
+                    ctx, "washroom", piece, "modest", random.Random(0))
+                with self.subTest(band=band):
+                    self.assertIsNotNone(obj, why)
+                    self.assertEqual(obj["category"], "bath")
+            finally:
+                assembler.deactivate()

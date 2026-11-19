@@ -1168,23 +1168,36 @@ def _pick_for(ctx, purpose, piece, tier, rng):
     tiers = lib.tiers
     order = [tier] + sorted((t for t in tiers if t != tier),
                             key=lambda t: abs(tiers.index(t) - tiers.index(tier)))
-    for t in order:
-        for cat in cats:
-            objs = [o for o in sorted(lib.objects.values(), key=lambda o: o["id"])
-                    if binding_matches(cat, o)
-                    and (o["bands"] == ["*"] or ctx.band in o["bands"])
-                    and t in o["wealth"]
-                    and library_rooms.sleeps_right(role, o)
-                    and (not o.get("onlyGenres") or (ctx.genre or "") in o["onlyGenres"])
-                    and exact(o)]
-            if objs:
-                facing = [o for o in objs if o.get("back")]
-                group = facing or objs
-                reuse = [o for o in group if o["id"] in ctx.registry.used_ids()]
-                pool = reuse if reuse and rng.random() < library_rooms.REUSE_SHARE \
-                    else group
-                obj = rng.choice(pool)
-                return obj, rot_for(obj), t, None
+    def covers(obj):
+        # the piece's cells whatever way the object faces: a bath set end-on
+        # to the wall when every bath object backs on its long side
+        return tuple(obj["size"]) == tuple(size) \
+            or tuple(turned(obj["size"], 1)) == tuple(size)
+
+    def covers_rot(obj):
+        return 0 if tuple(obj["size"]) == tuple(size) else 1
+
+    # an object facing the piece's way first, at every tier; only then one
+    # that just covers its cells
+    for fits, rot in ((exact, rot_for), (covers, covers_rot)):
+        for t in order:
+            for cat in cats:
+                objs = [o for o in sorted(lib.objects.values(), key=lambda o: o["id"])
+                        if binding_matches(cat, o)
+                        and (o["bands"] == ["*"] or ctx.band in o["bands"])
+                        and t in o["wealth"]
+                        and library_rooms.sleeps_right(role, o)
+                        and (not o.get("onlyGenres")
+                             or (ctx.genre or "") in o["onlyGenres"])
+                        and fits(o)]
+                if objs:
+                    facing = [o for o in objs if o.get("back")]
+                    group = facing or objs
+                    reuse = [o for o in group if o["id"] in ctx.registry.used_ids()]
+                    pool = reuse if reuse and rng.random() < library_rooms.REUSE_SHARE \
+                        else group
+                    obj = rng.choice(pool)
+                    return obj, rot(obj), t, None
     return None, 0, tier, f"no {role} object of size {size} for {ctx.band} {tier}"
 
 
