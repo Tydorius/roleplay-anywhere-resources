@@ -268,6 +268,19 @@ class TestRegenerateOne(LibraryTestCase):
 
     def test_a_hand_room_regenerates_inside_its_band(self):
         self.copy_library()
+        # the servants' recipe has only three narrow layouts and the library
+        # ships two of them (bc866ac added the 7x2), so every candidate would
+        # duplicate a stored room and be dropped: free one in this copy
+        p = self.dir / "rooms" / "bedroom.json"
+        data = json.loads(p.read_text(encoding="utf-8"))
+        rooms = data["rooms"] if isinstance(data, dict) else data
+        keep = [r for r in rooms if r["id"] != "bedroom.narrow.b.tight.flush"]
+        self.assertEqual(len(keep), len(rooms) - 1, "the 7x2 sibling is shipped")
+        if isinstance(data, dict):
+            data["rooms"] = keep
+        else:
+            data = keep
+        p.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
         # a hand recipe of a family with its own band table composes with
         # the band pinned (the generator's own rule), so its candidates
         # stay in the room's band — the 5x2 servants' room would break the
