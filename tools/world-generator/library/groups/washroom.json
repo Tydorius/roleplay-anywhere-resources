@@ -58,41 +58,6 @@
       ]
     },
     {
-      "id": "wash.bath.wash.bath.opt",
-      "family": "washroom",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "back": "north"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "back": "north",
-          "optional": true
-        }
-      ]
-    },
-    {
       "id": "storage.small.single.washroom",
       "family": "washroom",
       "wall": "corner",
@@ -338,52 +303,6 @@
             0
           ],
           "optional": true
-        }
-      ]
-    },
-    {
-      "id": "wash.bath.decor.floor.seat.opt",
-      "family": "washroom",
-      "wall": "back",
-      "use": [
-        "south"
-      ],
-      "pieces": [
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            0
-          ]
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "minWealth": "wealthy"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "optional": true,
-          "back": "north"
         }
       ]
     },
@@ -739,6 +658,77 @@
           "optional": true
         }
       ]
+    },
+    {
+      "id": "wash.bath.wash.bath.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "wash.bath.decor.floor.seat.opt",
+      "family": "washroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [

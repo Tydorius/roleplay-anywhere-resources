@@ -264,7 +264,7 @@
     "cook": "front",
     "bake": "front",
     "wash.basin": "front",
-    "wash.bath": "front",
+    "wash.bath": "one-long",
     "wash.toilet": "front",
     "laundry.wash": "front",
     "laundry.dry": "front",

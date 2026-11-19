@@ -1,976 +1,17 @@
 {
   "rooms": [
     {
-      "id": "washroom.large.a.grand.flush",
+      "id": "washroom.large.a.grand.open",
       "family": "washroom",
       "sizeBand": "large",
       "clearance": "grand",
-      "style": "flush",
+      "style": "open",
       "wealth": [
         "wealthy",
         "elite"
       ],
       "size": [
         11,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "display",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "lux.display.single",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            3
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            10,
-            3
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            7
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            7
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            10,
-            7
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          2,
-          3,
-          5,
-          6,
-          9,
-          10
-        ],
-        "south": [
-          2,
-          3,
-          6,
-          7,
-          8,
-          9
-        ],
-        "west": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "y": [
-          1,
-          2,
-          3,
-          5,
-          6
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A spacious washroom, privy in the northwest corner, a washbasin against the west wall, a bathtub in the southwest corner, and a chest against the north wall."
-    },
-    {
-      "id": "washroom.large.a.roomy.flush",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        8,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            7,
-            5
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            6
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          2,
-          3,
-          5,
-          6
-        ],
-        "south": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "west": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          4,
-          7
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "y": []
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A spacious washroom, privy in the northwest corner, a washbasin against the west wall, a bathtub in the southwest corner, and a chest against the north wall."
-    },
-    {
-      "id": "washroom.large.a.roomy.open",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "roomy",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            8,
-            2
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            3
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            2,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            6
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            6
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          3,
-          4,
-          6,
-          7,
-          8
-        ],
-        "south": [
-          0,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          4,
-          5,
-          6,
-          7
-        ],
-        "east": [
-          0,
-          1,
-          4,
-          5,
-          7
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "y": [
-          6
-        ]
-      },
-      "filler": {
-        "at": [
-          3,
-          2
-        ],
-        "size": [
-          2,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A spacious washroom, privy against the north wall, a washbasin against the west wall, a bathtub opposite, a waste bucket against the north wall, and open floor in the middle."
-    },
-    {
-      "id": "washroom.large.d.grand.open",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        13,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            8,
-            0
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            0
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            3
-          ],
-          "group": "lux.storage.small.single",
-          "optional": false
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            3
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            12,
-            4
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            2,
-            6
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            6
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            7
-          ],
-          "group": "lux.decor.floor.single",
-          "optional": false
-        },
-        {
-          "role": "display",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            11,
-            7
-          ],
-          "group": "lux.display.single",
-          "optional": false,
-          "back": "south"
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          3,
-          4,
-          6,
-          7,
-          10,
-          11
-        ],
-        "south": [
-          0,
-          3,
-          4,
-          5,
-          6,
-          7,
-          9,
-          10
-        ],
-        "west": [
-          0,
-          1,
-          2,
-          4,
-          5,
-          6,
-          7
-        ],
-        "east": [
-          1,
-          2,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "y": [
-          1,
-          2,
-          6
-        ]
-      },
-      "filler": {
-        "at": [
-          5,
-          2
-        ],
-        "size": [
-          2,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A spacious washroom, privy against the north wall, a washbasin against the west wall, a bathtub opposite, a lamp against the north wall, and open floor in the middle."
-    },
-    {
-      "id": "washroom.large.d.roomy.flush",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        7,
         9
       ],
       "sleeps": {
@@ -979,27 +20,13 @@
       },
       "pieces": [
         {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "seat.long.single.washroom1",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "wash.toilet",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            1,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -1007,288 +34,72 @@
           "back": "north"
         },
         {
-          "role": "wash.bath",
+          "role": "decor.floor",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
-            6,
+            4,
             0
           ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "coat.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            4
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            7
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            7
-          ],
-          "group": "heat.fuel.opt.washroom",
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": false
         },
         {
-          "role": "fuel",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            8
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "south": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5
-        ],
-        "west": [
-          2,
-          3,
-          4,
-          5,
-          8
-        ],
-        "east": [
-          2,
-          3,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "y": [
-          8,
-          9
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.b",
-      "description": "A spacious washroom, privy against the north wall, a bathtub in the northeast corner, a washbasin against the east wall, and a bench in the northwest corner."
-    },
-    {
-      "id": "washroom.large.d.roomy.open",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "roomy",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        11,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "seat.long.single.washroom1",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
           "role": "wash.bath",
           "size": [
             1,
             2
-          ],
-          "at": [
-            9,
-            0
-          ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": false
-        },
-        {
-          "role": "fuel",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            4
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": true
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            9,
-            4
-          ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            7
-          ],
-          "group": "coat.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
           ],
           "at": [
             5,
-            7
+            0
           ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            0
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            0
+          ],
+          "group": "lux.table.small.seat",
+          "optional": false,
+          "back": "north"
         },
         {
           "role": "wash.basin",
@@ -1297,62 +108,154 @@
             1
           ],
           "at": [
-            8,
-            7
+            0,
+            3
           ],
           "group": "wash.basin.single.washroom",
           "optional": false,
-          "back": "south"
+          "back": "west"
+        },
+        {
+          "role": "display",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            10,
+            3
+          ],
+          "group": "lux.display.single",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "storage.small.single.washroom2",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "lux.storage.small.single",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            7
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            10,
+            7
+          ],
+          "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "east"
         }
       ],
       "doors": {
         "north": [
           0,
-          1,
-          4,
-          5,
+          2,
+          3,
           7,
-          8,
-          10
+          8
         ],
         "south": [
           0,
           1,
+          2,
           3,
           4,
+          5,
           6,
           7,
-          9,
-          10
+          8,
+          9
         ],
         "west": [
           0,
           1,
           2,
+          4,
           5,
           6,
-          7
+          7,
+          8
         ],
         "east": [
-          0,
           1,
           2,
-          3,
           5,
-          6,
-          7
+          6
         ]
       },
       "stretch": {
         "x": [
           6,
           7,
-          8
+          8,
+          9,
+          10
         ],
         "y": [
-          2,
-          6,
-          7
+          2
         ]
       },
       "filler": {
@@ -1367,22 +270,22 @@
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.medium.b",
-      "description": "A spacious washroom, privy against the north wall, a bathtub against the north wall, a bathtub against the east wall, a washbasin opposite, and open floor in the middle."
+      "recipe": "washroom.medium.c",
+      "description": "A spacious washroom, privy against the north wall, a bathtub against the north wall, a washbasin against the west wall, a chair in the northeast corner, and open floor in the middle."
     },
     {
-      "id": "washroom.large.e.grand.flush",
+      "id": "washroom.large.a.tight.open",
       "family": "washroom",
       "sizeBand": "large",
-      "clearance": "grand",
-      "style": "flush",
+      "clearance": "tight",
+      "style": "open",
       "wealth": [
         "wealthy",
         "elite"
       ],
       "size": [
         7,
-        13
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -1390,18 +293,17 @@
       },
       "pieces": [
         {
-          "role": "seat.long",
+          "role": "storage.small",
           "size": [
             1,
-            2
+            1
           ],
           "at": [
-            0,
+            2,
             0
           ],
-          "group": "seat.long.single.washroom1",
-          "optional": false,
-          "back": "west"
+          "group": "storage.small.single.washroom1",
+          "optional": true
         },
         {
           "role": "wash.toilet",
@@ -1410,7 +312,7 @@
             1
           ],
           "at": [
-            3,
+            4,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -1432,42 +334,43 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
+          "role": "seat.long",
           "size": [
             1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
+            2
           ],
           "at": [
             0,
-            4
+            1
           ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": false
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "west"
         },
         {
-          "role": "wash.basin",
+          "role": "coat",
           "size": [
             1,
             1
           ],
           "at": [
-            6,
-            4
+            2,
+            2
           ],
-          "group": "wash.basin.single.washroom",
+          "group": "coat.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "wash.bath.single",
           "optional": false,
           "back": "east"
         },
@@ -1479,24 +382,119 @@
           ],
           "at": [
             0,
-            5
+            4
           ],
           "group": "heat.fuel.opt.washroom",
           "optional": true
         },
         {
-          "role": "storage.small",
+          "role": "heat",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
-            6
+            0,
+            5
           ],
-          "group": "lux.storage.small.single",
+          "group": "heat.fuel.opt.washroom",
           "optional": false
         },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            6
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "south": [
+          0,
+          1,
+          4,
+          6
+        ],
+        "west": [
+          0,
+          3,
+          6
+        ],
+        "east": [
+          2,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          4,
+          5
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          3,
+          2
+        ],
+        "size": [
+          2,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.b",
+      "description": "A spacious washroom, privy against the north wall, a bathtub in the northeast corner, a bathtub against the east wall, a washbasin opposite, and open floor in the middle."
+    },
+    {
+      "id": "washroom.large.b.grand.flush",
+      "family": "washroom",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
         {
           "role": "seat",
           "size": [
@@ -1504,156 +502,13 @@
             1
           ],
           "at": [
-            6,
-            7
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
             0,
-            8
+            0
           ],
-          "group": "coat.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            8
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            9
-          ],
-          "group": "lux.decor.floor.single",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            11
-          ],
-          "group": "seat.long.single.washroom",
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": true,
           "back": "west"
         },
-        {
-          "role": "display",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            12
-          ],
-          "group": "lux.display.single",
-          "optional": false,
-          "back": "south"
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "south": [
-          1,
-          2,
-          5,
-          6
-        ],
-        "west": [
-          2,
-          3,
-          6,
-          7,
-          9,
-          10
-        ],
-        "east": [
-          2,
-          3,
-          5,
-          6,
-          9,
-          10,
-          11,
-          12
-        ]
-      },
-      "stretch": {
-        "x": [
-          1,
-          2,
-          3
-        ],
-        "y": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.b",
-      "description": "A spacious washroom, privy against the north wall, a bathtub in the northeast corner, a washbasin against the east wall, and a bench in the northwest corner."
-    },
-    {
-      "id": "washroom.large.e.grand.open",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        8,
-        15
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
         {
           "role": "wash.toilet",
           "size": [
@@ -1669,20 +524,6 @@
           "back": "north"
         },
         {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
           "role": "wash.basin",
           "size": [
             1,
@@ -1690,7 +531,7 @@
           ],
           "at": [
             7,
-            2
+            0
           ],
           "group": "wash.basin.single.washroom",
           "optional": false,
@@ -1704,9 +545,49 @@
           ],
           "at": [
             0,
-            3
+            1
           ],
           "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "storage.small.single.washroom2",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            3
+          ],
+          "group": "light.small.single.washroom",
           "optional": false
         },
         {
@@ -1717,89 +598,10 @@
           ],
           "at": [
             0,
-            4
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
             5
-          ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            5
-          ],
-          "group": "lux.decor.floor.single",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            8
           ],
           "group": "decor.floor.single.washroom",
           "optional": true
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            8
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "display",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            7,
-            8
-          ],
-          "group": "lux.display.single",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            11
-          ],
-          "group": "lux.storage.small.single",
-          "optional": false
         },
         {
           "role": "heat",
@@ -1809,7 +611,7 @@
           ],
           "at": [
             4,
-            11
+            6
           ],
           "group": "heat.single.washroom",
           "optional": false
@@ -1822,11 +624,25 @@
           ],
           "at": [
             0,
-            14
+            8
           ],
           "group": "lux.table.small.seat",
           "optional": false,
-          "back": "south"
+          "back": "west"
+        },
+        {
+          "role": "display",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            8
+          ],
+          "group": "lux.display.single",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "seat",
@@ -1835,8 +651,8 @@
             1
           ],
           "at": [
-            1,
-            14
+            0,
+            9
           ],
           "group": "lux.table.small.seat",
           "optional": false
@@ -1848,10 +664,370 @@
             1
           ],
           "at": [
-            4,
-            14
+            3,
+            9
           ],
           "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "south": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "west": [
+          3,
+          4,
+          6,
+          7
+        ],
+        "east": [
+          1,
+          2,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          5,
+          6,
+          7
+        ],
+        "y": [
+          1,
+          2,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.c",
+      "description": "A spacious washroom, bathtub in the northwest corner, a privy against the north wall, a washbasin in the northeast corner, and a chest in the middle of the room."
+    },
+    {
+      "id": "washroom.large.b.roomy.flush",
+      "family": "washroom",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "wash.bath.wash.bath.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "coat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "south"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            9
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          2,
+          3
+        ],
+        "south": [
+          2,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          7,
+          8
+        ],
+        "east": [
+          1,
+          2,
+          4,
+          5,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.a",
+      "description": "A spacious, narrow washroom, privy against the north wall, a washbasin in the northeast corner, a bathtub against the west wall, and a coat rack against the east wall."
+    },
+    {
+      "id": "washroom.large.b.roomy.open",
+      "family": "washroom",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "wash.bath.wash.bath.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "coat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            10
+          ],
+          "group": "seat.long.single.washroom",
           "optional": true,
           "back": "south"
         }
@@ -1861,70 +1037,66 @@
           0,
           1,
           2,
-          3,
-          5,
-          6,
-          7
+          5
         ],
         "south": [
+          1,
           2,
-          3,
-          6,
-          7
+          5
         ],
         "west": [
           0,
+          2,
+          3,
+          5,
+          6,
+          8,
+          9
+        ],
+        "east": [
+          0,
           1,
+          2,
+          3,
           5,
           6,
           7,
           8,
           9,
-          10,
-          11,
-          12,
-          13
-        ],
-        "east": [
-          0,
-          1,
-          3,
-          4,
-          6,
-          7,
-          10,
-          11,
-          12,
-          13,
-          14
+          10
         ]
       },
       "stretch": {
         "x": [
-          2
+          1,
+          2,
+          3
         ],
         "y": [
-          6,
-          7
+          1,
+          2,
+          3,
+          4,
+          5
         ]
       },
       "filler": {
         "at": [
           2,
-          6
+          4
         ],
         "size": [
-          4,
+          2,
           2
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A spacious washroom, privy against the north wall, a bathtub against the west wall, a washbasin against the east wall, a chest in the open middle, and open floor in the middle."
+      "recipe": "washroom.medium.a",
+      "description": "A spacious washroom, privy against the north wall, a washbasin against the west wall, a bathtub against the east wall, a chest against the west wall, and open floor in the middle."
     },
     {
-      "id": "washroom.large.e.roomy.flush",
+      "id": "washroom.large.c.roomy.flush",
       "family": "washroom",
       "sizeBand": "large",
       "clearance": "roomy",
@@ -1944,27 +1116,13 @@
       },
       "pieces": [
         {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
           "role": "wash.toilet",
           "size": [
             1,
             1
           ],
           "at": [
-            4,
+            0,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -1972,56 +1130,57 @@
           "back": "north"
         },
         {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "decor.floor.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
+          "role": "wash.bath",
           "size": [
             1,
             2
           ],
           "at": [
-            10,
+            3,
             0
           ],
-          "group": "storage.big.single.washroom",
-          "optional": true,
-          "back": "east"
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "north"
         },
         {
-          "role": "wash.bath",
+          "role": "seat.long",
           "size": [
             2,
             1
           ],
           "at": [
-            0,
-            1
+            6,
+            0
           ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "north"
         },
         {
-          "role": "decor.floor",
+          "role": "fuel",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
-            2
+            10,
+            0
           ],
-          "group": "wash.bath.decor.floor.seat.opt",
+          "group": "heat.fuel.opt.washroom",
+          "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            1
+          ],
+          "group": "heat.fuel.opt.washroom",
           "optional": false
         },
         {
@@ -2032,11 +1191,38 @@
           ],
           "at": [
             0,
-            5
+            3
           ],
           "group": "wash.basin.single.washroom",
           "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
           "back": "south"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "coat.single.washroom1",
+          "optional": true
         },
         {
           "role": "storage.small",
@@ -2045,73 +1231,26 @@
             1
           ],
           "at": [
-            3,
-            5
+            10,
+            4
           ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            9,
-            5
-          ],
-          "group": "heat.single.washroom",
-          "optional": false
+          "group": "storage.small.single.washroom1",
+          "optional": true
         }
       ],
       "doors": {
         "north": [
           1,
           2,
-          3,
+          4,
           5,
-          6,
           8,
           9
         ],
         "south": [
+          0,
           1,
           2,
-          4,
-          5,
-          7,
-          8,
-          10
-        ],
-        "west": [
-          3,
-          4
-        ],
-        "east": [
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
           4,
           5,
           6,
@@ -2120,15 +1259,43 @@
           9,
           10
         ],
-        "y": []
+        "west": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "east": [
+          2,
+          3,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8,
+          9,
+          10,
+          11
+        ],
+        "y": [
+          2,
+          3
+        ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A spacious washroom, bathtub in the northwest corner, a privy against the north wall, a washbasin in the southwest corner, and a floor rug against the north wall."
+      "recipe": "washroom.medium.b",
+      "description": "A spacious washroom, privy in the northwest corner, a bathtub against the north wall, a washbasin against the west wall, and a bathtub opposite."
     },
     {
-      "id": "washroom.large.e.roomy.open",
+      "id": "washroom.large.c.roomy.open",
       "family": "washroom",
       "sizeBand": "large",
       "clearance": "roomy",
@@ -2138,8 +1305,8 @@
         "elite"
       ],
       "size": [
-        9,
-        9
+        11,
+        7
       ],
       "sleeps": {
         "singles": 0,
@@ -2147,13 +1314,26 @@
       },
       "pieces": [
         {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "storage.small.single.washroom1",
+          "optional": true
+        },
+        {
           "role": "wash.toilet",
           "size": [
             1,
             1
           ],
           "at": [
-            5,
+            8,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -2161,18 +1341,85 @@
           "back": "north"
         },
         {
-          "role": "seat",
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "fuel",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
+            3,
+            3
+          ],
+          "group": "heat.fuel.opt.washroom",
+          "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
             1
           ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "west"
+          "at": [
+            4,
+            3
+          ],
+          "group": "heat.fuel.opt.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "coat.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "seat.long.single.washroom1",
+          "optional": false,
+          "back": "south"
         },
         {
           "role": "wash.basin",
@@ -2182,103 +1429,11 @@
           ],
           "at": [
             8,
-            1
+            6
           ],
           "group": "wash.basin.single.washroom",
           "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            4
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            6
-          ],
-          "group": "heat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            7
-          ],
-          "group": "decor.floor.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            8,
-            7
-          ],
-          "group": "storage.big.single.washroom",
-          "optional": true,
-          "back": "east"
+          "back": "south"
         }
       ],
       "doors": {
@@ -2286,52 +1441,50 @@
           0,
           1,
           2,
-          3,
           4,
+          5,
           6,
           7,
-          8
+          9,
+          10
         ],
         "south": [
           0,
-          1,
           2,
           3,
-          4,
-          5,
           6,
-          7
+          7,
+          9,
+          10
         ],
         "west": [
           0,
+          1,
           4,
           5,
-          6,
-          7,
-          8
+          6
         ],
         "east": [
           0,
+          1,
           2,
-          3,
+          4,
           5,
           6
         ]
       },
       "stretch": {
         "x": [
-          3,
-          4
+          6,
+          7,
+          8
         ],
-        "y": [
-          1,
-          2
-        ]
+        "y": []
       },
       "filler": {
         "at": [
-          3,
-          2
+          5,
+          1
         ],
         "size": [
           2,
@@ -2340,273 +1493,8 @@
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A spacious washroom, privy against the north wall, a bathtub against the west wall, a washbasin against the east wall, a chest in the open middle, and open floor in the middle."
-    },
-    {
-      "id": "washroom.large.f.grand.flush",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "flush",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        8,
-        11
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "lux.storage.small.single",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            3
-          ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            6
-          ],
-          "group": "decor.floor.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            6
-          ],
-          "group": "heat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            6
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "display",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            9
-          ],
-          "group": "lux.display.single",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            7,
-            9
-          ],
-          "group": "storage.big.single.washroom",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "table.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            10
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            10
-          ],
-          "group": "lux.table.small.seat",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          3,
-          5,
-          6
-        ],
-        "south": [
-          1,
-          2,
-          5,
-          6
-        ],
-        "west": [
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "east": [
-          1,
-          2,
-          4,
-          5,
-          7,
-          8
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "y": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A spacious washroom, bathtub in the northwest corner, a privy against the north wall, a washbasin in the northeast corner, and a chest in the middle of the room."
+      "recipe": "washroom.medium.b",
+      "description": "A spacious washroom, privy against the north wall, a bathtub against the east wall, a washbasin opposite, a chest against the north wall, and open floor in the middle."
     },
     {
       "id": "washroom.large.f.grand.open",
@@ -2818,18 +1706,19 @@
       "description": "A spacious washroom, privy against the north wall, a washbasin against the east wall, a bathtub opposite, an armchair against the west wall, and open floor in the middle."
     },
     {
-      "id": "washroom.large.f.roomy.open",
+      "id": "washroom.large.f.roomy.flush",
       "family": "washroom",
       "sizeBand": "large",
       "clearance": "roomy",
-      "style": "open",
+      "style": "flush",
       "wealth": [
-        "wealthy",
-        "elite"
+        "poor",
+        "modest",
+        "wealthy"
       ],
       "size": [
-        7,
-        7
+        8,
+        8
       ],
       "sleeps": {
         "singles": 0,
@@ -2837,206 +1726,20 @@
       },
       "pieces": [
         {
-          "role": "wash.toilet",
+          "role": "seat",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "wash.basin.wash.basin.opt.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            1
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.basin.wash.basin.opt.washroom",
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": true,
           "back": "west"
         },
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            5
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            3,
-            5
-          ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            5
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          2,
-          4,
-          5,
-          6
-        ],
-        "south": [
-          0,
-          1,
-          2,
-          4,
-          5,
-          6
-        ],
-        "west": [
-          0,
-          3,
-          4,
-          6
-        ],
-        "east": [
-          0,
-          2,
-          3,
-          4,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          1
-        ],
-        "y": [
-          1,
-          2,
-          3
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          4,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.c",
-      "description": "A spacious washroom, privy against the north wall, a washbasin against the west wall, a privy against the east wall, a bathtub opposite, and open floor in the middle."
-    },
-    {
-      "id": "washroom.large.g.grand.flush",
-      "family": "washroom",
-      "sizeBand": "large",
-      "clearance": "grand",
-      "style": "flush",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        5,
-        10
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "lux.seat.lounge.single",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "wash.toilet.wash.basin.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
           "role": "wash.toilet",
           "size": [
             1,
@@ -3046,35 +1749,23 @@
             4,
             0
           ],
-          "group": "wash.toilet.wash.basin.washroom",
+          "group": "wash.toilet.single.washroom",
           "optional": false,
           "back": "north"
         },
         {
-          "role": "storage.small",
+          "role": "wash.basin",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
-            3
+            7,
+            0
           ],
-          "group": "storage.small.single.washroom3",
-          "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": true
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
         },
         {
           "role": "wash.bath",
@@ -3083,25 +1774,25 @@
             1
           ],
           "at": [
-            3,
-            4
+            0,
+            1
           ],
-          "group": "wash.bath.decor.floor.opt",
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": false,
-          "back": "east"
+          "back": "west"
         },
         {
-          "role": "waste",
+          "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
             0,
-            6
+            2
           ],
-          "group": "waste.single.washroom",
-          "optional": true
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false
         },
         {
           "role": "storage.small",
@@ -3110,10 +1801,10 @@
             1
           ],
           "at": [
-            3,
-            7
+            4,
+            3
           ],
-          "group": "lux.storage.small.single",
+          "group": "storage.small.single.washroom2",
           "optional": false
         },
         {
@@ -3123,37 +1814,295 @@
             1
           ],
           "at": [
-            0,
-            9
+            7,
+            3
           ],
-          "group": "light.small.single.washroom1",
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "decor.floor.single.washroom",
           "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "east"
         }
       ],
       "doors": {
         "north": [
           1,
-          2
+          2,
+          3,
+          5,
+          6
         ],
         "south": [
+          0,
           1,
           2,
           3,
-          4
-        ],
-        "west": [
-          1,
-          2,
           4,
           5,
-          7,
-          8
+          6
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6,
+          7
         ],
         "east": [
           1,
           2,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4,
           5,
           6,
+          7
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.c",
+      "description": "A spacious washroom, bathtub in the northwest corner, a privy against the north wall, a washbasin in the northeast corner, and a chest in the middle of the room."
+    },
+    {
+      "id": "washroom.large.g.roomy.open",
+      "family": "washroom",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "storage.small.single.washroom2",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            9
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            9
+          ],
+          "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          2,
+          3,
+          6,
+          7
+        ],
+        "west": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          0,
+          2,
+          3,
+          4,
+          5,
           7,
           8,
           9
@@ -3161,19 +2110,204 @@
       },
       "stretch": {
         "x": [
-          1,
+          2
+        ],
+        "y": [
+          1
+        ]
+      },
+      "filler": {
+        "at": [
           2,
           3
         ],
-        "y": []
+        "size": [
+          4,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.c",
+      "description": "A spacious washroom, privy against the north wall, a bathtub against the west wall, a washbasin against the east wall, a chest in the open middle, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.a.grand.flush",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "lux.seat.lounge.single",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": true
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "storage.small.single.washroom3",
+          "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "light.small.single.washroom1",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          3
+        ],
+        "south": [
+          0,
+          2,
+          3
+        ],
+        "west": [
+          1,
+          2,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.small.a",
-      "description": "A spacious, narrow washroom, washbasin in the northeast corner, a bathtub against the east wall, an armchair in the northwest corner, and a chest against the west wall."
+      "description": "A mid-sized washroom, washbasin in the northwest corner, a bathtub against the west wall, an armchair in the northeast corner, and a chest against the east wall."
     },
     {
-      "id": "washroom.medium.a.roomy.flush",
+      "id": "washroom.medium.b.roomy.flush",
       "family": "washroom",
       "sizeBand": "medium",
       "clearance": "roomy",
@@ -3193,26 +2327,13 @@
       },
       "pieces": [
         {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        },
-        {
           "role": "wash.basin",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
           "group": "wash.toilet.wash.basin.washroom",
@@ -3226,7 +2347,7 @@
             1
           ],
           "at": [
-            4,
+            1,
             0
           ],
           "group": "wash.toilet.wash.basin.washroom",
@@ -3240,23 +2361,10 @@
             1
           ],
           "at": [
-            0,
-            3
+            4,
+            0
           ],
           "group": "storage.small.single.washroom3",
-          "optional": true
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "wash.bath.decor.floor.opt",
           "optional": true
         },
         {
@@ -3266,12 +2374,38 @@
             1
           ],
           "at": [
-            3,
-            4
+            0,
+            3
           ],
           "group": "wash.bath.decor.floor.opt",
           "optional": false,
-          "back": "east"
+          "back": "west"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": true
         },
         {
           "role": "light.small",
@@ -3280,7 +2414,7 @@
             1
           ],
           "at": [
-            0,
+            4,
             6
           ],
           "group": "light.small.single.washroom1",
@@ -3289,34 +2423,34 @@
       ],
       "doors": {
         "north": [
-          1,
-          2
+          2,
+          3
         ],
         "south": [
-          1,
-          2,
-          3,
-          4
-        ],
-        "west": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "east": [
-          1,
-          2,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
           0,
           1,
           2,
           3
+        ],
+        "west": [
+          1,
+          2,
+          5,
+          6
+        ],
+        "east": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4,
+          5
         ],
         "y": [
           1,
@@ -3328,10 +2462,10 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.small.a",
-      "description": "A mid-sized washroom, washbasin in the northeast corner, a bathtub against the east wall, a waste bucket in the northwest corner, and a chest against the west wall."
+      "description": "A mid-sized washroom, washbasin in the northwest corner, a bathtub against the west wall, a chest in the northeast corner, and a waste bucket against the east wall."
     },
     {
-      "id": "washroom.medium.a.roomy.open",
+      "id": "washroom.medium.b.roomy.open",
       "family": "washroom",
       "sizeBand": "medium",
       "clearance": "roomy",
@@ -3378,19 +2512,6 @@
           "back": "north"
         },
         {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "storage.small.single.washroom3",
-          "optional": true
-        },
-        {
           "role": "decor.floor",
           "size": [
             1,
@@ -3401,6 +2522,19 @@
             4
           ],
           "group": "wash.bath.decor.floor.opt",
+          "optional": true
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.small.single.washroom3",
           "optional": true
         },
         {
@@ -3460,7 +2594,7 @@
           1,
           2,
           3,
-          5,
+          4,
           6,
           7
         ],
@@ -3475,24 +2609,20 @@
         ]
       },
       "stretch": {
-        "x": [
-          3
-        ],
+        "x": [],
         "y": [
           1,
-          2,
-          3,
-          4
+          2
         ]
       },
       "filler": {
         "at": [
           1,
-          3
+          2
         ],
         "size": [
-          3,
-          2
+          2,
+          4
         ]
       },
       "outdoor": false,
@@ -3501,7 +2631,7 @@
       "description": "A mid-sized washroom, washbasin against the north wall, a bathtub against the east wall, a chest against the west wall, a lamp in the southwest corner, and open floor in the middle."
     },
     {
-      "id": "washroom.medium.a.tight.flush",
+      "id": "washroom.medium.b.tight.flush",
       "family": "washroom",
       "sizeBand": "medium",
       "clearance": "tight",
@@ -3511,14 +2641,779 @@
         "modest"
       ],
       "size": [
-        8,
-        4
+        6,
+        5
       ],
       "sleeps": {
         "singles": 0,
         "couples": 0
       },
       "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.bath.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "coat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "south"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            4
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          4
+        ],
+        "south": [
+          1,
+          4
+        ],
+        "west": [
+          1,
+          3
+        ],
+        "east": [
+          1,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          4,
+          5,
+          6
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.a",
+      "description": "A mid-sized washroom, privy in the northwest corner, a bathtub against the north wall, a washbasin against the west wall, and a chest in the northeast corner."
+    },
+    {
+      "id": "washroom.medium.b.tight.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": true,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.toilet.wash.toilet.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.bath.wash.bath.opt",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "storage.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "waste.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "coat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "south"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3
+        ],
+        "south": [
+          0,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          2,
+          4,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.a",
+      "description": "A mid-sized washroom, privy against the north wall, a bathtub in the northeast corner, a washbasin against the west wall, a chest against the east wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.c.grand.flush",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "light.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "lux.seat.lounge.single",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          7
+        ],
+        "west": [
+          2,
+          3
+        ],
+        "east": [
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.b",
+      "description": "A mid-sized washroom, washbasin in the northwest corner, a privy against the north wall, a bathtub in the northeast corner, and a waste bucket in the middle of the room."
+    },
+    {
+      "id": "washroom.medium.c.roomy.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        9,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "light.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            3
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8
+        ],
+        "south": [
+          0,
+          1,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          5,
+          6
+        ],
+        "y": [
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          4,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.b",
+      "description": "A mid-sized washroom, privy against the north wall, a bathtub in the southeast corner, a washbasin opposite, a lamp against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.c.tight.flush",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            2
+          ],
+          "group": "seat.long.single.washroom",
+          "optional": true,
+          "back": "east"
+        },
         {
           "role": "seat.long",
           "size": [
@@ -3527,12 +3422,113 @@
           ],
           "at": [
             0,
-            0
+            4
           ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
+          "group": "seat.long.single.washroom1",
+          "optional": false,
           "back": "west"
         },
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "coat.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "heat.fuel.opt.washroom",
+          "optional": true
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "heat.fuel.opt.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "storage.small.single.washroom1",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          2
+        ],
+        "south": [
+          2
+        ],
+        "west": [
+          0,
+          1,
+          3,
+          6
+        ],
+        "east": [
+          1,
+          4,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.b",
+      "description": "A mid-sized, narrow washroom, privy against the north wall, a washbasin in the northeast corner, a bathtub against the west wall, and a bench against the east wall."
+    },
+    {
+      "id": "washroom.medium.c.tight.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
         {
           "role": "wash.basin",
           "size": [
@@ -3557,390 +3553,38 @@
             6,
             0
           ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            4,
-            2
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            5,
-            2
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            3
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            7,
-            3
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          3,
-          5
-        ],
-        "south": [
-          1,
-          3,
-          6
-        ],
-        "west": [
-          2
-        ],
-        "east": [
-          1,
-          2
-        ]
-      },
-      "stretch": {
-        "x": [],
-        "y": []
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A mid-sized, narrow washroom, washbasin against the north wall, a privy in the northeast corner, a bathtub opposite, and a bench in the northwest corner."
-    },
-    {
-      "id": "washroom.medium.a.tight.open",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        5,
-        9
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.toilet.opt",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            1
-          ],
-          "group": "wash.bath.wash.bath.opt",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "storage.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "waste.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            5
-          ],
-          "group": "coat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            7
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            8
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "south"
-        }
-      ],
-      "doors": {
-        "north": [
-          2
-        ],
-        "south": [
-          2,
-          3,
-          4
-        ],
-        "west": [
-          1,
-          3,
-          5,
-          6,
-          7
-        ],
-        "east": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ]
-      },
-      "stretch": {
-        "x": [
-          2
-        ],
-        "y": [
-          1,
-          2,
-          3
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          3
-        ],
-        "size": [
-          2,
-          3
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.a",
-      "description": "A mid-sized washroom, privy in the northwest corner, a bathtub in the northeast corner, a washbasin against the west wall, a chest in the open middle, and open floor in the middle."
-    },
-    {
-      "id": "washroom.medium.b.grand.flush",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "grand",
-      "style": "flush",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        5,
-        8
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "seat.lounge",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "lux.seat.lounge.single",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
           "group": "wash.toilet.single.washroom",
           "optional": false,
           "back": "north"
         },
         {
-          "role": "waste",
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "storage.small.single.washroom2",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
           "size": [
             1,
             1
@@ -3949,8 +3593,62 @@
             0,
             3
           ],
-          "group": "waste.single.washroom1",
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            3
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "south"
         },
         {
           "role": "seat",
@@ -3959,39 +3657,96 @@
             1
           ],
           "at": [
-            4,
-            3
+            7,
+            5
           ],
-          "group": "wash.bath.seat.opt",
+          "group": "wash.bath.decor.floor.seat.opt",
           "optional": true,
           "back": "east"
-        },
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          7
+        ],
+        "south": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          2,
+          4
+        ],
+        "east": [
+          0,
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": [
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          2,
+          2
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.c",
+      "description": "A mid-sized washroom, washbasin against the north wall, a privy against the north wall, a bathtub in the southeast corner, a lamp against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.d.roomy.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
         {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            4
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "light.small",
+          "role": "wash.toilet",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
-            6
+            3,
+            0
           ],
-          "group": "light.small.single.washroom1",
-          "optional": true
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
         },
         {
           "role": "wash.basin",
@@ -4000,8 +3755,218 @@
             1
           ],
           "at": [
+            0,
+            1
+          ],
+          "group": "wash.basin.wash.basin.opt.washroom",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "wash.basin.wash.basin.opt.washroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
             3,
-            7
+            4
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "west": [
+          0,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          1
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          4,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.c",
+      "description": "A mid-sized washroom, privy against the north wall, a washbasin against the west wall, a privy against the east wall, a bathtub opposite, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.e.roomy.flush",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "light.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            3
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
           ],
           "group": "wash.basin.storage.small",
           "optional": false,
@@ -4014,61 +3979,73 @@
             1
           ],
           "at": [
-            4,
-            7
+            2,
+            4
           ],
           "group": "wash.basin.storage.small",
           "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            4
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": false,
+          "back": "east"
         }
       ],
       "doors": {
         "north": [
           1,
           2,
-          3
+          4,
+          5
         ],
         "south": [
           0,
-          1,
-          2
+          3,
+          4
         ],
         "west": [
           1,
           2,
-          4,
-          5,
-          7
+          3,
+          4
         ],
         "east": [
           1,
-          2,
-          5,
-          6
+          2
         ]
       },
       "stretch": {
         "x": [
+          0,
           1,
           2,
-          3
+          3,
+          4,
+          5
         ],
         "y": [
           1,
           2,
           3,
-          4,
-          5,
-          6,
-          7
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.small.b",
-      "description": "A mid-sized washroom, privy in the northeast corner, a bathtub against the east wall, a washbasin in the southeast corner, and an armchair in the northwest corner."
+      "description": "A mid-sized washroom, privy in the northeast corner, a bathtub in the southeast corner, a washbasin opposite, and a lamp in the northwest corner."
     },
     {
-      "id": "washroom.medium.c.roomy.flush",
+      "id": "washroom.medium.f.roomy.flush",
       "family": "washroom",
       "sizeBand": "medium",
       "clearance": "roomy",
@@ -4144,7 +4121,7 @@
           "back": "east"
         },
         {
-          "role": "waste",
+          "role": "storage.small",
           "size": [
             1,
             1
@@ -4153,8 +4130,8 @@
             0,
             4
           ],
-          "group": "waste.single.washroom1",
-          "optional": false
+          "group": "storage.small.single.washroom1",
+          "optional": true
         },
         {
           "role": "wash.bath",
@@ -4171,7 +4148,7 @@
           "back": "south"
         },
         {
-          "role": "storage.small",
+          "role": "waste",
           "size": [
             1,
             1
@@ -4180,8 +4157,8 @@
             0,
             7
           ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
+          "group": "waste.single.washroom1",
+          "optional": false
         }
       ],
       "doors": {
@@ -4220,9 +4197,646 @@
       "description": "A mid-sized, narrow washroom, washbasin in the northwest corner, a privy in the northeast corner, a privy against the east wall, and a bathtub in the southeast corner."
     },
     {
-      "id": "washroom.medium.d.roomy.flush",
+      "id": "washroom.medium.f.tight.flush",
       "family": "washroom",
       "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        5,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.small.single.washroom2",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.basin.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "heat.single.washroom",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.big.single.washroom",
+          "optional": true,
+          "back": "west"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "wash.bath.decor.floor.seat.opt",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "decor.floor.single.washroom",
+          "optional": true
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "light.small.single.washroom",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          3
+        ],
+        "south": [
+          0,
+          1,
+          3
+        ],
+        "west": [
+          1,
+          3,
+          6
+        ],
+        "east": [
+          1,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.medium.c",
+      "description": "A mid-sized washroom, washbasin against the north wall, a privy in the northeast corner, a bathtub against the east wall, and a chest in the northwest corner."
+    },
+    {
+      "id": "washroom.medium.g.roomy.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          4
+        ],
+        "south": [
+          0,
+          1,
+          2
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          5
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          3,
+          4
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.tiny.b",
+      "description": "A mid-sized washroom, washbasin against the north wall, a bathtub in the southeast corner, a chest against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.h.tight.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "light.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "wash.bath.seat.opt",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "wash.basin.storage.small",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          3
+        ],
+        "south": [
+          0,
+          3
+        ],
+        "west": [
+          0,
+          2,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": [
+          2,
+          3
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.b",
+      "description": "A mid-sized washroom, privy against the north wall, a bathtub against the east wall, a washbasin opposite, a lamp against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.medium.i.tight.open",
+      "family": "washroom",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.toilet.single.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "wash.basin.wash.basin.opt.washroom",
+          "optional": true,
+          "back": "east"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "wash.basin.wash.basin.opt.washroom",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "storage.small.single.washroom1",
+          "optional": true
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          3,
+          4
+        ],
+        "south": [
+          0,
+          2
+        ],
+        "west": [
+          0,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": [
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.c",
+      "description": "A mid-sized washroom, privy against the north wall, a washbasin against the east wall, a bathtub in the southeast corner, a waste bucket against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "washroom.small.a.roomy.flush",
+      "family": "washroom",
+      "sizeBand": "small",
       "clearance": "roomy",
       "style": "flush",
       "wealth": [
@@ -4231,216 +4845,14 @@
         "wealthy"
       ],
       "size": [
-        7,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            0
-          ],
-          "group": "light.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            4
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2,
-          4,
-          5
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          6
-        ],
-        "west": [
-          1,
-          2
-        ],
-        "east": [
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
-          4,
-          5,
-          6,
-          7
-        ],
-        "y": [
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.b",
-      "description": "A mid-sized washroom, privy in the northwest corner, a bathtub in the southwest corner, a washbasin opposite, and a waste bucket against the north wall."
-    },
-    {
-      "id": "washroom.medium.d.tight.flush",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
         6,
-        5
+        4
       ],
       "sleeps": {
         "singles": 0,
         "couples": 0
       },
       "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "seat.long.single.washroom1",
-          "optional": false,
-          "back": "north"
-        },
         {
           "role": "wash.bath",
           "size": [
@@ -4449,23 +4861,51 @@
           ],
           "at": [
             0,
-            2
+            0
           ],
-          "group": "wash.bath.single",
+          "group": "wash.bath.decor.floor.opt",
           "optional": false,
           "back": "west"
         },
         {
-          "role": "coat",
+          "role": "wash.basin",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
-            2
+            4,
+            0
           ],
-          "group": "coat.single.washroom1",
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "wash.bath.decor.floor.opt",
           "optional": true
         },
         {
@@ -4476,68 +4916,31 @@
           ],
           "at": [
             5,
-            2
+            3
           ],
           "group": "storage.small.single.washroom1",
           "optional": true
-        },
-        {
-          "role": "fuel",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": true
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            4
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": false
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            4,
-            4
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "south"
         }
       ],
       "doors": {
         "north": [
-          1,
-          3
-        ],
-        "south": [
           2,
           3
         ],
-        "west": [
+        "south": [
+          0,
           1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          2,
           3
         ],
         "east": [
           1,
-          3
+          2
         ]
       },
       "stretch": {
@@ -4545,780 +4948,26 @@
           6
         ],
         "y": [
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.b",
-      "description": "A mid-sized washroom, privy in the northwest corner, a washbasin against the north wall, a bathtub against the west wall, and a bench in the northeast corner."
-    },
-    {
-      "id": "washroom.medium.d.tight.open",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        6,
-        7
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "seat.long.single.washroom1",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "coat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            4
-          ],
-          "group": "coat.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "seat.long",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "seat.long.single.washroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "fuel",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            6
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": true
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            6
-          ],
-          "group": "heat.fuel.opt.washroom",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          3,
-          5
-        ],
-        "south": [
-          2,
-          5
-        ],
-        "west": [
-          0,
-          3,
-          5
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
-          4
-        ],
-        "y": []
-      },
-      "filler": {
-        "at": [
-          2,
-          2
-        ],
-        "size": [
-          2,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.b",
-      "description": "A mid-sized washroom, privy against the north wall, a bathtub against the north wall, a washbasin against the east wall, a bench against the west wall, and open floor in the middle."
-    },
-    {
-      "id": "washroom.medium.e.roomy.open",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "roomy",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            1
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            1
-          ],
-          "group": "light.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            4
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            4
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          1,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          4,
-          7,
-          8
-        ],
-        "west": [
-          0,
-          1,
-          2
-        ],
-        "east": [
-          0,
-          2,
-          3,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          3,
-          4
-        ],
-        "y": [
-          3,
-          4
-        ]
-      },
-      "filler": {
-        "at": [
-          3,
-          2
-        ],
-        "size": [
-          2,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.b",
-      "description": "A mid-sized washroom, privy against the north wall, a bathtub in the southwest corner, a washbasin opposite, a waste bucket in the open middle, and open floor in the middle."
-    },
-    {
-      "id": "washroom.medium.e.tight.flush",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        5,
-        7
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "heat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            2
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "decor.floor.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            4
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            6
-          ],
-          "group": "storage.big.single.washroom",
-          "optional": true,
-          "back": "south"
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            6
-          ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          3
-        ],
-        "south": [
-          2,
-          4
-        ],
-        "west": [
-          1,
-          3,
-          5
-        ],
-        "east": [
-          1,
-          5,
-          6
-        ]
-      },
-      "stretch": {
-        "x": [
-          0
-        ],
-        "y": []
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A mid-sized washroom, washbasin against the north wall, a privy in the northeast corner, a bathtub against the east wall, and a lamp in the northwest corner."
-    },
-    {
-      "id": "washroom.medium.e.tight.open",
-      "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "tight",
-      "style": "open",
-      "wealth": [
-        "wealthy",
-        "elite"
-      ],
-      "size": [
-        9,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "wash.basin.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "storage.big",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "storage.big.single.washroom",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            1
-          ],
-          "group": "decor.floor.single.washroom",
-          "optional": true
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": true,
-          "back": "west"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            3
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "storage.small.single.washroom2",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            6,
-            3
-          ],
-          "group": "light.small.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "heat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            8,
-            3
-          ],
-          "group": "heat.single.washroom",
-          "optional": false
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            4
-          ],
-          "group": "wash.bath.decor.floor.seat.opt",
-          "optional": false
-        }
-      ],
-      "doors": {
-        "north": [
-          0,
-          2,
-          4,
-          7,
-          8
-        ],
-        "south": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "west": [
-          0,
           1
-        ],
-        "east": [
-          0,
-          2,
-          4
-        ]
-      },
-      "stretch": {
-        "x": [
-          5,
-          7,
-          8
-        ],
-        "y": []
-      },
-      "filler": {
-        "at": [
-          4,
-          1
-        ],
-        "size": [
-          2,
-          2
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.medium.c",
-      "description": "A mid-sized washroom, privy against the north wall, a washbasin against the north wall, a bathtub in the southwest corner, a wardrobe against the north wall, and open floor in the middle."
+      "recipe": "washroom.tiny.b",
+      "description": "A small washroom, bathtub in the northwest corner, a washbasin in the northeast corner, and a chest in the southeast corner."
     },
     {
-      "id": "washroom.medium.f.roomy.open",
+      "id": "washroom.small.a.tight.open",
       "family": "washroom",
-      "sizeBand": "medium",
-      "clearance": "roomy",
+      "sizeBand": "small",
+      "clearance": "tight",
       "style": "open",
       "wealth": [
         "wealthy",
         "elite"
       ],
       "size": [
-        5,
+        4,
         6
       ],
       "sleeps": {
@@ -5357,12 +5006,139 @@
         {
           "role": "wash.bath",
           "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "wash.bath.decor.floor.opt",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3
+        ],
+        "south": [
+          0,
+          3
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          2
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "washroom.small.a",
+      "description": "A small washroom, washbasin against the north wall, a bathtub opposite, and open floor in the middle."
+    },
+    {
+      "id": "washroom.small.b.tight.flush",
+      "family": "washroom",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        3,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "wash.toilet.wash.basin.washroom",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "wash.bath",
+          "size": [
             2,
             1
           ],
           "at": [
             0,
-            4
+            2
           ],
           "group": "wash.bath.decor.floor.opt",
           "optional": false,
@@ -5376,90 +5152,55 @@
           ],
           "at": [
             0,
-            5
+            3
           ],
           "group": "wash.bath.decor.floor.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            5
-          ],
-          "group": "storage.small.single.washroom1",
           "optional": true
         }
       ],
       "doors": {
         "north": [
-          0,
-          3,
-          4
+          0
         ],
         "south": [
           1,
-          2,
-          3
+          2
         ],
         "west": [
           0,
+          1
+        ],
+        "east": [
           1,
           2,
           3
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3,
-          4
         ]
       },
       "stretch": {
-        "x": [
-          2
-        ],
+        "x": [],
         "y": [
           1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          2
-        ],
-        "size": [
-          3,
           2
         ]
       },
       "outdoor": false,
       "symmetric": false,
-      "recipe": "washroom.tiny.b",
-      "description": "A mid-sized washroom, washbasin against the north wall, a bathtub in the southwest corner, a chest in the southeast corner, and open floor in the middle."
+      "recipe": "washroom.small.a",
+      "description": "A small washroom, washbasin in the northeast corner, a bathtub in the southwest corner."
     },
     {
-      "id": "washroom.medium.f.tight.open",
+      "id": "washroom.small.f.tight.flush",
       "family": "washroom",
-      "sizeBand": "medium",
+      "sizeBand": "small",
       "clearance": "tight",
-      "style": "open",
+      "style": "flush",
       "wealth": [
-        "wealthy",
-        "elite"
+        "poor",
+        "modest"
       ],
       "size": [
-        4,
-        7
+        5,
+        4
       ],
       "sleeps": {
         "singles": 0,
@@ -5473,7 +5214,7 @@
             1
           ],
           "at": [
-            1,
+            0,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -5487,11 +5228,24 @@
             1
           ],
           "at": [
-            3,
+            2,
             0
           ],
           "group": "light.small.single.washroom1",
           "optional": true
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "waste.single.washroom1",
+          "optional": false
         },
         {
           "role": "wash.bath",
@@ -5506,19 +5260,6 @@
           "group": "wash.bath.seat.opt",
           "optional": false,
           "back": "west"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            2
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
         },
         {
           "role": "seat",
@@ -5541,8 +5282,8 @@
             1
           ],
           "at": [
-            1,
-            6
+            3,
+            3
           ],
           "group": "wash.basin.storage.small",
           "optional": false,
@@ -5555,8 +5296,8 @@
             1
           ],
           "at": [
-            2,
-            6
+            4,
+            3
           ],
           "group": "wash.basin.storage.small",
           "optional": false
@@ -5564,65 +5305,51 @@
       ],
       "doors": {
         "north": [
-          0,
-          2
-        ],
-        "south": [
-          0,
-          3
-        ],
-        "west": [
-          0,
-          1,
-          4,
-          5,
-          6
-        ],
-        "east": [
           1,
           3,
-          4,
-          5,
-          6
+          4
+        ],
+        "south": [
+          1,
+          2
+        ],
+        "west": [
+          1
+        ],
+        "east": [
+          0,
+          2
         ]
       },
       "stretch": {
         "x": [
-          2
+          2,
+          3,
+          4,
+          5
         ],
         "y": [
-          4,
-          5,
-          6
-        ]
-      },
-      "filler": {
-        "at": [
-          1,
-          3
-        ],
-        "size": [
           2,
-          2
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.small.b",
-      "description": "A mid-sized washroom, privy against the north wall, a bathtub against the west wall, a washbasin opposite, a lamp in the northeast corner, and open floor in the middle."
+      "description": "A small washroom, privy in the northwest corner, a bathtub in the southwest corner, a washbasin in the southeast corner, and a lamp against the north wall."
     },
     {
-      "id": "washroom.medium.g.tight.open",
+      "id": "washroom.small.g.tight.flush",
       "family": "washroom",
-      "sizeBand": "medium",
+      "sizeBand": "small",
       "clearance": "tight",
-      "style": "open",
+      "style": "flush",
       "wealth": [
-        "wealthy",
-        "elite"
+        "poor",
+        "modest"
       ],
       "size": [
-        6,
+        3,
         5
       ],
       "sleeps": {
@@ -5631,41 +5358,13 @@
       },
       "pieces": [
         {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.basin.wash.basin.opt.washroom",
-          "optional": true,
-          "back": "north"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.basin.wash.basin.opt.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
           "role": "wash.toilet",
           "size": [
             1,
             1
           ],
           "at": [
-            3,
+            0,
             0
           ],
           "group": "wash.toilet.single.washroom",
@@ -5679,8 +5378,8 @@
             1
           ],
           "at": [
-            5,
-            1
+            2,
+            0
           ],
           "group": "wash.basin.wash.basin.opt.washroom",
           "optional": true,
@@ -5693,26 +5392,12 @@
             1
           ],
           "at": [
-            5,
-            2
+            2,
+            1
           ],
           "group": "wash.basin.wash.basin.opt.washroom",
           "optional": false,
           "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            3
-          ],
-          "group": "wash.bath.single",
-          "optional": false,
-          "back": "south"
         },
         {
           "role": "waste",
@@ -5721,11 +5406,25 @@
             1
           ],
           "at": [
-            3,
-            4
+            0,
+            2
           ],
           "group": "waste.single.washroom1",
           "optional": false
+        },
+        {
+          "role": "wash.bath",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "wash.bath.single",
+          "optional": false,
+          "back": "south"
         },
         {
           "role": "storage.small",
@@ -5734,7 +5433,7 @@
             1
           ],
           "at": [
-            5,
+            0,
             4
           ],
           "group": "storage.small.single.washroom1",
@@ -5743,52 +5442,38 @@
       ],
       "doors": {
         "north": [
-          2,
-          4,
-          5
+          1
         ],
         "south": [
-          0,
-          2,
-          4
+          1
         ],
         "west": [
           1,
-          2,
-          3,
-          4
+          3
         ],
         "east": [
-          0,
-          3
+          2
         ]
       },
       "stretch": {
         "x": [
-          2,
-          3,
-          4,
-          5
-        ],
-        "y": []
-      },
-      "filler": {
-        "at": [
-          2,
+          0,
+          1,
           2
         ],
-        "size": [
+        "y": [
+          1,
           2,
-          2
+          3
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.small.c",
-      "description": "A mid-sized washroom, washbasin in the northwest corner, a privy against the north wall, a washbasin against the east wall, a bathtub opposite, and open floor in the middle."
+      "description": "A small washroom, privy in the northwest corner, a washbasin in the northeast corner, a bathtub in the southeast corner, and a waste bucket against the west wall."
     },
     {
-      "id": "washroom.small.a.tight.flush",
+      "id": "washroom.small.h.tight.flush",
       "family": "washroom",
       "sizeBand": "small",
       "clearance": "tight",
@@ -5835,277 +5520,17 @@
           "back": "north"
         },
         {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
           "role": "decor.floor",
           "size": [
             1,
             1
           ],
           "at": [
-            0,
-            3
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          2
-        ],
-        "south": [
-          1,
-          2
-        ],
-        "west": [
-          1
-        ],
-        "east": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "stretch": {
-        "x": [],
-        "y": [
-          1,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.a",
-      "description": "A small washroom, washbasin in the northwest corner, a bathtub in the southwest corner."
-    },
-    {
-      "id": "washroom.small.b.roomy.flush",
-      "family": "washroom",
-      "sizeBand": "small",
-      "clearance": "roomy",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest",
-        "wealthy"
-      ],
-      "size": [
-        6,
-        4
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.bath",
-          "size": [
             2,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": false,
-          "back": "west"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "wash.toilet.wash.basin.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            5,
-            0
-          ],
-          "group": "wash.toilet.wash.basin.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            1
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": true
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            3
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        }
-      ],
-      "doors": {
-        "north": [
-          2,
-          3
-        ],
-        "south": [
-          0,
-          1,
-          2,
-          3,
-          5
-        ],
-        "west": [
-          2,
-          3
-        ],
-        "east": [
-          1,
-          2,
-          3
-        ]
-      },
-      "stretch": {
-        "x": [
-          2,
-          3,
-          4,
-          5,
-          6
-        ],
-        "y": [
-          1
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.tiny.b",
-      "description": "A small washroom, bathtub in the northwest corner, a washbasin in the northeast corner, and a chest opposite."
-    },
-    {
-      "id": "washroom.small.c.tight.flush",
-      "family": "washroom",
-      "sizeBand": "small",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        5,
-        3
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            0
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            4,
-            0
-          ],
-          "group": "storage.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
             2
           ],
-          "group": "wash.basin.wash.basin.opt.washroom",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            2
-          ],
-          "group": "wash.basin.wash.basin.opt.washroom",
-          "optional": true,
-          "back": "south"
+          "group": "wash.bath.decor.floor.opt",
+          "optional": true
         },
         {
           "role": "wash.bath",
@@ -6114,119 +5539,12 @@
             1
           ],
           "at": [
-            3,
-            2
+            1,
+            3
           ],
-          "group": "wash.bath.single",
+          "group": "wash.bath.decor.floor.opt",
           "optional": false,
           "back": "east"
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          3
-        ],
-        "south": [
-          2
-        ],
-        "west": [
-          1
-        ],
-        "east": [
-          1
-        ]
-      },
-      "stretch": {
-        "x": [
-          0,
-          1,
-          2,
-          3
-        ],
-        "y": [
-          1,
-          2
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.c",
-      "description": "A small washroom, privy in the northwest corner, a washbasin in the southwest corner, a bathtub in the southeast corner, and a waste bucket against the north wall."
-    },
-    {
-      "id": "washroom.small.d.tight.flush",
-      "family": "washroom",
-      "sizeBand": "small",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        3,
-        4
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.wash.basin.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            0
-          ],
-          "group": "wash.toilet.wash.basin.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            1,
-            2
-          ],
-          "at": [
-            1,
-            2
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": false,
-          "back": "south"
-        },
-        {
-          "role": "decor.floor",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            2,
-            3
-          ],
-          "group": "wash.bath.decor.floor.opt",
-          "optional": true
         }
       ],
       "doors": {
@@ -6243,171 +5561,19 @@
         ],
         "east": [
           0,
-          1,
-          2
+          1
         ]
       },
       "stretch": {
         "x": [],
         "y": [
-          1,
-          2
+          4
         ]
       },
       "outdoor": false,
       "symmetric": false,
       "recipe": "washroom.tiny.b",
       "description": "A small washroom, washbasin in the northwest corner, a bathtub in the southeast corner."
-    },
-    {
-      "id": "washroom.small.e.tight.flush",
-      "family": "washroom",
-      "sizeBand": "small",
-      "clearance": "tight",
-      "style": "flush",
-      "wealth": [
-        "poor",
-        "modest"
-      ],
-      "size": [
-        4,
-        5
-      ],
-      "sleeps": {
-        "singles": 0,
-        "couples": 0
-      },
-      "pieces": [
-        {
-          "role": "wash.toilet",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            0
-          ],
-          "group": "wash.toilet.single.washroom",
-          "optional": false,
-          "back": "north"
-        },
-        {
-          "role": "seat",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            0
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": true,
-          "back": "east"
-        },
-        {
-          "role": "wash.bath",
-          "size": [
-            2,
-            1
-          ],
-          "at": [
-            2,
-            1
-          ],
-          "group": "wash.bath.seat.opt",
-          "optional": false,
-          "back": "east"
-        },
-        {
-          "role": "waste",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            0,
-            2
-          ],
-          "group": "waste.single.washroom1",
-          "optional": false
-        },
-        {
-          "role": "storage.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            3
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false
-        },
-        {
-          "role": "light.small",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            1,
-            4
-          ],
-          "group": "light.small.single.washroom1",
-          "optional": true
-        },
-        {
-          "role": "wash.basin",
-          "size": [
-            1,
-            1
-          ],
-          "at": [
-            3,
-            4
-          ],
-          "group": "wash.basin.storage.small",
-          "optional": false,
-          "back": "east"
-        }
-      ],
-      "doors": {
-        "north": [
-          1,
-          2
-        ],
-        "south": [
-          0,
-          2
-        ],
-        "west": [
-          1,
-          3,
-          4
-        ],
-        "east": [
-          2
-        ]
-      },
-      "stretch": {
-        "x": [
-          2
-        ],
-        "y": [
-          1,
-          2,
-          3,
-          4,
-          5
-        ]
-      },
-      "outdoor": false,
-      "symmetric": false,
-      "recipe": "washroom.small.b",
-      "description": "A small washroom, privy in the northwest corner, a bathtub in the northeast corner, a washbasin in the southeast corner, and a waste bucket against the west wall."
     }
   ]
 }
