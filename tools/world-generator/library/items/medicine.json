@@ -476,6 +476,23 @@
       "tags": ["medicine", "military"],
       "aliases": [],
       "sources": ["authored"]
+    },
+    {
+      "id": "medicine.vet_kit",
+      "category": "medicine",
+      "type": "consumable",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "vet kit"},
+      "description": {"*": "A vet's kit, drenches and dressings for stock that cannot say where it hurts."},
+      "looks": [
+        {"key": "box", "bands": ["*"], "physical": "A green metal veterinary kit box with a white cross, a latch and a carry handle"}
+      ],
+      "tags": ["medicine", "farm"],
+      "aliases": ["Vet kit", "Veterinary kit"],
+      "sources": ["authored"]
     }
   ]
 }

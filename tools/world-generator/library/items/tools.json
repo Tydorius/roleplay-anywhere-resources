@@ -187,7 +187,7 @@
         {"key": "steel", "bands": ["modern", "scifi"], "physical": "A round-point steel shovel with a D-handle and worn grip"}
       ],
       "tags": ["tool"],
-      "aliases": ["Iron spade", "Hoe"],
+      "aliases": ["Iron spade"],
       "sources": ["harvest"]
     },
     {
@@ -204,7 +204,7 @@
         {"key": "curved", "bands": ["*"], "physical": "A scythe with a long curved blade lashed to a bent wooden snath"}
       ],
       "tags": ["tool", "farm"],
-      "aliases": ["Scythe", "Threshing flail", "Field Sickle", "Sickle", "Bill hook", "Billhook", "Hedging Billhook"],
+      "aliases": ["Scythe", "Bill hook", "Billhook", "Hedging Billhook"],
       "sources": ["harvest"]
     },
     {
@@ -579,7 +579,7 @@
         {"key": "comb", "bands": ["*"], "physical": "A wooden curry comb with a leather hand strap and worn teeth"}
       ],
       "tags": ["tool", "horse"],
-      "aliases": ["Curry comb", "Harness set"],
+      "aliases": ["Curry comb"],
       "sources": ["harvest"]
     },
     {
@@ -954,6 +954,227 @@
       ],
       "tags": ["tool", "military"],
       "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.sickle",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "sickle"},
+      "description": {"*": "A short sickle, the harvest taken a handful at a time."},
+      "looks": [
+        {"key": "hooked", "bands": ["*"], "physical": "A short sickle with a hooked steel blade and a worn wooden grip"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Sickle", "Field Sickle", "Reaping hook"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.pitchfork",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "pitchfork"},
+      "description": {"*": "A pitchfork, for the hay, the straw and the muck, in that order."},
+      "looks": [
+        {"key": "tined", "bands": ["*"], "physical": "A long-handled pitchfork with three curved steel tines and a polished ash shaft"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Pitchfork", "Hay fork", "Manure fork", "Stable fork"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.hoe",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hoe"},
+      "description": {"*": "A hoe that cuts the weeds down at the neck, row after row."},
+      "looks": [
+        {"key": "blade", "bands": ["*"], "physical": "A garden hoe with a flat steel blade set at an angle on a smooth wooden shaft"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Hoe", "Garden hoe"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.shears",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "hand shears"},
+      "description": {"*": "Hand shears, the flock's yearly haircut in two blades of iron."},
+      "looks": [
+        {"key": "bow", "bands": ["*"], "physical": "A pair of iron hand shears with wide blades and a spring bow between the grips"}
+      ],
+      "tags": ["tool", "farm", "wool"],
+      "aliases": ["Hand shears", "Shearing shears", "Wool shears", "Sheep shears"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.flail",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "flail"},
+      "description": {"*": "A threshing flail, the day's work measured in aching shoulders."},
+      "looks": [
+        {"key": "joined", "bands": ["*"], "physical": "A threshing flail of two wooden staves joined by a leather strap"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Threshing flail", "Flail", "Grain flail"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.winnowing_basket",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "winnowing basket"},
+      "description": {"*": "A wide basket for throwing grain at the wind and letting the chaff go."},
+      "looks": [
+        {"key": "wide", "bands": ["*"], "physical": "A wide shallow woven basket with a rim of plaited straw and a dusting of chaff"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Winnowing basket", "Winnowing fan"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.bee_smoker",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "bee smoker"},
+      "description": {"*": "A bee smoker; one squeeze of the bellows and the hive forgets to sting."},
+      "looks": [
+        {"key": "bellows", "bands": ["*"], "physical": "A tin bee smoker with a leather bellows and a bent spout trailing a thread of smoke"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Bee smoker", "Smoker"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.branding_iron",
+      "category": "tool",
+      "type": "wieldable",
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "branding iron"},
+      "description": {"*": "A branding iron with the ranch's mark, ownership written in scar."},
+      "looks": [
+        {"key": "marked", "bands": ["*"], "physical": "A long steel branding iron with a lettered head and a wooden grip at the handle end"}
+      ],
+      "tags": ["tool", "farm"],
+      "aliases": ["Branding iron", "Brand iron"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.halter",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "halter"},
+      "description": {"*": "A rope halter, the first word a hand says to a horse."},
+      "looks": [
+        {"key": "rope", "bands": ["*"], "physical": "A folded rope halter with knotted cheek pieces and a trailing lead line"}
+      ],
+      "tags": ["tool", "tack", "horse"],
+      "aliases": ["Halter", "Rope halter", "Lead rope"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.bridle",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "bridle"},
+      "description": {"*": "A bridle with its bit, the firmer word after that."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A leather bridle with a curved steel bit, looped cheek straps and gathered reins"}
+      ],
+      "tags": ["tool", "tack", "horse"],
+      "aliases": ["Bridle", "Horse bridle", "Bit and bridle"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.saddle",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "saddle"},
+      "description": {"*": "A riding saddle worn to the shape of one horse's back."},
+      "looks": [
+        {"key": "leather", "bands": ["*"], "physical": "A leather riding saddle with stirrup leathers, a high rounded cantle and a folded blanket"}
+      ],
+      "tags": ["tool", "tack", "horse"],
+      "aliases": ["Saddle", "Riding saddle", "Horse saddle"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.harness_set",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 4,
+      "names": {"*": "harness set"},
+      "description": {"*": "A draught harness of buckled leather, a horse's whole working wardrobe."},
+      "looks": [
+        {"key": "straps", "bands": ["*"], "physical": "A draught harness of broad leather straps with brass buckles and a curved hame collar"}
+      ],
+      "tags": ["tool", "tack", "horse"],
+      "aliases": ["Harness set", "Horse harness", "Plough harness"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "tool.yoke",
+      "category": "tool",
+      "type": "misc",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 3,
+      "names": {"*": "ox yoke"},
+      "description": {"*": "A carved ox yoke, the beam that makes two animals one."},
+      "looks": [
+        {"key": "beam", "bands": ["*"], "physical": "A carved wooden ox yoke beam with two bow staples and worn rope fastenings"}
+      ],
+      "tags": ["tool", "tack", "farm"],
+      "aliases": ["Ox yoke", "Yoke"],
       "sources": ["authored"]
     }
   ]

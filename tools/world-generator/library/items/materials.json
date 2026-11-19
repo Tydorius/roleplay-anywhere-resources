@@ -202,7 +202,7 @@
         {"key": "heavy", "bands": ["*"], "physical": "A heavy cloth sack of grain tied at the neck with a wooden scoop"}
       ],
       "tags": ["material", "food"],
-      "aliases": ["Sack of Flour", "Flour sack", "Barley Sack", "Seed grain sack", "Sack of Miller's Toll Flour", "Nosebag of Oats", "Dried oats", "Handful of Barley", "Coarse millet", "Seed barley"],
+      "aliases": ["Sack of Flour", "Flour sack", "Barley Sack", "Sack of Miller's Toll Flour", "Dried oats", "Handful of Barley", "Coarse millet"],
       "sources": ["harvest"]
     },
     {
@@ -596,6 +596,109 @@
       ],
       "tags": ["material", "metal"],
       "aliases": [],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.seed_sack",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "sack of seed grain"},
+      "description": {"*": "A half-sack of seed grain, next year's harvest measured out."},
+      "looks": [
+        {"key": "half", "bands": ["*"], "physical": "A cloth sack of pale seed grain tied at the neck with a wooden scoop in the top"}
+      ],
+      "tags": ["material", "farm"],
+      "aliases": ["Seed grain sack", "Seed barley", "Sack of seed grain"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.feed_sack",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "sack of feed"},
+      "description": {"*": "A sack of mixed feed, the ration the whole yard waits on."},
+      "looks": [
+        {"key": "rolled", "bands": ["*"], "physical": "A rolled burlap sack of coarse brown feed with a scoop resting in the open top"}
+      ],
+      "tags": ["material", "farm"],
+      "aliases": ["Sack of feed", "Feed sack", "Bran sack", "Nosebag of oats"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.tallow",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "crock of tallow"},
+      "description": {"*": "A crock of rendered tallow, frying, candles and squeaking cart wheels out of one pot."},
+      "looks": [
+        {"key": "crock", "bands": ["*"], "physical": "An open clay crock of pale tallow with a wooden dipper standing in it"}
+      ],
+      "tags": ["material", "fuel"],
+      "aliases": ["Tallow", "Bucket of tallow", "Rendered fat"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.beeswax",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 2,
+      "names": {"*": "block of beeswax"},
+      "description": {"*": "A block of beeswax, sweet to smell and too dear to waste."},
+      "looks": [
+        {"key": "block", "bands": ["*"], "physical": "A golden block of beeswax with a stamped hive mark and honey-coloured sheen"}
+      ],
+      "tags": ["material", "craft"],
+      "aliases": ["Beeswax", "Beeswax block", "Wax block"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.fertiliser_bag",
+      "category": "material",
+      "type": "material",
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "bag of fertiliser"},
+      "description": {"*": "A part-used bag of fertiliser, the field's yearly meal."},
+      "looks": [
+        {"key": "bag", "bands": ["*"], "physical": "A woven plastic bag of grey granules with a torn corner and printed stripes"}
+      ],
+      "tags": ["material", "farm"],
+      "aliases": ["Fertiliser bag", "Bag of fertiliser", "Sack of fertiliser"],
+      "sources": ["authored"]
+    },
+    {
+      "id": "material.straw_bale",
+      "category": "material",
+      "type": "material",
+      "bands": ["medieval", "industrial", "modern"],
+      "onlyGenres": [],
+      "quality": "common",
+      "price": 1,
+      "names": {"*": "straw bale", "medieval": "straw bundle"},
+      "description": {"*": "Straw, bedding for the stock and mulch for the beds."},
+      "looks": [
+        {"key": "bundle", "bands": ["medieval"], "physical": "A tight bundle of golden straw bound with twisted straw rope"},
+        {"key": "bale", "bands": ["industrial", "modern"], "physical": "A rectangular straw bale bound with orange twine, chaff at the cut edges"}
+      ],
+      "tags": ["material", "farm"],
+      "aliases": ["Straw bale", "Straw bundle", "Bundle of straw", "Hay bale"],
       "sources": ["authored"]
     }
   ]
