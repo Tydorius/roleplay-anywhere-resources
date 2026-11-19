@@ -1,7 +1,10 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
 recipe of the bedroom, master bedroom, washroom, privy, bath and closet
 families composed at each clearance (tight/roomy/grand) in each style
-(flush/open), seed 1, keeping the best room of each. A hand recipe of a
+(flush/open), seed 1, keeping the best room of each. The bedroom family also
+composes its recipes for two singles (its two-bed rooms, described as "for
+two"), under the same rules and the same shape dedupe, their ids continuing
+the letter sequence. A hand recipe of a
 family with its own familySizeBands table composes once per band it names,
 the band pinned (a band its furniture cannot reach produces no room — the
 composer never pads a room up to one), and its optional "wealth" list
@@ -162,9 +165,11 @@ def describe(room):
     w, h = room["size"]
     head = FAMILY_NOUNS.get(room["family"], room["family"])
     sleeps = room.get("sleeps") or {}
-    if room["family"] == "bedroom" and sleeps.get("singles", 0) == 1 \
-            and not sleeps.get("couples"):
-        head = "single " + head
+    if room["family"] == "bedroom" and not sleeps.get("couples"):
+        if sleeps.get("singles", 0) == 1:
+            head = "single " + head
+        elif sleeps.get("singles", 0) == 2 and room.get("_fortwo"):
+            head = head + " for two"
     adjs = []
     band = BAND_ADJECTIVES.get(room["sizeBand"])
     if band:
@@ -282,20 +287,22 @@ def _shipped_ids(fam, rooms_dir=None):
 
 
 def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None,
-                   size_band=None):
+                   size_band=None, sleepers=None):
     """One recipe composed at a clearance and style under this generator's
     own rules: the grand-private area cap from the roomy sibling (``roomy``),
     then the luxury-pool, more-furniture and cells-per-piece filters. Returns
     (rooms, reason), ``reason`` naming the rule that left nothing.
-    ``size_band`` pins the composition to one band (a hand recipe's own). A
-    recipe's "wealth" list rides the rooms out as "_wealth" for _finalize.
-    The editor's "regenerate this room" calls this, so its candidates come
-    from the same rules a full generation runs."""
+    ``size_band`` pins the composition to one band (a hand recipe's own);
+    ``sleepers`` overrides the family's default sleeper count (the bedroom's
+    two-single pass). A recipe's "wealth" list rides the rooms out as
+    "_wealth" for _finalize. The editor's "regenerate this room" calls this,
+    so its candidates come from the same rules a full generation runs."""
     cap = None
     if clearance == "grand" and fam in RC.PRIVATE_FAMILIES and roomy is not None:
         cap = math.ceil(RC.GRAND_AREA_RATIO * roomy["size"][0] * roomy["size"][1])
     rooms, reason = RC.compose(recipe, data, clearance, style, seed,
-                               max_area=cap, size_band=size_band)
+                               max_area=cap, size_band=size_band,
+                               sleepers=sleepers)
     if not rooms:
         return rooms, reason
     if clearance == "grand" and fam in RC.PRIVATE_FAMILIES:
@@ -324,6 +331,11 @@ def compose_recipe(recipe, fam, data, clearance, style, seed, roomy=None,
     if wealth:
         for r in rooms:
             r["_wealth"] = list(wealth)
+    if sleepers:
+        # the two-sleeper pass marks its rooms: describe says "for two" of
+        # them alone, never of a shipped room that happens to sleep two
+        for r in rooms:
+            r["_fortwo"] = True
     return rooms, None
 
 
@@ -378,51 +390,67 @@ def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
         kept = []
         seen = {canonical(r) for r in keep}
         drops = []          # (layout, clearance, style, reason)
-        for recipe in recipes:
-            # a wash family's recipe must be able to give the room its
-            # fixtures (fixed_rooms.WASH_FAMILY_RULES); the old
-            # toilet-and-basin washroom tinies now belong to the privy
-            need = FR.WASH_FAMILY_RULES.get(fam, ((), ()))[0]
-            missing = set(need) - _guaranteed_roles(recipe, gdefs)
-            if missing:
-                names = ", ".join(sorted(missing))
-                drops.append((recipe["layout"], None, None,
-                              f"a {fam} needs a toilet, a bath and a basin "
-                              f"(see privy); this recipe gives no {names}"))
-                continue
-            # a hand recipe of a family with its own band table composes
-            # once per band it names, the band pinned (no padding to reach
-            # it); every other recipe composes as before, its band wherever
-            # the furniture lands
-            hand_bands = (recipe.get("sizeBands") or []) \
-                if recipe.get("source") == "hand" and FR.family_bands(fam) \
-                else [None]
-            roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
-            for band in hand_bands:
-                for clearance in CLEARANCES:
-                    for style in STYLES:
-                        rooms, reason = compose_recipe(recipe, fam, data,
-                                                       clearance, style, seed,
-                                                       roomy=roomy_rooms.get(style),
-                                                       size_band=band)
-                        if not rooms:
-                            drops.append((recipe["layout"], clearance, style,
-                                          reason))
-                            continue
-                        # the best room of the recipe that no earlier one kept:
-                        # two rooms equal after any turn or mirror are one room,
-                        # so a recipe whose best is taken falls to its next-best
-                        best = next((r for r in rooms if canonical(r) not in seen),
-                                    None)
-                        if best is None:
-                            drops.append((recipe["layout"], clearance, style,
-                                          "every candidate duplicates an earlier "
-                                          "room"))
-                            continue
-                        seen.add(canonical(best))
-                        if clearance == "roomy":
-                            roomy_rooms[style] = best
-                        kept.append(best)
+
+        def run_recipes(sleepers=None):
+            """One composition pass over the family's recipes, every clearance
+            and style. Pass None for the family's default sleepers; pass
+            (2, 0) for the bedroom's two-single rooms (with a fresh roomy
+            map, so a grand two-bed room must best its own roomy sibling,
+            not the one-bed one)."""
+            for recipe in recipes:
+                # a wash family's recipe must be able to give the room its
+                # fixtures (fixed_rooms.WASH_FAMILY_RULES); the old
+                # toilet-and-basin washroom tinies now belong to the privy
+                need = FR.WASH_FAMILY_RULES.get(fam, ((), ()))[0]
+                missing = set(need) - _guaranteed_roles(recipe, gdefs)
+                if missing:
+                    names = ", ".join(sorted(missing))
+                    drops.append((recipe["layout"], None, None,
+                                  f"a {fam} needs a toilet, a bath and a basin "
+                                  f"(see privy); this recipe gives no {names}"))
+                    continue
+                # a hand recipe of a family with its own band table composes
+                # once per band it names, the band pinned (no padding to reach
+                # it); every other recipe composes as before, its band wherever
+                # the furniture lands
+                hand_bands = (recipe.get("sizeBands") or []) \
+                    if recipe.get("source") == "hand" and FR.family_bands(fam) \
+                    else [None]
+                roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
+                for band in hand_bands:
+                    for clearance in CLEARANCES:
+                        for style in STYLES:
+                            rooms, reason = compose_recipe(
+                                recipe, fam, data, clearance, style, seed,
+                                roomy=roomy_rooms.get(style), size_band=band,
+                                sleepers=sleepers)
+                            if not rooms:
+                                drops.append((recipe["layout"], clearance, style,
+                                              reason))
+                                continue
+                            # the best room of the recipe that no earlier one kept:
+                            # two rooms equal after any turn or mirror are one room,
+                            # so a recipe whose best is taken falls to its next-best
+                            best = next((r for r in rooms if canonical(r) not in seen),
+                                        None)
+                            if best is None:
+                                drops.append((recipe["layout"], clearance, style,
+                                              "every candidate duplicates an earlier "
+                                              "room"))
+                                continue
+                            seen.add(canonical(best))
+                            if clearance == "roomy":
+                                roomy_rooms[style] = best
+                            kept.append(best)
+
+        run_recipes()
+        # the bedroom family also composes its recipes for two singles — the
+        # two-bed rooms a shared bedroom or a children's loft asks for — at
+        # the bands they fit, under the same rules and the same dedupe; the
+        # one-bed rooms are already in ``seen``, so they keep their ids and
+        # the new rooms continue the letter sequence
+        if fam == "bedroom":
+            run_recipes(sleepers=(2, 0))
         shipped_ids = _shipped_ids(fam, rooms_dir)
         letters = {}        # group -> letters already on this run's ids
         # an id is <family>.<band>.<letter>.<clearance>.<style>, and the

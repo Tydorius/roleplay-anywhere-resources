@@ -365,6 +365,69 @@ def ensure_sleep_room(design, b, lib, log):
     log.append((f"building {b['name']}", f"added {name}: {residents} residents had no bedroom"))
 
 
+def dorm_room_specs(n):
+    """The dormitory rooms sleeping ``n`` bunks: one room up to eight sleepers,
+    two (ceil/floor) past that."""
+    caps = [n] if n <= 8 else [(n + 1) // 2, n // 2]
+    return [{"name": "Dormitory" if not k else f"Dormitory {k + 1}",
+             "share": "large" if cap > 4 else "medium",
+             "use": "dormitory", "purpose": "bunks for the night"}
+            for k, cap in enumerate(caps)]
+
+
+def ensure_dorm_room(design, b, lib, log):
+    """A building whose bunks became a dormitory (P1's ``dormitory`` count)
+    sleeps all its residents in dormitory rooms: the design's own stay, else
+    rooms planted off the entrance; either way no bedroom competes for the
+    sleepers, so they all reach the bunks."""
+    n = b.get("dormitory")
+    if not isinstance(n, int) or n <= 0:
+        return
+    fam = {r["name"]: lib.family_of(r.get("use")) for r in design["rooms"]}
+    if not any(f == "dormitory" for f in fam.values()):
+        entry = (design.get("entrance") or {}).get("room") or design["rooms"][0]["name"]
+        for spec in dorm_room_specs(n):
+            name = spec["name"]
+            while any(r["name"] == name for r in design["rooms"]):
+                name += " 2"
+            design["rooms"].append(dict(spec, name=name))
+            design.setdefault("connections", []).append([entry, name])
+            log.append((f"building {b['name']}",
+                        f"added {name} for {n} bunks: the bunks are one room"))
+    for r in list(design["rooms"]):
+        f = fam.get(r["name"])
+        if f in SLEEP_FAMILIES and f != "dormitory" \
+                and r.get("use") not in SPARE_PURPOSES:
+            design["rooms"].remove(r)
+            design["connections"] = [c for c in design.get("connections") or []
+                                     if r["name"] not in c]
+
+
+def ensure_dorm_upper(design, b, lib, registry, band, genre, seed, log):
+    """A dormitory building the floors extension took to two storeys sleeps
+    its bunks on the upper one: the storey spec the floors machinery places,
+    furnished by the library, above the ground floor's common rooms. An
+    upper storey the model already gave with a sleep room keeps its own."""
+    n = b.get("dormitory")
+    if not isinstance(n, int) or n <= 0:
+        return
+    for u in design.get("upper") or []:
+        if isinstance(u, dict) and any(
+                lib.family_of(r.get("use")) == "dormitory"
+                for r in u.get("rooms") or [] if isinstance(r, dict)):
+            return
+    upper = {"rooms": dorm_room_specs(n), "connections": [], "furniture": []}
+    copy = {"name": b["name"], "residents": n, "couples": 0,
+            "wealth": b.get("wealth"), "condition": b.get("condition")}
+    expand_design(lib, registry, upper, copy, band, genre, seed, log,
+                  ensure_beds=False)
+    design.setdefault("upper", []).append(
+        {"storey": 2, "rooms": upper["rooms"], "connections": [],
+         "furniture": upper["furniture"]})
+    log.append((f"building {b['name']}",
+                f"added an upper storey for the {n} bunks over the ground rooms"))
+
+
 def expand_unit(lib, registry, design, b, band, genre, seed, log, pools=()):
     """Furnish a unit building's one copy from the library: its rooms by
     purpose, with the copy's residents as single sleepers."""
@@ -442,6 +505,7 @@ def expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=
     rng = random.Random(f"{seed}|library|{b['name']}")
     pool_names = {str(n) for n in pools if n}
     if ensure_beds:
+        ensure_dorm_room(design, b, lib, log)
         ensure_sleep_room(design, b, lib, log)
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
     couples = b.get("couples") if isinstance(b.get("couples"), int) else 0

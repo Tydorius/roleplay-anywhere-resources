@@ -454,6 +454,26 @@ def is_urban_zone(zone):
     return zone_class(zone) == "settlement" and bool(_kind_words(zone.kind) & set(URBAN_WORDS))
 
 
+# the settlement sizes a zone kind can name, biggest first. The zones' kinds
+# are the one source of settlement size (the frame and the map size say
+# nothing about any single settlement): P1's lodging cap reads them.
+SETTLEMENT_SIZES = ("city", "town", "village", "hamlet")
+
+
+def settlement_size(kind):
+    """The settlement size a zone kind names: its biggest size word (a
+    "farming village" is a village), a town when the kind is a settlement
+    without a size word (district, market, quarter), None when the kind is
+    no settlement at all."""
+    words = _kind_words(kind)
+    if not words & set(SETTLEMENT_WORDS):
+        return None
+    for size in SETTLEMENT_SIZES:
+        if size in words:
+            return size
+    return "town"
+
+
 GREEN_LIKE_WORDS = ("green", "common")
 
 

@@ -492,12 +492,22 @@ style the composer found a clear layout for.
   id's letter is never reused). Regenerating a family keeps a hand or retired room exactly as
   it stands and drops any generated room equal to it after a turn or mirror; world generation
   and the assembler skip retired rooms (`worldgen.fixed_rooms.active`).
+- **Two-sleeper bedrooms:** `bedroom.json` carries the composer's second pass — the same
+  recipes composed for `sleeps {"singles": 2}` (two beds, each on its own access cells),
+  under the same rules and the same dedupe, their ids continuing the letter sequence. A
+  `description` says "for two" only of these rooms; a hand room or an older room that
+  happens to sleep two keeps its own description untouched.
 - **The assembler:** one-storey library buildings can be placed from these rooms whole
   (`--room-assembler`, `worldgen/assembler.py`). What helps it place a family: door offsets
   on three or four sides (a room with doors on one side can only end a wing), stretch lines
   for growing into a leftover strip, and a variant one cell up in each axis at the same
   clearance and wealth — without one, a strip beside the room can force the building back
-  to the old method.
+  to the old method. The assembler never gives a family up for want of a stored room: when
+  every stored room misses (band, clearance, wealth tier, sleepers or furnishings) it
+  composes candidates from the family's recipes on the spot — the same checks as the
+  generator — and tries the family's neighbouring band one step larger, then one smaller,
+  before falling back. A stored room that fits always comes first, so good coverage of a
+  family's bands and sleeper counts is what keeps buildings on the library's own rooms.
 
 ## Purposes: `purposes.json`
 

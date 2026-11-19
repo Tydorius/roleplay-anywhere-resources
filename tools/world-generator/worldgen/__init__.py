@@ -69,6 +69,7 @@ class World:
         self.reserved = set()
         self.failures = []
         self.fallbacks = []
+        self.notes = []           # run notes (rooms the assembler built on the spot)
         self.side_exits = []
         self.default_ground = ("grass", "grass")   # the plan's dominant wild ground
         self.metrics = {}
@@ -1038,6 +1039,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.failures.extend([(w, r) if i == 0 else (f"{w} [{piece_label}]", r)
                                    for (w, r) in zout.failures])
             world.fallbacks.extend(zout.fallbacks)
+            world.notes.extend(zout.notes)
             world.side_exits.extend(zout.side_exits)
             if zout.spine_rects:
                 g, tex = zout.spine_ground

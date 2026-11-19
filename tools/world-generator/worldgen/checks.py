@@ -912,6 +912,7 @@ def run_checks(world):
         "objects": {"placed": len(world.objects),
                     "unplaced": [{"what": w, "reason": r} for (w, r) in notes]},
         "hint_fallbacks": [{"what": w, "reason": r} for (w, r) in getattr(world, "fallbacks", [])],
+        "notes": [{"what": w, "reason": r} for (w, r) in getattr(world, "notes", [])],
         "density": {"rooms": room_density, "outdoor_per_100_cells": zone_density,
                     "building_coverage": building_coverage},
         "zone_fill": _zone_fill(world),

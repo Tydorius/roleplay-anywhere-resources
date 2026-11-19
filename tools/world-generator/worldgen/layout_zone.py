@@ -128,6 +128,7 @@ class ZoneOut:
         self.reserved = set()     # path + branch + entrance approach cells
         self.failures = []        # (what, reason) strings
         self.fallbacks = []       # hints that could not be met, placed anywhere free
+        self.notes = []           # run notes (a room the assembler built on the spot)
         self.side_exits = []      # (building or complex, room, cell) added by exits.py
         self.ground_blocked = set()  # what stands on the open ground (see _splits_ground)
         self.solid_props = set()  # cells of the solid props placed so far
@@ -1031,6 +1032,7 @@ def _record_furniture(out, b):
     note = assembler.fallback_note(b.layout.design.name)
     if note is not None:
         out.fallbacks.append(note)
+    out.notes.extend(assembler.spot_notes(b.layout.design.name))
     for (t, room_name) in b.layout.dropped:
         out.failures.append((f"piece {t} in {room_name}", "dropped: over the 28x22 building cap"))
     for name in getattr(b.layout, "unit_dropped", []) or []:

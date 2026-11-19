@@ -454,6 +454,19 @@ corridor and stair positions identical, numbering continuing — with no
 per-storey design; each storey is laid out as its own 1.0 floor, so a stack
 of any height fits beside the map.
 
+**Lodging fits its settlement.** A building of a lodging kind (an inn, a
+tavern with rooms, a hostel, a lodge, a boarding house, a waystation, a
+caravanserai — one table for all of them) carries at most 2 units in a hamlet,
+4 in a village, 10 in a town, 24 in a city. The settlement's size comes from
+the zone kinds — the one source — and a lodging outside every settlement (a
+roadside inn) takes the plan's largest. A building whose units are one bed
+each (Bunk, Berth, Bed, Cot, Hammock) is a dormitory: one room sleeping the
+count, split in two past eight beds, not unit copies. With the floors
+extension on, a lodging or dormitory of three or more beds the plan left at
+one storey goes up to two — the unit rows halve, the dormitory sits above the
+ground rooms — through the same storey machinery as any taller building; with
+the extension off, none of this applies and the plan's storeys stand.
+
 **A row of parts** (`"shape": "row"`, `"frontage": "north|south|east|west"`,
 `"front": "street|parking|walkway|none"`) lines parts up side by side facing
 the frontage, `linked` neighbours butting (the builder joins them with a
@@ -572,6 +585,17 @@ never fails because of the assembler. Rooms are picked by family and purpose,
 wealth tier and size band, seeded by the world, so the same seed builds the
 same house. `library-seed/compare_assembler.py` prints the two methods'
 footprints and room sizes side by side.
+
+A family whose stored rooms all miss — the band, the clearance, the wealth
+tier, the sleepers or the furnishings — does not give the building up: the
+assembler composes candidates live from the family's recipes, under the same
+checks the room generator applies, and a room built that way for a family that
+ships stored rooms is recorded in the run's notes (`metrics.json` `notes`),
+never as a fallback. The band itself is tolerant: a share whose band yields
+nothing takes the family's neighbouring band one step larger first, then one
+step smaller. The bedroom family ships rooms for two singles as well — the
+shared bedrooms and children's lofts — composed under the same rules as the
+one-bed rooms, so a household's children sleep in a room the library drew.
 
 ## How zones are sized
 

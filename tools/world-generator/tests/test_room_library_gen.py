@@ -240,17 +240,22 @@ class TestShippedRooms(unittest.TestCase):
     def test_grand_rooms_stay_within_the_area_ratio(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms,
                       self.privies, self.baths, self.closets):
-            roomy = {(r["recipe"], r["style"]): r["size"][0] * r["size"][1]
+            # the roomy sibling is the same recipe, style and sleeper count
+            # (the bedroom family ships one-bed and two-bed rooms)
+            def sibling(r):
+                return (r["recipe"], r["style"],
+                        (r.get("sleeps") or {}).get("singles", 0))
+            roomy = {sibling(r): r["size"][0] * r["size"][1]
                      for r in rooms if r["clearance"] == "roomy"}
             for room in rooms:
                 if room["clearance"] != "grand":
                     continue
                 with self.subTest(room=room["id"]):
-                    self.assertIn((room["recipe"], room["style"]), roomy,
+                    self.assertIn(sibling(room), roomy,
                                   "no roomy sibling to size against")
                     w, h = room["size"]
                     cap = math.ceil(RC.GRAND_AREA_RATIO
-                                    * roomy[(room["recipe"], room["style"])])
+                                    * roomy[sibling(room)])
                     self.assertLessEqual(w * h, cap,
                                          f"{w}x{h} = {w * h} cells over the "
                                          f"cap of {cap}")
@@ -258,17 +263,20 @@ class TestShippedRooms(unittest.TestCase):
     def test_every_grand_room_outranks_its_roomy_sibling(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms,
                       self.privies, self.baths, self.closets):
-            roomy = {(r["recipe"], r["style"]): len(r["pieces"])
+            def sibling(r):
+                return (r["recipe"], r["style"],
+                        (r.get("sleeps") or {}).get("singles", 0))
+            roomy = {sibling(r): len(r["pieces"])
                      for r in rooms if r["clearance"] == "roomy"}
             for room in rooms:
                 if room["clearance"] != "grand":
                     continue
                 with self.subTest(room=room["id"]):
-                    self.assertIn((room["recipe"], room["style"]), roomy,
+                    self.assertIn(sibling(room), roomy,
                                   "no roomy sibling to outdo")
                     self.assertGreater(
                         len(room["pieces"]),
-                        roomy[(room["recipe"], room["style"])])
+                        roomy[sibling(room)])
 
     def test_every_grand_room_stays_under_eight_cells_per_piece(self):
         for rooms in (self.bedrooms, self.masters, self.washrooms,
@@ -358,6 +366,69 @@ class TestShippedRooms(unittest.TestCase):
                          sum(map(len, (self.bedrooms, self.masters,
                                        self.washrooms, self.privies,
                                        self.baths, self.closets))))
+
+
+class TestTwoSleeperBedrooms(unittest.TestCase):
+    """The second pass: the bedroom recipes composed for two singles — the
+    two-bed rooms a shared bedroom or a children's loft asks for."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(GEN, "library", "rooms", "bedroom.json"),
+                  encoding="utf-8") as fh:
+            cls.bedrooms = json.load(fh)["rooms"]
+
+    def two_sleeper_rooms(self):
+        return [r for r in self.bedrooms
+                if (r.get("sleeps") or {}).get("singles") == 2
+                and (r.get("sleeps") or {}).get("couples") == 0]
+
+    def test_two_sleeper_rooms_ship_at_small_and_medium(self):
+        bands = {r["sizeBand"] for r in self.two_sleeper_rooms()}
+        self.assertIn("small", bands, bands)
+        self.assertIn("medium", bands, bands)
+
+    def test_every_two_sleeper_room_sleeps_two_singles_in_two_beds(self):
+        for room in self.two_sleeper_rooms():
+            with self.subTest(room=room["id"]):
+                self.assertEqual(room["sleeps"],
+                                 {"singles": 2, "couples": 0})
+                beds = [p for p in room["pieces"] if p["role"] == "sleep"]
+                self.assertEqual(len(beds), 2,
+                                 "two beds for two singles")
+
+    def test_every_two_sleeper_room_keeps_the_access_rules(self):
+        """Both beds sit on cells their access constraints keep clear, each
+        on its own the way the assembler lays it."""
+        data, lib = RG.load(), WL.load()
+        for room in self.two_sleeper_rooms():
+            with self.subTest(room=room["id"]):
+                errors = [e for e in FR.check([room], data, lib)
+                          if "access cell" in e or "faces nothing" in e
+                          or "needs a door" in e]
+                self.assertEqual(errors, [])
+
+    def test_one_sleeper_rooms_come_out_unchanged(self):
+        """The first pass keeps its shape: one bed for one single, and "for
+        two" marks only the second pass's rooms (the shipped servants' room
+        sleeps two without ever saying so)."""
+        ones = [r for r in self.bedrooms
+                if (r.get("sleeps") or {}).get("singles") == 1]
+        self.assertGreater(len(ones), 0)
+        for room in ones:
+            with self.subTest(room=room["id"]):
+                self.assertEqual(room["sleeps"],
+                                 {"singles": 1, "couples": 0})
+                self.assertNotIn("for two", room.get("description", ""))
+        servants = [r for r in self.bedrooms
+                    if r["id"] == "bedroom.narrow.a.tight.flush"]
+        self.assertEqual(len(servants), 1)
+        self.assertEqual(servants[0]["sleeps"],
+                         {"singles": 2, "couples": 0})
+        self.assertNotIn("for two", servants[0]["description"])
+        for room in self.two_sleeper_rooms():
+            if room.get("_fortwo") is not None:      # never shipped
+                self.fail(room["id"])
 
 
 class TestFamilyBandRooms(unittest.TestCase):

@@ -17,10 +17,10 @@ from . import cast as cast_mod
 from . import hints as hints_mod
 from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     HUB_POSITIONS, ITEM_QUALITIES, ITEM_TYPES, ROW_FRONTS,
-                    SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
+                    SETTLEMENT_SIZES, SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
                     WATER_FEATURE_KINDS, WATER_MARKS,
                     bed_capacity, is_spare_room, is_sleep_name as _sleeps,
-                    outdoor_name, outdoor_water)
+                    outdoor_name, outdoor_water, settlement_size)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -38,6 +38,19 @@ EXTERIORS = ("", "void")
 UNIT_NUMBERING = ("plain", "storey")
 MAX_UNIT_COUNT = cast_mod.MAX_FLATS         # copies across the building's storeys
 MAX_UNIT_RESIDENTS = cast_mod.MAX_FLAT_BEDS  # beds stamped inside each copy
+
+# one table for the lodging kinds: a building whose kind (or whose unit name —
+# an "Inn room" makes any kind a lodging) carries one of these words rents
+# beds by the room, so its units fit the settlement it stands in
+LODGING_WORDS = frozenset(("inn", "tavern", "pub", "alehouse", "saloon",
+                           "cantina", "hotel", "motel", "hostel", "lodge",
+                           "lodging", "boarding", "waystation",
+                           "caravanserai", "guesthouse", "guest"))
+# the units that are one bed each: a building of them is a dormitory, not
+# copies of a room
+BUNK_WORDS = frozenset(("bunk", "berth", "bed", "cot", "hammock", "barracks"))
+# how many lodging units a settlement of each size carries (model.SETTLEMENT_SIZES)
+LODGING_UNIT_CAPS = {"city": 24, "town": 10, "village": 4, "hamlet": 2}
 
 MAX_BUILDINGS = 12      # across the whole P1 plan, before population lifts it
 MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
@@ -147,6 +160,11 @@ def _building_line(b):
         wc += f", {b['condition']}"
     line = (f"{b.get('name')} - {b.get('kind')}, {b.get('sizeClass')}{wc}{s}{r}{cp}: "
             f"{b.get('purpose', '')}{y}")
+    if _check_int(b.get("dormitory")) and b["dormitory"] > 0:
+        where = "upstairs, over the ground rooms" \
+            if _check_int(b.get("storeys")) and b["storeys"] > 1 else "on the ground floor"
+        line += (f" Its {b['dormitory']} bunks are one dormitory room "
+                 f"{where}, not units")
     if b.get("status") in cast_mod.STATUS_NOTES:
         why = f" {b['why']}" if b.get("why") else ""
         line += f" [{b['status']}, {cast_mod.STATUS_NOTES[b['status']]}.{why}]"
@@ -1140,6 +1158,60 @@ def check_p1(d, floors=False, residents=None):
     return errors[:MAX_ERRORS]
 
 
+def _kind_word_set(text):
+    return set(re.findall(r"[a-z]+", str(text or "").lower()))
+
+
+def _lodge_to_fit(b, zone_kind, plan_settlement, floors, log):
+    """The P1 lodging rules, one pass: a lodging kind's units.count fits its
+    settlement (hamlet 2, village 4, town 10, city 24 — the zone kinds are
+    the one source of settlement size, and a lodging outside every
+    settlement takes the plan's largest); a building of single-bed units is
+    a dormitory (one room sleeping the count, not unit copies); and with the
+    floors extension on, a lodging or dormitory P1 left at one storey goes
+    up to two when that makes the footprint smaller (3 or more beds: the
+    unit rows halve, the dormitory moves above the ground rooms)."""
+    u = b.get("units")
+    if not isinstance(u, dict) or not _check_int(u.get("count")):
+        return
+    words = _kind_word_set(b.get("kind")) | _kind_word_set(u.get("name"))
+    if words & LODGING_WORDS:
+        size = settlement_size(zone_kind) or plan_settlement
+        cap = LODGING_UNIT_CAPS[size]
+        if u["count"] > cap:
+            log.append((f"building {b['name']}",
+                        f"units.count {u['count']} -> {cap}: a lodging fits "
+                        f"its settlement ({size}, from the zone kinds)"))
+            u["count"] = cap
+            if _check_int(u.get("perStorey")) and u["perStorey"] > cap:
+                u["perStorey"] = cap
+    if u.get("residents") == 1 and words & BUNK_WORDS:
+        n = u["count"]
+        log.append((f"building {b['name']}",
+                    f"units {u.get('name')!r} x{n} -> one dormitory room "
+                    f"sleeping {n}: bunks and barracks are a dormitory, "
+                    f"not units"))
+        b.pop("units", None)
+        b["residents"] = n
+        b.pop("couples", None)
+        b["dormitory"] = n
+    if not floors:
+        return
+    if _check_int(b.get("dormitory")):
+        beds = b["dormitory"]
+    elif isinstance(b.get("units"), dict) and words & LODGING_WORDS \
+            and _check_int(b["units"].get("count")):
+        beds = b["units"]["count"]
+    else:
+        beds = 0
+    st = b.get("storeys", 1)
+    if beds >= 3 and not (_check_int(st) and st > 1):
+        log.append((f"building {b['name']}",
+                    f"storeys 1 -> 2: the beds go upstairs over the ground "
+                    f"rooms ({beds} beds halve the footprint)"))
+        b["storeys"] = 2
+
+
 def sanitize_p1(d, log, floors=False, residents=None):
     """Drop bad zones/buildings/roads and default bad enums; log each change."""
     d["name"] = d.get("name") if _is_str(d.get("name")) else "Generated World"
@@ -1202,6 +1274,11 @@ def sanitize_p1(d, log, floors=False, residents=None):
     part_names = {p.get("building") for c in (d.get("compounds") or [])
                   if isinstance(c, dict)
                   for p in (c.get("parts") or []) if isinstance(p, dict)}
+    # the plan's largest settlement from the zone kinds: a lodging outside
+    # every settlement (a roadside inn) fits this one
+    sizes = [settlement_size(z.get("kind")) for z in zones]
+    sizes = [s for s in sizes if s is not None]
+    plan_settlement = min(sizes, key=SETTLEMENT_SIZES.index) if sizes else "hamlet"
     seen, total = set(), 0
     for z in zones:
         keep = []
@@ -1246,6 +1323,7 @@ def sanitize_p1(d, log, floors=False, residents=None):
                             f"couple ({b.get('residents')!r} residents)"))
                 b.pop("couples", None)
             _sanitize_units(b, b["name"], log)
+            _lodge_to_fit(b, z.get("kind"), plan_settlement, floors, log)
             if floors:
                 top = 6 if (b.get("units") or b["name"] in part_names) else 3
                 if not _check_int(b.get("storeys", 1)) or not 1 <= b.get("storeys", 1) <= top:
@@ -3415,6 +3493,14 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                                  storeys=(b.get("storeys", 1) if floors else None),
                                  units=b.get("units") or False, pools=pool_names,
                                  ruined=ruined_building(b))
+            if lib and floors and _check_int(b.get("dormitory")):
+                # the bunks sleep on the storey the floors machinery adds
+                # when the model's reply left them off it
+                library_plan.ensure_dorm_upper(design, b, lib, registry, band,
+                                               genre, world_seed, stats["dropped"])
+                for t in registry.templates():
+                    if t.get("forSleep"):
+                        bed_templates[t["name"]] = bed_capacity(tuple(t["size"]))
             designs.append(design)
             # a home that came back with fewer beds than P1 promised sleeps
             # only what its furniture beds (the layout's bed-ensuring pass

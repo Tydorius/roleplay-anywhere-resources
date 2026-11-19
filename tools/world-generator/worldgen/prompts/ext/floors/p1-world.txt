@@ -9,3 +9,8 @@ STOREYS (the floors extension)
 - "numbering": "plain" names the copies Apartment 1, 2, 3 across the floors;
   "storey" numbers each floor's rooms 101, 102 ... 201, 202 (hotel or
   hospital style).
+- A lodging's room count fits its settlement: about 2 rooms for a hamlet,
+  4 for a village, 10 for a town, 24 for a city. An inn in a hamlet is a
+  common hall and two rooms, not a hotel.
+- Bunks and barracks are one dormitory room, not units: give the building
+  "residents" (one per bunk) and let one big room hold the beds.

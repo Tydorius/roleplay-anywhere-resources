@@ -6,7 +6,11 @@ theirs names a library purpose). A library cottage assembles with its rooms
 reached from the entrance, doors on shared walls, no overlap and every piece
 inside its room; a purpose the library does not know falls back to the old
 method with the reason recorded; the same seed gives the same building; a
-bedroom picked for two residents sleeps two."""
+bedroom picked for two residents sleeps two. A fixed family with no stored
+fit composes its room on the spot (noted in the run's notes, never a
+fallback); a share whose band gives nothing takes the family's next band one
+step larger first; the live run's tenant cottage assembles, its children's
+loft sleeping two."""
 import json
 import os
 import tempfile
@@ -71,9 +75,13 @@ COTTAGE_PLAN = {
 def cottage_plan(**changes):
     data = json.loads(json.dumps(COTTAGE_PLAN))
     building = data["buildings"][0]
+    # the parsed design reads residents, couples, wealth and condition from
+    # the zone's building entry, so a change has to reach both
+    zone_b = data["zones"][0]["buildings"][0]
     for key, value in changes.items():
         if key in ("wealth", "condition", "residents", "couples"):
             building[key] = value
+            zone_b[key] = value
         elif key == "use":
             building["rooms"][2]["use"] = value
         else:
@@ -180,7 +188,140 @@ class TestACottageAssembles(unittest.TestCase):
                           if f[0] == "building Rose Cottage"], self.world.fallbacks)
 
 
-class TestFallbacksAndSeeds(unittest.TestCase):
+# the live run's tenant cottage: the plan whose children's loft (two singles,
+# poor, tight) once missed every stored bedroom and fell back
+TENANT_COTTAGE_PLAN = {
+    "name": "Millet Hollow",
+    "worldBackground": "A forgotten village.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "normal", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Millet Hollow", "kind": "village", "sizeClass": "medium",
+        "description": "The hollow.", "ground": "grass", "adjacentTo": [],
+        "outdoor": [], "buildings": [
+            {"name": "Tenant Cottage", "kind": "cottage", "sizeClass": "small",
+             "purpose": "a cotter's home", "residents": 4, "couples": 1,
+             "wealth": "poor", "yard": None}],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }],
+    "roads": [],
+    "templates": [],
+    "buildings": [
+        {"name": "Tenant Cottage", "wall": "wood", "ground": "wood",
+         "residents": 4, "couples": 1, "wealth": "poor", "condition": "kept",
+         "rooms": [
+             {"name": "Hearth Room", "share": "large", "use": "living_room",
+              "purpose": "the fire and the pot"},
+             {"name": "Bedchamber", "share": "medium", "use": "master_bedroom",
+              "purpose": "the cotter's bed"},
+             {"name": "Children's Loft", "share": "small", "use": "bedroom",
+              "purpose": "the children sleep tight under the eaves"}],
+         "connections": [["Hearth Room", "Bedchamber"],
+                         ["Hearth Room", "Children's Loft"]],
+         "entrance": {"room": "Hearth Room", "side": "south"},
+         "furniture": [], "yard": None},
+    ],
+    "npcs": [],
+    "player": {"name": "The Wanderer", "gender": "female", "role": "traveller",
+               "home": "Tenant Cottage", "work": "Millet Hollow",
+               "description": "Passing through.", "physicalDescription": "cloaked"},
+}
+
+
+class TestTheTenantCottageAssembles(unittest.TestCase):
+    """The live run's fallback: a children's loft for two singles at small,
+    tight and poor, before the two-sleeper bedrooms shipped."""
+
+    def test_the_cottage_assembles_and_the_loft_sleeps_two(self):
+        world = worldgen.run(TENANT_COTTAGE_PLAN, seed=1, room_assembler=True)
+        bl = assembled(world, "Tenant Cottage")
+        self.assertIsNotNone(bl, "no building in the world")
+        self.assertTrue(getattr(bl, "assembled", False),
+                        [f for f in world.fallbacks
+                         if f[0] == "building Tenant Cottage"])
+        self.assertEqual(len(bl.rooms), 3, [r.base_name for r in bl.rooms])
+        beds = 0
+        for o in world.objects:
+            if not o.region.endswith("Children's Loft"):
+                continue
+            t = world.templates[o.template]
+            if t.for_sleep:
+                beds += bed_capacity(t)
+        self.assertGreaterEqual(beds, 2, "two children, no two beds")
+
+
+class TestBuildOnTheSpot(unittest.TestCase):
+    """A fixed family with no stored fit composes its room live — noted as a
+    run note, never a fallback."""
+
+    def test_a_bedroom_for_three_singles_builds_on_the_spot(self):
+        world = worldgen.run(cottage_plan(residents=3, couples=0, use="bedroom"),
+                             seed=7, room_assembler=True)
+        bl = assembled(world)
+        self.assertTrue(getattr(bl, "assembled", False), world.fallbacks)
+        notes = [n for n in world.notes if n[0] == "room Bedroom in building Rose Cottage"]
+        self.assertEqual(len(notes), 1, world.notes)
+        self.assertIn("built on the spot", notes[0][1])
+        self.assertFalse([f for f in world.fallbacks
+                          if f[0] == "building Rose Cottage"], world.fallbacks)
+        beds = 0
+        for o in world.objects:
+            if not o.region.endswith("Bedroom"):
+                continue
+            t = world.templates[o.template]
+            if t.for_sleep:
+                beds += bed_capacity(t)
+        self.assertGreaterEqual(beds, 3, "three residents, no three beds")
+
+    def test_a_stored_fit_leaves_no_note(self):
+        world = worldgen.run(cottage_plan(residents=2, couples=0, use="bedroom"),
+                             seed=7, room_assembler=True)
+        bl = assembled(world)
+        self.assertTrue(getattr(bl, "assembled", False), world.fallbacks)
+        self.assertEqual([n for n in world.notes
+                          if "Bedroom" in n[0] and "built on the spot" in n[1]],
+                         [], world.notes)
+
+
+class TestBandTolerance(unittest.TestCase):
+    """A share whose band gives nothing takes the family's neighbouring band,
+    one step larger first (the live run's sickroom: a ward that cannot fit
+    two beds at small composes at medium)."""
+
+    def test_a_ward_share_small_takes_the_medium_band(self):
+        import random
+        from worldgen import assembler, model
+        plan_data = {"name": "c", "setting": {"era": "medieval",
+                                               "technology": "iron",
+                                               "density": "normal",
+                                               "climate": "mild"},
+                     "zones": [{"name": "Z", "kind": "village",
+                                "sizeClass": "medium", "adjacentTo": [],
+                                "outdoor": [], "buildings": [],
+                                "dressing": {"paths": "dirt", "props": [],
+                                             "filler": []}}],
+                     "roads": [], "templates": [], "buildings": [], "npcs": [],
+                     "player": {"name": "x"}}
+        ctx = assembler.activate(model.parse_plan(plan_data), plan_data, "c", {})
+        try:
+            from worldgen.model import BuildingDesign, RoomSpec
+            d = BuildingDesign(name="Hut", kind="clinic", wealth="poor",
+                               condition="kept", residents=1,
+                               rooms=[RoomSpec(name="Sickroom", share="small",
+                                               use="infirmary", purpose="")],
+                               connections=[], entrance_room="Sickroom",
+                               entrance_side="south")
+            pool, reason = assembler._room_pool(ctx, d, d.rooms[0], "ward",
+                                                 "poor", random.Random(0))
+            self.assertTrue(pool, reason)
+            self.assertEqual({r.get("sizeBand") for r in pool}, {"medium"},
+                             [r.get("id") or r.get("size") for r in pool])
+        finally:
+            assembler.deactivate()
+
+
+
     def test_an_unknown_purpose_falls_back_with_the_reason(self):
         world = worldgen.run(cottage_plan(use="throne_room"), seed=7,
                              room_assembler=True)

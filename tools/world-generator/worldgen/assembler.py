@@ -125,6 +125,7 @@ class _Context:
                 self.registry.names.add(t["name"])
         self.cache = {}          # (name, entrance_side) -> _Assembly | None
         self.fallbacks = {}      # building name -> reason
+        self.spot_built = {}     # building name -> [(room name, note)]
         self.injected = set()    # template names already in the plan
         self.sleepers = {}       # design room name -> (singles, couples)
         self._clearances = {}    # (design name, family) -> clearance
@@ -181,6 +182,15 @@ def fallback_note(name):
     return (f"building {name}", f"room assembler fell back: {_context.fallbacks[name]}")
 
 
+def spot_notes(name):
+    """[(label, note)] for the rooms of a building composed on the spot: the
+    run's notes carry them, never its fallbacks."""
+    if _context is None:
+        return []
+    return [(f"room {room} in building {name}", note)
+            for (room, note) in _context.spot_built.get(name, [])]
+
+
 # ------------------------------------------------------------------ qualifying
 
 def _qualifies(design):
@@ -224,6 +234,7 @@ def _assembly_for(design):
         reason = f"{type(e).__name__}: {e}"
     if asm is None:
         ctx.fallbacks.setdefault(design.name, reason or "no assembly")
+        ctx.spot_built.pop(design.name, None)
     else:
         ctx.fallbacks.pop(design.name, None)
     ctx.cache[key] = asm
@@ -301,37 +312,34 @@ def _furnishable(ctx, spec, room, tier):
     return True
 
 
-def _room_pool(ctx, design, spec, family, tier, rng):
-    """The variant rooms one design room may take, best first. Fixed families
-    read their stored rooms; every other family composes live the way
-    ``generate_rooms`` does. ([rooms], reason)."""
-    band = _band_for_share(ctx, family, spec.share)
-    singles, couples = ctx.sleepers.get(spec.name, (0, 0))
-    if any(r.get("family") == family for r in FR.active(ctx.rooms)):
-        pool = [r for r in FR.active(ctx.rooms)
-                if r.get("family") == family
-                and r.get("clearance") == clearance_of(ctx, design, family)
-                and tier in (r.get("wealth") or [])
-                and r.get("sizeBand") == band
-                and _sleeps_ok(r, singles, couples)]
-        if not pool:
-            return [], (f"no {family} room of band {band} at "
-                        f"{clearance_of(ctx, design, family)} {tier} "
-                        f"sleeping {singles} single and {couples} coupled")
-        pool = [r for r in pool if _furnishable(ctx, spec, r, tier)]
-        if not pool:
-            return [], (f"no {family} room of band {band} at "
-                        f"{clearance_of(ctx, design, family)} {tier} whose "
-                        f"pieces all pick objects")
-        pool.sort(key=lambda r: (_spare_beds(r, singles, couples), r.get("id", "")))
-        flush = [r for r in pool if r.get("style") == "flush"]
-        return flush or pool, None
-    recipes = [r for r in sorted(ctx.groups["recipes"].values(),
-                                 key=lambda r: str(r.get("layout") or ""))
-               if r.get("family") == family]
+def _band_order(ctx, family, share_band):
+    """The share's band first, then the family's neighbouring band one step
+    larger and one step smaller, both by cell area — the tolerance a room gets
+    before the assembler gives the building up. Families with bands of their
+    own (library.json familySizeBands) walk those; every other family walks
+    the shared bands."""
+    fam_bands = FR.family_bands(family, ctx.lib)
+    ordered = fam_bands or [{"name": n, "cells": c} for n, c in FR.BANDS.items()]
+    ordered = sorted(ordered, key=lambda b: (b["cells"][0], b["cells"][1]))
+    names = [b["name"] for b in ordered]
+    if share_band not in names:
+        return [share_band]
+    i = names.index(share_band)
+    out = [share_band]
+    if i + 1 < len(names):
+        out.append(names[i + 1])
+    if i > 0:
+        out.append(names[i - 1])
+    return out
+
+
+def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
+                  recipes, rng):
+    """A few composed variants of the family's recipes at one band, or
+    (None, why) — the live path ``generate_rooms`` takes, shared by families
+    without stored rooms and stored families whose rooms all miss."""
     if not recipes:
-        return [], f"no {family} room stored and no recipe to compose one"
-    clearance = clearance_of(ctx, design, family)
+        return None, f"no {family} room stored and no recipe to compose one"
     key = (family, clearance, band, tier, singles, couples)
     if key in ctx._pools:
         return ctx._pools[key], None
@@ -362,7 +370,62 @@ def _room_pool(ctx, design, spec, family, tier, rng):
     if out:
         ctx._pools[key] = out
         return out, None
-    return [], reason
+    return None, reason
+
+
+def _room_pool(ctx, design, spec, family, tier, rng):
+    """The variant rooms one design room may take, best first. Each band of
+    the family — the share's band, then one step larger, then one smaller —
+    offers its stored rooms first and, for a family whose stored rooms all
+    miss (band, clearance, wealth, sleepers, furnishings), candidates
+    composed live from its recipes the same way; the first band that yields a
+    room wins, and a room built on the spot for a family with stored rooms is
+    noted. ([rooms], reason)."""
+    share = _band_for_share(ctx, family, spec.share)
+    singles, couples = ctx.sleepers.get(spec.name, (0, 0))
+    clearance = clearance_of(ctx, design, family)
+    recipes = [r for r in sorted(ctx.groups["recipes"].values(),
+                                 key=lambda r: str(r.get("layout") or ""))
+               if r.get("family") == family]
+    stored = [r for r in FR.active(ctx.rooms) if r.get("family") == family]
+    reason = None
+    for band in _band_order(ctx, family, share):
+        missed = None
+        if stored:
+            fits = [r for r in stored
+                    if r.get("clearance") == clearance
+                    and tier in (r.get("wealth") or [])
+                    and r.get("sizeBand") == band
+                    and _sleeps_ok(r, singles, couples)]
+            if fits:
+                pool = [r for r in fits if _furnishable(ctx, spec, r, tier)]
+                if pool:
+                    pool.sort(key=lambda r: (_spare_beds(r, singles, couples),
+                                             r.get("id", "")))
+                    flush = [r for r in pool if r.get("style") == "flush"]
+                    return flush or pool, None
+                missed = (f"no {family} room of band {band} at {clearance} "
+                          f"{tier} whose pieces all pick objects")
+            else:
+                missed = (f"no {family} room of band {band} at {clearance} "
+                          f"{tier} sleeping {singles} single and "
+                          f"{couples} coupled")
+            reason = reason or missed
+        composed, why = _compose_pool(ctx, spec, family, tier, band, clearance,
+                                      singles, couples, recipes, rng)
+        if composed:
+            if stored and not any(room == spec.name
+                                  for room, _note in
+                                  ctx.spot_built.get(design.name, [])):
+                # the assembly retries a placement several times, so the
+                # same room pools again: one note per room
+                ctx.spot_built.setdefault(design.name, []).append(
+                    (spec.name,
+                     f"{family} room built on the spot at band {band} "
+                     f"({missed or 'no stored room fits'})"))
+            return composed, None
+        reason = reason or why
+    return [], reason or f"no {family} recipe composed a {share} room"
 
 
 def clearance_of(ctx, design, family):
