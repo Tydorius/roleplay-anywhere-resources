@@ -12,7 +12,11 @@ machine shed and milking parlour recipes have stored rooms whose machine
 slots only the new equipment fills, and no medieval room changed. rl-14d
 adds the scifi set: every new object loads and binds to a farm purpose
 role in the scifi band, the vat farm and gene bank recipes have stored
-rooms, and no room that shipped before rl-14d stands changed."""
+rooms, and no room that shipped before rl-14d stands changed. rl-14f adds
+the farmsteads of every era: five new wings, three buildings and three
+suites load and check clean, the barn wings stand two storeys with a
+hayloft upstairs (design 8.1g), the farmhouse wing's Dairy is the dairy
+purpose, and the flat suites match planner kinds in their own bands."""
 import json
 import random
 import unittest
@@ -726,6 +730,125 @@ PRE_RL14D_ROOMS = (
     ("granary.medium.a.tight.flush", "granary.long.a", [8, 6], 14),
     ("granary.small.a.tight.flush", "granary.small.a", [6, 4], 8),
 )
+
+
+# rl-14f's wings: (id, band, purpose, storeys)
+FARMSTEAD_WINGS = (
+    ("farm.longhouse", "medieval", "common_rooms", 2),
+    ("farm.sheds.industrial", "industrial", "stables", 2),
+    ("ranch.house", "modern", "common_rooms", 1),
+    ("ranch.sheds", "modern", "stables", 1),
+    ("agri.dome", "scifi", "workshop", 1),
+)
+
+# rl-14f's buildings: (id, band, shape)
+FARMSTEAD_BUILDINGS = (
+    ("farmstead.industrial", "industrial", "l"),
+    ("ranch.courtyard", "modern", "courtyard"),
+    ("agri.station", "scifi", "spine"),
+)
+
+# rl-14f's suites: (id, band, a planner kind that finds it, room purposes)
+FARMSTEAD_SUITES = (
+    ("farm.mixed", "industrial", "steading",
+     ("barn", "dairy", "granary", "kitchen", "living_room", "master_bedroom")),
+    ("farm.ranch", "modern", "farmhouse",
+     ("bedroom", "kitchen", "living_room", "machine_shed", "master_bedroom",
+      "washroom")),
+    ("farm.agridome", "scifi", "agri dome",
+     ("hydroponics_bay", "laboratory", "storage", "vat_farm")),
+)
+
+
+class TestFarmsteadRecipesPerEra(unittest.TestCase):
+    """rl-14f: the farmstead wings, buildings and suites of every era load
+    and check clean; the barn wings stand two storeys with a hayloft upstairs
+    (design 8.1g); and the farmhouse wing's Dairy is the dairy purpose."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = L.load(L.LIB_DIR)
+        cls.errors, cls.warnings = L.check(cls.lib)
+
+    def test_the_shipped_library_still_checks_clean(self):
+        self.assertEqual(self.errors, [], "\n".join(self.errors[:40]))
+
+    def test_every_new_wing_loads_as_declared(self):
+        for wid, band, purpose, storeys in FARMSTEAD_WINGS:
+            with self.subTest(wing=wid):
+                w = self.lib.wings[wid]
+                self.assertEqual(w["bands"], [band])
+                self.assertEqual(w["purpose"], purpose)
+                self.assertEqual(w["storeys"], storeys)
+
+    def test_the_barn_wings_stand_two_storeys_with_a_hayloft(self):
+        for wid in ("farm.longhouse", "farm.sheds.industrial"):
+            with self.subTest(wing=wid):
+                w = self.lib.wings[wid]
+                self.assertEqual(w["storeys"], 2)
+                lofts = [r for r in w["rooms"] if r["purpose"] == "hayloft"]
+                self.assertEqual(len(lofts), 1, [r["purpose"] for r in w["rooms"]])
+                self.assertEqual(self.lib.family_of("hayloft"), "barn")
+
+    def test_every_new_wing_rooms_resolve_to_farm_families(self):
+        for wid, families in (
+                ("farm.longhouse",
+                 ("barn", "barn", "bedroom", "common_room", "kitchen", "stable")),
+                ("farm.sheds.industrial",
+                 ("barn", "barn", "dairy", "granary")),
+                ("ranch.house",
+                 ("bedroom", "bedroom.master", "common_room", "kitchen",
+                  "washroom")),
+                ("ranch.sheds", ("barn", "dairy", "granary")),
+                ("agri.dome",
+                 ("greenhouse", "greenhouse", "laboratory", "storage"))):
+            with self.subTest(wing=wid):
+                fams = sorted(self.lib.family_of(r["purpose"])
+                              for r in self.lib.wings[wid]["rooms"])
+                self.assertEqual(fams, sorted(families), fams)
+
+    def test_the_farm_house_dairy_is_the_dairy_purpose(self):
+        rooms = {r["name"]: r for r in self.lib.wings["farm.house"]["rooms"]}
+        self.assertEqual(rooms["Dairy"]["purpose"], "dairy")
+        self.assertEqual(self.lib.family_of("dairy"), "dairy")
+        # the industrial farmstead reuses the farmhouse wing
+        self.assertEqual(self.lib.wings["farm.house"]["bands"],
+                         ["medieval", "industrial"])
+
+    def test_every_new_building_loads_and_names_its_wings(self):
+        for bid, band, shape in FARMSTEAD_BUILDINGS:
+            with self.subTest(building=bid):
+                b = self.lib.buildings[bid]
+                self.assertEqual(b["bands"], [band])
+                self.assertEqual(b["shape"], shape)
+                for e in b["wings"]:
+                    self.assertIn(e["wing"], self.lib.wings)
+                    self.assertIn(band, self.lib.wings[e["wing"]]["bands"])
+
+    def test_the_ranch_and_station_outdoors_are_farm_grounds(self):
+        ranch = self.lib.buildings["ranch.courtyard"]
+        self.assertEqual({o["purpose"] for o in ranch["outdoor"]},
+                         {"paddock", "farmyard"})
+        station = self.lib.buildings["agri.station"]
+        self.assertEqual([o["purpose"] for o in station["outdoor"]], ["garden"])
+        for b in (ranch, station):
+            for o in b["outdoor"]:
+                with self.subTest(outdoor=o["name"]):
+                    self.assertIn(self.lib.family_of(o["purpose"]),
+                                  self.lib.outdoor_families())
+
+    def test_every_new_suite_loads_and_matches_its_planner_kinds(self):
+        from worldgen import library_plan as LP
+        for sid, band, kind, purposes in FARMSTEAD_SUITES:
+            s = self.lib.suites[sid]
+            with self.subTest(suite=sid):
+                self.assertEqual(s["bands"], [band])
+                self.assertEqual(sorted(r["purpose"] for r in s["rooms"]),
+                                 sorted(purposes))
+                found = LP.suite_by_kind(
+                    self.lib, {"kind": kind, "sizeClass": "large",
+                               "residents": 4 if band != "scifi" else 0}, band)
+                self.assertEqual((found or {}).get("id"), sid)
 
 
 if __name__ == "__main__":

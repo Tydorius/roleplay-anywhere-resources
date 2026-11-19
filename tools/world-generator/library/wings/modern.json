@@ -47,6 +47,42 @@
       "connections": [["Staff room", "Stores"]],
       "entrance": {"room": "Staff room"},
       "sleeps": "none"
+    },
+    {
+      "id": "ranch.house",
+      "purpose": "common_rooms",
+      "kinds": ["ranch house", "farmhouse", "ranch", "farm", "homestead"],
+      "bands": ["modern"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Living room",    "purpose": "living_room",    "share": "medium"},
+        {"name": "Kitchen",        "purpose": "kitchen",        "share": "small"},
+        {"name": "Master bedroom", "purpose": "master_bedroom", "share": "small"},
+        {"name": "Bedroom",        "purpose": "bedroom",        "share": "small"},
+        {"name": "Washroom",       "purpose": "washroom",       "share": "small"}
+      ],
+      "connections": [["Living room", "Kitchen"], ["Living room", "Master bedroom"],
+                      ["Living room", "Bedroom"], ["Living room", "Washroom"]],
+      "entrance": {"room": "Living room"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "ranch.sheds",
+      "purpose": "stables",
+      "kinds": ["machine shed", "barn", "feedlot", "dairy", "milking parlour", "ranch sheds"],
+      "bands": ["modern"],
+      "storeys": 1,
+      "entry": "west",
+      "rooms": [
+        {"name": "Machine shed",    "purpose": "machine_shed",    "share": "large"},
+        {"name": "Granary",         "purpose": "granary",         "share": "medium"},
+        {"name": "Milking parlour", "purpose": "milking_parlour", "share": "small"}
+      ],
+      "connections": [["Machine shed", "Granary"], ["Machine shed", "Milking parlour"]],
+      "entrance": {"room": "Machine shed"},
+      "sleeps": "none"
     }
   ]
 }

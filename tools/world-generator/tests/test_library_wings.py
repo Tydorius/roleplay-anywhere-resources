@@ -199,6 +199,20 @@ class TestBuildingByKind(unittest.TestCase):
             "b.inn": {"id": "b.inn", "kinds": ["inn"], "bands": ["medieval"]}}
         self.assertIsNone(LP.building_by_kind(lib, "inn", "medieval"))
 
+    def test_a_dairy_farm_finds_the_industrial_farmstead(self):
+        r = LP.building_by_kind(self.lib, "dairy farm", "industrial")
+        self.assertEqual((r or {}).get("id"), "farmstead.industrial")
+
+    def test_a_ranch_finds_the_ranch_courtyard(self):
+        r = LP.building_by_kind(self.lib, "ranch", "modern")
+        self.assertEqual((r or {}).get("id"), "ranch.courtyard")
+
+    def test_an_agri_dome_finds_the_agri_station(self):
+        for kind in ("agri-dome", "hydroponics station", "vertical farm"):
+            with self.subTest(kind=kind):
+                r = LP.building_by_kind(self.lib, kind, "scifi")
+                self.assertEqual((r or {}).get("id"), "agri.station")
+
 
 class TestWealthOffsets(unittest.TestCase):
     def test_design_83_defaults(self):

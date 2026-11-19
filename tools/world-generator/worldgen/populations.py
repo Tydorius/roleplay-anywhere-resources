@@ -3,7 +3,8 @@ and patrols of a laid-out world, written as the game's own ``npcTemplates``
 (``world10.js`` ``addNpcType``). The generator names no character for them: a
 home's members start in place as entities of their template, and the game adds
 one member a day to any home below its ``count``, so a farm has sheep in its
-pasture, a cellar has rats and a town square has a few townsfolk. Each
+pasture, horses in its stable, oxen in its byre, a cellar has rats and a town
+square has a few townsfolk. Each
 population costs the GM attention, so the whole world holds at most ``CAP``
 creatures and the chooser trims the largest counts first.
 
@@ -27,6 +28,14 @@ GRAZING_WORDS = frozenset(
     "pasture pastures paddock paddocks pen pens fold folds field fields".split())
 # a farmyard by name, or any yard of an agricultural zone (a farm)
 FARMYARD_WORDS = frozenset("farmyard farmyards".split())
+# whole words of a room's or building's own name that home stock inside the
+# building (the base name without its parent's, like the rats read it):
+# horses in a stable or livery, oxen in a byre or cowshed, pigs in the
+# pigsty, chickens in the henhouse or coop
+HORSE_WORDS = frozenset("stable stables livery".split())
+OX_WORDS = frozenset("byre byres cowshed cowsheds oxhouse oxhouses".split())
+PIGSTY_WORDS = frozenset("pigsty pigsties sty".split())
+COOP_WORDS = frozenset("henhouse henhouses coop coops".split())
 # where rats nest, by whole words of the region's OWN name (a room's base name
 # without its building's, so a shop's bedrooms never match through the shop's
 # name): a meal store, a cellar
@@ -47,6 +56,11 @@ GUARD_ROLE = re.compile(r"\b(guard|watch|police)")
 MODERN_WORDS = re.compile(
     r"\b(present|contemporary|modern|cyberpunk|scifi|sci-fi|future|futuristic|"
     r"space|starship|near.future|post.apocalyptic|zombie)\b")
+# setting words that read as science fiction: such a world grows its food in
+# vats and racks, and the catalog carries no stock that fits it
+SCIFI_WORDS = re.compile(
+    r"\b(scifi|sci-fi|science.fiction|cyberpunk|space|starship|spaceship|"
+    r"future|futuristic)\b")
 # bands the room library reads as fantasy or historical (see library_plan)
 PERIOD_BANDS = ("medieval", "industrial")
 
@@ -57,6 +71,10 @@ CATALOG = {
               "A woolly sheep with a dark, gentle face."),
     "Cows": ("cow", "A small herd of cattle grazing the ground.",
              "A placid dairy cow, brown and white."),
+    "Horses": ("horse", "A few horses stabled by the doors.",
+               "A bay horse with a dark mane, ears turning."),
+    "Oxen": ("cow", "A pair of oxen in their stalls.",
+             "A heavy draft ox with a broad back and short horns."),
     "Goats": ("goat", "A few goats browsing the rough grass.",
               "A lean goat with stubby horns and a wise look."),
     "Pigs": ("pig", "A few pigs rooting the soft ground.",
@@ -109,6 +127,21 @@ def _gender_id(base, gender):
     return f"{base}-man" if gender == "male" else f"{base}-woman"
 
 
+def _has_livestock(plan):
+    """Whether the setting keeps livestock at all. A scifi world grows its
+    food in vats and drone-fed racks and the catalog carries no stock that
+    fits it (no vat or drone creature ships), so such a world homes none;
+    rats, crows and crowds are not livestock and stay. The band is the
+    library's own reading; without it the setting words decide, and an
+    unreadable setting keeps stock, as the library's own default is medieval."""
+    setting = plan.setting or {}
+    band = setting.get("band")
+    if band:
+        return band != "scifi"
+    text = " ".join(str(setting.get(k, "")) for k in ("genre", "era", "technology"))
+    return not SCIFI_WORDS.search(text.lower())
+
+
 def choose(world, plan, water=None):
     """The world's native populations, as template dicts ready for the spec:
     ``{name, description, physicalDescription, animationId, gender, stance,
@@ -142,6 +175,7 @@ def choose(world, plan, water=None):
     entries = []       # {"kind", "region", "count"} in world order
     taken = set()      # one population per region
     rat_spots = []     # rat candidates, settled after the walk
+    stock = _has_livestock(plan)
 
     def add(kind, region, count):
         taken.add(region.name)
@@ -155,7 +189,7 @@ def choose(world, plan, water=None):
         urban = zone is not None and _urban(zone)
         # livestock: grazing animals on pasture-named (or pasture-kind) open
         # ground, yard stock in a farmyard or a farm's yard
-        if r.kind in ("zone", "square", "yard"):
+        if stock and r.kind in ("zone", "square", "yard"):
             if _words(r.name) & GRAZING_WORDS or \
                     (r.kind == "zone" and zone_words & GRAZING_WORDS):
                 add(rng.choice(GRAZING_KINDS), r, _by_area(r, 2, 5, 60))
@@ -164,6 +198,18 @@ def choose(world, plan, water=None):
                     r.kind == "yard" and zone is not None
                     and _zone_class(zone) == "agricultural"):
                 add(rng.choice(YARD_KINDS), r, _by_area(r, 2, 5, 60))
+                continue
+        # stock homed in the buildings that serve it, by the region's own
+        # name (a stable's horses, a byre's oxen, a pigsty's pigs, a
+        # henhouse's chickens)
+        if stock and r.kind in ("room", "building"):
+            own = _own_words(world, r)
+            kind = ("Horses" if own & HORSE_WORDS else
+                    "Oxen" if own & OX_WORDS else
+                    "Pigs" if own & PIGSTY_WORDS else
+                    "Chickens" if own & COOP_WORDS else None)
+            if kind:
+                add(kind, r, _by_area(r, 2, 4, 40))
                 continue
         if r.kind in ("room", "building", "zone"):
             own = _own_words(world, r)

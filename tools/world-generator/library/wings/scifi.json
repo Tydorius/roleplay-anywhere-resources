@@ -47,6 +47,25 @@
       "entrance": {"room": "Crew quarters"},
       "sleeps": "residents",
       "wealth": "building"
+    },
+    {
+      "id": "agri.dome",
+      "purpose": "workshop",
+      "kinds": ["agri-dome", "farm module", "hydroponics bay", "vertical farm", "grow deck"],
+      "bands": ["scifi"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Grow bay",       "purpose": "hydroponics_bay", "share": "large"},
+        {"name": "Vat farm",       "purpose": "vat_farm",        "share": "medium"},
+        {"name": "Seed lab",       "purpose": "laboratory",      "share": "small"},
+        {"name": "Nutrient store", "purpose": "storage",         "share": "small"}
+      ],
+      "connections": [["Grow bay", "Vat farm"], ["Grow bay", "Seed lab"],
+                      ["Grow bay", "Nutrient store"]],
+      "entrance": {"room": "Grow bay"},
+      "sleeps": "none",
+      "wealth": "building"
     }
   ]
 }
