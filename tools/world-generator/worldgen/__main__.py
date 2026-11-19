@@ -37,13 +37,17 @@ def _generate_args(args):
                 "library": s["library"] if args.library is None else args.library,
                 "item_library": (s["item_library"] if args.item_library is None
                                  else args.item_library),
+                "room_assembler": (bool(s.get("room_assembler"))
+                                   if getattr(args, "room_assembler", None) is None
+                                   else getattr(args, "room_assembler", None)),
                 "frame": s.get("frame"),
                 "questionnaire": settings_mod.questionnaire(s)}
     if not args.idea:
         raise ValueError("give --idea, or --settings with a world settings file")
     return {"idea": args.idea, "seed": 1 if args.seed is None else args.seed,
             "extensions": args.ext, "library": args.library is not False,
-            "item_library": args.item_library is not False}
+            "item_library": args.item_library is not False,
+            "room_assembler": bool(getattr(args, "room_assembler", None))}
 
 
 def main(argv=None):
@@ -56,6 +60,10 @@ def main(argv=None):
     lay.add_argument("--ext", action="append", default=[], choices=list(IDS),
                      help="enable an extension, off by default (repeatable; "
                           "also read from plan.json)")
+    lay.add_argument("--room-assembler", dest="room_assembler", action="store_true",
+                     default=False,
+                     help="place one-storey library buildings from the room library's "
+                          "own rooms (the old footprint method otherwise)")
     gen = sub.add_parser("generate", help="run the model phases on an idea and build the scenario")
     gen.add_argument("--idea", default=None,
                      help="the world in one line (or give --settings)")
@@ -78,6 +86,10 @@ def main(argv=None):
     gen.add_argument("--ext", action="append", default=[], choices=list(IDS),
                      help="enable an extension, off by default (repeatable; "
                           "recorded in plan.json)")
+    gen.add_argument("--room-assembler", dest="room_assembler", action="store_true",
+                     default=None,
+                     help="place one-storey library buildings from the room library's "
+                          "own rooms (also read from a --settings file; off otherwise)")
     chk = sub.add_parser("check-provider",
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")
@@ -175,7 +187,8 @@ def main(argv=None):
     try:
         if args.command == "layout":
             summary = api.relayout(args.plan, seed=args.seed, extensions=args.ext,
-                                   out_dir=args.out, progress=_print_event, emit=print)
+                                   out_dir=args.out, progress=_print_event, emit=print,
+                                   room_assembler=args.room_assembler)
         else:
             summary = api.generate(provider=args.provider, out_dir=args.out,
                                    progress=_print_event, providers_path=args.providers,

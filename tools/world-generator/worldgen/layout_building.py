@@ -425,6 +425,10 @@ def building_footprint(design, templates):
     the zone packer and the layout itself agree."""
     if getattr(design, "units", None):
         return units_footprint(design, templates)
+    from . import assembler
+    placed = assembler.footprint(design, templates)
+    if placed is not None:
+        return placed
     return _resolve_plan(design, templates)[:2]
 
 
@@ -767,6 +771,10 @@ def layout_building(design, origin, rng, templates=None):
     if getattr(design, "units", None):
         w, h = units_footprint(design, templates)
         return layout_units(design, Rect(origin[0], origin[1], w, h), rng, templates)
+    from . import assembler
+    placed = assembler.build(design, origin, templates)
+    if placed is not None:
+        return placed
     if templates:
         w, h, design, furniture, dropped, needs = _resolve_plan(design, templates)
     else:

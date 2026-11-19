@@ -492,6 +492,12 @@ style the composer found a clear layout for.
   id's letter is never reused). Regenerating a family keeps a hand or retired room exactly as
   it stands and drops any generated room equal to it after a turn or mirror; world generation
   and the assembler skip retired rooms (`worldgen.fixed_rooms.active`).
+- **The assembler:** one-storey library buildings can be placed from these rooms whole
+  (`--room-assembler`, `worldgen/assembler.py`). What helps it place a family: door offsets
+  on three or four sides (a room with doors on one side can only end a wing), stretch lines
+  for growing into a leftover strip, and a variant one cell up in each axis at the same
+  clearance and wealth — without one, a strip beside the room can force the building back
+  to the old method.
 
 ## Purposes: `purposes.json`
 

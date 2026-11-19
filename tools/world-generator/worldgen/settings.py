@@ -35,15 +35,16 @@ class SettingsError(ValueError):
 
 
 def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
-         extensions=(), library=True, item_library=True, frame=None, clarify=None,
-         model=None):
+         extensions=(), library=True, item_library=True, room_assembler=False,
+         frame=None, clarify=None, model=None):
     """A settings dict, checked the same way a loaded file is."""
     data = {"kind": KIND, "version": VERSION,
             "saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "mode": mode, "idea": idea or "", "answers": answers or {},
             "population": population, "notes": notes or "", "seed": seed,
             "extensions": list(extensions or ()), "library": bool(library),
-            "item_library": bool(item_library)}
+            "item_library": bool(item_library),
+            "room_assembler": bool(room_assembler)}
     if frame:
         data["frame"] = frame
     if clarify:
@@ -54,13 +55,13 @@ def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
 
 
 def from_run(idea, seed, extensions, library, frame=None, questionnaire=None,
-             item_library=True, model=None):
+             item_library=True, room_assembler=False, model=None):
     """The settings of one generate() call."""
     q = questionnaire or {}
     return make(mode=q.get("mode") or "quick", idea=idea, answers=q.get("answers"),
                 population=q.get("population"), notes=q.get("notes") or "", seed=seed,
                 extensions=extensions, library=library, item_library=item_library,
-                frame=frame, model=model)
+                room_assembler=room_assembler, frame=frame, model=model)
 
 
 def check(data):
@@ -120,7 +121,8 @@ def check(data):
            "notes": questions_mod.sanitize_notes(data.get("notes")),
            "seed": seed, "extensions": exts,
            "library": bool(data.get("library", True)),
-           "item_library": bool(data.get("item_library", True))}
+           "item_library": bool(data.get("item_library", True)),
+           "room_assembler": bool(data.get("room_assembler", False))}
     if not (out["idea"] or out["answers"] or frame):
         raise SettingsError("the settings have no idea, no answers and no frame: "
                             "nothing to build a world from")

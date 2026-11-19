@@ -1007,6 +1007,8 @@ def _furnish(out, b, zone, templates, rng):
     layouts = [b.layout] + [u.layout for u in getattr(b.layout, "unit_outs", [])]
     for bl in layouts:
         for room in bl.rooms:
+            if room.furniture is not None:
+                continue        # the room assembler placed this room already
             furniture = [f for f in bl.furniture if f.room == room.base_name]
             unknown = [f for f in bl.furniture
                        if f.room not in {r.base_name for r in bl.rooms}]
@@ -1025,6 +1027,10 @@ def _furnish(out, b, zone, templates, rng):
 
 
 def _record_furniture(out, b):
+    from . import assembler
+    note = assembler.fallback_note(b.layout.design.name)
+    if note is not None:
+        out.fallbacks.append(note)
     for (t, room_name) in b.layout.dropped:
         out.failures.append((f"piece {t} in {room_name}", "dropped: over the 28x22 building cap"))
     for name in getattr(b.layout, "unit_dropped", []) or []:

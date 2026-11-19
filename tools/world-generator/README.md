@@ -554,6 +554,25 @@ room, so a row of stalls has ways through. It may never join two separate
 obstacles, wherever it goes. `open_cells_cut_off` in `metrics.json` counts free
 cells nobody can walk to, by the game's own wall rule.
 
+## The room assembler
+
+`--room-assembler` on `generate` or `layout` (also `"room_assembler": true` in a
+settings file) places a one-storey library building out of the room library's own
+fixed rooms instead of packing rectangles: the entrance room first, then every
+room against its parent in the connection tree, doors opening across the walls
+they share, and the outline closed to a rectangle (a room stretched, a larger
+variant, or a filler store) so the building is a solid shape. Off by default;
+with it off, nothing changes.
+
+A building takes the assembler when it has one storey, no units, is not a
+compound part, and every one of its rooms names a library purpose. Anything
+else — and any room that cannot be picked, placed or closed — falls back to the
+old method with the reason recorded (the summary's `fallbacks` count); a world
+never fails because of the assembler. Rooms are picked by family and purpose,
+wealth tier and size band, seeded by the world, so the same seed builds the
+same house. `library-seed/compare_assembler.py` prints the two methods'
+footprints and room sizes side by side.
+
 ## How zones are sized
 
 A zone's ground follows what stands on it, not its size class alone. A zone

@@ -745,7 +745,7 @@ def _piece_direction(primary, piece):
     return "NorthWest" if dy > 0 else "SouthWest"
 
 
-def run(plan_data, seed=1, extensions=()):
+def run(plan_data, seed=1, extensions=(), room_assembler=False):
     import copy
     from .extensions import BY_ID, expand
     plan = parse_plan(plan_data)
@@ -763,7 +763,16 @@ def run(plan_data, seed=1, extensions=()):
 
     def attempt(weight_scale=None):
         data = copy.deepcopy(base)
-        return _build_world(plan, data, seed, exts, weight_scale), data
+        # the room assembler is plan-wide state the build reads as it lays
+        # library buildings out (worldgen/assembler.py, off by default)
+        from . import assembler
+        if room_assembler:
+            assembler.activate(plan, data, data.get("name", "world"), None)
+        try:
+            return _build_world(plan, data, seed, exts, weight_scale), data
+        finally:
+            if room_assembler:
+                assembler.deactivate()
 
     world, winner = attempt()
     # content sizing is a target, not a limit: a zone that dropped a building
@@ -904,6 +913,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     world.seed = seed
     world.extensions = exts
     world.templates = {t.name: t for t in plan.templates}
+    from . import assembler
+    if assembler.active() is not None:
+        # the assembler injects the templates its rooms picked into the
+        # world's live table as it builds
+        assembler.active().world_templates = world.templates
 
     m = layout_map.layout_map(plan, rng, extensions=exts, weight_scale=weight_scale)
     world.grid = m.grid
@@ -1154,11 +1168,15 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                         # equal-sized child region would duplicate its name
                         breg.ambience = amb
                     else:
+                        # an assembled building opens exactly the door cells
+                        # its aligned seams picked; the old path leaves the
+                        # doors to the builder's auto-connect
                         reg = RegionOut(room.full_name, room.rect, "room", parent=building_name,
                                         wall=design.wall, ground="wood", ground_texture="floorboards",
                                         ambience=amb,
                                         description=next((r.purpose for r in design.rooms
-                                                          if r.name == room.base_name), ""))
+                                                          if r.name == room.base_name), ""),
+                                        doors=set(room.doors) if getattr(bl, "assembled", None) else None)
                         reg.entrance_door = bl.entrance_door if (bl.entrance_room is room) else None
                         world.regions.append(reg)
                     for (tname, pos) in room.furniture.placements:

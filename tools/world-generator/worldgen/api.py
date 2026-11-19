@@ -52,7 +52,7 @@ def _check_extensions(extensions):
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
              emit=None, frame=None, questionnaire=None, cast=True, library=True,
-             item_library=True):
+             item_library=True, room_assembler=False):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -69,7 +69,8 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         kwargs = {"providers_path": providers_path} if providers_path else {}
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire,
-                    getattr(client, "model", None), emit, item_library=item_library)
+                    getattr(client, "model", None), emit, item_library=item_library,
+                    room_assembler=room_assembler)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
                                     item_library=item_library,
@@ -83,11 +84,12 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
     return _layout_and_build(plan, seed=seed, out_dir=out_dir,
                              extra_exts=extensions,
                              gen=(client, stats, minutes, idea),
-                             progress=progress, cancel=cancel, emit=emit)
+                             progress=progress, cancel=cancel, emit=emit,
+                             room_assembler=room_assembler)
 
 
 def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
-                    emit=None, item_library=True):
+                    emit=None, item_library=True, room_assembler=False):
     """settings.json in the run folder, before the first model call, so even a
     run that fails leaves the choices behind for someone to look at. Never
     fails the run."""
@@ -96,6 +98,7 @@ def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnai
         os.makedirs(out_dir, exist_ok=True)
         data = settings.from_run(idea, seed, extensions, library, frame=frame,
                                  questionnaire=questionnaire, item_library=item_library,
+                                 room_assembler=room_assembler,
                                  model=model if isinstance(model, str) else None)
         settings.write(os.path.join(out_dir, settings.FILE_NAME), data)
     except (OSError, ValueError) as e:
@@ -127,7 +130,7 @@ def frame(mode, idea="", answers=None, population=None, clarify=None,
 
 
 def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
-             cancel=None, emit=None):
+             cancel=None, emit=None, room_assembler=False):
     """Lay out a saved plan (plan.json) again and rebuild the scenario. No
     model calls happen: a different seed re-places the same world. Returns
     the summary dict; raises Cancelled when ``cancel()`` turns true."""
@@ -139,7 +142,8 @@ def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
         plan_data = json.load(f)
     return _layout_and_build(plan_data, seed=seed, out_dir=out_dir,
                              extra_exts=tuple(extensions or ()),
-                             progress=progress, cancel=cancel, emit=emit)
+                             progress=progress, cancel=cancel, emit=emit,
+                             room_assembler=room_assembler)
 
 
 def estimate(idea_or_plan):
@@ -238,7 +242,7 @@ def _container_counts(spec, plan_data):
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
-                      progress=None, cancel=None, emit=None):
+                      progress=None, cancel=None, emit=None, room_assembler=False):
     """Layout, checks, spec, then the vendored builder, validator and
     renderer. ``gen`` carries the generate-run context (client, stats,
     minutes, idea) for the summary; relayout passes None."""
@@ -248,7 +252,8 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     if cancel is not None and cancel():
         raise Cancelled("cancelled before layout")
     t0 = time.time()
-    world = worldgen.run(plan_data, seed=seed, extensions=exts)
+    world = worldgen.run(plan_data, seed=seed, extensions=exts,
+                         room_assembler=room_assembler)
     spec = worldgen.build_spec(world, plan_data)
     os.makedirs(out_dir, exist_ok=True)
     from worldgen import spec_writer as sw

@@ -161,6 +161,7 @@ class RoomSpec:
     share: str = "small"
     purpose: str = ""
     loot_pool: str = ""      # every container in this room draws here
+    use: str = ""            # the library family this room is for (library plans)
 
 
 @dataclass
@@ -198,6 +199,9 @@ class BuildingDesign:
     stairs_room: str = ""                              # ground room the stair rises from
     units: object = None                               # UnitSpec when it repeats units
     couples: int = 0                                   # P1: pairs of residents sharing a bed
+    residents: int = 0                                 # P1: people sleeping here
+    wealth: str = ""                                   # P1: poor/modest/wealthy/elite
+    condition: str = ""                                # P1: kept/worn/...
     status: str = ""                                   # P1b: home, staffed, vacant...
     upper: list = field(default_factory=list)          # [UpperStorey]
     rooms: list = field(default_factory=list)          # [RoomSpec]
@@ -581,7 +585,8 @@ def _parse_roomspec(d):
     return RoomSpec(name=_require(d, "name", "room"),
                     share=d.get("share", "small"),
                     purpose=d.get("purpose", ""),
-                    loot_pool=d.get("lootPool", "") or "")
+                    loot_pool=d.get("lootPool", "") or "",
+                    use=d.get("use", "") or "")
 
 
 def _parse_storeys(d, top=3):
@@ -705,6 +710,9 @@ def _parse_building(d, designs):
         upper=upper,
         units=units,
         couples=(0 if units else max(0, int(d.get("couples", 0) or 0))),
+        residents=max(0, int(d.get("residents", 0) or 0)),
+        wealth=d.get("wealth", "") or "",
+        condition=d.get("condition", "") or "",
         status=d.get("status", "") or "",
         rooms=rooms,
         connections=[list(c) for c in g.get("connections", [])],
