@@ -99,6 +99,35 @@
         }
       ],
       "source": "hand"
+    },
+    {
+      "id": "pen.fold",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "animal.pen",
+          "size": [2, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "animal.pen",
+          "size": [1, 2],
+          "at": [0, 1]
+        },
+        {
+          "role": "animal",
+          "size": [1, 1],
+          "at": [1, 1]
+        },
+        {
+          "role": "animal.pen",
+          "size": [1, 1],
+          "at": [1, 2]
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [
