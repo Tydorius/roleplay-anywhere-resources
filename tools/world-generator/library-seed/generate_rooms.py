@@ -1,7 +1,9 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
-recipe of the bedroom, master bedroom, washroom, privy, bath and closet
-families composed at each clearance (tight/roomy/grand) in each style
-(flush/open), seed 1, keeping the best room of each. The bedroom family also
+recipe of the bedroom, master bedroom, washroom, privy, bath, closet,
+courtyard, garden and yard families composed at each clearance
+(tight/roomy/grand) in each style the family takes (flush/open; the outdoor
+families flush alone, their rooms having no walls to open against), seed 1,
+keeping the best room of each. The bedroom family also
 composes its recipes for two singles (its two-bed rooms, described as "for
 two"), under the same rules and the same shape dedupe, their ids continuing
 the letter sequence. A hand recipe of a
@@ -51,10 +53,17 @@ from worldgen import library as WL          # noqa: E402
 from worldgen import room_composer as RC    # noqa: E402
 from worldgen import room_groups as RG      # noqa: E402
 
-FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet")
+FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet",
+            "courtyard", "garden", "yard")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
+
+
+def styles_for(fam):
+    """The styles a family composes in: an outdoor family keeps the flush
+    style, the open middle being a wall-room idea."""
+    return ("flush",) if FR.is_outdoor_family(fam) else STYLES
 # a grand private room carries so much furniture that no piece stands over
 # more than this many cells of floor (the shipped grand rooms assert it)
 GRAND_MAX_CELLS_PER_PIECE = 8
@@ -93,11 +102,15 @@ NOUNS = (
     ("coat", "coat rack"),
     ("waste", "waste bucket"),
     ("decor.floor", "floor rug"),
+    ("decor.feature", "centrepiece"),
+    ("animal", "trough"),
+    ("grow", "plant bed"),
     ("decor", "decoration"),
 )
 FAMILY_NOUNS = {"bedroom": "bedroom", "bedroom.master": "master bedroom",
                 "washroom": "washroom", "privy": "privy", "bath": "bath room",
-                "closet": "closet"}
+                "closet": "closet", "courtyard": "courtyard",
+                "garden": "garden", "yard": "yard"}
 BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
                    "large": "spacious", "stall": "stall", "reach": "reach-in",
                    "walkin": "walk-in"}
@@ -105,7 +118,9 @@ BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
 # (the bed and its bedside read as "bed") and is mentioned first
 FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
                 "washroom": ("wash",), "privy": ("wash",), "bath": ("wash",),
-                "closet": ("storage", "shelving", "utility")}
+                "closet": ("storage", "shelving", "utility"),
+                "courtyard": ("decor.feature",), "garden": ("grow",),
+                "yard": ("animal", "storage")}
 MAX_MENTIONS = 4      # furniture groups named in one description
 LETTERS = "abcdefghijklmnopqrstuvwxyz"
 
@@ -255,7 +270,8 @@ def _finalize(room, rid, elite=False):
            "stretch": room["stretch"]}
     if room["style"] == "open":
         out["filler"] = room["filler"]
-    out.update({"outdoor": False, "symmetric": room["symmetric"],
+    out.update({"outdoor": FR.is_outdoor_family(room["family"]),
+                "symmetric": room["symmetric"],
                 "recipe": room["recipe"], "description": describe(room)})
     return out
 
@@ -419,7 +435,7 @@ def generate(families=FAMILIES, seed=SEED, rooms_dir=None, groups_dir=None,
                 roomy_rooms = {}   # style -> the kept roomy room (the grand sibling)
                 for band in hand_bands:
                     for clearance in CLEARANCES:
-                        for style in STYLES:
+                        for style in styles_for(fam):
                             rooms, reason = compose_recipe(
                                 recipe, fam, data, clearance, style, seed,
                                 roomy=roomy_rooms.get(style), size_band=band,

@@ -406,7 +406,7 @@
     {
       "id": "decor.feature.seat.long",
       "family": "greenhouse",
-      "wall": "back",
+      "wall": "none",
       "use": [],
       "pieces": [
         {
@@ -429,8 +429,7 @@
           "at": [
             0,
             0
-          ],
-          "back": "north"
+          ]
         }
       ]
     },

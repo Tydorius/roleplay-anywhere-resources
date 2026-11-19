@@ -31,6 +31,11 @@ class TestShippedLibrary(unittest.TestCase):
 
     def test_every_family_has_layouts(self):
         for fam in self.lib.vocab["families"]:
+            # the outdoor families (courtyard, garden, yard) have no P3
+            # layouts on purpose: their groups and recipes are hand-authored,
+            # and their rooms compose from those like any other family's
+            if fam in self.lib.outdoor_families():
+                continue
             self.assertTrue(self.lib.layouts_for(fam), fam)
 
     def test_every_object_fills_in_every_setting(self):

@@ -63,10 +63,11 @@ SEAT_ROLES = ("seat", "seat.long", "seat.lounge", "seat.state")
 # what a seat is placed at, inside the same group: it is used from the side
 # facing away from these — a table, desk or counter, and the other pieces
 # the layouts seat people at (workbenches, consoles, computers, screens,
-# altars, hearths and game tables)
+# altars, hearths, game tables and the outdoor centrepieces a court's
+# benches face: fountains, statues, wells)
 BELONG_ROLES = ("desk", "counter.serve", "counter.prep", "game", "control",
                 "computer", "med.station", "altar", "heat", "teach",
-                "lectern", "screen", "radio", "music")
+                "lectern", "screen", "radio", "music", "decor.feature")
 
 
 def seat_facing(role):
@@ -161,6 +162,15 @@ def _family_spec(family, lib):
         return None
     spec = (vocab.get("familySizeBands") or {}).get(family)
     return spec if isinstance(spec, dict) else None
+
+
+def is_outdoor_family(family, lib=None):
+    """True when the family's familySizeBands spec flags it ``outdoor``: its
+    rooms stand in the open, so every free edge cell is an entrance and the
+    wall-side rules do not apply. ``lib`` defaults to the shipped library,
+    the way family_bands reads it."""
+    spec = _family_spec(family, lib)
+    return bool(spec and spec.get("outdoor"))
 
 
 def family_bands(family, lib=None):
@@ -818,6 +828,17 @@ def _chebyshev(x, y, rect):
     return max(rx - x, 0, x - (rx + rw - 1), ry - y, 0, y - (ry + rh - 1))
 
 
+def _edge_doors(w, h, occupied):
+    """Every free edge cell as door offsets per side — the doors an outdoor
+    room lists: its whole edge is its entrance."""
+    return {
+        "north": [x for x in range(w) if (x, 0) not in occupied],
+        "south": [x for x in range(w) if (x, h - 1) not in occupied],
+        "west": [y for y in range(h) if (0, y) not in occupied],
+        "east": [y for y in range(h) if (w - 1, y) not in occupied],
+    }
+
+
 def _check_room(room, groups, lib, err, check_band=True):
     """Every rule that holds per room, as plain sentences through ``err``.
     ``check_band`` is off while validating a stretch line, where the inserted
@@ -859,6 +880,15 @@ def _check_room(room, groups, lib, err, check_band=True):
     for key in ("outdoor", "symmetric"):
         if not isinstance(room.get(key), bool):
             err(f"{key} must be true or false")
+    outdoor = room.get("outdoor") is True
+    if isinstance(fam, str) and room.get("outdoor") != is_outdoor_family(fam, lib):
+        # the family's familySizeBands spec is the one source: a room either
+        # stands in the open or it does not
+        stands = "stands in the open" if is_outdoor_family(fam, lib) else "has walls"
+        err(f"outdoor is {room.get('outdoor')!r} but family {fam!r} {stands}")
+    if outdoor and room.get("style") == "open":
+        err("an outdoor room keeps the flush style: the open middle is a "
+            "wall-room idea")
     if room.get("retired") is not None and not isinstance(room.get("retired"), bool):
         err("retired must be true or false")
     edited = room.get("edited")
@@ -900,6 +930,9 @@ def _check_room(room, groups, lib, err, check_band=True):
             err(f"names no group {p.get('group')!r}")
         if p.get("back") is not None and p.get("back") not in SIDES:
             err(f"piece {role!r} back must be one of {'/'.join(SIDES)} or left out")
+        if outdoor and p.get("back") in SIDES:
+            err(f"piece {role!r} backs {p.get('back')}: an outdoor room has "
+                f"no walls to pin it to")
         if p.get("optional") is not None and not isinstance(p.get("optional"), bool):
             err(f"piece {role!r} optional must be true or false")
         at, sz = p["at"], p["size"]
@@ -979,8 +1012,25 @@ def _check_room(room, groups, lib, err, check_band=True):
                     door_cells.append(cell)
     # a closet's doors sit on one side only, and every closet needs one: a
     # walk-in keeps a free edge cell, a reach-in's door cells are its
-    # pieces' access cells outside the room, all on the side they face
-    if closet and sides_with > 1:
+    # pieces' access cells outside the room, all on the side they face.
+    # An outdoor room's whole edge is its entrance: every free edge cell is
+    # a door cell, and every side keeps one — with the free area in one
+    # piece (checked next), a free cell on every edge is a clear walkway
+    # crossing the room between every pair of opposite edges
+    if outdoor:
+        want = _edge_doors(w, h, occupied)
+        have = {s: sorted(doors.get(s) or []) for s in SIDES}
+        if have != want:
+            wrong = "; ".join(f"{s} {have[s]}" for s in SIDES
+                              if have[s] != want[s])
+            err(f"doors must list every free edge cell (off: {wrong}); an "
+                f"outdoor room's whole edge is its entrance")
+        for side in SIDES:
+            if not want[side]:
+                err(f"no free edge cell on the {side} edge: a clear walkway "
+                    f"must cross the room between every pair of opposite "
+                    f"edges")
+    elif closet and sides_with > 1:
         err(f"door cells on {sides_with} sides; a closet keeps its doors "
             f"on one side only")
     elif closet and sides_with < 1:
@@ -1012,8 +1062,9 @@ def _check_room(room, groups, lib, err, check_band=True):
                 err(f"door cell {cell[0]},{cell[1]} is cut off from the "
                     f"other doors")
     # dead floor: a free cell more than the gap from every piece is floor
-    # nobody walks on (an open room's filler and its ring are walked)
-    dead = dead_cells(room)
+    # nobody walks on (an open room's filler and its ring are walked; an
+    # outdoor room's open ground is walked wherever it likes)
+    dead = [] if outdoor else dead_cells(room)
     if dead:
         gap = _gap(room.get("family"), room.get("clearance"))
         err(f"{len(dead)} dead floor cell(s) (first at {dead[0][0]},"
@@ -1195,9 +1246,11 @@ def _check_room(room, groups, lib, err, check_band=True):
     # empty edge lines: a full row or column along a wall with no piece and
     # no filler cell on it. A flush room allows at most the one slack line
     # per wall; an open room only the line its middle needs — the buffer
-    # line the filler keeps to that wall
+    # line the filler keeps to that wall. An outdoor room has no walls: its
+    # edge lines are open ground
     fcells = set(_cells((fx, fy, fw, fh))) if filler is not None else set()
-    for side, k in _edge_line_counts(w, h, occupied, fcells).items():
+    for side, k in ([] if outdoor
+                    else _edge_line_counts(w, h, occupied, fcells).items()):
         if k < 1:
             continue
         if room.get("style") == "open":
@@ -1284,7 +1337,10 @@ def check(rooms, groups=None, lib=None):
     overlapping, wall-bound pieces flush against their wall, door cells valid
     and on at least two sides (a closet keeps its doors on one side only,
     and every closet needs one — a reach-in's door cells are its pieces'
-    access cells outside the room, the side they face), every free cell
+    access cells outside the room, the side they face; an outdoor room's
+    doors list every free edge cell of every side, so a clear walkway
+    crosses it between every pair of opposite edges, and its pieces never
+    back a wall), every free cell
     reached from every door cell, no dead floor (a free cell more than the
     clearance's gap from every piece), the long side within the family's
     aspect cap (a band with its own aspect range may stretch past it), every

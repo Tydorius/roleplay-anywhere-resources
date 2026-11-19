@@ -109,6 +109,28 @@ def suite_by_kind(lib, b, band):
     return hits[0] if len(hits) == 1 else None
 
 
+def building_by_kind(lib, kind, band):
+    """The building recipe whose kinds name this kind: whole-word matches on
+    the kind and its last word, like ``suite_by_kind``. When several recipes
+    match, the most specific one wins — the matched phrase with the most words
+    ("coaching inn" beats "inn"); a tie names no winner. None when nothing
+    matches, and then the building stays a flat suite."""
+    words = _kind_words(kind)
+    best, best_len, tie = None, 0, False
+    for r in sorted(lib.buildings.values(), key=lambda r: str(r.get("id"))):
+        if band not in (r.get("bands") or []):
+            continue
+        hit = max((len(k.split()) for k in r.get("kinds") or []
+                   if isinstance(k, str) and k.lower() in words), default=0)
+        if not hit:
+            continue
+        if hit > best_len:
+            best, best_len, tie = r, hit, False
+        elif hit == best_len:
+            tie = True
+    return None if tie else best
+
+
 def can_skip_p3(b, compound_parts, notes=""):
     """A building that can take a suite as it is: no units, not part of a
     compound, and not named in the user's own instructions."""

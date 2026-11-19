@@ -97,6 +97,30 @@
         {"name": "reach", "cells": [1, 2]},
         {"name": "walkin", "cells": [3, 4], "aspect": [1, 4]}
       ]
+    },
+    "courtyard": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [12, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
+    },
+    "garden": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [9, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
+    },
+    "yard": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [9, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
     }
   },
   "categories": {
@@ -333,7 +357,10 @@
     "gym": "exercise and training",
     "greenhouse": "growing plants indoors",
     "stable": "animals in stalls",
-    "passage": "a way through: corridor, entrance hall, lobby, airlock"
+    "passage": "a way through: corridor, entrance hall, lobby, airlock",
+    "courtyard": "an unwalled outdoor room: a castle or house court, a cloister garth, an inn yard",
+    "garden": "a planted outdoor room: a garden, a herb garden, an orchard corner",
+    "yard": "a working outdoor room: a farmyard, a yard of troughs, carts and stacks"
   },
   "purposes": {
     "bedroom": "bedroom",
@@ -417,7 +444,14 @@
     "closet": "closet",
     "clothes_closet": "closet",
     "linen_closet": "closet",
-    "broom_closet": "closet"
+    "broom_closet": "closet",
+    "courtyard": "courtyard",
+    "cloister": "courtyard",
+    "inn_yard": "courtyard",
+    "garden": "garden",
+    "herb_garden": "garden",
+    "yard": "yard",
+    "farmyard": "yard"
   },
   "purposeFit": {
     "_readme": "Which recipes and stored rooms a purpose may take, by role: requires lists roles at least one of which a fit must carry; forbids lists roles a fit must carry none of. A purpose with no entry here is free to use any recipe.",

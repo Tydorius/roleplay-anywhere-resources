@@ -1,0 +1,192 @@
+{
+  "groups": [
+    {
+      "id": "animal.storage.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [2, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [1, 1],
+          "at": [2, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "heat.seat.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [2, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "heat",
+          "size": [1, 1],
+          "at": [0, 1]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "animal.stall.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [1, 2],
+          "at": [0, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.bulk.pair.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [1, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [1, 1],
+          "at": [1, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "plant.tree.single.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [1, 1],
+          "at": [0, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "light.small.single.yard",
+      "family": "yard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [1, 1],
+          "at": [0, 0],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "yard.small.hand",
+      "family": "yard",
+      "sizeBands": ["small"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "animal.storage.yard",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.bulk.pair.yard",
+          "kind": "repeatable",
+          "count": [1, 2]
+        },
+        {
+          "group": "plant.tree.single.yard",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "yard.medium.hand",
+      "family": "yard",
+      "sizeBands": ["medium"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "heat.seat.yard",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.bulk.pair.yard",
+          "kind": "repeatable",
+          "count": [2, 3]
+        },
+        {
+          "group": "plant.tree.single.yard",
+          "kind": "repeatable",
+          "count": [1, 2]
+        },
+        {
+          "group": "light.small.single.yard",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "yard.large.hand",
+      "family": "yard",
+      "sizeBands": ["large"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "animal.storage.yard",
+          "kind": "anchor"
+        },
+        {
+          "group": "heat.seat.yard",
+          "kind": "required"
+        },
+        {
+          "group": "animal.stall.yard",
+          "kind": "repeatable",
+          "count": [2, 3]
+        },
+        {
+          "group": "storage.bulk.pair.yard",
+          "kind": "repeatable",
+          "count": [3, 4]
+        },
+        {
+          "group": "plant.tree.single.yard",
+          "kind": "repeatable",
+          "count": [2, 3]
+        },
+        {
+          "group": "light.small.single.yard",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.yard",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

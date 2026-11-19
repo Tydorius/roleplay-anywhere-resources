@@ -1214,5 +1214,141 @@
         "barrel"
       ]
     }
+  },
+  "courtyard": {
+    "roles": {
+      "decor.feature": [
+        "decor.fountain",
+        "statue",
+        "decor",
+        "plant"
+      ],
+      "seat.long": [
+        "bench"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
+  },
+  "cloister": {
+    "roles": {
+      "decor.feature": [
+        "statue",
+        "plant",
+        "decor"
+      ],
+      "seat.long": [
+        "bench"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
+  },
+  "inn_yard": {
+    "roles": {
+      "decor.feature": [
+        "decor.fountain",
+        "statue",
+        "decor",
+        "plant"
+      ],
+      "seat.long": [
+        "bench"
+      ],
+      "animal": [
+        "feed",
+        "rack.hitching_rail"
+      ]
+    }
+  },
+  "garden": {
+    "roles": {
+      "grow": [
+        "plant",
+        "hydroponics"
+      ],
+      "decor.feature": [
+        "statue",
+        "plant",
+        "decor"
+      ],
+      "seat.long": [
+        "bench"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
+  },
+  "herb_garden": {
+    "roles": {
+      "grow": [
+        "plant",
+        "hydroponics"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
+  },
+  "yard": {
+    "roles": {
+      "animal": [
+        "feed",
+        "crate"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "crate",
+        "sack"
+      ],
+      "heat": [
+        "hearth",
+        "stove"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
+  },
+  "farmyard": {
+    "roles": {
+      "animal": [
+        "feed",
+        "crate"
+      ],
+      "storage.bulk": [
+        "barrel",
+        "crate",
+        "sack"
+      ],
+      "heat": [
+        "hearth",
+        "stove"
+      ],
+      "decor.floor": [
+        "plant",
+        "statue",
+        "rug",
+        "decor"
+      ]
+    }
   }
 }

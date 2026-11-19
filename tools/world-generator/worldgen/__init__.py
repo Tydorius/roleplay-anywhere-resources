@@ -1110,7 +1110,53 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                     world.solid_walls |= {
                         (x, y) for x in range(strip.pos[0], strip.pos[0] + strip.size[0])
                         for y in range(strip.pos[1], strip.pos[1] + strip.size[1])}
+                court = getattr(comp, "court", None)
+                court_rect = None
+                if court is not None:
+                    # the furnished courtyard: the library room's ground as an
+                    # unwalled region under the compound, its pieces as
+                    # objects picked from the registry the assemblies use —
+                    # the wall strips' own pattern (intentional solids the
+                    # checks know)
+                    from . import assembler, library_rooms
+                    ctx = assembler.active()
+                    if ctx is not None:
+                        room, (cx, cy) = court["room"], court["at"]
+                        fname = f"{comp.name} Courtyard"
+                        court_rect = Rect(cx, cy, room["size"][0], room["size"][1])
+                        world.regions.append(RegionOut(
+                            fname, court_rect,
+                            "yard", parent=comp.name,
+                            ground="stone", ground_texture="cobblestone",
+                            ambience={"day": "nature_outdoors", "night": "crickets"},
+                            description=room.get("description")
+                            or f"The courtyard of {comp.name}."))
+                        purpose = library_rooms.purpose_for_family(
+                            ctx.lib, room.get("family")) or "courtyard"
+                        tier = (room.get("wealth") or ["modest"])[-1]
+                        for i, piece in enumerate(room.get("pieces") or []):
+                            rng = random.Random(
+                                f"{ctx.world_seed}|courtyard|{comp.name}|"
+                                f"{i}|{piece.get('role')}")
+                            tmpl, rot, _reason = assembler._pick_exact(
+                                ctx, purpose, piece, tier, "kept", rng)
+                            if tmpl is None:
+                                continue    # a gap in the objects: the court
+                                            # keeps its ground without this piece
+                            px, py = piece.get("at") or [0, 0]
+                            pos = (cx + px, cy + py)
+                            world.objects.append(ObjectOut(tmpl["name"], pos,
+                                                           fname, rot=rot))
+                            tw, th = tmpl["size"][0], tmpl["size"][1]
+                            world.solid_walls |= {
+                                (x, y) for x in range(pos[0], pos[0] + tw)
+                                for y in range(pos[1], pos[1] + th)}
+                        assembler._inject_templates(world.templates)
                 for j, pr in enumerate(comp.paths):
+                    if court_rect is not None and court_rect.intersects(pr):
+                        # the path's ground through the furnished court is the
+                        # court's own flagstone now
+                        continue
                     world.regions.append(RegionOut(
                         f"{comp.name} Path" + (f" {j + 1}" if j else ""), pr,
                         "path", parent=comp.name, ground="dirt", ground_texture="dirt",

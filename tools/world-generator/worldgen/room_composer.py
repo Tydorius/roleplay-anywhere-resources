@@ -895,7 +895,8 @@ def _build_room(state, sw, se, sn, ss, ctx):
     room = {"id": ctx["family"] + ".draft", "family": ctx["family"],
             "clearance": ctx["clearance"], "style": "flush",
             "wealth": WEALTH[ctx["clearance"]], "size": [w, h],
-            "pieces": pieces, "outdoor": False,
+            "pieces": pieces,
+            "outdoor": fixed_rooms.is_outdoor_family(ctx["family"]),
             "symmetric": ctx["symmetric"], "recipe": ctx["layout"],
             "description": "draft"}
     room = fixed_rooms.derive(room, stretch=False)
