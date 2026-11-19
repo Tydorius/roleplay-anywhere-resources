@@ -522,7 +522,7 @@ class TestABarnGetsAHayloft(unittest.TestCase):
         self.assertEqual(len(upper), 1, upper)
         self.assertEqual(upper[0]["storey"], 2)
         self.assertEqual([r["name"] for r in upper[0]["rooms"]], ["Hayloft"])
-        self.assertEqual(upper[0]["rooms"][0]["use"], "barn")
+        self.assertEqual(upper[0]["rooms"][0]["use"], "hayloft")
         t_by_name = {t["name"]: t for t in plan["templates"]}
         sleep_upstairs = [f["template"] for f in upper[0].get("furniture") or []
                           if t_by_name[f["template"]].get("forSleep")]

@@ -29,7 +29,7 @@ GUEST_PURPOSES = ("dormitory", "guest_room", "barracks", "crew_quarters",
                   "servants_room")
 SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
 # kinds whose upper storey is a hayloft, not a bedroom floor (design 8.1g):
-# the "barn" purpose is the hay storage one (feed, sacks, crates, barrels)
+# the "hayloft" purpose (barn family, purposeFit keeps it to hay storage)
 LOFT_KINDS = ("barn", "byre", "stable", "stables", "livery")
 SIZE_ORDER = ("tiny", "small", "medium", "large")
 # the building packer splits one footprint into at most five rooms before it
@@ -490,7 +490,7 @@ def ensure_loft_upper(design, b, lib, registry, band, genre, seed, log):
     if any(isinstance(u, dict) and (u.get("rooms") or [])
            for u in design.get("upper") or []):
         return
-    upper = {"rooms": [{"name": "Hayloft", "share": "large", "use": "barn",
+    upper = {"rooms": [{"name": "Hayloft", "share": "large", "use": "hayloft",
                         "purpose": "hay storage"}],
              "connections": [], "furniture": []}
     copy = {"name": b["name"], "residents": 0, "couples": 0,
