@@ -27,11 +27,11 @@
       "rooms": [
         {"name": "Stable",     "purpose": "stable",    "share": "large"},
         {"name": "Tack room",  "purpose": "storage",   "share": "small"},
-        {"name": "Hayloft",    "purpose": "dormitory", "share": "small"}
+        {"name": "Hayloft",    "purpose": "barn",      "share": "small"}
       ],
       "connections": [["Stable", "Tack room"], ["Stable", "Hayloft"]],
       "entrance": {"room": "Stable"},
-      "sleeps": "staff"
+      "sleeps": "none"
     },
     {
       "id": "sleeping.inn",

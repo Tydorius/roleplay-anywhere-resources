@@ -391,3 +391,129 @@ class TestAnEndOnBathFindsAnObject(unittest.TestCase):
                     self.assertEqual(obj["category"], "bath")
             finally:
                 assembler.deactivate()
+
+
+# the live floors run's waystation (out/sundered-forgotten-village-floors):
+# its bunk room — guests, no residents — once resolved its anchor to zero
+# copies and fell back
+WAYSTATION_BUNK_ROOM_PLAN = {
+    "name": "The Sundered Boundary",
+    "worldBackground": "A forgotten village's western waystation.",
+    "setting": {"era": "1200 years after the Sundering",
+                "technology": "medieval Xianxia with qi-based cultivation",
+                "density": "sparse", "climate": "thin dry mountain air",
+                "band": "medieval", "genre": "xianxia"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Western Waystation", "kind": "station",
+        "sizeClass": "medium", "description": "The roadside waystation.",
+        "ground": "dirt", "adjacentTo": [], "outdoor": [],
+        "buildings": [{"name": "Waystation Bunk Room", "kind": "dormitory",
+                       "sizeClass": "small", "purpose": "bunk lodging",
+                       "wealth": "modest", "condition": "kept",
+                       "status": "staffed", "yard": None}],
+        "dressing": {"paths": "dirt", "props": [], "filler": []}}],
+    "roads": [],
+    "templates": [],
+    "buildings": [
+        {"name": "Waystation Bunk Room", "wall": "wood",
+         "ground": "packed earth", "wealth": {}, "yard": None,
+         "rooms": [{"name": "Bunk Room", "share": "small",
+                    "use": "dormitory",
+                    "purpose": "A cramped bunk room for exhausted roadside travellers."}],
+         "connections": [], "entrance": {"room": "Bunk Room", "side": "north"},
+         "furniture": [], "upper": [], "stairs": None}],
+    "npcs": [],
+    "player": {"name": "The Wanderer", "gender": "female",
+               "role": "traveller", "home": "Waystation Bunk Room",
+               "work": "Western Waystation", "description": "Passing through.",
+               "physicalDescription": "cloaked"},
+}
+
+
+class TestGuestRoomsGetBeds(unittest.TestCase):
+    """rl-06d: a room for guests or lodgers no residents were assigned to
+    takes the family's usual occupancy, so the beds are always furnished."""
+
+    def test_the_bunk_room_assembles_with_a_bed(self):
+        world = worldgen.run(WAYSTATION_BUNK_ROOM_PLAN, seed=1,
+                             room_assembler=True)
+        bl = assembled(world, "Waystation Bunk Room")
+        self.assertIsNotNone(bl, "no building in the world")
+        self.assertTrue(getattr(bl, "assembled", False),
+                        [f for f in world.fallbacks
+                         if "Bunk Room" in f[0]])
+        beds = 0
+        for o in world.objects:
+            if not o.region.endswith("Bunk Room"):
+                continue
+            t = world.templates[o.template]
+            if t.for_sleep:
+                beds += bed_capacity(t)
+        self.assertGreaterEqual(beds, 1, "a guest room, no bed")
+
+
+class TestABarnGetsAHayloft(unittest.TestCase):
+    """rl-06d: a barn standing at two storeys gets a hayloft upstairs —
+    hay storage (the barn purpose: feed, sacks, crates, barrels), never
+    beds."""
+
+    BARN_P3 = {"name": "The Old Barn", "suite": None, "wall": "wood",
+               "ground": "packed earth",
+               "rooms": [{"name": "Barn floor", "share": "large",
+                          "use": "barn",
+                          "purpose": "hay and the stalls through winter"},
+                         {"name": "Tack corner", "share": "small",
+                          "use": "storage",
+                          "purpose": "harnesses and pitchforks"}],
+               "connections": [["Barn floor", "Tack corner"]],
+               "entrance": {"room": "Barn floor", "side": "south"},
+               "stairs": {"room": "Barn floor"},
+               "wealth": {}, "yard": None}
+
+    def test_the_upper_storey_is_a_hayloft_not_beds(self):
+        from tests.test_library_generate import LIB_P3
+        from tests.test_model import (CANNED_COTTAGE, CANNED_MILL, CANNED_P1,
+                                      ScriptedClient, _dump, canned_replies)
+
+        class BarnClient(ScriptedClient):
+            # every p3 call gets a design: the barn's for the barn, the
+            # library's loft-bearing one for the mill and the cottage
+            def call(self, phase, system, user, validate=None, max_retries=2):
+                if phase.startswith("p3-"):
+                    reply = self.BARN_P3 if "The Old Barn" in user else LIB_P3
+                    self._queue.insert(0, _dump(reply))
+                return super().call(phase, system, user, validate, max_retries)
+
+        p1 = json.loads(json.dumps(CANNED_P1))
+        p1["zones"][0]["buildings"].append(
+            {"name": "The Old Barn", "kind": "barn", "sizeClass": "large",
+             "purpose": "hay and stalls through winter", "storeys": 2,
+             "yard": None})
+        queue = [r for r in canned_replies()
+                 if r not in (_dump(CANNED_MILL), _dump(CANNED_COTTAGE))]
+        queue[0] = _dump(p1)      # the canned P1 with the barn added
+        client = BarnClient(queue)
+        client.BARN_P3 = self.BARN_P3
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = api.generate("a mill village", client=client, seed=3,
+                                   cast=False, out_dir=tmp)
+            self.assertTrue(summary["ok"], summary)
+            with open(os.path.join(tmp, "plan.json"), encoding="utf-8") as f:
+                plan = json.load(f)
+            again = api.relayout(os.path.join(tmp, "plan.json"), seed=4,
+                                 out_dir=os.path.join(tmp, "again"))
+            self.assertTrue(again["ok"], again)
+        barn = next(b for b in plan["buildings"] if b["name"] == "The Old Barn")
+        self.assertEqual([r["name"] for r in barn["rooms"]],
+                         ["Barn floor", "Tack corner"])
+        upper = barn["upper"]
+        self.assertEqual(len(upper), 1, upper)
+        self.assertEqual(upper[0]["storey"], 2)
+        self.assertEqual([r["name"] for r in upper[0]["rooms"]], ["Hayloft"])
+        self.assertEqual(upper[0]["rooms"][0]["use"], "barn")
+        t_by_name = {t["name"]: t for t in plan["templates"]}
+        sleep_upstairs = [f["template"] for f in upper[0].get("furniture") or []
+                          if t_by_name[f["template"]].get("forSleep")]
+        self.assertFalse(sleep_upstairs, sleep_upstairs)
+        self.assertTrue(upper[0].get("furniture"), "the loft shipped empty")

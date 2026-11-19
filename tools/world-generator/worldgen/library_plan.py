@@ -15,13 +15,22 @@ import re
 
 from . import library as lib_mod
 from .library_rooms import Templates, compile_room
+from .model import kind_phrases_hit
 
 SLEEP_FAMILIES = ("bedroom", "bedroom.master", "dormitory", "hut")
 BAND_WALL = {"medieval": "wood", "industrial": "brick", "modern": "brick", "scifi": "steel"}
 BAND_GROUND = {"medieval": "packed earth", "industrial": "floorboards", "modern": "tiles",
                "scifi": "deck plating"}
 SPARE_PURPOSES = ("guest_room",)    # beds for travellers, not residents
+# purposes whose rooms sleep guests and lodgers rather than residents: with
+# none assigned they still take the family's usual occupancy, so the beds
+# are always furnished (design 8.1g)
+GUEST_PURPOSES = ("dormitory", "guest_room", "barracks", "crew_quarters",
+                  "servants_room")
 SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
+# kinds whose upper storey is a hayloft, not a bedroom floor (design 8.1g):
+# the "barn" purpose is the hay storage one (feed, sacks, crates, barrels)
+LOFT_KINDS = ("barn", "byre", "stable", "stables", "livery")
 SIZE_ORDER = ("tiny", "small", "medium", "large")
 # the building packer splits one footprint into at most five rooms before it
 # starts dropping everything (measured: 5 rooms place all 33 pieces of an inn,
@@ -343,10 +352,30 @@ def _room_band(lib, family, share):
                                     SIZE_ORDER.index(b)))
 
 
+def _guest_defaults(lib):
+    """{family: (singles, couples)} — the composer's default sleepers, the
+    maximum over each family's recipes, cached on the library for the run."""
+    cached = getattr(lib, "guest_defaults", None)
+    if cached is None:
+        from . import room_groups as RG
+        from .room_composer import _default_sleepers
+        data = RG.load()
+        cached = {}
+        for recipe in data["recipes"].values():
+            fam = recipe.get("family")
+            occ = _default_sleepers(recipe, data["groups"])
+            if fam not in cached or occ > cached[fam]:
+                cached[fam] = occ
+        lib.guest_defaults = cached
+    return cached
+
+
 def _sleepers(lib, rooms, residents, couples):
     """{room name: (singles, couples)}: one couple to each master bedroom,
     the other residents shared over the single-bed rooms, a spare bed or two
-    in each guest room."""
+    in each guest room. A room for guests or lodgers that no residents were
+    assigned to takes the family's usual occupancy — the beds are always
+    furnished."""
     fam = {r["name"]: lib.family_of(r.get("use")) for r in rooms}
     masters = [r["name"] for r in rooms if fam[r["name"]] == "bedroom.master"]
     singles_rooms = [r["name"] for r in rooms
@@ -365,6 +394,8 @@ def _sleepers(lib, rooms, residents, couples):
     for r in rooms:
         if r.get("use") in SPARE_PURPOSES:
             out[r["name"]] = (2 if r.get("share") == "large" else 1, 0)
+        elif out[r["name"]] == (0, 0) and r.get("use") in GUEST_PURPOSES:
+            out[r["name"]] = _guest_defaults(lib).get(fam[r["name"]], (1, 0))
     return out
 
 
@@ -450,6 +481,29 @@ def ensure_dorm_upper(design, b, lib, registry, band, genre, seed, log):
                 f"added an upper storey for the {n} bunks over the ground rooms"))
 
 
+def ensure_loft_upper(design, b, lib, registry, band, genre, seed, log):
+    """A barn the floors extension took to two storeys gets a hayloft on the
+    upper one (design 8.1g): hay storage — the ``barn`` purpose — never beds.
+    An upper storey the design already carries keeps its own rooms."""
+    if not kind_phrases_hit(b.get("kind"), LOFT_KINDS):
+        return
+    if any(isinstance(u, dict) and (u.get("rooms") or [])
+           for u in design.get("upper") or []):
+        return
+    upper = {"rooms": [{"name": "Hayloft", "share": "large", "use": "barn",
+                        "purpose": "hay storage"}],
+             "connections": [], "furniture": []}
+    copy = {"name": b["name"], "residents": 0, "couples": 0,
+            "wealth": b.get("wealth"), "condition": b.get("condition")}
+    expand_design(lib, registry, upper, copy, band, genre, seed, log,
+                  ensure_beds=False)
+    design.setdefault("upper", []).append(
+        {"storey": 2, "rooms": upper["rooms"], "connections": [],
+         "furniture": upper["furniture"]})
+    log.append((f"building {b['name']}",
+                "added a hayloft over the ground rooms (hay storage, not beds)"))
+
+
 def expand_unit(lib, registry, design, b, band, genre, seed, log, pools=()):
     """Furnish a unit building's one copy from the library: its rooms by
     purpose, with the copy's residents as single sleepers."""
@@ -509,10 +563,16 @@ def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds
 
 
 def used_templates(designs):
-    """Template names any design's furniture (unit copies included) uses."""
+    """Template names any design's furniture (unit copies and upper storeys
+    included) uses."""
     used = set()
     for d in designs:
-        for f in (d.get("furniture") or []) + ((d.get("unit") or {}).get("furniture") or []):
+        lines = (d.get("furniture") or []) \
+            + ((d.get("unit") or {}).get("furniture") or [])
+        for u in d.get("upper") or []:
+            if isinstance(u, dict):
+                lines += u.get("furniture") or []
+        for f in lines:
             used.add(f.get("template"))
     return used
 

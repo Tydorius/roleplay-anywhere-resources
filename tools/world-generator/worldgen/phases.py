@@ -20,7 +20,8 @@ from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     SETTLEMENT_SIZES, SIDE_WORDS, SPINE_AXES, VALID_ARRANGEMENTS,
                     WATER_FEATURE_KINDS, WATER_MARKS,
                     bed_capacity, is_spare_room, is_sleep_name as _sleeps,
-                    outdoor_name, outdoor_water, settlement_size)
+                    kind_phrases_hit, outdoor_name, outdoor_water,
+                    settlement_size)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -51,6 +52,66 @@ LODGING_WORDS = frozenset(("inn", "tavern", "pub", "alehouse", "saloon",
 BUNK_WORDS = frozenset(("bunk", "berth", "bed", "cot", "hammock", "barracks"))
 # how many lodging units a settlement of each size carries (model.SETTLEMENT_SIZES)
 LODGING_UNIT_CAPS = {"city": 24, "town": 10, "village": 4, "hamlet": 2}
+
+# kinds the storey contract lets rise to six in any band (a unit building or
+# a compound part already may): the caps table below is what limits them
+TALL_KINDS = ("castle", "keep", "watchtower", "tower", "fortress", "citadel",
+              "tenement", "mill", "factory", "warehouse", "works",
+              "apartment", "office", "hotel", "hospital",
+              "station", "starship", "spaceship", "ship", "habitat")
+
+# one table for building heights (design 8.1g): the most storeys a building
+# may rise to, by band and the settlement it stands in — the zone kinds name
+# the size the way the lodging cap reads them, and a building outside every
+# settlement reads "outside". Kind phrases override the default by
+# whole-word match (model.kind_phrases_hit), the first hit winning. The
+# table only lowers: a building at or below its cap keeps the storeys the
+# model gave it (Michael, 2026-11-19: no three storeys on a cottage; a
+# village's anchors — the inn, the barn with its loft — may rise to two).
+STOREY_CAPS = {
+    "medieval": {
+        "default": {"hamlet": 1, "village": 1, "town": 2, "city": 3,
+                    "outside": 1},
+        "kinds": (
+            # (settlements covered, or None for all of them; phrases; cap)
+            (None, ("castle", "keep", "watchtower", "tower", "fortress"), 4),
+            (None, ("cathedral", "great temple", "basilica"), 3),
+            (("town",), ("merchant house", "guildhall", "guild hall",
+                         "townhouse"), 2),
+            (("city",), ("merchant house", "guildhall", "guild hall",
+                         "townhouse"), 3),
+            (("hamlet", "village", "outside"),
+             ("headman", "elder", "chief", "reeve", "manor house", "inn",
+              "tavern", "waystation", "barn", "byre", "mill", "granary",
+              "temple", "shrine hall", "chapel", "church"), 2),
+        ),
+    },
+    "industrial": {
+        "default": {"hamlet": 1, "village": 2, "town": 3, "city": 4,
+                    "outside": 1},
+        "kinds": (
+            (("city",), ("tenement", "mill", "factory", "warehouse",
+                         "works"), 4),
+            (None, ("farmhouse", "cottage"), 2),
+        ),
+    },
+    "modern": {
+        "default": {"hamlet": 1, "village": 2, "town": 3, "city": 6,
+                    "outside": 1},
+        "kinds": (
+            (("city",), ("apartment", "office", "hotel", "hospital"), 6),
+            (None, ("house", "home", "cottage"), 2),
+            (None, ("shed", "barn", "garage", "outhouse"), 1),
+        ),
+    },
+    "scifi": {
+        "default": {"hamlet": 3, "village": 3, "town": 3, "city": 3,
+                    "outside": 3},
+        "kinds": (
+            (None, ("station", "starship", "spaceship", "ship", "habitat"), 6),
+        ),
+    },
+}
 
 MAX_BUILDINGS = 12      # across the whole P1 plan, before population lifts it
 MAX_BUILDINGS_COMPOUNDS = 16   # the cap when the plan uses compounds
@@ -1125,7 +1186,7 @@ def check_p1(d, floors=False, residents=None):
                                   f"{r} residents to share beds")
             _unit_errors(b, ctx, errors)
             if floors and "storeys" in b:
-                top = 6 if (b.get("units") or b["name"] in part_names) else 3
+                top = _storey_top(b, part_names)
                 s = b["storeys"]
                 if not _check_int(s) or not 1 <= s <= top:
                     errors.append(f"{ctx}: storeys must be a whole number 1..{top}, "
@@ -1212,8 +1273,56 @@ def _lodge_to_fit(b, zone_kind, plan_settlement, floors, log):
         b["storeys"] = 2
 
 
-def sanitize_p1(d, log, floors=False, residents=None):
-    """Drop bad zones/buildings/roads and default bad enums; log each change."""
+def _storey_top(b, part_names):
+    """The contract's ceiling for a building's storeys: a unit building, a
+    compound part, or a tall kind (a keep, a tenement — TALL_KINDS) may rise
+    to six; the rest to three."""
+    if b.get("units") or b["name"] in part_names \
+            or kind_phrases_hit(b.get("kind"), TALL_KINDS):
+        return 6
+    return 3
+
+
+def _storey_cap(band, kind, size):
+    """The most storeys STOREY_CAPS lets this building rise to — its band's
+    default for the settlement it stands in, or the first kind phrase that
+    matches (whole words) anywhere the phrase's settlements cover."""
+    table = STOREY_CAPS.get(band) or STOREY_CAPS["medieval"]
+    for where, phrases, cap in table["kinds"]:
+        if kind_phrases_hit(kind, phrases) and (where is None or size in where):
+            return cap
+    return table["default"][size]
+
+
+def _cap_storeys(b, zone_kind, band, log):
+    """The height rules, one pass (design 8.1g): a building over its
+    STOREY_CAPS cap is lowered to it — its units re-spread over the storeys
+    that remain. A building at or below the cap keeps the storeys it was
+    given; the table never raises."""
+    band = band or "medieval"
+    size = settlement_size(zone_kind) or "outside"
+    cap = _storey_cap(band, b.get("kind"), size)
+    if b["storeys"] > cap:
+        n = b["storeys"]
+        where = f"a {b.get('kind') or 'building'} " + (
+            "outside every settlement" if size == "outside" else f"in a {size}")
+        log.append((f"building {b['name']}",
+                    f"storeys {n} -> {cap}: {where} rises to "
+                    f"{cap} storey{'s' if cap != 1 else ''} in the {band} band"))
+        b["storeys"] = cap
+        u = b.get("units")
+        if isinstance(u, dict) and _check_int(u.get("perStorey")) \
+                and _check_int(u.get("count")):
+            # the copies the storeys lost are re-spread over those that
+            # remain, keeping a perStorey that still holds them all
+            if u["perStorey"] * cap < u["count"]:
+                u["perStorey"] = max(1, -(-u["count"] // cap))
+
+
+def sanitize_p1(d, log, floors=False, residents=None, band=None):
+    """Drop bad zones/buildings/roads and default bad enums; log each change.
+    With the floors extension on, band names the setting's era for the
+    STOREY_CAPS height rules (a missing band reads as medieval)."""
     d["name"] = d.get("name") if _is_str(d.get("name")) else "Generated World"
     s = d.get("setting") if isinstance(d.get("setting"), dict) else {}
     s["density"] = s.get("density") if s.get("density") in DENSITY else "normal"
@@ -1325,11 +1434,15 @@ def sanitize_p1(d, log, floors=False, residents=None):
             _sanitize_units(b, b["name"], log)
             _lodge_to_fit(b, z.get("kind"), plan_settlement, floors, log)
             if floors:
-                top = 6 if (b.get("units") or b["name"] in part_names) else 3
+                top = _storey_top(b, part_names)
                 if not _check_int(b.get("storeys", 1)) or not 1 <= b.get("storeys", 1) <= top:
                     log.append((f"building {b['name']}",
                                 f"storeys {b.get('storeys')!r} -> 1"))
                     b["storeys"] = 1
+                elif b.get("storeys", 1) > 1:
+                    # after the lodging pass: its raised storeys are already
+                    # in place, so the cap only lowers what sits over it
+                    _cap_storeys(b, z.get("kind"), band, log)
             else:
                 b.pop("storeys", None)
             if isinstance(b.get("yard"), dict) and b["yard"].get("side") not in YARD_SIDES:
@@ -3228,7 +3341,15 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                                    check_p1(x, floors=floors, residents=target))[1])
     if p1 is None:
         raise PhaseError(_no_reply("P1", client))
-    p1 = sanitize_p1(p1, stats["dropped"], floors=floors, residents=target)
+    storey_band = None
+    if floors:
+        # the height caps read the setting's era here, before
+        # library_plan stamps the band below (the shipped library's
+        # detector gives the same answer either way)
+        from . import library_plan as _lp
+        storey_band = _lp.band_of(lib or _lp.load(), p1.get("setting"))
+    p1 = sanitize_p1(p1, stats["dropped"], floors=floors, residents=target,
+                     band=storey_band)
     if not p1["zones"]:
         raise PhaseError("P1 produced no usable zones")
     band = genre = None
@@ -3501,6 +3622,10 @@ def run_phases(idea, client, extensions=(), progress=None, cancel=None,
                 for t in registry.templates():
                     if t.get("forSleep"):
                         bed_templates[t["name"]] = bed_capacity(tuple(t["size"]))
+            elif lib and floors and (b.get("storeys", 1) or 0) > 1:
+                # a barn's upper storey is a hayloft, not a bedroom floor
+                library_plan.ensure_loft_upper(design, b, lib, registry, band,
+                                               genre, world_seed, stats["dropped"])
             designs.append(design)
             # a home that came back with fewer beds than P1 promised sleeps
             # only what its furniture beds (the layout's bed-ensuring pass

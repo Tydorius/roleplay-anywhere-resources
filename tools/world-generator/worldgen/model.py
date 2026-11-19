@@ -435,6 +435,16 @@ def _kind_words(kind):
     return set(re.findall(r"[a-z]+", (kind or "").lower()))
 
 
+def kind_phrases_hit(kind, phrases):
+    """True when any phrase appears in a building kind as whole words, the
+    way ``suite_by_kind`` matches its kinds: "keep" hits "castle keep" and
+    "the keep", not "keeper's lodge" or "keepsake"; the phrase "shrine hall"
+    hits only a kind holding both words together."""
+    text = str(kind or "").lower()
+    return any(re.search(r"(?<![a-z])" + re.escape(p) + r"(?![a-z])", text)
+               for p in phrases)
+
+
 def zone_class(zone):
     """The zone's map class from its kind: settlement, agricultural, wild
     (the default open country) or water."""

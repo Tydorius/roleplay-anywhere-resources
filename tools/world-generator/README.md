@@ -464,11 +464,36 @@ already sleep, and
 `BuildingLayout.residents` reports the total for the population work. Proven
 by `fixtures/apartment-block.plan.json`.
 
-**Taller buildings.** `storeys` runs 1-6 for a unit building or a compound
-part (3 otherwise). A unit building's upper storeys repeat the ground stamp —
+**Taller buildings.** `storeys` runs 1-6 for a unit building, a compound
+part, or a tall kind (a keep, a tenement, an apartment block — 3 otherwise).
+A unit building's upper storeys repeat the ground stamp —
 corridor and stair positions identical, numbering continuing — with no
 per-storey design; each storey is laid out as its own 1.0 floor, so a stack
 of any height fits beside the map.
+
+**Building heights fit the era and the settlement.** One table,
+`STOREY_CAPS` in `worldgen/phases.py`, caps how far a building may rise by
+band and by the settlement it stands in (the zone kinds name the size; a
+building outside every settlement reads the outside column). Kind phrases
+override the default by whole-word match — "keep" hits "castle keep", not
+"keeper's lodge" — and the first hit wins. The cap only lowers: a building
+at or below it keeps the storeys the plan gave it, and with the floors
+extension off none of this applies. A building over its cap is lowered in
+the same P1 pass as the lodging rules, its units re-spread with `perStorey`
+over the storeys that remain; upper rooms that no longer fit move down or
+drop, as the storey rules already do. The table as shipped:
+
+| band | hamlet | village | town | city | outside | kind overrides |
+|---|---|---|---|---|---|---|
+| medieval | 1 | 1 | 2 | 3 | 1 | castle, keep, watchtower, tower, fortress 4 anywhere; cathedral, great temple, basilica 3; merchant house, guildhall, townhouse 2 in towns, 3 in cities; the village anchors (headman, elder, chief, reeve, manor house, inn, tavern, waystation, barn, byre, mill, granary, temple, shrine hall, chapel, church) 2 in hamlets, villages and outside |
+| industrial | 1 | 2 | 3 | 4 | 1 | tenement, mill, factory, warehouse, works 4 in cities; farmhouse, cottage 2 |
+| modern | 1 | 2 | 3 | 6 | 1 | apartment, office, hotel, hospital 6 in cities; house, home, cottage 2; shed, barn, garage, outhouse 1 |
+| scifi | 3 | 3 | 3 | 3 | 3 | station, starship, spaceship, ship, habitat 6 anywhere |
+
+A barn (or byre, or stable with a loft) that stands at two storeys gets a
+hayloft upstairs — hay storage (the `barn` purpose: feed, sacks, crates,
+barrels), never beds — and the shipped medieval `stables.yard` wing's
+Hayloft is the same storage room, not a dormitory.
 
 **Lodging fits its settlement.** A building of a lodging kind (an inn, a
 tavern with rooms, a hostel, a lodge, a boarding house, a waystation, a

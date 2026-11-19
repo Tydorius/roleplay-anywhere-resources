@@ -440,6 +440,95 @@ class TestLodgingFitsTheSettlement(unittest.TestCase):
         self.assertTrue(any("storeys 1 -> 2" in r for (_w, r) in log), log)
 
 
+class TestStoreysFitTheEra(unittest.TestCase):
+    """The P1 height rules (design 8.1g): one table caps how far a building
+    may rise, by band and by the settlement it stands in. The cap only
+    lowers — the lodging rules may still send beds upstairs, within it —
+    and with the floors extension off none of it applies."""
+
+    def p1(self, zone_kind, bkind, storeys, band, floors=True, units=None):
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c", "band": band},
+             "mapSize": "small",
+             "zones": [{"name": "Z", "kind": zone_kind, "sizeClass": "medium",
+                        "description": "d", "ground": "grass",
+                        "buildings": [{"name": "B", "kind": bkind,
+                                       "sizeClass": "medium", "purpose": "p",
+                                       "storeys": storeys}]}],
+             "roads": []}
+        if units is not None:
+            d["zones"][0]["buildings"][0]["units"] = units
+        log = []
+        d = phases.sanitize_p1(d, log, floors=floors, band=band)
+        return d["zones"][0]["buildings"][0], [(w, r) for (w, r) in log]
+
+    def test_a_village_cottage_is_lowered_to_one_storey(self):
+        b, log = self.p1("village", "cottage", 3, "medieval")
+        self.assertEqual(b["storeys"], 1)
+        self.assertTrue(any("storeys 3 -> 1" in r for (_w, r) in log), log)
+
+    def test_a_village_inn_keeps_its_two_storeys(self):
+        b, log = self.p1("village", "inn", 2, "medieval")
+        self.assertEqual(b["storeys"], 2)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_city_merchant_house_keeps_three(self):
+        b, log = self.p1("city", "merchant house", 3, "medieval")
+        self.assertEqual(b["storeys"], 3)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_keep_keeps_four_and_the_contract_takes_it(self):
+        b, log = self.p1("hamlet", "keep", 4, "medieval")
+        self.assertEqual(b["storeys"], 4)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c"},
+             "mapSize": "small",
+             "zones": [{"name": "Z", "kind": "village", "sizeClass": "medium",
+                        "description": "d", "ground": "grass",
+                        "buildings": [{"name": "B", "kind": "keep",
+                                       "sizeClass": "medium", "purpose": "p",
+                                       "storeys": 4}]}],
+             "roads": []}
+        self.assertFalse([e for e in phases.check_p1(d, floors=True)
+                          if "storeys" in e])
+
+    def test_an_industrial_city_tenement_keeps_four(self):
+        b, log = self.p1("city", "tenement", 4, "industrial")
+        self.assertEqual(b["storeys"], 4)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_modern_city_apartment_block_keeps_six(self):
+        b, log = self.p1("city", "apartment block", 6, "modern")
+        self.assertEqual(b["storeys"], 6)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_modern_village_house_is_lowered_to_two(self):
+        b, log = self.p1("village", "house", 3, "modern")
+        self.assertEqual(b["storeys"], 2)
+        self.assertTrue(any("storeys 3 -> 2" in r for (_w, r) in log), log)
+
+    def test_the_table_never_raises_a_building(self):
+        b, log = self.p1("city", "house", 1, "modern")
+        self.assertEqual(b["storeys"], 1)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_lowering_re_spreads_the_units(self):
+        b, log = self.p1("city", "tenement", 6, "industrial",
+                         units={"name": "Flat", "count": 24, "perStorey": 4,
+                                "residents": 2})
+        self.assertEqual(b["storeys"], 4)
+        self.assertEqual(b["units"]["perStorey"], 6)
+        self.assertTrue(any("storeys 6 -> 4" in r for (_w, r) in log), log)
+
+    def test_floors_off_leaves_the_heights_alone(self):
+        b, log = self.p1("village", "cottage", 3, "medieval", floors=False)
+        self.assertNotIn("storeys", b)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+
 class TestAnInnGoesUpstairs(unittest.TestCase):
     """The same inn through the layout: two storeys of rooms over a smaller
     ground floor than one storey of the same four rooms."""
