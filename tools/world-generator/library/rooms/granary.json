@@ -1,0 +1,407 @@
+{
+  "rooms": [
+    {
+      "id": "granary.medium.a.tight.flush",
+      "family": "granary",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        8,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "sack.stack",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "sack.stack",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            2
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "table.work.storage.bulk",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "table.work.storage.bulk",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "sack.stack",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          6
+        ],
+        "south": [
+          6
+        ],
+        "west": [
+          1,
+          2,
+          4
+        ],
+        "east": []
+      },
+      "stretch": {
+        "x": [
+          0,
+          2,
+          4,
+          6,
+          7
+        ],
+        "y": [
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "granary.long.a",
+      "description": "A mid-sized granary, sack in the northwest corner, a sack in the northeast corner, a sack in the middle of the room, and a table against the west wall."
+    },
+    {
+      "id": "granary.small.a.tight.flush",
+      "family": "granary",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        6,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "storage.bulk.storage.bulk",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "table.work.storage.bulk",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "table.work.storage.bulk",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "sack.stack",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "sack.stack",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "sack.stack",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "west": [
+          1,
+          3
+        ],
+        "east": [
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "y": [
+          1,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "granary.small.a",
+      "description": "A small granary, sack in the northwest corner, a table against the west wall, and a sack in the southeast corner."
+    }
+  ]
+}

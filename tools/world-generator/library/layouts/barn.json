@@ -1,0 +1,36 @@
+{
+  "layouts": [
+    {
+      "id": "barn.small.a",
+      "family": "barn",
+      "sizeBands": ["small"],
+      "minInterior": [4, 3],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "row:far", "count": 2, "back": "wall"},
+        {"id": "bale", "role": "storage.hay", "size": [1, 1], "anchor": "beside:bulk", "optional": true},
+        {"id": "machine", "role": "machine", "size": [2, 1], "anchor": "wall:near", "optional": true},
+        {"id": "rick", "role": "storage.hay", "size": [3, 2], "anchor": "corner", "optional": true},
+        {"id": "tool", "role": "work.tool", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "tool2", "role": "work.tool", "size": [1, 1], "anchor": "beside:tool"}
+      ]
+    },
+    {
+      "id": "barn.large.a",
+      "family": "barn",
+      "sizeBands": ["large"],
+      "minInterior": [7, 7],
+      "maxInterior": [10, 10],
+      "slots": [
+        {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall"},
+        {"id": "bale", "role": "storage.hay", "size": [1, 1], "anchor": "beside:bulk", "optional": true},
+        {"id": "flails", "role": "machine", "size": [2, 1], "anchor": "wall:near", "optional": true},
+        {"id": "rick", "role": "storage.hay", "size": [3, 2], "anchor": "corner", "optional": true},
+        {"id": "tool", "role": "work.tool", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+        {"id": "tool2", "role": "work.tool", "size": [1, 1], "anchor": "beside:tool"},
+        {"id": "trough", "role": "animal", "size": [2, 1], "anchor": "wall:side", "optional": true},
+        {"id": "straw", "role": "storage.hay", "size": [1, 1], "anchor": "beside:trough", "optional": true}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "layouts": [
+    {
+      "id": "henhouse.small.a",
+      "family": "henhouse",
+      "sizeBands": ["small"],
+      "minInterior": [3, 3],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "perch", "role": "animal", "size": [1, 1], "anchor": "row:far", "count": [2, 3], "back": "wall", "optional": true},
+        {"id": "nest", "role": "animal", "size": [2, 2], "anchor": "beside:perch", "optional": true},
+        {"id": "feed", "role": "storage.bulk", "size": [1, 1], "anchor": "wall:side"},
+        {"id": "chick", "role": "animal", "size": [1, 1], "anchor": "beside:feed", "optional": true},
+        {"id": "muck", "role": "waste", "size": [1, 1], "anchor": "near_door"},
+        {"id": "straw", "role": "storage.hay", "size": [1, 1], "anchor": "beside:muck", "optional": true}
+      ],
+      "grow": [
+        {"role": "waste", "size": [2, 1], "anchor": "beside:perch"}
+      ]
+    }
+  ]
+}

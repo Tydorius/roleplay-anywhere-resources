@@ -209,7 +209,7 @@
       "purpose": "stables",
       "kinds": ["farmstead", "farm", "barn", "byre"],
       "bands": ["medieval"],
-      "storeys": 1,
+      "storeys": 2,
       "entry": "west",
       "rooms": [
         {"name": "Barn", "purpose": "barn",   "share": "large"},

@@ -442,6 +442,63 @@
           ]
         }
       ]
+    },
+    {
+      "id": "byre.stall.row",
+      "family": "stable",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        }
+      ],
+      "source": "hand"
     }
   ],
   "recipes": [

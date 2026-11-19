@@ -1168,6 +1168,12 @@
       ],
       "animal": [
         "feed"
+      ],
+      "machine": [
+        "farm_machine"
+      ],
+      "storage.hay": [
+        "feed"
       ]
     }
   },
@@ -1212,6 +1218,12 @@
         "feed",
         "sack",
         "barrel"
+      ],
+      "animal": [
+        "feed",
+        "coop",
+        "pen",
+        "crate"
       ]
     }
   },
@@ -1275,6 +1287,10 @@
         "plant",
         "hydroponics"
       ],
+      "work.primary": [
+        "press",
+        "workbench"
+      ],
       "decor.feature": [
         "statue",
         "plant",
@@ -1309,7 +1325,14 @@
     "roles": {
       "animal": [
         "feed",
+        "coop",
         "crate"
+      ],
+      "animal.pen": [
+        "pen"
+      ],
+      "storage.hay": [
+        "feed"
       ],
       "storage.bulk": [
         "barrel",
@@ -1319,6 +1342,10 @@
       "heat": [
         "hearth",
         "stove"
+      ],
+      "waste": [
+        "muck",
+        "bin"
       ],
       "decor.floor": [
         "plant",
@@ -1334,6 +1361,9 @@
         "feed",
         "crate"
       ],
+      "animal.pen": [
+        "pen"
+      ],
       "storage.bulk": [
         "barrel",
         "crate",
@@ -1343,11 +1373,464 @@
         "hearth",
         "stove"
       ],
+      "waste": [
+        "muck",
+        "bin"
+      ],
       "decor.floor": [
         "plant",
         "statue",
         "rug",
         "decor"
+      ]
+    }
+  },
+  "byre": {
+    "roles": {
+      "animal": [
+        "feed",
+        "coop",
+        "pen",
+        "crate"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "work.material": [
+        "feed",
+        "firewood"
+      ],
+      "storage.bulk": [
+        "feed",
+        "sack",
+        "barrel"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "cowshed": {
+    "roles": {
+      "animal": [
+        "feed",
+        "coop",
+        "pen",
+        "crate"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "work.material": [
+        "feed",
+        "firewood"
+      ],
+      "storage.bulk": [
+        "feed",
+        "sack",
+        "barrel"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "oxhouse": {
+    "roles": {
+      "animal": [
+        "feed",
+        "coop",
+        "pen",
+        "crate"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "work.material": [
+        "feed",
+        "firewood"
+      ],
+      "storage.bulk": [
+        "feed",
+        "sack",
+        "barrel"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "threshing_floor": {
+    "roles": {
+      "machine": [
+        "farm_machine"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "storage.bulk": [
+        "sack",
+        "granary",
+        "crate"
+      ],
+      "work.tool": [
+        "rack",
+        "chest"
+      ]
+    }
+  },
+  "cart_shed": {
+    "roles": {
+      "machine": [
+        "farm_machine"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "work.tool": [
+        "rack",
+        "chest"
+      ]
+    }
+  },
+  "implement_shed": {
+    "roles": {
+      "machine": [
+        "farm_machine"
+      ],
+      "work.tool": [
+        "rack",
+        "chest"
+      ],
+      "storage.hay": [
+        "feed"
+      ]
+    }
+  },
+  "machine_shed": {
+    "roles": {
+      "machine": [
+        "farm_machine"
+      ],
+      "work.tool": [
+        "rack",
+        "chest"
+      ],
+      "storage.bulk": [
+        "crate",
+        "sack"
+      ],
+      "storage.hay": [
+        "feed"
+      ]
+    }
+  },
+  "hayloft": {
+    "roles": {
+      "storage.hay": [
+        "feed"
+      ],
+      "storage.bulk": [
+        "feed",
+        "sack"
+      ],
+      "machine": [
+        "farm_machine"
+      ]
+    }
+  },
+  "dairy": {
+    "roles": {
+      "dairy": [
+        "dairy"
+      ],
+      "table.work": [
+        "table.trestle",
+        "table.plank",
+        "workbench"
+      ],
+      "shelving": [
+        "shelf"
+      ],
+      "storage.cold": [
+        "fridge",
+        "barrel",
+        "chest"
+      ]
+    }
+  },
+  "creamery": {
+    "roles": {
+      "dairy": [
+        "dairy"
+      ],
+      "table.work": [
+        "table.trestle",
+        "table.plank",
+        "workbench"
+      ],
+      "shelving": [
+        "shelf"
+      ],
+      "storage.cold": [
+        "fridge",
+        "barrel",
+        "chest"
+      ]
+    }
+  },
+  "milk_house": {
+    "roles": {
+      "dairy": [
+        "dairy"
+      ],
+      "table.work": [
+        "table.trestle",
+        "table.plank",
+        "workbench"
+      ],
+      "shelving": [
+        "shelf"
+      ],
+      "storage.cold": [
+        "fridge",
+        "barrel",
+        "chest"
+      ]
+    }
+  },
+  "milking_parlour": {
+    "roles": {
+      "dairy": [
+        "dairy"
+      ],
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "storage.cold": [
+        "fridge",
+        "barrel",
+        "chest"
+      ]
+    }
+  },
+  "granary": {
+    "roles": {
+      "storage.bulk": [
+        "granary",
+        "sack",
+        "crate"
+      ],
+      "table.work": [
+        "table.trestle",
+        "workbench"
+      ],
+      "shelving": [
+        "shelf"
+      ]
+    }
+  },
+  "silo_room": {
+    "roles": {
+      "storage.bulk": [
+        "granary",
+        "sack",
+        "crate"
+      ],
+      "table.work": [
+        "table.trestle",
+        "workbench"
+      ],
+      "shelving": [
+        "shelf"
+      ]
+    }
+  },
+  "pigsty": {
+    "roles": {
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ],
+      "storage.hay": [
+        "feed"
+      ]
+    }
+  },
+  "pig_pen": {
+    "roles": {
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ],
+      "storage.hay": [
+        "feed"
+      ]
+    }
+  },
+  "henhouse": {
+    "roles": {
+      "animal": [
+        "coop",
+        "feed"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "chicken_house": {
+    "roles": {
+      "animal": [
+        "coop",
+        "feed"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "coop_room": {
+    "roles": {
+      "animal": [
+        "coop",
+        "feed"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "paddock": {
+    "roles": {
+      "animal.pen": [
+        "pen"
+      ],
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "fold": {
+    "roles": {
+      "animal.pen": [
+        "pen"
+      ],
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "pen_room": {
+    "roles": {
+      "animal.pen": [
+        "pen"
+      ],
+      "animal": [
+        "feed",
+        "pen"
+      ],
+      "storage.hay": [
+        "feed"
+      ],
+      "waste": [
+        "muck",
+        "bin"
+      ]
+    }
+  },
+  "apiary": {
+    "roles": {
+      "animal": [
+        "coop"
+      ],
+      "grow": [
+        "plant",
+        "hydroponics"
+      ]
+    }
+  },
+  "orchard": {
+    "roles": {
+      "grow": [
+        "plant"
+      ],
+      "work.primary": [
+        "press",
+        "workbench"
+      ]
+    }
+  },
+  "kitchen_garden": {
+    "roles": {
+      "grow": [
+        "plant",
+        "hydroponics"
+      ]
+    }
+  },
+  "vegetable_garden": {
+    "roles": {
+      "grow": [
+        "plant",
+        "hydroponics"
+      ]
+    }
+  },
+  "vat_farm": {
+    "roles": {
+      "grow": [
+        "hydroponics",
+        "plant"
+      ]
+    }
+  },
+  "tack_room": {
+    "roles": {
+      "work.tool": [
+        "rack.tool",
+        "rack",
+        "chest"
       ]
     }
   }

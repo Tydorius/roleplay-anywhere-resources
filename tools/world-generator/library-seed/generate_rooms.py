@@ -1,6 +1,7 @@
 """Generate the first fixed rooms into library/rooms/<family>.json: every
 recipe of the bedroom, master bedroom, washroom, privy, bath, closet,
-courtyard, garden and yard families composed at each clearance
+courtyard, garden, yard, barn, dairy, granary, pigsty and henhouse
+families composed at each clearance
 (tight/roomy/grand) in each style the family takes (flush/open; the outdoor
 families flush alone, their rooms having no walls to open against), seed 1,
 keeping the best room of each. The bedroom family also
@@ -54,7 +55,8 @@ from worldgen import room_composer as RC    # noqa: E402
 from worldgen import room_groups as RG      # noqa: E402
 
 FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet",
-            "courtyard", "garden", "yard")
+            "courtyard", "garden", "yard", "barn", "dairy", "granary",
+            "pigsty", "henhouse")
 SEED = 1
 CLEARANCES = ("tight", "roomy", "grand")
 STYLES = ("flush", "open")
@@ -81,6 +83,9 @@ NOUNS = (
     ("storage.small", "chest"),
     ("storage.cold", "icebox"),
     ("storage.bulk", "sack"),
+    ("storage.hay", "hay stack"),
+    ("machine", "machine"),
+    ("dairy", "churn"),
     ("shelving", "shelf"),
     ("utility", "utility stand"),
     ("wash.bath", "bathtub"),
@@ -103,6 +108,7 @@ NOUNS = (
     ("waste", "waste bucket"),
     ("decor.floor", "floor rug"),
     ("decor.feature", "centrepiece"),
+    ("animal.pen", "pen hurdle"),
     ("animal", "trough"),
     ("grow", "plant bed"),
     ("decor", "decoration"),
@@ -110,7 +116,9 @@ NOUNS = (
 FAMILY_NOUNS = {"bedroom": "bedroom", "bedroom.master": "master bedroom",
                 "washroom": "washroom", "privy": "privy", "bath": "bath room",
                 "closet": "closet", "courtyard": "courtyard",
-                "garden": "garden", "yard": "yard"}
+                "garden": "garden", "yard": "yard", "barn": "barn",
+                "dairy": "dairy", "granary": "granary", "pigsty": "pigsty",
+                "henhouse": "hen house"}
 BAND_ADJECTIVES = {"tiny": "cramped", "small": "small", "medium": "mid-sized",
                    "large": "spacious", "stall": "stall", "reach": "reach-in",
                    "walkin": "walk-in"}
@@ -120,7 +128,10 @@ FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
                 "washroom": ("wash",), "privy": ("wash",), "bath": ("wash",),
                 "closet": ("storage", "shelving", "utility"),
                 "courtyard": ("decor.feature",), "garden": ("grow",),
-                "yard": ("animal", "storage")}
+                "yard": ("animal", "storage"),
+                "barn": ("machine", "storage.hay"),
+                "dairy": ("dairy",), "granary": ("storage.bulk",),
+                "pigsty": ("animal",), "henhouse": ("animal",)}
 MAX_MENTIONS = 4      # furniture groups named in one description
 LETTERS = "abcdefghijklmnopqrstuvwxyz"
 

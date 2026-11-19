@@ -1,0 +1,176 @@
+{
+  "groups": [
+    {
+      "id": "animal.animal.waste.opt",
+      "family": "henhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.bulk.animal",
+      "family": "henhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "waste.storage.hay",
+      "family": "henhouse",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "henhouse.small.a",
+      "family": "henhouse",
+      "sizeBands": [
+        "tiny",
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "animal.animal.waste.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "waste.storage.hay",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.animal",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "henhouse.barn.a",
+      "family": "henhouse",
+      "sizeBands": [
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.bulk.animal",
+          "kind": "anchor"
+        },
+        {
+          "group": "animal.animal.waste.opt",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.animal",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "waste.storage.hay",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}
