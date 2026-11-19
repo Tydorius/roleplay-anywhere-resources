@@ -51,7 +51,7 @@ from . import room_composer as RC
 from . import room_groups as RG
 from .layout_building import BuildingLayout, RoomOut, _connection_tree
 from .layout_room import TURN_SIDES, RoomLayout, turned
-from .model import FurniturePlan, Rect, is_urban_zone
+from .model import FurniturePlan, Rect, is_urban_zone, settlement_size
 
 # a room's share names the shared size band it asks for; a family with bands
 # of its own takes its band nearest that shared band's centre — one table for
@@ -243,6 +243,8 @@ class _Context:
                                   # shipped — a discarded side's closets are
                                   # not this building's story
         self.injected = set()    # template names already in the plan
+        self.block_designs = {}  # building name -> the wing design a block
+                                 # recipe stands it for (rl-10), or None
         self.sleepers = {}       # design room name -> (singles, couples)
         self._clearances = {}    # (design name, family) -> clearance
         self._pools = {}         # (family, clearance, band, sleepers, fit) -> [rooms]
@@ -269,10 +271,45 @@ def active():
     return _context
 
 
+def _block_design(ctx, design):
+    """The wing design a block-shape building recipe stands this single
+    building for (rl-10): the recipe's one wing is the building's whole
+    design — its rooms by purpose and share, the storeys the height rules
+    allow, the building's own wealth, loot and name. None when the kind
+    names no block recipe (compound parts and unit buildings never qualify:
+    a compound's wings come through the compound, a unit stamps copies), so
+    the design stands as the plan drew it."""
+    if getattr(design, "units", None) or ctx.compound_of.get(design.name):
+        return None
+    if design.name in ctx.block_designs:
+        return ctx.block_designs[design.name]
+    wing = None
+    if design.kind:
+        recipe = library_plan.building_by_kind(ctx.lib, design.kind, ctx.band)
+        if recipe is not None and recipe.get("shape") == "block":
+            entries = [e for e in recipe.get("wings") or []
+                       if isinstance(e, dict)]
+            wing = ctx.lib.wings.get(entries[0].get("wing")) \
+                if entries else None
+    if wing is None:
+        ctx.block_designs[design.name] = None
+    else:
+        from .phases import _storey_cap
+        zone = ctx.zone_of.get(design.name)
+        cap = _storey_cap(ctx.band, design.kind,
+                          settlement_size(zone.kind) if zone is not None
+                          else "hamlet")
+        ctx.block_designs[design.name] = library_plan.wing_design(
+            ctx.lib, wing, design.name, design, ctx.band, cap, design.kind)
+    return ctx.block_designs[design.name]
+
+
 def footprint(design, templates=None):
     """The (w, h) an assembled building takes, or None when the assembler is
     off or the design does not qualify. ``building_footprint`` calls this
     first so the map, the packer and the layout agree."""
+    if _context is not None:
+        design = _block_design(_context, design) or design
     asm = _assembly_for(design)
     if asm is None:
         return None
@@ -284,6 +321,8 @@ def footprint(design, templates=None):
 def build(design, origin, templates=None):
     """The assembled BuildingLayout at ``origin``, or None (the caller falls
     back to the old method)."""
+    if _context is not None:
+        design = _block_design(_context, design) or design
     asm = _assembly_for(design)
     if asm is None:
         return None

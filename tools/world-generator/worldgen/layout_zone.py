@@ -1316,6 +1316,8 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         _record_furniture(out, b)
 
     for compound in sorted(compounds, key=lambda c: c.name, reverse=True):
+        compound, recipe_notes = layout_compound.expand_recipe(zone, compound)
+        out.failures.extend(recipe_notes)
         fp = layout_compound.compound_footprint(zone, compound, templates)
         pos = _compound_position(zone, rect, out, compound, fp, inner, fits,
                                  rng, mouths)
@@ -1333,8 +1335,8 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
             out.buildings.append(b)
         targets = []
         by_name = {b.layout.design.name: b for b in comp.parts}
-        if compound.shape == "enclosure":
-            for part in compound.parts:
+        if comp.compound.shape == "enclosure":
+            for part in comp.compound.parts:
                 b = by_name.get(part.building)
                 if part.slot_kind != "inside" or b is None:
                     continue

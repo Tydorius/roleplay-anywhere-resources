@@ -200,6 +200,161 @@ def design_from_suite(suite, b, band, rng):
             "furniture": [], "yard": None, "suite": suite["id"]}
 
 
+# --------------------------------------------------------- wings (rl-10, 8.3)
+# A building recipe's wings become part designs: the rooms the wing lists,
+# split over its floors, with the P1 building the wing stands for flowing
+# through (its residents and condition, and its own room names where a wing
+# room shares their purpose family)
+
+
+def _stepped_tier(lib, tier, offset):
+    """The tier ``offset`` steps from ``tier`` — down for a negative offset,
+    never past either end of the ladder."""
+    tiers = lib.tiers
+    i = tiers.index(tier) if tier in tiers else 0
+    return tiers[max(0, min(i + offset, len(tiers) - 1))]
+
+
+def wing_wealth_tier(lib, wing, tier):
+    """The tier a wing furnishes at (design 8.3): the tier its ``wealth``
+    names, else the building's stepped by its offset — a wing that keeps
+    quiet steps with its purpose's default (servants two down, stables two
+    down, barracks and kitchen storage one down)."""
+    spec = lib_mod.wing_wealth(wing)
+    if spec is None or spec == "building":
+        return tier
+    if isinstance(spec, str):
+        return spec if spec in lib.tiers else tier
+    return _stepped_tier(lib, tier, int(spec))
+
+
+def wing_floor_rooms(lib, wing, storeys):
+    """The wing's rooms over its floors, {floor: [room dicts]}: the ground
+    keeps the entrance room and every room that is neither a bedchamber nor
+    the hayloft; the bedchambers fill the upper storeys from storey 2 up (the
+    bigger share below), and the hayloft sits on the top one, under the roof.
+    The entrance room's last-connected bedchamber stays down when it would
+    otherwise be alone there (the keepers by the door, the guests upstairs);
+    a one-storey wing keeps every room it lists; an upper storey left with
+    nothing takes a chamber, or a store room when the wing sleeps nobody."""
+    rooms = list(wing.get("rooms") or [])
+    if storeys <= 1 or not rooms:
+        return {1: list(rooms)}
+    entry = (wing.get("entrance") or {}).get("room") or rooms[0]["name"]
+    fam = {r["name"]: lib.family_of(r.get("purpose")) for r in rooms}
+    beds = [r for r in rooms if fam[r["name"]] in SLEEP_FAMILIES]
+    lofts = [r for r in rooms if r.get("purpose") == "hayloft"]
+    down = {id(r) for r in rooms if r not in beds and r not in lofts}
+    entry_room = next((r for r in rooms if r["name"] == entry), rooms[0])
+    down.add(id(entry_room))          # the wing's door opens into it
+    if len(down) == 1 and beds:
+        # its own keeper stays by the door: the last bedchamber the entrance
+        # room connects to (else the last one listed)
+        adj = {c[0] if c[1] == entry else c[1] for c in wing.get("connections") or []}
+        pick = next((r for r in reversed(beds) if r["name"] in adj), None) \
+            or (beds[-1] if beds else None)
+        if pick is not None and id(pick) not in down:
+            down.add(id(pick))
+    ground = [r for r in rooms if id(r) in down]
+    up = [r for r in rooms if id(r) not in down]
+    up_beds = [r for r in up if fam[r["name"]] in SLEEP_FAMILIES]
+    floors = {1: ground}
+    n = storeys - 1
+    counts = [len(up_beds) // n + (1 if i < len(up_beds) % n else 0)
+              for i in range(n)]
+    i = 0
+    for f in range(2, storeys + 1):
+        floors[f] = up_beds[i:i + counts[f - 2]]
+        i += counts[f - 2]
+    floors[storeys].extend(r for r in up if r not in up_beds)   # the lofts, on top
+    for f in range(2, storeys + 1):
+        if floors[f]:
+            continue
+        use = "bedroom" if wing.get("sleeps") != "none" else "storage"
+        base = "Chamber" if use == "bedroom" else "Store room"
+        name, k = base, 2
+        while any(r["name"] == name for fl in floors.values() for r in fl):
+            name, k = f"{base} {k}", k + 1
+        floors[f] = [{"name": name, "share": "small", "purpose": use}]
+    return floors
+
+
+def wing_design(lib, wing, name, b, band, cap, kind=""):
+    """The BuildingDesign of one wing recipe (rl-10): rooms by purpose and
+    share from the wing, split over its floors within ``cap`` (the height
+    rules' cap for the building's kind where it stands, and the three the
+    assembler lays), its wealth the P1 building ``b`` it stands for with the
+    wing's design-8.3 offset applied, its residents and condition ``b``'s own.
+    A wing room whose purpose family matches a room of ``b`` takes ``b``'s
+    name for it (each of ``b``'s names once), so a P1 part keeps its named
+    rooms where the recipe has a wing for them."""
+    from .model import BuildingDesign, RoomSpec, UpperStorey
+    storeys = max(1, min(int(wing.get("storeys") or 1), cap, 3))
+    floors = wing_floor_rooms(lib, wing, storeys)
+
+    # the reconciliation, once: {wing room name -> the P1 room's name}
+    rename, taken = {}, set()
+    if b is not None:
+        for f in sorted(floors):
+            for r in floors[f]:
+                fam = lib.family_of(r.get("purpose"))
+                if fam is None:
+                    continue
+                named = next((o.name for o in b.rooms
+                              if o.name not in taken
+                              and lib.family_of(o.use) == fam), None)
+                if named is not None:
+                    taken.add(named)
+                    rename[r["name"]] = named
+
+    def spec(r):
+        use = r.get("purpose") or ""
+        return RoomSpec(name=rename.get(r["name"], r["name"]),
+                        share=r.get("share") or "medium",
+                        purpose=use.replace("_", " "), use=use)
+
+    ground = [spec(r) for r in floors.get(1, [])]
+    uppers = [UpperStorey(storey=f, rooms=[spec(r) for r in floors.get(f, [])])
+              for f in range(2, storeys + 1)]
+    # the connections the ground still names (uppers slot by share alone);
+    # a room the split left unreachable joins the entrance room
+    names = {r.name for r in ground}
+    entry = rename.get((wing.get("entrance") or {}).get("room"), "") or \
+        (ground[0].name if ground else "")
+    conn = []
+    for c in wing.get("connections") or []:
+        a, d = rename.get(c[0], c[0]), rename.get(c[1], c[1])
+        if a in names and d in names and a != d and [a, d] not in conn:
+            conn.append([a, d])
+    linked = {entry}
+    grew = True
+    while grew:
+        grew = False
+        for a, d in conn:
+            if (a in linked) != (d in linked):
+                linked |= {a, d}
+                grew = True
+    for r in ground:
+        if r.name not in linked:
+            conn.append([entry, r.name])
+            linked.add(r.name)
+    tier = wing_wealth_tier(lib, wing,
+                            b.wealth if b is not None and b.wealth in lib.tiers
+                            else "modest")
+    return BuildingDesign(
+        name=name, kind=kind or (b.kind if b is not None else "house"),
+        size_class=b.size_class if b is not None else "small",
+        wall=BAND_WALL.get(band, "wood"), ground=BAND_GROUND.get(band, "wood"),
+        storeys=storeys, couples=b.couples if b is not None else 0,
+        residents=b.residents if b is not None else 0,
+        wealth=tier, condition=(b.condition if b is not None else "") or "kept",
+        status=b.status if b is not None else "",
+        upper=uppers, rooms=ground, connections=conn,
+        entrance_room=entry, entrance_side=wing.get("entry") or "south",
+        stairs_room=entry if storeys > 1 else "",
+        furniture=[], loot_pool=b.loot_pool if b is not None else "")
+
+
 def suite_lines(lib, b, band):
     """P3's list of fitting suites: ``id | Room (purpose, share); ...``."""
     lines = []

@@ -30,7 +30,8 @@ import dataclasses
 import random
 
 from .layout_building import building_footprint, layout_building
-from .model import OPPOSITE_SIDE, SIDE_DX_DY, Rect, shared_wall_cells
+from .model import (OPPOSITE_SIDE, SIDE_DX_DY, CompoundPart, Rect,
+                    kind_phrases_hit, settlement_size, shared_wall_cells)
 
 WALL_WIDTH = 3        # a walkable wall corridor's outer width (1-cell interior)
 MIN_WALL_RUN = 3      # the shortest corridor run that still has an interior
@@ -77,6 +78,7 @@ class CompoundOut:
         self.wall_material = "stone"
         self.court = None            # {"room", "at"}: the library room placed
                                      # in the open ground (assembler on only)
+        self.court_family = "courtyard"   # the family that room comes from
         self.failures = []
 
 
@@ -109,15 +111,194 @@ def _design_of(zone, building):
     return None
 
 
-def part_plans(zone, compound, templates):
+# ---------------------------------------------------------- recipes (rl-10)
+# A compound whose kind matches a building recipe is laid out from the recipe:
+# every wing becomes a part design the compound machinery places — doors,
+# gates and courtyard as ever — and assembles in wing mode against the rect
+# it lands in. Shapes map onto today's arrangements: block is one building
+# and never a compound (the assembler takes single buildings itself); l, u
+# and courtyard are the enclosure with no wall strips, the wings on their
+# sides and the entrance wing the gate; row is the row compound, its wings
+# linked along the front; spine is the spine compound, the entrance wing the
+# hub and the others alternating columns.
+
+RECIPE_SHAPES = {"l": "enclosure", "u": "enclosure", "courtyard": "enclosure",
+                 "row": "row", "spine": "spine"}
+
+
+def _compound_kind(zone, compound):
+    """The kind that names what this compound is: its gate part's — the part
+    whose door is the compound's public face (the inn itself, the farmhouse),
+    so a keep behind a gatehouse never claims a castle recipe. "" when P1
+    marked no gate."""
+    gate = next((p for p in compound.parts if p.gate), None)
+    if gate is None:
+        return ""
+    d = _design_of(zone, gate.building)
+    return d.kind if d is not None else ""
+
+
+def _wing_cap(ctx, zone, kind):
+    """The storeys the height rules let this compound's wings rise to."""
+    from .phases import _storey_cap
+    return _storey_cap(ctx.band, kind, settlement_size(zone.kind))
+
+
+def _recipe_compound(zone, compound):
+    """(compound, designs, wings, notes, recipe): the recipe's compound when
+    the compound's kind matches a building recipe, else the compound itself
+    with nothing else — with the assembler off, today's layout, byte for
+    byte. ``designs`` maps part name -> the wing's BuildingDesign, ``wings``
+    part name -> the wing recipe (the parts it drives build in wing mode),
+    ``notes`` are (label, note) lines for the run's failures list, and
+    ``recipe`` the building recipe that matched (None when none did).
+
+    The P1 parts reconcile with the recipe's wings: the gate part stands for
+    the entrance wing, then each wing takes the first unmatched part whose
+    kind names the wing's kinds, keeping its residents, condition and — where
+    a room's purpose family matches — its own room names. A wing no part
+    claims becomes a part of the library's own; a part no wing claims is
+    dropped, noted. An already-expanded compound comes back untouched, so the
+    zone may expand once and every later pass agrees with it."""
+    from . import assembler, library_plan
+    notes = []
+    if getattr(compound, "from_recipe", None):
+        rd = compound.recipe_data
+        return compound, rd["extra"], rd["wings"], notes, rd["recipe"]
+    ctx = assembler.active()
+    if ctx is None:
+        return compound, {}, {}, notes, None
+    kind = _compound_kind(zone, compound)
+    recipe = library_plan.building_by_kind(ctx.lib, kind, ctx.band) if kind else None
+    if recipe is None or recipe.get("shape") not in RECIPE_SHAPES:
+        return compound, {}, {}, notes, None
+    by_name = {d.name: d for d in zone.buildings}
+    wings = [e for e in recipe.get("wings") or [] if isinstance(e, dict)]
+    entry_id = (recipe.get("entrance") or {}).get("wing")
+    pool = list(compound.parts)
+    gate_part = next((p for p in pool if p.gate), None)
+
+    def kind_of(part):
+        d = by_name.get(part.building)
+        return d.kind if d is not None else ""
+
+    assigns = []          # [(wing entry, P1 part or None)] in recipe order
+    for e in [w for w in wings if w.get("wing") == entry_id] + \
+             [w for w in wings if w.get("wing") != entry_id]:
+        part = None
+        if e.get("wing") == entry_id and gate_part is not None:
+            part, gate_part = gate_part, None
+            pool.remove(part)
+        else:
+            w = ctx.lib.wings.get(e.get("wing")) or {}
+            kinds = tuple(str(k).lower() for k in w.get("kinds") or [])
+            part = next((p for p in pool if kind_phrases_hit(kind_of(p), kinds)),
+                        None)
+            if part is not None:
+                pool.remove(part)
+        assigns.append((e, part))
+    for p in pool:
+        notes.append((f"compound {compound.name}",
+                      f"part {p.building} dropped: recipe {recipe['id']} has "
+                      f"no wing for a {kind_of(p) or 'building'}"))
+    names = []
+    for (e, part) in assigns:
+        if part is not None:
+            names.append(part.building)
+            continue
+        base, k = str(e.get("wing") or "Wing"), 2
+        name = base
+        while name in names or name in by_name:
+            name, k = f"{base} {k}", k + 1
+        names.append(name)
+
+    shape = RECIPE_SHAPES[recipe["shape"]]
+    sides = [e.get("side", "south") for e in wings]
+    parts = []
+    for (e, _part), name in zip(assigns, names):
+        if shape == "enclosure":
+            parts.append(CompoundPart(building=name,
+                                      at=f"edge:{e.get('side', 'south')}:center",
+                                      gate=e.get("wing") == entry_id,
+                                      slot_kind="edge", side=e.get("side", "south"),
+                                      offset="center"))
+        elif shape == "row":
+            parts.append(CompoundPart(building=name, at="row", gate=True,
+                                      linked=True, slot_kind="row",
+                                      index=len(parts)))
+        else:
+            if e.get("wing") == entry_id:
+                parts.append(CompoundPart(building=name, at="spine:hub",
+                                          gate=True, slot_kind="hub"))
+            else:
+                col = "left" if e.get("side") in ("north", "west") else "right"
+                parts.append(CompoundPart(
+                    building=name, at=f"spine:{col}", slot_kind="spine", side=col,
+                    index=sum(1 for q in parts
+                              if q.slot_kind == "spine" and q.side == col)))
+    new = dataclasses.replace(
+        compound, shape=shape, parts=parts,
+        walls="none" if shape == "enclosure" else compound.walls,
+        frontage=sides[0] if shape == "row" and sides else compound.frontage,
+        axis=("ew" if set(sides) <= {"north", "south"} else "ns")
+        if shape == "spine" else compound.axis,
+        hub_pos="start" if shape == "spine" else compound.hub_pos)
+    new.from_recipe = recipe["id"]   # the later passes leave it as it stands
+
+    cap = _wing_cap(ctx, zone, kind)
+    gate_design = by_name.get(assigns[0][1].building) if assigns and assigns[0][1] else None
+    designs, wingmap = {}, {}
+    for (e, part), name in zip(assigns, names):
+        w = ctx.lib.wings.get(e.get("wing"))
+        if w is None:
+            continue
+        b = by_name.get(part.building) if part is not None else gate_design
+        designs[name] = library_plan.wing_design(ctx.lib, w, name, b, ctx.band,
+                                                 cap, kind)
+        wingmap[name] = w
+    new.recipe_data = {"wings": wingmap, "extra": designs, "recipe": recipe}
+    return new, designs, wingmap, notes, recipe
+
+
+def expand_recipe(zone, compound):
+    """(compound, notes): the recipe's compound when the compound's kind
+    matches a building recipe (rl-10), else the compound itself. The zone
+    expands once, before it measures, positions and places, so every pass
+    agrees on the one compound; the later expansions are no-ops."""
+    compound, _extra, _wings, notes, _recipe = _recipe_compound(zone, compound)
+    return compound, notes
+
+
+def _court_family(ctx, recipe):
+    """The family the recipe's own outdoor room furnishes the open ground
+    with (the courtyard family when the recipe keeps quiet or names one the
+    library has nothing for)."""
+    fam = None
+    for o in (recipe or {}).get("outdoor") or []:
+        if isinstance(o, dict) and o.get("between", "all") == "all":
+            fam = ctx.lib.family_of(o.get("purpose"))
+            break
+    if fam is None:
+        return "courtyard"
+    stored = [r for r in ctx.rooms
+              if r.get("family") == fam and not r.get("retired")]
+    composed = [r for r in ctx.groups["recipes"].values()
+                if r.get("family") == fam and not r.get("retired")]
+    return fam if stored or composed else "courtyard"
+
+
+def part_plans(zone, compound, templates, extra=None):
     """{building: (design, inward side, {side: (w, h)})} — each part's design
     with the entrance side the compound gives it, plus its footprint under
     every entrance side it could end up with (a gate's flips outward), so
     the compound can size its bands for the widest case and place with the
-    exact one."""
+    exact one. ``extra`` adds designs the zone's own buildings don't carry
+    (a recipe's wings, rl-10) — and stands in front of the zone's own for a
+    part a recipe claims: the wing's rooms size the part, the P1 building's
+    name and wealth ride along inside the wing's design."""
     out = {}
     for part in compound.parts:
-        design = _design_of(zone, part.building)
+        design = (extra or {}).get(part.building) or _design_of(zone, part.building)
         if design is None:
             continue
         if compound.shape == "row":
@@ -311,8 +492,11 @@ def _plan_geometry(zone, compound, templates, plans):
 
 def compound_footprint(zone, compound, templates):
     """The (w, h) block the compound occupies — one place so the zone packer
-    and the layout agree, like building_footprint for a building."""
-    plans = part_plans(zone, compound, templates)
+    and the layout agree, like building_footprint for a building. A compound
+    whose kind matches a building recipe is measured as the recipe's
+    (rl-10); the expansion is deterministic, so every caller agrees."""
+    compound, extra, _wings, _notes, _recipe = _recipe_compound(zone, compound)
+    plans = part_plans(zone, compound, templates, extra)
     if not plans:
         return (MIN_BAND * 3, MIN_BAND * 3)
     if compound.shape == "row":
@@ -755,28 +939,114 @@ def place_compound(zone, compound, rect, templates, rng, furnish, mouths=None):
     to pick the default gate."""
     from .layout_zone import BuildingOut
 
+    compound, extra, wings, notes, recipe = _recipe_compound(zone, compound)
     out = CompoundOut(compound, rect)
-    plans = part_plans(zone, compound, templates)
+    out.failures.extend(notes)
+    rdata = None
+    if recipe is not None:
+        from . import assembler
+        ctx = assembler.active()
+        rdata = {"wings": wings, "extra": extra,
+                 "family": _court_family(ctx, recipe)}
+        out.court_family = rdata["family"]
+    plans = part_plans(zone, compound, templates, extra)
     if not plans:
         out.failures.append((f"compound {compound.name}", "no part buildings"))
         return out
     if compound.shape == "row":
         return _place_row_compound(zone, compound, rect, templates, rng,
-                                   furnish, mouths, out, plans)
+                                   furnish, mouths, out, plans, rdata)
     if compound.shape in ("spine", "cluster"):
         return _place_spine_compound(zone, compound, rect, templates, rng,
-                                     furnish, mouths, out, plans)
+                                     furnish, mouths, out, plans, rdata)
     return _place_enclosure(zone, compound, rect, templates, rng,
-                            furnish, mouths, out, plans)
+                            furnish, mouths, out, plans, rdata)
+
+
+def _ring_pin(r, side):
+    """(side, offset): r's `side` wall's middle cell as a wing pin — the cell
+    `_add_courtyard_door` would open — or None when that cell is a corner
+    (no door opens in a corner)."""
+    from .layout_building import _entrance_cell
+    return _ring_pin_of_cell(r, _entrance_cell(r, side))
+
+
+def _ring_pin_of_cell(r, cell):
+    """The (side, offset) pin a cell on r's ring is — the 0-based count from
+    the first non-corner cell of its side — or None on a corner or off the
+    ring (wing mode refuses a corner pin, so one is never asked for)."""
+    x, y = cell
+    if y == r.y1 and r.x < x < r.x1:
+        return ("north", x - r.x - 1)
+    if y == r.y and r.x < x < r.x1:
+        return ("south", x - r.x - 1)
+    if x == r.x1 and r.y < y < r.y1:
+        return ("east", y - r.y - 1)
+    if x == r.x and r.y < y < r.y1:
+        return ("west", y - r.y - 1)
+    return None
+
+
+def _wing_door_pins(rects, corridors):
+    """{name: [(side, offset)]}: for every placed rect, a wing pin per ring
+    cell another part or corridor meets it on — the cells the builder's
+    auto-connect opens between touching ground, so the wing opens them itself
+    and its furniture keeps them clear by construction."""
+    out = {}
+    for name, r in rects.items():
+        doors = []
+        neighbours = [ro for other, ro in rects.items() if other != name]
+        neighbours += [c.rect for c in corridors]
+        for ro in neighbours:
+            for cell in shared_wall_cells(r, ro):
+                if not r.contains_cell(cell):
+                    continue
+                pin = _ring_pin_of_cell(r, cell)
+                if pin is not None and pin not in doors:
+                    doors.append(pin)
+        out[name] = doors
+    return out
+
+
+def _wing_or_plain(ctx, wing_design, r, doors, rng, templates):
+    """One recipe wing's BuildingLayout: assembled in wing mode against the
+    rect the compound placed it in — which it must fill exactly — with its
+    doors pinned to the cells the compound will meet it on. A wing that
+    cannot do that falls back to the plain build of its own design (the
+    plain footprint is what sized the rect, so it fits by construction),
+    the reason recorded the way the assembler ever records one."""
+    from . import assembler
+    bl = assembler.wing_build(wing_design, (r.x, r.y), (r.w, r.h),
+                              None, doors, templates)
+    if bl is not None and bl.rect == r:
+        return bl
+    if bl is not None:
+        ctx.fallbacks.setdefault(wing_design.name,
+                                 f"the wing fills {bl.rect.w}x{bl.rect.h} of "
+                                 f"the {r.w}x{r.h} it was placed in")
+    bl = layout_building(wing_design, (r.x, r.y), rng, templates)
+    if getattr(bl, "assembled", False):
+        # the plain assembly took the wing's place (the rect is its own
+        # footprint): the wing ask's fallback note is stale, not the part's
+        # story — the part stands assembled
+        ctx.fallbacks.pop(wing_design.name, None)
+    return bl
 
 
 def _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
-                 furnish, doors_extra=None):
+                 furnish, doors_extra=None, rdata=None):
     """Every part's BuildingOut under its final orientation, furnished, with
     the auto-connect door cells the builder will open between touching
-    parts and corridors recorded on the rooms behind them."""
+    parts and corridors recorded on the rooms behind them. A recipe's wings
+    (rl-10) build in wing mode against the rects they landed in, one door
+    pinned per cell the compound will meet them on."""
     from .layout_zone import BuildingOut
+    from . import assembler
 
+    wings = (rdata or {}).get("wings") or {}
+    extra = (rdata or {}).get("extra") or {}
+    pins = _wing_door_pins(placed, out.corridors) if wings else {}
+    ctx = assembler.active() if wings else None
     rects = []
     for part in compound.parts:
         r = placed.get(part.building)
@@ -784,11 +1054,15 @@ def _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
             out.failures.append((f"compound {compound.name} part {part.building}",
                                  "no slot placed it"))
             continue
-        design = _design_of(zone, part.building)
+        design = extra.get(part.building) or _design_of(zone, part.building)
         side = sides.get(part.building, design.entrance_side)
         d = dataclasses.replace(design, entrance_side=side)
         b = BuildingOut(None, r, None)
-        b.layout = layout_building(d, (r.x, r.y), rng, templates)
+        if part.building in wings:
+            b.layout = _wing_or_plain(ctx, d, r, pins.get(part.building) or [],
+                                      rng, templates)
+        else:
+            b.layout = layout_building(d, (r.x, r.y), rng, templates)
         b.lot = r
         b.compound = compound.name
         if b.layout.rect != r:
@@ -815,7 +1089,7 @@ def _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
 
 
 def _place_row_compound(zone, compound, rect, templates, rng, furnish,
-                        mouths, out, plans):
+                        mouths, out, plans, rdata=None):
     """A row: parts side by side facing the frontage, a street, walkway or
     parking strip in front. Every part's entrance opens onto the strip, so
     every part is its own gate; linked neighbours butt (and join by a door),
@@ -854,7 +1128,8 @@ def _place_row_compound(zone, compound, rect, templates, rng, furnish,
             out.parking = (f"{compound.name} Parking", frect, slots)
     out.gates = [p for p in compound.parts if p.slot_kind == "row"]
     out.gate_side = compound.frontage
-    _build_parts(zone, compound, out, placed, sides, plans, templates, rng, furnish)
+    _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
+                 furnish, rdata=rdata)
     return out
 
 
@@ -870,7 +1145,7 @@ def _attached_rect(host_r, side, fp):
 
 
 def _place_spine_compound(zone, compound, rect, templates, rng, furnish,
-                          mouths, out, plans):
+                          mouths, out, plans, rdata=None):
     """A spine: a walled corridor with parts butted along it (each touching
     it, so the builder's auto-connect gives every one a door onto it), end
     parts capping it and an optional hub at its centre or an end. The hub —
@@ -904,13 +1179,15 @@ def _place_spine_compound(zone, compound, rect, templates, rng, furnish,
         sides[gate.building] = outward
         out.gates = [gate]
         out.gate_side = outward
-    _build_parts(zone, compound, out, placed, sides, plans, templates, rng, furnish)
+    _build_parts(zone, compound, out, placed, sides, plans, templates, rng,
+                 furnish, rdata=rdata)
     return out
 
 
 def _place_enclosure(zone, compound, rect, templates, rng, furnish,
-                     mouths, out, plans):
+                     mouths, out, plans, rdata=None):
     from .layout_zone import BuildingOut
+    from . import assembler
 
     geo = _plan_geometry(zone, compound, templates, plans)
     out.courtyard = Rect(rect.x + geo["west"], rect.y + geo["south"],
@@ -973,18 +1250,32 @@ def _place_enclosure(zone, compound, rect, templates, rng, furnish,
 
     # ---- the parts themselves: their layouts under the same orientation
     # (the resolved footprint is deterministic, so each rect matches the
-    # one the walls were spanned from), the gate's courtyard door added
+    # one the walls were spanned from), the gate's courtyard door added. A
+    # recipe's wings (rl-10) assemble in wing mode against their rects, the
+    # gate's courtyard door pinned among its doors
+    wings = (rdata or {}).get("wings") or {}
+    extra = (rdata or {}).get("extra") or {}
+    pins = _wing_door_pins(placed, out.corridors) if wings else {}
+    ctx = assembler.active() if wings else None
     for part in compound.parts:
         r = placed.get(part.building)
         if r is None:
             out.failures.append((f"compound {compound.name} part {part.building}",
                                  "no slot placed it"))
             continue
-        design = _design_of(zone, part.building)
+        design = extra.get(part.building) or _design_of(zone, part.building)
         side = _final_side(part, gates)
         d = dataclasses.replace(design, entrance_side=side)
         b = BuildingOut(None, r, None)
-        b.layout = layout_building(d, (r.x, r.y), rng, templates)
+        if part.building in wings:
+            doors = list(pins.get(part.building) or [])
+            if part in gates:
+                court = _ring_pin(r, OPPOSITE_SIDE[side])
+                if court is not None and court not in doors:
+                    doors.append(court)
+            b.layout = _wing_or_plain(ctx, d, r, doors, rng, templates)
+        else:
+            b.layout = layout_building(d, (r.x, r.y), rng, templates)
         b.lot = r
         b.compound = compound.name
         if b.layout.rect != r:
@@ -1045,10 +1336,10 @@ def _largest_clear_rect(court, blocked):
     return best
 
 
-def _courtyard_room(ctx, name, fw, fh):
-    """A courtyard-family room that fits fw x fh: the largest stored active
-    room that fits (turned when that helps), else one composed on the spot
-    to the band holding the rectangle's area. None when neither gives one."""
+def _courtyard_room(ctx, name, fw, fh, family="courtyard"):
+    """A `family` room that fits fw x fh: the largest stored active room
+    that fits (turned when that helps), else one composed on the spot to
+    the band holding the rectangle's area. None when neither gives one."""
     from . import fixed_rooms, room_composer
 
     def fits(r):
@@ -1060,18 +1351,18 @@ def _courtyard_room(ctx, name, fw, fh):
 
     stored = []
     for r in ctx.rooms:
-        if r.get("family") != "courtyard" or r.get("retired"):
+        if r.get("family") != family or r.get("retired"):
             continue
         t = fits(r)
         if t is not None:
             stored.append(t)
     if stored:
         return max(stored, key=lambda r: (r["size"][0] * r["size"][1], r["id"]))
-    band = fixed_rooms.band_for("courtyard", fw, fh)
+    band = fixed_rooms.band_for(family, fw, fh)
     if band is None:
         return None
     recipes = [r for r in ctx.groups["recipes"].values()
-               if r.get("family") == "courtyard" and not r.get("retired")
+               if r.get("family") == family and not r.get("retired")
                and band in (r.get("sizeBands") or [])]
     for recipe in sorted(recipes, key=lambda r: str(r.get("layout"))):
         for clearance in ("roomy", "tight", "grand"):
@@ -1120,7 +1411,7 @@ def _fill_courtyard(out):
     if free is None:
         return
     fx, fy, fw, fh = free
-    room = _courtyard_room(ctx, out.name, fw, fh)
+    room = _courtyard_room(ctx, out.name, fw, fh, out.court_family)
     if room is None:
         return
     rw, rh = room["size"]
@@ -1149,7 +1440,9 @@ def _add_courtyard_door(b, side):
     room's furniture keeps the walkway clear."""
     from .layout_building import _entrance_cell
     cell = _entrance_cell(b.layout.rect, side)
-    extra = list(getattr(b.layout, "extra_doors", [])) + [cell]
+    extra = list(getattr(b.layout, "extra_doors", []))
+    if cell not in extra:
+        extra.append(cell)
     b.layout.extra_doors = extra
     for room in b.layout.rooms:
         x, y = cell
