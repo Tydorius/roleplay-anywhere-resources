@@ -19,8 +19,15 @@ across the corner square and the vertical side's run starts three cells
 in, so the two join without overlapping. The courtyard is sized from the
 inside parts plus walking room, and the enclosure's outer size follows
 from it — the block is never stretched to fill the zone.
+
+With the room assembler on, the enclosure's courtyard is furnished from
+the room library: a stored courtyard-family room (or one composed on the
+spot) lands in the largest clear rectangle of open ground, its pieces
+joining the path blocker the way the parts' cells do. With the assembler
+off the courtyard stays bare as before.
 """
 import dataclasses
+import random
 
 from .layout_building import building_footprint, layout_building
 from .model import OPPOSITE_SIDE, SIDE_DX_DY, Rect, shared_wall_cells
@@ -68,6 +75,8 @@ class CompoundOut:
         self.gate_side = ""          # outward side of the first gate part
         self.gates = []              # [CompoundPart] with doors on both faces
         self.wall_material = "stone"
+        self.court = None            # {"room", "at"}: the library room placed
+                                     # in the open ground (assembler on only)
         self.failures = []
 
 
@@ -1004,7 +1013,119 @@ def _place_enclosure(zone, compound, rect, templates, rng, furnish,
                     _door_into_room(bl_a, cell)
     for b in out.parts:
         furnish(b)
+    _fill_courtyard(out)
     return out
+
+
+def _largest_clear_rect(court, blocked):
+    """The largest axis-aligned rectangle of courtyard cells off ``blocked``,
+    as (x, y, w, h), or None when no cell is clear. The classic histogram
+    sweep: column heights of consecutive clear cells, row by row."""
+    best = None
+
+    def note(x, y, w, h):
+        nonlocal best
+        if w and h and (best is None or w * h > best[2] * best[3]):
+            best = (x, y, w, h)
+
+    heights = {x: 0 for x in range(court.x, court.x1 + 1)}
+    for y in range(court.y, court.y1 + 1):
+        for x in range(court.x, court.x1 + 1):
+            heights[x] = 0 if (x, y) in blocked else heights[x] + 1
+        stack = []           # (start x, height) of bars still open
+        for x in range(court.x, court.x1 + 2):
+            h = heights.get(x, 0)
+            start = x
+            while stack and stack[-1][1] >= h:
+                sx, sh = stack.pop()
+                note(sx, y - sh + 1, x - sx, sh)
+                start = sx
+            if h:
+                stack.append((start, h))
+    return best
+
+
+def _courtyard_room(ctx, name, fw, fh):
+    """A courtyard-family room that fits fw x fh: the largest stored active
+    room that fits (turned when that helps), else one composed on the spot
+    to the band holding the rectangle's area. None when neither gives one."""
+    from . import fixed_rooms, room_composer
+
+    def fits(r):
+        for turn in (0, 1):
+            t = fixed_rooms.rotate(r, turn) if turn else r
+            if t["size"][0] <= fw and t["size"][1] <= fh:
+                return t
+        return None
+
+    stored = []
+    for r in ctx.rooms:
+        if r.get("family") != "courtyard" or r.get("retired"):
+            continue
+        t = fits(r)
+        if t is not None:
+            stored.append(t)
+    if stored:
+        return max(stored, key=lambda r: (r["size"][0] * r["size"][1], r["id"]))
+    band = fixed_rooms.band_for("courtyard", fw, fh)
+    if band is None:
+        return None
+    recipes = [r for r in ctx.groups["recipes"].values()
+               if r.get("family") == "courtyard" and not r.get("retired")
+               and band in (r.get("sizeBands") or [])]
+    for recipe in sorted(recipes, key=lambda r: str(r.get("layout"))):
+        for clearance in ("roomy", "tight", "grand"):
+            rooms, _reason = room_composer.compose(
+                recipe, ctx.groups, clearance, "flush",
+                f"{ctx.world_seed}|courtyard|{name}|{recipe['layout']}",
+                size_band=band)
+            for r in rooms:
+                t = fits(r)
+                if t is not None:
+                    return t
+    return None
+
+
+def _fill_courtyard(out):
+    """Furnish the enclosure's open ground from the room library, when the
+    room assembler is on: a courtyard-family room lands centred in the
+    largest clear rectangle of courtyard, kept a walk ring away from every
+    part and wall (their doors and entrance approaches stay clear), its
+    pieces joining the path blocker the way the parts' cells do. The
+    composition draws from its own seeded rng, so the enclosure's own
+    randomness is untouched either way."""
+    from . import assembler
+
+    ctx = assembler.active()
+    if ctx is None or out.courtyard is None:
+        return
+    court = out.courtyard
+    blocked = set()
+    for b in out.parts:
+        blocked |= {c for c in b.layout.rect.cells()
+                    if court.contains_cell(c)}
+    for c in out.corridors:
+        blocked |= {c for c in c.rect.cells() if court.contains_cell(c)}
+    # the courtyard's own boundary is a walk too: no piece stands on it, so
+    # every part door and the gate's approach stay clear and the ground
+    # stays passable around the furnishing
+    ring = {c for c in court.cells()
+            if c[0] in (court.x, court.x1) or c[1] in (court.y, court.y1)}
+    # ...and a walk ring around every part and wall inside
+    for (x, y) in set(blocked):
+        for nb in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if court.contains_cell(nb):
+                ring.add(nb)
+    free = _largest_clear_rect(court, blocked | ring)
+    if free is None:
+        return
+    fx, fy, fw, fh = free
+    room = _courtyard_room(ctx, out.name, fw, fh)
+    if room is None:
+        return
+    rw, rh = room["size"]
+    at = (fx + (fw - rw) // 2, fy + (fh - rh) // 2)
+    out.court = {"room": room, "at": at}
 
 
 def _door_into_room(bl, cell):
@@ -1069,6 +1190,15 @@ def courtyard_paths(compound_out, targets):
         blocked |= b.layout.rect.cells()
     for c in compound_out.corridors:
         blocked |= c.rect.cells()
+    if compound_out.court is not None:
+        # the furnished courtyard's pieces block path ground the way the
+        # parts' cells do, so no path is drawn through a bench or a tree
+        room, (ox, oy) = compound_out.court["room"], compound_out.court["at"]
+        for p in room["pieces"]:
+            px, py = p["at"]
+            pw, ph = p["size"]
+            blocked |= {(ox + px + i, oy + py + j)
+                        for i in range(pw) for j in range(ph)}
     out = []
     for cell in targets:
         cells = _l_shape(start, cell)

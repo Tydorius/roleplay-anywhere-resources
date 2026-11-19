@@ -409,7 +409,15 @@ storeys are floors of their own, and a walkable wall gets its wall-walk
 storey 2 wherever both ends have one — joined to each end's storey by a
 linked passage pair (planes cannot share a door in 1.0), so the towers and
 the gatehouse meet along the walk upstairs. With floors off, a compound is
-ground floor only and plays in the unmodded game.
+ground floor only and plays in the unmodded game. Behind `--room-assembler`
+the courtyard is furnished too: the open ground's largest clear rectangle
+takes a room of the library's outdoor `courtyard` family — a stored room
+that fits, else one composed on the spot — and ships as an unwalled
+flagstone region under the compound with its pieces as objects (a statue or
+fountain centrepiece, benches, trees). The gate's approach, the parts'
+doors and a perimeter walk stay clear, and the courtyard paths keep off
+what stands there. With the switch off the courtyard is bare ground,
+exactly as before.
 
 The feasibility answers behind those choices are in
 `reports/012-feasibility.md`, each pinned by builder specs in
@@ -596,6 +604,12 @@ nothing takes the family's neighbouring band one step larger first, then one
 step smaller. The bedroom family ships rooms for two singles as well — the
 shared bedrooms and children's lofts — composed under the same rules as the
 one-bed rooms, so a household's children sleep in a room the library drew.
+
+The same switch furnishes a compound's courtyard from the library's outdoor
+families (see "Compounds and zone arrangements"): rooms that stand in the
+open, with no walls, the whole edge an entrance and a clear walk crossing
+between every pair of opposite edges — `library/AUTHORING.md` has the rules
+a hand-authored outdoor room follows.
 
 ## How zones are sized
 

@@ -497,6 +497,17 @@ style the composer found a clear layout for.
   under the same rules and the same dedupe, their ids continuing the letter sequence. A
   `description` says "for two" only of these rooms; a hand room or an older room that
   happens to sleep two keeps its own description untouched.
+- **Outdoor rooms:** a family whose `familySizeBands` spec carries `"outdoor": true` (the
+  courtyard, garden and yard families) stands in the open, and its rooms live by their own
+  rules: no piece backs a side (there is no wall to pin it to), the style is `flush` alone,
+  and the whole edge is the entrance — `doors` lists every free edge cell, and every side
+  keeps at least one, so a clear walkway crosses the room between every pair of opposite
+  edges. The dead-floor and empty-edge-line rules do not apply (open ground is walked
+  wherever it likes), and a seat belongs to the court's centrepiece as it does to a table:
+  `decor.feature` counts among the roles a seat faces. Behind `--room-assembler` a
+  compound's courtyard is furnished from the courtyard family — a stored room that fits,
+  else one composed on the spot — shipped as an unwalled region with the room's pieces as
+  objects.
 - **The assembler:** one-storey library buildings can be placed from these rooms whole
   (`--room-assembler`, `worldgen/assembler.py`). What helps it place a family: door offsets
   on three or four sides (a room with doors on one side can only end a wing), stretch lines

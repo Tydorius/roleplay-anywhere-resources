@@ -63,6 +63,13 @@ class Library:
     def family_of(self, purpose):
         return self.vocab.get("purposes", {}).get(purpose)
 
+    def outdoor_families(self):
+        """Families flagged ``outdoor`` in their familySizeBands spec: their
+        rooms stand in the open, so walls and wall-side furniture rules do not
+        apply to them."""
+        return {f for f, spec in self.vocab.get("familySizeBands", {}).items()
+                if isinstance(spec, dict) and spec.get("outdoor")}
+
     def layouts_for(self, family):
         return [l for l in self.layouts.values() if l.get("family") == family]
 
@@ -565,9 +572,6 @@ WING_SLEEPS = ("guests", "residents", "staff", "none")
 # design 8.3: wing purposes the assembler steps down when a recipe keeps quiet
 WING_WEALTH_OFFSETS = {"servants": -2, "barracks": -1, "kitchen_storage": -1, "stables": -2}
 BUILDING_SHAPES = ("block", "l", "u", "courtyard", "row", "spine")
-# library.json has no outdoor families yet (they land with the outdoor-rooms
-# brief); until then a building recipe's outdoor rooms draw from this list
-OUTDOOR_PURPOSES = ("courtyard", "garden", "yard")
 SHAPE_SIDE_RULES = {
     "block": "shape block is one wing",
     "row": "a row's wings share one side (the front)",
@@ -721,9 +725,12 @@ def _check_building(lib, b, err, warn):
     onames = []
     for o in outdoor:
         onames.append(o.get("name"))
-        if o.get("purpose") not in OUTDOOR_PURPOSES:
+        # one source of truth: a purpose serves an outdoor room when it maps
+        # to a family flagged outdoor in its familySizeBands spec
+        outdoor_fams = lib.outdoor_families()
+        if lib.family_of(o.get("purpose")) not in outdoor_fams:
             err(f"{where}: outdoor room {o.get('name')} has purpose {o.get('purpose')!r}, "
-                f"not one of {OUTDOOR_PURPOSES}")
+                f"not a purpose of an outdoor family ({', '.join(sorted(outdoor_fams))})")
         if o.get("between", "all") not in ("all", "wings"):
             err(f"{where}: outdoor room {o.get('name')} between must be \"all\" or \"wings\"")
     for d, n in Counter(onames).items():
