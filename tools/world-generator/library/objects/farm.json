@@ -60,14 +60,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "henhouse"},
-      "parts": {"walls": "wood", "straw": "plant"},
+      "parts": {"walls": "wood"},
       "partsByBand": {},
       "tags": ["animal", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {walls} henhouse with a perch through it and {straw} drifting from the pop hole.",
-        "physical": "Top-down view of {A:noun}: a square {walls.color} {walls} shed, a perch line across the middle, a small pop hole in the front wall, {straw.color} {straw} spilled below it."
+        "description": "{A:condition} {walls} henhouse with a perch through it and golden straw drifting from the pop hole.",
+        "physical": "Top-down view of {A:noun}: a square {walls.color} {walls} shed, a perch line across the middle, a small pop hole in the front wall, golden straw spilled below it."
       },
       "aliases": ["chicken house", "fowl house", "chicken coop"],
       "sources": ["claude-authored"]
@@ -156,14 +156,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "hay rack"},
-      "parts": {"frame": "wood", "hay": "plant"},
+      "parts": {"frame": "wood"},
       "partsByBand": {},
       "tags": ["animal", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {frame} rack of bars with {hay} pulled through the slots and droppings strewn below.",
-        "physical": "Top-down view of {A:noun}: a {frame.color} {frame} frame of upright bars along its back edge, {hay.color} {hay} bundled behind them."
+        "description": "{A:condition} {frame} rack of bars with golden hay pulled through the slots and droppings strewn below.",
+        "physical": "Top-down view of {A:noun}: a {frame.color} {frame} frame of upright bars along its back edge, golden hay bundled behind them."
       },
       "aliases": ["hay rack", "manger rack", "feeding rack"],
       "sources": ["claude-authored"]
@@ -180,14 +180,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "hay rick"},
-      "parts": {"rick": "plant"},
+      "parts": {},
       "partsByBand": {},
       "tags": ["storage", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} conical {rick} rick on staddle stones, its thatched top combed smooth against the rain.",
-        "physical": "Top-down view of {A:noun}: a round conical {rick.color} {rick} rick, darker combed thatch ringing the crown, the tips of staddle stones showing under its edge."
+        "description": "{A:condition} conical golden hay rick on staddle stones, its thatched top combed smooth against the rain.",
+        "physical": "Top-down view of {A:noun}: a round conical golden hay rick, darker combed thatch ringing the crown, the tips of staddle stones showing under its edge."
       },
       "aliases": ["rick", "haystack", "hay stack"],
       "sources": ["claude-authored"]
@@ -204,14 +204,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "loft haystack"},
-      "parts": {"hay": "plant"},
+      "parts": {},
       "partsByBand": {},
       "tags": ["storage", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} loose {hay} pile under the rafters, a pitchfork left standing in it.",
-        "physical": "Top-down view of {A:noun}: a rough square of piled {hay.color} {hay}, darker patches pressed down, the shadow of rafters across it, a fork handle standing proud."
+        "description": "{A:condition} loose golden hay pile under the rafters, a pitchfork left standing in it.",
+        "physical": "Top-down view of {A:noun}: a rough square of piled golden hay, darker patches pressed down, the shadow of rafters across it, a fork handle standing proud."
       },
       "aliases": ["hay pile", "loose hay", "loft hay"],
       "sources": ["claude-authored"]
@@ -300,14 +300,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "granary bin"},
-      "parts": {"bin": "wood", "grain": "plant"},
+      "parts": {"bin": "wood"},
       "partsByBand": {},
       "tags": ["storage", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {bin} grain bin raised on staddle stones, its lid ajar and {grain} spilling over the lip.",
-        "physical": "Top-down view of {A:noun}: a long {bin.color} {bin} bin on low stone feet, lid boards ajar at one end, {grain.color} {grain} heaped at the gap."
+        "description": "{A:condition} {bin} grain bin raised on staddle stones, its lid ajar and golden grain spilling over the lip.",
+        "physical": "Top-down view of {A:noun}: a long {bin.color} {bin} bin on low stone feet, lid boards ajar at one end, golden grain heaped at the gap."
       },
       "aliases": ["grain bin", "corn bin", "storage bin"],
       "sources": ["claude-authored"]
@@ -420,14 +420,14 @@
       "bands": ["medieval", "industrial"],
       "onlyGenres": [],
       "names": {"*": "muck heap"},
-      "parts": {"heap": "plant"},
+      "parts": {},
       "partsByBand": {},
       "tags": ["waste"],
       "container": false,
       "lootPool": null,
       "text": {
         "description": "{A:condition} steaming muck heap, a fork stuck in it and straw flecked through.",
-        "physical": "Top-down view of {A:noun}: a rough round heap of dung and {heap.color} {heap} straw, darker wet streaks down it, a fork handle standing off centre."
+        "physical": "Top-down view of {A:noun}: a rough round heap of dung and dirty straw, darker wet streaks down it, a fork handle standing off centre."
       },
       "aliases": ["dung heap", "midden", "compost heap"],
       "sources": ["claude-authored"]
@@ -780,14 +780,14 @@
       "bands": ["modern"],
       "onlyGenres": [],
       "names": {"*": "tube feeder"},
-      "parts": {"feeder": "metal", "feed": "plant"},
+      "parts": {"feeder": "metal"},
       "partsByBand": {},
       "tags": ["animal", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} cylindrical feed {feeder}, {feed} trickling into the ring at its base.",
-        "physical": "Top-down view of {A:noun}: a round {feeder.color} {feeder} feed dispenser with a feed ring at the base, {feed.color} {feed} scattered in the ring."
+        "description": "{A:condition} cylindrical feed {feeder}, pale feed pellets trickling into the ring at its base.",
+        "physical": "Top-down view of {A:noun}: a round {feeder.color} {feeder} feed dispenser with a feed ring at the base, pale feed pellets scattered in the ring."
       },
       "aliases": ["tube feeder", "feed dispenser", "bulk feeder"],
       "sources": ["claude-authored"]
@@ -828,14 +828,14 @@
       "bands": ["modern"],
       "onlyGenres": [],
       "names": {"*": "nest box"},
-      "parts": {"box": "wood", "straw": "plant"},
+      "parts": {"box": "wood"},
       "partsByBand": {},
       "tags": ["animal", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} nest box row, {straw} poking from the holes and one brown egg tucked in.",
-        "physical": "Top-down view of {A:noun}: a row of nest holes in a {box.color} {box} box, {straw.color} {straw} poking from each, one egg visible."
+        "description": "{A:condition} nest box row, golden straw poking from the holes and one brown egg tucked in.",
+        "physical": "Top-down view of {A:noun}: a row of nest holes in a {box.color} {box} box, golden straw poking from each, one egg visible."
       },
       "aliases": ["nest box", "nesting box", "laying box"],
       "sources": ["claude-authored"]
@@ -852,14 +852,14 @@
       "bands": ["modern"],
       "onlyGenres": [],
       "names": {"*": "round baler"},
-      "parts": {"baler": "metal", "bale": "plant"},
+      "parts": {"baler": "metal"},
       "partsByBand": {},
       "tags": ["machine", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} round baler with a {bale} of straw wedged in its chamber.",
-        "physical": "Top-down view of {A:noun}: a {baler.color} {baler} baler body with a round {bale.color} {bale} bale half in the chamber, belts round the drum."
+        "description": "{A:condition} round baler with a golden straw of straw wedged in its chamber.",
+        "physical": "Top-down view of {A:noun}: a {baler.color} {baler} baler body with a round golden straw bale half in the chamber, belts round the drum."
       },
       "aliases": ["baler", "round baler", "hay baler"],
       "sources": ["claude-authored"]
@@ -948,14 +948,14 @@
       "bands": ["scifi"],
       "onlyGenres": [],
       "names": {"*": "grow tower"},
-      "parts": {"column": "synthetic", "plants": "plant"},
+      "parts": {"column": "synthetic"},
       "partsByBand": {},
       "tags": ["grow", "furniture", "light"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {column} grow tower, {plants} growth spiralling its column under the light cap.",
-        "physical": "Top-down view of {A:noun}: a slim {column.color} {column} column ringed by spiralling {plants.color} {plants} growth, a bright light cap glowing at its crown."
+        "description": "{A:condition} {column} grow tower, leafy green growth spiralling its column under the light cap.",
+        "physical": "Top-down view of {A:noun}: a slim {column.color} {column} column ringed by spiralling leafy green growth, a bright light cap glowing at its crown."
       },
       "aliases": ["grow tower", "vertical grower", "hydroponic tower"],
       "sources": ["claude-authored"]
@@ -972,14 +972,14 @@
       "bands": ["scifi"],
       "onlyGenres": [],
       "names": {"*": "algae vat"},
-      "parts": {"tank": "synthetic", "algae": "plant"},
+      "parts": {"tank": "synthetic"},
       "partsByBand": {},
       "tags": ["grow", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
         "description": "{A:condition} {tank} algae vat, green broth bubbling in it and a harvest tap at the base.",
-        "physical": "Top-down view of {A:noun}: a square {tank.color} {tank} vat of green broth, bubbler columns standing in the middle, {algae.color} {algae} crusted round a harvest tap at one corner."
+        "physical": "Top-down view of {A:noun}: a square {tank.color} {tank} vat of green broth, bubbler columns standing in the middle, pale green algae crusted round a harvest tap at one corner."
       },
       "aliases": ["algae tank", "algae vat", "growth vat"],
       "sources": ["claude-authored"]

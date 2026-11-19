@@ -218,7 +218,10 @@ def farm_names(lib):
 
 
 def is_farm_template(name, names):
-    return name in names or any(name.endswith(" " + n) for n in names)
+    # case-insensitive: an object whose contents are fixed words (hay, straw)
+    # has no material prefix, so its template is just the capitalised noun
+    low = name.lower()
+    return any(low == n.lower() or low.endswith(" " + n.lower()) for n in names)
 
 
 def roles_of(room):
