@@ -1,0 +1,52 @@
+{
+  "wings": [
+    {
+      "id": "clinic.entry",
+      "purpose": "entry",
+      "kinds": ["clinic", "clinic wing", "medical practice", "health centre",
+                "health center", "urgent care"],
+      "bands": ["modern"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Reception",    "purpose": "reception", "share": "small"},
+        {"name": "Waiting room", "purpose": "lounge",    "share": "medium"}
+      ],
+      "connections": [["Reception", "Waiting room"]],
+      "entrance": {"room": "Reception"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "clinic.care",
+      "purpose": "ward",
+      "kinds": ["clinic", "ward", "infirmary"],
+      "bands": ["modern"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Consultation room", "purpose": "surgery", "share": "small"},
+        {"name": "Treatment room",    "purpose": "surgery", "share": "small"}
+      ],
+      "connections": [["Consultation room", "Treatment room"]],
+      "entrance": {"room": "Consultation room"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "clinic.service",
+      "purpose": "kitchen_storage",
+      "kinds": ["clinic"],
+      "bands": ["modern"],
+      "storeys": 1,
+      "entry": "north",
+      "rooms": [
+        {"name": "Staff room", "purpose": "lounge",   "share": "small"},
+        {"name": "Stores",     "purpose": "storage",  "share": "small"}
+      ],
+      "connections": [["Staff room", "Stores"]],
+      "entrance": {"room": "Staff room"},
+      "sleeps": "none"
+    }
+  ]
+}

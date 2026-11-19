@@ -45,6 +45,10 @@ class Library:
         self.purposes = {}
         self.suites = {}
         self.suite_files = {}
+        self.wings = {}         # id -> wing recipe (design 8.1)
+        self.wing_files = {}
+        self.buildings = {}     # id -> building recipe (design 8.2)
+        self.building_files = {}
         self.load_errors = []
 
     # ---- vocabulary shortcuts
@@ -119,6 +123,24 @@ def load(path=LIB_DIR):
                 continue
             lib.suites[sid] = s
             lib.suite_files[sid] = f
+    for f in _json_files(os.path.join(path, "wings")):
+        for w in ((_read(f, e) or {}).get("wings") or []):
+            wid = w.get("id") if isinstance(w, dict) else None
+            if wid in lib.wings:
+                lib.dupes.append(f"wing id {wid!r} in {os.path.basename(f)} and "
+                                 f"{os.path.basename(lib.wing_files[wid])}")
+                continue
+            lib.wings[wid] = w
+            lib.wing_files[wid] = f
+    for f in _json_files(os.path.join(path, "buildings")):
+        for b in ((_read(f, e) or {}).get("buildings") or []):
+            bid = b.get("id") if isinstance(b, dict) else None
+            if bid in lib.buildings:
+                lib.dupes.append(f"building id {bid!r} in {os.path.basename(f)} and "
+                                 f"{os.path.basename(lib.building_files[bid])}")
+                continue
+            lib.buildings[bid] = b
+            lib.building_files[bid] = f
     return lib
 
 
@@ -535,6 +557,207 @@ def check_role_access(vocab):
     return errors
 
 
+# ------------------------------------------------------- wings and buildings
+
+WING_PURPOSES = ("entry", "common_rooms", "sleeping", "servants", "kitchen_storage",
+                 "stables", "barracks", "ward", "chapel", "shop", "workshop")
+WING_SLEEPS = ("guests", "residents", "staff", "none")
+# design 8.3: wing purposes the assembler steps down when a recipe keeps quiet
+WING_WEALTH_OFFSETS = {"servants": -2, "barracks": -1, "kitchen_storage": -1, "stables": -2}
+BUILDING_SHAPES = ("block", "l", "u", "courtyard", "row", "spine")
+# library.json has no outdoor families yet (they land with the outdoor-rooms
+# brief); until then a building recipe's outdoor rooms draw from this list
+OUTDOOR_PURPOSES = ("courtyard", "garden", "yard")
+SHAPE_SIDE_RULES = {
+    "block": "shape block is one wing",
+    "row": "a row's wings share one side (the front)",
+    "l": "shape l wants two wings on perpendicular sides",
+    "u": "shape u wants three wings on three sides",
+    "courtyard": "a courtyard wants three or four wings on distinct sides",
+    "spine": "spine wings flank one axis (north/south or east/west)",
+}
+
+
+def wing_wealth(wing):
+    """A wing's wealth spec (design 8.3): its own ``wealth`` when set, else the
+    default offset its purpose carries, else "building"."""
+    if wing.get("wealth") is not None:
+        return wing["wealth"]
+    return WING_WEALTH_OFFSETS.get(wing.get("purpose"), "building")
+
+
+def _sides_fit(shape, sides):
+    """Do a building's wing sides draw the shape it names?"""
+    n, uniq = len(sides), set(sides)
+    if shape == "block":
+        return n == 1
+    if shape == "row":
+        return n >= 2 and len(uniq) == 1
+    if shape == "l":
+        return n == 2 and bool(uniq & {"north", "south"}) and bool(uniq & {"east", "west"})
+    if shape == "u":
+        return n == 3 and len(uniq) == 3
+    if shape == "courtyard":
+        return 3 <= n <= 4 and len(uniq) == n
+    if shape == "spine":
+        return n >= 2 and uniq in ({"north", "south"}, {"east", "west"})
+    return False
+
+
+def _check_wing(lib, w, err, warn):
+    wid = w.get("id")
+    where = f"wing {wid}"
+    if not isinstance(wid, str) or not ID_RE.match(wid):
+        err(f"{where}: id must be <kind>.<variant>")
+    kinds = w.get("kinds")
+    if not isinstance(kinds, list) or not kinds or not all(isinstance(k, str) and k == k.lower()
+                                                           for k in kinds):
+        err(f"{where}: kinds must be lower-case building kinds")
+    bands = w.get("bands")
+    if not isinstance(bands, list) or not bands or any(b not in lib.bands for b in bands):
+        err(f"{where}: bands must list bands")
+    if w.get("purpose") not in WING_PURPOSES:
+        err(f"{where}: purpose must be one of {WING_PURPOSES}")
+    st = w.get("storeys")
+    if isinstance(st, bool) or not isinstance(st, int) or not 1 <= st <= 6:
+        err(f"{where}: storeys must be 1-6")
+    if w.get("entry") not in SIDES:
+        err(f"{where}: entry must be one of {SIDES}")
+    rooms = w.get("rooms") or []
+    if not 1 <= len(rooms) <= 8:
+        err(f"{where}: one to eight rooms")
+    names = [x.get("name") for x in rooms]
+    for d, n in Counter(names).items():
+        if n > 1:
+            err(f"{where}: room name {d!r} repeats")
+    for x in rooms:
+        p = x.get("purpose")
+        if p != "custom" and p not in lib.vocab.get("purposes", {}):
+            err(f"{where}: room {x.get('name')} has unknown purpose {p!r}")
+        if x.get("share") not in SHARES:
+            err(f"{where}: room {x.get('name')} share must be one of {SHARES}")
+    adj = defaultdict(set)
+    for c in w.get("connections") or []:
+        if not (isinstance(c, list) and len(c) == 2 and c[0] in names and c[1] in names):
+            err(f"{where}: connection {c} names a missing room")
+            continue
+        adj[c[0]].add(c[1])
+        adj[c[1]].add(c[0])
+    start = (w.get("entrance") or {}).get("room")
+    if start not in names:
+        err(f"{where}: entrance room {start!r} is not a room")
+    else:
+        seen, q = {start}, deque([start])
+        while q:
+            for nb in adj[q.popleft()] - seen:
+                seen.add(nb)
+                q.append(nb)
+        for n in names:
+            if n not in seen:
+                err(f"{where}: room {n} can't be reached from the entrance")
+    sleeps = w.get("sleeps")
+    if sleeps not in WING_SLEEPS:
+        err(f"{where}: sleeps must be one of {WING_SLEEPS}")
+    elif sleeps != "none" and not any(lib.family_of(x.get("purpose")) in SLEEP_FAMILIES
+                                      for x in rooms):
+        err(f"{where}: sleeps {sleeps!r} but no room to sleep in")
+    if w.get("purpose") == "sleeping" and sleeps == "none":
+        warn(f"{where}: a sleeping wing that sleeps nobody")
+    wealth = w.get("wealth")
+    if wealth is not None and wealth != "building" and wealth not in lib.tiers and (
+            isinstance(wealth, bool) or not isinstance(wealth, int) or not -3 <= wealth <= 1):
+        err(f"{where}: wealth must be an offset -3..1, a tier or \"building\", not {wealth!r}")
+    if wealth is None and w.get("purpose") in WING_WEALTH_OFFSETS:
+        warn(f"{where}: wealth defaults to {WING_WEALTH_OFFSETS[w['purpose']]} "
+             f"({w['purpose']}, design 8.3)")
+
+
+def check_wings(lib, err, warn):
+    """Every wing recipe, one by one."""
+    for w in lib.wings.values():
+        _check_wing(lib, w, err, warn)
+
+
+def _check_building(lib, b, err, warn):
+    bid = b.get("id")
+    where = f"building {bid}"
+    if not isinstance(bid, str) or not ID_RE.match(bid):
+        err(f"{where}: id must be <kind>.<variant>")
+    kinds = b.get("kinds")
+    if not isinstance(kinds, list) or not kinds or not all(isinstance(k, str) and k == k.lower()
+                                                           for k in kinds):
+        err(f"{where}: kinds must be lower-case building kinds")
+    bands = b.get("bands")
+    if not isinstance(bands, list) or not bands or any(x not in lib.bands for x in bands):
+        err(f"{where}: bands must list bands")
+        bands = []
+    shape = b.get("shape")
+    if shape not in BUILDING_SHAPES:
+        err(f"{where}: shape must be one of {BUILDING_SHAPES}")
+        shape = None
+    wings = b.get("wings") or []
+    if not wings:
+        err(f"{where}: no wings")
+    sides = []
+    for e in wings:
+        ref = e.get("wing") if isinstance(e, dict) else None
+        w = lib.wings.get(ref) if isinstance(ref, str) else None
+        if w is None:
+            err(f"{where}: wing {ref!r} is not in the wing library")
+            continue
+        if any(x not in (w.get("bands") or []) for x in bands):
+            err(f"{where}: wing {ref!r} does not cover bands {bands}")
+        side = e.get("side", "south")
+        if side not in SIDES:
+            err(f"{where}: wing {ref!r} has unknown side {side!r}")
+            side = "south"
+        sides.append(side)
+        main = e.get("main")
+        if main is not None and main not in [r.get("name") for r in w.get("rooms") or []]:
+            err(f"{where}: main room {main!r} is not a room of wing {ref!r}")
+    if shape and wings and not _sides_fit(shape, sides):
+        err(f"{where}: {SHAPE_SIDE_RULES[shape]}, not sides {sides}")
+    outdoor = b.get("outdoor") or []
+    onames = []
+    for o in outdoor:
+        onames.append(o.get("name"))
+        if o.get("purpose") not in OUTDOOR_PURPOSES:
+            err(f"{where}: outdoor room {o.get('name')} has purpose {o.get('purpose')!r}, "
+                f"not one of {OUTDOOR_PURPOSES}")
+        if o.get("between", "all") not in ("all", "wings"):
+            err(f"{where}: outdoor room {o.get('name')} between must be \"all\" or \"wings\"")
+    for d, n in Counter(onames).items():
+        if n > 1:
+            err(f"{where}: outdoor room name {d!r} repeats")
+    if shape == "courtyard" and not outdoor:
+        err(f"{where}: a courtyard has an outdoor room")
+    start = (b.get("entrance") or {}).get("wing")
+    if start not in [e.get("wing") for e in wings if isinstance(e, dict)]:
+        err(f"{where}: entrance wing {start!r} is not a wing of this building")
+
+
+def check_buildings(lib, err, warn):
+    """Every building recipe, plus the one-winner rule on kind words: a kind
+    string belongs to one recipe per band, so ``building_by_kind`` never has
+    two recipes claiming the same words."""
+    claims = defaultdict(list)
+    for b in lib.buildings.values():
+        for band in b.get("bands") or []:
+            for k in b.get("kinds") or []:
+                claims[(band, str(k))].append(b.get("id"))
+    for (band, k), ids in sorted(claims.items()):
+        if len(ids) > 1:
+            err(f"building kind {k!r} is claimed by {ids} in band {band}")
+    for b in lib.buildings.values():
+        _check_building(lib, b, err, warn)
+
+
+def check_recipes(lib, err, warn):
+    """Wing and building recipes (design 8.1-8.3), called from ``check``."""
+    check_wings(lib, err, warn)
+    check_buildings(lib, err, warn)
+
+
 def check(lib, sources_path=SOURCES_PATH):
     """(errors, warnings) for the whole library."""
     errors, warnings = list(lib.load_errors), []
@@ -565,6 +788,7 @@ def check(lib, sources_path=SOURCES_PATH):
     _check_purposes(lib, err, warn)
     for s in lib.suites.values():
         _check_suite(lib, s, err, warn)
+    check_recipes(lib, err, warn)
     for fam in lib.vocab.get("families", {}):
         if lib.layouts and not lib.layouts_for(fam):
             warn(f"family {fam} has no layouts")
@@ -718,6 +942,7 @@ def report(lib, errors, warnings, gaps=None, out=print):
     """Print a short summary for the ``library`` command."""
     out(f"library {lib.path}")
     out(f"  {len(lib.objects)} objects, {len(lib.layouts)} layouts, {len(lib.suites)} suites, "
+        f"{len(lib.wings)} wings, {len(lib.buildings)} buildings, "
         f"{len([p for p in lib.purposes if not p.startswith('_')])} purposes")
     by_band = Counter()
     for o in lib.objects.values():

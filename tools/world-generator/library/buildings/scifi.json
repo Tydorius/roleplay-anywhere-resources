@@ -1,0 +1,18 @@
+{
+  "buildings": [
+    {
+      "id": "station.research",
+      "kinds": ["research station", "research module", "lab module", "science lab",
+                "biolab", "station"],
+      "bands": ["scifi"],
+      "shape": "spine",
+      "wings": [
+        {"wing": "station.entry",     "side": "south", "main": "Hub"},
+        {"wing": "station.lab",       "side": "north"},
+        {"wing": "station.lab",       "side": "south"},
+        {"wing": "station.quarters",  "side": "north"}
+      ],
+      "entrance": {"wing": "station.entry"}
+    }
+  ]
+}

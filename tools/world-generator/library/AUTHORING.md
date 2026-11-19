@@ -565,3 +565,110 @@ outdoor fire pits stay out.
   couple the building usually holds, `bedroom` or `dormitory` rooms for the rest.
 - **`connections`**: pairs of room names; every room must be reachable from the entrance room.
 - Name rooms the way the setting would ("Taproom", "Galley", "Crew bunks").
+
+## Wings: `wings/<band>.json`
+
+A wing is a rectangular, walled block of one to eight rooms serving one purpose in a larger
+building (design 8.1). The rooms, connections and entrance are the suite's shape one level
+down; a building recipe places whole wings.
+
+```json
+{
+  "wings": [
+    {
+      "id": "sleeping.inn",
+      "purpose": "sleeping",
+      "kinds": ["inn", "coaching inn", "hostelry", "posting house"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "east",
+      "rooms": [
+        {"name": "Landing",          "purpose": "hallway",      "share": "small"},
+        {"name": "Guest chamber",    "purpose": "guest_room",   "share": "small"},
+        {"name": "Best chamber",     "purpose": "guest_room",   "share": "small"},
+        {"name": "Keepers' chamber", "purpose": "master_bedroom", "share": "small"}
+      ],
+      "connections": [["Landing", "Guest chamber"], ["Landing", "Best chamber"],
+                      ["Landing", "Keepers' chamber"]],
+      "entrance": {"room": "Landing"},
+      "sleeps": "guests",
+      "wealth": "building"
+    }
+  ]
+}
+```
+
+- **`id`** is `<kind>.<variant>`, unique across all wings. **`kinds`**: the building kinds the
+  wing suits, lower case (documentation for now; buildings pick wings by id).
+- **`purpose`** is the wing-purpose vocabulary: `entry`, `common_rooms`, `sleeping`,
+  `servants`, `kitchen_storage`, `stables`, `barracks`, `ward`, `chapel`, `shop`, `workshop`.
+- **`storeys`** 1-6 (the upper floors are partitioned inside the wing's outline);
+  **`entry`** the side its entrance faces (a courtyard wing faces in).
+- **`rooms`** use `library.json` purposes, exactly like suites; **`connections`** and
+  **`entrance`** follow the suite rules (every room reachable from the entrance room).
+- **`sleeps`** decides the wing's bed count: `guests` (the settlement's lodging size),
+  `residents` (the building's residents), `staff` (those left over) or `none`. A wing that
+  sleeps somebody needs a room in a sleep family. Write the full set of guest rooms for an
+  inn's sleeping wing; the assembler caps the room count by the settlement's size when it
+  expands the wing (rl-06b's lodging cap), so a hamlet's inn simply keeps fewer of them.
+- **`wealth`** (design 8.3) is the wing's tier against the building's: an integer offset
+  −3 to 1 stepping down the tiers (`elite` → `wealthy` → `modest` → `poor`), a fixed tier
+  name, or `"building"` for the building's own. A wing that keeps quiet takes a default
+  offset from its purpose — `servants` −2, `barracks` −1, `kitchen_storage` −1, `stables`
+  −2 — and the checker reports every default it applies.
+
+## Buildings: `buildings/<band>.json`
+
+A building recipe composes wings and outdoor rooms into one walled shape (design 8.2). Its
+wings are references: each names a wing recipe and the side of the shape it stands on.
+
+```json
+{
+  "buildings": [
+    {
+      "id": "inn.courtyard",
+      "kinds": ["inn", "coaching inn", "caravanserai", "hostelry", "wayside inn",
+                "posting house", "roadhouse"],
+      "bands": ["medieval", "industrial"],
+      "shape": "courtyard",
+      "wings": [
+        {"wing": "inn.front",    "side": "south", "main": "Taproom"},
+        {"wing": "stables.yard", "side": "east"},
+        {"wing": "sleeping.inn", "side": "west"}
+      ],
+      "outdoor": [{"name": "Inn yard", "purpose": "courtyard", "between": "all"}],
+      "entrance": {"wing": "inn.front"}
+    }
+  ]
+}
+```
+
+- **`id`** is `<kind>.<variant>`, unique across all buildings. **`kinds`** answers P1's
+  building kind by whole words, the `suite_by_kind` rule: `building_by_kind` matches the
+  kind and its last word, and the most specific recipe wins — the matched phrase with the
+  most words ("coaching inn" beats "inn"). A kind string may belong to only one recipe per
+  band; nothing matches and the building stays a flat suite.
+- **`shape`** and its sides:
+
+  | shape | wings and sides |
+  |---|---|
+  | `block` | one wing, any side |
+  | `row` | two or more wings sharing one side (the front) |
+  | `l` | two wings on perpendicular sides |
+  | `u` | three wings on three sides |
+  | `courtyard` | three or four wings on distinct sides, and an outdoor room |
+  | `spine` | two or more wings flanking one axis (north/south or east/west) |
+
+- **`wings`**: `wing` is a wing recipe id, and the wing's `bands` must cover the building's;
+  `side` defaults to `south`. The same wing recipe may stand twice (a spine's matching
+  flanks). `main` optionally names the wing room that is the building's main room (the
+  taproom of an inn); it must be a room of that wing.
+- **`outdoor`**: unwalled rooms — courtyards, gardens, yards — placed in the space the shape
+  leaves: `between: "all"` fills the whole enclosed middle, `"wings"` the inner corner the
+  named wings enclose. `purpose` is `courtyard`, `garden` or `yard` (a short list held in the
+  checker until the outdoor-room families land in `library.json`).
+- **`entrance`** names the wing the way in.
+
+Nothing consumes these files yet: the assembler and the compound machinery take up wing
+recipes in later phases, and until then a building that matches a recipe still lays out as a
+flat suite.
