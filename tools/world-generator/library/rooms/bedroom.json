@@ -4466,7 +4466,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.c",
-      "description": "A spacious single bedroom, bed in the northwest corner, a desk against the north wall, a decoration in the northeast corner, and a coat rack in the middle of the room."
+      "description": "A spacious single bedroom, bed in the northwest corner, a desk against the north wall, a centrepiece in the northeast corner, and a coat rack in the middle of the room."
     },
     {
       "id": "bedroom.large.e.grand.open",
@@ -4804,7 +4804,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.medium.a",
-      "description": "A spacious bedroom for two, bed against the north wall, a bed against the west wall, a wardrobe in the northeast corner, a decoration in the open middle, and open floor in the middle."
+      "description": "A spacious bedroom for two, bed against the north wall, a bed against the west wall, a wardrobe in the northeast corner, a centrepiece in the open middle, and open floor in the middle."
     },
     {
       "id": "bedroom.large.e.roomy.flush",
@@ -10598,7 +10598,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.b",
-      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe in the northwest corner, a coat rack against the west wall, and a decoration against the east wall."
+      "description": "A mid-sized single bedroom, bed in the northeast corner, a wardrobe in the northwest corner, a coat rack against the west wall, and a centrepiece against the east wall."
     },
     {
       "id": "bedroom.medium.f.roomy.flush",
@@ -11424,7 +11424,7 @@
       "outdoor": false,
       "symmetric": false,
       "recipe": "bedroom.small.c",
-      "description": "A mid-sized single bedroom, bed against the north wall, an armchair in the northeast corner, a lamp against the west wall, and a decoration opposite."
+      "description": "A mid-sized single bedroom, bed against the north wall, an armchair in the northeast corner, a lamp against the west wall, and a centrepiece opposite."
     },
     {
       "id": "bedroom.medium.g.roomy.flush",
