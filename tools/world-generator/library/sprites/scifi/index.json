@@ -117,6 +117,17 @@
    "physical": "Top-down view of an oval laundry tote: perforated white plasteel sides, crumpled shirts and socks piled above the rim.",
    "reviewed": true
   },
+  "bath.hygiene_pod": {
+   "template": "Plasteel hygiene pod [bath.hygiene_pod]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "transparisteel",
+    "shell": "plasteel"
+   },
+   "physical": "Top-down view of a long capsule-shaped hygiene pod: a rounded white plasteel shell with a clear blue-tinted transparisteel lid over most of its length, a small control panel glowing at the end nearest the top edge.",
+   "reviewed": true
+  },
   "bath.plunge_pool": {
    "template": "Nanocarbon immersion pool [bath.plunge_pool]",
    "tier": "elite",
@@ -933,6 +944,28 @@
    "physical": "Top-down view of a display bench two cells wide: grey polycarbonate cloth over the moulded polymer top, small goods arranged in rows, a price slate at the top edge.",
    "reviewed": true
   },
+  "farm_machine.auto_harvester": {
+   "template": "Ceramet alloy auto-harvester [farm_machine.auto_harvester]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "ceramet alloy",
+    "sensor": "electrochromic glass"
+   },
+   "physical": "Top-down view of an auto-harvester: a broad bronze ceramet alloy body with reel arms folded along its sides, a thin blue-tinted electrochromic glass sensor mast rising over the front.",
+   "reviewed": true
+  },
+  "farm_machine.drone_feeder": {
+   "template": "Duralloy drone feeder [farm_machine.drone_feeder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "dock": "duralloy",
+    "pad": "plasteel"
+   },
+   "physical": "Top-down view of a drone feeder: a square gunmetal duralloy dock with a grey plasteel charging pad at its centre, a feed hopper cupped over one corner.",
+   "reviewed": true
+  },
   "feed.trough": {
    "template": "Grown bamboo feed dispenser [feed.trough]",
    "tier": "modest",
@@ -1039,6 +1072,17 @@
    "physical": "Top-down view of a round holo-game table: a silver polished chromalloy rim around a dark electrochromic glass disc, small glowing figures and terrain projected across it.",
    "reviewed": true
   },
+  "granary.gene_bank": {
+   "template": "Polished chromalloy gene bank [granary.gene_bank]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "rack": "polished chromalloy",
+    "slots": "memory polymer"
+   },
+   "physical": "Top-down view of a gene bank: a low chrome polished chromalloy rack of sealed pearl memory polymer slots, a pale frost light running down the row.",
+   "reviewed": true
+  },
   "gym.dummy": {
    "template": "Anodised alloy sparring droid [gym.dummy]",
    "tier": "modest",
@@ -1127,6 +1171,16 @@
    "physical": "Top-down view of a wheeled med bed: grey titanium side rails, a clear polycarbonate sheet, the head section raised at the top, castors at the corners.",
    "reviewed": true
   },
+  "hydroponics.algae_tank": {
+   "template": "Plasteel algae vat [hydroponics.algae_tank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tank": "plasteel"
+   },
+   "physical": "Top-down view of an algae vat: a square grey plasteel vat of green broth, bubbler columns standing in the middle, pale green algae crusted round a harvest tap at one corner.",
+   "reviewed": true
+  },
   "hydroponics.basin": {
    "template": "Moulded polymer hydroponics basin [hydroponics.basin]",
    "tier": "modest",
@@ -1138,6 +1192,16 @@
    "physical": "Top-down view of a hydroponics basin: a long shallow grey moulded polymer tank of pale blue fluid, rows of pale green grown bamboo growing through a perforated lid.",
    "reviewed": true
   },
+  "hydroponics.tower": {
+   "template": "Polycarbonate grow tower [hydroponics.tower]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "column": "polycarbonate"
+   },
+   "physical": "Top-down view of a grow tower: a slim clear polycarbonate column ringed by spiralling leafy green growth, a bright light cap glowing at its crown.",
+   "reviewed": true
+  },
   "hydroponics.tray_rack": {
    "template": "Titanium hydroponic rack [hydroponics.tray_rack]",
    "tier": "modest",
@@ -1147,6 +1211,17 @@
     "trays": "moulded polymer"
    },
    "physical": "Top-down view of a hydroponic rack: a long titanium rack of white moulded polymer trays packed with bright green leafy plants, a strip of purple grow lights over them, pipes along the top edge.",
+   "reviewed": true
+  },
+  "hydroponics.vat_meat": {
+   "template": "Plasteel vat-meat tank [hydroponics.vat_meat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tank": "plasteel",
+    "window": "transparisteel"
+   },
+   "physical": "Top-down view of a vat-meat tank: a square white plasteel tank with a pale culture mass drifting in clear fluid, a dark blue-tinted transparisteel viewing window set along one side.",
    "reviewed": true
   },
   "instrument.drum_kit": {

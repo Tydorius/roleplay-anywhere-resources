@@ -779,6 +779,26 @@
    "physical": "Top-down view of the CCTV monitor bank: a silver aluminium desk with a block of small frosted glass screens along the top edge, a joystick and phone toward the bottom.",
    "reviewed": true
   },
+  "coop.nest_box": {
+   "template": "Pine veneer nest box [coop.nest_box]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "pine veneer"
+   },
+   "physical": "Top-down view of a nest box: a row of nest holes in a pale pine veneer box, golden straw poking from each, one egg visible.",
+   "reviewed": true
+  },
+  "coop.perch_rack": {
+   "template": "Chrome-plated steel perch rack [coop.perch_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rack": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a perch rack: a chrome-plated steel frame of tiered perch bars over a droppings board, a feather caught on the top rail.",
+   "reviewed": true
+  },
   "counter.bar": {
    "template": "Chrome-plated steel bar counter [counter.bar]",
    "tier": "modest",
@@ -938,6 +958,28 @@
     "frame": "birch plywood"
    },
    "physical": "Top-down view of a small designer crib: a pale birch plywood basket with a mustard velvet canopy drawn over the top end, a tiny pillow beneath it.",
+   "reviewed": true
+  },
+  "dairy.milk_tank": {
+   "template": "Powder-coated steel bulk milk tank [dairy.milk_tank]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tank": "powder-coated steel"
+   },
+   "physical": "Top-down view of a bulk milk tank: a long grey powder-coated steel bulk tank with a gauge panel along one side, an icy sheen over the manhole.",
+   "reviewed": true
+  },
+  "dairy.milking_stall": {
+   "template": "Aluminium milking stall [dairy.milking_stall]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cluster": "powder-coated steel",
+    "rails": "aluminium",
+    "trough": "powder-coated steel"
+   },
+   "physical": "Top-down view of a milking stall: silver aluminium rails up both long sides, a grey powder-coated steel feed trough across the head end, a black rubber mat floor, a grey powder-coated steel milking cluster hung on an arm at the side.",
    "reviewed": true
   },
   "decor.aquarium": {
@@ -1146,6 +1188,49 @@
    "physical": "Top-down view of a display table two cells wide: white cotton cloth over the pine veneer top, small goods arranged in rows, a price slate at the top edge.",
    "reviewed": true
   },
+  "farm_machine.baler": {
+   "template": "Chrome-plated steel round baler [farm_machine.baler]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "baler": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a round baler: a chrome-plated steel baler body with a round golden straw bale half in the chamber, belts round the drum.",
+   "reviewed": true
+  },
+  "farm_machine.combine": {
+   "template": "Anodised aluminium combine harvester [farm_machine.combine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "body": "anodised aluminium",
+    "header": "stainless steel"
+   },
+   "physical": "Top-down view of a combine harvester: a wide silver stainless steel header front, a long champagne anodised aluminium body with grain tank and unloading chute behind the cab.",
+   "reviewed": true
+  },
+  "farm_machine.drill_modern": {
+   "template": "Aluminium seed drill [farm_machine.drill_modern]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "drill": "aluminium",
+    "hopper": "melamine"
+   },
+   "physical": "Top-down view of a seed drill: a wide silver aluminium drill frame folded for the shed, tine rows along it, a white melamine seed hopper on top.",
+   "reviewed": true
+  },
+  "farm_machine.tractor": {
+   "template": "Powder-coated steel tractor [farm_machine.tractor]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "powder-coated steel",
+    "cab": "float glass"
+   },
+   "physical": "Top-down view of a tractor: a long white powder-coated steel engine body, huge rear wheels broader than the front pair, a glazed clear float glass cab over the seat.",
+   "reviewed": true
+  },
   "feed.hay_bale": {
    "template": "Bamboo hay bale [feed.hay_bale]",
    "tier": "modest",
@@ -1177,6 +1262,16 @@
     "trough": "powder-coated steel"
    },
    "physical": "Top-down view of a trough: a long narrow white powder-coated steel trough holding green spider plant or water.",
+   "reviewed": true
+  },
+  "feed.tube_feeder": {
+   "template": "Chrome-plated steel tube feeder [feed.tube_feeder]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "feeder": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a tube feeder: a round chrome-plated steel feed dispenser with a feed ring at the base, pale feed pellets scattered in the ring.",
    "reviewed": true
   },
   "firewood.coal_scuttle": {
@@ -1303,6 +1398,26 @@
     "top": "painted mdf"
    },
    "physical": "Top-down view of a small square chess table: an inlaid checkered sage painted mdf board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "granary.hopper_bin": {
+   "template": "Chrome-plated steel hopper bin [granary.hopper_bin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bin": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a hopper bin: a square chrome-plated steel bin with a sloped hopper underneath, an auger port at the low corner.",
+   "reviewed": true
+  },
+  "granary.silo": {
+   "template": "Chrome-plated steel grain silo [granary.silo]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "silo": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a grain silo: a round chrome-plated steel silo body with ribs, a ladder line down one side, cone vents at the crown.",
    "reviewed": true
   },
   "gym.dummy": {
@@ -1867,6 +1982,16 @@
     "wrap": "moulded plastic"
    },
    "physical": "Top-down view of a square loaded pallet: boxes stacked in a tight block under red moulded plastic wrapping, the beech-effect laminate slats showing at the edges.",
+   "reviewed": true
+  },
+  "pen.panel": {
+   "template": "Chrome-plated steel stock panel [pen.panel]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "panel": "chrome-plated steel"
+   },
+   "physical": "Top-down view of a stock panel: a line of chrome-plated steel tubular rails with pin hooks at one end, mud trampled along it.",
    "reviewed": true
   },
   "plant.herb_pot": {

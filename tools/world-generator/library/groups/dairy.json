@@ -135,7 +135,7 @@
       "source": "hand"
     },
     {
-      "id": "dairy.parlour.dairy",
+      "id": "milking.row3.dairy",
       "family": "dairy",
       "wall": "back",
       "use": [
@@ -143,24 +143,72 @@
       ],
       "pieces": [
         {
-          "role": "dairy",
+          "role": "milking.stall",
           "size": [
-            3,
+            1,
             2
           ],
           "at": [
             0,
             0
-          ]
+          ],
+          "back": "north"
         },
         {
-          "role": "dairy",
+          "role": "milking.stall",
           "size": [
-            2,
-            1
+            1,
+            2
           ],
           "at": [
-            3,
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "milking.row2.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
             0
           ],
           "back": "north"
@@ -254,7 +302,7 @@
       "source": "hand",
       "groups": [
         {
-          "group": "dairy.parlour.dairy",
+          "group": "milking.row3.dairy",
           "kind": "anchor"
         },
         {
@@ -264,6 +312,24 @@
         {
           "group": "table.work.dairy",
           "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dairy.stalls.a",
+      "family": "dairy",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "milking.row2.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
         }
       ]
     }

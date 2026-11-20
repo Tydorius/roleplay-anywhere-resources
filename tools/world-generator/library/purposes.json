@@ -1550,6 +1550,9 @@
       "dairy": [
         "dairy"
       ],
+      "milking.stall": [
+        "milking_stall"
+      ],
       "table.work": [
         "table.trestle",
         "table.plank",
@@ -1609,6 +1612,9 @@
     "roles": {
       "dairy": [
         "dairy"
+      ],
+      "milking.stall": [
+        "milking_stall"
       ],
       "animal": [
         "feed",

@@ -16,7 +16,11 @@ rooms, and no room that shipped before rl-14d stands changed. rl-14f adds
 the farmsteads of every era: five new wings, three buildings and three
 suites load and check clean, the barn wings stand two storeys with a
 hayloft upstairs (design 8.1g), the farmhouse wing's Dairy is the dairy
-purpose, and the flat suites match planner kinds in their own bands."""
+purpose, and the flat suites match planner kinds in their own bands. rl-14g
+replaces the 3x2 parlour stalls object with one 1x2 milking stall set in
+rows by a furniture group: the old id is gone, the sprite index points at
+the new id, the regenerated dairy rooms hold rows of two and three stalls
+each reachable from its rear, and the medieval dairy builds without one."""
 import json
 import random
 import unittest
@@ -493,6 +497,17 @@ class TestTheLonghouseKeepsItsBedsInTheHouseRooms(unittest.TestCase):
                  if ctx.world_templates[t].for_sleep],
                 f"a bed in the {name}")
 
+    def test_the_medieval_dairy_builds_without_a_milking_stall(self):
+        """rl-14g: the stall is a modern object, so a band without it keeps
+        its dairy rooms — the medieval farmstead's Dairy still furnishes and
+        no stall template enters the world."""
+        placed = [self.world.templates[o.template]
+                  for o in self.world.objects if o.region.endswith("Dairy")]
+        self.assertTrue(placed, "the Dairy shipped empty")
+        self.assertFalse([t.name for t in placed
+                          if "milking stall" in t.name.lower()],
+                         [t.name for t in placed])
+
 
 class TestTheBarnOnTheOldLayoutPath(unittest.TestCase):
     """The barn gap closed on the old layout path too: pick_layout finds the
@@ -542,7 +557,7 @@ INDUSTRIAL_FARM_OBJECTS = (
 MODERN_FARM_OBJECTS = (
     ("farm_machine.tractor", "farm_machine", [2, 3], None, ["poor", "modest"]),
     ("farm_machine.combine", "farm_machine", [4, 3], None, ["wealthy", "elite"]),
-    ("dairy.parlour_stalls", "dairy", [3, 2], None, ["poor", "modest"]),
+    ("dairy.milking_stall", "milking_stall", [1, 2], "north", ["poor", "modest"]),
     ("dairy.milk_tank", "dairy", [2, 1], "north", ["poor", "modest"]),
     ("granary.silo", "granary", [2, 2], None, ["poor", "modest"]),
     ("feed.tube_feeder", "feed", [1, 1], None, ["poor", "modest"]),
@@ -559,6 +574,7 @@ MODERN_FARM_OBJECTS = (
 # through the wildcard purpose's utility role)
 FARM_PURPOSE_ROLE = {
     "dairy": ("dairy", "dairy"),
+    "milking_stall": ("milking_parlour", "milking.stall"),
     "farm_machine": ("barn", "machine"),
     "coop": ("byre", "animal"),
     "feed": ("byre", "animal"),
@@ -635,7 +651,7 @@ class TestMachineShedAndParlourRooms(unittest.TestCase):
     """rl-14c: the machine shed and milking parlour recipes have stored
     rooms whose machine slots only the new equipment fills — the industrial
     sheds hold the traction engine and thresher, the modern ones the tractor
-    and combine, the parlour the stalls and bulk tank — while every room
+    and combine, the parlour the milking stalls — while every room
     that shipped before rl-14c stands unchanged."""
 
     @classmethod
@@ -674,14 +690,12 @@ class TestMachineShedAndParlourRooms(unittest.TestCase):
         parlours = [r for r in self.rooms["dairy"]
                     if r["recipe"] == "dairy.parlour.b"]
         self.assertTrue(parlours, "no milking parlour room was stored")
-        for shape, want in (((2, 3), "dairy.parlour_stalls"),
-                            ((1, 2), "dairy.milk_tank")):
-            rooms = [r for r in parlours if shape in _piece_sizes(r, "dairy")]
-            with self.subTest(machine=want):
-                self.assertTrue(rooms, f"no parlour room holds a {shape} dairy piece")
-                ids = {o["id"] for o in L.candidates(
-                    self.lib, "dairy", "dairy", list(shape), "modern", "poor")}
-                self.assertIn(want, ids)
+        rooms = [r for r in parlours
+                 if (1, 2) in _piece_sizes(r, "milking.stall")]
+        self.assertTrue(rooms, "no parlour room holds a 1x2 milking stall")
+        ids = {o["id"] for o in L.candidates(
+            self.lib, "dairy", "milking.stall", [1, 2], "modern", "poor")}
+        self.assertIn("dairy.milking_stall", ids)
 
     def test_the_industrial_dairy_separates_in_its_stored_rooms(self):
         """The dairy rooms rl-14b shipped need no new recipe: their dairy
@@ -979,6 +993,111 @@ class TestFarmsteadRecipesPerEra(unittest.TestCase):
                     self.lib, {"kind": kind, "sizeClass": "large",
                                "residents": 4 if band != "scifi" else 0}, band)
                 self.assertEqual((found or {}).get("id"), sid)
+
+
+FRONT_OF = {"north": "south", "south": "north", "east": "west", "west": "east"}
+
+
+def _front_cell(piece):
+    """The open cell a piece's front (the side opposite its back) is used
+    from: the middle cell of that side — of two middle cells the lower-left
+    one — the same cell fixed_rooms derives from the role's access rule."""
+    x, y = piece["at"]
+    w, h = piece["size"]
+    side = FRONT_OF[piece["back"]]
+    if side == "north":
+        return (x + (w - 1) // 2, y - 1)
+    if side == "south":
+        return (x + (w - 1) // 2, y + h)
+    if side == "west":
+        return (x - 1, y + h // 2)
+    return (x + w, y + h // 2)
+
+
+class TestTheMilkingStall(unittest.TestCase):
+    """rl-14g: the 3x2 parlour stalls object became one 1x2 milking stall —
+    the old id is gone, the new object loads with its role and access rule,
+    the sprite index points at the new id, the regenerated dairy rooms set
+    the stalls in rows of two and three with each stall's rear cell open
+    floor, and the bands without the stall keep their dairy rooms."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = L.load(L.LIB_DIR)
+
+    def test_parlour_stalls_is_gone_and_the_stall_loads(self):
+        self.assertNotIn("dairy.parlour_stalls", self.lib.objects)
+        o = self.lib.objects["dairy.milking_stall"]
+        self.assertEqual(o["aliases"],
+                         ["milking stall", "milking stalls", "parlour stalls"])
+        access = self.lib.vocab["roleAccess"]
+        self.assertEqual(access.get("milking.stall"), "front")
+        self.assertEqual(L.check_role_access(self.lib.vocab), [])
+
+    def test_the_stall_binds_only_where_it_exists(self):
+        for purpose in ("dairy", "milking_parlour"):
+            ids = {o["id"] for t in self.lib.tiers for o in L.candidates(
+                self.lib, purpose, "milking.stall", [1, 2], "modern", t)}
+            with self.subTest(purpose=purpose):
+                self.assertIn("dairy.milking_stall", ids)
+        for band in ("medieval", "industrial", "scifi"):
+            ids = {o["id"] for t in self.lib.tiers for o in L.candidates(
+                self.lib, "dairy", "milking.stall", None, band, t)}
+            self.assertEqual(ids, set(), f"a {band} milking stall exists")
+
+    def test_the_stall_rooms_hold_rows_reachable_from_the_rear(self):
+        rows = []
+        for room in FR.load():
+            stalls = [p for p in room["pieces"]
+                      if p["role"] == "milking.stall" and not p.get("optional")]
+            if not stalls:
+                continue
+            with self.subTest(room=room["id"]):
+                # two or three stalls, one row side by side, backs alike
+                self.assertIn(len(stalls), (2, 3), [p["at"] for p in stalls])
+                backs = {p["back"] for p in stalls}
+                self.assertEqual(backs, {stalls[0]["back"]}, [p["back"] for p in stalls])
+                step = (1, 0) if stalls[0]["back"] in ("north", "south") else (0, 1)
+                starts = sorted((p["at"][0] * step[0] + p["at"][1] * step[1],
+                                 p["at"][0] * (1 - step[0]) + p["at"][1] * (1 - step[1]))
+                                for p in stalls)
+                self.assertEqual([s[0] for s in starts], list(range(starts[0][0], starts[0][0] + len(stalls))),
+                                 [p["at"] for p in stalls])
+                self.assertEqual(len({s[1] for s in starts}), 1,
+                                 "the stalls are not in one row")
+                # each stall is reached from its open rear: the front cell is
+                # open floor inside the room
+                W, H = room["size"]
+                covered = {(x, y) for p in room["pieces"]
+                           for x in range(p["at"][0], p["at"][0] + p["size"][0])
+                           for y in range(p["at"][1], p["at"][1] + p["size"][1])}
+                for p in stalls:
+                    cx, cy = _front_cell(p)
+                    self.assertTrue(0 <= cx < W and 0 <= cy < H,
+                                    (p["at"], (cx, cy), room["size"]))
+                    self.assertNotIn((cx, cy), covered,
+                                     f"stall at {p['at']} has its rear blocked")
+            rows.append(room)
+        self.assertTrue(rows, "no stored room holds a row of milking stalls")
+        bands = {r["sizeBand"] for r in rows}
+        self.assertIn("medium", bands, "no parlour-sized stall room")
+        self.assertIn("small", bands, "no small stall room")
+
+    def test_the_sprite_index_points_at_the_new_stall(self):
+        import os
+        from worldgen import library_art
+        idx = library_art.load_index("modern")
+        self.assertNotIn("dairy.parlour_stalls", idx)
+        entry = idx.get("dairy.milking_stall")
+        self.assertIsNotNone(entry, "the modern index has no milking stall")
+        self.assertTrue(entry.get("reviewed"))
+        self.assertIn("milking stall", entry.get("physical", ""))
+        o = self.lib.objects["dairy.milking_stall"]
+        self.assertEqual(set(entry.get("materials", {})), set(o["parts"]))
+        self.assertTrue(os.path.exists(
+            library_art.sprite_path("modern", "dairy.milking_stall")))
+        self.assertFalse(os.path.exists(
+            library_art.sprite_path("modern", "dairy.parlour_stalls")))
 
 
 if __name__ == "__main__":

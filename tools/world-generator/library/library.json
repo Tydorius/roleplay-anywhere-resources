@@ -233,6 +233,7 @@
     "pen": "animal pens and folds: hurdle panels, pen fences and gates",
     "coop": "housing for small stock: chicken coops, hutches, dovecotes, beehives",
     "dairy": "dairy equipment: churns, milk cans, cream separators, milk tanks",
+    "milking_stall": "a stall where one cow is milked: tie stalls, stanchion stalls, milking stands",
     "farm_machine": "parked agricultural machines: ploughs, harrows, drills, reapers, tractors, combines",
     "granary": "grain and feed bins: raised granary bins, hopper bins, silo pieces",
     "muck": "a muck heap, dung pile or compost heap"
@@ -305,6 +306,7 @@
     "animal.pen": "a pen, fold or hurdle run for stock",
     "storage.hay": "hay and straw stored: ricks, stacks, loose-piled lofts",
     "dairy": "the dairy's main station: churn, separator, milk cans",
+    "milking.stall": "one cow's milking stall: rails, feed trough, cluster",
     "machine": "a parked machine or implement"
   },
   "roleAccess": {
@@ -375,6 +377,7 @@
     "animal.pen": "none",
     "storage.hay": "front",
     "dairy": "front",
+    "milking.stall": "front",
     "machine": "none"
   },
   "families": {
