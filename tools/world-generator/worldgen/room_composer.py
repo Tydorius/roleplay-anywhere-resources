@@ -27,7 +27,6 @@ passes.
 list is empty, then a plain sentence why. Pure functions throughout; the
 only randomness is random.Random(seed), which breaks ties.
 """
-import copy
 import random
 
 from . import fixed_rooms
@@ -636,8 +635,11 @@ def _try_place(state, form, x, y, ctx, allow_growth=True):
     short side); the cap is hard on the finished room. None when any rule
     fails."""
     w, h = form["w"], form["h"]
-    minx, miny = min(state["minx"], x), min(state["miny"], y)
-    maxx, maxy = max(state["maxx"], x + w - 1), max(state["maxy"], y + h - 1)
+    minx = x if x < state["minx"] else state["minx"]
+    miny = y if y < state["miny"] else state["miny"]
+    mx, my = x + w - 1, y + h - 1
+    maxx = mx if mx > state["maxx"] else state["maxx"]
+    maxy = my if my > state["maxy"] else state["maxy"]
     if not allow_growth and (minx, miny, maxx, maxy) != (
             state["minx"], state["miny"], state["maxx"], state["maxy"]):
         return None
@@ -654,11 +656,15 @@ def _try_place(state, form, x, y, ctx, allow_growth=True):
             return None
     gap = ctx["gap"]
     for g in state["placed"]:
-        sx = max(x - (g["x"] + g["w"]), g["x"] - (x + w))
-        sy = max(y - (g["y"] + g["h"]), g["y"] - (y + h))
-        if max(sx, sy) < gap:
+        gx, gy, gw, gh = g["x"], g["y"], g["w"], g["h"]
+        dx, dy = x - gx - gw, gx - x - w
+        sx = dx if dx > dy else dy
+        dx, dy = y - gy - gh, gy - y - h
+        sy = dx if dx > dy else dy
+        if (sx if sx > sy else sy) < gap:
             return None
-    walls = dict(state["walls"])
+    # a form with no back never writes a wall, so the copy can be skipped
+    walls = dict(state["walls"]) if form["back"] else state["walls"]
     if form["back"]:
         b = form["back"]
         bcoord = {"north": y, "south": y + h - 1,
@@ -723,7 +729,11 @@ def _placements(state, form, ctx, allow_growth=True):
         for xs, ys in spans.values():
             for x in xs:
                 for y in ys:
-                    s2 = _place(state, form, x, y, ctx, allow_growth)
+                    # a non-symmetric room's _place is _try_place itself
+                    s2 = (_place(state, form, x, y, ctx, allow_growth)
+                          if ctx["symmetric"]
+                          else _try_place(state, form, x, y, ctx,
+                                          allow_growth))
                     if s2 is not None:
                         out.append(s2)
     return out
@@ -977,7 +987,12 @@ def _dedup_cands(cands):
 def _grown(room, gw, ge, gn, gs):
     """The room grown by gw+ge columns and gn+gs rows: wall-bound groups
     move out with their walls, everything else stays, doors derived again."""
-    moved = copy.deepcopy(room)
+    # only the piece dicts are touched below (their ``at`` reassigned, the
+    # list re-sorted) and derive returns a fresh room, so a dict copy with
+    # fresh piece dicts is all the safety this needs
+    moved = {k: v for k, v in room.items() if not k.startswith("_")}
+    moved["pieces"] = [dict(p) if isinstance(p, dict) else p
+                       for p in moved.get("pieces") or []]
     W, H = room["size"]
     moved["size"] = [W + gw + ge, H + gn + gs]
     for inst in fixed_rooms.instances(room):

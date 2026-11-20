@@ -37,7 +37,6 @@ EDITABLE_FIELDS, which the generator keeps on regeneration) and "source"
 ("hand": a room a person made or re-laid out, which the generator never
 changes or removes).
 """
-import copy
 import json
 import os
 from collections import Counter
@@ -662,7 +661,13 @@ def rotate(room, quarter_turns, mirror=False):
     ``at``, ``back``, door sides and offsets, stretch lines and the filler
     area all turn with the furniture. Four turns (and no mirror) return the
     room unchanged; every result passes ``check`` unchanged."""
-    r = copy.deepcopy({k: v for k, v in room.items() if not k.startswith("_")})
+    # the turn and the mirror reassign every key they touch in fresh dicts,
+    # never mutating a shared value; the pieces list is copied because the
+    # room handed on may be re-derived or stretched, and those copy, not
+    # mutate — so a shallow copy with fresh piece dicts is the whole guard
+    r = {k: v for k, v in room.items() if not k.startswith("_")}
+    r["pieces"] = [dict(p) if isinstance(p, dict) else p
+                   for p in r.get("pieces") or []]
     if mirror:
         r = _mirror_room(r)
     for _ in range(int(quarter_turns) % 4):
@@ -1395,7 +1400,10 @@ def derive(room, groups=None, lib=None, stretch=True):
     shrinking a room is the editor's to do); a room without one is sized to
     its pieces' span from the origin. ``stretch`` is off on the composer's
     mid-search path, where the lines are finalized later."""
-    r = copy.deepcopy({k: v for k, v in room.items() if not k.startswith("_")})
+    # derive assigns fresh values to the keys it works out (size, doors,
+    # sleeps, sizeBand, stretch) and never mutates a nested value, so a dict
+    # copy is the whole guard; the pieces ride along by reference
+    r = {k: v for k, v in room.items() if not k.startswith("_")}
     rects = [t for t in (_rect(p) for p in r.get("pieces") or []) if t]
     if _int_pair(r.get("size"), 1):
         w, h = r["size"]
@@ -1458,10 +1466,32 @@ def derive(room, groups=None, lib=None, stretch=True):
 
 # ------------------------------------------------------------------- stretch
 
+def _shiftable(p):
+    """A dict copy whose ``at`` and ``size`` lists are fresh: the fields a
+    line insert shifts in place."""
+    q = dict(p)
+    if isinstance(q.get("at"), list):
+        q["at"] = list(q["at"])
+    if isinstance(q.get("size"), list):
+        q["size"] = list(q["size"])
+    return q
+
+
 def _insert_line(room, axis, line):
     """A copy of the room with one empty line inserted at ``line``: pieces on
     the far side (and doors, stretch lines and the filler) shift past it."""
-    r = copy.deepcopy(room)
+    # what shifts in place is each piece's ``at``, the doors and stretch
+    # dicts' keys and the filler's at/size — copy those and the room dict,
+    # and nothing else needs the deep treatment
+    r = dict(room)
+    r["pieces"] = [_shiftable(p) if isinstance(p, dict) else p
+                   for p in room.get("pieces") or []]
+    if isinstance(room.get("doors"), dict):
+        r["doors"] = dict(room["doors"])
+    if isinstance(room.get("stretch"), dict):
+        r["stretch"] = dict(room["stretch"])
+    if isinstance(room.get("filler"), dict):
+        r["filler"] = _shiftable(room["filler"])
     w, h = r["size"]
     if axis == "x":
         r["size"] = [w + 1, h]

@@ -263,6 +263,12 @@ class _Context:
         self._pools = {}         # (family, clearance, band, sleepers, fit) -> [rooms]
         self._size_catalogues = {}  # (design, family, tier, use, share, ask) ->
                                     # ((w, h, door sides), ...) a family's sizes
+        self._filler_rooms = {}  # (recipe, band, clearance, style, seed) ->
+                                 # compose's rooms; every hole of one band in
+                                 # one building asks the same recipes at the
+                                 # same seed, so the first hole pays for all
+        self._filler_none = set()  # (building, iw, ih) asks that found no
+                                   # room: never composed again
 
 
 # ------------------------------------------------------------------ the switch
@@ -1746,7 +1752,13 @@ def _empty_room(w, h, family):
 
 
 def _compose_filler(ctx, building, iw, ih):
-    """A storage room composed to exactly fit a hole's floor, or None."""
+    """A storage room composed to exactly fit a hole's floor, or None. The
+    compose results are cached on the context: every hole of one band in one
+    building asks the same recipes at the same seed, and an ask that found no
+    room never composes again. The returned room is shared, not copied —
+    placed rooms are never mutated, only re-derived or turned."""
+    if (building, iw, ih) in ctx._filler_none:
+        return None
     area = iw * ih
     band = None
     for name, span in sorted((ctx.lib.vocab.get("sizeBands") or {}).items()):
@@ -1755,18 +1767,21 @@ def _compose_filler(ctx, building, iw, ih):
             band = name
     if band is None:
         return None
-    recipes = [r for r in sorted(ctx.groups["recipes"].values(),
-                                 key=lambda r: str(r.get("layout") or ""))
-               if r.get("family") == "storage"]
-    if not recipes:
-        return None
-    for recipe in recipes:
-        rooms, _why = RC.compose(recipe, ctx.groups, "tight", "flush",
-                                 f"{ctx.world_seed}|assembler|{building}|filler",
-                                 size_band=band)
+    seed = f"{ctx.world_seed}|assembler|{building}|filler"
+    for rid, recipe in sorted(ctx.groups["recipes"].items(),
+                              key=lambda kv: str(kv[1].get("layout") or "")):
+        if recipe.get("family") != "storage":
+            continue
+        key = (rid, band, "tight", "flush", seed)
+        rooms = ctx._filler_rooms.get(key)
+        if rooms is None:
+            rooms, _why = RC.compose(recipe, ctx.groups, "tight", "flush",
+                                     seed, size_band=band)
+            ctx._filler_rooms[key] = rooms
         for room in rooms:
             if room["size"] == [iw, ih]:
                 return room
+    ctx._filler_none.add((building, iw, ih))
     return None
 
 
