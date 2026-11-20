@@ -498,8 +498,8 @@
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {wall} {noun} with a little {roof} roof over the winch, a bucket on a rope and a wet ring of ground around it.",
-        "physical": "Top-down view of a round {noun}: a ring of {wall.color} {wall} blocks around a dark round shaft of water, a small pitched {roof.color} {roof} roof over a wooden winch across the middle, a wooden bucket on the rim."
+        "description": "{A:condition} {wall} {noun} under a pitched {roof} roof as wide as the well, a bucket on a rope and a wet ring of ground around it.",
+        "physical": "Top-down view of a round {noun}, seen from directly above: a large pitched {roof.color} {roof} roof as wide as the well, its two sloped halves meeting at a ridge straight across the middle and covering most of it; a ring of {wall.color} {wall} blocks showing round the roof's edges; a wooden bucket on the rim."
       },
       "aliases": ["village well", "wellhead"],
       "sources": ["claude-authored"]

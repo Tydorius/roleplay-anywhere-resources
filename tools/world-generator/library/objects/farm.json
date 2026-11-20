@@ -282,8 +282,8 @@
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} sloped {table} butter worker, scotch hands crossed on it and a pat of butter to one side.",
-        "physical": "Top-down view of {A:noun}: a sloped {table.color} {table} working table with a raised rim, scotch hands crossed at the middle, a pat of butter at the near corner."
+        "description": "{A:condition} sloped {table} butter worker, two ridged wooden butter paddles on it and a pat of butter to one side.",
+        "physical": "Top-down view of {A:noun}: a sloped {table.color} {table} working table with a raised rim, two ridged wooden butter paddles lying side by side at the middle, a pat of butter at the near corner."
       },
       "aliases": ["butter bench", "working table", "scotch hands table"],
       "sources": ["claude-authored"]
