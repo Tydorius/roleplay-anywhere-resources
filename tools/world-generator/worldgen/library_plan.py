@@ -27,6 +27,9 @@ SPARE_PURPOSES = ("guest_room",)    # beds for travellers, not residents
 # are always furnished (design 8.1g)
 GUEST_PURPOSES = ("dormitory", "guest_room", "barracks", "crew_quarters",
                   "servants_room")
+# the wing purposes that serve the building rather than the household
+# (rl-12): the parts standing for them sleep in the staff's own wing
+SERVICE_PURPOSES = ("servants", "kitchen_storage", "stables")
 SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
 # kinds whose upper storey is a hayloft, not a bedroom floor (design 8.1g):
 # the "hayloft" purpose (barn family, purposeFit keeps it to hay storage)
@@ -289,14 +292,14 @@ def wing_floor_rooms(lib, wing, storeys):
 def wing_design(lib, wing, name, b, band, cap, kind=""):
     """The BuildingDesign of one wing recipe (rl-10): rooms by purpose and
     share from the wing, split over its floors within ``cap`` (the height
-    rules' cap for the building's kind where it stands, and the three the
+    rules' cap for the building's kind where it stands, and the four the
     assembler lays), its wealth the P1 building ``b`` it stands for with the
     wing's design-8.3 offset applied, its residents and condition ``b``'s own.
     A wing room whose purpose family matches a room of ``b`` takes ``b``'s
     name for it (each of ``b``'s names once), so a P1 part keeps its named
     rooms where the recipe has a wing for them."""
     from .model import BuildingDesign, RoomSpec, UpperStorey
-    storeys = max(1, min(int(wing.get("storeys") or 1), cap, 3))
+    storeys = max(1, min(int(wing.get("storeys") or 1), cap, 4))
     floors = wing_floor_rooms(lib, wing, storeys)
 
     # the reconciliation, once: {wing room name -> the P1 room's name}
@@ -360,6 +363,117 @@ def wing_design(lib, wing, name, b, band, cap, kind=""):
         entrance_room=entry, entrance_side=wing.get("entry") or "south",
         stairs_room=entry if storeys > 1 else "",
         furniture=[], loot_pool=b.loot_pool if b is not None else "")
+
+
+def split_wing_sleepers(lib, designs, wingmap, sources, notes, label):
+    """rl-12: the compound's sleeper budget over its wings by role. Every
+    wing design starts holding its own part's residents (an unmatched wing
+    the gate's), so each part's counts come off first, then go where their
+    role sleeps: the traveller beds the P1 lodging promised to the wing that
+    sleeps guests, the servants' and stable hands' beds to the wing that
+    sleeps staff, the household to the wing that sleeps residents — a part
+    whose own wing declares its sleeping and has the beds keeps its counts,
+    and a role with no wing to receive it falls back over the others, never
+    into a farm wing, whose buildings sleep nobody (rl-15's rule, its note
+    unchanged). A compound with no wing that sleeps anyone keeps its counts
+    where they were. One line notes the split, one per farm building."""
+    def rooms_of(d):
+        return list(d.rooms) + [r for u in d.upper for r in u.rooms]
+
+    def all_farm(d):
+        rooms = rooms_of(d)
+        return bool(rooms) and all(lib.family_of(r.use) in FARM_FAMILIES
+                                   for r in rooms)
+
+    def has_bed(d):
+        return any(lib.family_of(r.use) in SLEEP_FAMILIES for r in rooms_of(d))
+
+    def guest_beds(src):
+        """The traveller beds a P1 part promises: its lodging's unit count."""
+        from .phases import LODGING_WORDS
+        u = getattr(src, "units", None)
+        if u is None or not getattr(u, "count", 0):
+            return 0
+        if kind_phrases_hit(src.kind, LODGING_WORDS) or \
+                kind_phrases_hit(u.name, LODGING_WORDS):
+            return int(u.count)
+        return 0
+
+    def plural(n, word):
+        # "staff" is its own plural; the other role words take the s
+        return f"{n} {word}" + ("" if n == 1 or word == "staff" else "s")
+
+    staff_wing = next((n for n in designs
+                       if wingmap.get(n, {}).get("sleeps") == "staff"), None)
+    guest_wing = next((n for n in designs
+                       if wingmap.get(n, {}).get("sleeps") == "guests"), None)
+    home_wing = next((n for n in designs
+                      if wingmap.get(n, {}).get("sleeps") == "residents"),
+                     guest_wing)
+    if home_wing is None:
+        home_wing = next((n for n in designs if has_bed(designs[n])), None)
+
+    # (source wing, role, residents, couples, guests, destination or None to
+    # stay where the part put them)
+    moves = []
+    for name, d in designs.items():
+        src = sources.get(name)
+        if src is None:
+            continue
+        g = guest_beds(src)
+        r, c = int(src.residents or 0), int(src.couples or 0)
+        if not g and not r and not c:
+            continue
+        wing = wingmap.get(name) or {}
+        if g:
+            dest = name if wing.get("sleeps") == "guests" else guest_wing
+            moves.append((name, "guests", 0, 0, g, dest))
+        if not r and not c:
+            continue
+        if wing.get("purpose") in SERVICE_PURPOSES and not all_farm(d):
+            dest = name if wing.get("sleeps") == "staff" else staff_wing
+            moves.append((name, "staff", r, c, 0, dest))
+        else:
+            dest = name if wing.get("sleeps") == "residents" and has_bed(d) \
+                else home_wing
+            moves.append((name, "household", r, c, 0, dest))
+    if not moves:
+        return
+
+    # every wing's counts came off its own part (an unmatched wing's from the
+    # gate's): the moves hand them back by role below
+    kept = {name: (d.residents, d.couples) for name, d in designs.items()}
+    for d in designs.values():
+        d.residents = d.couples = d.guests = 0
+    roles = {name: [] for name in designs}
+    restored = set()
+    for name, role, r, c, g, dest in moves:
+        if dest is None:
+            # nowhere receives this role: the counts stay where they were
+            if name not in restored:
+                restored.add(name)
+                kr, kc = kept[name]
+                designs[name].residents += kr
+                designs[name].couples += kc
+            continue
+        d = designs[dest]
+        d.residents += r
+        d.couples += c
+        d.guests += g
+        if g:
+            roles[dest].append(plural(g, "guest"))
+        if role == "staff" and r:
+            roles[dest].append(plural(r, "staff"))
+        if role == "household" and r:
+            roles[dest].append(plural(r, "resident"))
+        if c:
+            roles[dest].append(plural(c, "couple"))
+        if role == "household" and dest != name and all_farm(designs[name]):
+            notes.append((label,
+                          f"residents of {name} sleep elsewhere: farm building"))
+    if any(r for r in roles.values()):
+        notes.append((label, "sleepers: " + ", ".join(
+            f"{name} {', '.join(r)}" for name, r in roles.items() if r)))
 
 
 def suite_lines(lib, b, band):
@@ -538,12 +652,14 @@ def _guest_defaults(lib):
     return cached
 
 
-def _sleepers(lib, rooms, residents, couples):
+def _sleepers(lib, rooms, residents, couples, guests=0):
     """{room name: (singles, couples)}: one couple to each master bedroom,
     the other residents shared over the single-bed rooms, a spare bed or two
-    in each guest room. A room for guests or lodgers that no residents were
-    assigned to takes the family's usual occupancy — the beds are always
-    furnished."""
+    in each guest room — and the traveller beds a lodging promised (rl-12)
+    shared over those guest rooms on top of the beds they always furnish, so
+    the building sleeps who it said it would. A room for guests or lodgers
+    that no residents were assigned to takes the family's usual occupancy —
+    the beds are always furnished."""
     fam = {r["name"]: lib.family_of(r.get("use")) for r in rooms}
     masters = [r["name"] for r in rooms if fam[r["name"]] == "bedroom.master"]
     singles_rooms = [r["name"] for r in rooms
@@ -559,11 +675,20 @@ def _sleepers(lib, rooms, residents, couples):
             name = singles_rooms[i % len(singles_rooms)]
             s, c = out[name]
             out[name] = (s + 1, c)
+    spare = []
     for r in rooms:
         if r.get("use") in SPARE_PURPOSES:
             out[r["name"]] = (2 if r.get("share") == "large" else 1, 0)
+            spare.append(r["name"])
         elif out[r["name"]] == (0, 0) and r.get("use") in GUEST_PURPOSES:
             out[r["name"]] = _guest_defaults(lib).get(fam[r["name"]], (1, 0))
+    for i in range(max(0, int(guests or 0)
+                       - sum(out[name][0] for name in spare))):
+        if not spare:
+            break
+        name = spare[i % len(spare)]
+        s, c = out[name]
+        out[name] = (s + 1, c)
     return out
 
 

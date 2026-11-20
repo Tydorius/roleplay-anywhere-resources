@@ -95,6 +95,12 @@ class _Fallback(Exception):
     pinned = False
 
 
+class _NoRoom(_Fallback):
+    """A storey's split drew but cannot seat a single one of its rooms —
+    the cue for the one-sided gallery, unlike a split that seated its rooms
+    and only failed to close (rl-12b)."""
+
+
 def _pin_refused(msg):
     """A _Fallback that names a pinned door the ask cannot honour."""
     fail = _Fallback(msg)
@@ -246,6 +252,8 @@ class _Context:
         self.block_designs = {}  # building name -> the wing design a block
                                  # recipe stands it for (rl-10), or None
         self.sleepers = {}       # design room name -> (singles, couples)
+        self.slot_asking = False  # a storey slot is walking its ask ladder:
+                                  # its speculative pools note nothing
         self._clearances = {}    # (design name, family) -> clearance
         self._pools = {}         # (family, clearance, band, sleepers, fit) -> [rooms]
 
@@ -381,7 +389,7 @@ def spot_notes(name, side=None):
 
 def _qualifies(design):
     """Whether the assembler takes this design: a simple rectangle of one to
-    three storeys whose every room — the ground's and each upper storey's —
+    four storeys whose every room — the ground's and each upper storey's —
     carries a library ``use`` that maps to a family. A compound part
     qualifies the same way (the compound's own code lays it out through
     ``layout_building`` like any building); a unit building qualifies when
@@ -404,10 +412,10 @@ def _qualifies(design):
             from .layout_building import units_per_storey
             return design.storeys in (2, 3) and not design.upper and \
                 design.units.count <= units_per_storey(design) * (design.storeys - 1)
-        # storeys 2-3 walk their upper specs; a storeys key beyond them (or an
+        # storeys 2-4 walk their upper specs; a storeys key beyond them (or an
         # empty storey) leaves a floor the partition has nothing to place on
         return design.storeys == 1 or (
-            design.storeys <= 3 and len(design.upper or []) == design.storeys - 1
+            design.storeys <= 4 and len(design.upper or []) == design.storeys - 1
             and all(s.rooms for s in design.upper))
     # a library plan names a purpose the library has no family for: the old
     # method takes the building and the run says why. A plan with no use keys
@@ -610,9 +618,15 @@ def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
     rng.shuffle(recipes)
     reason = f"no {family} recipe composed a {band} room"
     out, sizes = [], set()
-    for recipe in recipes[:5]:
+    for i, recipe in enumerate(recipes):
         # one seed per family, not per room: the world keeps its variety, and
-        # buildings of the same family reuse what was composed
+        # buildings of the same family reuse what was composed — the first
+        # five recipes fill the pool, and only a pool still empty walks on,
+        # stopping at the first recipe that composes: a family whose smaller
+        # band only one late recipe composes still yields it, without
+        # walking every recipe for every band (rl-12b)
+        if i >= 5 and out:
+            break
         rooms, why = RC.compose(recipe, ctx.groups, clearance, "flush",
                                 f"{ctx.world_seed}|assembler|{family}",
                                 size_band=band, sleepers=(singles, couples))
@@ -640,6 +654,50 @@ def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
         ctx._pools[key] = out
         return out, None
     return None, reason
+
+
+class _NoUse:
+    """A spec with no ``use``: _furnishable's check for a room a closer grows."""
+    use = None
+
+
+def _deep_pool(ctx, room, name, tier, req, forb):
+    """The family's every recipe at a placed room's own band — the recipes
+    the capped walk never composed — asked for only by a closing that wants a
+    variant neither the pool nor the stored rooms hold (rl-12b): a storey
+    that seats its rooms but cannot close may still grow one into a strip
+    the first five recipes cannot shape."""
+    fam, cl = room.get("family"), room.get("clearance")
+    band = room.get("sizeBand")
+    if fam is None or cl is None or band is None:
+        return []
+    singles, couples = ctx.sleepers.get(name, (0, 0))
+    key = (fam, cl, band, tier, singles, couples, tuple(req), tuple(forb),
+           "deep")
+    if key in ctx._pools:
+        return ctx._pools[key]
+    recipes = [r for r in sorted(ctx.groups["recipes"].values(),
+                                 key=lambda r: str(r.get("layout") or ""))
+               if r.get("family") == fam
+               and _roles_fit(req, forb, _recipe_roles(ctx, r))]
+    spec = _NoUse()
+    out, sizes = [], set()
+    for recipe in recipes:
+        rooms, _why = RC.compose(recipe, ctx.groups, cl, "flush",
+                                 f"{ctx.world_seed}|assembler|{fam}",
+                                 size_band=band, sleepers=(singles, couples))
+        for r in rooms or []:
+            if tuple(r["size"]) in sizes or not _furnishable(ctx, spec, r, tier):
+                continue
+            if (singles or couples) and \
+                    not _composed_sleeps_ok(r, singles, couples):
+                continue
+            out.append(r)
+            sizes.add(tuple(r["size"]))
+        if len(out) >= 8:
+            break
+    ctx._pools[key] = out
+    return out
 
 
 def _room_pool(ctx, design, spec, family, tier, rng):
@@ -689,9 +747,10 @@ def _room_pool(ctx, design, spec, family, tier, rng):
                                       singles, couples, recipes, rng,
                                       req=req, forb=forb)
         if composed:
-            if stored and not any(room == spec.name
-                                  for room, _note in
-                                  ctx.spot_built.get(design.name, [])):
+            if stored and not ctx.slot_asking \
+                    and not any(room == spec.name
+                                for room, _note in
+                                ctx.spot_built.get(design.name, [])):
                 # the assembly retries a placement several times, so the
                 # same room pools again: one note per room
                 ctx.spot_built.setdefault(design.name, []).append(
@@ -995,9 +1054,15 @@ def _passage_candidates(placed, entry, side_s, parent, pool, bounds=None,
 
 def _assemble(ctx, design, wing=None):
     rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}")
+    # the sleeper counts cover every floor (rl-12): a sleeping wing's
+    # bedchambers sit upstairs, and the traveller beds its lodging promised
+    # reach the guest rooms wherever the wing put them
+    sleep_rooms = [{"name": r.name, "use": r.use} for r in design.rooms]
+    sleep_rooms += [{"name": r.name, "use": r.use}
+                    for s in design.upper or [] for r in s.rooms]
     ctx.sleepers = library_plan._sleepers(
-        ctx.lib, [{"name": r.name, "use": r.use} for r in design.rooms],
-        design.residents, design.couples)
+        ctx.lib, sleep_rooms, design.residents, design.couples,
+        getattr(design, "guests", 0) or 0)
     tier = design.wealth if design.wealth in ctx.lib.tiers else "modest"
     cond = design.condition if design.condition in ctx.lib.vocab["conditions"] \
         else "kept"
@@ -1530,15 +1595,19 @@ def _stretch_close(placed, entry, side_s, holes):
             break
 
 
-def _variant_close(placed, entry, side_s, holes, pools, tier, rules=None):
+def _variant_close(placed, entry, side_s, holes, pools, tier, rules=None,
+                   deep=False):
     """Swap a room for a larger variant of its own family when a strip of
     holes one or two cells deep runs along one of its edges (design 8.1
     step 4: 'a larger variant'): the room grows into the strip, every other
     edge — and the seams opened on them — staying where they were. The room's
     own band first; a stored room one band up, same clearance, wealth, sleep
     count and purpose fit (``rules``: name -> (requires, forbids), the
-    purposeFit table's lists) when the band holds no bigger variant.
-    ``entry`` may be None (a storey partition has no entrance line to keep)."""
+    purposeFit table's lists) when the band holds no bigger variant; and,
+    for the pinned narrow gallery alone (``deep``), the later recipes
+    ``_deep_pool`` composes — a slot's menu stays its pool's first five,
+    the gallery's last resort may reach past them. ``entry`` may be None
+    (a storey partition has no entrance line to keep)."""
     ctx = _context
 
     def bigger(p, size):
@@ -1556,6 +1625,11 @@ def _variant_close(placed, entry, side_s, holes, pools, tier, rules=None):
                     and _roles_fit(req, forb, _room_roles(r))
                     and tuple(r["size"]) == size):
                 return r
+        if deep:
+            return next((o for v in _deep_pool(ctx, p.room, p.name, tier,
+                                               req, forb)
+                         for o in _orientations(v)
+                         if tuple(o["size"]) == size), None)
         return None
 
     for p in list(placed):
@@ -1919,52 +1993,83 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
     """One slot of a storey partition. A spec's pool room goes in turned so
     a door candidate faces the corridor, flush to the slot's corridor-facing
     edge and its low long edge, biggest clean fit first (a strip 1-2 cells
-    wide beside it is refused while anything clean remains); a spec of None,
-    or a pool with nothing that fits, becomes a closet or store, recorded in
-    the run's notes. (the _Placed room, its pool, its slot leftover) — the
-    leftover is what the closing steps grow into."""
+    wide beside it is refused while anything clean remains); when no room
+    sleeping everyone the spec was asked to take fits the slot, a bedroom
+    that sleeps fewer goes in before anything is given up (rl-12: the
+    residents reach the upper rooms, and the slot fits what it fits), noted;
+    a spec of None, or a pool with nothing that fits at all, becomes a
+    closet or store, recorded in the run's notes. (the _Placed room, its
+    pool, its slot leftover) — the leftover is what the closing steps grow
+    into."""
     sw = (slot.w - 2) if horizontal else (slot.h - 2)   # along the long axis
     sh = (slot.h - 2) if horizontal else (slot.w - 2)
     if spec is not None:
         fam = ctx.lib.family_of(spec.use)
-        pool, _reason = _room_pool(ctx, design, spec, fam, tier, rng)
-        for allow_slivers in (False, True):
-            best = None
-            for variant in pool or []:
-                for o in _orientations(variant):
-                    if not _side_offsets(o, facing):
-                        continue
-                    fw, fh = o["size"]
-                    # the room stands fw on X and fh on Y whatever the slot's
-                    # long axis, so a vertical slot measures its cross axis
-                    # against fw — the placement below does not turn the pair
-                    along, across = (fw, fh) if horizontal else (fh, fw)
-                    if along > sw or across > sh:
-                        continue
-                    if not allow_slivers and \
-                            (1 <= sw - along <= MIN_SPAN - 1
-                             or 1 <= sh - across <= MIN_SPAN - 1):
-                        continue
-                    if facing == "south":
-                        rect2 = Rect(slot.x, slot.y1 - fh - 1, fw + 2, fh + 2)
-                    elif facing == "north":
-                        rect2 = Rect(slot.x, slot.y, fw + 2, fh + 2)
-                    elif facing == "east":
-                        rect2 = Rect(slot.x1 - fw - 1, slot.y, fw + 2, fh + 2)
-                    else:
-                        rect2 = Rect(slot.x, slot.y, fw + 2, fh + 2)
-                    room = _Placed(spec.name, o, rect2)
-                    seam = _filler_seam([sasm.rooms[0]], room)
-                    if seam is None:
-                        continue
-                    key = (-(fw * fh),
-                           0 if along == sw and across == sh else 1,
-                           variant.get("id", ""))
-                    if best is None or key < best[0]:
-                        best = (key, room, seam)
-            if best is not None:
-                (_key, room, seam) = best
-                return room, pool or [], seam
+        singles, couples = ctx.sleepers.get(spec.name, (0, 0))
+        # every smaller ask, the fullest first — the room itself outranks the
+        # beds: a bedroom sleeping some of its people beats a closet
+        asks = sorted(((a, b) for a in range(singles + 1)
+                       for b in range(couples + 1)),
+                      key=lambda ab: (-(ab[0] + 2 * ab[1]), -ab[0], -ab[1]))
+        saved = ctx.sleepers.get(spec.name)
+        ctx.slot_asking = True
+        try:
+            for ask in asks:
+                ctx.sleepers[spec.name] = ask
+                pool, _reason = _room_pool(ctx, design, spec, fam, tier, rng)
+                for allow_slivers in (False, True):
+                    best = None
+                    for variant in pool or []:
+                        for o in _orientations(variant):
+                            if not _side_offsets(o, facing):
+                                continue
+                            fw, fh = o["size"]
+                            # the room stands fw on X and fh on Y whatever the
+                            # slot's long axis, so a vertical slot measures its
+                            # cross axis against fw — the placement below does
+                            # not turn the pair
+                            along, across = (fw, fh) if horizontal else (fh, fw)
+                            if along > sw or across > sh:
+                                continue
+                            if not allow_slivers and \
+                                    (1 <= sw - along <= MIN_SPAN - 1
+                                     or 1 <= sh - across <= MIN_SPAN - 1):
+                                continue
+                            if facing == "south":
+                                rect2 = Rect(slot.x, slot.y1 - fh - 1,
+                                             fw + 2, fh + 2)
+                            elif facing == "north":
+                                rect2 = Rect(slot.x, slot.y, fw + 2, fh + 2)
+                            elif facing == "east":
+                                rect2 = Rect(slot.x1 - fw - 1, slot.y,
+                                             fw + 2, fh + 2)
+                            else:
+                                rect2 = Rect(slot.x, slot.y, fw + 2, fh + 2)
+                            room = _Placed(spec.name, o, rect2)
+                            seam = _filler_seam([sasm.rooms[0]], room)
+                            if seam is None:
+                                continue
+                            key = (-(fw * fh),
+                                   0 if along == sw and across == sh else 1,
+                                   variant.get("id", ""))
+                            if best is None or key < best[0]:
+                                best = (key, room, seam)
+                    if best is not None:
+                        (_key, room, seam) = best
+                        if ask != (singles, couples):
+                            sasm.notes.append(
+                                (spec.name,
+                                 f"storey {storey} slot sleeps "
+                                 f"{ask[0] + 2 * ask[1]} of the "
+                                 f"{singles + 2 * couples} asked of it: no "
+                                 f"larger {fam} room fits"))
+                        return room, pool or [], seam
+        finally:
+            ctx.slot_asking = False
+            if saved is None:
+                ctx.sleepers.pop(spec.name, None)
+            else:
+                ctx.sleepers[spec.name] = saved
         if pool:
             why = f"no {fam} room of the pool fits"
         else:
@@ -2120,15 +2225,17 @@ def _one_room_storey(ctx, design, spec, rect, anchor, tier, cond, storey):
 
 def _corridor_storey(ctx, design, rooms, rect, anchor, tier, cond, storey):
     """``partition_storey``'s partition proper (design 8.1f); the dispatcher
-    above decides when a storey takes it."""
-    from .model import RoomSpec
-    rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}|"
-                        f"storey{storey}")
+    above decides when a storey takes it. The two-sided split goes first —
+    a storey that laid out two-sided keeps exactly its layout — and only a
+    split that cannot seat a single room of the storey gives every room to
+    the deeper side, the corridor flush against the outline's other edge:
+    a gallery over the front of a range too shallow for rooms either side
+    (rl-12)."""
     horizontal = rect.w >= rect.h          # the corridor runs the long way
     # ---- the slot counts: the side of the anchor holding more outline
     # takes the extra slot of an odd count (odd counts give the shorter
-    # side the bigger slots), and a side with no rooms at all sits the
-    # corridor flush against the outline's edge there (a loft)
+    # side the smaller room, and the anchor side is the read on which side
+    # a storey's big rooms belong)
     n = len(rooms)
     if horizontal:
         share_a, share_b = anchor[1] - rect.y, rect.y1 - anchor[1] + 1
@@ -2138,16 +2245,67 @@ def _corridor_storey(ctx, design, rooms, rect, anchor, tier, cond, storey):
         k_a, k_b = -(-n // 2), n // 2
     else:
         k_a, k_b = n // 2, -(-n // 2)
+    one_sided = (n, 0) if share_a >= share_b else (0, n)
+    try:
+        return _lay_split(ctx, design, rooms, rect, anchor, tier, cond,
+                          storey, horizontal, k_a, k_b)
+    except _NoRoom:
+        # a split that seated its rooms but failed to close keeps failing —
+        # the next outline is tried, exactly as before, and a square-ish
+        # outline keeps its landing
+        if one_sided == (k_a, k_b):
+            raise
+        try:
+            st = _lay_split(ctx, design, rooms, rect, anchor, tier, cond,
+                            storey, horizontal, *one_sided)
+        except _NoRoom:
+            st = None
+        tight = None
+        if corridor_width(ctx, design) > 1:
+            # a corridor one cell narrower buys the band the depth to seat
+            # a room the wider gallery could not (rl-12b)
+            try:
+                tight = _lay_split(ctx, design, rooms, rect, anchor, tier,
+                                   cond, storey, horizontal, *one_sided,
+                                   width=1)
+            except _Fallback:
+                tight = None
+        if tight is not None and (st is None or
+                                  _seated(tight) > _seated(st)):
+            return tight
+        if st is not None:
+            return st
+        raise _NoRoom(f"storey {storey}: no room of the storey fits any slot")
+
+
+def _seated(st):
+    """How many of the storey's asked-for rooms a partition actually seated
+    (the corridor and the closets a failed slot became are none of them)."""
+    return sum(1 for p in st.rooms if not p.synthetic)
+
+
+def _lay_split(ctx, design, rooms, rect, anchor, tier, cond, storey,
+               horizontal, k_a, k_b, width=None):
+    """One partition of a storey's outline at the split (k_a, k_b): the
+    corridor band over the stair, its slots filled and closed, the stairs
+    and the furnishing — everything the split's storey owes. ``width``
+    pins the corridor; None draws the design's width, falling back to one
+    cell on an outline too shallow for it."""
+    from .model import RoomSpec
+    rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}|"
+                        f"storey{storey}")
     bands = None
-    for width in (corridor_width(ctx, design), 1):
-        bands = _corridor_bands(rect, horizontal, width, anchor, k_a, k_b)
+    for w in ((width,) if width is not None
+              else (corridor_width(ctx, design), 1)):
+        bands = _corridor_bands(rect, horizontal, w, anchor, k_a, k_b)
         if bands is not None:
             break
     if bands is None:
-        raise _Fallback(f"storey {storey}: the outline is too shallow to "
-                        f"partition around a corridor")
+        raise _NoRoom(f"storey {storey}: the outline is too shallow to "
+                      f"partition around a corridor")
     corr_rect, band_a, band_b = bands
-    width = (corr_rect.h - 2) if horizontal else (corr_rect.w - 2)
+    pinned = width == 1        # the gallery retry's narrow corridor, not a
+    width = (corr_rect.h - 2) if horizontal else (corr_rect.w - 2)  # fallback
 
     # the corridor itself (a landing on a square-ish outline, a corridor on
     # a long one): an empty room, door candidates on its two long sides and
@@ -2237,13 +2395,14 @@ def _corridor_storey(ctx, design, rooms, rect, anchor, tier, cond, storey):
             _stretch_close(placed, None, None, holes)
         elif pools:
             _variant_close(placed, None, None, holes, pools, tier,
-                           {r.name: _fit_rules(ctx, r.use) for r in rooms})
+                           {r.name: _fit_rules(ctx, r.use) for r in rooms},
+                           deep=pinned)
         _box, holes = _holes(placed)
     if holes:
         raise _Fallback(f"storey {storey}: {len(holes)} hole cell(s) no "
                         f"stretch or filler closes")
     if not any(not p.synthetic for p in placed):
-        raise _Fallback(f"storey {storey}: no room of the storey fits any slot")
+        raise _NoRoom(f"storey {storey}: no room of the storey fits any slot")
 
     # ---- the doors the fillers' seams opened (the slots' own were recorded
     # before the closers ran), and the design the storey reports

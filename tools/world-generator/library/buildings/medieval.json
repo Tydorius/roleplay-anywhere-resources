@@ -8,7 +8,7 @@
       "shape": "courtyard",
       "wings": [
         {"wing": "inn.front",     "side": "south", "main": "Taproom"},
-        {"wing": "stables.yard",  "side": "east"},
+        {"wing": "stables.loft",  "side": "east"},
         {"wing": "sleeping.inn",  "side": "west"}
       ],
       "outdoor": [{"name": "Inn yard", "purpose": "courtyard", "between": "all"}],

@@ -277,7 +277,7 @@ def _recipe_compound(zone, compound):
 
     cap = _wing_cap(ctx, zone, kind)
     gate_design = by_name.get(assigns[0][1].building) if assigns and assigns[0][1] else None
-    designs, wingmap = {}, {}
+    designs, wingmap, sources = {}, {}, {}
     for (e, part), name in zip(assigns, names):
         w = ctx.lib.wings.get(e.get("wing"))
         if w is None:
@@ -286,6 +286,9 @@ def _recipe_compound(zone, compound):
         designs[name] = library_plan.wing_design(ctx.lib, w, name, b, ctx.band,
                                                  cap, kind)
         wingmap[name] = w
+        sources[name] = by_name.get(part.building) if part is not None else None
+    library_plan.split_wing_sleepers(ctx.lib, designs, wingmap, sources, notes,
+                                     f"compound {compound.name}")
     _move_farm_residents(ctx.lib, designs, notes, f"compound {compound.name}")
     new.recipe_data = {"wings": wingmap, "extra": designs, "recipe": recipe}
     return new, designs, wingmap, notes, recipe

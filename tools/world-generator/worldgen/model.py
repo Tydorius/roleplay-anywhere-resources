@@ -195,11 +195,12 @@ class BuildingDesign:
     purpose: str = ""
     wall: str = "wood"
     ground: str = "wood"
-    storeys: int = 1                                   # 1-3 (floors extension)
+    storeys: int = 1                                   # 1-4 (floors extension)
     stairs_room: str = ""                              # ground room the stair rises from
     units: object = None                               # UnitSpec when it repeats units
     couples: int = 0                                   # P1: pairs of residents sharing a bed
     residents: int = 0                                 # P1: people sleeping here
+    guests: int = 0                                    # rl-12: traveller beds a lodging promised
     wealth: str = ""                                   # P1: poor/modest/wealthy/elite
     condition: str = ""                                # P1: kept/worn/...
     status: str = ""                                   # P1b: home, staffed, vacant...

@@ -34,6 +34,23 @@
       "sleeps": "none"
     },
     {
+      "id": "stables.loft",
+      "purpose": "stables",
+      "kinds": ["inn", "coaching inn", "posting house", "stable", "stables", "livery"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Stable",     "purpose": "stable",    "share": "large"},
+        {"name": "Tack room",  "purpose": "storage",   "share": "small"},
+        {"name": "Loft",       "purpose": "barracks",  "share": "medium"}
+      ],
+      "connections": [["Stable", "Tack room"], ["Stable", "Loft"]],
+      "entrance": {"room": "Stable"},
+      "sleeps": "staff",
+      "wealth": -2
+    },
+    {
       "id": "sleeping.inn",
       "purpose": "sleeping",
       "kinds": ["inn", "coaching inn", "hostelry", "posting house"],
@@ -41,10 +58,10 @@
       "storeys": 2,
       "entry": "east",
       "rooms": [
-        {"name": "Landing",            "purpose": "hallway",        "share": "small"},
+        {"name": "Landing",            "purpose": "hallway",        "share": "medium"},
         {"name": "Guest chamber",      "purpose": "guest_room",     "share": "small"},
         {"name": "Best chamber",       "purpose": "guest_room",     "share": "small"},
-        {"name": "Keepers' chamber",   "purpose": "master_bedroom", "share": "small"}
+        {"name": "Keepers' chamber",   "purpose": "master_bedroom", "share": "medium"}
       ],
       "connections": [["Landing", "Guest chamber"], ["Landing", "Best chamber"],
                       ["Landing", "Keepers' chamber"]],
@@ -118,7 +135,7 @@
       "connections": [["Great chamber", "Bedchamber"], ["Great chamber", "Nursery"]],
       "entrance": {"room": "Great chamber"},
       "sleeps": "residents",
-      "wealth": "building"
+      "wealth": 1
     },
     {
       "id": "manor.service",
@@ -128,7 +145,7 @@
       "storeys": 2,
       "entry": "west",
       "rooms": [
-        {"name": "Kitchen",         "purpose": "kitchen",        "share": "medium"},
+        {"name": "Kitchen",         "purpose": "kitchen",        "share": "large"},
         {"name": "Pantry",          "purpose": "pantry",         "share": "small"},
         {"name": "Servants' room",  "purpose": "servants_room",  "share": "small"},
         {"name": "Maids' room",     "purpose": "servants_room",  "share": "small"}
@@ -159,7 +176,7 @@
       "purpose": "sleeping",
       "kinds": ["castle", "keep", "donjon"],
       "bands": ["medieval"],
-      "storeys": 3,
+      "storeys": 4,
       "entry": "south",
       "rooms": [
         {"name": "Great chamber", "purpose": "master_bedroom", "share": "medium"},
@@ -169,7 +186,7 @@
       "connections": [["Great chamber", "Chamber"], ["Great chamber", "Guardroom"]],
       "entrance": {"room": "Great chamber"},
       "sleeps": "residents",
-      "wealth": "building"
+      "wealth": 1
     },
     {
       "id": "castle.barracks",
