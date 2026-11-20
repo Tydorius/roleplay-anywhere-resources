@@ -86,6 +86,7 @@ NOUNS = (
     ("storage.hay", "hay stack"),
     ("machine", "machine"),
     ("dairy", "churn"),
+    ("milking.stall", "milking stall"),
     ("shelving", "shelf"),
     ("utility", "utility stand"),
     ("wash.bath", "bathtub"),
@@ -130,7 +131,7 @@ FAMILY_ROLES = {"bedroom": ("sleep",), "bedroom.master": ("sleep",),
                 "courtyard": ("decor.feature",), "garden": ("grow",),
                 "yard": ("animal", "storage"),
                 "barn": ("machine", "storage.hay"),
-                "dairy": ("dairy",), "granary": ("storage.bulk",),
+                "dairy": ("dairy", "milking.stall"), "granary": ("storage.bulk",),
                 "pigsty": ("animal",), "henhouse": ("animal",),
                 "greenhouse": ("grow",)}
 MAX_MENTIONS = 4      # furniture groups named in one description

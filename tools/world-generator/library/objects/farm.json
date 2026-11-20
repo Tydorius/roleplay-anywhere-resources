@@ -697,27 +697,27 @@
       "sources": ["claude-authored"]
     },
     {
-      "id": "dairy.parlour_stalls",
-      "category": "dairy",
-      "size": [3, 2],
+      "id": "dairy.milking_stall",
+      "category": "milking_stall",
+      "size": [1, 2],
       "walkability": 0,
       "forSleep": false,
       "light": 0,
-      "back": null,
+      "back": "north",
       "wealth": ["poor", "modest"],
       "bands": ["modern"],
       "onlyGenres": [],
-      "names": {"*": "milking stalls"},
-      "parts": {"stalls": "metal", "pipes": "metal"},
+      "names": {"*": "milking stall"},
+      "parts": {"rails": "metal", "trough": "metal", "cluster": "metal"},
       "partsByBand": {},
       "tags": ["dairy", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} herringbone {noun}, clusters hung and the pit rail polished by cows.",
-        "physical": "Top-down view of {noun}: two rows of {stalls.color} {stalls} stalls set in a herringbone, {pipes.color} {pipes} pipe clusters on arms above, a pit rail round the outside."
+        "description": "{A:condition} {rails} tie stall for one cow, its rubber mat scrubbed clean and the cluster hanging ready on its arm.",
+        "physical": "Top-down view of {A:noun}: {rails.color} {rails} rails up both long sides, a {trough.color} {trough} feed trough across the head end, a black rubber mat floor, a {cluster} milking cluster hung on an arm at the side."
       },
-      "aliases": ["milking stalls", "herringbone parlour", "parlour stalls"],
+      "aliases": ["milking stall", "milking stalls", "parlour stalls"],
       "sources": ["claude-authored"]
     },
     {

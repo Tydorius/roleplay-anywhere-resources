@@ -970,15 +970,16 @@
    "physical": "Top-down view of a bulk milk tank: a long grey powder-coated steel bulk tank with a gauge panel along one side, an icy sheen over the manhole.",
    "reviewed": true
   },
-  "dairy.parlour_stalls": {
-   "template": "Powder-coated steel milking stalls [dairy.parlour_stalls]",
+  "dairy.milking_stall": {
+   "template": "Aluminium milking stall [dairy.milking_stall]",
    "tier": "modest",
    "condition": "kept",
    "materials": {
-    "pipes": "powder-coated steel",
-    "stalls": "aluminium"
+    "cluster": "powder-coated steel",
+    "rails": "aluminium",
+    "trough": "powder-coated steel"
    },
-   "physical": "Top-down view of milking stalls: two rows of silver aluminium stalls set in a herringbone, grey powder-coated steel pipe clusters on arms above, a pit rail round the outside.",
+   "physical": "Top-down view of a milking stall: silver aluminium rails up both long sides, a grey powder-coated steel feed trough across the head end, a black rubber mat floor, a grey powder-coated steel milking cluster hung on an arm at the side.",
    "reviewed": true
   },
   "decor.aquarium": {
