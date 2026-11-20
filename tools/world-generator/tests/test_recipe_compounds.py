@@ -408,6 +408,52 @@ class TestFarmsteadFromRecipe(unittest.TestCase):
         self.assertTrue(m["walkways_clear"], m.get("walkways"))
 
 
+class TestTheBarnsResidentsSleepInTheFarmhouse(unittest.TestCase):
+    """rl-15 on the recipe path: a farm wing's residents are never dropped —
+    they move to the compound's sleeping wing, noted, so the farmhouse ships
+    their beds and the barn's rooms ship none."""
+
+    @classmethod
+    def setUpClass(cls):
+        plan = farm_plan()
+        plan["zones"][0]["buildings"][1]["residents"] = 3
+        cls.world = worldgen.run(plan, seed=1, room_assembler=True)
+        cls.comp = compound_of(cls.world, "Millfield Compound")
+        cls.assertIsNotNone(cls, cls.comp, cls.world.failures)
+
+    def _rooms(self, name):
+        from worldgen import assembler
+        bl = part(self.comp, name)
+        rooms = list(bl.rooms)
+        for i in range(len(getattr(bl, "upper_asm", None) or [])):
+            rooms.extend(assembler.upper_layout(bl, i, bl.rect).rooms)
+        return rooms
+
+    def test_the_counts_move_to_the_farmhouse(self):
+        self.assertEqual(part(self.comp, "The Barn").design.residents, 0)
+        self.assertEqual(part(self.comp, "Millfield Farmhouse").design.residents,
+                         3)
+
+    def test_the_barn_keeps_no_bed(self):
+        beds = [(r.base_name, t) for r in self._rooms("The Barn")
+                for (t, _p) in r.furniture.placements
+                if self.world.templates[t].for_sleep]
+        self.assertEqual(beds, [], "a bed in a farm wing")
+
+    def test_the_farmhouse_sleeps_the_barns_residents(self):
+        from worldgen.model import bed_capacity
+        beds = sum(bed_capacity(self.world.templates[t])
+                   for r in self._rooms("Millfield Farmhouse")
+                   for (t, _p) in r.furniture.placements
+                   if self.world.templates[t].for_sleep)
+        self.assertGreaterEqual(beds, 3, "the moved residents, no beds")
+
+    def test_the_move_is_noted(self):
+        self.assertIn(("compound Millfield Compound",
+                       "residents of The Barn sleep elsewhere: farm building"),
+                      self.world.failures, self.world.failures)
+
+
 class TestCompoundWithoutARecipe(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

@@ -725,6 +725,14 @@ def _side_offsets(room, side):
     return list((room.get("doors") or {}).get(side) or [])
 
 
+def _plan_side(side):
+    """The wall name a plan side (model.Rect's compass: north is high y)
+    picks out of the rooms' own door lists and this module's edges, which
+    name low y north and high y south. The two agree on east and west and
+    swap north and south."""
+    return {"north": "south", "south": "north"}.get(side, side)
+
+
 def _bbox(placed):
     return Rect(min(p.rect.x for p in placed), min(p.rect.y for p in placed),
                 max(p.rect.x1 for p in placed) - min(p.rect.x for p in placed) + 1,
@@ -742,11 +750,13 @@ def _overlaps(placed, rect):
 
 def _crosses_entrance_line(entry_rect, side, rect):
     """No room may stand further out than the entrance room on the entrance
-    side, so the entrance room keeps its outside wall there. The library's
-    sides name the grid the rooms use: south and east are the high edges."""
-    if side == "south":
-        return rect.y1 > entry_rect.y1
+    side, so the entrance room keeps its outside wall there. ``side`` is the
+    plan's compass (north is high y), as it is everywhere a side leaves or
+    enters this module; only the rooms' own door lists and the inner seam
+    naming keep the edges' names."""
     if side == "north":
+        return rect.y1 > entry_rect.y1
+    if side == "south":
         return rect.y < entry_rect.y
     if side == "east":
         return rect.x1 > entry_rect.x1
@@ -1013,7 +1023,7 @@ def _assemble(ctx, design, wing=None):
     for r in range(8):
         for variant in pools[root]:
             o = _orientations(variant)[r]
-            if not _side_offsets(o, design.entrance_side):
+            if not _side_offsets(o, _plan_side(design.entrance_side)):
                 continue
             if wing is not None and (o["size"][0] + 2 > wing.target[0]
                                      or o["size"][1] + 2 > wing.target[1]):
@@ -1052,7 +1062,7 @@ def _wing_bounds(wing, entry_rect, side):
     tw, th = wing.target
     if side in ("north", "south"):
         ex = (tw - entry_rect.w) // 2
-        if side == "south":
+        if side == "north":
             return Rect(-ex, -(th - entry_rect.h), tw, th)
         return Rect(-ex, 0, tw, th)
     ey = (th - entry_rect.h) // 2
@@ -1272,13 +1282,16 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
         if not p.doors and p is not entry:
             raise _Fallback(f"room {p.name} ended up with no door")
     if wing is None:
-        offsets = _side_offsets(entry.room, side)
+        offsets = _side_offsets(entry.room, _plan_side(side))
         if not offsets:
             raise _Fallback(f"the entrance room's {side} wall has no free cell")
+        # the middle cell of the entry room's own wall — the cell the plain
+        # builder's entrance pick opens. The offsets count the wall's
+        # non-corner cells, so the middle sits (span - 3) // 2 into them
         if side in ("north", "south"):
-            mid = (_bbox_.w - 1) // 2
+            mid = (entry.rect.w - 3) // 2
         else:
-            mid = (_bbox_.h - 1) // 2
+            mid = (entry.rect.h - 3) // 2
         k = min(offsets, key=lambda k: abs(k - mid))
         asm.entrance = _ring_cell(entry.rect, side, k)
         entry.doors.add(asm.entrance)
@@ -1357,11 +1370,12 @@ def _owns_ring(p, cell):
 
 
 def _ring_cell(rect, side, k):
-    """The wall cell of door offset ``k`` on one side of a placed room."""
+    """The wall cell of door offset ``k`` on one side of a placed room —
+    the plan's compass, north the high edge of ``rect``."""
     if side == "north":
-        return (rect.x + 1 + k, rect.y)
-    if side == "south":
         return (rect.x + 1 + k, rect.y1)
+    if side == "south":
+        return (rect.x + 1 + k, rect.y)
     if side == "west":
         return (rect.x, rect.y + 1 + k)
     return (rect.x1, rect.y + 1 + k)
@@ -1388,13 +1402,13 @@ def _free_entrance(placed, ring, side):
         else (ring.h - 1) // 2
     best = None
     for p in placed:
-        at_edge = (p.rect.y == ring.y if side == "north"
-                   else p.rect.y1 == ring.y1 if side == "south"
+        at_edge = (p.rect.y1 == ring.y1 if side == "north"
+                   else p.rect.y == ring.y if side == "south"
                    else p.rect.x == ring.x if side == "west"
                    else p.rect.x1 == ring.x1)
         if not at_edge:
             continue
-        for k in _side_offsets(p.room, side):
+        for k in _side_offsets(p.room, _plan_side(side)):
             cell = _ring_cell(p.rect, side, k)
             at = cell[0] if side in ("north", "south") else cell[1]
             key = (abs(at - mid), cell[0], cell[1])
@@ -1792,7 +1806,7 @@ def _stretch_for_stair(ctx, asm, placed, entry, centre):
             w, h = room2["size"]
             for shift, direction in ((0, "south" if axis == "y" else "east"),
                                      (1, "north" if axis == "y" else "west")):
-                if direction == asm.side:
+                if direction == _plan_side(asm.side):
                     continue        # the entrance wall stays where it is
                 if axis == "x":
                     rect2 = Rect(entry.rect.x - shift, entry.rect.y, w + 2, h + 2)
@@ -1984,9 +1998,129 @@ def partition_storey(ctx, design, rooms, rect, anchor, tier, cond, storey):
     ground closes — stretch lines, larger variants, closets and stores; a
     slot nothing fits becomes a closet or store, recorded in the run's
     notes. The stair from below lands in the band nearest ``anchor``; a
-    storey above gets its stair about three cells along. Returns the
-    finished ``_Storey``; any failure raises _Fallback and the caller gives
-    the whole building back to the old method."""
+    storey above gets its stair about three cells along. A storey of one
+    room whose outline the partition cannot slot (a gatehouse's or tower's
+    thin upper floor) takes the room over the whole outline instead, the
+    stair its only way in. Returns the finished ``_Storey``; any failure
+    raises _Fallback and the caller gives the whole building back to the old
+    method."""
+    if len(rooms) == 1:
+        try:
+            return _corridor_storey(ctx, design, rooms, rect, anchor, tier,
+                                    cond, storey)
+        except _Fallback:
+            return _one_room_storey(ctx, design, rooms[0], rect, anchor, tier,
+                                    cond, storey)
+    return _corridor_storey(ctx, design, rooms, rect, anchor, tier, cond, storey)
+
+
+def _one_room_storey(ctx, design, spec, rect, anchor, tier, cond, storey):
+    """A storey of one room in an outline no corridor partition can slot
+    (rl-15: a 2-storey gatehouse's upper floor): the room itself, turned
+    whichever way fits and sited over ``anchor`` — the stair from below must
+    land inside it, never on its furniture — then closed to the outline the
+    way the ground closes. The stair is the room's only way in, so it needs
+    no door of its own; a storey above still gets its stair about three
+    cells along. Raises _Fallback when no room of the family fits the
+    outline over the stair or the holes will not close."""
+    from .model import RoomSpec
+    rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}|"
+                        f"storey{storey}")
+    fam = ctx.lib.family_of(spec.use)
+    pool, why = _room_pool(ctx, design, spec, fam, tier, rng)
+    if not pool:
+        raise _Fallback(f"storey {storey}: {why}")
+    # the placement to beat: the most outline filled, then the first place
+    # it fits — so what is left over gathers on one side for the closers
+    best = None
+    for variant in pool:
+        for o in _orientations(variant):
+            fw, fh = o["size"]
+            if fw + 2 > rect.w or fh + 2 > rect.h:
+                continue
+            for x in range(rect.x, rect.x1 - fw):
+                for y in range(rect.y, rect.y1 - fh):
+                    room = _Placed(spec.name, o, Rect(x, y, fw + 2, fh + 2))
+                    if anchor not in _stair_candidates(room):
+                        continue
+                    key = ((fw + 2) * (fh + 2), variant.get("id", ""), x, y)
+                    if best is None or key > best[0]:
+                        best = (key, room)
+    if best is None:
+        raise _Fallback(f"storey {storey}: no {fam} room fits the outline "
+                        f"over the stair")
+    room = best[1]
+    sdesign = dataclasses.replace(design, name=f"{design.name} (floor {storey})",
+                                  rooms=[], connections=[], entrance_room="",
+                                  furniture=[])
+    sasm = _Assembly(sdesign, design.entrance_side)
+    sasm.rooms.append(room)
+    placed, pools = [room], {room.name: pool}
+
+    # ---- close to the outline: the same steps a slot closes with — fillers
+    # first (a strip too narrow for anything, then stretch lines and larger
+    # variants for what they cannot shape, and fillers again after each
+    _box, holes = _holes(placed, rect)
+    for closer in ("fill", "stretch", "fill", "variant", "fill"):
+        if not holes:
+            break
+        if closer == "fill":
+            _fill_holes(ctx, sasm, placed, holes)
+        elif closer == "stretch":
+            _stretch_close(placed, None, None, holes)
+        elif pools:
+            _variant_close(placed, None, None, holes, pools, tier,
+                           {room.name: _fit_rules(ctx, spec.use)})
+        _box, holes = _holes(placed)
+    if holes:
+        raise _Fallback(f"storey {storey}: {len(holes)} hole cell(s) no "
+                        f"stretch or filler closes")
+
+    # ---- the doors the fillers' seams opened, and the design the storey
+    # reports (the room itself needs no door: the stair is its way in)
+    for pair in sasm.pairs:
+        for cell in pair:
+            owner = next((p for p in placed if _owns_ring(p, cell)), None)
+            if owner is not None:
+                owner.doors.add(cell)
+    for p in placed:
+        if not p.doors and p is not room:
+            raise _Fallback(f"storey {storey}: room {p.name} ended up "
+                            f"with no door")
+    sdesign.rooms = [spec if p is room
+                     else RoomSpec(name=p.name, purpose="storage")
+                     for p in placed]
+    sdesign.connections = [[_room_label(placed, pair[0]), _room_label(placed, pair[1])]
+                           for pair in sasm.pairs]
+    sdesign.entrance_room = room.name
+
+    sasm.layouts, sasm.lines = _furnish_assembly(ctx, sdesign, sasm, tier, cond)
+
+    # ---- the stairs: from below at the anchor, still clear of the furniture
+    # the closers may have moved or swapped; to the storey above about three
+    # cells along, never beside the first
+    cands = _stair_candidates(room)
+    if anchor not in cands:
+        raise _Fallback(f"storey {storey}: no cell over the stair stays "
+                        f"clear for it")
+    down = anchor
+    up = None
+    if storey < design.storeys:
+        far = [c for c in cands
+               if max(abs(c[0] - down[0]), abs(c[1] - down[1])) >= 2]
+        if not far:
+            raise _Fallback(f"storey {storey}: no second cell in the room "
+                            f"for its up stair")
+        up = min(far, key=lambda c: (abs(max(abs(c[0] - down[0]),
+                                             abs(c[1] - down[1])) - 3),
+                                     c[1], c[0]))
+    return _Storey(storey, sdesign, placed, sasm.pairs, down, up,
+                   sasm.layouts, sasm.lines, sasm.notes)
+
+
+def _corridor_storey(ctx, design, rooms, rect, anchor, tier, cond, storey):
+    """``partition_storey``'s partition proper (design 8.1f); the dispatcher
+    above decides when a storey takes it."""
     from .model import RoomSpec
     rng = random.Random(f"{ctx.world_seed}|assembler|{design.name}|"
                         f"storey{storey}")
@@ -2430,9 +2564,9 @@ def upper_layout(bl, index, rect):
     # the build-time door over the ground door: the storey is sealed, and
     # finish_scenario strips this cell again in the shipped scenario
     if b.entrance_side == "north":
-        b.entrance_door = (ox + w // 2, oy)
-    elif b.entrance_side == "south":
         b.entrance_door = (ox + w // 2, oy + h - 1)
+    elif b.entrance_side == "south":
+        b.entrance_door = (ox + w // 2, oy)
     elif b.entrance_side == "west":
         b.entrance_door = (ox, oy + h // 2)
     else:

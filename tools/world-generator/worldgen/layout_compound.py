@@ -144,6 +144,36 @@ def _wing_cap(ctx, zone, kind):
     return _storey_cap(ctx.band, kind, settlement_size(zone.kind))
 
 
+def _move_farm_residents(lib, designs, notes, label):
+    """A wing of only farm-family rooms never sleeps anyone (rl-15): each
+    such wing's residents and couples move to the compound's sleeping wing —
+    the first with a bed of its own — noted, never dropped. A compound with
+    no sleeping wing keeps its counts where they were."""
+    from .library_plan import FARM_FAMILIES, SLEEP_FAMILIES
+
+    def rooms_of(d):
+        return list(d.rooms) + [r for u in d.upper for r in u.rooms]
+
+    def all_farm(d):
+        rooms = rooms_of(d)
+        return bool(rooms) and all(lib.family_of(r.use) in FARM_FAMILIES
+                                   for r in rooms)
+
+    home = next((d for d in designs.values()
+                 if any(lib.family_of(r.use) in SLEEP_FAMILIES
+                        for r in rooms_of(d))), None)
+    if home is None:
+        return
+    for name, d in designs.items():
+        if d is home or not all_farm(d) or not (d.residents or d.couples):
+            continue
+        home.residents += d.residents
+        home.couples += d.couples
+        notes.append((label,
+                      f"residents of {name} sleep elsewhere: farm building"))
+        d.residents = d.couples = 0
+
+
 def _recipe_compound(zone, compound):
     """(compound, designs, wings, notes, recipe): the recipe's compound when
     the compound's kind matches a building recipe, else the compound itself
@@ -256,6 +286,7 @@ def _recipe_compound(zone, compound):
         designs[name] = library_plan.wing_design(ctx.lib, w, name, b, ctx.band,
                                                  cap, kind)
         wingmap[name] = w
+    _move_farm_residents(ctx.lib, designs, notes, f"compound {compound.name}")
     new.recipe_data = {"wings": wingmap, "extra": designs, "recipe": recipe}
     return new, designs, wingmap, notes, recipe
 
@@ -813,7 +844,11 @@ def _place_rows(compound, plans, geo, court):
         h = max(g["height"] for g in groups)
         shapes.append((groups, w, h))
     total = sum(h for (_g, _w, h) in shapes) + (len(shapes) - 1) * clear
-    y = court.y1 - shapes[0][2] + 1     # the north row starts at the top
+    # the north row sits the clear margin below the courtyard's top — the
+    # courtyard is sized with walking room round every row, and the parts on
+    # the north perimeter need open ground at their doors' approaches, which
+    # the flush row would take (an inside part's wall would stand on it)
+    y = court.y1 - clear - shapes[0][2] + 1
     for i, (groups, w, _h) in enumerate(shapes):
         x = court.x + max(0, (court.w - w) // 2)
         for g in groups:

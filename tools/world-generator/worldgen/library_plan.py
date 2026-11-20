@@ -31,6 +31,13 @@ SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
 # kinds whose upper storey is a hayloft, not a bedroom floor (design 8.1g):
 # the "hayloft" purpose (barn family, purposeFit keeps it to hay storage)
 LOFT_KINDS = ("barn", "byre", "stable", "stables", "livery")
+# the families of the farm families' buildings: a building or wing of only
+# these families never gains a bed, a bedroom or a sleep room — its residents
+# sleep in the farmhouse. The sci-fi vat-farm room is the greenhouse family's
+# recipe and the gene-bank room the granary family's, so each is covered by
+# its family here rather than by its name
+FARM_FAMILIES = ("barn", "stable", "dairy", "granary", "pigsty", "henhouse",
+                 "greenhouse")
 SIZE_ORDER = ("tiny", "small", "medium", "large")
 # the building packer splits one footprint into at most five rooms before it
 # starts dropping everything (measured: 5 rooms place all 33 pieces of an inn,
@@ -521,6 +528,12 @@ def _guest_defaults(lib):
             occ = _default_sleepers(recipe, data["groups"])
             if fam not in cached or occ > cached[fam]:
                 cached[fam] = occ
+        # a dormitory is a shared room (barracks and crew quarters are the
+        # same family): its recipes count bunks one per sleeper, so the
+        # composer's floor of one would hand an empty dormitory a single
+        # bed — a shared room never sleeps fewer than two
+        if cached.get("dormitory", (0, 0)) < (2, 0):
+            cached["dormitory"] = (2, 0)
         lib.guest_defaults = cached
     return cached
 
@@ -556,11 +569,18 @@ def _sleepers(lib, rooms, residents, couples):
 
 def ensure_sleep_room(design, b, lib, log):
     """A home whose rooms have nowhere to sleep gets a bedroom off its
-    entrance room, so the residents P1 promised have beds."""
+    entrance room, so the residents P1 promised have beds — unless every room
+    is of the farm families, whose buildings never take beds: the residents
+    sleep in the farmhouse, and a compound moves the count there itself."""
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
     if residents <= 0:
         return
     if any(lib.family_of(r.get("use")) in SLEEP_FAMILIES for r in design["rooms"]):
+        return
+    if design["rooms"] and all(lib.family_of(r.get("use")) in FARM_FAMILIES
+                               for r in design["rooms"]):
+        log.append((f"building {b['name']}",
+                    f"residents of {b['name']} sleep elsewhere: farm building"))
         return
     couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
     use = "master_bedroom" if couples and residents <= 2 else "bedroom"

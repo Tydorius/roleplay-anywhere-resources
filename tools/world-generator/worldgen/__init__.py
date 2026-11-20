@@ -88,9 +88,32 @@ class World:
         self.water_marks = False       # the plan itself marks water anywhere
 
 
-def _most_private_room(world, b):
+def _room_use(design, room):
+    """The library purpose a placed room's design spec gives it ('' when the
+    plan wrote the room by hand)."""
+    return next((r.use for r in design.rooms if r.name == room.base_name), "")
+
+
+def _farm_room_uses(world):
+    """The library purpose keys of the farm families' rooms (byre, hayloft,
+    vat farm...), read from the shipped library's purpose-to-family map: a bed
+    never lands in a farm room — the residents sleep in the farmhouse. Empty
+    when no room in the world came from the library, so plain plans never
+    load it."""
+    if not any(r.use for b in world.buildings
+               for d in [b.layout.design]
+               + [f.layout.design for f in getattr(b, "floors", []) or []]
+               for r in d.rooms):
+        return frozenset()
+    from .library_plan import FARM_FAMILIES, load as library_load
+    purposes = library_load().vocab.get("purposes", {})
+    return frozenset(u for u, fam in purposes.items() if fam in FARM_FAMILIES)
+
+
+def _most_private_room(world, b, farm_uses=frozenset()):
     """The room a bed belongs in: one named or purposed for sleeping, else the
-    room farthest from the entrance door."""
+    room farthest from the entrance door — never a farm family's room, so
+    None when every room is one (its residents sleep in the farmhouse)."""
     import re
     bl = b.layout
     door = bl.entrance_door
@@ -104,7 +127,8 @@ def _most_private_room(world, b):
         cx, cy = room.rect.center()
         return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
 
-    return max(bl.rooms, key=score)
+    rooms = [r for r in bl.rooms if _room_use(bl.design, r) not in farm_uses]
+    return max(rooms, key=score) if rooms else None
 
 
 def _bed_template(world, plan_data):
@@ -225,9 +249,11 @@ def _couples_by_home(plan):
     return out
 
 
-def _rooms_by_privacy(world, b):
+def _rooms_by_privacy(world, b, farm_uses=frozenset()):
     """A building's rooms (ground and uppers), most private first: one named
-    or purposed for sleeping, else the farthest from the entrance door."""
+    or purposed for sleeping, else the farthest from the entrance door. A farm
+    family's room is never on the list — its residents sleep in the
+    farmhouse."""
     import re
     bl = b.layout
     door = bl.entrance_door
@@ -242,9 +268,11 @@ def _rooms_by_privacy(world, b):
         cx, cy = room.rect.center()
         return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
 
-    rooms = [(r, bl.design) for r in bl.rooms]
+    rooms = [(r, bl.design) for r in bl.rooms
+             if _room_use(bl.design, r) not in farm_uses]
     for f in getattr(b, "floors", []) or []:
-        rooms += [(r, f.layout.design) for r in f.layout.rooms]
+        rooms += [(r, f.layout.design) for r in f.layout.rooms
+                  if _room_use(f.layout.design, r) not in farm_uses]
     return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]
 
 
@@ -256,20 +284,27 @@ def _double_beds_in(world, building):
     return n
 
 
-def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
+def _ensure_couple_beds(world, plan, plan_data, home_name, pairs,
+                        farm_uses=frozenset()):
     """One double bed per couple the plan promises this home, added in its
     most private room that has space when the furniture holds none (two
-    single beds and a recorded failure when nothing fits a double), then the
-    home's sleep assignment re-run so both partners share the double room."""
+    single beds and a recorded failure when nothing fits a double; a noted
+    pass when every room is a farm family's), then the home's sleep
+    assignment re-run so both partners share the double room."""
     home = next((b for b in world.buildings
                  if b.layout.design.name == home_name), None)
     if home is None:
         return
     want = getattr(home.layout.design, "couples", 0) or 0
     while _double_beds_in(world, home) < want:
+        rooms = _rooms_by_privacy(world, home, farm_uses)
+        if not rooms:
+            world.notes.append((f"double bed for {home_name}",
+                                f"residents of {home_name} sleep elsewhere: farm building"))
+            return
         tmpl = _double_template(world, plan_data)
         placed = None
-        for room in _rooms_by_privacy(world, home):
+        for room in rooms:
             pos = _place_bed(world, room, tmpl)
             if pos is not None:
                 room.furniture.placements.append((tmpl.name, pos))
@@ -279,7 +314,7 @@ def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
         if placed is None:
             single = _bed_template(world, plan_data)
             room = None
-            for r in _rooms_by_privacy(world, home):
+            for r in rooms:
                 pos = _place_bed(world, r, single)
                 if pos is not None:
                     r.furniture.placements.append((single.name, pos))
@@ -305,9 +340,11 @@ def _ensure_beds(world, plan, plan_data):
     fullest bedded room when its beds are all taken (they stay home, crowded,
     when that room has no free cell), else in its most private room. A
     bedless home borrows the nearest bedded building of its household (the
-    same zone) first."""
+    same zone) first. A farm family's room never takes a bed — its residents
+    sleep in the farmhouse, noted when the world gave them nowhere else."""
+    farm_uses = _farm_room_uses(world)
     for home_name, pairs in _couples_by_home(plan).items():
-        _ensure_couple_beds(world, plan, plan_data, home_name, pairs)
+        _ensure_couple_beds(world, plan, plan_data, home_name, pairs, farm_uses)
     for person in plan.npcs + [plan.player]:
         if world.sleep_assign.get(person.name) is not None:
             continue   # the layout assigned them a bed of their own
@@ -322,7 +359,11 @@ def _ensure_beds(world, plan, plan_data):
                 and schedule_mod.sleep_room(world, b.layout.design.name) is not None
                 for b in world.buildings):
             continue   # the schedule will point at the household's bed
-        room = full or _most_private_room(world, home)
+        room = full or _most_private_room(world, home, farm_uses)
+        if room is None:
+            world.notes.append((f"bed for {person.name}",
+                                f"residents of {person.home} sleep elsewhere: farm building"))
+            continue
         tmpl = _bed_template(world, plan_data)
         pos = _place_bed(world, room, tmpl)
         if pos is None:

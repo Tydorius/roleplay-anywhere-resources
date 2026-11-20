@@ -357,11 +357,141 @@ class TestTheFarmsteadAssembles(unittest.TestCase):
                 self.assertTrue(any(is_farm_template(t.name, self.farm)
                                     for t in placed),
                                 [t.name for t in placed])
-                if room != "Byre":
-                    # the byre is the stable family's room and keeps that
-                    # family's own bindings; never-beds is the barn's rule
-                    self.assertFalse([t.name for t in placed if t.for_sleep],
-                                     "a bed in a farm building")
+                # no farm family's room ever ships a bed: the residents of
+                # an all-farm building sleep in the farmhouse, noted
+                self.assertFalse([t.name for t in placed if t.for_sleep],
+                                 "a bed in a farm building")
+
+    def test_the_farm_buildings_residents_sleep_in_the_farmhouse(self):
+        # the plan's only building is all farm families, so its residents
+        # sleep elsewhere: the note says so and nothing in the world sleeps
+        self.assertFalse([o for o in self.world.objects
+                          if self.world.templates[o.template].for_sleep],
+                         "a bed in an all-farm world")
+        self.assertIn(("bed for The Miller",
+                       "residents of Millbrook Farm sleep elsewhere: "
+                       "farm building"),
+                      self.world.notes, self.world.notes)
+
+
+class TestTheIndustrialFarmsteadAssembles(unittest.TestCase):
+    """rl-15 on the industrial band: the same all-farm farmstead — its barn,
+    byre and dairy kitted with the industrial set — ships no bed either, the
+    residents noted as sleeping elsewhere."""
+
+    @classmethod
+    def setUpClass(cls):
+        plan = json.loads(json.dumps(FARMSTEAD_PLAN))
+        plan["setting"]["band"] = "industrial"
+        cls.world = worldgen.run(plan, seed=7, room_assembler=True)
+        cls.farm = farm_names(L.load(L.LIB_DIR))
+
+    def test_no_farm_room_ships_a_bed(self):
+        for room in ("Barn", "Byre", "Dairy"):
+            placed = [self.world.templates[o.template]
+                      for o in self.world.objects if o.region.endswith(room)]
+            with self.subTest(room=room):
+                self.assertTrue(placed, "the room shipped empty")
+                self.assertTrue(any(is_farm_template(t.name, self.farm)
+                                    for t in placed),
+                                [t.name for t in placed])
+                self.assertFalse([t.name for t in placed if t.for_sleep],
+                                 "a bed in a farm building")
+
+    def test_the_residents_still_sleep_elsewhere(self):
+        self.assertIn(("bed for The Miller",
+                       "residents of Millbrook Farm sleep elsewhere: "
+                       "farm building"),
+                      self.world.notes, self.world.notes)
+
+
+# the P1 stand-in the longhouse wing is built from: a longhouse of mixed
+# house and farm rooms, its residents on the zone's building entry
+LONGHOUSE_WING_PLAN = {
+    "name": "Thornfield",
+    "worldBackground": "A longhouse under the hill, cows in the byre end.",
+    "setting": {"era": "medieval", "technology": "iron",
+                "density": "normal", "climate": "mild"},
+    "mapSize": "small",
+    "zones": [{
+        "name": "Thornfield", "kind": "village", "sizeClass": "small",
+        "description": "The green.", "ground": "grass",
+        "adjacentTo": ["The Ford"], "outdoor": [], "buildings": [
+            {"name": "Thornfield Longhouse", "kind": "longhouse",
+             "sizeClass": "medium", "purpose": "the house and its byre",
+             "residents": 4, "yard": None}],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }, {
+        "name": "The Ford", "kind": "farmland", "sizeClass": "medium",
+        "description": "Meadows.", "ground": "grass",
+        "adjacentTo": ["Thornfield"], "outdoor": [], "buildings": [],
+        "dressing": {"paths": "dirt", "props": [], "filler": []},
+    }],
+    "roads": [{"from": "Thornfield", "to": "The Ford", "kind": "dirt"}],
+    "templates": [],
+    "buildings": [
+        {"name": "Thornfield Longhouse", "wall": "wood", "ground": "wood",
+         "residents": 4, "couples": 1, "wealth": "modest", "condition": "kept",
+         "rooms": [
+             {"name": "Hall", "share": "medium", "use": "living_room",
+              "purpose": "hearth and table"},
+             {"name": "Kitchen", "share": "small", "use": "kitchen",
+              "purpose": "cooking"},
+             {"name": "Bedchamber", "share": "small", "use": "master_bedroom",
+              "purpose": "the bed"},
+             {"name": "Byre", "share": "medium", "use": "byre",
+              "purpose": "the cows"},
+             {"name": "Barn", "share": "small", "use": "barn",
+              "purpose": "stores"},
+             {"name": "Hayloft", "share": "small", "use": "hayloft",
+              "purpose": "hay"}],
+         "connections": [["Hall", "Kitchen"], ["Hall", "Bedchamber"],
+                         ["Hall", "Byre"], ["Byre", "Barn"],
+                         ["Byre", "Hayloft"]],
+         "entrance": {"room": "Hall", "side": "south"},
+         "furniture": [], "yard": None},
+    ],
+    "npcs": [],
+    "player": {"name": "The Husbandman", "gender": "male", "role": "farmer",
+               "home": "Thornfield Longhouse", "work": "The Ford",
+               "description": "Working the fields.",
+               "physicalDescription": "weathered"},
+}
+
+
+class TestTheLonghouseKeepsItsBedsInTheHouseRooms(unittest.TestCase):
+    """rl-15: the longhouse wing mixes house rooms with farm rooms, and its
+    beds stay where its families allow them — the bedchamber's own, never the
+    byre's or the barn's."""
+
+    def test_the_wing_design_sleeps_in_the_bedchamber_only(self):
+        from worldgen import assembler, library_plan, model
+        lib = L.load(L.LIB_DIR)
+        plan = json.loads(json.dumps(LONGHOUSE_WING_PLAN))
+        parsed = model.parse_plan(plan)
+        b = next(d for d in parsed.zones[0].buildings
+                 if d.name == "Thornfield Longhouse")
+        ctx = assembler.activate(parsed, plan, "s", {})
+        self.addCleanup(assembler.deactivate)
+        design = library_plan.wing_design(
+            lib, lib.wings["farm.longhouse"], "Thornfield Longhouse", b,
+            "medieval", 2, "longhouse")
+        bl = assembler.build(design, (0, 0))
+        self.assertIsNotNone(bl, ctx.fallbacks)
+        rooms = list(bl.rooms)
+        for i in range(len(bl.upper_asm or [])):
+            rooms.extend(assembler.upper_layout(bl, i, bl.rect).rooms)
+        beds = sorted(r.base_name for r in rooms
+                      if any(ctx.world_templates[t].for_sleep
+                             for (t, _p) in r.furniture.placements))
+        self.assertEqual(beds, ["Bedchamber"], beds)
+        for name in ("Byre", "Barn"):
+            room = next((r for r in rooms if r.base_name == name), None)
+            self.assertIsNotNone(room, f"no {name} in the longhouse")
+            self.assertFalse(
+                [t for (t, _p) in room.furniture.placements
+                 if ctx.world_templates[t].for_sleep],
+                f"a bed in the {name}")
 
 
 class TestTheBarnOnTheOldLayoutPath(unittest.TestCase):
