@@ -4,8 +4,9 @@ keeping what it recorded — and the partition rule (design 8.1f): a square-ish
 outline takes a landing with its rooms in a 2x2 around it, a long one a
 corridor with rooms both sides, three rooms split 2+1, the stair cells line
 up storey over storey, a slot nothing fits becomes a closet or store and the
-run says so, and a purpose's fit rules (purposeFit) hold through the build: a
-living room never serves across a counter, a taproom always does."""
+run says so, the slots follow the sizes the pool could give (the size-first
+splits of rl-16), and a purpose's fit rules (purposeFit) hold through the
+build: a living room never serves across a counter, a taproom always does."""
 import os
 import tempfile
 import unittest
@@ -13,6 +14,8 @@ import unittest
 import worldgen
 from tests.test_model import ScriptedClient, canned_replies
 from worldgen import api
+from worldgen import assembler
+from worldgen.model import Rect, RoomSpec
 
 FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
 
@@ -101,6 +104,20 @@ LANDING_BUILDING = _building("Gable House", GABLE_GROUND, SMALL4, 6, 2)
 INN_BUILDING = _building("The Long Saddle", INN_GROUND, INN_UP, 8, 3)
 SPLIT_BUILDING = _building("The Long Saddle", INN_GROUND, UP3, 8, 3)
 CLOSET_BUILDING = _building("The Long Saddle", INN_GROUND, INN_BEDS, 8, 3)
+# a two-storey house whose run hands the split case below a live assembly
+# context: the case partitions a storey of its own directly, so no outline
+# the walk would reach has to line up
+PACKED_UP = [
+    {"name": "Bedroom", "share": "small", "use": "bedroom", "purpose": "a"},
+    {"name": "Guest Chamber", "share": "small", "use": "guest_room",
+     "purpose": "b"},
+    {"name": "Guest Room", "share": "small", "use": "guest_room",
+     "purpose": "c"},
+    {"name": "Maid Room", "share": "small", "use": "bedroom",
+     "purpose": "d"},
+    {"name": "Nurse Room", "share": "small", "use": "bedroom",
+     "purpose": "e"}]
+PACKED_BUILDING = _building("Gable House", GABLE_GROUND, PACKED_UP, 4, 0)
 
 
 def assembled(world, name):
@@ -377,6 +394,135 @@ class TestAClosetSlotIsNoted(StoreyCase):
 
     def test_the_storey_is_sound(self):
         self.assert_sound(self.world, self.bl, self.f)
+
+
+class TestAnUnevenSplitSeatsEveryRoomAtFullBeds(StoreyCase):
+    """The size-first split's promise (rl-16): a band of five rooms whose
+    equal tiles run 5, 5, 5, 5 and 4 cells — a 4-cell slot doors no
+    bedchamber, so the equal partition hands the last one a closet. The
+    split packs the band at the widths the catalogue gives — the privy the
+    one room with a 4-wide turn — and every room keeps its own room at its
+    full bed ask. The storey is partitioned directly on the context of one
+    real run, so the case needs no outline the walk would reach."""
+
+    SPECS = [
+        RoomSpec(name="Bedroom", share="small", use="bedroom"),
+        RoomSpec(name="Guest Chamber", share="small", use="guest_room"),
+        RoomSpec(name="Guest Room", share="small", use="guest_room"),
+        RoomSpec(name="Privy", share="small", use="privy"),
+        RoomSpec(name="Servant Room", share="small", use="bedroom"),
+        RoomSpec(name="Sewing Room", share="small", use="study"),
+        RoomSpec(name="Study", share="small", use="study"),
+        RoomSpec(name="Weaving Room", share="small", use="study"),
+        RoomSpec(name="Work Room", share="small", use="study")]
+    RECT = Rect(0, 0, 24, 20)
+    ANCHOR = (12, 10)
+
+    @classmethod
+    def setUpClass(cls):
+        captured = {}
+        orig = assembler._lay_split
+
+        def spy(ctx, design, *a, **k):
+            captured.setdefault("ctx", ctx)
+            captured.setdefault("design", design)
+            return orig(ctx, design, *a, **k)
+
+        assembler._lay_split = spy
+        try:
+            cls.world, cls.bl = cls.build(PACKED_BUILDING, seed=1)
+        finally:
+            assembler._lay_split = orig
+        cls.ctx, cls.design = captured["ctx"], captured["design"]
+        cls.ctx.sleepers = {"Bedroom": (2, 0), "Guest Chamber": (2, 0),
+                            "Guest Room": (2, 0), "Servant Room": (2, 0),
+                            "Privy": (0, 0)}
+        cls.ctx._size_catalogues = {}
+        cls.storey = assembler.partition_storey(
+            cls.ctx, cls.design, cls.SPECS, cls.RECT, cls.ANCHOR,
+            "modest", "kept", 2)
+
+    def test_the_split_hands_the_narrow_slot_to_the_privy(self):
+        rooms = {r.name: r.rect for r in self.storey.rooms}
+        # every bedchamber kept a bedchamber's room — the servant room the
+        # equal tiles closet included — and the run's notes stay silent
+        for n in ("Bedroom", "Guest Chamber", "Guest Room",
+                  "Servant Room"):
+            self.assertEqual((rooms[n].w, rooms[n].h), (5, 8), n)
+        # the one 4-wide tile goes to the room whose catalogue has a
+        # 4-wide turn: the privy
+        self.assertEqual((rooms["Privy"].w, rooms["Privy"].h), (4, 5))
+        self.assertEqual(self.storey.notes, [])
+
+    def test_the_equal_tiles_closet_the_last_bedchamber(self):
+        orig = assembler._ranked_splits
+        assembler._ranked_splits = lambda *a, **k: []
+        try:
+            storey = assembler.partition_storey(
+                self.ctx, self.design, self.SPECS, self.RECT, self.ANCHOR,
+                "modest", "kept", 2)
+        finally:
+            assembler._ranked_splits = orig
+        self.assertIn(("Servant Room",
+                       "storey 2 slot took a closet instead: "
+                       "no bedroom room of the pool fits"),
+                      storey.notes)
+
+    def test_the_rooms_tile_the_outline_without_overlap(self):
+        for i, a in enumerate(self.storey.rooms):
+            self.assertTrue(self.RECT.contains_rect(a.rect), a.name)
+            for b in self.storey.rooms[i + 1:]:
+                self.assertFalse(a.rect.intersects(b.rect),
+                                 (a.name, b.name))
+
+
+class TestTheBandSplitProgram(unittest.TestCase):
+    """The exact 1D split (rl-16) on the example it was specced from: a
+    band 10 cells long and 5 deep — its floor 3 across — a catalogue whose
+    rooms give outer footprints 5x3, 4x4, 7x5 and 7x7. The 7x7 fits
+    neither turn at that depth, the 7x5 only the turn 5 cells along, and
+    the rooms tile side by side each keeping its own walls, so a 10-cell
+    band seats the 5-wide footprint beside the 4-wide one with one cell to
+    spare — a band one cell longer packs the 7-wide turn against the far
+    wall with no slack at all."""
+
+    CATALOGUE = [
+        {"id": "five-by-three", "size": [3, 1],
+         "doors": {"north": [1], "south": [0, 1, 2], "east": [0],
+                   "west": [0]}},
+        {"id": "four-by-four", "size": [2, 2],
+         "doors": {"north": [0, 1], "south": [0, 1], "east": [0, 1],
+                   "west": [0, 1]}},
+        {"id": "seven-by-five", "size": [5, 3],
+         "doors": {"north": [0, 1, 2, 3, 4], "south": [0, 1, 2, 3, 4],
+                   "east": [0, 1, 2], "west": [0, 1, 2]}},
+        {"id": "seven-by-seven", "size": [5, 5],
+         "doors": {"north": [0, 1, 2, 3, 4], "south": [0, 1, 2, 3, 4],
+                   "east": [0, 1, 2, 3, 4], "west": [0, 1, 2, 3, 4]}}]
+
+    def test_the_depth_drops_sizes_and_keeps_the_fitting_turns(self):
+        entries = assembler._oriented_sizes(self.CATALOGUE)
+        # the band is 5 cells deep less its wall pair: 3 across
+        self.assertEqual(
+            assembler._catalogue_widths(entries, "south", 3, True),
+            [3, 4, 5, 7])
+
+    def test_the_best_split_packs_the_band_with_no_slack(self):
+        # the 7-wide turn and the 4-wide room want 11 cells together: the
+        # 10-cell band takes the 5-wide footprint instead, one cell spare
+        splits = assembler._band_splits(
+            10, [[(3, 0), (4, 0), (5, 0), (7, 0)], [(4, 0)]])
+        self.assertEqual(splits, [((5, 4), 1), ((4, 4), 2), ((3, 4), 3)])
+        # one cell more and the 7x5's fitting turn packs exactly
+        splits = assembler._band_splits(
+            11, [[(3, 0), (4, 0), (5, 0), (7, 0)], [(4, 0)]])
+        self.assertEqual(splits[0], ((7, 4), 0), splits)
+
+    def test_a_width_that_loses_beds_ranks_behind_the_full_ask(self):
+        # a wider room would pack tighter, but it costs three beds: the
+        # split that seats the full ask wins first
+        splits = assembler._band_splits(10, [[(5, 0), (6, 3)], [(4, 0)]])
+        self.assertEqual(splits[0], ((5, 4), 1), splits)
 
 
 class TestTheSameSeedGivesTheSameStorey(StoreyCase):

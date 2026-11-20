@@ -101,6 +101,11 @@ class _NoRoom(_Fallback):
     and only failed to close (rl-12b)."""
 
 
+class _SplitMiss(Exception):
+    """A size-first split's slot could not take a room of its planned width:
+    the next ranked split gets its chance before the equal tiles do."""
+
+
 def _pin_refused(msg):
     """A _Fallback that names a pinned door the ask cannot honour."""
     fail = _Fallback(msg)
@@ -256,6 +261,8 @@ class _Context:
                                   # its speculative pools note nothing
         self._clearances = {}    # (design name, family) -> clearance
         self._pools = {}         # (family, clearance, band, sleepers, fit) -> [rooms]
+        self._size_catalogues = {}  # (design, family, tier, use, share, ask) ->
+                                    # ((w, h, door sides), ...) a family's sizes
 
 
 # ------------------------------------------------------------------ the switch
@@ -1988,8 +1995,225 @@ def _slot_tiles(band, k, horizontal):
     return out
 
 
+def _share_key(spec):
+    """A band's specs go to their slots biggest share first, as the ground
+    gives its biggest rooms the biggest spans."""
+    return -{"large": 3, "medium": 2, "small": 1}.get(spec.share, 2)
+
+
+def _oriented_sizes(rooms):
+    """A pool's distinct oriented sizes: (width, height, sides-with-doors)
+    for every turn of every room, the door sides turned along — the turns
+    a slot may sit a room in, without composing anything."""
+    out = set()
+    for r in rooms:
+        for o in _orientations(r):
+            fw, fh = o["size"]
+            sides = frozenset(s for s, cells in (o.get("doors") or {}).items()
+                              if cells)
+            if sides:
+                out.add((int(fw), int(fh), sides))
+    return sorted(out, key=lambda e: (e[0], e[1], sorted(e[2])))
+
+
+def _family_sizes(ctx, design, spec, family, tier, ask):
+    """The family's size catalogue at one sleeper ask, cached on ctx per
+    (design, family, tier, use, share, ask): the distinct oriented sizes of
+    the rooms its pool could give — the first band of the share's band order
+    with stored fits, else a pool an earlier slot of the run already
+    composed. Never composes a room to build it: the sizes come from the
+    stored rooms and the composed pools the run already has."""
+    singles, couples = ask
+    key = (design.name, family, tier, spec.use, spec.share, singles, couples)
+    if key in ctx._size_catalogues:
+        return ctx._size_catalogues[key]
+    clearance = clearance_of(ctx, design, family)
+    req, forb = _fit_rules(ctx, spec.use)
+    stored = [r for r in FR.active(ctx.rooms) if r.get("family") == family
+              and _roles_fit(req, forb, _room_roles(r))]
+    entries = ()
+    for band in _band_order(ctx, family,
+                            _band_for_share(ctx, family, spec.share)):
+        fits = [r for r in stored
+                if r.get("clearance") == clearance
+                and tier in (r.get("wealth") or [])
+                and r.get("sizeBand") == band
+                and _sleeps_ok(r, singles, couples)]
+        if fits:
+            entries = tuple(_oriented_sizes(fits))
+            break
+        pool = ctx._pools.get((family, clearance, band, tier, singles,
+                               couples, req, forb))
+        if pool:
+            entries = tuple(_oriented_sizes(pool))
+            break
+    ctx._size_catalogues[key] = entries
+    return entries
+
+
+def _catalogue_widths(entries, facing, sh, horizontal, sealable=False):
+    """The distinct widths along the band, walls in, a catalogue's rooms
+    could take turned so a door candidate faces ``facing`` in a band whose
+    floor is ``sh`` cells across: a size that fits neither rotation is
+    dropped, and a rotation without a door on the corridor side never
+    offers its width. ``sealable`` (the split's view) also drops a turn
+    that would leave a sliver of 1 to MIN_SPAN - 1 cells of the band's
+    depth behind the room — no closer can seal one that thin, so a width
+    only depth-short turns offer would roll the split back at the closing
+    step instead of missing cleanly here."""
+    widths = set()
+    for fw, fh, sides in entries:
+        if facing not in sides:
+            continue
+        along, across = (fw, fh) if horizontal else (fh, fw)
+        if across > sh:
+            continue
+        if sealable and 1 <= sh - across <= MIN_SPAN - 1:
+            continue
+        widths.add(along + 2)
+    return sorted(widths)
+
+
+def _ask_ladder(singles, couples):
+    """Every smaller ask, the fullest first — the ladder a storey slot walks
+    before it gives a room up (rl-12)."""
+    return sorted(((a, b) for a in range(singles + 1)
+                   for b in range(couples + 1)),
+                  key=lambda ab: (-(ab[0] + 2 * ab[1]), -ab[0], -ab[1]))
+
+
+def _spec_widths(ctx, design, spec, family, tier, facing, sh, horizontal):
+    """One spec's candidate widths for a band: (width, 0) for every width
+    its family's full-ask catalogue could door onto the corridor at this
+    depth. A family that cannot seat the full ask in this band offers no
+    width at all — no split exists and the band keeps its equal tiles,
+    whose own ask ladder (rl-12) seats what it can with its notes: a split
+    never trades beds for tightness. Only sealable turns offer their
+    widths: a room depth-short of the band leaves a sliver no closer
+    seals. [] when nothing fits the band."""
+    singles, couples = ctx.sleepers.get(spec.name, (0, 0))
+    entries = _family_sizes(ctx, design, spec, family, tier,
+                            (singles, couples))
+    return [(w, 0) for w in _catalogue_widths(entries, facing, sh,
+                                              horizontal, sealable=True)]
+
+
+def _band_splits(span, widths_per_room, keep=8):
+    """The exact split of one band (the 1D dynamic program of the layout
+    research, section 3.4): each room takes one width of its own family's
+    catalogue — a (width, beds lost) pair, so a width that gives beds up
+    can still lose to one that seats them — the widths tiling side by
+    side, every room keeping its own wall ring, so they cover at most
+    ``span`` cells and leave the rest as slack. The program runs over
+    (cells used, rooms placed) and keeps the best few completions per
+    state, best first by: beds lost, least slack, no sliver of 1 to
+    MIN_SPAN - 1 cells, order closest to the plan's (the widths follow
+    the shares), then the widths themselves, so the result stays
+    deterministic. [(widths, slack)], best first; [] when no widths
+    fit."""
+    k = len(widths_per_room)
+
+    def score(c):
+        lost, used, dev, widths = c
+        slack = span - used
+        return (lost, slack, 1 if 0 < slack < MIN_SPAN else 0, dev, widths)
+
+    # best[j][i]: the best few (beds lost, cells used, order deviation,
+    # widths) placements of rooms j.. starting at cell i
+    best = [[[] for _ in range(span + 1)] for _ in range(k + 1)]
+    for i in range(span + 1):
+        best[k][i] = [(0, 0, 0, ())]
+    for j in range(k - 1, -1, -1):
+        for i in range(span, -1, -1):
+            out = []
+            for w, lost in widths_per_room[j]:
+                if i + w > span:        # the room would run past the band
+                    continue
+                for tail_lost, used, dev, tail in best[j + 1][i + w]:
+                    out.append((lost + tail_lost, used + w,
+                                dev + (1 if tail and w < tail[0] else 0),
+                                (w,) + tail))
+            out.sort(key=score)
+            best[j][i] = out[:keep]
+    return [(widths, span - used)
+            for _lost, used, _dev, widths in best[0][0]]
+
+
+def _slots_from_widths(band, widths, slack, horizontal):
+    """The slot tiles one split hands _fill_slot: a slot per room of the
+    width its family asked, side by side with each keeping its own walls,
+    the split's slack added to the last slot for the closers to grow into."""
+    out, pos = [], 0
+    for j, w in enumerate(widths):
+        tile = w + (slack if j == len(widths) - 1 else 0)
+        if horizontal:
+            out.append(Rect(band.x + pos, band.y, tile, band.h))
+        else:
+            out.append(Rect(band.x, band.y + pos, band.w, tile))
+        pos += w
+    return out
+
+
+def _ranked_splits(ctx, design, specs, band, facing, horizontal, tier):
+    """One band's size-first splits, best first: every spec's family offers
+    the widths its catalogue could door onto the corridor at this band's
+    depth, and the exact DP packs one width per room into the band's span.
+    [] when any family has no width that fits the band at all — no split
+    exists and the band keeps its equal tiles."""
+    span = band.w if horizontal else band.h
+    sh = (band.h - 2) if horizontal else (band.w - 2)
+    widths_per_room = []
+    for spec in sorted(specs, key=_share_key):
+        widths = _spec_widths(ctx, design, spec, ctx.lib.family_of(spec.use),
+                              tier, facing, sh, horizontal)
+        if not widths:
+            return []
+        widths_per_room.append(widths)
+    return _band_splits(span, widths_per_room)
+
+
+def _size_first_band(ctx, design, sasm, placed, pools, spec_list, band,
+                     facing, horizontal, tier, rng, storey):
+    """One band filled size-first (rl-16): the ranked splits hand each spec
+    a slot of its planned width and _fill_slot picks a pool room of exactly
+    that size; a slot no room of the size doors onto the corridor rolls the
+    band back — placed rooms, seams, pools and notes — and the next split
+    takes its turn. True when a split seated the band; False after the
+    ranked list runs out, when the caller falls back to the equal tiles
+    (the rl-12 smaller-bedroom and closet fallbacks live inside _fill_slot
+    either way)."""
+    splits = _ranked_splits(ctx, design, spec_list, band, facing,
+                            horizontal, tier)
+    for widths, slack in splits:
+        mark = (len(placed), len(sasm.pairs), len(sasm.notes), dict(pools))
+        slots = _slots_from_widths(band, widths, slack, horizontal)
+        try:
+            for j, spec in enumerate(sorted(spec_list, key=_share_key)):
+                room, pool, seam = _fill_slot(ctx, design, sasm, spec,
+                                              slots[j], facing, horizontal,
+                                              tier, rng, storey,
+                                              target=widths[j] - 2)
+                placed.append(room)
+                if pool:
+                    pools[room.name] = pool
+                sasm.pairs.append(seam)
+            return True
+        except _SplitMiss:
+            del placed[mark[0]:]
+            del sasm.pairs[mark[1]:]
+            del sasm.notes[mark[2]:]
+            pools.clear()
+            pools.update(mark[3])
+    if splits:
+        sasm.notes.append(
+            (f"storey {storey}",
+             "no size-first split could door its rooms onto the corridor: "
+             "equal slots instead"))
+    return False
+
+
 def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
-               storey):
+               storey, target=None):
     """One slot of a storey partition. A spec's pool room goes in turned so
     a door candidate faces the corridor, flush to the slot's corridor-facing
     edge and its low long edge, biggest clean fit first (a strip 1-2 cells
@@ -1998,9 +2222,12 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
     that sleeps fewer goes in before anything is given up (rl-12: the
     residents reach the upper rooms, and the slot fits what it fits), noted;
     a spec of None, or a pool with nothing that fits at all, becomes a
-    closet or store, recorded in the run's notes. (the _Placed room, its
-    pool, its slot leftover) — the leftover is what the closing steps grow
-    into."""
+    closet or store, recorded in the run's notes. ``target`` (rl-16) fills
+    the slot size-first instead: the ask ladder walks as ever, but only a
+    room of exactly that many floor cells along the long axis goes in, and
+    no room of the width doors the corridor raises _SplitMiss for the next
+    ranked split — never a closet. (the _Placed room, its pool, its slot
+    leftover) — the leftover is what the closing steps grow into."""
     sw = (slot.w - 2) if horizontal else (slot.h - 2)   # along the long axis
     sh = (slot.h - 2) if horizontal else (slot.w - 2)
     if spec is not None:
@@ -2008,13 +2235,10 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
         singles, couples = ctx.sleepers.get(spec.name, (0, 0))
         # every smaller ask, the fullest first — the room itself outranks the
         # beds: a bedroom sleeping some of its people beats a closet
-        asks = sorted(((a, b) for a in range(singles + 1)
-                       for b in range(couples + 1)),
-                      key=lambda ab: (-(ab[0] + 2 * ab[1]), -ab[0], -ab[1]))
         saved = ctx.sleepers.get(spec.name)
         ctx.slot_asking = True
         try:
-            for ask in asks:
+            for ask in _ask_ladder(singles, couples):
                 ctx.sleepers[spec.name] = ask
                 pool, _reason = _room_pool(ctx, design, spec, fam, tier, rng)
                 for allow_slivers in (False, True):
@@ -2030,6 +2254,8 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
                             # not turn the pair
                             along, across = (fw, fh) if horizontal else (fh, fw)
                             if along > sw or across > sh:
+                                continue
+                            if target is not None and along != target:
                                 continue
                             if not allow_slivers and \
                                     (1 <= sw - along <= MIN_SPAN - 1
@@ -2070,6 +2296,12 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
                 ctx.sleepers.pop(spec.name, None)
             else:
                 ctx.sleepers[spec.name] = saved
+        if target is not None:
+            # size-first: the split planned this slot around one width of
+            # the family's catalogue, and no room of it doors the corridor —
+            # the next ranked split takes its turn, never a closet
+            raise _SplitMiss(f"storey {storey}: no {fam} room of the planned "
+                             f"width doors the corridor")
         if pool:
             why = f"no {fam} room of the pool fits"
         else:
@@ -2335,29 +2567,34 @@ def _lay_split(ctx, design, rooms, rect, anchor, tier, cond, storey,
     corr = _Placed(_free_name(sasm, base), corr_room, corr_rect, synthetic=True)
     sasm.rooms.append(corr)
 
-    # ---- the slots: each band's, biggest slot to the biggest share
+    # ---- the slots: each band's, biggest slot to the biggest share — the
+    # size-first splits first (rl-16: the slots follow the rooms the pool
+    # could give, not the other way round), the equal tiles only where no
+    # split could seat the band
     if horizontal:
         sides = [(band_a, "south", k_a), (band_b, "north", k_b)]
     else:
         sides = [(band_a, "east", k_a), (band_b, "west", k_b)]
     sides = [s for s in sides if s[0] is not None]
 
-    def share_key(spec):
-        return -{"large": 3, "medium": 2, "small": 1}.get(spec.share, 2)
-
-    ordered = sorted(rooms, key=lambda r: (share_key(r), r.name))
+    ordered = sorted(rooms, key=lambda r: (_share_key(r), r.name))
     placed, pools = [corr], {}
     taken = 0
     for band, facing, k in sides:
+        spec_list = ordered[taken:taken + k]
+        taken += k
+        if len(spec_list) == k and _size_first_band(ctx, design, sasm, placed,
+                                                    pools, spec_list, band,
+                                                    facing, horizontal, tier,
+                                                    rng, storey):
+            continue
         slot_list = _slot_tiles(band, k, horizontal)
         if slot_list is None:
             raise _Fallback(f"storey {storey}: the outline is too short to "
                             f"slot its rooms along the corridor")
-        spec_list = ordered[taken:taken + k]
-        taken += k
         by_area = sorted(slot_list, key=lambda s: (s.w - 2) * (s.h - 2),
                          reverse=True)
-        for slot, spec in zip(by_area, sorted(spec_list, key=share_key)):
+        for slot, spec in zip(by_area, sorted(spec_list, key=_share_key)):
             room, pool, seam = _fill_slot(ctx, design, sasm, spec, slot, facing,
                                           horizontal, tier, rng, storey)
             placed.append(room)
