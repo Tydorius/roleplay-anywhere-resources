@@ -186,6 +186,21 @@ class Variations(unittest.TestCase):
         with mock.patch.object(ig, "comfy", FakeComfy(canned_history("A", 4, tag))):
             self.assertEqual(ig.adopt(self.src, "http://comfy"), 0)
 
+    def test_a_retried_result_never_comes_back(self):
+        # Retry replaces a result waiting for review; once the new one is discarded, a Reload's
+        # adopt() must not bring the replaced one back from ComfyUI's history
+        tag = {"source": "work/x", "id": "npc_alys", "kind": "portrait", "meta": {"seed": 7}}
+        with mock.patch.object(ig, "comfy", FakeComfy(canned_history("A", 1, tag))):
+            self.assertEqual(ig.adopt(self.src, "http://comfy"), 1)
+        queue = lambda url, path, body=None, timeout=60: json.dumps({"prompt_id": "B"}).encode()
+        with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})),                 mock.patch.object(ig, "comfy", queue):
+            ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
+        self.assertEqual(set(ig.JOBS), {"B"})
+        self.assertIn("A", ig.load_state())
+        ig.JOBS.pop("B"); ig.mark_reviewed("B")  # the new result discarded
+        with mock.patch.object(ig, "comfy", FakeComfy(canned_history("A", 1, tag))):
+            self.assertEqual(ig.adopt(self.src, "http://comfy"), 0)
+
     def test_keep_index_two_writes_that_image(self):
         j, fake = self.finished(4)
         ig.JOBS["P"] = j

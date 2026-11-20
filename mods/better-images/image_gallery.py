@@ -455,9 +455,12 @@ def submit(req, settings):
            "state": "pending", "position": None, "submitted": time.time(), "started": None, "finished": None,
            "error": None, "meta": meta, "imgs": [], "pngs": {}, "misses": 0}
     with _jobs_lock:
-        for old in [j for j in JOBS.values() if j["source"] == job["source"] and j["id"] == job["id"]]:
-            JOBS.pop(old["pid"], None)  # one job per image; a newer one replaces an unreviewed result
+        replaced = [j["pid"] for j in JOBS.values() if j["source"] == job["source"] and j["id"] == job["id"]]
+        for pid in replaced:
+            JOBS.pop(pid, None)  # one job per image; a newer one replaces an unreviewed result
         JOBS[job["pid"]] = job
+    for pid in replaced:  # a replaced result counts as discarded, so adopt() never brings it back
+        mark_reviewed(pid)
     return public(job)
 
 
