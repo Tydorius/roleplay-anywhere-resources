@@ -377,6 +377,17 @@ class TestTheFarmsteadAssembles(unittest.TestCase):
                        "farm building"),
                       self.world.notes, self.world.notes)
 
+    def test_the_medieval_dairy_builds_without_a_milking_stall(self):
+        """rl-14g: the stall is a modern object, so a band without it keeps
+        its dairy rooms — the medieval farmstead's Dairy still furnishes and
+        no stall template enters the world."""
+        placed = [self.world.templates[o.template]
+                  for o in self.world.objects if o.region.endswith("Dairy")]
+        self.assertTrue(placed, "the Dairy shipped empty")
+        self.assertFalse([t.name for t in placed
+                          if "milking stall" in t.name.lower()],
+                         [t.name for t in placed])
+
 
 class TestTheIndustrialFarmsteadAssembles(unittest.TestCase):
     """rl-15 on the industrial band: the same all-farm farmstead — its barn,
@@ -496,18 +507,6 @@ class TestTheLonghouseKeepsItsBedsInTheHouseRooms(unittest.TestCase):
                 [t for (t, _p) in room.furniture.placements
                  if ctx.world_templates[t].for_sleep],
                 f"a bed in the {name}")
-
-    def test_the_medieval_dairy_builds_without_a_milking_stall(self):
-        """rl-14g: the stall is a modern object, so a band without it keeps
-        its dairy rooms — the medieval farmstead's Dairy still furnishes and
-        no stall template enters the world."""
-        placed = [self.world.templates[o.template]
-                  for o in self.world.objects if o.region.endswith("Dairy")]
-        self.assertTrue(placed, "the Dairy shipped empty")
-        self.assertFalse([t.name for t in placed
-                          if "milking stall" in t.name.lower()],
-                         [t.name for t in placed])
-
 
 class TestTheBarnOnTheOldLayoutPath(unittest.TestCase):
     """The barn gap closed on the old layout path too: pick_layout finds the
