@@ -179,6 +179,14 @@ function toast(msg) {
 const source = () => $("source").value;
 const remember = (k, v) => { try { localStorage.setItem("gallery." + k, v); } catch {} };
 const recall = k => { try { return localStorage.getItem("gallery." + k); } catch { return null; } };
+const unremember = k => { try { localStorage.removeItem("gallery." + k); } catch {} };
+// an edited description is kept per workspace and image, so a Reload, a workspace switch or a
+// page reload brings it back instead of the scenario's own text
+const editKey = it => `edit.${source()}|${it.kind}|${it.id}`;
+function setEditDesc(it, text) {
+  if (text == null || text === it.desc) { it.editDesc = undefined; unremember(editKey(it)); }
+  else { it.editDesc = text; remember(editKey(it), text); }
+}
 
 // ---------------------------------------------------------------- settings / models
 async function saveSettings() {
@@ -273,6 +281,7 @@ async function loadItems() {
   const old = Object.fromEntries(S.items.map(i => [i.id, i]));
   S.items = r.items.map(i => ({...i, job: old[i.id]?.job, error: old[i.id]?.error,
                                editing: old[i.id]?.editing, editDesc: old[i.id]?.editDesc, subjectSel: old[i.id]?.subjectSel}));
+  for (const it of S.items) if (it.editDesc == null) it.editDesc = recall(editKey(it)) ?? undefined;
   S.fmt = r.promptFormat;
   renderChips(); renderGrid();
   try {  // results finished while the gallery or this page was closed
@@ -358,7 +367,8 @@ function card(it) {
       ${it.note ? `<div class="meta">${esc(it.note)}</div>` : ""}
       ${st === "done" ? `<div class="meta">${job.meta.width}×${job.meta.height}, ${clock(job.elapsed)}, ${esc(Object.values(job.meta.files)[0])}${many ? `, ${job.count} variations` : ""}</div>` : ""}
       ${it.editing ? `<div class="edit">
-          <textarea class="desc-edit" spellcheck="true" title="Description used for this image only; the scenario is not changed">${esc(it.editDesc ?? it.desc)}</textarea>
+          <textarea class="desc-edit" spellcheck="true" title="Description used for this image only; the scenario is not changed. Kept in this browser until you reset it.">${esc(it.editDesc ?? it.desc)}</textarea>
+          ${it.editDesc != null ? `<button class="reset-desc" data-a="resetdesc" title="Go back to the scenario's own description">Reset text</button>` : ""}
           ${it.kind === "portrait" ? `<select class="subject">${S.subjects.map(s => `<option value="${s}" ${s === (it.subjectSel || "auto") ? "selected" : ""}>${
             esc(s === "auto" ? `${SUBJECT_LABEL.auto} (${it.subject})` : SUBJECT_LABEL[s])}</option>`).join("")}</select>` : ""}
           ${it.subjectSel === "custom" ? `<div class="custom">
@@ -381,7 +391,10 @@ function card(it) {
       </div>
     </div>`;
   el.querySelector(".pick").onchange = e => { e.target.checked ? S.selected.add(it.id) : S.selected.delete(it.id); el.classList.toggle("sel", e.target.checked); updateBar(); };
-  const ta = el.querySelector(".desc-edit"); if (ta) ta.oninput = () => { it.editDesc = ta.value; };
+  const ta = el.querySelector(".desc-edit"); if (ta) {
+    ta.oninput = () => setEditDesc(it, ta.value);
+    ta.onchange = () => redraw(it);  // shows or hides Reset text once typing stops
+  }
   const sub = el.querySelector(".edit .subject"); if (sub) sub.onchange = () => {
     it.subjectSel = sub.value;
     if (sub.value === "custom" && it.customPrompt == null) {  // start from the last custom prompt, or this card's own
@@ -413,6 +426,7 @@ function redraw(it) {  // a card that now passes or fails the filters appears or
 
 async function act(it, a) {
   if (a === "edit") { it.editing = !it.editing; return redraw(it); }
+  if (a === "resetdesc") { setEditDesc(it, null); return redraw(it); }
   if (a === "browse") { const inp = $("imgFile"); inp.onchange = () => { const f = inp.files[0]; inp.value = ""; if (f) openCrop(it, f); }; return inp.click(); }
   if (a === "regen") return submit(it);
   if (a === "keep") return keep(it);

@@ -170,7 +170,7 @@ python image_gallery.py
   portraits, SD1.5) and then a model from the ones your ComfyUI actually has. Encoders and VAE are
   matched for you and can be changed under *Encoders and VAE*. Your choices are kept in
   `image_gallery.settings.json`.
-- **Edit prompt** changes the description for that one image only; the scenario isn't changed.
+- **Edit prompt** changes the description for that one image only; the scenario isn't changed. The edit stays in this browser through a Reload, a workspace switch or a page reload, and **Reset text** goes back to the scenario's own description.
 - **Portraits** get a subject: "one woman", "one man", "one girl", "one boy" or "one creature",
   read from the character's gender, age and animation, which you can override. It is worded for
   the model: booru tags (`1girl, solo` against `2girls, multiple girls`) for Illustrious, Pony
