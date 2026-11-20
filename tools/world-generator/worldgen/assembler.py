@@ -1313,7 +1313,7 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
                             for r in design.rooms})
             _bbox_, holes = _holes(placed, box)
         if holes:
-            _fill_holes(ctx, asm, placed, holes)
+            _fill_holes(ctx, asm, placed, holes, tier)
             _bbox_, holes = _holes(placed, box)
         return _bbox_, holes
 
@@ -1421,7 +1421,7 @@ def _finish_assembly(ctx, design, side, placed, pairs, names, tier, cond,
     # access cell, a door cell or a piece)
     stair = None
     if design.storeys > 1:
-        stair = _reserve_stair(ctx, asm, placed, entry)
+        stair = _reserve_stair(ctx, asm, placed, entry, tier)
         asm.stair_cell = stair
 
     asm.layouts, asm.lines = _furnish_assembly(ctx, design, asm, tier, cond)
@@ -1715,17 +1715,17 @@ def _offset_of(p, cell):
     return None, None
 
 
-def _fill_holes(ctx, asm, placed, holes):
-    """Fill what is left of the outline: a composed storage room when one
-    fits the hole's floor exactly, else an empty store, closet or passage;
-    each takes a door pair with whatever it touches."""
+def _fill_holes(ctx, asm, placed, holes, tier):
+    """Fill what is left of the outline: a stored or composed storage room
+    when one fits the hole's floor exactly, else an empty store, closet or
+    passage; each takes a door pair with whatever it touches."""
     for hole in _hole_rects(holes):
         if hole.w < MIN_SPAN or hole.h < MIN_SPAN:
             continue
         iw, ih = hole.w - 2, hole.h - 2
         filler = None
         if iw >= FURNISHED_FILLER - 2 and ih >= FURNISHED_FILLER - 2:
-            filler = _compose_filler(ctx, asm.design.name, iw, ih)
+            filler = _compose_filler(ctx, asm.design.name, iw, ih, tier)
         if filler is None:
             filler = _empty_room(iw, ih, "storage")
         big = filler.get("family") == "storage" or hole.w * hole.h >= 18
@@ -1751,12 +1751,35 @@ def _empty_room(w, h, family):
                       "west": list(range(h)), "east": list(range(h))}}
 
 
-def _compose_filler(ctx, building, iw, ih):
-    """A storage room composed to exactly fit a hole's floor, or None. The
-    compose results are cached on the context: every hole of one band in one
-    building asks the same recipes at the same seed, and an ask that found no
-    room never composes again. The returned room is shared, not copied —
-    placed rooms are never mutated, only re-derived or turned."""
+def _stored_filler(ctx, iw, ih, tier, band):
+    """An active stored storage room whose floor is exactly (iw, ih) — turned
+    once when only the sideways size fits — picked by the pools' rules:
+    tight clearance, the tier among its wealth bands, the hole's own size
+    band, every required piece furnishing, flush rooms first, id last."""
+    fits = [r for r in FR.active(ctx.rooms)
+            if r.get("family") == "storage"
+            and r.get("clearance") == "tight"
+            and tier in (r.get("wealth") or [])
+            and r.get("sizeBand") == band
+            and (r.get("size") == [iw, ih] or r.get("size") == [ih, iw])
+            and _furnishable(ctx, _NoUse(), r, tier)]
+    if not fits:
+        return None
+    fits.sort(key=lambda r: (_spare_beds(r, 0, 0), r.get("id", "")))
+    flush = [r for r in fits if r.get("style") == "flush"]
+    room = (flush or fits)[0]
+    if room["size"] == [ih, iw]:
+        room = FR.rotate(room, 1)
+    return room
+
+
+def _compose_filler(ctx, building, iw, ih, tier):
+    """A filler for a hole's floor: an active stored storage room of exactly
+    that size in either rotation first, else one composed to fit, else None.
+    The compose results are cached on the context: every hole of one band in
+    one building asks the same recipes at the same seed, and an ask that
+    found no room never composes again. The returned room is shared, not
+    copied — placed rooms are never mutated, only re-derived or turned."""
     if (building, iw, ih) in ctx._filler_none:
         return None
     area = iw * ih
@@ -1767,6 +1790,9 @@ def _compose_filler(ctx, building, iw, ih):
             band = name
     if band is None:
         return None
+    stored = _stored_filler(ctx, iw, ih, tier, band)
+    if stored is not None:
+        return stored
     seed = f"{ctx.world_seed}|assembler|{building}|filler"
     for rid, recipe in sorted(ctx.groups["recipes"].items(),
                               key=lambda kv: str(kv[1].get("layout") or "")):
@@ -1863,7 +1889,7 @@ def _nearest(cells, centre):
                                      c[1], c[0]))
 
 
-def _reserve_stair(ctx, asm, placed, entry):
+def _reserve_stair(ctx, asm, placed, entry, tier):
     """The ground cell the stairs rise from, reserved before anything
     furnishes it: the design's stairs room when the ground has it, then the
     entrance room, then the other rooms (synthetics last) — always inside a
@@ -1885,10 +1911,10 @@ def _reserve_stair(ctx, asm, placed, entry):
         cells = _stair_candidates(p)
         if cells:
             return _nearest(cells, centre)
-    return _stretch_for_stair(ctx, asm, placed, entry, centre)
+    return _stretch_for_stair(ctx, asm, placed, entry, centre, tier)
 
 
-def _stretch_for_stair(ctx, asm, placed, entry, centre):
+def _stretch_for_stair(ctx, asm, placed, entry, centre, tier):
     """The rescue when no room had a free cell: the entrance room takes one
     of its stretch lines, growing a cell out of the outline (never on the
     entrance side — its door stays where it is), and the new strip fills so
@@ -1919,7 +1945,7 @@ def _stretch_for_stair(ctx, asm, placed, entry, centre):
                 # building stays a rectangle, and the fillers' seams open
                 _box, holes = _holes(placed)
                 if holes:
-                    _fill_holes(ctx, asm, placed, holes)
+                    _fill_holes(ctx, asm, placed, holes, tier)
                     _box, holes = _holes(placed)
                     if holes:
                         raise _Fallback("the stretch line for the stairs left "
@@ -2417,7 +2443,7 @@ def _one_room_storey(ctx, design, spec, rect, anchor, tier, cond, storey):
         if not holes:
             break
         if closer == "fill":
-            _fill_holes(ctx, sasm, placed, holes)
+            _fill_holes(ctx, sasm, placed, holes, tier)
         elif closer == "stretch":
             _stretch_close(placed, None, None, holes)
         elif pools:
@@ -2642,7 +2668,7 @@ def _lay_split(ctx, design, rooms, rect, anchor, tier, cond, storey,
         if not holes:
             break
         if closer == "fill":
-            _fill_holes(ctx, sasm, placed, holes)
+            _fill_holes(ctx, sasm, placed, holes, tier)
         elif closer == "stretch":
             _stretch_close(placed, None, None, holes)
         elif pools:
