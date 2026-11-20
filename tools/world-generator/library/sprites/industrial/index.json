@@ -162,6 +162,16 @@
    "physical": "Top-down view of a free-standing clawfoot bath: a long rounded blue delftware tub with a rolled rim, taps at the end nearest the top edge, four small polished copper claw feet peeking out at the corners.",
    "reviewed": true
   },
+  "bath.tin_bath": {
+   "template": "Sheet steel tin bath [bath.tin_bath]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "tub": "sheet steel"
+   },
+   "physical": "Top-down view of a long tin bath: a shallow oval grey sheet steel tub with a rolled rim and a small handle at each end, soapy water inside, a folded towel over one end.",
+   "reviewed": true
+  },
   "bath.wash_tub": {
    "template": "Sheet steel tin bath [bath.wash_tub]",
    "tier": "modest",
@@ -718,6 +728,36 @@
    "physical": "Top-down view of the ship's wheel: a squat black cast iron helm stand with its back along the top edge, a large round spoked honey varnished pine wheel mounted on it and tilted back so its face and every spoke show, no compass.",
    "reviewed": true
   },
+  "coop.beehive": {
+   "template": "Varnished pine frame beehive [coop.beehive]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hive": "varnished pine"
+   },
+   "physical": "Top-down view of a frame beehive: stacked amber varnished pine hive boxes, a narrow alighting board at the front, a few bees about the entrance.",
+   "reviewed": true
+  },
+  "coop.henhouse": {
+   "template": "Varnished pine henhouse [coop.henhouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "walls": "varnished pine"
+   },
+   "physical": "Top-down view of a henhouse: a square honey varnished pine shed, a perch line across the middle, a small pop hole in the front wall, golden straw spilled below it.",
+   "reviewed": true
+  },
+  "coop.hutch": {
+   "template": "Bentwood rabbit hutch [coop.hutch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "bentwood"
+   },
+   "physical": "Top-down view of a rabbit hutch: a raised brown bentwood box on short legs, a wire front along its open face, hay strewn below.",
+   "reviewed": true
+  },
   "counter.bar": {
    "template": "Cast iron saloon bar [counter.bar]",
    "tier": "modest",
@@ -870,6 +910,47 @@
    "physical": "Top-down view of a small lace bassinet: a tawny burr elm basket with a cream damask canopy drawn over the top end, a tiny pillow beneath it.",
    "reviewed": true
   },
+  "dairy.butter_worker": {
+   "template": "Stained beech butter worker [dairy.butter_worker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "table": "stained beech"
+   },
+   "physical": "Top-down view of a butter worker: a sloped mid-brown stained beech working table with a raised rim, scotch hands crossed at the middle, a pat of butter at the near corner.",
+   "reviewed": true
+  },
+  "dairy.churn": {
+   "template": "Enamelled iron churn [dairy.churn]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "churn": "enamelled iron"
+   },
+   "physical": "Top-down view of a churn: a round cream enamelled iron churn with a cross-bar plunger handle over its mouth, a wet ring on the floor about it.",
+   "reviewed": true
+  },
+  "dairy.milk_cans": {
+   "template": "Sheet steel milk cans [dairy.milk_cans]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cans": "sheet steel"
+   },
+   "physical": "Top-down view of milk cans: two tall grey sheet steel cans standing side by side, domed lids on top, one carrying handle raised.",
+   "reviewed": true
+  },
+  "dairy.separator": {
+   "template": "Enamelled iron cream separator [dairy.separator]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "enamelled iron",
+    "pail": "cast iron"
+   },
+   "physical": "Top-down view of a cream separator: a cast-iron white enamelled iron body with a stack of conical bowls over it, a feed hopper on top, a small black cast iron pail below the outlet.",
+   "reviewed": true
+  },
   "decor.aquarium": {
    "template": "Varnished mahogany glass fish tank [decor.aquarium]",
    "tier": "wealthy",
@@ -979,6 +1060,17 @@
    "physical": "Top-down view straight down onto the open mouth of a large floor vase: a wide circle of deep green glazed stoneware with a thick rim, a dark shadowed opening in the middle with a few dried stems and seed heads fanning out of it.",
    "reviewed": true
   },
+  "decor.well": {
+   "template": "Slate well [decor.well]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "roof": "bentwood",
+    "wall": "slate"
+   },
+   "physical": "Top-down view of a round well: a ring of charcoal slate blocks around a dark round shaft of water, a small pitched brown bentwood roof over a wooden winch across the middle, a wooden bucket on the rim.",
+   "reviewed": true
+  },
   "desk.plain": {
    "template": "Stained beech clerk's desk [desk.plain]",
    "tier": "modest",
@@ -1077,6 +1169,117 @@
    "physical": "Top-down view of a tall vitrine: square red-brown varnished mahogany top with a carved cornice, the glazed door along the bottom edge, its back flat against the top edge.",
    "reviewed": true
   },
+  "farm_machine.cart": {
+   "template": "Varnished pine hay cart [farm_machine.cart]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cart": "varnished pine"
+   },
+   "physical": "Top-down view of a hay cart: a flat amber varnished pine bed with low side rails, two iron-tyred wheels showing at the sides, shafts forward, chaff scattered on the boards.",
+   "reviewed": true
+  },
+  "farm_machine.harrow": {
+   "template": "Sheet steel harrow [farm_machine.harrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "sheet steel",
+    "tines": "enamelled iron"
+   },
+   "physical": "Top-down view of a harrow: an open grid frame of grey sheet steel bars with cream enamelled iron tines standing in rows, a draw chain coiled over one corner.",
+   "reviewed": true
+  },
+  "farm_machine.hay_rake": {
+   "template": "Bentwood hay rake [farm_machine.hay_rake]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "tines": "sheet steel"
+   },
+   "physical": "Top-down view of a hay rake: a brown bentwood frame carrying a drum of curved grey sheet steel tines, hay wound through them.",
+   "reviewed": true
+  },
+  "farm_machine.muck_spreader": {
+   "template": "Stained beech muck spreader [farm_machine.muck_spreader]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "stained beech",
+    "disk": "sheet steel"
+   },
+   "physical": "Top-down view of a muck spreader: a rectangular chestnut stained beech spreader bed on wheels, a line of grey sheet steel spinning disks behind it.",
+   "reviewed": true
+  },
+  "farm_machine.plough": {
+   "template": "Cast iron plough [farm_machine.plough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "beam": "cast iron",
+    "share": "enamelled iron"
+   },
+   "physical": "Top-down view of a plough: a heavy dark grey cast iron beam with handle staves, a bright white enamelled iron share blade at one end, shafts reaching forward, clods dried on the blade.",
+   "reviewed": true
+  },
+  "farm_machine.reaper": {
+   "template": "Bentwood reaper-binder [farm_machine.reaper]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "bentwood",
+    "knife": "enamelled iron",
+    "reel": "flannel"
+   },
+   "physical": "Top-down view of a reaper-binder: a brown bentwood frame with a wide red flannel canvas reel at the front, a white enamelled iron cutter bar along one side, sheaves on the platform.",
+   "reviewed": true
+  },
+  "farm_machine.seed_drill": {
+   "template": "Cast iron seed drill [farm_machine.seed_drill]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "coulters": "cast iron",
+    "drill": "varnished pine",
+    "seedbox": "bentwood"
+   },
+   "physical": "Top-down view of a seed drill: a long honey varnished pine frame with a wide brown bentwood seed box above rows of black cast iron coulters, shafts forward.",
+   "reviewed": true
+  },
+  "farm_machine.thresher": {
+   "template": "Threshing machine [farm_machine.thresher]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "belt": "striped ticking",
+    "drum": "cast iron"
+   },
+   "physical": "Top-down view of a thresher: a boxy black cast iron threshing drum with a long blue-striped ticking belt run off it, straw chaff strewn about.",
+   "reviewed": true
+  },
+  "farm_machine.traction_engine": {
+   "template": "Polished copper traction engine [farm_machine.traction_engine]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "engine": "polished copper",
+    "funnel": "brass"
+   },
+   "physical": "Top-down view of a traction engine: a long rose-gold polished copper boiler body, spiked rear wheels broader than the front pair, a thin brass funnel ahead of the cab.",
+   "reviewed": true
+  },
+  "farm_machine.wagon": {
+   "template": "Covered wagon [farm_machine.wagon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "canvas": "striped ticking",
+    "wagon": "varnished pine"
+   },
+   "physical": "Top-down view of a wagon: a long honey varnished pine wagon bed, grey-striped ticking hoops arched over it, four iron-shod wheels at the corners, shafts forward.",
+   "reviewed": true
+  },
   "feed.hay_bale": {
    "template": "Aspidistra hay bale [feed.hay_bale]",
    "tier": "modest",
@@ -1086,6 +1289,32 @@
     "twine": "cane"
    },
    "physical": "Top-down view of a hay bale: a rectangular block of dark green aspidistra with two twine bands across it, loose stalks around the edges.",
+   "reviewed": true
+  },
+  "feed.hay_rack": {
+   "template": "Varnished pine hay rack [feed.hay_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "varnished pine"
+   },
+   "physical": "Top-down view of a hay rack: a honey varnished pine frame of upright bars along its back edge, golden hay bundled behind them.",
+   "reviewed": true
+  },
+  "feed.loft_stack": {
+   "template": "Loft haystack [feed.loft_stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a loft haystack: a rough square of piled golden hay, darker patches pressed down, the shadow of rafters across it, a fork handle standing proud.",
+   "reviewed": true
+  },
+  "feed.rick": {
+   "template": "Hay rick [feed.rick]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a hay rick: a round conical golden hay rick, darker combed thatch ringing the crown, the tips of staddle stones showing under its edge.",
    "reviewed": true
   },
   "feed.stall": {
@@ -1215,6 +1444,16 @@
     "top": "stained beech"
    },
    "physical": "Top-down view of a small square chess table: an inlaid checkered mid-brown stained beech board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "granary.bin": {
+   "template": "Bentwood granary bin [granary.bin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bin": "bentwood"
+   },
+   "physical": "Top-down view of a granary bin: a long brown bentwood bin on low stone feet, lid boards ajar at one end, golden grain heaped at the gap.",
    "reviewed": true
   },
   "gym.dummy": {
@@ -1694,6 +1933,14 @@
    "physical": "Top-down view of a grinding mill: a large round dark brown polished walnut casing around a broad grey-veined marble millstone, a grain hopper over the centre, a flour chute at the bottom edge.",
    "reviewed": true
   },
+  "muck.heap": {
+   "template": "Muck heap [muck.heap]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a muck heap: a rough round heap of dung and dirty straw, darker wet streaks down it, a fork handle standing off centre.",
+   "reviewed": true
+  },
   "nightstand.crate": {
    "template": "Crate pine packing crate [nightstand.crate]",
    "tier": "poor",
@@ -1767,6 +2014,27 @@
     "wrap": "wool serge"
    },
    "physical": "Top-down view of a square loaded pallet: boxes stacked in a tight block under black wool serge wrapping, the stained beech slats showing at the edges.",
+   "reviewed": true
+  },
+  "pen.gate": {
+   "template": "Stained beech pen gate [pen.gate]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "gate": "stained beech"
+   },
+   "physical": "Top-down view of a pen gate: an open chestnut stained beech gate frame hung on one stake post, set ajar in a line of hurdles.",
+   "reviewed": true
+  },
+  "pen.hurdle": {
+   "template": "Varnished pine hurdle [pen.hurdle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stakes": "varnished pine",
+    "wattle": "varnished pine"
+   },
+   "physical": "Top-down view of a hurdle: a line of honey varnished pine stakes with woven amber varnished pine panels between them, a muddy line along the open side.",
    "reviewed": true
   },
   "plant.herb_pot": {
@@ -1854,6 +2122,16 @@
     "frame": "varnished pine"
    },
    "physical": "Top-down view of a folding clothes horse: parallel honey varnished pine rails with blue-striped sheets and shirts draped over them.",
+   "reviewed": true
+  },
+  "rack.hitching_rail": {
+   "template": "Varnished pine hitching rail [rack.hitching_rail]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "varnished pine"
+   },
+   "physical": "Top-down view of a long hitching rail: a single honey varnished pine beam on two thick posts, a few iron rings along it, a wooden water bucket beside one post, hoof-churned mud along the front.",
    "reviewed": true
   },
   "rack.tool": {
@@ -2490,6 +2768,17 @@
     "handle": "stained beech"
    },
    "physical": "Top-down view of a metal bucket: a round dark grey cast iron bucket full of murky grey-brown water, a thick rim with a small mid-brown stained beech roller wringer clamped to one side, no mop and no handle.",
+   "reviewed": true
+  },
+  "utility.wind_pump": {
+   "template": "Sheet steel wind pump [utility.wind_pump]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "fan": "sheet steel",
+    "tower": "varnished pine"
+   },
+   "physical": "Top-down view of a wind pump: a many-bladed grey sheet steel fan wheel set on a slim honey varnished pine tower, a pipe line down its centre.",
    "reviewed": true
   },
   "wardrobe.armoire": {
