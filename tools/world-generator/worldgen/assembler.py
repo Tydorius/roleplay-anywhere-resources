@@ -289,6 +289,12 @@ class _Context:
         self._filler_none = store["filler_none"]
         # (building, iw, ih, tier) asks that found no room: never
         # composed again
+        self._pool_asks = set()   # pool keys this attempt already asked:
+                                  # only a key's first ask of the attempt
+                                  # draws the shuffle — a fresh context
+                                  # shuffles misses alone, and the store
+                                  # must spend the rng a fresh attempt's
+                                  # miss would have, never more
         self.storey_splits = {"dp used": 0, "dp missed": 0,
                               "no catalogue": 0}  # how each storey band
                                   # partition split (rl-21): a split the DP
@@ -652,15 +658,19 @@ def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
     family but never a pool."""
     if not recipes:
         return None, f"no {family} room stored and no recipe to compose one"
-    # the shuffle runs before the cache is asked, hit or miss: it advances
-    # the caller's rng either way, so a growth attempt that reaches an ask
-    # no earlier attempt made draws the same recipe order a fresh context
-    # would have — the store never changes what composes
-    rng.shuffle(recipes)
     key = (family, clearance, band, tier, singles, couples, req, forb,
            ctx.world_seed)
     if key in ctx._pools:
+        # the store's pool answers this attempt's first ask of the key the
+        # way a fresh context's miss would — one shuffle — while a later
+        # ask of the same attempt draws nothing, the pool this attempt
+        # itself composed answering it as a fresh context's own cache would
+        if key not in ctx._pool_asks:
+            rng.shuffle(recipes)
+            ctx._pool_asks.add(key)
         return ctx._pools[key], None
+    rng.shuffle(recipes)
+    ctx._pool_asks.add(key)
     reason = f"no {family} recipe composed a {band} room"
     out, sizes = [], set()
     for i, recipe in enumerate(recipes):
