@@ -787,7 +787,7 @@ def _piece_direction(primary, piece):
     return "NorthWest" if dy > 0 else "SouthWest"
 
 
-def run(plan_data, seed=1, extensions=(), room_assembler=False):
+def run(plan_data, seed=1, extensions=(), room_assembler=True):
     import copy
     from .extensions import BY_ID, expand
     plan = parse_plan(plan_data)
@@ -806,7 +806,7 @@ def run(plan_data, seed=1, extensions=(), room_assembler=False):
     def attempt(weight_scale=None):
         data = copy.deepcopy(base)
         # the room assembler is plan-wide state the build reads as it lays
-        # library buildings out (worldgen/assembler.py, off by default)
+        # library buildings out (worldgen/assembler.py, on by default)
         from . import assembler
         if room_assembler:
             assembler.activate(plan, data, data.get("name", "world"), None)

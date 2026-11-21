@@ -441,7 +441,8 @@ storeys are floors of their own, and a walkable wall gets its wall-walk
 storey 2 wherever both ends have one — joined to each end's storey by a
 linked passage pair (planes cannot share a door in 1.0), so the towers and
 the gatehouse meet along the walk upstairs. With floors off, a compound is
-ground floor only and plays in the unmodded game. Behind `--room-assembler`
+ground floor only and plays in the unmodded game. With the room assembler on
+(the default; `--no-room-assembler` turns it off)
 the courtyard is furnished too: the open ground's largest clear rectangle
 takes a room of the library's outdoor `courtyard` family — a stored room
 that fits, else one composed on the spot — and ships as an unwalled
@@ -634,13 +635,15 @@ cells nobody can walk to, by the game's own wall rule.
 
 ## The room assembler
 
-`--room-assembler` on `generate` or `layout` (also `"room_assembler": true` in a
-settings file) places a one-storey library building out of the room library's own
+The room assembler is on by default: `--no-room-assembler` on `generate` or
+`layout` turns it off, a settings file's `"room_assembler": false` keeps it
+off, and `"room_assembler": true` in one that has it off turns it back on. It
+places a one-storey library building out of the room library's own
 fixed rooms instead of packing rectangles: the entrance room first, then every
 room against its parent in the connection tree, doors opening across the walls
 they share, and the outline closed to a rectangle (a room stretched, a larger
-variant, or a filler store) so the building is a solid shape. Off by default;
-with it off, nothing changes.
+variant, or a filler store) so the building is a solid shape. With it off,
+nothing changes.
 
 A building takes the assembler when it has one storey, no units, is not a
 compound part, and every one of its rooms names a library purpose. Anything

@@ -52,7 +52,7 @@ def _check_extensions(extensions):
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
              emit=None, frame=None, questionnaire=None, cast=True, library=True,
-             item_library=True, room_assembler=False, floors=True):
+             item_library=True, room_assembler=True, floors=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -93,7 +93,7 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
 
 
 def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
-                    emit=None, item_library=True, room_assembler=False):
+                    emit=None, item_library=True, room_assembler=True):
     """settings.json in the run folder, before the first model call, so even a
     run that fails leaves the choices behind for someone to look at. Never
     fails the run."""
@@ -134,7 +134,7 @@ def frame(mode, idea="", answers=None, population=None, clarify=None,
 
 
 def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
-             cancel=None, emit=None, room_assembler=False, floors=True):
+             cancel=None, emit=None, room_assembler=True, floors=True):
     """Lay out a saved plan (plan.json) again and rebuild the scenario. No
     model calls happen: a different seed re-places the same world. A plan
     that records its extensions keeps exactly what it recorded; one that
@@ -249,7 +249,7 @@ def _container_counts(spec, plan_data):
 # ------------------------------------------------------------------ build
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
-                      progress=None, cancel=None, emit=None, room_assembler=False,
+                      progress=None, cancel=None, emit=None, room_assembler=True,
                       floors=True):
     """Layout, checks, spec, then the vendored builder, validator and
     renderer. ``gen`` carries the generate-run context (client, stats,

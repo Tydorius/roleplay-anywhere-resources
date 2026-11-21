@@ -55,7 +55,8 @@ def _generate_args(args):
             "floors": not getattr(args, "no_floors", False),
             "library": args.library is not False,
             "item_library": args.item_library is not False,
-            "room_assembler": bool(getattr(args, "room_assembler", None))}
+            # on by default; only --no-room-assembler turns it off
+            "room_assembler": getattr(args, "room_assembler", None) is not False}
 
 
 def main(argv=None):
@@ -73,18 +74,24 @@ def main(argv=None):
                           "a plan that records its extensions keeps what it "
                           "recorded unless this is given)")
     lay.add_argument("--room-assembler", dest="room_assembler", action="store_true",
-                     default=False,
+                     default=None,
                      help="place library buildings from the room library's "
-                          "own rooms, upper storeys included (the old "
-                          "footprint method otherwise)")
+                          "own rooms, upper storeys included (on by default, "
+                          "so this changes nothing; the old footprint method "
+                          "otherwise)")
+    lay.add_argument("--no-room-assembler", dest="room_assembler",
+                     action="store_false", default=None,
+                     help="lay rooms out with the older room cutter instead "
+                          "of the room library's own rooms")
     gen = sub.add_parser("generate", help="run the model phases on an idea and build the scenario")
     gen.add_argument("--idea", default=None,
                      help="the world in one line (or give --settings)")
     gen.add_argument("--settings", default=None,
                      help="a world settings file (settings.json from a run folder, or one "
                           "exported from the Scenario Editor): its idea, answers, frame, seed, "
-                          "extensions and room- and item-library choices; --idea, --seed, "
-                          "--ext, --no-library and --no-item-library still override it")
+                          "extensions, room- and item-library choices and room-assembler "
+                          "choice; --idea, --seed, --ext, --no-library, --no-item-library "
+                          "and the room-assembler flags still override it")
     gen.add_argument("--provider", required=True)
     gen.add_argument("--out", required=True)
     gen.add_argument("--seed", type=int, default=None, help="layout seed (default 1)")
@@ -106,8 +113,14 @@ def main(argv=None):
     gen.add_argument("--room-assembler", dest="room_assembler", action="store_true",
                      default=None,
                      help="place library buildings from the room library's "
-                          "own rooms, upper storeys included (also read from a "
-                          "--settings file; off otherwise)")
+                          "own rooms, upper storeys included (on by default, "
+                          "so this changes nothing; also read from a "
+                          "--settings file)")
+    gen.add_argument("--no-room-assembler", dest="room_assembler",
+                     action="store_false", default=None,
+                     help="lay rooms out with the older room cutter instead "
+                          "of the room library's own rooms (with --settings "
+                          "the file's choice rules unless this is given)")
     chk = sub.add_parser("check-provider",
                          help="send one tiny request and report the model and latency")
     chk.add_argument("name", help="provider name from providers.json")
@@ -206,7 +219,8 @@ def main(argv=None):
         if args.command == "layout":
             summary = api.relayout(args.plan, seed=args.seed, extensions=args.ext,
                                    out_dir=args.out, progress=_print_event, emit=print,
-                                   room_assembler=args.room_assembler,
+                                   room_assembler=(getattr(args, "room_assembler", None)
+                                                    is not False),
                                    floors=not args.no_floors)
         else:
             summary = api.generate(provider=args.provider, out_dir=args.out,
