@@ -70,7 +70,7 @@ TALL_KINDS = ("castle", "keep", "watchtower", "tower", "fortress", "citadel",
 # village's anchors — the inn, the barn with its loft — may rise to two).
 STOREY_CAPS = {
     "medieval": {
-        "default": {"hamlet": 1, "village": 1, "town": 2, "city": 3,
+        "default": {"hamlet": 1, "village": 1, "town": 2, "city": 2,
                     "outside": 1},
         "kinds": (
             # (settlements covered, or None for all of them; phrases; cap)

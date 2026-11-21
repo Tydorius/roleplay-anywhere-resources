@@ -473,6 +473,11 @@ class TestStoreysFitTheEra(unittest.TestCase):
         self.assertEqual(b["storeys"], 2)
         self.assertFalse(any("storeys" in r for (_w, r) in log), log)
 
+    def test_a_medieval_city_cottage_is_lowered_to_two(self):
+        b, log = self.p1("city", "cottage", 3, "medieval")
+        self.assertEqual(b["storeys"], 2)
+        self.assertTrue(any("storeys 3 -> 2" in r for (_w, r) in log), log)
+
     def test_a_city_merchant_house_keeps_three(self):
         b, log = self.p1("city", "merchant house", 3, "medieval")
         self.assertEqual(b["storeys"], 3)
