@@ -373,6 +373,62 @@ class TestBandTolerance(unittest.TestCase):
         self.assertGreaterEqual(beds, 2, "two residents, no two beds")
 
 
+class TestAStoredFiller(unittest.TestCase):
+    """rl-21: a hole big enough to furnish takes a stored storage room of
+    exactly that floor when the library has one — a copy, never the
+    library's own dict — and the no-room cache is keyed by tier, so a tier
+    that found nothing does not answer for one that could."""
+
+    def setUp(self):
+        from worldgen import assembler, model
+        import shutil
+        plan_data = json.loads(json.dumps(COTTAGE_PLAN))
+        self.parsed = model.parse_plan(plan_data)
+        self.ctx = assembler.activate(self.parsed, plan_data, "c", {})
+        self.addCleanup(assembler.deactivate)
+        # a copy of the shipped rooms, never library/ itself, holding one
+        # stored storage room: floor 2x5 (area 10, the tiny band — a size
+        # no storage recipe composes, so the compose path cannot serve this
+        # ask at any tier), tight and flush, furnished at wealthy only
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        rooms_dir = os.path.join(self.tmp.name, "rooms")
+        shutil.copytree(os.path.join(os.path.dirname(worldgen.__file__),
+                                     "..", "library", "rooms"), rooms_dir)
+        with open(os.path.join(rooms_dir, "stash.json"), "w",
+                  encoding="utf-8", newline="\n") as f:
+            json.dump({"rooms": [{
+                "id": "stash.test.a.tight.flush", "family": "storage",
+                "size": [2, 5], "sizeBand": "tiny", "clearance": "tight",
+                "style": "flush", "wealth": ["wealthy", "elite"],
+                "recipe": "stash.test.a", "pieces": [],
+            }]}, f, indent=1)
+        from worldgen import fixed_rooms
+        self.ctx.rooms = fixed_rooms.load(rooms_dir)
+
+    def test_the_filler_is_a_copy_and_the_cache_knows_its_tier(self):
+        from worldgen import assembler
+        # a poor ask finds nothing — and must not answer for the same
+        # building's wealthy ask, which the stored room does serve
+        self.assertIsNone(
+            assembler._compose_filler(self.ctx, "Rose Cottage", 2, 5, "poor"))
+        filler = assembler._compose_filler(self.ctx, "Rose Cottage", 2, 5,
+                                           "wealthy")
+        self.assertIsNotNone(filler)
+        self.assertEqual(filler["id"], "stash.test.a.tight.flush")
+        self.assertEqual(filler["family"], "storage")
+        # the room handed out is a copy: not the library's own dict, and an
+        # in-place edit of its piece list cannot reach the library
+        lib_room = next(r for r in self.ctx.rooms
+                        if r.get("id") == "stash.test.a.tight.flush")
+        self.assertIsNot(filler, lib_room)
+        filler["pieces"].append({"role": "sleep"})
+        self.assertEqual(lib_room["pieces"], [])
+        # the poor tier's cached "none" stays cached for itself
+        self.assertIsNone(
+            assembler._compose_filler(self.ctx, "Rose Cottage", 2, 5, "poor"))
+
+
 if __name__ == "__main__":
     unittest.main()
 

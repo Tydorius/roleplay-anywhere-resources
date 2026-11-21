@@ -274,8 +274,8 @@ class _Context:
                                  # compose's rooms; every hole of one band in
                                  # one building asks the same recipes at the
                                  # same seed, so the first hole pays for all
-        self._filler_none = set()  # (building, iw, ih) asks that found no
-                                   # room: never composed again
+        self._filler_none = set()  # (building, iw, ih, tier) asks that found
+                                   # no room: never composed again
 
 
 # ------------------------------------------------------------------ the switch
@@ -1772,7 +1772,9 @@ def _stored_filler(ctx, iw, ih, tier, band):
     """An active stored storage room whose floor is exactly (iw, ih) — turned
     once when only the sideways size fits — picked by the pools' rules:
     tight clearance, the tier among its wealth bands, the hole's own size
-    band, every required piece furnishing, flush rooms first, id last."""
+    band, every required piece furnishing, flush rooms first, id last. The
+    room handed out is a copy (the same fresh-dict guard ``FR.rotate``
+    applies), so the library's own dict never reaches a placement."""
     fits = [r for r in FR.active(ctx.rooms)
             if r.get("family") == "storage"
             and r.get("clearance") == "tight"
@@ -1785,6 +1787,9 @@ def _stored_filler(ctx, iw, ih, tier, band):
     fits.sort(key=lambda r: (_spare_beds(r, 0, 0), r.get("id", "")))
     flush = [r for r in fits if r.get("style") == "flush"]
     room = (flush or fits)[0]
+    room = {k: v for k, v in room.items() if not k.startswith("_")}
+    room["pieces"] = [dict(p) if isinstance(p, dict) else p
+                      for p in room.get("pieces") or []]
     if room["size"] == [ih, iw]:
         room = FR.rotate(room, 1)
     return room
@@ -1792,12 +1797,13 @@ def _stored_filler(ctx, iw, ih, tier, band):
 
 def _compose_filler(ctx, building, iw, ih, tier):
     """A filler for a hole's floor: an active stored storage room of exactly
-    that size in either rotation first, else one composed to fit, else None.
-    The compose results are cached on the context: every hole of one band in
-    one building asks the same recipes at the same seed, and an ask that
-    found no room never composes again. The returned room is shared, not
+    that size in either rotation first (a copy — the library's dict stays
+    the library's), else one composed to fit, else None. The compose results
+    are cached on the context: every hole of one band in one building asks
+    the same recipes at the same seed, and an ask that found no room at one
+    tier never composes again at that tier. A composed room is shared, not
     copied — placed rooms are never mutated, only re-derived or turned."""
-    if (building, iw, ih) in ctx._filler_none:
+    if (building, iw, ih, tier) in ctx._filler_none:
         return None
     area = iw * ih
     band = None
@@ -1824,7 +1830,7 @@ def _compose_filler(ctx, building, iw, ih, tier):
         for room in rooms:
             if room["size"] == [iw, ih]:
                 return room
-    ctx._filler_none.add((building, iw, ih))
+    ctx._filler_none.add((building, iw, ih, tier))
     return None
 
 
