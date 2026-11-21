@@ -214,6 +214,40 @@ class TestBuildingByKind(unittest.TestCase):
                 self.assertEqual((r or {}).get("id"), "agri.station")
 
 
+class TestSuiteByKind(unittest.TestCase):
+    """rl-24: an industrial "dairy farm" matched two suites at once — the
+    farm suite through the full phrase, farmhouse.yeoman through the bare
+    "farm" — so the match named no winner and P3 chose freely. The most
+    specific match now wins, like building_by_kind's rule."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = shipped()
+
+    def _building(self, kind, size="large", residents=4):
+        return {"kind": kind, "sizeClass": size, "residents": residents}
+
+    def test_x_farm_kinds_get_the_farm_suite(self):
+        for kind in ("dairy farm", "mixed farm", "farm steading"):
+            with self.subTest(kind=kind):
+                s = LP.suite_by_kind(self.lib, self._building(kind), "industrial")
+                self.assertEqual((s or {}).get("id"), "farm.mixed")
+
+    def test_a_farm_kind_no_suite_names_keeps_the_farmhouse(self):
+        # "sheep farm" names no suite's kind: the farmhouse's bare "farm" is
+        # the one match, in every band that has one
+        for band, want in (("medieval", "farmhouse.yeoman"),
+                           ("industrial", "farmhouse.yeoman"),
+                           ("modern", "farm.ranch")):
+            with self.subTest(band=band):
+                s = LP.suite_by_kind(self.lib, self._building("sheep farm"), band)
+                self.assertEqual((s or {}).get("id"), want)
+
+    def test_a_genuine_tie_still_names_no_winner(self):
+        b = self._building("house", size="medium", residents=5)
+        self.assertIsNone(LP.suite_by_kind(self.lib, b, "medieval"))
+
+
 class TestWealthOffsets(unittest.TestCase):
     def test_design_83_defaults(self):
         self.assertEqual(L.WING_WEALTH_OFFSETS,

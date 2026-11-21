@@ -121,11 +121,22 @@ def suite_candidates(lib, b, band):
 
 def suite_by_kind(lib, b, band):
     """The one suite whose kinds name this building's kind, or None when
-    none or several do (then P3 chooses)."""
+    none or several do (then P3 chooses). When several match, the most
+    specific one wins — the matched phrase with the most words ("dairy
+    farm" the farm suite over the farmhouse's "farm"), like
+    ``building_by_kind``; a tie names no winner."""
     words = _kind_words(b.get("kind"))
-    hits = [s for s in suite_candidates(lib, b, band)
-            if words & {k.lower() for k in s.get("kinds", [])}]
-    return hits[0] if len(hits) == 1 else None
+    best, best_len, tie = None, 0, False
+    for s in suite_candidates(lib, b, band):
+        hit = max((len(k.split()) for k in s.get("kinds", [])
+                   if isinstance(k, str) and k.lower() in words), default=0)
+        if not hit:
+            continue
+        if hit > best_len:
+            best, best_len, tie = s, hit, False
+        elif hit == best_len:
+            tie = True
+    return None if tie else best
 
 
 def building_by_kind(lib, kind, band):
