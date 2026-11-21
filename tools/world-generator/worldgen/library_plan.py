@@ -317,6 +317,20 @@ def wing_design(lib, wing, name, b, band, cap, kind=""):
                     taken.add(named)
                     rename[r["name"]] = named
 
+    # the wing's room names unique over all its floors (rl-19): a room the
+    # reconciliation renamed must not take a name another floor's room holds,
+    # or the sleepers of both storeys merge into one
+    names_taken = set()
+    for f in sorted(floors):
+        for r in floors[f]:
+            want = rename.get(r["name"], r["name"])
+            if want in names_taken:
+                base, k = want, 2
+                while f"{base} {k}" in names_taken:
+                    k += 1
+                rename[r["name"]] = want = f"{base} {k}"
+            names_taken.add(want)
+
     def spec(r):
         use = r.get("purpose") or ""
         return RoomSpec(name=rename.get(r["name"], r["name"]),

@@ -22,7 +22,7 @@ FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
 
 # ------------------------------------------------------------------ the plans
 
-def _plan(building, kind="house"):
+def _plan(building, kind="house", storeys=2):
     """A two-zone hamlet with a road, so the building's entrance counts
     toward the reachability metric the way a real plan's does."""
     return {
@@ -37,7 +37,7 @@ def _plan(building, kind="house"):
             "buildings": [{"name": building["name"], "kind": kind,
                            "sizeClass": "medium", "purpose": "a roof",
                            "residents": building.get("residents", 4),
-                           "storeys": 2, "yard": None}],
+                           "storeys": storeys, "yard": None}],
             "dressing": {"paths": "dirt", "props": [], "filler": []},
         }, {
             "name": "The Ford", "kind": "farmland", "sizeClass": "medium",
@@ -181,13 +181,13 @@ class TestFloorsOnByDefault(unittest.TestCase):
 # ------------------------------------------------------------ the storey case
 
 class StoreyCase(unittest.TestCase):
-    """The shared plumbing: one two-storey building assembled with the room
-    assembler and the floors extension, and the soundness every partition
-    promises of its upper storey."""
+    """The shared plumbing: one building of the storey count its case
+    names, assembled with the room assembler and the floors extension, and
+    the soundness every partition promises of its upper storeys."""
 
     @classmethod
-    def build(cls, building, seed, kind="house"):
-        world = worldgen.run(_plan(building, kind), seed=seed,
+    def build(cls, building, seed, kind="house", storeys=2):
+        world = worldgen.run(_plan(building, kind, storeys), seed=seed,
                              room_assembler=True, extensions=("floors",))
         bl = assembled(world, building["name"])
         assert bl is not None, "no building in the world"
@@ -202,12 +202,13 @@ class StoreyCase(unittest.TestCase):
         assert len(floors) == 1, [f.building for f in world.floors]
         return floors[0]
 
-    def assert_sound(self, world, bl, f):
+    def assert_sound(self, world, bl, f, stacked=True, top=True):
         """What any partitioned storey owes: the checks pass, the storey
         covers the ground's whole outline without overlap, its doors sit
-        between two rooms, the stair lands on the ground stair's own cell,
-        every room is reached from it, and every piece sits inside its
-        room."""
+        between two rooms, the stair lands on the ground stair's own cell
+        (a first upper storey's promise — a storey above the first passes
+        stacked=False and owes only the checks every storey owes), every
+        room is reached from it, and every piece sits inside its room."""
         m = world.metrics
         self.assertEqual(m["floors"]["issues"], [], m["floors"]["issues"])
         self.assertEqual(m["reachability"], 1.0, m["rooms"])
@@ -231,13 +232,19 @@ class StoreyCase(unittest.TestCase):
                                     ((ax, ay), (bx, by), owners))
 
         # the stair from below lands on the ground stair's own cell of the
-        # plane, and the top storey grows no stair of its own
-        self.assertEqual((bl.stair_cell[0] - bl.rect.x,
-                          bl.stair_cell[1] - bl.rect.y),
-                         (f.stair_down[1][0] - f.rect.x,
-                          f.stair_down[1][1] - f.rect.y),
-                         "the stair cells do not line up")
-        self.assertIsNone(f.stair_up)
+        # plane, and the top storey grows no stair of its own; a storey above
+        # the first (stacked=False) keeps only what every storey owes — its
+        # stair lands in a room, which the walk below from the stair proves
+        if stacked:
+            self.assertEqual((bl.stair_cell[0] - bl.rect.x,
+                              bl.stair_cell[1] - bl.rect.y),
+                             (f.stair_down[1][0] - f.rect.x,
+                              f.stair_down[1][1] - f.rect.y),
+                             "the stair cells do not line up")
+        if top:
+            self.assertIsNone(f.stair_up)
+        else:
+            self.assertIsNotNone(f.stair_up)
 
         def cell_room(cell):
             for i, r in enumerate(lay.rooms):
@@ -394,6 +401,74 @@ class TestAClosetSlotIsNoted(StoreyCase):
 
     def test_the_storey_is_sound(self):
         self.assert_sound(self.world, self.bl, self.f)
+
+
+class TestSameNamedRoomsOnTwoStoreys(StoreyCase):
+    """rl-19: two rooms named alike on different storeys of one P1 building
+    come out with two names, so each keeps its own share of the sleepers —
+    four residents over two bedchambers, two asked of each, never the whole
+    four asked of both."""
+
+    @classmethod
+    def setUpClass(cls):
+        building = _building("Gable House", GABLE_GROUND, [
+            {"name": "Bedroom", "share": "small", "use": "bedroom",
+             "purpose": "a"},
+            {"name": "Sewing Room", "share": "small", "use": "study",
+             "purpose": "b"}], 4, 0)
+        building["upper"].append({
+            "storey": 3, "connections": [],
+            "rooms": [
+                {"name": "Bedroom", "share": "small", "use": "bedroom",
+                 "purpose": "c"},
+                {"name": "Study", "share": "small", "use": "study",
+                 "purpose": "d"}]})
+        captured = {}
+        orig = assembler._lay_split
+
+        def spy(ctx, design, *a, **k):
+            captured.setdefault("ctx", ctx)
+            return orig(ctx, design, *a, **k)
+
+        assembler._lay_split = spy
+        try:
+            cls.world, cls.bl = cls.build(building, seed=1, storeys=3)
+        finally:
+            assembler._lay_split = orig
+        cls.ctx = captured["ctx"]
+        cls.floors = sorted((f for f in cls.world.floors
+                             if f.building == "Gable House"),
+                            key=lambda f: f.storey)
+
+    def _beds(self, room):
+        from worldgen.model import bed_capacity
+        return sum(bed_capacity(self.world.templates[t])
+                   for (t, _p) in room.furniture.placements
+                   if self.world.templates[t].for_sleep)
+
+    def test_the_two_bedrooms_take_two_names(self):
+        self.assertEqual([f.storey for f in self.floors], [2, 3])
+        self.assertIn("Bedroom",
+                      {r.base_name for r in self.floors[0].layout.rooms})
+        self.assertIn("Bedroom 2",
+                      {r.base_name for r in self.floors[1].layout.rooms})
+
+    def test_each_bedroom_is_asked_its_share_not_the_whole(self):
+        asks = {n: self.ctx.sleepers[n] for n in ("Bedroom", "Bedroom 2")}
+        self.assertEqual(asks, {"Bedroom": (2, 0), "Bedroom 2": (2, 0)},
+                         asks)
+        beds = {r.base_name: self._beds(r)
+                for f in self.floors for r in f.layout.rooms
+                if r.base_name in ("Bedroom", "Bedroom 2")}
+        for name, (singles, couples) in asks.items():
+            self.assertGreaterEqual(beds[name], singles + 2 * couples,
+                                    (name, beds))
+
+    def test_the_storeys_are_sound(self):
+        middle, top = self.floors
+        self.assert_sound(self.world, self.bl, middle, stacked=False,
+                          top=False)
+        self.assert_sound(self.world, self.bl, top, stacked=False)
 
 
 class TestAnUnevenSplitSeatsEveryRoomAtFullBeds(StoreyCase):

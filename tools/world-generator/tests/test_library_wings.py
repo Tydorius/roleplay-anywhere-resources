@@ -239,5 +239,51 @@ class TestWealthOffsets(unittest.TestCase):
         self.assertTrue(any("stables.yard" in w and "defaults to -2" in w for w in warnings))
 
 
+class TestWingDesignRoomNames(unittest.TestCase):
+    """rl-19: a wing's room names come out unique over all its floors — the
+    store rooms an empty upper floor fills take two names, and a room the
+    reconciliation renamed onto a P1 name never takes a name another floor's
+    room already holds, or the sleepers of both storeys would merge."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.lib = shipped()
+
+    def test_two_filler_rooms_take_two_names(self):
+        wing = copy.deepcopy(GOOD_WING)
+        wing.update({"storeys": 3, "sleeps": "none",
+                     "rooms": [{"name": "Store", "purpose": "storage",
+                                "share": "small"}],
+                     "entrance": {"room": "Store"}})
+        d = LP.wing_design(self.lib, wing, "Test Wing", None, "medieval", 3)
+        names = [r.name for s in d.upper for r in s.rooms]
+        self.assertEqual(names, ["Store room", "Store room 2"], names)
+        every = [r.name for r in d.rooms] + names
+        self.assertEqual(len(set(every)), len(every), every)
+
+    def test_a_renamed_room_does_not_take_another_floors_name(self):
+        from worldgen.model import BuildingDesign, RoomSpec
+        wing = copy.deepcopy(GOOD_WING)
+        wing.update({
+            "storeys": 2,
+            "rooms": [
+                {"name": "Hall", "purpose": "living_room", "share": "medium"},
+                {"name": "Bedchamber", "purpose": "bedroom", "share": "small"},
+                {"name": "Guest Room", "purpose": "guest_room", "share": "small"}],
+            "connections": [["Hall", "Bedchamber"], ["Hall", "Guest Room"]],
+            "entrance": {"room": "Hall"}, "sleeps": "residents"})
+        # the P1 building names its bedroom "Hall": the reconciliation moves
+        # the wing's ground-floor guest room onto that name, which the
+        # ground's own Hall already holds
+        b = BuildingDesign(name="P1 House", rooms=[
+            RoomSpec(name="Hall", share="small", purpose="", use="bedroom")])
+        d = LP.wing_design(self.lib, wing, "Test Wing", b, "medieval", 2)
+        # the keeper rule keeps the guest room by the door; the renamed room
+        # takes the first free suffix, never the ground's own Hall
+        self.assertEqual([r.name for r in d.rooms], ["Hall", "Hall 2"])
+        self.assertEqual([r.name for r in d.upper[0].rooms], ["Bedchamber"])
+        self.assertEqual(d.entrance_room, "Hall")
+
+
 if __name__ == "__main__":
     unittest.main()

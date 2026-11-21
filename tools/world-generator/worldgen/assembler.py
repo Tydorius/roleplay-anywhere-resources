@@ -1073,6 +1073,12 @@ def _assemble(ctx, design, wing=None):
     sleep_rooms = [{"name": r.name, "use": r.use} for r in design.rooms]
     sleep_rooms += [{"name": r.name, "use": r.use}
                     for s in design.upper or [] for r in s.rooms]
+    # rl-19: names are unique over a building's storeys by the time they get
+    # here; a duplicate that slips through still must not crash, only note
+    # that its rooms share one bed count
+    dup_names = sorted({q["name"] for q in sleep_rooms
+                        if sum(1 for o in sleep_rooms
+                               if o["name"] == q["name"]) > 1})
     ctx.sleepers = library_plan._sleepers(
         ctx.lib, sleep_rooms, design.residents, design.couples,
         getattr(design, "guests", 0) or 0)
@@ -1120,6 +1126,10 @@ def _assemble(ctx, design, wing=None):
                                tier, cond, wing)
             if design.upper:
                 _build_uppers(ctx, design, asm, tier, cond)
+            for dup in dup_names:
+                asm.notes.append(
+                    (dup, f"room {dup!r} on more than one storey of building "
+                          f"{design.name}: those rooms share one bed count"))
             # the storey notes belong to the assembly this entrance side
             # ships, not merged across sides: a closet one side's copy took
             # is not a room the placed building lost

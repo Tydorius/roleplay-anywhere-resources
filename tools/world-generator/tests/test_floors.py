@@ -134,13 +134,22 @@ class TestP3Upper(unittest.TestCase):
         self.assertEqual(self._errors(d, storeys=None), [])
 
     def test_sanitize_drops_the_bad_and_keeps_the_good(self):
+        # storey 3 takes its own room names: rl-19 renames a room that
+        # shares another storey's name, which would drop the furniture below
         d = dict(GROUND, stairs={"room": "Back Hall"},
                  upper=[upper_storey(),
                         upper_storey(storey=2, rooms=[]),
                         upper_storey(storey=9),
-                        upper_storey(storey=3, furniture=[
-                            {"template": "Lamp", "room": "Landing", "count": 1, "hint": "wall:zzz"}],
-                            opening={"over_room": "Common Room", "kind": "well"})])
+                        upper_storey(storey=3,
+                                     rooms=[{"name": "Attic", "share": "large",
+                                             "purpose": "boxes"},
+                                            {"name": "Box Room", "share": "small",
+                                             "purpose": "the stair head"}],
+                                     connections=[["Attic", "Box Room"]],
+                                     furniture=[
+                                         {"template": "Lamp", "room": "Box Room",
+                                          "count": 1, "hint": "wall:zzz"}],
+                                     opening={"over_room": "Common Room", "kind": "well"})])
         log = []
         phases.sanitize_p3(d, "The Sickle & Sheaf", CATALOGUE, log, storeys=3)
         self.assertEqual([u["storey"] for u in d["upper"]], [2, 3])
@@ -148,6 +157,31 @@ class TestP3Upper(unittest.TestCase):
         self.assertEqual(d["upper"][1]["furniture"][0]["hint"], "")
         self.assertEqual(d["stairs"], {"room": "Back Hall"})
         self.assertTrue(log)
+
+    def test_room_names_unique_across_the_storeys(self):
+        # rl-19: "Bedroom" on the ground and both upper storeys of one
+        # building renames to names no other room keeps — the "Bedroom 2"
+        # the ground already holds stops the first duplicate taking it
+        bedroom = {"share": "small", "purpose": "sleep"}
+        d = dict(GROUND, stairs={"room": "Back Hall"},
+                 rooms=[{"name": "Common Room", "share": "large", "purpose": "a"},
+                        {"name": "Back Hall", "share": "small", "purpose": "b"},
+                        {"name": "Bedroom", **bedroom},
+                        {"name": "Bedroom 2", **bedroom}],
+                 upper=[{"storey": 2, "connections": [], "furniture": [],
+                         "rooms": [{"name": "Bedroom", **bedroom}]},
+                        {"storey": 3, "connections": [], "furniture": [],
+                         "rooms": [{"name": "Bedroom", **bedroom},
+                                   {"name": "Bedroom", **bedroom}]}])
+        log = []
+        phases.sanitize_p3(d, "The Sickle & Sheaf", CATALOGUE, log, storeys=3)
+        self.assertEqual([r["name"] for r in d["rooms"]],
+                         ["Common Room", "Back Hall", "Bedroom", "Bedroom 2"])
+        self.assertEqual([r["name"] for r in d["upper"][0]["rooms"]],
+                         ["Bedroom 3"])
+        self.assertEqual([r["name"] for r in d["upper"][1]["rooms"]],
+                         ["Bedroom 4", "Bedroom 5"])
+        self.assertTrue([w for who, w in log if "renamed duplicate" in w], log)
 
     def test_sanitize_strips_when_off_or_single_storey(self):
         d = dict(GROUND, stairs={"room": "Back Hall"}, upper=[upper_storey()])

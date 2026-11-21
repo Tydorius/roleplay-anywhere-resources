@@ -2251,6 +2251,16 @@ def ruined_building(b):
     return any(isinstance(w, str) and RUIN_WORDS.search(w) for w in words)
 
 
+def _free_room_name(name, busy):
+    """The first free suffix of ``name`` (" 2", " 3", ...) that ``busy`` does
+    not already hold (rl-19: a renamed duplicate never takes a name another
+    room of the building keeps)."""
+    k = 2
+    while f"{name} {k}" in busy:
+        k += 1
+    return f"{name} {k}"
+
+
 def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
                 pools=None, ruined=False):
     """``storeys`` is the building's P1 storey count with floors enabled
@@ -2274,11 +2284,21 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
     if not rooms:
         log.append((f"building {building_name}", "no usable rooms; using one 'Hall' room"))
         rooms = [{"name": "Hall", "share": "medium", "purpose": d.get("ground", "") or "hall"}]
+    # room names unique over the whole building, the ground and every upper
+    # storey together (rl-19): a duplicate takes the first free suffix, never
+    # a name another room of this building already holds
+    taken = {r["name"] for r in rooms}
+    for u in (d.get("upper") or []):
+        if isinstance(u, dict):
+            taken.update(r["name"] for r in (u.get("rooms") or [])
+                         if isinstance(r, dict) and _is_str(r.get("name")))
+    seen = set()
     rnames = []
     for r in rooms:
-        if r["name"] in rnames:
+        if r["name"] in seen:
             log.append((f"building {building_name}", f"room {r['name']!r} renamed duplicate"))
-            r["name"] = r["name"] + " 2"
+            r["name"] = _free_room_name(r["name"], seen | taken)
+        seen.add(r["name"])
         rnames.append(r["name"])
         if r.get("share") not in SHARES:
             r["share"] = "medium"
@@ -2341,7 +2361,7 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
                     f"lootPool {d['lootPool']!r} dropped: no such pool"))
         d.pop("lootPool", None)
     d["upper"], d["stairs"] = _sanitize_upper(d, building_name, rnames, templates, log, storeys,
-                                              pools, ruined)
+                                              pools, ruined, seen, taken)
     if units:
         if isinstance(d.get("unit"), dict) and d["unit"]:
             d["unit"] = _sanitize_unit(d["unit"], building_name, templates, log, pools)
@@ -2359,9 +2379,14 @@ def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,
 
 
 def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
-                      pools=None, ruined=False):
+                      pools=None, ruined=False, seen=None, taken=None):
     """(upper list, stairs) cleaned against the floors contract. Without the
-    extension, or for a single-storey building, both come back empty."""
+    extension, or for a single-storey building, both come back empty.
+    ``seen``/``taken`` carry the building-wide name dedupe (rl-19): the names
+    the ground's rooms took, and every name a room of the building holds, so
+    an upper room never shares a name with another storey's."""
+    seen = seen if seen is not None else set(ground_rooms)
+    taken = taken if taken is not None else set(ground_rooms)
     if storeys is None or storeys < 2:
         if storeys is None and ("upper" in d or "stairs" in d):
             log.append((f"building {building_name}",
@@ -2376,11 +2401,11 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
             log.append((f"building {building_name}",
                         f"stairs {st!r} dropped: not a ground room name"))
         stairs = None
-    out, seen = [], set()
+    out, storeys_seen = [], set()
     for u in (d.get("upper") or []):
         label = f"upper storey {u.get('storey')!r} of {building_name}"
         if not isinstance(u, dict) or not _check_int(u.get("storey")) \
-                or not 2 <= u["storey"] <= storeys or u["storey"] in seen:
+                or not 2 <= u["storey"] <= storeys or u["storey"] in storeys_seen:
             log.append((f"building {building_name}",
                         f"{label} dropped: bad or duplicate storey (building has {storeys})"))
             continue
@@ -2388,10 +2413,11 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
         for r in (u.get("rooms") or []):
             if not isinstance(r, dict) or not _is_str(r.get("name")):
                 continue
-            if r["name"] in names:
+            if r["name"] in seen:
                 log.append((f"building {building_name}",
                             f"room {r['name']!r} in {label} renamed duplicate"))
-                r["name"] = r["name"] + " 2"
+                r["name"] = _free_room_name(r["name"], seen | taken)
+            seen.add(r["name"])
             names.append(r["name"])
             if r.get("share") not in SHARES:
                 r["share"] = "medium"
@@ -2441,7 +2467,7 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
                             f"opening {op if not isinstance(op, dict) else op.get('over_room')!r} "
                             f"in {label} dropped: bad over_room or kind"))
             opening = None
-        seen.add(u["storey"])
+        storeys_seen.add(u["storey"])
         out.append({"storey": u["storey"], "rooms": rooms, "connections": connections,
                     "furniture": furn, "opening": opening})
     return out, stairs

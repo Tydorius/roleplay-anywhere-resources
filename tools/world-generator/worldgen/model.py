@@ -676,9 +676,26 @@ def _parse_units(d, g, name):
                     numbering=numbering, design=design)
 
 
+def _free_room_name(name, busy):
+    """The first free suffix of ``name`` (" 2", " 3", ...) that ``busy`` does
+    not already hold (rl-19: a renamed duplicate never takes a name another
+    room of the building keeps)."""
+    k = 2
+    while f"{name} {k}" in busy:
+        k += 1
+    return f"{name} {k}"
+
+
 def _parse_upper(specs, storeys, ground_rooms):
     """[UpperStorey] from a design's "upper" entries, in storey order, keeping
-    only storeys 2..storeys."""
+    only storeys 2..storeys. Room names come out unique over the whole
+    building (rl-19): an upper room sharing another storey's name takes the
+    first free suffix, so rooms on different storeys never merge into one bed
+    count."""
+    seen = set(ground_rooms)
+    taken = set(ground_rooms) | {
+        r.get("name") for u in specs if isinstance(u, dict)
+        for r in (u.get("rooms") or []) if isinstance(r, dict)}
     out = []
     for u in specs:
         if not isinstance(u, dict):
@@ -695,11 +712,25 @@ def _parse_upper(specs, storeys, ground_rooms):
                                   kind=op.get("kind", "gallery"))
         else:
             opening = None
+        rooms = []
+        renames = {}
+        for r in (u.get("rooms") or []):
+            if not isinstance(r, dict):
+                continue
+            if isinstance(r.get("name"), str):
+                if r["name"] in seen:
+                    renames[r["name"]] = r["name"] = _free_room_name(
+                        r["name"], seen | taken)
+                seen.add(r["name"])
+            rooms.append(_parse_roomspec(r))
         out.append(UpperStorey(
             storey=s,
-            rooms=[_parse_roomspec(r) for r in u.get("rooms", []) if isinstance(r, dict)],
-            connections=[list(c) for c in u.get("connections", [])],
-            furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+            rooms=rooms,
+            connections=[[renames.get(x, x) if isinstance(x, str) else x
+                          for x in c] for c in u.get("connections", [])],
+            furniture=[FurniturePlan(template=f.get("template"),
+                                     room=renames.get(f.get("room", ""),
+                                                      f.get("room", "")),
                                      count=int(f.get("count", 1)), hint=f.get("hint", ""),
                                      loot_pool=f.get("lootPool", "") or "")
                        for f in u.get("furniture", [])],
