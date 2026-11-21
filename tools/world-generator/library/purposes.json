@@ -1224,7 +1224,11 @@
       ],
       "animal": [
         "feed",
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "pen",
         "crate"
       ]
@@ -1392,7 +1396,11 @@
     "roles": {
       "animal": [
         "feed",
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "pen",
         "crate"
       ],
@@ -1418,7 +1426,11 @@
     "roles": {
       "animal": [
         "feed",
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "pen",
         "crate"
       ],
@@ -1444,7 +1456,11 @@
     "roles": {
       "animal": [
         "feed",
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "pen",
         "crate"
       ],
@@ -1692,7 +1708,11 @@
   "henhouse": {
     "roles": {
       "animal": [
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "feed"
       ],
       "storage.hay": [
@@ -1707,7 +1727,11 @@
   "chicken_house": {
     "roles": {
       "animal": [
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "feed"
       ],
       "storage.hay": [
@@ -1722,7 +1746,11 @@
   "coop_room": {
     "roles": {
       "animal": [
-        "coop",
+        "coop.henhouse",
+        "coop.hutch",
+        "coop.dovecote",
+        "coop.perch_rack",
+        "coop.nest_box",
         "feed"
       ],
       "storage.hay": [

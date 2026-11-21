@@ -196,6 +196,44 @@ class TestFarmObjects(unittest.TestCase):
         hard = [g for g in L.coverage(self.lib) if not g[7]]
         self.assertEqual(hard, [], "\n".join(map(str, hard[:20])))
 
+    def test_hives_reach_no_indoor_animal_house(self):
+        # rl-24: the coop category's hives (the medieval skep, the industrial
+        # frame beehive) belong outdoors — every indoor animal house binds the
+        # category's other coops by name, so no byre, stable or henhouse can
+        # pick one, whatever the band, tier or slot size
+        for purpose in ("byre", "cowshed", "oxhouse", "stable",
+                        "henhouse", "chicken_house", "coop_room"):
+            for band in self.lib.bands:
+                for tier in self.lib.tiers:
+                    ids = {o["id"] for o in L.candidates(self.lib, purpose,
+                                                         "animal", None, band, tier)}
+                    self.assertNotIn("coop.skep", ids,
+                                     f"{purpose} {band} {tier}")
+                    self.assertNotIn("coop.beehive", ids,
+                                     f"{purpose} {band} {tier}")
+
+    def test_hives_still_reach_the_apiary_and_the_yard(self):
+        hits = {(p, o["id"])
+                for p in ("apiary", "yard")
+                for band in self.lib.bands for tier in self.lib.tiers
+                for o in L.candidates(self.lib, p, "animal", None, band, tier)
+                if o["id"] in ("coop.skep", "coop.beehive")}
+        self.assertEqual(hits, {("apiary", "coop.skep"),
+                                ("apiary", "coop.beehive"),
+                                ("yard", "coop.skep"),
+                                ("yard", "coop.beehive")})
+
+    def test_a_byre_still_furnishes_its_other_coops(self):
+        for purpose in ("byre", "henhouse"):
+            ids = set()
+            for band in self.lib.bands:
+                for tier in self.lib.tiers:
+                    ids |= {o["id"] for o in L.candidates(self.lib, purpose,
+                                                          "animal", None,
+                                                          band, tier)}
+            for oid in ("coop.henhouse", "coop.hutch", "coop.dovecote"):
+                self.assertIn(oid, ids, purpose)
+
 
 class TestFarmGroups(unittest.TestCase):
     @classmethod
@@ -570,12 +608,13 @@ MODERN_FARM_OBJECTS = (
 )
 
 # each farm category's own purpose and role (the wind pump serves any yard
-# through the wildcard purpose's utility role)
+# through the wildcard purpose's utility role; the coop category's home is
+# the apiary, the one indoor-animals purpose its hives still bind)
 FARM_PURPOSE_ROLE = {
     "dairy": ("dairy", "dairy"),
     "milking_stall": ("milking_parlour", "milking.stall"),
     "farm_machine": ("barn", "machine"),
-    "coop": ("byre", "animal"),
+    "coop": ("apiary", "animal"),
     "feed": ("byre", "animal"),
     "pen": ("paddock", "animal.pen"),
     "granary": ("granary", "storage.bulk"),
