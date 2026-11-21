@@ -193,7 +193,8 @@ class Variations(unittest.TestCase):
         with mock.patch.object(ig, "comfy", FakeComfy(canned_history("A", 1, tag))):
             self.assertEqual(ig.adopt(self.src, "http://comfy"), 1)
         queue = lambda url, path, body=None, timeout=60: json.dumps({"prompt_id": "B"}).encode()
-        with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})),                 mock.patch.object(ig, "comfy", queue):
+        with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})), \
+                mock.patch.object(ig, "comfy", queue):
             ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
         self.assertEqual(set(ig.JOBS), {"B"})
         self.assertIn("A", ig.load_state())

@@ -183,9 +183,20 @@ const unremember = k => { try { localStorage.removeItem("gallery." + k); } catch
 // an edited description is kept per workspace and image, so a Reload, a workspace switch or a
 // page reload brings it back instead of the scenario's own text
 const editKey = it => `edit.${source()}|${it.kind}|${it.id}`;
+// stored as {base, text}: base is the scenario's text the edit started from, so when the scenario's
+// own description changes later (a fixed prompt), the old edit is dropped instead of shadowing it
 function setEditDesc(it, text) {
   if (text == null || text === it.desc) { it.editDesc = undefined; unremember(editKey(it)); }
-  else { it.editDesc = text; remember(editKey(it), text); }
+  else { it.editDesc = text; remember(editKey(it), JSON.stringify({base: it.desc, text})); }
+}
+function recallEditDesc(it) {
+  const raw = recall(editKey(it));
+  if (raw == null) return undefined;
+  let saved;
+  try { saved = JSON.parse(raw); } catch { saved = null; }
+  if (!saved || typeof saved !== "object" || typeof saved.text !== "string") return raw;  // older plain-text edit: no base to compare, kept
+  if (saved.base !== it.desc) { unremember(editKey(it)); return null; }  // the scenario's text changed under it
+  return saved.text;
 }
 
 // ---------------------------------------------------------------- settings / models
@@ -280,8 +291,13 @@ async function loadItems() {
   const r = await api("/api/items?source=" + encodeURIComponent(src));
   const old = Object.fromEntries(S.items.map(i => [i.id, i]));
   S.items = r.items.map(i => ({...i, job: old[i.id]?.job, error: old[i.id]?.error,
-                               editing: old[i.id]?.editing, editDesc: old[i.id]?.editDesc, subjectSel: old[i.id]?.subjectSel}));
-  for (const it of S.items) if (it.editDesc == null) it.editDesc = recall(editKey(it)) ?? undefined;
+                               editing: old[i.id]?.editing, editDesc: old[i.id]?.desc === i.desc ? old[i.id]?.editDesc : undefined, subjectSel: old[i.id]?.subjectSel}));
+  const dropped = [];
+  for (const it of S.items) if (it.editDesc == null) {
+    const t = recallEditDesc(it);
+    if (t === null) dropped.push(it.name || it.id); else it.editDesc = t;
+  }
+  if (dropped.length) toast(`The scenario's description changed, so your edited text was dropped for: ${dropped.slice(0, 3).join(", ")}${dropped.length > 3 ? ` and ${dropped.length - 3} more` : ""}`);
   S.fmt = r.promptFormat;
   renderChips(); renderGrid();
   try {  // results finished while the gallery or this page was closed
