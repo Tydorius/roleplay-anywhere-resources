@@ -599,15 +599,6 @@ def access_constraints(pieces, room=None, lib=None, groups=None, skip=()):
 
 # ----------------------------------------------------------------- instances
 
-def _touch(a, b):
-    """Two piece rects share an edge (not just a corner)."""
-    ax, ay, aw, ah = a
-    bx, by, bw, bh = b
-    gx = max(bx - (ax + aw), ax - (bx + bw))
-    gy = max(by - (ay + ah), ay - (by + bh))
-    return (gx <= 0 and gy == 0) or (gy <= 0 and gx == 0)
-
-
 def _rect(p):
     at, size = p.get("at"), p.get("size")
     return None if not (isinstance(at, list) and len(at) == 2
@@ -621,31 +612,53 @@ def instances(room):
     clearance apart, so they never touch). Each entry is
     {"gid", "box": (x, y, w, h), "indices": [piece indexes], "back": side}."""
     pieces = room.get("pieces") or []
+    n = len(pieces)
+    rects = [_rect(p) if isinstance(p, dict) else None for p in pieces]
+    gids = [p.get("group") if isinstance(p, dict) else None for p in pieces]
+    # a cluster only ever grows through pieces of its own group id, so the
+    # growth scan walks that id's pieces alone — the same subsequence, in
+    # the same order, the whole-list scan would have stopped on — and the
+    # rects it tests are the ones read once up front
+    by_gid = {}
+    for j in range(n):
+        if rects[j] is not None:
+            by_gid.setdefault(gids[j], []).append(j)
+    used = [False] * n
     out = []
-    used = [False] * len(pieces)
-    for i, p in enumerate(pieces):
-        if used[i] or not isinstance(p, dict) or _rect(p) is None:
+    for i in range(n):
+        if used[i] or rects[i] is None:
             continue
-        gid = p.get("group")
+        gid = gids[i]
         used[i] = True
         cluster = [i]
         grew = True
         while grew:
             grew = False
-            for j, q in enumerate(pieces):
-                if used[j] or not isinstance(q, dict) or q.get("group") != gid \
-                        or _rect(q) is None:
+            for j in by_gid[gid]:
+                if used[j]:
                     continue
-                if any(_touch(_rect(pieces[k]), _rect(q)) for k in cluster):
-                    used[j] = True
-                    cluster.append(j)
-                    grew = True
-        rects = [_rect(pieces[k]) for k in cluster]
-        xs = [r[0] for r in rects]
-        ys = [r[1] for r in rects]
+                bx, by, bw, bh = rects[j]
+                for k in cluster:
+                    ax, ay, aw, ah = rects[k]
+                    gx = bx - (ax + aw)
+                    other = ax - (bx + bw)
+                    if other > gx:
+                        gx = other
+                    gy = by - (ay + ah)
+                    other = ay - (by + bh)
+                    if other > gy:
+                        gy = other
+                    if (gx <= 0 and gy == 0) or (gy <= 0 and gx == 0):
+                        used[j] = True
+                        cluster.append(j)
+                        grew = True
+                        break
+        crects = [rects[k] for k in cluster]
+        xs = [r[0] for r in crects]
+        ys = [r[1] for r in crects]
         box = (min(xs), min(ys),
-               max(r[0] + r[2] for r in rects) - min(xs),
-               max(r[1] + r[3] for r in rects) - min(ys))
+               max(r[0] + r[2] for r in crects) - min(xs),
+               max(r[1] + r[3] for r in crects) - min(ys))
         back = next((pieces[k].get("back") for k in cluster
                      if pieces[k].get("back") in SIDES), None)
         out.append({"gid": gid, "box": box, "indices": cluster, "back": back})
