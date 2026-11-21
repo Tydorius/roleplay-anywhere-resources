@@ -276,6 +276,9 @@ class _Context:
         store = new_store() if store is None else store
         self._pools = store["pools"]      # (family, clearance, band, tier,
                                           # sleepers, fit, seed) -> [rooms]
+        self._composes = store["composes"]
+        # (recipe identity, groups identity, clearance, style, seed, band,
+        # sleepers, symmetric, max area) -> compose's own (rooms, reason)
         self._size_catalogues = store["size_catalogues"]
         # (design, family, tier, use, share, ask, seed) ->
         # ((w, h, door sides), ...) a family's sizes
@@ -310,13 +313,33 @@ _context = None
 
 def new_store():
     """The compose caches that outlive one build attempt: the pools, the
-    filler memo and the size catalogues, empty and unowned. One
-    ``worldgen.run`` hands the same store to every attempt it makes, so a
-    growth pass composes no room the first attempt already composed; the
-    entries are keyed by all of their inputs (seed key and tier included)
-    and handed out the way the per-build caches always handed them out."""
-    return {"pools": {}, "size_catalogues": {}, "filler_rooms": {},
-            "filler_walks": {}, "filler_none": set()}
+    compose memo, the filler memo and the size catalogues, empty and
+    unowned. One ``worldgen.run`` hands the same store to every attempt it
+    makes, so a growth pass composes no room the first attempt already
+    composed; the entries are keyed by all of their inputs (seed key and
+    tier included) and handed out the way the per-build caches always
+    handed them out."""
+    return {"pools": {}, "composes": {}, "size_catalogues": {},
+            "filler_rooms": {}, "filler_walks": {}, "filler_none": set()}
+
+
+def _composed(ctx, recipe, clearance, style, seed, **kw):
+    """compose's answer for one exact ask, kept for the run: compose seeds
+    its own rng from ``seed`` and reads its arguments only, so a later
+    identical ask — the deep pool re-asking what the capped walk composed,
+    a failed ask the next attempt tries again — would rebuild the same
+    rooms, and gets these instead, the way the pool and filler caches
+    already hand theirs out. The entry keeps the recipe and groups it is
+    keyed by alive, so an id no other object can hold answers for them."""
+    key = (id(recipe), id(ctx.groups), clearance, style, seed,
+           kw.get("size_band"), kw.get("sleepers"),
+           kw.get("symmetric"), kw.get("max_area"))
+    hit = ctx._composes.get(key)
+    if hit is not None:
+        return hit[0], hit[1]
+    rooms, why = RC.compose(recipe, ctx.groups, clearance, style, seed, **kw)
+    ctx._composes[key] = (rooms, why, recipe, ctx.groups)
+    return rooms, why
 
 
 def activate(plan, plan_data, world_seed, world_templates, store=None):
@@ -682,9 +705,9 @@ def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
         # walking every recipe for every band (rl-12b)
         if i >= 5 and out:
             break
-        rooms, why = RC.compose(recipe, ctx.groups, clearance, "flush",
-                                f"{ctx.world_seed}|assembler|{family}",
-                                size_band=band, sleepers=(singles, couples))
+        rooms, why = _composed(ctx, recipe, clearance, "flush",
+                               f"{ctx.world_seed}|assembler|{family}",
+                               size_band=band, sleepers=(singles, couples))
         if not rooms:
             reason = why
             continue
@@ -738,9 +761,9 @@ def _deep_pool(ctx, room, name, tier, req, forb):
     spec = _NoUse()
     out, sizes = [], set()
     for recipe in recipes:
-        rooms, _why = RC.compose(recipe, ctx.groups, cl, "flush",
-                                 f"{ctx.world_seed}|assembler|{fam}",
-                                 size_band=band, sleepers=(singles, couples))
+        rooms, _why = _composed(ctx, recipe, cl, "flush",
+                                f"{ctx.world_seed}|assembler|{fam}",
+                                size_band=band, sleepers=(singles, couples))
         for r in rooms or []:
             if tuple(r["size"]) in sizes or not _furnishable(ctx, spec, r, tier):
                 continue
@@ -1865,8 +1888,8 @@ def _compose_filler(ctx, building, iw, ih, tier):
         key = (rid, band, "tight", "flush", seed, tier)
         rooms = ctx._filler_rooms.get(key)
         if rooms is None:
-            rooms, _why = RC.compose(ctx.groups["recipes"][rid], ctx.groups,
-                                     "tight", "flush", seed, size_band=band)
+            rooms, _why = _composed(ctx, ctx.groups["recipes"][rid],
+                                    "tight", "flush", seed, size_band=band)
             ctx._filler_rooms[key] = rooms
         for room in rooms:
             if room["size"] == [iw, ih]:
