@@ -177,6 +177,30 @@ Programs (like the Scenario Editor) drive the same thing through
 `worldgen/api.py`: `generate()`, `relayout()`, `estimate()`, `frame()` and the
 question bank, with progress events and cancellation.
 
+## Running the tests
+
+`python -m unittest discover -s tests` (from this folder) is the reference
+run — the one the suite is written for. For the same answer in a fraction of
+the time there is a parallel runner:
+
+```
+python run_tests.py                       # whole suite, longest jobs first
+python run_tests.py -j 8                  # eight worker processes
+python run_tests.py test_assembler        # one module
+python run_tests.py test_assembler.TestX  # one class
+```
+
+It counts the tests with unittest's own loader before running anything and
+fails if the jobs ran a different total, prints a line per job as it
+finishes, replays every failing job's full output at the end, and exits 0
+only when everything passed. Job order comes from the last measured times in
+`tests/durations.json`; a job missing from that file runs with the first
+wave. `python run_tests.py --record` rewrites the file with the times just
+measured — run it after adding tests. A module whose recorded time passes
+the runner's split threshold is broken into one job per test class, so one
+slow module cannot stretch the batch. `--timeout N` (minutes, default 30)
+kills a runaway job and counts it as an error.
+
 ## The World Frame: questionnaires, population and systems
 
 A one-line idea is enough, but a short questionnaire shapes the whole world
