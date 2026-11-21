@@ -8,6 +8,7 @@ run says so, the slots follow the sizes the pool could give (the size-first
 splits of rl-16), and a purpose's fit rules (purposeFit) hold through the
 build: a living room never serves across a counter, a taproom always does."""
 import os
+import random
 import tempfile
 import unittest
 
@@ -598,6 +599,66 @@ class TestTheBandSplitProgram(unittest.TestCase):
         # split that seats the full ask wins first
         splits = assembler._band_splits(10, [[(5, 0), (6, 3)], [(4, 0)]])
         self.assertEqual(splits[0], ((5, 4), 1), splits)
+
+
+class TestAPlannedWidthTriesOnlyTheFullAsk(StoreyCase):
+    """rl-19: a slot the size-first split planned around one width tries
+    only the full ask — no room of that width sleeping everyone the spec
+    was asked to take misses the split, and the caller falls to the next
+    ranked split, never a smaller bedroom squeezed into the planned width.
+    The slot is the real one a build's split planned; its pool is replaced
+    by one holding a room of the width only for a smaller ask."""
+
+    @classmethod
+    def setUpClass(cls):
+        captured = []
+        orig = assembler._fill_slot
+
+        def spy(ctx, design, sasm, spec, slot, facing, horizontal, tier,
+                rng, storey, target=None):
+            if spec is not None and target is not None and not captured:
+                captured.append((ctx, design, sasm, spec, slot, facing,
+                                 horizontal, tier, storey, target))
+            return orig(ctx, design, sasm, spec, slot, facing, horizontal,
+                        tier, rng, storey, target=target)
+
+        assembler._fill_slot = spy
+        try:
+            cls.world, cls.bl = cls.build(PACKED_BUILDING, seed=1)
+        finally:
+            assembler._fill_slot = orig
+        (cls.ctx, cls.design, cls.sasm, cls.spec, cls.slot, cls.facing,
+         cls.horizontal, cls.tier, cls.storey, cls.target) = captured[0]
+
+    def test_no_room_of_the_width_sleeping_everyone_misses_the_split(self):
+        W = self.target
+        # the planned width's only room sleeps fewer than the four asked
+        fake = {"id": "planned.width.two.bed",
+                "size": [W, 2] if self.horizontal else [2, W],
+                "doors": {"north": list(range(W if self.horizontal else 2)),
+                          "south": list(range(W if self.horizontal else 2)),
+                          "west": list(range(2 if self.horizontal else W)),
+                          "east": list(range(2 if self.horizontal else W))}}
+        orig_pool = assembler._room_pool
+
+        def pool(ctx, design, spec, fam, tier, rng):
+            if ctx.sleepers.get(spec.name) == (4, 0):
+                return [], "no room of the width sleeps four"
+            return [dict(fake)], ""
+
+        self.ctx.sleepers[self.spec.name] = (4, 0)
+        notes = list(self.sasm.notes)
+        assembler._room_pool = pool
+        try:
+            with self.assertRaises(assembler._SplitMiss):
+                assembler._fill_slot(
+                    self.ctx, self.design, self.sasm, self.spec, self.slot,
+                    self.facing, self.horizontal, self.tier,
+                    random.Random(0), self.storey, target=W)
+        finally:
+            assembler._room_pool = orig_pool
+        # never a smaller bedroom: the miss left no note behind
+        self.assertEqual(self.sasm.notes, notes)
 
 
 class TestTheSameSeedGivesTheSameStorey(StoreyCase):

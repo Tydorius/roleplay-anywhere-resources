@@ -2274,22 +2274,28 @@ def _fill_slot(ctx, design, sasm, spec, slot, facing, horizontal, tier, rng,
     residents reach the upper rooms, and the slot fits what it fits), noted;
     a spec of None, or a pool with nothing that fits at all, becomes a
     closet or store, recorded in the run's notes. ``target`` (rl-16) fills
-    the slot size-first instead: the ask ladder walks as ever, but only a
-    room of exactly that many floor cells along the long axis goes in, and
-    no room of the width doors the corridor raises _SplitMiss for the next
-    ranked split — never a closet. (the _Placed room, its pool, its slot
-    leftover) — the leftover is what the closing steps grow into."""
+    the slot size-first instead: only a room of exactly that many floor
+    cells along the long axis goes in and only the full ask is tried — the
+    smaller asks are the unplanned slot's ladder (rl-19: a planned width
+    never trades beds for fit) — and no room of the width doors the
+    corridor raises _SplitMiss for the next ranked split — never a closet.
+    (the _Placed room, its pool, its slot leftover) — the leftover is what
+    the closing steps grow into."""
     sw = (slot.w - 2) if horizontal else (slot.h - 2)   # along the long axis
     sh = (slot.h - 2) if horizontal else (slot.w - 2)
     if spec is not None:
         fam = ctx.lib.family_of(spec.use)
         singles, couples = ctx.sleepers.get(spec.name, (0, 0))
         # every smaller ask, the fullest first — the room itself outranks the
-        # beds: a bedroom sleeping some of its people beats a closet
+        # beds: a bedroom sleeping some of its people beats a closet; a
+        # planned width tries only the full ask (rl-19), so a split that
+        # cannot seat everyone misses rather than sleep fewer
+        asks = ([(singles, couples)] if target is not None
+                else _ask_ladder(singles, couples))
         saved = ctx.sleepers.get(spec.name)
         ctx.slot_asking = True
         try:
-            for ask in _ask_ladder(singles, couples):
+            for ask in asks:
                 ctx.sleepers[spec.name] = ask
                 pool, _reason = _room_pool(ctx, design, spec, fam, tier, rng)
                 for allow_slivers in (False, True):
