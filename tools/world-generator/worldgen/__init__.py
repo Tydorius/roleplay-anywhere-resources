@@ -1347,6 +1347,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.player = c
 
     checks.run_checks(world)
+    ctx = assembler.active()
+    if ctx is not None:
+        # how each storey band partition split (rl-21) — a metric only:
+        # run_checks just built world.metrics fresh, so it lands here
+        world.metrics["storey_splits"] = dict(ctx.storey_splits)
     return world
 
 

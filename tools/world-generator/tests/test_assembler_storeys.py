@@ -521,14 +521,19 @@ class TestAnUnevenSplitSeatsEveryRoomAtFullBeds(StoreyCase):
     def test_the_split_hands_the_narrow_slot_to_the_privy(self):
         rooms = {r.name: r.rect for r in self.storey.rooms}
         # every bedchamber kept a bedchamber's room — the servant room the
-        # equal tiles closet included — and the run's notes stay silent
+        # equal tiles closet included — and the split band notes nothing;
+        # the study band's composed-only family has no size catalogue, so
+        # its equal slots are the one note the run keeps (rl-21)
         for n in ("Bedroom", "Guest Chamber", "Guest Room",
                   "Servant Room"):
             self.assertEqual((rooms[n].w, rooms[n].h), (5, 8), n)
         # the one 4-wide tile goes to the room whose catalogue has a
         # 4-wide turn: the privy
         self.assertEqual((rooms["Privy"].w, rooms["Privy"].h), (4, 5))
-        self.assertEqual(self.storey.notes, [])
+        self.assertEqual(self.storey.notes,
+                         [("storey 2",
+                           "no size catalogue for study: equal slots "
+                           "instead")])
 
     def test_the_equal_tiles_closet_the_last_bedchamber(self):
         orig = assembler._ranked_splits

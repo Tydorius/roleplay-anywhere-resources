@@ -276,6 +276,12 @@ class _Context:
                                  # same seed, so the first hole pays for all
         self._filler_none = set()  # (building, iw, ih, tier) asks that found
                                    # no room: never composed again
+        self.storey_splits = {"dp used": 0, "dp missed": 0,
+                              "no catalogue": 0}  # how each storey band
+                                  # partition split (rl-21): a split the DP
+                                  # seated / splits that all missed to equal
+                                  # tiles / families with no size catalogue
+                                  # to split by at all
 
 
 # ------------------------------------------------------------------ the switch
@@ -2246,6 +2252,7 @@ def _size_first_band(ctx, design, sasm, placed, pools, spec_list, band,
                 if pool:
                     pools[room.name] = pool
                 sasm.pairs.append(seam)
+            ctx.storey_splits["dp used"] += 1
             return True
         except _SplitMiss:
             del placed[mark[0]:]
@@ -2254,10 +2261,25 @@ def _size_first_band(ctx, design, sasm, placed, pools, spec_list, band,
             pools.clear()
             pools.update(mark[3])
     if splits:
+        ctx.storey_splits["dp missed"] += 1
         sasm.notes.append(
             (f"storey {storey}",
              "no size-first split could door its rooms onto the corridor: "
              "equal slots instead"))
+    else:
+        # no split was even ranked: a family whose pool never yields stored
+        # rooms has no size catalogue to offer a width from
+        empty = sorted({spec.use for spec in spec_list
+                        if _family_sizes(ctx, design, spec,
+                                         ctx.lib.family_of(spec.use), tier,
+                                         ctx.sleepers.get(spec.name,
+                                                          (0, 0))) == ()})
+        if empty:
+            ctx.storey_splits["no catalogue"] += 1
+            sasm.notes.append(
+                (f"storey {storey}",
+                 f"no size catalogue for {' or '.join(empty)}: equal slots "
+                 "instead"))
     return False
 
 
