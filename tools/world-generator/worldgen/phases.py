@@ -21,7 +21,7 @@ from .model import (COMPOUND_SHAPES, COMPOUND_WALLS, COURTYARD_SIZES,
                     WATER_FEATURE_KINDS, WATER_MARKS,
                     bed_capacity, is_spare_room, is_sleep_name as _sleeps,
                     kind_phrases_hit, outdoor_name, outdoor_water,
-                    settlement_size)
+                    settlement_size, _free_room_name)
 
 PROMPTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "prompts")
 
@@ -2249,16 +2249,6 @@ def ruined_building(b):
     if status == "abandoned" or condition == "ruined":
         return True
     return any(isinstance(w, str) and RUIN_WORDS.search(w) for w in words)
-
-
-def _free_room_name(name, busy):
-    """The first free suffix of ``name`` (" 2", " 3", ...) that ``busy`` does
-    not already hold (rl-19: a renamed duplicate never takes a name another
-    room of the building keeps)."""
-    k = 2
-    while f"{name} {k}" in busy:
-        k += 1
-    return f"{name} {k}"
 
 
 def sanitize_p3(d, building_name, templates, log, storeys=None, units=False,

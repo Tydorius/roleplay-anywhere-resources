@@ -586,19 +586,11 @@ class TestTheBandSplitProgram(unittest.TestCase):
     def test_the_best_split_packs_the_band_with_no_slack(self):
         # the 7-wide turn and the 4-wide room want 11 cells together: the
         # 10-cell band takes the 5-wide footprint instead, one cell spare
-        splits = assembler._band_splits(
-            10, [[(3, 0), (4, 0), (5, 0), (7, 0)], [(4, 0)]])
+        splits = assembler._band_splits(10, [[3, 4, 5, 7], [4]])
         self.assertEqual(splits, [((5, 4), 1), ((4, 4), 2), ((3, 4), 3)])
         # one cell more and the 7x5's fitting turn packs exactly
-        splits = assembler._band_splits(
-            11, [[(3, 0), (4, 0), (5, 0), (7, 0)], [(4, 0)]])
+        splits = assembler._band_splits(11, [[3, 4, 5, 7], [4]])
         self.assertEqual(splits[0], ((7, 4), 0), splits)
-
-    def test_a_width_that_loses_beds_ranks_behind_the_full_ask(self):
-        # a wider room would pack tighter, but it costs three beds: the
-        # split that seats the full ask wins first
-        splits = assembler._band_splits(10, [[(5, 0), (6, 3)], [(4, 0)]])
-        self.assertEqual(splits[0], ((5, 4), 1), splits)
 
 
 class TestAPlannedWidthTriesOnlyTheFullAsk(StoreyCase):

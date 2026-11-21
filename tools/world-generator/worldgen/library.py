@@ -533,17 +533,6 @@ ACCESS_RULES = ("both-long", "one-long", "front", "any", "none")
 ACCESS_CLEARANCES = ("tight", "roomy", "grand")
 
 
-def role_access(vocab, role):
-    """The access rule a role carries from library.json's ``roleAccess`` — one
-    of ACCESS_RULES — with its relax entry ({"wealth", "clearance", "to"}) or
-    None: a role is a bare rule string or {"rule": ..., "relax": {...}}.
-    Unknown roles and a missing table read as None."""
-    entry = (vocab.get("roleAccess") or {}).get(role) if isinstance(vocab, dict) else None
-    if isinstance(entry, dict):
-        entry = entry.get("rule")
-    return entry if entry in ACCESS_RULES else None
-
-
 def check_role_access(vocab):
     """[error, ...] for library.json's ``roleAccess`` table: every role in
     ``roles`` must carry one of ACCESS_RULES, nothing else may sit in the

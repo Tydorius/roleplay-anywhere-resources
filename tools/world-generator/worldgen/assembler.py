@@ -13,7 +13,7 @@ parent with a door candidate of each lining up across the shared wall —
 then the outline is closed to a rectangle with stretch lines and filler
 rooms.
 
-A wing ask (``wing_footprint`` / ``wing_build``) assembles the same design
+A wing ask (``wing_build``) assembles the same design
 inside a target rectangle instead of its natural one: the placement search
 stays inside the target, the leaves closest to filling it close first, and
 the strip between the rooms and the target's edge is a hole the closers
@@ -358,25 +358,13 @@ def build(design, origin, templates=None):
     return _building_layout(asm, origin)
 
 
-def wing_footprint(design, target, entrance=None, doors=(), templates=None):
-    """The (w, h) the design takes assembled inside the target rectangle
-    (w, h) — the target itself when the closers fill it, the smaller
-    rectangle the wing grew to when they cannot (a note says so; the caller
-    decides whether the rectangle it got is one it can use) — or None with
-    the reason recorded. ``entrance`` and each of ``doors`` pin a door to
-    the target's ring: (side, offset), or an exact (x, y) cell."""
-    asm = _assembly_for(design, wing=_Wing(target, entrance, doors))
-    if asm is None:
-        return None
-    _inject_templates(templates)
-    box = _bbox(asm.rooms)   # the rooms need not touch the target's origin
-    return (box.w, box.h)
-
-
 def wing_build(design, origin, target, entrance=None, doors=(), templates=None):
     """The assembled BuildingLayout at ``origin``, inside the target
-    rectangle with its pinned doors opened — or None, the reason recorded,
-    the caller falling back to its own method."""
+    rectangle (w, h) with its pinned doors opened — the rectangle itself
+    when the closers fill it, the smaller one the wing grew to when they
+    cannot (a note says so) — or None, the reason recorded, the caller
+    falling back to its own method. ``entrance`` and each of ``doors`` pin a
+    door to the target's ring: (side, offset), or an exact (x, y) cell."""
     asm = _assembly_for(design, wing=_Wing(target, entrance, doors))
     if asm is None:
         return None
@@ -2147,60 +2135,57 @@ def _ask_ladder(singles, couples):
 
 
 def _spec_widths(ctx, design, spec, family, tier, facing, sh, horizontal):
-    """One spec's candidate widths for a band: (width, 0) for every width
-    its family's full-ask catalogue could door onto the corridor at this
-    depth. A family that cannot seat the full ask in this band offers no
-    width at all — no split exists and the band keeps its equal tiles,
-    whose own ask ladder (rl-12) seats what it can with its notes: a split
-    never trades beds for tightness. Only sealable turns offer their
-    widths: a room depth-short of the band leaves a sliver no closer
-    seals. [] when nothing fits the band."""
+    """One spec's candidate widths for a band: every width its family's
+    full-ask catalogue could door onto the corridor at this depth. A
+    family that cannot seat the full ask in this band offers no width at
+    all — no split exists and the band keeps its equal tiles, whose own
+    ask ladder (rl-12) seats what it can with its notes: a split never
+    trades beds for tightness. Only sealable turns offer their widths: a
+    room depth-short of the band leaves a sliver no closer seals. []
+    when nothing fits the band."""
     singles, couples = ctx.sleepers.get(spec.name, (0, 0))
     entries = _family_sizes(ctx, design, spec, family, tier,
                             (singles, couples))
-    return [(w, 0) for w in _catalogue_widths(entries, facing, sh,
-                                              horizontal, sealable=True)]
+    return _catalogue_widths(entries, facing, sh, horizontal, sealable=True)
 
 
 def _band_splits(span, widths_per_room, keep=8):
     """The exact split of one band (the 1D dynamic program of the layout
     research, section 3.4): each room takes one width of its own family's
-    catalogue — a (width, beds lost) pair, so a width that gives beds up
-    can still lose to one that seats them — the widths tiling side by
-    side, every room keeping its own wall ring, so they cover at most
-    ``span`` cells and leave the rest as slack. The program runs over
-    (cells used, rooms placed) and keeps the best few completions per
-    state, best first by: beds lost, least slack, no sliver of 1 to
-    MIN_SPAN - 1 cells, order closest to the plan's (the widths follow
-    the shares), then the widths themselves, so the result stays
-    deterministic. [(widths, slack)], best first; [] when no widths
-    fit."""
+    full-ask catalogue, the widths tiling side by side, every room
+    keeping its own wall ring, so they cover at most ``span`` cells and
+    leave the rest as slack. The program runs over (cells used, rooms
+    placed) and keeps the best few completions per state, best first by:
+    least slack, no sliver of 1 to MIN_SPAN - 1 cells, order closest to
+    the plan's (the widths follow the shares), then the widths
+    themselves, so the result stays deterministic. [(widths, slack)],
+    best first; [] when no widths fit."""
     k = len(widths_per_room)
 
     def score(c):
-        lost, used, dev, widths = c
+        used, dev, widths = c
         slack = span - used
-        return (lost, slack, 1 if 0 < slack < MIN_SPAN else 0, dev, widths)
+        return (slack, 1 if 0 < slack < MIN_SPAN else 0, dev, widths)
 
-    # best[j][i]: the best few (beds lost, cells used, order deviation,
-    # widths) placements of rooms j.. starting at cell i
+    # best[j][i]: the best few (cells used, order deviation, widths)
+    # placements of rooms j.. starting at cell i
     best = [[[] for _ in range(span + 1)] for _ in range(k + 1)]
     for i in range(span + 1):
-        best[k][i] = [(0, 0, 0, ())]
+        best[k][i] = [(0, 0, ())]
     for j in range(k - 1, -1, -1):
         for i in range(span, -1, -1):
             out = []
-            for w, lost in widths_per_room[j]:
+            for w in widths_per_room[j]:
                 if i + w > span:        # the room would run past the band
                     continue
-                for tail_lost, used, dev, tail in best[j + 1][i + w]:
-                    out.append((lost + tail_lost, used + w,
+                for used, dev, tail in best[j + 1][i + w]:
+                    out.append((used + w,
                                 dev + (1 if tail and w < tail[0] else 0),
                                 (w,) + tail))
             out.sort(key=score)
             best[j][i] = out[:keep]
     return [(widths, span - used)
-            for _lost, used, _dev, widths in best[0][0]]
+            for used, _dev, widths in best[0][0]]
 
 
 def _slots_from_widths(band, widths, slack, horizontal):

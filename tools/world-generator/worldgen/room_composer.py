@@ -14,7 +14,7 @@ fill out instead of stringing along one line. A grand private room
 pool instead: the pool's groups join the recipe's optionals at grand, each
 inside the size bands the pool gives it, one group of each luxury kind at
 most (LUXURY_LIMITS, decor two groups and three pieces) and never doubling
-a role the recipe itself already places (EXCLUSIVE_ROLES: no second desk,
+a role the recipe itself already places (_EXCLUSIVE_FAMILY: no second desk,
 bed or fire). A grand private room also stays inside max_area, the grand
 area cap its caller derives from the roomy sibling (GRAND_AREA_RATIO), so
 optional groups join only while the cap holds. A small beam search keeps
@@ -75,7 +75,6 @@ LUXURY_DECOR_PIECES = 3
 # already places it: no second desk, bed or fire in one room. Heat and
 # hearth are one fire (a recipe with a stove takes no fireplace group), and
 # sleep and sleep.couple one bed.
-EXCLUSIVE_ROLES = ("desk", "sleep", "sleep.couple", "heat", "hearth")
 _EXCLUSIVE_FAMILY = {"desk": "desk", "sleep": "sleep",
                      "sleep.couple": "sleep", "heat": "fire",
                      "hearth": "fire"}
@@ -330,9 +329,9 @@ def _luxury_units(recipe, groups, family, clearance, ctx):
     fireplace never joins a small recipe) becomes one fill-only group after
     the recipe's own, in pool order — that order is the preference, the
     fireplace and one seating area before decor. A group carrying one of
-    EXCLUSIVE_ROLES that the recipe itself already places never joins (no
-    second desk, bed or fire). Each entry's bands ride along in ctx and gate
-    the finished room's band in _build_room."""
+    _EXCLUSIVE_FAMILY's roles that the recipe itself already places never
+    joins (no second desk, bed or fire). Each entry's bands ride along in
+    ctx and gate the finished room's band in _build_room."""
     if clearance != "grand" or family not in PRIVATE_FAMILIES:
         return []
     pools = (groups or {}).get("pools") or {}

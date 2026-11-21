@@ -13,7 +13,7 @@ step larger first; the live run's tenant cottage assembles, its children's
 loft sleeping two.
 
 rl-09 adds the wing mode: the same design asked to fill a target rectangle
-(``wing_footprint`` / ``wing_build``) fills it exactly with its entrance
+(``wing_build``) fills it exactly with its entrance
 and outward doors pinned to the ring, no piece on a pinned cell and every
 room still reached; a target the closers cannot meet still assembles and
 reports the rectangle it grew to; a door pin no room can honour falls the
@@ -767,9 +767,9 @@ class TestAWingFillsItsTarget(unittest.TestCase):
 
     def test_an_over_large_target_reports_the_rectangle_it_grew_to(self):
         from worldgen import assembler
-        fp = assembler.wing_footprint(self.design, (30, 20))
-        self.assertIsNotNone(fp, assembler.fallback_note("Wing Hall"))
-        self.assertEqual(fp, (29, 20))
+        bl = assembler.wing_build(self.design, (0, 0), (30, 20))
+        self.assertIsNotNone(bl, assembler.fallback_note("Wing Hall"))
+        self.assertEqual((bl.rect.w, bl.rect.h), (29, 20))
         notes = assembler.spot_notes("Wing Hall", "south")
         self.assertTrue(any("fills 29x20 of the 30x20 target" in note
                             for (_label, note) in notes), notes)
@@ -777,9 +777,9 @@ class TestAWingFillsItsTarget(unittest.TestCase):
     def test_a_door_pin_no_room_can_honour_falls_back_with_the_reason(self):
         from worldgen import assembler
         # the target's corner cell can never open a door
-        fp = assembler.wing_footprint(self.design, (18, 12),
-                                      doors=[("south", 16)])
-        self.assertIsNone(fp)
+        bl = assembler.wing_build(self.design, (0, 0), (18, 12),
+                                  doors=[("south", 16)])
+        self.assertIsNone(bl)
         note = assembler.fallback_note("Wing Hall")
         self.assertIsNotNone(note)
         self.assertIn("the pinned south door at offset 16", note[1])

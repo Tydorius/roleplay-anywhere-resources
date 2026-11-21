@@ -45,9 +45,8 @@ from .library import ACCESS_RULES, ID_RE, LIB_DIR, SIDES
 
 ROOMS_DIR = os.path.join(LIB_DIR, "rooms")
 CLEARANCES = ("tight", "roomy", "grand")
-# the plain clearance table; the gap a family's rooms actually keep comes
-# from room_composer.gap_for (a grand private room stays roomy)
-CLEARANCE_GAP = {"tight": 1, "roomy": 2, "grand": 3}
+# the gap a family's rooms actually keep comes from room_composer.gap_for
+# (a grand private room stays roomy)
 STYLES = ("flush", "open")
 # library.json's sizeBands, measured on the whole room now (there is no wall
 # ring to subtract). The composer labels rooms from this table without loading
