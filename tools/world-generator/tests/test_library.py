@@ -19,7 +19,7 @@ class TestShippedLibrary(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lib = shipped()
-        cls.errors, cls.warnings = L.check(cls.lib)
+        cls.errors, cls.warnings, cls.infos = L.check(cls.lib)
 
     def test_no_errors(self):
         self.assertEqual(self.errors, [], "\n".join(self.errors[:40]))

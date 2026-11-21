@@ -181,9 +181,9 @@ def main(argv=None):
             return 1 if errors else 0
         from worldgen import library as library_mod
         lb = library_mod.load(args.path or library_mod.LIB_DIR)
-        errors, warnings = library_mod.check(lb)
+        errors, warnings, infos = library_mod.check(lb)
         gaps = library_mod.coverage(lb) if args.coverage else None
-        library_mod.report(lb, errors, warnings, gaps)
+        library_mod.report(lb, errors, warnings, infos, gaps)
         return 1 if errors else 0
 
     if getattr(args, "ext", None):

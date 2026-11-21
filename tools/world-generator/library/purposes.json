@@ -1551,7 +1551,7 @@
         "dairy"
       ],
       "milking.stall": [
-        "milking_stall"
+        "dairy.milking_stall"
       ],
       "table.work": [
         "table.trestle",
@@ -1614,7 +1614,7 @@
         "dairy"
       ],
       "milking.stall": [
-        "milking_stall"
+        "dairy.milking_stall"
       ],
       "animal": [
         "feed",

@@ -232,8 +232,7 @@
     "utility": "ladders, mop buckets, generators, pipes and other building plant",
     "pen": "animal pens and folds: hurdle panels, pen fences and gates",
     "coop": "housing for small stock: chicken coops, hutches, dovecotes, beehives",
-    "dairy": "dairy equipment: churns, milk cans, cream separators, milk tanks",
-    "milking_stall": "a stall where one cow is milked: tie stalls, stanchion stalls, milking stands",
+    "dairy": "dairy equipment: churns, milk cans, cream separators, milk tanks, milking stalls",
     "farm_machine": "parked agricultural machines: ploughs, harrows, drills, reapers, tractors, combines",
     "granary": "grain and feed bins: raised granary bins, hopper bins, silo pieces",
     "muck": "a muck heap, dung pile or compost heap"

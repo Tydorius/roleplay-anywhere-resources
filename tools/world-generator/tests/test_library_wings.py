@@ -55,7 +55,7 @@ class TestShippedRecipes(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lib = shipped()
-        cls.errors, cls.warnings = L.check(cls.lib)
+        cls.errors, cls.warnings, cls.infos = L.check(cls.lib)
 
     def test_no_errors(self):
         self.assertEqual(self.errors, [], "\n".join(self.errors[:40]))
@@ -234,9 +234,10 @@ class TestWealthOffsets(unittest.TestCase):
         self.assertEqual(L.wing_wealth(lib.wings["manor.service"]), -2)
         self.assertEqual(L.wing_wealth(lib.wings["sleeping.inn"]), "building")
 
-    def test_the_checker_reports_an_applied_default(self):
-        _, warnings = L.check(shipped())
-        self.assertTrue(any("stables.yard" in w and "defaults to -2" in w for w in warnings))
+    def test_the_checker_reports_an_applied_default_as_info(self):
+        _e, _w, infos = L.check(shipped())
+        self.assertTrue(any("stables.yard" in n and "defaults to -2" in n
+                            for n in infos))
 
 
 class TestWingDesignRoomNames(unittest.TestCase):

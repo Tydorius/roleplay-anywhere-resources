@@ -7,7 +7,7 @@ route doesn't read the library. This module is what the later build steps
 (layout compiling, P3 with the library) load it through.
 
   load(path)          -> Library
-  check(lib)          -> (errors, warnings), lists of strings
+  check(lib)          -> (errors, warnings, infos), lists of strings
   coverage(lib)       -> gaps: rooms whose slots no object can fill
   fill_text(...)      -> an object's description and physical text for a setting
 """
@@ -633,7 +633,7 @@ def _sides_fit(shape, sides):
     return False
 
 
-def _check_wing(lib, w, err, warn):
+def _check_wing(lib, w, err, warn, info):
     wid = w.get("id")
     where = f"wing {wid}"
     if not isinstance(wid, str) or not ID_RE.match(wid):
@@ -697,14 +697,14 @@ def _check_wing(lib, w, err, warn):
             isinstance(wealth, bool) or not isinstance(wealth, int) or not -3 <= wealth <= 1):
         err(f"{where}: wealth must be an offset -3..1, a tier or \"building\", not {wealth!r}")
     if wealth is None and w.get("purpose") in WING_WEALTH_OFFSETS:
-        warn(f"{where}: wealth defaults to {WING_WEALTH_OFFSETS[w['purpose']]} "
+        info(f"{where}: wealth defaults to {WING_WEALTH_OFFSETS[w['purpose']]} "
              f"({w['purpose']}, design 8.3)")
 
 
-def check_wings(lib, err, warn):
+def check_wings(lib, err, warn, info):
     """Every wing recipe, one by one."""
     for w in lib.wings.values():
-        _check_wing(lib, w, err, warn)
+        _check_wing(lib, w, err, warn, info)
 
 
 def _check_building(lib, b, err, warn):
@@ -784,17 +784,19 @@ def check_buildings(lib, err, warn):
         _check_building(lib, b, err, warn)
 
 
-def check_recipes(lib, err, warn):
+def check_recipes(lib, err, warn, info=None):
     """Wing and building recipes (design 8.1-8.3), called from ``check``."""
-    check_wings(lib, err, warn)
+    check_wings(lib, err, warn, info or (lambda _n: None))
     check_buildings(lib, err, warn)
 
 
 def check(lib, sources_path=SOURCES_PATH):
-    """(errors, warnings) for the whole library."""
-    errors, warnings = list(lib.load_errors), []
+    """(errors, warnings, infos) for the whole library. The infos are the
+    informational notes — defaults applied as the design says, families with
+    no layouts by design — reported as a count, not item by item."""
+    errors, warnings, infos = list(lib.load_errors), [], []
     errors += getattr(lib, "dupes", [])
-    err, warn = errors.append, warnings.append
+    err, warn, info = errors.append, warnings.append, infos.append
     for key in ("bands", "wealth", "conditions", "materialClasses", "categories", "roles",
                 "families", "purposes", "anchors", "sizeBands"):
         if key not in lib.vocab:
@@ -821,11 +823,11 @@ def check(lib, sources_path=SOURCES_PATH):
     _check_purposefit(lib, err)
     for s in lib.suites.values():
         _check_suite(lib, s, err, warn)
-    check_recipes(lib, err, warn)
+    check_recipes(lib, err, warn, info)
     for fam in lib.vocab.get("families", {}):
         if lib.layouts and not lib.layouts_for(fam):
-            warn(f"family {fam} has no layouts")
-    return errors, warnings
+            info(f"family {fam} has no layouts")
+    return errors, warnings, infos
 
 
 # ------------------------------------------------------------------ coverage
@@ -971,7 +973,7 @@ def fill_text(lib, obj, band, tier, condition, rng, fixed=None):
 
 # ------------------------------------------------------------------ report
 
-def report(lib, errors, warnings, gaps=None, out=print):
+def report(lib, errors, warnings, infos=(), gaps=None, out=print):
     """Print a short summary for the ``library`` command."""
     out(f"library {lib.path}")
     out(f"  {len(lib.objects)} objects, {len(lib.layouts)} layouts, {len(lib.suites)} suites, "
@@ -982,7 +984,8 @@ def report(lib, errors, warnings, gaps=None, out=print):
         for b in (lib.bands if o.get("bands") == ["*"] else o.get("bands") or []):
             by_band[b] += 1
     out("  objects per band: " + ", ".join(f"{b} {by_band[b]}" for b in lib.bands))
-    out(f"  {len(errors)} error(s), {len(warnings)} warning(s)")
+    out(f"  {len(errors)} error(s), {len(warnings)} warning(s), "
+        f"{len(infos)} info note(s)")
     for e in errors:
         out("ERROR " + e)
     if gaps is not None:
