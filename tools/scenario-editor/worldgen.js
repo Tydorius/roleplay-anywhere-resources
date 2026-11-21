@@ -71,6 +71,7 @@ async function newWorldDialog() {
       extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
       library: $("wgLibrary").checked,
       item_library: $("wgItemLibrary").checked,
+      room_assembler: $("wgLibrary").checked && $("wgRoomAssembler").checked,
       frame: wgFrame,
       questionnaire: {mode, answers: wgAnswers(dlg), population: wgPopulation(dlg),
                       notes: $("wgNotes").value.trim()},
@@ -157,6 +158,9 @@ function wgFormHtml(drafts) {
     ${field("Item library",
             `<label class="check"><input type="checkbox" id="wgItemLibrary" checked> Use item library</label>`,
             "Containers are stocked from the generator's item library of reviewed item art: the model fills loot pools from a menu, recolours variants for local flavour, and only plot items get a picture of their own. Untick and the model invents every item.")}
+    ${field("Room assembler",
+            `<label class="check"><input type="checkbox" id="wgRoomAssembler" checked> Lay out rooms from the library</label>`,
+            "Rooms come from the room library's own room layouts; untick it for the older room cutter.")}
     <div class="wg-exts">
       <span class="wg-exts-title">Extensions</span>
       <span class="note">Floors is on by default (Anywhere RPG 1.0's own floors, no mod); untick it for a single-storey world. The rest start off: without them the world imports and plays in the unmodded game.</span>
@@ -390,7 +394,8 @@ function wgDraftState(dlg) {
              seed: wgSeedOf($("wgSeed")),
              extensions: [...dlg.querySelectorAll("[data-ext]:checked")].map(cb => cb.dataset.ext),
              library: $("wgLibrary").checked,
-             item_library: $("wgItemLibrary").checked};
+             item_library: $("wgItemLibrary").checked,
+             room_assembler: $("wgRoomAssembler").checked};
   if (wgFrame) s.summary = $("wgSummary").value;
   if (wgClarifyQuestions) s.clarifyAnswers = wgClarifyAnswers(dlg);
   return s;
@@ -429,6 +434,8 @@ async function wgResumeDraft(dlg, id) {
   dlg.querySelectorAll("[data-ext]").forEach(cb => cb.checked = (d.extensions || []).includes(cb.dataset.ext));
   if (d.library != null) $("wgLibrary").checked = !!d.library;
   if (d.item_library != null) $("wgItemLibrary").checked = !!d.item_library;
+  if (d.room_assembler != null) $("wgRoomAssembler").checked = !!d.room_assembler;
+  wgSyncAssembler();
   dlg.querySelectorAll(".wg-q[data-q]").forEach(box => {
     const q = wgQuestionById(box.dataset.q), a = (d.answers || {})[box.dataset.q];
     if (!q || !a) return;
@@ -526,10 +533,19 @@ async function wgImportSettings(dlg, file) {
   toast(`Settings imported${from}${d.frame ? ", with its frame" : ""}`);
 }
 
+/** The room assembler only matters with the room library on: its tick greys
+ * out while the library is off, and Generate passes false for it then. */
+function wgSyncAssembler() {
+  const box = $("wgRoomAssembler");
+  if (box) box.disabled = !$("wgLibrary").checked;
+}
+
 function wgBindForm(dlg) {
   wgDialog = dlg;
   wgRenderQuestions(dlg, "quick");
   wgUpdateGo();
+  $("wgLibrary").onchange = wgSyncAssembler;
+  wgSyncAssembler();
   $("wgExport").onclick = () => wgExportSettings(dlg).catch(e => toast(e.message));
   $("wgImport").onclick = () => $("wgImportFile").click();
   $("wgImportFile").onchange = ev => {

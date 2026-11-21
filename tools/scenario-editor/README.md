@@ -149,6 +149,9 @@ The dialog's steps:
   and recolours variants for local colour (Pillow installed; otherwise the variant keeps the
   original art); only the few invented plot items are left for image generation. Untick it and
   the model invents every item, the old method.
+- **Lay out rooms from the library** — on by default (and only usable with the room library
+  on): rooms come from the room library's own room layouts, wings and storeys. Untick it for
+  the older room cutter, which packs rectangles instead.
 - **Extensions** — all off by default, so the plain world imports and plays in the unmodded game:
 
   | Extension | What it adds | Game mods needed |

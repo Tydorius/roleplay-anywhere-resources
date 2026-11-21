@@ -364,12 +364,14 @@ class TestWorldgenEndpoints(unittest.TestCase):
         form = {"mode": "short", "idea": "a mill town", "notes": "keep it cozy",
                 "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
                 "population": [25, 35], "provider": "mockp", "seed": 6,
-                "extensions": ["floors"], "library": False,
+                "extensions": ["floors"], "library": False, "room_assembler": False,
                 "frame": A_FRAME, "summary": "An edited summary."}
         s = self.post("/api/worldgen/settings/export", form)["settings"]
         self.assertEqual(s["kind"], wg.wgsettings.KIND)
         self.assertEqual(s["frame"]["summary"], "An edited summary.")
         self.assertEqual(s["model"], "mock-model")
+        self.assertEqual(s["library"], False)
+        self.assertEqual(s["room_assembler"], False, "an explicit off stays off")
         self.assertEqual(s["extensions"], ["floors"], "floors no longer brings portals along")
         text = json.dumps(s)
         self.assertNotIn(FULL_KEY, text)
@@ -377,8 +379,9 @@ class TestWorldgenEndpoints(unittest.TestCase):
         d = self.post("/api/worldgen/settings/import", {"settings": s})["draft"]
         try:
             self.assertTrue(d["id"].startswith("d-") and d["id"].endswith("import"))
-            self.assertEqual((d["mode"], d["idea"], d["notes"], d["seed"], d["library"]),
-                             ("short", "a mill town", "keep it cozy", 6, False))
+            self.assertEqual((d["mode"], d["idea"], d["notes"], d["seed"], d["library"],
+                              d["room_assembler"]),
+                             ("short", "a mill town", "keep it cozy", 6, False, False))
             self.assertEqual((d["frame"]["summary"], d["framedMode"]),
                              ("An edited summary.", "short"))
             self.assertEqual(d["imported"]["model"], "mock-model")
@@ -412,12 +415,14 @@ class TestWorldgenEndpoints(unittest.TestCase):
                        "questionnaire": {"mode": "short",
                                          "answers": {"genre": {"choices": ["Fantasy"], "other": ""}},
                                          "population": [25, 35]},
-                       "library": True, "item_library": False})["job"]
+                       "library": True, "item_library": False,
+                       "room_assembler": False})["job"]
         done = self.wait_job(j["id"])
         self.assertEqual(done["state"], "done", done["error"])
         self.assertTrue(done["source"].startswith("work/"))
         self.assertIs(GEN_KWARGS[-1]["library"], True)        # both switches travel
         self.assertIs(GEN_KWARGS[-1]["item_library"], False)  # and stay independent
+        self.assertIs(GEN_KWARGS[-1]["room_assembler"], False)  # the form's tick, not the default
         self.assertEqual(GEN_KWARGS[-1]["frame"], A_FRAME)
         self.assertEqual(GEN_KWARGS[-1]["questionnaire"],
                          {"mode": "short",

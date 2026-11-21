@@ -173,7 +173,8 @@ class Handler(ig.Handler):
                     req.get("idea"), req.get("provider"), req.get("extensions") or [], req.get("seed", 1),
                     frame=req.get("frame"), questionnaire=req.get("questionnaire"),
                     draft=req.get("draft"), library=req.get("library", True),
-                    item_library=req.get("item_library", True))})
+                    item_library=req.get("item_library", True),
+                    room_assembler=req.get("room_assembler", True))})
             if u.path == "/api/worldgen/frame":
                 req = req_json(self.body())
                 return self.send(200, {"job": wg.start_frame(

@@ -16,6 +16,7 @@ import launcher
 from worldgen import api, llm
 from worldgen import settings as settings_mod
 from tests.test_013_frame import a_frame
+from tests.test_library_generate import client as library_client
 from tests.test_model import ScriptedClient, canned_replies
 
 
@@ -300,6 +301,46 @@ class TestWorlds(unittest.TestCase):
         self.assertTrue(summary["ok"], summary)
         self.assertEqual((summary["seed"], summary["calls"]), (7, 0))
         self.assertIn("village-seed7-", os.path.basename(summary["out"]))
+
+    def test_the_room_assembler_answer_reaches_the_run_and_its_settings(self):
+        # quick mode, the idea, default population, use the frame, extensions
+        # off, the room library yes (the question only comes then), the item
+        # library yes, the room assembler no, seed 4, start
+        generate = api.generate
+        seen = {}
+
+        def record(*a, **k):
+            seen.update(k)
+            return generate(*a, **k)
+        c = library_client()
+        c._queue.insert(0, _dump(a_frame()))   # the frame call comes first
+        s = Session(["1", "a mill village", "", "1", "n", "n", "n", "n",
+                     "y", "", "n", "4", ""], self.tmp, client=c)
+        with mock.patch.object(api, "generate", record):
+            summary = s.launcher.new_world()
+        self.assertTrue(summary["ok"], summary)
+        self.assertIs(seen["room_assembler"], False)
+        saved = settings_mod.read(os.path.join(summary["out"], settings_mod.FILE_NAME))
+        self.assertIs(saved["room_assembler"], False)
+
+    def test_reroll_reads_the_room_assembler_from_the_saved_settings(self):
+        world = os.path.join(self.tmp, "out", "village-20261101-120000")
+        os.makedirs(world)
+        shutil.copy(os.path.join(FIXTURES, "village.json"), os.path.join(world, "plan.json"))
+        settings_mod.write(os.path.join(world, settings_mod.FILE_NAME),
+                           settings_mod.make(mode="quick", idea="v", extensions=(),
+                                             library=True, room_assembler=False))
+        relayout = api.relayout
+        seen = {}
+
+        def record(*a, **k):
+            seen.update(k)
+            return relayout(*a, **k)
+        s = Session(["1", "7"], self.tmp)
+        with mock.patch.object(api, "relayout", record):
+            summary = s.launcher.reroll()
+        self.assertTrue(summary["ok"], summary)
+        self.assertIs(seen["room_assembler"], False)
 
 
 if __name__ == "__main__":
