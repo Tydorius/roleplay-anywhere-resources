@@ -599,6 +599,15 @@ def access_constraints(pieces, room=None, lib=None, groups=None, skip=()):
 
 # ----------------------------------------------------------------- instances
 
+def _touch(a, b):
+    """Two piece rects share an edge (not just a corner)."""
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    gx = max(bx - (ax + aw), ax - (bx + bw))
+    gy = max(by - (ay + ah), ay - (by + bh))
+    return (gx <= 0 and gy == 0) or (gy <= 0 and gx == 0)
+
+
 def _rect(p):
     at, size = p.get("at"), p.get("size")
     return None if not (isinstance(at, list) and len(at) == 2
