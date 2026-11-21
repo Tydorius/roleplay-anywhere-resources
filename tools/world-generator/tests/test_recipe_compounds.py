@@ -983,9 +983,10 @@ class TestTheInnsSleepersSplitByRole(unittest.TestCase):
 
 class TestAVillageWorldCapsEveryWing(unittest.TestCase):
     """rl-12: wings follow the height rules — a medieval village world whose
-    compounds rise only as far as each building's cap, the farmstead's barn
-    and hayloft held to the village's one storey while the inn and manor
-    wings take their two."""
+    compounds rise only as far as each wing's own cap: the gate's cap, or the
+    barn's row for a wing that holds the hayloft or stables the animals, so
+    the farmstead's barn stands its two storeys with the loft while the
+    farmhouse keeps its one, and the inn and manor wings take their two."""
 
     @classmethod
     def setUpClass(cls):
@@ -1001,14 +1002,25 @@ class TestAVillageWorldCapsEveryWing(unittest.TestCase):
                          if r.x <= mid[0] < r.x + r.w
                          and r.y <= mid[1] < r.y + r.h), "")
             zone_kind = kinds.get(zone, "village")
+            wings = (getattr(comp.compound, "recipe_data", None) or {}) \
+                .get("wings") or {}
             gates = [p.layout.design.kind for p in comp.parts
                      if getattr(p, "gate", False)] or \
                 [p.layout.design.kind for p in comp.parts]
             cap = phases._storey_cap("medieval", gates[0],
                                      settlement_size(zone_kind))
             for p in comp.parts:
-                self.assertLessEqual(p.layout.design.storeys, cap,
-                                     (comp.name, p.layout.design.name, cap))
+                # the per-wing rule the composer caps by: a hayloft or
+                # stables wing takes the barn's row where it stands
+                wing = wings.get(p.layout.design.name) or {}
+                own = cap
+                if wing.get("purpose") == "stables" or any(
+                        r.get("purpose") == "hayloft"
+                        for r in wing.get("rooms") or []):
+                    own = max(cap, phases._storey_cap(
+                        "medieval", "barn", settlement_size(zone_kind)))
+                self.assertLessEqual(p.layout.design.storeys, own,
+                                     (comp.name, p.layout.design.name, own))
 
     def test_the_storeys_land_where_the_rules_say(self):
         want = {
@@ -1016,7 +1028,7 @@ class TestAVillageWorldCapsEveryWing(unittest.TestCase):
             ("The Gilded Stag Inn", "Stable Range"): 2,
             ("The Gilded Stag Inn", "Guest Range"): 2,
             ("Millfield Compound", "Millfield Farmhouse"): 1,
-            ("Millfield Compound", "The Barn"): 1,
+            ("Millfield Compound", "The Barn"): 2,
             ("Ashford Compound", "Ashford Manor"): 1,
             ("Ashford Compound", "The Family Wing"): 2,
             ("Ashford Compound", "The Old Hall"): 2,

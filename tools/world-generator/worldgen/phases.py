@@ -81,9 +81,10 @@ STOREY_CAPS = {
             (("city",), ("merchant house", "guildhall", "guild hall",
                          "townhouse"), 3),
             (("hamlet", "village", "outside"),
-             ("headman", "elder", "chief", "reeve", "manor house", "inn",
-              "tavern", "waystation", "barn", "byre", "mill", "granary",
-              "temple", "shrine hall", "chapel", "church"), 2),
+             ("headman", "elder", "chief", "reeve", "manor", "manor house",
+              "estate", "great house", "inn", "tavern", "waystation", "barn",
+              "byre", "mill", "granary", "temple", "shrine hall", "chapel",
+              "church"), 2),
         ),
     },
     "industrial": {
@@ -93,6 +94,8 @@ STOREY_CAPS = {
             (("city",), ("tenement", "mill", "factory", "warehouse",
                          "works"), 4),
             (None, ("farmhouse", "cottage"), 2),
+            (("hamlet", "village", "outside"),
+             ("barn", "threshing barn", "steading", "farm sheds"), 2),
         ),
     },
     "modern": {

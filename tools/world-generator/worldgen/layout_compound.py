@@ -144,6 +144,21 @@ def _wing_cap(ctx, zone, kind):
     return _storey_cap(ctx.band, kind, settlement_size(zone.kind))
 
 
+def _wing_own_cap(ctx, zone, wing, cap):
+    """The cap one wing rises to (rl-19): a wing that holds the hayloft, or
+    whose purpose is stables, is capped as the barn it stands as where it
+    stands, when that rises higher than the compound's own cap — a village
+    farmstead's barn keeps its loft even while the farmhouse stays at one
+    (Michael, 2026-11-19: a barn with its loft is one of the anchors). Every
+    other wing keeps the compound's cap."""
+    barn_wing = str(wing.get("purpose") or "") == "stables" or any(
+        isinstance(r, dict) and r.get("purpose") == "hayloft"
+        for r in wing.get("rooms") or [])
+    if not barn_wing:
+        return cap
+    return max(cap, _wing_cap(ctx, zone, "barn"))
+
+
 def _move_farm_residents(lib, designs, notes, label):
     """A wing of only farm-family rooms never sleeps anyone (rl-15): each
     such wing's residents and couples move to the compound's sleeping wing —
@@ -284,7 +299,8 @@ def _recipe_compound(zone, compound):
             continue
         b = by_name.get(part.building) if part is not None else gate_design
         designs[name] = library_plan.wing_design(ctx.lib, w, name, b, ctx.band,
-                                                 cap, kind)
+                                                 _wing_own_cap(ctx, zone, w, cap),
+                                                 kind)
         wingmap[name] = w
         sources[name] = by_name.get(part.building) if part is not None else None
     library_plan.split_wing_sleepers(ctx.lib, designs, wingmap, sources, notes,
