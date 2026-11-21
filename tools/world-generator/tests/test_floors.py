@@ -134,22 +134,13 @@ class TestP3Upper(unittest.TestCase):
         self.assertEqual(self._errors(d, storeys=None), [])
 
     def test_sanitize_drops_the_bad_and_keeps_the_good(self):
-        # storey 3 takes its own room names: rl-19 renames a room that
-        # shares another storey's name, which would drop the furniture below
         d = dict(GROUND, stairs={"room": "Back Hall"},
                  upper=[upper_storey(),
                         upper_storey(storey=2, rooms=[]),
                         upper_storey(storey=9),
-                        upper_storey(storey=3,
-                                     rooms=[{"name": "Attic", "share": "large",
-                                             "purpose": "boxes"},
-                                            {"name": "Box Room", "share": "small",
-                                             "purpose": "the stair head"}],
-                                     connections=[["Attic", "Box Room"]],
-                                     furniture=[
-                                         {"template": "Lamp", "room": "Box Room",
-                                          "count": 1, "hint": "wall:zzz"}],
-                                     opening={"over_room": "Common Room", "kind": "well"})])
+                        upper_storey(storey=3, furniture=[
+                            {"template": "Lamp", "room": "Landing", "count": 1, "hint": "wall:zzz"}],
+                            opening={"over_room": "Common Room", "kind": "well"})])
         log = []
         phases.sanitize_p3(d, "The Sickle & Sheaf", CATALOGUE, log, storeys=3)
         self.assertEqual([u["storey"] for u in d["upper"]], [2, 3])
@@ -157,6 +148,24 @@ class TestP3Upper(unittest.TestCase):
         self.assertEqual(d["upper"][1]["furniture"][0]["hint"], "")
         self.assertEqual(d["stairs"], {"room": "Back Hall"})
         self.assertTrue(log)
+
+    def test_a_renamed_upper_room_keeps_its_connections_and_furniture(self):
+        # rl-19 review: storey 3 repeats storey 2's Gallery and Landing; they
+        # are renamed, and storey 3's own connection and lamp follow them
+        d = dict(GROUND, stairs={"room": "Back Hall"},
+                 upper=[upper_storey(),
+                        upper_storey(storey=3, furniture=[
+                            {"template": "Lamp", "room": "Landing", "count": 1, "hint": ""}])])
+        log = []
+        phases.sanitize_p3(d, "The Sickle & Sheaf", CATALOGUE, log, storeys=3)
+        top = d["upper"][1]
+        self.assertEqual([r["name"] for r in top["rooms"]], ["Gallery 2", "Landing 2"])
+        self.assertEqual(top["connections"], [["Gallery 2", "Landing 2"]])
+        self.assertEqual([(f["template"], f["room"]) for f in top["furniture"]],
+                         [("Lamp", "Landing 2")])
+        # storey 2 keeps its own names and its own stool
+        self.assertEqual([r["name"] for r in d["upper"][0]["rooms"]], ["Gallery", "Landing"])
+        self.assertEqual(d["upper"][0]["furniture"][0]["room"], "Gallery")
 
     def test_room_names_unique_across_the_storeys(self):
         # rl-19: "Bedroom" on the ground and both upper storeys of one

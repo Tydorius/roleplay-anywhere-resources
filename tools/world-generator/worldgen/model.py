@@ -713,14 +713,20 @@ def _parse_upper(specs, storeys, ground_rooms):
         else:
             opening = None
         rooms = []
-        renames = {}
+        renames, own = {}, set()
         for r in (u.get("rooms") or []):
             if not isinstance(r, dict):
                 continue
             if isinstance(r.get("name"), str):
+                first = r["name"]
                 if r["name"] in seen:
-                    renames[r["name"]] = r["name"] = _free_room_name(
-                        r["name"], seen | taken)
+                    r["name"] = _free_room_name(r["name"], seen | taken)
+                    # only a clash with another storey re-points this storey's
+                    # connections and furniture; a duplicate within the storey
+                    # stays ambiguous and keeps pointing at the first
+                    if first not in own:
+                        renames[first] = r["name"]
+                own.add(first)
                 seen.add(r["name"])
             rooms.append(_parse_roomspec(r))
         out.append(UpperStorey(

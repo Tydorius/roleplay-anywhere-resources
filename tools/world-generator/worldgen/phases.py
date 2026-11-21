@@ -2410,13 +2410,21 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
                         f"{label} dropped: bad or duplicate storey (building has {storeys})"))
             continue
         rooms, names = [], []
+        own, renames = set(), {}   # this storey's own names, as the model wrote them
         for r in (u.get("rooms") or []):
             if not isinstance(r, dict) or not _is_str(r.get("name")):
                 continue
+            first = r["name"]
             if r["name"] in seen:
                 log.append((f"building {building_name}",
                             f"room {r['name']!r} in {label} renamed duplicate"))
                 r["name"] = _free_room_name(r["name"], seen | taken)
+                # a name another storey holds: this storey's connections and
+                # furniture meant this room, so they follow it to its new name
+                # (a duplicate within the storey itself stays ambiguous)
+                if first not in own:
+                    renames[first] = r["name"]
+            own.add(first)
             seen.add(r["name"])
             names.append(r["name"])
             if r.get("share") not in SHARES:
@@ -2430,11 +2438,16 @@ def _sanitize_upper(d, building_name, ground_rooms, templates, log, storeys,
         if not rooms:
             log.append((f"building {building_name}", f"{label} dropped: no usable rooms"))
             continue
-        connections = [c for c in (u.get("connections") or [])
+        connections = [[renames.get(x, x) for x in c]
+                       for c in (u.get("connections") or [])
                        if isinstance(c, list) and len(c) == 2
-                       and c[0] in names and c[1] in names and c[0] != c[1]]
+                       and all(isinstance(x, str) for x in c)]
+        connections = [c for c in connections
+                       if c[0] in names and c[1] in names and c[0] != c[1]]
         furn = []
         for f in (u.get("furniture") or []):
+            if isinstance(f, dict) and f.get("room") in renames:
+                f["room"] = renames[f["room"]]
             if not isinstance(f, dict) or f.get("template") not in templates or f.get("room") not in names:
                 log.append((f"building {building_name}",
                             f"furniture {f.get('template') if isinstance(f, dict) else f!r} "
