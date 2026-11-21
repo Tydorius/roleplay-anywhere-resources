@@ -1276,7 +1276,7 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         for other in placed_lots:
             if other.gap(lot) < spacing:
                 return False
-        if lot.cells() & out.reserved:
+        if lot.touches_any(out.reserved):
             return False
         if out.feature is not None and out.feature.intersects(lot):
             return False

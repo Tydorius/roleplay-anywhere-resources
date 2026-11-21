@@ -43,6 +43,17 @@ class Rect:
     def cells(self):
         return {(x, y) for x in range(self.x, self.x1 + 1) for y in range(self.y, self.y1 + 1)}
 
+    def touches_any(self, cells):
+        """True when any of ``cells`` lies inside this rect: the same answer
+        as ``bool(self.cells() & cells)`` without building the cell set,
+        walking whichever side is smaller and stopping at the first hit."""
+        if not cells:
+            return False
+        x0, y0, x1, y1 = self.x, self.y, self.x + self.w - 1, self.y + self.h - 1
+        if len(cells) <= self.w * self.h:
+            return any(x0 <= x <= x1 and y0 <= y <= y1 for (x, y) in cells)
+        return any((x, y) in cells for x in range(x0, x1 + 1) for y in range(y0, y1 + 1))
+
     def interior(self, n=1):
         return Rect(self.x + n, self.y + n, max(1, self.w - 2 * n), max(1, self.h - 2 * n))
 
