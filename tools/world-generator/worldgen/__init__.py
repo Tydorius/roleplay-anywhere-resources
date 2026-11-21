@@ -802,14 +802,19 @@ def run(plan_data, seed=1, extensions=(), room_assembler=True):
     # caller's dict ends up holding the winner's — a discarded pass must not
     # leave its sizes behind (a shorter slab than the strip it must cover).
     base = copy.deepcopy(plan_data)
+    # the room assembler's compose caches live for the whole run, not one
+    # attempt: a growth pass composes no room the first attempt already
+    # composed (worldgen/assembler.py)
+    from . import assembler
+    store = assembler.new_store() if room_assembler else None
 
     def attempt(weight_scale=None):
         data = copy.deepcopy(base)
         # the room assembler is plan-wide state the build reads as it lays
         # library buildings out (worldgen/assembler.py, on by default)
-        from . import assembler
         if room_assembler:
-            assembler.activate(plan, data, data.get("name", "world"), None)
+            assembler.activate(plan, data, data.get("name", "world"), None,
+                               store)
         try:
             return _build_world(plan, data, seed, exts, weight_scale), data
         finally:

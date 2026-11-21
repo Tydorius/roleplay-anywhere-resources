@@ -884,3 +884,55 @@ class TestCompoundPartsAssemble(unittest.TestCase):
             with open(os.path.join(tmp, "off", "spec.py"),
                       encoding="utf-8", newline="") as f:
                 self.assertEqual(f.read(), want)
+
+
+class TestTheRunsComposeStore(unittest.TestCase):
+    """rl-23: one worldgen.run hands every attempt its growth loop makes the
+    same compose store, so a room the first attempt composed is never
+    composed again — a growth pass costs its placement work, not its
+    composing."""
+
+    def test_two_attempts_in_one_run_compose_a_room_once(self):
+        import sys
+        from worldgen import room_composer as RC
+        asks = []      # (the composer asking, its compose arguments)
+        real = RC.compose
+
+        def counting(recipe, groups, clearance, style, seed, **kw):
+            rooms, why = real(recipe, groups, clearance, style, seed, **kw)
+            # only a compose that found rooms is cached (a miss is asked
+            # again the way it always was), so only those can prove the
+            # store: the same ask reaching compose twice recomposed a pool
+            if rooms and "|assembler|" in str(seed):
+                asks.append((sys._getframe(1).f_code.co_name,
+                             str(recipe.get("layout")),
+                             recipe.get("family"), clearance, style,
+                             str(seed), str(kw.get("size_band")),
+                             str(kw.get("sleepers"))))
+            return rooms, why
+
+        real_growth = worldgen._growth_scale
+        forced = []
+
+        def scale(plan, world, current=None):
+            if not forced:
+                # a scale nothing dropped earns: the loop still rebuilds the
+                # world once under it, which is the pass the store must serve
+                forced.append({z.name: 1.4 for z in plan.zones if z.buildings})
+                return forced[0]
+            return real_growth(plan, world, current)
+
+        RC.compose = counting
+        worldgen._growth_scale = scale
+        try:
+            world = worldgen.run(cottage_plan(use="infirmary"), seed=7,
+                                 room_assembler=True)
+        finally:
+            RC.compose = real
+            worldgen._growth_scale = real_growth
+        # the growth pass really ran, and something really composed
+        self.assertTrue(forced, "the run never made its second attempt")
+        self.assertTrue(asks, "nothing composed: the run proves no caching")
+        again = [a for a in asks if asks.count(a) > 1]
+        self.assertEqual(again, [], "a later attempt recomposed a room")
+        self.assertTrue(getattr(assembled(world), "assembled", False))

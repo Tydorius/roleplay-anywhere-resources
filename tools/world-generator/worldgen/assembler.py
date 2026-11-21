@@ -208,7 +208,7 @@ class _Context:
     and the assembled buildings, cached per entrance side so the map's
     measurements and the build itself agree."""
 
-    def __init__(self, plan, plan_data, world_seed, world_templates):
+    def __init__(self, plan, plan_data, world_seed, world_templates, store=None):
         self.lib = library_plan.load()
         self.groups = RG.load()
         self.rooms = FR.load()
@@ -267,15 +267,25 @@ class _Context:
         self.slot_asking = False  # a storey slot is walking its ask ladder:
                                   # its speculative pools note nothing
         self._clearances = {}    # (design name, family) -> clearance
-        self._pools = {}         # (family, clearance, band, sleepers, fit) -> [rooms]
-        self._size_catalogues = {}  # (design, family, tier, use, share, ask) ->
-                                    # ((w, h, door sides), ...) a family's sizes
-        self._filler_rooms = {}  # (recipe, band, clearance, style, seed) ->
-                                 # compose's rooms; every hole of one band in
-                                 # one building asks the same recipes at the
-                                 # same seed, so the first hole pays for all
-        self._filler_none = set()  # (building, iw, ih, tier) asks that found
-                                   # no room: never composed again
+        # the compose caches below live in a store that can outlive one
+        # build: worldgen.run hands every attempt it makes the same store,
+        # so a growth pass composes no room an earlier attempt composed.
+        # Their keys carry every input, seed key and tier included, so two
+        # attempts of one run (same seed, same plan) always agree; a store
+        # made without one is this context's alone
+        store = new_store() if store is None else store
+        self._pools = store["pools"]      # (family, clearance, band, tier,
+                                          # sleepers, fit, seed) -> [rooms]
+        self._size_catalogues = store["size_catalogues"]
+        # (design, family, tier, use, share, ask, seed) ->
+        # ((w, h, door sides), ...) a family's sizes
+        self._filler_rooms = store["filler_rooms"]
+        # (recipe, band, clearance, style, seed) -> compose's rooms; every
+        # hole of one band in one building asks the same recipes at the
+        # same seed, so the first hole pays for all
+        self._filler_none = store["filler_none"]
+        # (building, iw, ih, tier) asks that found no room: never
+        # composed again
         self.storey_splits = {"dp used": 0, "dp missed": 0,
                               "no catalogue": 0}  # how each storey band
                                   # partition split (rl-21): a split the DP
@@ -289,10 +299,23 @@ class _Context:
 _context = None
 
 
-def activate(plan, plan_data, world_seed, world_templates):
-    """Turn the assembler on for one build; ``deactivate`` after it."""
+def new_store():
+    """The compose caches that outlive one build attempt: the pools, the
+    filler memo and the size catalogues, empty and unowned. One
+    ``worldgen.run`` hands the same store to every attempt it makes, so a
+    growth pass composes no room the first attempt already composed; the
+    entries are keyed by all of their inputs (seed key and tier included)
+    and handed out the way the per-build caches always handed them out."""
+    return {"pools": {}, "size_catalogues": {}, "filler_rooms": {},
+            "filler_none": set()}
+
+
+def activate(plan, plan_data, world_seed, world_templates, store=None):
+    """Turn the assembler on for one build; ``deactivate`` after it.
+    ``store`` is the run's compose cache (worldgen.run's, shared by its
+    attempts); None gives this context a store of its own."""
     global _context
-    _context = _Context(plan, plan_data, world_seed, world_templates)
+    _context = _Context(plan, plan_data, world_seed, world_templates, store)
     return _context
 
 
@@ -626,10 +649,15 @@ def _compose_pool(ctx, spec, family, tier, band, clearance, singles, couples,
     family but never a pool."""
     if not recipes:
         return None, f"no {family} room stored and no recipe to compose one"
-    key = (family, clearance, band, tier, singles, couples, req, forb)
+    # the shuffle runs before the cache is asked, hit or miss: it advances
+    # the caller's rng either way, so a growth attempt that reaches an ask
+    # no earlier attempt made draws the same recipe order a fresh context
+    # would have — the store never changes what composes
+    rng.shuffle(recipes)
+    key = (family, clearance, band, tier, singles, couples, req, forb,
+           ctx.world_seed)
     if key in ctx._pools:
         return ctx._pools[key], None
-    rng.shuffle(recipes)
     reason = f"no {family} recipe composed a {band} room"
     out, sizes = [], set()
     for i, recipe in enumerate(recipes):
@@ -687,7 +715,7 @@ def _deep_pool(ctx, room, name, tier, req, forb):
         return []
     singles, couples = ctx.sleepers.get(name, (0, 0))
     key = (fam, cl, band, tier, singles, couples, tuple(req), tuple(forb),
-           "deep")
+           "deep", ctx.world_seed)
     if key in ctx._pools:
         return ctx._pools[key]
     recipes = [r for r in sorted(ctx.groups["recipes"].values(),
@@ -2082,7 +2110,8 @@ def _family_sizes(ctx, design, spec, family, tier, ask):
     composed. Never composes a room to build it: the sizes come from the
     stored rooms and the composed pools the run already has."""
     singles, couples = ask
-    key = (design.name, family, tier, spec.use, spec.share, singles, couples)
+    key = (design.name, family, tier, spec.use, spec.share, singles, couples,
+           ctx.world_seed)
     if key in ctx._size_catalogues:
         return ctx._size_catalogues[key]
     clearance = clearance_of(ctx, design, family)
@@ -2101,7 +2130,7 @@ def _family_sizes(ctx, design, spec, family, tier, ask):
             entries = tuple(_oriented_sizes(fits))
             break
         pool = ctx._pools.get((family, clearance, band, tier, singles,
-                               couples, req, forb))
+                               couples, req, forb, ctx.world_seed))
         if pool:
             entries = tuple(_oriented_sizes(pool))
             break
