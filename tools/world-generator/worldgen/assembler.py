@@ -244,6 +244,13 @@ class _Context:
                 self.registry.by_key[tuple(key)] = t
                 self.registry.by_name[t["name"]] = t
                 self.registry.names.add(t["name"])
+            # a template the plan's own furnishing made (the old library
+            # path): adopt it by its object, so an assembled room that picks
+            # the same object places the plan's template — its containers
+            # stay the plan's, pools and all, instead of fresh-named copies
+            if isinstance(t, dict) and t.get("libraryId") \
+                    and t.get("name") not in self.registry.by_name:
+                self.registry.adopt(t["libraryId"], t)
         self.cache = {}          # (name, entrance_side, compound, wing) ->
                                   # _Assembly | None; the wing half is None for
                                   # a plain assembly, else its target and pins
@@ -2770,18 +2777,27 @@ def _build_uppers(ctx, design, asm, tier, cond):
 
 # ------------------------------------------------------------------ furniture
 
-def _pick_for(ctx, purpose, piece, tier, rng):
+def _pick_for(ctx, purpose, piece, tier, rng, ids=None):
     """The library object for one fixed-room piece at the piece's exact cells:
     ``pick_object``'s choice when its turned footprint covers them (and its
     back turns to the piece's back), else the same binding searched for an
     exact fit, nearest tier first. (object dict, rot, reason) — nothing is
     registered, so a pool may ask without placing. A piece that faces nowhere
-    may take its object either way round."""
+    may take its object either way round. The plan's own objects (``ids``,
+    the registry's adopted ones when the plan carries library templates) come
+    first: a piece that can hold one takes it, so the plan's containers —
+    and the pools their lines bound — stay in play."""
     from .library import binding_matches
     lib = ctx.lib
     role = piece.get("role")
     size = list(piece.get("size") or [1, 1])
     back = piece.get("back") if piece.get("back") in TURN_SIDES else None
+
+    if ids is None and ctx.registry.adopted:
+        got = _pick_for(ctx, purpose, piece, tier, rng,
+                        ids=set(ctx.registry.adopted))
+        if got[0] is not None:
+            return got
 
     def exact(obj):
         if back:
@@ -2796,9 +2812,10 @@ def _pick_for(ctx, purpose, piece, tier, rng):
             return TURN_SIDES.index(back)
         return 0 if tuple(obj["size"]) == tuple(size) else 1
 
+    prefer = () if ids else ctx.registry.used_ids()
     obj, _widened = library_rooms.pick_object(lib, purpose, role, size, ctx.band,
                                               tier, rng, ctx.genre,
-                                              prefer=ctx.registry.used_ids())
+                                              prefer=prefer, only=ids or ())
     if obj is not None and exact(obj):
         return obj, rot_for(obj), tier, None
     cats = ((lib.purposes.get(purpose) or {}).get("roles") or {}).get(role)
@@ -2844,7 +2861,8 @@ def _pick_for(ctx, purpose, piece, tier, rng):
                         and library_rooms.sleeps_right(role, o)
                         and (not o.get("onlyGenres")
                              or (ctx.genre or "") in o["onlyGenres"])
-                        and fits(o)]
+                        and fits(o)
+                        and (not ids or o["id"] in ids)]
                 if objs:
                     facing = [o for o in objs if o.get("back")]
                     group = facing or objs
