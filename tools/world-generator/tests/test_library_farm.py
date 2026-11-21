@@ -556,7 +556,7 @@ INDUSTRIAL_FARM_OBJECTS = (
 MODERN_FARM_OBJECTS = (
     ("farm_machine.tractor", "farm_machine", [2, 3], None, ["poor", "modest"]),
     ("farm_machine.combine", "farm_machine", [4, 3], None, ["wealthy", "elite"]),
-    ("dairy.milking_stall", "dairy", [1, 2], "north", ["poor", "modest"]),
+    ("dairy.milking_stall", "milking_stall", [1, 2], "north", ["poor", "modest"]),
     ("dairy.milk_tank", "dairy", [2, 1], "north", ["poor", "modest"]),
     ("granary.silo", "granary", [2, 2], None, ["poor", "modest"]),
     ("feed.tube_feeder", "feed", [1, 1], None, ["poor", "modest"]),
@@ -570,10 +570,10 @@ MODERN_FARM_OBJECTS = (
 )
 
 # each farm category's own purpose and role (the wind pump serves any yard
-# through the wildcard purpose's utility role; the milking stall sits in the
-# dairy category and binds by its id, tested in TestMachineShedAndParlourRooms)
+# through the wildcard purpose's utility role)
 FARM_PURPOSE_ROLE = {
     "dairy": ("dairy", "dairy"),
+    "milking_stall": ("milking_parlour", "milking.stall"),
     "farm_machine": ("barn", "machine"),
     "coop": ("byre", "animal"),
     "feed": ("byre", "animal"),

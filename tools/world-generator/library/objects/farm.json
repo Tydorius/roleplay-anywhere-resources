@@ -698,7 +698,7 @@
     },
     {
       "id": "dairy.milking_stall",
-      "category": "dairy",
+      "category": "milking_stall",
       "size": [1, 2],
       "walkability": 0,
       "forSleep": false,
