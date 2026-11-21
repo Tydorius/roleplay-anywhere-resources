@@ -250,10 +250,11 @@
       "storeys": 2,
       "entry": "west",
       "rooms": [
-        {"name": "Barn", "purpose": "barn",   "share": "large"},
-        {"name": "Byre", "purpose": "stable", "share": "medium"}
+        {"name": "Barn",    "purpose": "barn",    "share": "large"},
+        {"name": "Byre",    "purpose": "stable",  "share": "medium"},
+        {"name": "Hayloft", "purpose": "hayloft", "share": "small"}
       ],
-      "connections": [["Barn", "Byre"]],
+      "connections": [["Barn", "Byre"], ["Barn", "Hayloft"]],
       "entrance": {"room": "Barn"},
       "sleeps": "none"
     }

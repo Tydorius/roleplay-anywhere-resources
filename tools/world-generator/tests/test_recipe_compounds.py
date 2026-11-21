@@ -1039,6 +1039,20 @@ class TestAVillageWorldCapsEveryWing(unittest.TestCase):
             self.assertEqual(part(comp, part_name).design.storeys, storeys,
                              (comp_name, part_name))
 
+    def test_the_barns_top_storey_is_the_hayloft(self):
+        from worldgen import assembler
+        barn = part(compound_of(self.world, "Millfield Compound"), "The Barn")
+        self.assertEqual(barn.design.storeys, 2)
+        top = barn.design.upper[-1]
+        self.assertTrue([r for r in top.rooms if r.use == "hayloft"],
+                        [(r.name, r.use) for r in top.rooms])
+        placed = assembler.upper_layout(barn, len(barn.upper_asm) - 1,
+                                        barn.rect).rooms
+        self.assertIn("Hayloft", {r.base_name for r in placed},
+                      [r.base_name for r in placed])
+        self.assertNotIn("Store room", {r.base_name for r in placed},
+                         "a filler store room took the loft's storey")
+
     def test_the_checks_stay_clean(self):
         m = self.world.metrics
         self.assertEqual(m["region_overlaps"], [], m.get("regions"))

@@ -925,7 +925,7 @@ class TestFarmsteadRecipesPerEra(unittest.TestCase):
                 self.assertEqual(w["storeys"], storeys)
 
     def test_the_barn_wings_stand_two_storeys_with_a_hayloft(self):
-        for wid in ("farm.longhouse", "farm.sheds.industrial"):
+        for wid in ("farm.barn", "farm.longhouse", "farm.sheds.industrial"):
             with self.subTest(wing=wid):
                 w = self.lib.wings[wid]
                 self.assertEqual(w["storeys"], 2)
