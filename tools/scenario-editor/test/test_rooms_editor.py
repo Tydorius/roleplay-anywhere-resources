@@ -33,7 +33,9 @@ import scenario_editor as se                           # noqa: E402
 from worldgen import fixed_rooms                       # noqa: E402
 
 SHIPPED = Path(rmed.LIBRARY_DIR)                       # the real library, before any test swaps it
-FAMILIES = ("bath", "bedroom", "bedroom.master", "closet", "privy", "washroom")
+# every family file the shipped library holds, sorted, so a new family can
+# never leave this list stale (it did once the farm families were added)
+FAMILIES = tuple(sorted(p.stem for p in (SHIPPED / "rooms").glob("*.json")))
 
 
 def room_ids(family):
