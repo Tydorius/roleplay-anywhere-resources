@@ -117,7 +117,8 @@ class TestOffIsByteIdentical(unittest.TestCase):
                                       encoding="utf-8"))["spec"]
                 with tempfile.TemporaryDirectory() as tmp:
                     api.relayout(os.path.join(FIXTURES, plan_name), seed=1,
-                                 out_dir=os.path.join(tmp, "off"))
+                                 out_dir=os.path.join(tmp, "off"),
+                                 room_assembler=False)
                     api.relayout(os.path.join(FIXTURES, plan_name), seed=1,
                                  out_dir=os.path.join(tmp, "on"),
                                  room_assembler=True)
@@ -525,12 +526,14 @@ class TestABarnGetsAHayloft(unittest.TestCase):
         client.BARN_P3 = self.BARN_P3
         with tempfile.TemporaryDirectory() as tmp:
             summary = api.generate("a mill village", client=client, seed=3,
-                                   cast=False, out_dir=tmp)
+                                   cast=False, out_dir=tmp,
+                                   room_assembler=False)
             self.assertTrue(summary["ok"], summary)
             with open(os.path.join(tmp, "plan.json"), encoding="utf-8") as f:
                 plan = json.load(f)
             again = api.relayout(os.path.join(tmp, "plan.json"), seed=4,
-                                 out_dir=os.path.join(tmp, "again"))
+                                 out_dir=os.path.join(tmp, "again"),
+                                 room_assembler=False)
             self.assertTrue(again["ok"], again)
         barn = next(b for b in plan["buildings"] if b["name"] == "The Old Barn")
         self.assertEqual([r["name"] for r in barn["rooms"]],
