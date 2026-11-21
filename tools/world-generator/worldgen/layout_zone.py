@@ -12,7 +12,6 @@ mouths, or no path at all when it has fewer than two. Outdoor props and
 filler then spread over the remaining free ground, clear of paths, doors and
 yards, to a density scaled by the setting.
 """
-import bisect
 import dataclasses
 import random
 import re
@@ -1266,9 +1265,10 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
     # `fits` asks about `out.reserved` once per candidate position — a
     # compound's block scan alone asks thousands of times — and the
     # reserved set only grows while buildings place, so its cells sit in a
-    # row index (y to the sorted xs) rebuilt whenever the set has grown. A
-    # lot then tests a row at a time instead of a cell at a time, the same
-    # answer `Rect.touches_any` gives.
+    # row index (row to an integer whose bit x marks a reserved cell)
+    # rebuilt whenever the set has grown. A lot then meets each of its
+    # rows with one and of its column span against that row's mask — the
+    # same answer `Rect.touches_any` gives.
     reserved_rows = {}
     reserved_size = -1
 
@@ -1277,19 +1277,14 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         if len(out.reserved) != reserved_size:
             rows = {}
             for (x, y) in out.reserved:
-                rows.setdefault(y, []).append(x)
-            for xs in rows.values():
-                xs.sort()
+                rows[y] = rows.get(y, 0) | (1 << x)
             reserved_rows.clear()
             reserved_rows.update(rows)
             reserved_size = len(out.reserved)
-        x0, x1 = lot.x, lot.x + lot.w - 1
+        span = (1 << lot.w) - 1 << lot.x
         for y in range(lot.y, lot.y + lot.h):
-            xs = reserved_rows.get(y)
-            if not xs:
-                continue
-            i = bisect.bisect_left(xs, x0)
-            if i < len(xs) and xs[i] <= x1:
+            m = reserved_rows.get(y)
+            if m and m & span:
                 return True
         return False
 
