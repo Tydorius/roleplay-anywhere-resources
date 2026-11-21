@@ -526,14 +526,12 @@ class TestABarnGetsAHayloft(unittest.TestCase):
         client.BARN_P3 = self.BARN_P3
         with tempfile.TemporaryDirectory() as tmp:
             summary = api.generate("a mill village", client=client, seed=3,
-                                   cast=False, out_dir=tmp,
-                                   room_assembler=False)
+                                   cast=False, out_dir=tmp)
             self.assertTrue(summary["ok"], summary)
             with open(os.path.join(tmp, "plan.json"), encoding="utf-8") as f:
                 plan = json.load(f)
             again = api.relayout(os.path.join(tmp, "plan.json"), seed=4,
-                                 out_dir=os.path.join(tmp, "again"),
-                                 room_assembler=False)
+                                 out_dir=os.path.join(tmp, "again"))
             self.assertTrue(again["ok"], again)
         barn = next(b for b in plan["buildings"] if b["name"] == "The Old Barn")
         self.assertEqual([r["name"] for r in barn["rooms"]],
@@ -548,6 +546,27 @@ class TestABarnGetsAHayloft(unittest.TestCase):
                           if t_by_name[f["template"]].get("forSleep")]
         self.assertFalse(sleep_upstairs, sleep_upstairs)
         self.assertTrue(upper[0].get("furniture"), "the loft shipped empty")
+
+
+class TestARerunOverOnePlan(unittest.TestCase):
+    """rl-22: a second run over the same plan dict (the relayout path) must
+    not re-add the templates the first run injected: each library template
+    enters the plan once and the re-run parses. The first run's world is not
+    the second's (the registry's reuse preference, on from the first carried
+    templates, is the old behavior) — but from the second run on the plan is
+    a record, and the same seed builds the same spec again."""
+
+    def test_each_template_enters_once_and_reruns_settle(self):
+        plan = json.loads(json.dumps(COTTAGE_PLAN))
+        worldgen.run(plan, seed=5)
+        names = [t["name"] for t in plan["templates"]]
+        self.assertEqual(len(names), len(set(names)),
+                         "a template entered the plan twice")
+        second = worldgen.run(plan, seed=5)
+        spec = worldgen.build_spec(second, plan)
+        self.assertEqual([t["name"] for t in plan["templates"]], names)
+        third = worldgen.run(plan, seed=5)
+        self.assertEqual(worldgen.build_spec(third, plan), spec)
 
 
 WING_PLAN = {

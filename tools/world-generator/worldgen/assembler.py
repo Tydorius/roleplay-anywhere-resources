@@ -2928,7 +2928,11 @@ def _furnish_assembly(ctx, design, asm, tier, cond):
 def _inject_templates(templates=None):
     """The templates the assemblies picked, into the world and the plan, once
     each: the plan dict also carries the registry key, so a re-roll of a
-    built plan keeps the same template names. ``templates`` is the dict the
+    built plan keeps the same template names. A name the plan already carries
+    (an earlier run's injection, or its own furnishing's template, adopted by
+    the registry) is left as it is — the plan must hold each name once, the
+    way ``parse_plan`` demands — unless the entry is a different template,
+    which is a real conflict and raises. ``templates`` is the dict the
     caller is laying out with (the map measures with its own copy), and the
     names must exist there too, the way the old furniture path adds its own."""
     ctx = _context
@@ -2938,8 +2942,21 @@ def _inject_templates(templates=None):
     if not fresh:
         return
     from .model import ObjectTemplate
+    known = {t.get("name"): t for t in ctx.plan_data.get("templates", [])
+             if isinstance(t, dict) and t.get("name")}
     for key, t in ctx.registry.by_key.items():
         if t["name"] not in fresh or t["name"] in ctx.injected:
+            continue
+        if t["name"] in known:
+            # the plan already holds this name: the same template under the
+            # same key needs nothing, a different one cannot share the name
+            have = known[t["name"]]
+            if have.get("libraryKey") != list(key) \
+                    and have.get("libraryId") != t.get("libraryId"):
+                raise ValueError(
+                    f"template name {t['name']!r} is already another template "
+                    f"in this plan")
+            ctx.injected.add(t["name"])
             continue
         extras = {"forSleep": t["forSleep"], "light": t.get("light", 0)}
         if t.get("back"):
