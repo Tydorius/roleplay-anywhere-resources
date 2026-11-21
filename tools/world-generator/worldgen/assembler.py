@@ -280,9 +280,12 @@ class _Context:
         # (design, family, tier, use, share, ask, seed) ->
         # ((w, h, door sides), ...) a family's sizes
         self._filler_rooms = store["filler_rooms"]
-        # (recipe, band, clearance, style, seed) -> compose's rooms; every
-        # hole of one band in one building asks the same recipes at the
-        # same seed, so the first hole pays for all
+        # (recipe, band, clearance, style, seed, tier) -> compose's rooms;
+        # every hole of one band in one building asks the same recipes at
+        # the same seed, so the first hole pays for all
+        self._filler_walks = store["filler_walks"]
+        # (seed, band, tier) -> the storage recipe ids in walk order, the
+        # list every hole of that band selects from
         self._filler_none = store["filler_none"]
         # (building, iw, ih, tier) asks that found no room: never
         # composed again
@@ -307,7 +310,7 @@ def new_store():
     entries are keyed by all of their inputs (seed key and tier included)
     and handed out the way the per-build caches always handed them out."""
     return {"pools": {}, "size_catalogues": {}, "filler_rooms": {},
-            "filler_none": set()}
+            "filler_walks": {}, "filler_none": set()}
 
 
 def activate(plan, plan_data, world_seed, world_templates, store=None):
@@ -1820,11 +1823,13 @@ def _stored_filler(ctx, iw, ih, tier, band):
 def _compose_filler(ctx, building, iw, ih, tier):
     """A filler for a hole's floor: an active stored storage room of exactly
     that size in either rotation first (a copy — the library's dict stays
-    the library's), else one composed to fit, else None. The compose results
-    are cached on the context: every hole of one band in one building asks
-    the same recipes at the same seed, and an ask that found no room at one
-    tier never composes again at that tier. A composed room is shared, not
-    copied — placed rooms are never mutated, only re-derived or turned."""
+    the library's), else one composed to fit, else None. The composing is
+    done once per (building seed key, band, tier): the store keeps each
+    recipe's rooms and the walk order every hole of that band selects from,
+    so the next hole of the same band selects and never composes, and an
+    ask that found no room at one tier never composes again at that tier.
+    A composed room is shared, not copied — placed rooms are never mutated,
+    only re-derived or turned."""
     if (building, iw, ih, tier) in ctx._filler_none:
         return None
     area = iw * ih
@@ -1839,15 +1844,19 @@ def _compose_filler(ctx, building, iw, ih, tier):
     if stored is not None:
         return stored
     seed = f"{ctx.world_seed}|assembler|{building}|filler"
-    for rid, recipe in sorted(ctx.groups["recipes"].items(),
-                              key=lambda kv: str(kv[1].get("layout") or "")):
-        if recipe.get("family") != "storage":
-            continue
-        key = (rid, band, "tight", "flush", seed)
+    walk = ctx._filler_walks.get((seed, band, tier))
+    if walk is None:
+        walk = tuple(rid for rid, recipe
+                     in sorted(ctx.groups["recipes"].items(),
+                               key=lambda kv: str(kv[1].get("layout") or ""))
+                     if recipe.get("family") == "storage")
+        ctx._filler_walks[(seed, band, tier)] = walk
+    for rid in walk:
+        key = (rid, band, "tight", "flush", seed, tier)
         rooms = ctx._filler_rooms.get(key)
         if rooms is None:
-            rooms, _why = RC.compose(recipe, ctx.groups, "tight", "flush",
-                                     seed, size_band=band)
+            rooms, _why = RC.compose(ctx.groups["recipes"][rid], ctx.groups,
+                                     "tight", "flush", seed, size_band=band)
             ctx._filler_rooms[key] = rooms
         for room in rooms:
             if room["size"] == [iw, ih]:
