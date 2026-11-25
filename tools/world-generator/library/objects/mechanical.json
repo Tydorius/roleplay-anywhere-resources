@@ -1,0 +1,173 @@
+{
+  "_readme": "Mechanical equipment for the rooms below ground: furnaces, boilers, water heaters, coal bins, canning stations and preserving shelves. See library/AUTHORING.md.",
+  "objects": [
+    {
+      "id": "utility.coal_furnace",
+      "category": "utility",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["modest", "wealthy", "elite"],
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "names": {"*": "coal furnace"},
+      "parts": {"body": "metal", "flue": "metal"},
+      "partsByBand": {},
+      "tags": ["utility", "heat", "mechanical"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} ticking away behind the cellar hatch, its firebox door leaking a line of orange light and the floor around it dusted black.",
+        "physical": "Top-down view of {A:noun}: a squat square {body.color} {body} body with riveted seams, a hinged firebox door on the bottom edge, the {flue.color} {flue} flue pipe rising from the back edge."
+      },
+      "aliases": ["furnace", "heating furnace", "coal-fired furnace", "cellar furnace"],
+      "sources": ["cdda-furniture", "local-replies"]
+    },
+    {
+      "id": "utility.steam_boiler",
+      "category": "utility",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["modest", "wealthy", "elite"],
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "names": {"*": "steam boiler"},
+      "parts": {"shell": "metal", "gauge": "glass"},
+      "partsByBand": {},
+      "tags": ["utility", "heat", "mechanical"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {shell} {noun} with rivets down every seam, its {gauge} water gauge trembling and a slow red breath from the firebox door below.",
+        "physical": "Top-down view of {A:noun}: a round {shell.color} {shell} drum with riveted seams, a small {gauge.color} {gauge} gauge on the front face, pipes rising over the back edge, the firebox door at the bottom edge."
+      },
+      "aliases": ["boiler", "hot water boiler", "riveted boiler", "furnace room boiler"],
+      "sources": ["cdda-furniture", "local-replies"]
+    },
+    {
+      "id": "appliance.water_heater",
+      "category": "appliance",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["poor", "modest", "wealthy"],
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "names": {"*": "water heater", "industrial": "copper cylinder"},
+      "parts": {"casing": "metal", "pipe": "metal"},
+      "partsByBand": {},
+      "tags": ["appliance", "heat", "mechanical"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} keeping the house in hot water, its {casing} lid on tight and the {pipe} pipes sweating as it cools.",
+        "physical": "Top-down view of {A:noun}: a round tank filling the cell, a domed {casing.color} {casing} lid, the {pipe.color} {pipe} vent pipe at the back edge, a ring burner at the bottom edge."
+      },
+      "aliases": ["hot water tank", "water heater tank", "geyser", "copper"],
+      "sources": ["cdda-furniture", "local-replies"]
+    },
+    {
+      "id": "utility.gas_furnace",
+      "category": "utility",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["poor", "modest", "wealthy"],
+      "bands": ["modern"],
+      "onlyGenres": [],
+      "names": {"*": "gas furnace"},
+      "parts": {"casing": "metal", "vent": "metal"},
+      "partsByBand": {},
+      "tags": ["utility", "heat", "mechanical"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {casing} {noun} humming in the utility corner, the blower spinning up with a smell of warm dust and the igniter's click.",
+        "physical": "Top-down view of {A:noun}: a low boxy {casing.color} {casing} cabinet with louvered vents, a round burner port on the front face, the {vent.color} {vent} vent pipe running into the back edge."
+      },
+      "aliases": ["furnace", "gas heater", "forced-air furnace", "home furnace"],
+      "sources": ["cdda-furniture", "local-replies"]
+    },
+    {
+      "id": "bin.coal",
+      "category": "bin",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["poor", "modest", "wealthy"],
+      "bands": ["industrial"],
+      "onlyGenres": [],
+      "names": {"*": "coal bin"},
+      "parts": {"body": "wood", "rim": "metal"},
+      "partsByBand": {},
+      "tags": ["bin", "fuel", "mechanical"],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {body} {noun} heaped with black lumps, a short shovel leaning into the corner it makes with the wall and kindling stacked beside it.",
+        "physical": "Top-down view of {A:noun}: a square open-topped {body.color} {body} box with {rim} banding at the rim, black coal lumps inside, a shovel handle laid across one corner."
+      },
+      "aliases": ["coal bunker", "coal store", "fuel bin"],
+      "sources": ["local-replies"]
+    },
+    {
+      "id": "workbench.canning",
+      "category": "workbench",
+      "size": [1, 2],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["modest", "wealthy", "elite"],
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "names": {"*": "canning station"},
+      "parts": {"top": "wood", "kettle": "metal", "jar": "glass"},
+      "partsByBand": {},
+      "tags": ["workstation", "kitchen", "mechanical"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} run along the wall, {top} boards under a big {kettle} kettle and racks of {jar} jars waiting to be filled, the air still sweet with steam.",
+        "physical": "Top-down view of {A:noun} two cells long: a {top.color} {top} bench run with a round {kettle.color} {kettle} kettle set in at one end, racks of empty {jar.color} {jar} jars along the front edge, a towel and tongs at the other end."
+      },
+      "aliases": ["canning bench", "preserving station", "bottling station", "canning setup"],
+      "sources": ["local-replies"]
+    },
+    {
+      "id": "shelf.preserving",
+      "category": "shelf",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": ["poor", "modest", "wealthy"],
+      "bands": ["industrial", "modern"],
+      "onlyGenres": [],
+      "names": {"*": "preserving shelf"},
+      "parts": {"frame": "wood", "jar": "glass"},
+      "partsByBand": {},
+      "tags": ["shelf", "kitchen", "storage", "mechanical"],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} stacked with sealed {jar} jars in ranks, their lids pencilled with dates and the ones at the back gone dark.",
+        "physical": "Top-down view of {A:noun}: a {frame.color} {frame} shelf edge along the bottom, close rows of {jar.color} {jar} jar lids edge to edge, back against the top edge."
+      },
+      "aliases": ["jar shelf", "preserve shelf", "canning shelf", "shelves of preserves"],
+      "sources": ["local-replies"]
+    }
+  ]
+}
