@@ -19,7 +19,7 @@ class TestShippedLibrary(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.lib = shipped()
-        cls.errors, cls.warnings = L.check(cls.lib)
+        cls.errors, cls.warnings, cls.infos = L.check(cls.lib)
 
     def test_no_errors(self):
         self.assertEqual(self.errors, [], "\n".join(self.errors[:40]))
@@ -31,6 +31,11 @@ class TestShippedLibrary(unittest.TestCase):
 
     def test_every_family_has_layouts(self):
         for fam in self.lib.vocab["families"]:
+            # the outdoor families (courtyard, garden, yard) have no P3
+            # layouts on purpose: their groups and recipes are hand-authored,
+            # and their rooms compose from those like any other family's
+            if fam in self.lib.outdoor_families():
+                continue
             self.assertTrue(self.lib.layouts_for(fam), fam)
 
     def test_every_object_fills_in_every_setting(self):
@@ -59,6 +64,76 @@ class TestShippedLibrary(unittest.TestCase):
     def test_core_rooms_have_no_hard_gaps(self):
         hard = [g for g in L.coverage(self.lib) if not g[7] and g[0] in CORE]
         self.assertEqual(hard, [], "\n".join(map(str, hard[:30])))
+
+    def test_the_hearth_role_exists(self):
+        self.assertIn("heat", self.lib.vocab["roles"])
+        self.assertIn("hearth", self.lib.vocab["roles"])
+
+    def test_the_new_hearth_and_decor_objects_load(self):
+        for oid, category in (("hearth.gas_fireplace", "hearth"),
+                              ("hearth.electric_fireplace", "hearth"),
+                              ("decor.vase", "decor"),
+                              ("display.curio", "display")):
+            with self.subTest(object=oid):
+                o = self.lib.objects[oid]
+                self.assertEqual(o["category"], category)
+                self.assertEqual(o["sources"], ["claude-authored"])
+                self.assertTrue(o["text"]["physical"])
+
+    def test_hearth_resolves_to_gathering_hearths_not_fire_pits(self):
+        union = set()
+        for band in self.lib.bands:
+            for tier in self.lib.tiers:
+                ids = {o["id"] for o in L.candidates(self.lib, "bedroom",
+                                                     "hearth", None, band, tier)}
+                with self.subTest(band=band, tier=tier):
+                    self.assertNotIn("hearth.fire_pit", ids)
+                    self.assertNotIn("hearth.fire_barrel", ids)
+                union |= ids
+        self.assertEqual(union, {"hearth.fireplace", "hearth.great_fireplace",
+                                 "hearth.gas_fireplace",
+                                 "hearth.electric_fireplace",
+                                 "hearth.holo_fire", "hearth.brazier",
+                                 "hearth.woodstove"})
+
+    def test_heat_still_resolves_to_heaters(self):
+        for band, tier in (("industrial", "modest"), ("modern", "wealthy")):
+            with self.subTest(band=band, tier=tier):
+                ids = {o["id"] for o in L.candidates(self.lib, "bedroom",
+                                                     "heat", None, band, tier)}
+                self.assertIn("appliance.radiator", ids)
+
+    def test_the_privy_and_bath_families_and_purposes_load(self):
+        families = self.lib.vocab["families"]
+        self.assertIn("privy", families)
+        self.assertIn("bath", families)
+        purposes = self.lib.vocab["purposes"]
+        for purpose, family in (("privy", "privy"), ("outhouse", "privy"),
+                                ("latrine", "privy"), ("garderobe", "privy"),
+                                ("water_closet", "privy"), ("bath", "bath")):
+            with self.subTest(purpose=purpose):
+                self.assertEqual(purposes.get(purpose), family)
+        self.assertTrue(self.lib.layouts_for("privy"))
+        self.assertTrue(self.lib.layouts_for("bath"))
+
+    def test_the_privy_seat_object_loads_and_furnishes(self):
+        o = self.lib.objects["toilet.privy_seat"]
+        self.assertEqual(o["category"], "toilet")
+        self.assertEqual(o["wealth"], ["poor", "modest"])
+        self.assertEqual(o["bands"], ["medieval", "industrial"])
+        self.assertEqual(o["sources"], ["claude-authored"])
+        self.assertTrue(o["text"]["physical"])
+        for band in ("medieval", "industrial"):
+            for tier in ("poor", "modest"):
+                with self.subTest(band=band, tier=tier):
+                    ids = {c["id"] for c in L.candidates(
+                        self.lib, "washroom", "wash.toilet", None, band, tier)}
+                    self.assertIn("toilet.privy_seat", ids)
+
+    def test_purpose_for_family_finds_the_privy_and_bath(self):
+        from worldgen.library_rooms import purpose_for_family
+        self.assertEqual(purpose_for_family(self.lib, "privy"), "privy")
+        self.assertEqual(purpose_for_family(self.lib, "bath"), "bath")
 
 
 def tiny():

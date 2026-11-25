@@ -120,6 +120,17 @@
    "physical": "Top-down view of a square sunken bath: a grey-veined marble rim around a pool of clear blue-green water, steps down at one corner, towels folded on one edge.",
    "reviewed": true
   },
+  "bath.stave_tub": {
+   "template": "Elm stave tub [bath.stave_tub]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "hoops": "copper",
+    "tub": "elm"
+   },
+   "physical": "Top-down view of a long oval stave tub: plain mid-brown elm staves bound with two dark copper hoops, grey water inside, a wooden bucket beside one end.",
+   "reviewed": true
+  },
   "bath.wash_tub": {
    "template": "Beech wash tub [bath.wash_tub]",
    "tier": "modest",
@@ -580,6 +591,46 @@
    "physical": "Top-down view of a sarcophagus: a heavy cream polished limestone tomb chest with a lid carved as a lying figure, head at the top, feet at the bottom.",
    "reviewed": true
   },
+  "coop.dovecote": {
+   "template": "Granite dovecote [coop.dovecote]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "tower": "granite"
+   },
+   "physical": "Top-down view of a dovecote: a round grey granite tower with dark entry holes ringing its upper edge, a narrow opening at its base.",
+   "reviewed": true
+  },
+  "coop.henhouse": {
+   "template": "Woven reed henhouse [coop.henhouse]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "walls": "beech"
+   },
+   "physical": "Top-down view of a henhouse: a square light brown beech shed, a perch line across the middle, a small pop hole in the front wall, golden straw spilled below it.",
+   "reviewed": true
+  },
+  "coop.hutch": {
+   "template": "Ash rabbit hutch [coop.hutch]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "box": "ash"
+   },
+   "physical": "Top-down view of a rabbit hutch: a raised pale ash box on short legs, a wire front along its open face, hay strewn below.",
+   "reviewed": true
+  },
+  "coop.skep": {
+   "template": "Woven reed bee skep [coop.skep]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "skep": "woven reed"
+   },
+   "physical": "Top-down view of a bee skep: a coiled tan woven reed dome sitting on a low stool, a dark entry gap low on one side, a few bees about it.",
+   "reviewed": true
+  },
   "counter.bar": {
    "template": "Elm tap counter [counter.bar]",
    "tier": "modest",
@@ -700,6 +751,36 @@
    "physical": "Top-down view of a small canopied cradle: a reddish-brown cherrywood basket with a cream quilted linen canopy drawn over the top end, a tiny pillow beneath it.",
    "reviewed": true
   },
+  "dairy.butter_worker": {
+   "template": "Ash butter worker [dairy.butter_worker]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "table": "ash"
+   },
+   "physical": "Top-down view of a butter worker: a sloped pale ash working table with a raised rim, scotch hands crossed at the middle, a pat of butter at the near corner.",
+   "reviewed": true
+  },
+  "dairy.churn": {
+   "template": "Beech churn [dairy.churn]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "churn": "beech"
+   },
+   "physical": "Top-down view of a churn: a round light brown beech churn with a cross-bar plunger handle over its mouth, a wet ring on the floor about it.",
+   "reviewed": true
+  },
+  "dairy.milk_cans": {
+   "template": "Copper milk cans [dairy.milk_cans]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cans": "copper"
+   },
+   "physical": "Top-down view of milk cans: two tall copper cans standing side by side, domed lids on top, one carrying handle raised.",
+   "reviewed": true
+  },
   "decor.armour": {
    "template": "Brass suit of armour [decor.armour]",
    "tier": "wealthy",
@@ -777,6 +858,27 @@
    "physical": "Seen from above at a steep three-quarter angle: a free-standing folding screen of three tall panels standing in a zigzag, each panel madder-red dyed linen in a thick mid-brown ash frame, dark iron hinges between them, the zigzag of the panel tops clearly visible.",
    "reviewed": true
   },
+  "decor.vase": {
+   "template": "Glazed earthenware urn [decor.vase]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "glazed earthenware"
+   },
+   "physical": "Top-down view straight down onto the open mouth of a large urn: a wide circle of dark brown glazed earthenware with a thick rim, a dark shadowed opening in the middle with a few dried stems and seed heads fanning out of it.",
+   "reviewed": true
+  },
+  "decor.well": {
+   "template": "Sandstone well [decor.well]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "roof": "ash",
+    "wall": "dressed sandstone"
+   },
+   "physical": "Top-down view of a round well: a ring of buff dressed sandstone blocks around a dark round shaft of water, a small pitched honey ash roof over a wooden winch across the middle, a wooden bucket on the rim.",
+   "reviewed": true
+  },
   "desk.plain": {
    "template": "Beech clerk's table [desk.plain]",
    "tier": "modest",
@@ -796,6 +898,17 @@
     "top": "cherrywood"
    },
    "physical": "Top-down view of a broad writing desk: a reddish-brown cherrywood top with an inset chestnut tooled leather panel, an inkwell and quill, a row of pigeonholes along the top edge.",
+   "reviewed": true
+  },
+  "display.curio": {
+   "template": "Oak curio cabinet [display.curio]",
+   "tier": "wealthy",
+   "condition": "kept",
+   "materials": {
+    "frame": "oak",
+    "pane": "leaded glass"
+   },
+   "physical": "Top-down view of a small square curio cabinet against the top wall: a dark golden-brown oak top with a carved border, a strip of green leaded glass along the bottom edge showing small trinkets, a bowl and a carved figure inside.",
    "reviewed": true
   },
   "display.pedestal": {
@@ -831,6 +944,49 @@
    "physical": "Top-down view of a tall glazed cabinet: square reddish-brown cherrywood top with a carved cornice, the glazed door along the bottom edge, its back flat against the top edge.",
    "reviewed": true
   },
+  "farm_machine.cart": {
+   "template": "Beech hay cart [farm_machine.cart]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cart": "beech"
+   },
+   "physical": "Top-down view of a hay cart: a flat light brown beech bed with low side rails, two iron-tyred wheels showing at the sides, shafts forward, chaff scattered on the boards.",
+   "reviewed": true
+  },
+  "farm_machine.harrow": {
+   "template": "Beech harrow [farm_machine.harrow]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech",
+    "tines": "pewter"
+   },
+   "physical": "Top-down view of a harrow: an open grid frame of light brown beech bars with silver-grey pewter tines standing in rows, a draw chain coiled over one corner.",
+   "reviewed": true
+  },
+  "farm_machine.plough": {
+   "template": "Ash plough [farm_machine.plough]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "beam": "ash",
+    "share": "pewter"
+   },
+   "physical": "Top-down view of a plough: a heavy honey ash beam with handle staves, a bright silver-grey pewter share blade at one end, shafts reaching forward, clods dried on the blade.",
+   "reviewed": true
+  },
+  "farm_machine.wagon": {
+   "template": "Covered wagon [farm_machine.wagon]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "canvas": "felt",
+    "wagon": "elm"
+   },
+   "physical": "Top-down view of a wagon: a long mid-brown elm wagon bed, grey felt hoops arched over it, four iron-shod wheels at the corners, shafts forward.",
+   "reviewed": true
+  },
   "feed.hay_bale": {
    "template": "Woven reed hay bale [feed.hay_bale]",
    "tier": "modest",
@@ -840,6 +996,32 @@
     "twine": "willow"
    },
    "physical": "Top-down view of a hay bale: a rectangular block of tan woven reed with two twine bands across it, loose stalks around the edges.",
+   "reviewed": true
+  },
+  "feed.hay_rack": {
+   "template": "Ash hay rack [feed.hay_rack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "ash"
+   },
+   "physical": "Top-down view of a hay rack: a pale ash frame of upright bars along its back edge, golden hay bundled behind them.",
+   "reviewed": true
+  },
+  "feed.loft_stack": {
+   "template": "Loft haystack [feed.loft_stack]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a loft haystack: a rough square of piled golden hay, darker patches pressed down, the shadow of rafters across it, a fork handle standing proud.",
+   "reviewed": true
+  },
+  "feed.rick": {
+   "template": "Hay rick [feed.rick]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a hay rick: a round conical golden hay rick, darker combed thatch ringing the crown, the tips of staddle stones showing under its edge.",
    "reviewed": true
   },
   "feed.stall": {
@@ -926,6 +1108,16 @@
     "top": "ash"
    },
    "physical": "Top-down view of a small square chess table: an inlaid checkered honey ash board with pieces mid-game, a chair at the top and bottom edges.",
+   "reviewed": true
+  },
+  "granary.bin": {
+   "template": "Elm granary bin [granary.bin]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "bin": "elm"
+   },
+   "physical": "Top-down view of a granary bin: a long mid-brown elm bin on low stone feet, lid boards ajar at one end, golden grain heaped at the gap.",
    "reviewed": true
   },
   "gym.pell": {
@@ -1263,6 +1455,14 @@
    "physical": "Top-down view of a quern: two stacked round blue-grey slate millstones with a hole in the middle, an upright elm handle near the rim, a ring of flour around the base.",
    "reviewed": true
   },
+  "muck.heap": {
+   "template": "Muck heap [muck.heap]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {},
+   "physical": "Top-down view of a muck heap: a rough round heap of dung and dirty straw, darker wet streaks down it, a fork handle standing off centre.",
+   "reviewed": true
+  },
   "nightstand.crate": {
    "template": "Knotty fir upturned crate [nightstand.crate]",
    "tier": "poor",
@@ -1314,6 +1514,27 @@
     "door": "copper"
    },
    "physical": "Top-down view of a bread oven: a rounded brown glazed earthenware dome filling the square, a flat front lip at the bottom with a small ruddy copper door and a wooden peel leaning beside it.",
+   "reviewed": true
+  },
+  "pen.gate": {
+   "template": "Beech pen gate [pen.gate]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "gate": "beech"
+   },
+   "physical": "Top-down view of a pen gate: an open light brown beech gate frame hung on one stake post, set ajar in a line of hurdles.",
+   "reviewed": true
+  },
+  "pen.hurdle": {
+   "template": "Ash hurdle [pen.hurdle]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "stakes": "ash",
+    "wattle": "woven reed"
+   },
+   "physical": "Top-down view of a hurdle: a line of pale ash stakes with woven tan woven reed panels between them, a muddy line along the open side.",
    "reviewed": true
   },
   "plant.herb_pot": {
@@ -1401,6 +1622,16 @@
     "frame": "elm"
    },
    "physical": "Top-down view of a folding drying frame: parallel tawny elm rails with russet sheets and shirts draped over them.",
+   "reviewed": true
+  },
+  "rack.hitching_rail": {
+   "template": "Elm hitching rail [rack.hitching_rail]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "rail": "elm"
+   },
+   "physical": "Top-down view of a long hitching rail: a single tawny elm beam on two thick posts, a few iron rings along it, a wooden water bucket beside one post, hoof-churned mud along the front.",
    "reviewed": true
   },
   "rack.tool": {
@@ -1836,6 +2067,17 @@
     "seat": "wool"
    },
    "physical": "Top-down view of a boxy close stool: a square tawny elm chest with a hinged lid along the back edge, a green wool cushion on top, a carrying handle on each side.",
+   "reviewed": true
+  },
+  "toilet.privy_seat": {
+   "template": "Ash privy seat [toilet.privy_seat]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "lid": "ash",
+    "plank": "beech"
+   },
+   "physical": "Top-down view of a privy seat against the top wall: a squat bench of rough weathered pale grey ash planks filling the cell, a round dark hole near the top edge with a small round ash lid leaning beside it, thick plank edges and iron nail heads on every side.",
    "reviewed": true
   },
   "utility.ladder": {

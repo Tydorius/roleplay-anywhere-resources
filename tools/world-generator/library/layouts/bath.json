@@ -1,0 +1,42 @@
+{
+  "layouts": [
+    {
+      "id": "bath.large.a",
+      "family": "bath",
+      "sizeBands": ["large"],
+      "minInterior": [7, 7],
+      "maxInterior": [10, 10],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far+corner", "back": "wall", "minWealth": "modest"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:bath", "back": "wall"}
+      ],
+      "grow": [
+        {"role": "wash.bath", "size": [1, 2], "anchor": "beside:basin", "back": "wall"}
+      ]
+    },
+    {
+      "id": "bath.medium.a",
+      "family": "bath",
+      "sizeBands": ["medium"],
+      "minInterior": [5, 5],
+      "maxInterior": [6, 8],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far+corner", "back": "wall", "minWealth": "modest"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:bath", "back": "wall"}
+      ],
+      "grow": []
+    },
+    {
+      "id": "bath.small.a",
+      "family": "bath",
+      "sizeBands": ["small"],
+      "minInterior": [3, 4],
+      "maxInterior": [4, 6],
+      "slots": [
+        {"id": "bath", "role": "wash.bath", "size": [1, 2], "anchor": "wall:far+corner", "back": "wall", "minWealth": "modest"},
+        {"id": "basin", "role": "wash.basin", "size": [1, 1], "anchor": "beside:bath", "back": "wall"}
+      ],
+      "grow": []
+    }
+  ]
+}

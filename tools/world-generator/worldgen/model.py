@@ -43,6 +43,17 @@ class Rect:
     def cells(self):
         return {(x, y) for x in range(self.x, self.x1 + 1) for y in range(self.y, self.y1 + 1)}
 
+    def touches_any(self, cells):
+        """True when any of ``cells`` lies inside this rect: the same answer
+        as ``bool(self.cells() & cells)`` without building the cell set,
+        walking whichever side is smaller and stopping at the first hit."""
+        if not cells:
+            return False
+        x0, y0, x1, y1 = self.x, self.y, self.x + self.w - 1, self.y + self.h - 1
+        if len(cells) <= self.w * self.h:
+            return any(x0 <= x <= x1 and y0 <= y <= y1 for (x, y) in cells)
+        return any((x, y) in cells for x in range(x0, x1 + 1) for y in range(y0, y1 + 1))
+
     def interior(self, n=1):
         return Rect(self.x + n, self.y + n, max(1, self.w - 2 * n), max(1, self.h - 2 * n))
 
@@ -161,6 +172,7 @@ class RoomSpec:
     share: str = "small"
     purpose: str = ""
     loot_pool: str = ""      # every container in this room draws here
+    use: str = ""            # the library family this room is for (library plans)
 
 
 @dataclass
@@ -194,10 +206,14 @@ class BuildingDesign:
     purpose: str = ""
     wall: str = "wood"
     ground: str = "wood"
-    storeys: int = 1                                   # 1-3 (floors extension)
+    storeys: int = 1                                   # 1-4 (floors extension)
     stairs_room: str = ""                              # ground room the stair rises from
     units: object = None                               # UnitSpec when it repeats units
     couples: int = 0                                   # P1: pairs of residents sharing a bed
+    residents: int = 0                                 # P1: people sleeping here
+    guests: int = 0                                    # rl-12: traveller beds a lodging promised
+    wealth: str = ""                                   # P1: poor/modest/wealthy/elite
+    condition: str = ""                                # P1: kept/worn/...
     status: str = ""                                   # P1b: home, staffed, vacant...
     upper: list = field(default_factory=list)          # [UpperStorey]
     rooms: list = field(default_factory=list)          # [RoomSpec]
@@ -431,6 +447,16 @@ def _kind_words(kind):
     return set(re.findall(r"[a-z]+", (kind or "").lower()))
 
 
+def kind_phrases_hit(kind, phrases):
+    """True when any phrase appears in a building kind as whole words, the
+    way ``suite_by_kind`` matches its kinds: "keep" hits "castle keep" and
+    "the keep", not "keeper's lodge" or "keepsake"; the phrase "shrine hall"
+    hits only a kind holding both words together."""
+    text = str(kind or "").lower()
+    return any(re.search(r"(?<![a-z])" + re.escape(p) + r"(?![a-z])", text)
+               for p in phrases)
+
+
 def zone_class(zone):
     """The zone's map class from its kind: settlement, agricultural, wild
     (the default open country) or water."""
@@ -448,6 +474,26 @@ def is_urban_zone(zone):
     """A settlement that reads as a town/city district (alleys, tight blocks)
     rather than a village or hamlet (wide lanes, yards)."""
     return zone_class(zone) == "settlement" and bool(_kind_words(zone.kind) & set(URBAN_WORDS))
+
+
+# the settlement sizes a zone kind can name, biggest first. The zones' kinds
+# are the one source of settlement size (the frame and the map size say
+# nothing about any single settlement): P1's lodging cap reads them.
+SETTLEMENT_SIZES = ("city", "town", "village", "hamlet")
+
+
+def settlement_size(kind):
+    """The settlement size a zone kind names: its biggest size word (a
+    "farming village" is a village), a town when the kind is a settlement
+    without a size word (district, market, quarter), None when the kind is
+    no settlement at all."""
+    words = _kind_words(kind)
+    if not words & set(SETTLEMENT_WORDS):
+        return None
+    for size in SETTLEMENT_SIZES:
+        if size in words:
+            return size
+    return "town"
 
 
 GREEN_LIKE_WORDS = ("green", "common")
@@ -581,7 +627,8 @@ def _parse_roomspec(d):
     return RoomSpec(name=_require(d, "name", "room"),
                     share=d.get("share", "small"),
                     purpose=d.get("purpose", ""),
-                    loot_pool=d.get("lootPool", "") or "")
+                    loot_pool=d.get("lootPool", "") or "",
+                    use=d.get("use", "") or "")
 
 
 def _parse_storeys(d, top=3):
@@ -640,9 +687,26 @@ def _parse_units(d, g, name):
                     numbering=numbering, design=design)
 
 
+def _free_room_name(name, busy):
+    """The first free suffix of ``name`` (" 2", " 3", ...) that ``busy`` does
+    not already hold (rl-19: a renamed duplicate never takes a name another
+    room of the building keeps)."""
+    k = 2
+    while f"{name} {k}" in busy:
+        k += 1
+    return f"{name} {k}"
+
+
 def _parse_upper(specs, storeys, ground_rooms):
     """[UpperStorey] from a design's "upper" entries, in storey order, keeping
-    only storeys 2..storeys."""
+    only storeys 2..storeys. Room names come out unique over the whole
+    building (rl-19): an upper room sharing another storey's name takes the
+    first free suffix, so rooms on different storeys never merge into one bed
+    count."""
+    seen = set(ground_rooms)
+    taken = set(ground_rooms) | {
+        r.get("name") for u in specs if isinstance(u, dict)
+        for r in (u.get("rooms") or []) if isinstance(r, dict)}
     out = []
     for u in specs:
         if not isinstance(u, dict):
@@ -659,11 +723,31 @@ def _parse_upper(specs, storeys, ground_rooms):
                                   kind=op.get("kind", "gallery"))
         else:
             opening = None
+        rooms = []
+        renames, own = {}, set()
+        for r in (u.get("rooms") or []):
+            if not isinstance(r, dict):
+                continue
+            if isinstance(r.get("name"), str):
+                first = r["name"]
+                if r["name"] in seen:
+                    r["name"] = _free_room_name(r["name"], seen | taken)
+                    # only a clash with another storey re-points this storey's
+                    # connections and furniture; a duplicate within the storey
+                    # stays ambiguous and keeps pointing at the first
+                    if first not in own:
+                        renames[first] = r["name"]
+                own.add(first)
+                seen.add(r["name"])
+            rooms.append(_parse_roomspec(r))
         out.append(UpperStorey(
             storey=s,
-            rooms=[_parse_roomspec(r) for r in u.get("rooms", []) if isinstance(r, dict)],
-            connections=[list(c) for c in u.get("connections", [])],
-            furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+            rooms=rooms,
+            connections=[[renames.get(x, x) if isinstance(x, str) else x
+                          for x in c] for c in u.get("connections", [])],
+            furniture=[FurniturePlan(template=f.get("template"),
+                                     room=renames.get(f.get("room", ""),
+                                                      f.get("room", "")),
                                      count=int(f.get("count", 1)), hint=f.get("hint", ""),
                                      loot_pool=f.get("lootPool", "") or "")
                        for f in u.get("furniture", [])],
@@ -705,6 +789,9 @@ def _parse_building(d, designs):
         upper=upper,
         units=units,
         couples=(0 if units else max(0, int(d.get("couples", 0) or 0))),
+        residents=max(0, int(d.get("residents", 0) or 0)),
+        wealth=d.get("wealth", "") or "",
+        condition=d.get("condition", "") or "",
         status=d.get("status", "") or "",
         rooms=rooms,
         connections=[list(c) for c in g.get("connections", [])],

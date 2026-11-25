@@ -1,0 +1,247 @@
+{
+  "groups": [
+    {
+      "id": "storage.bulk.storage.bulk",
+      "family": "granary",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "sack.stack",
+      "family": "granary",
+      "wall": "corner",
+      "use": [
+        "south",
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "table.work.storage.bulk",
+      "family": "granary",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.bulk.computer",
+      "family": "granary",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "granary.small.a",
+      "family": "granary",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.bulk.storage.bulk",
+          "kind": "anchor"
+        },
+        {
+          "group": "sack.stack",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.storage.bulk",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "granary.gene_bank.a",
+      "family": "granary",
+      "sizeBands": [
+        "small",
+        "medium"
+      ],
+      "source": "hand",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.computer",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.bulk.storage.bulk",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.storage.bulk",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "granary.long.a",
+      "family": "granary",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "storage.bulk.storage.bulk",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.bulk.storage.bulk",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "sack.stack",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.work.storage.bulk",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}

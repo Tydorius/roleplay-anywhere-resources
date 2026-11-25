@@ -1,0 +1,2263 @@
+{
+  "rooms": [
+    {
+      "id": "yard.large.a.grand.flush",
+      "family": "yard",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        11,
+        12
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            2
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            6
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            6
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            10
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            11
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            11
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            11
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          10
+        ],
+        "west": [
+          2,
+          3,
+          4,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.large.hand",
+      "description": "A spacious yard, sack in the northwest corner, a sack in the middle of the room, a trough in the middle of the room, and a trough against the west wall."
+    },
+    {
+      "id": "yard.large.a.roomy.flush",
+      "family": "yard",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "light.small.single.yard",
+          "optional": true
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            2
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            2
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            5
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            8
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            3,
+            8
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            8
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            8
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            9
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          2,
+          3,
+          6,
+          7,
+          10
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          9,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.large.hand",
+      "description": "A spacious yard, sack in the middle of the room, a sack against the west wall, a trough in the middle of the room, and a trough in the middle of the room."
+    },
+    {
+      "id": "yard.medium.a.grand.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            6
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "west": [
+          2,
+          3,
+          4
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.medium.hand",
+      "description": "A mid-sized yard, sack in the northwest corner, a sack against the north wall, a bench in the southwest corner, and a floor rug opposite."
+    },
+    {
+      "id": "yard.medium.a.roomy.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          2,
+          3,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.medium.hand",
+      "description": "A mid-sized yard, sack in the middle of the room, a sack against the west wall, a sack in the southwest corner, and a floor rug against the north wall."
+    },
+    {
+      "id": "yard.medium.a.tight.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "heat.seat.yard",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "plant.tree.single.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.medium.hand",
+      "description": "A mid-sized yard, sack in the middle of the room, a sack in the middle of the room, a bench in the middle of the room, and a floor rug against the south wall."
+    },
+    {
+      "id": "yard.medium.b.grand.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            6
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          3,
+          4
+        ],
+        "south": [
+          0,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.paddock.a",
+      "description": "A mid-sized yard, trough in the northwest corner, a sack in the northeast corner, a pen hurdle opposite, and a hay stack in the southeast corner."
+    },
+    {
+      "id": "yard.medium.b.roomy.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal.pen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3,
+          4,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.paddock.a",
+      "description": "A mid-sized yard, pen hurdle against the north wall, a hay stack against the north wall, and a trough opposite."
+    },
+    {
+      "id": "yard.medium.b.tight.flush",
+      "family": "yard",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "animal.stall.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "hay.rack.yard",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            4
+          ],
+          "group": "pen.fold",
+          "optional": false
+        },
+        {
+          "role": "animal.pen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "pen.fold",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.paddock.a",
+      "description": "A mid-sized yard, trough against the north wall, a hay stack in the middle of the room, and a pen hurdle in the middle of the room."
+    },
+    {
+      "id": "yard.small.a.grand.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1
+        ],
+        "south": [
+          0
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.small.hand",
+      "description": "A small yard, sack in the northeast corner, a trough in the southeast corner."
+    },
+    {
+      "id": "yard.small.a.roomy.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1
+        ],
+        "south": [
+          0
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "east": [
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.small.hand",
+      "description": "A small yard, sack in the northeast corner, a trough in the southeast corner."
+    },
+    {
+      "id": "yard.small.a.tight.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "storage.bulk.pair.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "animal.storage.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          3
+        ],
+        "south": [
+          3
+        ],
+        "west": [
+          0,
+          1
+        ],
+        "east": [
+          0,
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.small.hand",
+      "description": "A small yard, sack against the north wall, a trough in the southwest corner."
+    },
+    {
+      "id": "yard.small.b.grand.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "west": [
+          3,
+          4,
+          5
+        ],
+        "east": [
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.apiary.a",
+      "description": "A small yard, trough in the northwest corner, a trough in the northeast corner, and a trough in the southeast corner."
+    },
+    {
+      "id": "yard.small.b.roomy.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            3
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          3,
+          4,
+          5
+        ],
+        "west": [
+          1,
+          2
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.apiary.a",
+      "description": "A small yard, trough in the northwest corner, a trough in the southeast corner, and a trough in the southwest corner."
+    },
+    {
+      "id": "yard.small.b.tight.flush",
+      "family": "yard",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "skep.row.yard",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "hive.stand.yard",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          1,
+          2
+        ],
+        "west": [
+          0,
+          1
+        ],
+        "east": [
+          1
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "yard.apiary.a",
+      "description": "A small yard, trough in the northeast corner, a trough in the southwest corner, and a trough in the southeast corner."
+    }
+  ]
+}

@@ -1,0 +1,1239 @@
+{
+  "groups": [
+    {
+      "id": "teach.desk.seat",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.classroom",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.classroom",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single.classroom",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.classroom",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "teach.lectern",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.classroom",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.classroom",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.classroom1",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "screen.single",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "screen",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.classroom1",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "teach.desk",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat2.seat.opt",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.classroom",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.classroom1",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.classroom",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.classroom2",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teach.desk.seat.classroom",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single.classroom1",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single.classroom2",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.classroom",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "teach.single",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "desk.seat4.seat.opt",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.classroom1",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teach.desk.seat.classroom1",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat3.seat.opt",
+      "family": "classroom",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.classroom",
+      "family": "classroom",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.classroom1",
+      "family": "classroom",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "classroom.large.a",
+      "family": "classroom",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "teach.desk.seat",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.single",
+          "kind": "repeatable",
+          "count": [
+            8,
+            12
+          ]
+        },
+        {
+          "group": "books.single.classroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.classroom",
+          "kind": "required"
+        },
+        {
+          "group": "desk.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.large.b",
+      "family": "classroom",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "teach.lectern",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.classroom",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "books.single.classroom",
+          "kind": "required"
+        },
+        {
+          "group": "light.big.single.classroom",
+          "kind": "repeatable",
+          "count": 2,
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.long.single.classroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "screen.single",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.classroom1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.large.c",
+      "family": "classroom",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "teach.desk",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.seat2.seat.opt",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "shelving.single.classroom",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.classroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.medium.a",
+      "family": "classroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "teach.desk.seat",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.single",
+          "kind": "repeatable",
+          "count": [
+            4,
+            5
+          ]
+        },
+        {
+          "group": "books.single.classroom2",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.medium.b",
+      "family": "classroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "teach.desk.seat.classroom",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.single.classroom1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "desk.single.classroom1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "desk.single.classroom2",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.medium.c",
+      "family": "classroom",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "teach.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.seat4.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.classroom",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.classroom1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "books.single.classroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.small.a",
+      "family": "classroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "teach.desk.seat.classroom1",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.classroom2",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.classroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.small.b",
+      "family": "classroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "teach.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.seat3.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "classroom.small.c",
+      "family": "classroom",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "teach.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "desk.single.classroom1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "desk.seat.classroom",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.classroom1",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.classroom2",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.classroom",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.classroom",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

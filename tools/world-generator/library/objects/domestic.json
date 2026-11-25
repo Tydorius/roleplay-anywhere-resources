@@ -339,6 +339,105 @@
       ]
     },
     {
+      "id": "hearth.gas_fireplace",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.7,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "industrial",
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "gas fireplace"
+      },
+      "parts": {
+        "surround": "stone",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "modern": {
+          "surround": "metal"
+        }
+      },
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {noun} with a {pane} front over ceramic coals, its ring of gas flames warming the room at the turn of a tap.",
+        "physical": "Top-down view of a wall {noun}: a {surround.color} {surround} slab along the top wall, a dark firebox behind {pane.color} {pane} with small blue-rimmed gas flames, a slim control strip along the bottom edge."
+      },
+      "aliases": [
+        "gas fire",
+        "gas insert"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "hearth.electric_fireplace",
+      "category": "hearth",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0.5,
+      "back": "north",
+      "wealth": [
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "modern"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "electric fireplace"
+      },
+      "parts": {
+        "frame": "metal",
+        "beads": "glass"
+      },
+      "partsByBand": {},
+      "tags": [
+        "hearth",
+        "heat",
+        "light"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} slim {noun} on the wall, its LED flames rippling over {beads.color} {beads} beads and warm air rising from the vents below.",
+        "physical": "Top-down view of a wall {noun}: a thin {frame.color} {frame} unit flush along the top wall, a wide {beads.color} {beads}-bead firebed with bright LED flames playing across it, a vent line along the bottom edge."
+      },
+      "aliases": [
+        "electric fire",
+        "wall fireplace"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
       "id": "stove.cookfire",
       "category": "stove",
       "size": [
@@ -1724,6 +1823,142 @@
       ]
     },
     {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.stave_tub",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval"
+      ],
+      "names": {
+        "*": "stave tub"
+      },
+      "parts": {
+        "tub": "wood",
+        "hoops": "metal"
+      },
+      "text": {
+        "description": "{A:condition} long {tub} {noun} bound with {hoops} hoops, filled a bucket at a time and emptied the same way.",
+        "physical": "Top-down view of a long oval {noun}: plain {tub.color} {tub} staves bound with two dark {hoops} hoops, grey water inside, a wooden bucket beside one end."
+      },
+      "aliases": [
+        "bathing tub",
+        "washing tub"
+      ]
+    },
+    {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.tin_bath",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "industrial"
+      ],
+      "names": {
+        "*": "tin bath"
+      },
+      "parts": {
+        "tub": "metal"
+      },
+      "text": {
+        "description": "{A:condition} long {tub} {noun} with a handle at each end, hung on a nail outside when it is not in use.",
+        "physical": "Top-down view of a long {noun}: a shallow oval {tub.color} {tub} tub with a rolled rim and a small handle at each end, soapy water inside, a folded towel over one end."
+      },
+      "aliases": [
+        "zinc bath",
+        "galvanised bath"
+      ]
+    },
+    {
+      "category": "bath",
+      "size": [
+        2,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "onlyGenres": [],
+      "partsByBand": {},
+      "tags": [
+        "bath",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "bath.hygiene_pod",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "scifi"
+      ],
+      "names": {
+        "*": "hygiene pod"
+      },
+      "parts": {
+        "shell": "synthetic",
+        "lid": "glass"
+      },
+      "text": {
+        "description": "{A:condition} {shell} {noun}: lie down, close the {lid} lid and it mists, scrubs and dries you in under a minute.",
+        "physical": "Top-down view of a long capsule-shaped {noun}: a rounded {shell.color} {shell} shell with a clear {lid.color} {lid} lid over most of its length, a small control panel glowing at the end nearest the top edge."
+      },
+      "aliases": [
+        "wash pod",
+        "cleansing pod"
+      ]
+    },
+    {
       "id": "bath.bathtub",
       "category": "bath",
       "size": [
@@ -1967,6 +2202,53 @@
       "aliases": [
         "commode chair",
         "night stool"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
+      "id": "toilet.privy_seat",
+      "category": "toilet",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "privy seat"
+      },
+      "parts": {
+        "plank": "wood",
+        "lid": "wood"
+      },
+      "partsByBand": {},
+      "tags": [
+        "toilet",
+        "washroom"
+      ],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {plank} {noun} with a round hole and a hinged {lid} lid, the bare bench of an outhouse or garderobe.",
+        "physical": "Top-down view of a {noun}: a squat {plank.color} {plank} bench with a round hole near the back edge, a small {lid.color} {lid} disc over the hole, thick plank edges on every side."
+      },
+      "aliases": [
+        "outhouse seat",
+        "garderobe seat",
+        "latrine seat"
       ],
       "sources": [
         "claude-authored"

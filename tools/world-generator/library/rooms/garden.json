@@ -1,0 +1,2132 @@
+{
+  "rooms": [
+    {
+      "id": "garden.large.a.grand.flush",
+      "family": "garden",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            0
+          ],
+          "group": "light.small.single.garden",
+          "optional": true
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            4
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            5
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            9
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            10
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            10
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            10
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            10
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.large.hand",
+      "description": "A spacious garden, plant bed against the north wall, a plant bed against the west wall, a plant bed in the middle of the room, and a plant bed in the southeast corner."
+    },
+    {
+      "id": "garden.large.a.roomy.flush",
+      "family": "garden",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            2
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            7,
+            3
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "grow.bed.pair.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "light.small.single.garden",
+          "optional": true
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            9
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          3,
+          4,
+          7,
+          8,
+          10
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.large.hand",
+      "description": "A spacious garden, plant bed against the west wall, a plant bed in the middle of the room, a plant bed against the west wall, and a plant bed in the middle of the room."
+    },
+    {
+      "id": "garden.large.b.grand.flush",
+      "family": "garden",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "press.stand.garden",
+          "optional": false
+        },
+        {
+          "role": "work.primary",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "press.stand.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            9
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            9
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.orchard.a",
+      "description": "A spacious garden, plant bed in the middle of the room, a plant bed in the middle of the room, a plant bed in the middle of the room, and a floor rug in the middle of the room."
+    },
+    {
+      "id": "garden.large.b.roomy.flush",
+      "family": "garden",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            2
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            2
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            2
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            9
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            9
+          ],
+          "group": "press.stand.garden",
+          "optional": false
+        },
+        {
+          "role": "work.primary",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            9
+          ],
+          "group": "press.stand.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.orchard.a",
+      "description": "A spacious garden, plant bed in the middle of the room, a plant bed in the middle of the room, a plant bed in the middle of the room, and a plant bed in the middle of the room."
+    },
+    {
+      "id": "garden.medium.a.grand.flush",
+      "family": "garden",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        9
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            3
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            8
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          3,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.medium.hand",
+      "description": "A mid-sized garden, plant bed in the northwest corner, a plant bed in the southwest corner, a bench against the east wall, and a floor rug in the middle of the room."
+    },
+    {
+      "id": "garden.medium.a.roomy.flush",
+      "family": "garden",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          6
+        ],
+        "south": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          1,
+          2,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.medium.hand",
+      "description": "A mid-sized garden, plant bed against the west wall, a plant bed in the southwest corner, a floor rug in the northwest corner, and a floor rug against the north wall."
+    },
+    {
+      "id": "garden.medium.a.tight.flush",
+      "family": "garden",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "statue.seat.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          2,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.medium.hand",
+      "description": "A mid-sized garden, plant bed against the west wall, a plant bed against the west wall, a floor rug in the middle of the room, and a bench against the south wall."
+    },
+    {
+      "id": "garden.small.a.grand.flush",
+      "family": "garden",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        4,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          3
+        ],
+        "south": [
+          3
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.small.hand",
+      "description": "A small garden, plant bed in the southwest corner, a floor rug opposite."
+    },
+    {
+      "id": "garden.small.a.roomy.flush",
+      "family": "garden",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        4,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "light.small.single.garden",
+          "optional": true
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            3
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2
+        ],
+        "south": [
+          0
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          1,
+          2
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.small.hand",
+      "description": "A small garden, plant bed in the southeast corner, a lamp in the northwest corner, and a floor rug in the northeast corner."
+    },
+    {
+      "id": "garden.small.a.tight.flush",
+      "family": "garden",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        4,
+        3
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "grow.row.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            2
+          ],
+          "group": "plant.tree.single.garden",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          3
+        ],
+        "south": [
+          0,
+          2
+        ],
+        "west": [
+          1,
+          2
+        ],
+        "east": [
+          0,
+          1
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "garden.small.hand",
+      "description": "A small garden, plant bed in the northwest corner, a floor rug opposite, and a floor rug in the southeast corner."
+    }
+  ]
+}

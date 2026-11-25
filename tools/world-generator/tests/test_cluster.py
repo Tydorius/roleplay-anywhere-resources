@@ -114,7 +114,9 @@ class TestGrowthStops(unittest.TestCase):
                 mock.patch.object(worldgen, "_build_world", side_effect=build), \
                 mock.patch.object(worldgen, "_coverage_scale", return_value={}), \
                 mock.patch("worldgen.extensions.expand", return_value=set()):
-            worldgen.run({})
+            # the stub plan models only the old build path; the assembler
+            # reads a parsed plan's setting
+            worldgen.run({}, room_assembler=False)
         return len(calls)
 
     def test_no_progress_stops_after_the_stalled_passes(self):

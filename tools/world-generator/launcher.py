@@ -298,7 +298,7 @@ class Launcher:
         self.out("")
         self.out("Extensions add features. Some need code mods from")
         self.out("../code-mod-loader installed in the game; others need no mod.")
-        self.out("All off makes a world for the plain game.")
+        self.out("Floors is on by default; everything else starts off.")
         chosen = set(given)
         for e in REGISTRY:
             if e.id in expand(chosen):
@@ -310,7 +310,8 @@ class Launcher:
                          f"{e.as_dict()['withoutMod']}.")
             else:
                 self.out("    No game mod needed.")
-            if self.yes(f"  Turn on {e.title}?"):
+            # the registry's default is the prompt's default (floors: on)
+            if self.yes(f"  Turn on {e.title}?", e.default):
                 chosen.add(e.id)
         return sorted(expand(chosen))
 
@@ -404,6 +405,9 @@ class Launcher:
                            "every room, the old method)", True)
         item_library = self.yes("Stock containers from the item library? (No: the model "
                                 "invents every item)", True)
+        room_assembler = library and self.yes(
+            "Lay out rooms from the room library's own room layouts? (No: the older room "
+            "cutter)", True)
         seed = self.ask("Seed (the same idea and seed give the same layout)", "1")
         seed = int(seed) if seed.isdigit() else 1
         est = api.estimate(idea or "a small world")
@@ -413,16 +417,17 @@ class Launcher:
         if not self.yes("Start?", True):
             return None
         return self._start_world(idea, provider, exts, seed, out_dir, frame, library,
-                                 item_library,
+                                 item_library, room_assembler,
                                  {"mode": mode, "answers": answers, "population": population})
 
     def _start_world(self, idea, provider, exts, seed, out_dir, frame, library,
-                     item_library, questionnaire):
+                     item_library, room_assembler, questionnaire):
         return self._run(lambda progress, emit: api.generate(
             idea, provider=provider, extensions=exts, seed=seed, out_dir=out_dir,
             progress=progress, providers_path=self.providers_path, client=self.client,
             emit=emit, frame=frame, library=library, item_library=item_library,
-            questionnaire=questionnaire), out_dir)
+            room_assembler=room_assembler, questionnaire=questionnaire,
+            floors="floors" in exts), out_dir)   # the answer rules, not the default
 
     def _pick_provider(self):
         """The provider for a run (setting one up when none is), or False."""
@@ -460,7 +465,8 @@ class Launcher:
         self.out(f"  Residents: {'the map decides' if pop == 'map' else f'{pop[0]}-{pop[1]}'}")
         self.out(f"  Seed {s['seed']}; extensions: {', '.join(s['extensions']) or 'none'}; "
                  f"room library: {'on' if s['library'] else 'off'}; "
-                 f"item library: {'on' if s['item_library'] else 'off'}")
+                 f"item library: {'on' if s['item_library'] else 'off'}; "
+                 f"room assembler: {'on' if s['room_assembler'] else 'off'}")
         if s.get("model"):
             self.out(f"  Made with the model {s['model']}")
         provider = self._pick_provider()
@@ -484,6 +490,7 @@ class Launcher:
             return None
         return self._start_world(s["idea"], provider, tuple(s["extensions"]), seed, out_dir,
                                  frame, s["library"], s["item_library"],
+                                 s["room_assembler"],
                                  settings_mod.questionnaire(s)
                                  or {"mode": s["mode"], "answers": {},
                                      "population": s["population"]})
@@ -510,7 +517,17 @@ class Launcher:
         seed = int(seed) if seed.isdigit() else 2
         out_dir = self._out_dir(re.sub(r"-\d{8}-\d{6}$", "", label) + f"-seed{seed}")
         return self._run(lambda progress, emit: api.relayout(
-            plan, seed=seed, out_dir=out_dir, progress=progress, emit=emit), out_dir)
+            plan, seed=seed, out_dir=out_dir, progress=progress, emit=emit,
+            room_assembler=self._room_assembler_of(plan)), out_dir)
+
+    def _room_assembler_of(self, plan):
+        """The saved world's room-assembler choice, from the settings file
+        beside its plan (on when there is none: the default)."""
+        path = os.path.join(os.path.dirname(plan), settings_mod.FILE_NAME)
+        try:
+            return settings_mod.read(path)["room_assembler"]
+        except settings_mod.SettingsError:
+            return True
 
     # ------------------------------------------------------------ menu
     def main(self):

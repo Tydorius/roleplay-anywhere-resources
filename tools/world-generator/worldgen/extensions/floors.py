@@ -219,14 +219,25 @@ def _build_storeys(world, b, uppers, rects, stairs, rng):
             layout = layout_units(design, rect, rng, world.templates,
                                   storey=storey, make_entrance=False)
         else:
-            layout = layout_rooms(_upper_design(design, spec, region_name), rect, rng,
-                                  world.templates, furniture=spec.furniture)
+            # an assembled ground carries its upper storeys as partitions
+            # already laid out (the assembler has stepped aside by now, so
+            # the conversion is context-free); only the old path lays the
+            # spec out itself
+            from .. import assembler
+            layout = assembler.upper_layout(bl, i, rect)
+            if layout is None:
+                layout = layout_rooms(_upper_design(design, spec, region_name), rect, rng,
+                                      world.templates, furniture=spec.furniture)
         names = {r.base_name for r in layout.rooms}
         for f in layout.furniture:
             if f.room not in names:
                 world.failures.append((f"piece {f.template} in {region_name}",
                                        f"room {f.room!r} not in the storey"))
         for room in layout.rooms:
+            if room.furniture is not None:
+                # an assembled storey's furniture sits at the fixed cells
+                # its rooms' pieces name; only the old path scatters here
+                continue
             furniture = [f for f in layout.furniture if f.room == room.base_name]
             room.furniture = layout_room(room.rect, sorted(room.doors), furniture,
                                          world.templates, rng)
@@ -259,12 +270,17 @@ def _build_storeys(world, b, uppers, rects, stairs, rng):
             if single:
                 storey_reg.ambience = amb
             else:
-                purposes = {r.name: r.purpose for r in spec.rooms} if spec is not None \
-                    else {r.name: r.purpose for r in layout.design.rooms}
+                # the layout's own design carries the placed rooms' purposes
+                # (an assembled storey's fillers included)
+                purposes = {r.name: r.purpose for r in layout.design.rooms}
+                # an assembled storey opens exactly the door cells its aligned
+                # seams picked, like the assembled ground below it; the old
+                # path leaves the doors to the builder's auto-connect
                 reg = RegionOut(room.full_name, room.rect, "room", parent=region_name,
                                 wall=design.wall, ground="wood", ground_texture="floorboards",
                                 ambience=amb,
-                                description=purposes.get(room.base_name, ""))
+                                description=purposes.get(room.base_name, ""),
+                                doors=set(room.doors) if getattr(layout, "assembled", None) else None)
                 reg.entrance_door = None   # sealed: no exterior door upstairs
                 regions.append(reg)
             # each piece keeps the quarter turn the room layout gave it, as on
@@ -444,31 +460,41 @@ def _plan_stairs(world, b, floors, stairs):
     stair rises from the ground stairs room; every upper storey gets a down
     stair (preferring the cell over the stair it pairs with) and, below the
     top storey, an up stair of its own — every stair a separate object, so
-    each portal edge has its own pad."""
+    each portal edge has its own pad. An assembled building names its cells
+    itself (the ground stair it reserved, each partition's stair cells) and
+    those are honoured as they stand."""
     bl = b.layout
     t_up, t_down = stairs
     out = []
-    g_room = _stairs_room(bl)
-    cell = _pick_stair_cell(world, [g_room]) \
-        or _pick_stair_cell(world, [g_room], relax=True) \
-        or _pick_stair_cell(world, bl.rooms, relax=True)
+    cell = getattr(bl, "stair_cell", None)
+    if cell is not None:
+        g_room = _room_holding(bl, cell)
+    else:
+        g_room = _stairs_room(bl)
+        cell = _pick_stair_cell(world, [g_room]) \
+            or _pick_stair_cell(world, [g_room], relax=True) \
+            or _pick_stair_cell(world, bl.rooms, relax=True)
     if cell is None:
         return None, "the ground floor"
     out.append((g_room, t_up.name, cell))
     below_up = (t_up.name, cell)
     below_rect = bl.rect
     for i, f in enumerate(floors):
-        prefer = (f.rect.x + (below_up[1][0] - below_rect.x),
-                  f.rect.y + (below_up[1][1] - below_rect.y))
-        cell = _pick_stair_cell(world, f.layout.rooms, prefer=prefer) \
-            or _pick_stair_cell(world, f.layout.rooms, prefer=prefer, relax=True)
+        cell = getattr(f.layout, "stair_down_cell", None)
+        if cell is None:
+            prefer = (f.rect.x + (below_up[1][0] - below_rect.x),
+                      f.rect.y + (below_up[1][1] - below_rect.y))
+            cell = _pick_stair_cell(world, f.layout.rooms, prefer=prefer) \
+                or _pick_stair_cell(world, f.layout.rooms, prefer=prefer, relax=True)
         if cell is None:
             return None, f.region_name
         f.stair_down = (t_down.name, cell)
         f.stair_below_up = below_up
         out.append((_room_holding(f.layout, cell), t_down.name, cell))
         if i + 1 < len(floors):
-            up = _pick_second_stair_cell(world, f, cell)
+            up = getattr(f.layout, "stair_up_cell", None)
+            if up is None:
+                up = _pick_second_stair_cell(world, f, cell)
             if up is None:
                 return None, f"{f.region_name}: no second cell for its up stair"
             f.stair_up = (t_up.name, up)

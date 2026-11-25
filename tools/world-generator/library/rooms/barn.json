@@ -1,0 +1,4933 @@
+{
+  "rooms": [
+    {
+      "id": "barn.large.a.grand.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            1,
+            8
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            9
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          3,
+          4
+        ],
+        "south": [
+          0,
+          6
+        ],
+        "west": [
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.hayloft.a",
+      "description": "A spacious barn, hay stack in the northwest corner, a hay stack in the northeast corner, and a hay stack opposite."
+    },
+    {
+      "id": "barn.large.a.grand.open",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          5,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A spacious barn, machine in the northeast corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.large.a.roomy.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        6,
+        9
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            7
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            8
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          3,
+          4
+        ],
+        "south": [
+          5
+        ],
+        "west": [
+          5,
+          6
+        ],
+        "east": [
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          3,
+          6
+        ],
+        "y": [
+          0,
+          5,
+          6,
+          7,
+          9
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.hayloft.a",
+      "description": "A spacious barn, hay stack in the northwest corner, a hay stack in the northeast corner, and a hay stack in the southwest corner."
+    },
+    {
+      "id": "barn.large.a.roomy.open",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        10,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "west": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          3
+        ]
+      },
+      "filler": {
+        "at": [
+          4,
+          2
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A spacious barn, hay stack in the northwest corner, a machine opposite, a work tool against the east wall, and open floor in the middle."
+    },
+    {
+      "id": "barn.large.a.tight.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        6,
+        9
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7,
+          8
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          0
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.hayloft.a",
+      "description": "A spacious barn, hay stack in the northeast corner, a hay stack against the west wall, and a hay stack against the east wall."
+    },
+    {
+      "id": "barn.large.b.grand.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          1,
+          2,
+          3,
+          4,
+          7
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A spacious barn, machine against the south wall, a work tool opposite."
+    },
+    {
+      "id": "barn.large.b.grand.open",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          5,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A spacious barn, machine in the northeast corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.large.b.roomy.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        5,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            8
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          3,
+          4
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          8,
+          9
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          3
+        ],
+        "y": [
+          3,
+          4,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A spacious, narrow barn, machine in the northwest corner, a hay stack in the southwest corner, and a work tool against the east wall."
+    },
+    {
+      "id": "barn.large.b.roomy.open",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        15,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            9,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            12,
+            1
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            10,
+            4
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            14,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            14,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            6
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            11,
+            6
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            14,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            7
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            6,
+            7
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          12,
+          13,
+          14
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [
+          8,
+          9,
+          12,
+          14
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          7,
+          2
+        ],
+        "size": [
+          2,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.large.a",
+      "description": "A spacious barn, hay stack against the north wall, a machine against the west wall, a machine in the open middle, a sack in the open middle, and open floor in the middle."
+    },
+    {
+      "id": "barn.large.b.tight.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            2,
+            4
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          6
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          0
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A spacious barn, machine in the northwest corner, a hay stack against the east wall, and a work tool in the southwest corner."
+    },
+    {
+      "id": "barn.large.c.grand.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        17
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            7
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            8
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            8
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            10
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            12
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            14
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            5,
+            14
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            15
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            16
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6,
+          7,
+          11,
+          12,
+          13
+        ],
+        "east": [
+          4,
+          5,
+          6,
+          9,
+          10,
+          11
+        ]
+      },
+      "stretch": {
+        "x": [
+          2,
+          3,
+          4,
+          5,
+          7
+        ],
+        "y": [
+          0,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          14,
+          17
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.large.a",
+      "description": "A spacious, narrow barn, machine in the northeast corner, a machine against the east wall, a hay stack in the southeast corner, and a trough in the northwest corner."
+    },
+    {
+      "id": "barn.large.c.roomy.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        8,
+        12
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            6,
+            5
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            9
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            9
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            5,
+            9
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            10
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            11
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          2,
+          3,
+          7
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          2,
+          3,
+          6,
+          7,
+          8
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          7,
+          8,
+          11
+        ]
+      },
+      "stretch": {
+        "x": [
+          8
+        ],
+        "y": [
+          1,
+          2,
+          3,
+          4,
+          7,
+          8,
+          9,
+          11,
+          12
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.large.a",
+      "description": "A spacious barn, machine in the northwest corner, a machine against the west wall, a hay stack against the east wall, and a trough against the north wall."
+    },
+    {
+      "id": "barn.large.c.roomy.open",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        10,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            8,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            8,
+            6
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "west": [
+          0,
+          1,
+          5,
+          6
+        ],
+        "east": [
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          4
+        ]
+      },
+      "filler": {
+        "at": [
+          3,
+          3
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A spacious barn, machine in the northeast corner, a hay stack in the southeast corner, a work tool against the west wall, and open floor in the middle."
+    },
+    {
+      "id": "barn.large.c.tight.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        10
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "animal",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "animal.storage.hay",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            3
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "threshing.open",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            4,
+            5
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            6,
+            6
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            8
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          3
+        ],
+        "south": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "east": [
+          1,
+          4,
+          5,
+          8,
+          9
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          1,
+          2,
+          4,
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.large.a",
+      "description": "A spacious barn, machine against the east wall, a hay stack against the south wall, a machine against the east wall, and a work tool in the northwest corner."
+    },
+    {
+      "id": "barn.large.d.grand.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          0,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A spacious barn, machine in the northeast corner, a work tool opposite."
+    },
+    {
+      "id": "barn.large.d.roomy.flush",
+      "family": "barn",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        10,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "west": [
+          0,
+          4
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          7
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A spacious, narrow barn, machine in the middle of the room, a work tool against the west wall."
+    },
+    {
+      "id": "barn.small.a.grand.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        9,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "south": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          0
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          3,
+          5,
+          6,
+          7,
+          8
+        ],
+        "y": [
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small, narrow barn, machine in the southwest corner, a work tool in the southeast corner."
+    },
+    {
+      "id": "barn.small.a.grand.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          4
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [
+          3
+        ],
+        "y": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          3,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small barn, machine in the northwest corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.a.roomy.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        9,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            2
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            4
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "south": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          0
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          9
+        ],
+        "y": [
+          0
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.shed.a",
+      "description": "A small barn, machine in the northeast corner, a machine in the southwest corner, and a work tool in the southeast corner."
+    },
+    {
+      "id": "barn.small.a.roomy.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          3,
+          4
+        ],
+        "east": [
+          0,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [
+          5,
+          6,
+          7
+        ],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          3,
+          2
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small barn, machine in the northwest corner, a work tool against the east wall, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.a.tight.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        8,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            1
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            6,
+            2
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            3,
+            2
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          5
+        ],
+        "west": [
+          2
+        ],
+        "east": []
+      },
+      "stretch": {
+        "x": [
+          0,
+          3
+        ],
+        "y": [
+          5
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.hayloft.a",
+      "description": "A small barn, hay stack in the northwest corner, a hay stack in the northeast corner, and a hay stack in the southwest corner."
+    },
+    {
+      "id": "barn.small.a.tight.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        8,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "filler": {
+        "at": [
+          3,
+          2
+        ],
+        "size": [
+          2,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.shed.a",
+      "description": "A small barn, machine in the northwest corner, a machine against the east wall, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.b.grand.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        10,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          6,
+          7,
+          8,
+          9
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "west": [
+          3
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          4,
+          6,
+          7,
+          8,
+          9
+        ],
+        "y": [
+          0,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A small, narrow barn, machine in the northwest corner, a work tool in the southeast corner."
+    },
+    {
+      "id": "barn.small.b.grand.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        8
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            7
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          4,
+          5
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "east": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "stretch": {
+        "x": [
+          4
+        ],
+        "y": [
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          4,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A small barn, machine in the northwest corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.b.roomy.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        8,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            6,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2
+        ],
+        "south": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          0
+        ],
+        "east": [
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          3,
+          6,
+          8
+        ],
+        "y": [
+          0,
+          3,
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small, narrow barn, machine in the northeast corner, a work tool in the southwest corner."
+    },
+    {
+      "id": "barn.small.b.roomy.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          4,
+          5
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          4,
+          5,
+          6
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          4,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A small barn, machine in the northwest corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.b.tight.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        8,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "north"
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            4
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "machine.single",
+          "optional": true
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          4,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          0,
+          1,
+          4
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [
+          8
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.shed.a",
+      "description": "A small barn, machine in the southeast corner, a machine against the west wall, and a work tool opposite."
+    },
+    {
+      "id": "barn.small.b.tight.open",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "open",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        5,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            6
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "south"
+        }
+      ],
+      "doors": {
+        "north": [],
+        "south": [
+          0,
+          4
+        ],
+        "west": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": [
+          4,
+          5,
+          6
+        ]
+      },
+      "filler": {
+        "at": [
+          1,
+          3
+        ],
+        "size": [
+          3,
+          2
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small barn, machine in the northwest corner, a work tool opposite, and open floor in the middle."
+    },
+    {
+      "id": "barn.small.c.roomy.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        9,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            4,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            8,
+            3
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "east"
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "south": [
+          6,
+          7
+        ],
+        "west": [
+          0
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [
+          0,
+          4,
+          6,
+          7,
+          8
+        ],
+        "y": [
+          4
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A small, narrow barn, machine in the southwest corner, a work tool in the southeast corner."
+    },
+    {
+      "id": "barn.small.c.tight.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            4,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "machine.single",
+          "optional": false
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "machine.single",
+          "optional": true
+        },
+        {
+          "role": "storage.hay",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "storage.hay.single",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            4
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            5
+          ],
+          "group": "storage.bulk.storage.hay",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          4
+        ],
+        "south": [
+          0,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [
+          4,
+          5
+        ],
+        "y": [
+          0,
+          3
+        ]
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.small.a",
+      "description": "A small barn, machine in the northwest corner, a hay stack in the northeast corner, and a sack opposite."
+    },
+    {
+      "id": "barn.small.d.tight.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        8,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "machine.machine2",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          1,
+          5,
+          6,
+          7
+        ],
+        "west": [
+          3
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          5
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.a",
+      "description": "A small, narrow barn, machine against the south wall, a work tool in the northwest corner."
+    },
+    {
+      "id": "barn.small.e.tight.flush",
+      "family": "barn",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        8,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        },
+        {
+          "role": "machine",
+          "size": [
+            4,
+            3
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "machine",
+          "size": [
+            2,
+            3
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "machine.machine",
+          "optional": false
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ],
+          "group": "work.tool.work.tool",
+          "optional": false,
+          "back": "west"
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "south": [
+          0,
+          1
+        ],
+        "west": [
+          3
+        ],
+        "east": [
+          0
+        ]
+      },
+      "stretch": {
+        "x": [
+          1,
+          2,
+          6,
+          8
+        ],
+        "y": []
+      },
+      "outdoor": false,
+      "symmetric": false,
+      "recipe": "barn.machine_shed.b",
+      "description": "A small, narrow barn, machine in the southeast corner, a work tool in the northwest corner."
+    }
+  ]
+}

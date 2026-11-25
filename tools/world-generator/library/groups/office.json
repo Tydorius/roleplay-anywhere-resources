@@ -1,0 +1,1076 @@
+{
+  "groups": [
+    {
+      "id": "desk.seat.storage.big",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.office",
+      "family": "office",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.office",
+      "family": "office",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.office",
+      "family": "office",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.office",
+      "family": "office",
+      "wall": "corner",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.office",
+      "family": "office",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single.office",
+      "family": "office",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.office",
+      "family": "office",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.office",
+      "family": "office",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.office1",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat6",
+      "family": "office",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "teach.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "teach",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.office1",
+      "family": "office",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.office1",
+      "family": "office",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.storage.big.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.office1",
+      "family": "office",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.office2",
+      "family": "office",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.office1",
+      "family": "office",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.office",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.office2",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.office",
+      "family": "office",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.office3",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.office1",
+      "family": "office",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "office.medium.a",
+      "family": "office",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.storage.big",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.single.office",
+          "kind": "optional",
+          "count": 2
+        },
+        {
+          "group": "shelving.single.office",
+          "kind": "required"
+        },
+        {
+          "group": "decor.floor.single.office",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "light.small.single.office",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.lounge.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "table.small.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single.office",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.medium.b",
+      "family": "office",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.office",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.big.single.office",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "table.work.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.office",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "desk.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.office1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.medium.c",
+      "family": "office",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "table.work.seat6",
+          "kind": "required"
+        },
+        {
+          "group": "desk.seat.office",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.office",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.office",
+          "kind": "optional",
+          "minWealth": "modest"
+        },
+        {
+          "group": "teach.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.office1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.small.a",
+      "family": "office",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.storage.big.office",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.office",
+          "kind": "required"
+        },
+        {
+          "group": "seat.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.office",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "coat.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.office",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.small.b",
+      "family": "office",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.office1",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.office",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.office2",
+          "kind": "required"
+        },
+        {
+          "group": "decor.floor.single.office",
+          "kind": "optional",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "books.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.lounge.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.office1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.small.c",
+      "family": "office",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.office1",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.office",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.office",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.office",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.office1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.tiny.a",
+      "family": "office",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.office",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.office2",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.office",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "office.tiny.b",
+      "family": "office",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.office",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.office3",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.office1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.office",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

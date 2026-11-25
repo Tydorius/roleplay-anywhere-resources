@@ -27,7 +27,7 @@ class TestGenerateWithAMockedProvider(unittest.TestCase):
         self.assertTrue(summary["ok"], summary)
         self.assertEqual(summary["calls"], 11)
         self.assertEqual(summary["provider"], "stub")
-        self.assertEqual(summary["extensions"], [])
+        self.assertEqual(summary["extensions"], ["floors"], "floors is on by default")
         self.assertEqual(summary["validator_errors"], 0, summary)
 
         phases = [e["phase"] for e in events]

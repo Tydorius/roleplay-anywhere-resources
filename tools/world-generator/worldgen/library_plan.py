@@ -15,13 +15,32 @@ import re
 
 from . import library as lib_mod
 from .library_rooms import Templates, compile_room
+from .model import kind_phrases_hit
 
 SLEEP_FAMILIES = ("bedroom", "bedroom.master", "dormitory", "hut")
 BAND_WALL = {"medieval": "wood", "industrial": "brick", "modern": "brick", "scifi": "steel"}
 BAND_GROUND = {"medieval": "packed earth", "industrial": "floorboards", "modern": "tiles",
                "scifi": "deck plating"}
 SPARE_PURPOSES = ("guest_room",)    # beds for travellers, not residents
+# purposes whose rooms sleep guests and lodgers rather than residents: with
+# none assigned they still take the family's usual occupancy, so the beds
+# are always furnished (design 8.1g)
+GUEST_PURPOSES = ("dormitory", "guest_room", "barracks", "crew_quarters",
+                  "servants_room")
+# the wing purposes that serve the building rather than the household
+# (rl-12): the parts standing for them sleep in the staff's own wing
+SERVICE_PURPOSES = ("servants", "kitchen_storage", "stables")
 SHARE_BAND = {"small": "small", "medium": "medium", "large": "large"}
+# kinds whose upper storey is a hayloft, not a bedroom floor (design 8.1g):
+# the "hayloft" purpose (barn family, purposeFit keeps it to hay storage)
+LOFT_KINDS = ("barn", "byre", "stable", "stables", "livery")
+# the families of the farm families' buildings: a building or wing of only
+# these families never gains a bed, a bedroom or a sleep room — its residents
+# sleep in the farmhouse. The sci-fi vat-farm room is the greenhouse family's
+# recipe and the gene-bank room the granary family's, so each is covered by
+# its family here rather than by its name
+FARM_FAMILIES = ("barn", "stable", "dairy", "granary", "pigsty", "henhouse",
+                 "greenhouse")
 SIZE_ORDER = ("tiny", "small", "medium", "large")
 # the building packer splits one footprint into at most five rooms before it
 # starts dropping everything (measured: 5 rooms place all 33 pieces of an inn,
@@ -102,11 +121,44 @@ def suite_candidates(lib, b, band):
 
 def suite_by_kind(lib, b, band):
     """The one suite whose kinds name this building's kind, or None when
-    none or several do (then P3 chooses)."""
+    none or several do (then P3 chooses). When several match, the most
+    specific one wins — the matched phrase with the most words ("dairy
+    farm" the farm suite over the farmhouse's "farm"), like
+    ``building_by_kind``; a tie names no winner."""
     words = _kind_words(b.get("kind"))
-    hits = [s for s in suite_candidates(lib, b, band)
-            if words & {k.lower() for k in s.get("kinds", [])}]
-    return hits[0] if len(hits) == 1 else None
+    best, best_len, tie = None, 0, False
+    for s in suite_candidates(lib, b, band):
+        hit = max((len(k.split()) for k in s.get("kinds", [])
+                   if isinstance(k, str) and k.lower() in words), default=0)
+        if not hit:
+            continue
+        if hit > best_len:
+            best, best_len, tie = s, hit, False
+        elif hit == best_len:
+            tie = True
+    return None if tie else best
+
+
+def building_by_kind(lib, kind, band):
+    """The building recipe whose kinds name this kind: whole-word matches on
+    the kind and its last word, like ``suite_by_kind``. When several recipes
+    match, the most specific one wins — the matched phrase with the most words
+    ("coaching inn" beats "inn"); a tie names no winner. None when nothing
+    matches, and then the building stays a flat suite."""
+    words = _kind_words(kind)
+    best, best_len, tie = None, 0, False
+    for r in sorted(lib.buildings.values(), key=lambda r: str(r.get("id"))):
+        if band not in (r.get("bands") or []):
+            continue
+        hit = max((len(k.split()) for k in r.get("kinds") or []
+                   if isinstance(k, str) and k.lower() in words), default=0)
+        if not hit:
+            continue
+        if hit > best_len:
+            best, best_len, tie = r, hit, False
+        elif hit == best_len:
+            tie = True
+    return None if tie else best
 
 
 def can_skip_p3(b, compound_parts, notes=""):
@@ -167,6 +219,286 @@ def design_from_suite(suite, b, band, rng):
             "entrance": {"room": suite["entrance"]["room"],
                          "side": rng.choice(("north", "south", "east", "west"))},
             "furniture": [], "yard": None, "suite": suite["id"]}
+
+
+# --------------------------------------------------------- wings (rl-10, 8.3)
+# A building recipe's wings become part designs: the rooms the wing lists,
+# split over its floors, with the P1 building the wing stands for flowing
+# through (its residents and condition, and its own room names where a wing
+# room shares their purpose family)
+
+
+def _stepped_tier(lib, tier, offset):
+    """The tier ``offset`` steps from ``tier`` — down for a negative offset,
+    never past either end of the ladder."""
+    tiers = lib.tiers
+    i = tiers.index(tier) if tier in tiers else 0
+    return tiers[max(0, min(i + offset, len(tiers) - 1))]
+
+
+def wing_wealth_tier(lib, wing, tier):
+    """The tier a wing furnishes at (design 8.3): the tier its ``wealth``
+    names, else the building's stepped by its offset — a wing that keeps
+    quiet steps with its purpose's default (servants two down, stables two
+    down, barracks and kitchen storage one down)."""
+    spec = lib_mod.wing_wealth(wing)
+    if spec is None or spec == "building":
+        return tier
+    if isinstance(spec, str):
+        return spec if spec in lib.tiers else tier
+    return _stepped_tier(lib, tier, int(spec))
+
+
+def wing_floor_rooms(lib, wing, storeys):
+    """The wing's rooms over its floors, {floor: [room dicts]}: the ground
+    keeps the entrance room and every room that is neither a bedchamber nor
+    the hayloft; the bedchambers fill the upper storeys from storey 2 up (the
+    bigger share below), and the hayloft sits on the top one, under the roof.
+    The entrance room's last-connected bedchamber stays down when it would
+    otherwise be alone there (the keepers by the door, the guests upstairs);
+    a one-storey wing keeps every room it lists; an upper storey left with
+    nothing takes a chamber, or a store room when the wing sleeps nobody."""
+    rooms = list(wing.get("rooms") or [])
+    if storeys <= 1 or not rooms:
+        return {1: list(rooms)}
+    entry = (wing.get("entrance") or {}).get("room") or rooms[0]["name"]
+    fam = {r["name"]: lib.family_of(r.get("purpose")) for r in rooms}
+    beds = [r for r in rooms if fam[r["name"]] in SLEEP_FAMILIES]
+    lofts = [r for r in rooms if r.get("purpose") == "hayloft"]
+    down = {id(r) for r in rooms if r not in beds and r not in lofts}
+    entry_room = next((r for r in rooms if r["name"] == entry), rooms[0])
+    down.add(id(entry_room))          # the wing's door opens into it
+    if len(down) == 1 and beds:
+        # its own keeper stays by the door: the last bedchamber the entrance
+        # room connects to (else the last one listed)
+        adj = {c[0] if c[1] == entry else c[1] for c in wing.get("connections") or []}
+        pick = next((r for r in reversed(beds) if r["name"] in adj), None) \
+            or (beds[-1] if beds else None)
+        if pick is not None and id(pick) not in down:
+            down.add(id(pick))
+    ground = [r for r in rooms if id(r) in down]
+    up = [r for r in rooms if id(r) not in down]
+    up_beds = [r for r in up if fam[r["name"]] in SLEEP_FAMILIES]
+    floors = {1: ground}
+    n = storeys - 1
+    counts = [len(up_beds) // n + (1 if i < len(up_beds) % n else 0)
+              for i in range(n)]
+    i = 0
+    for f in range(2, storeys + 1):
+        floors[f] = up_beds[i:i + counts[f - 2]]
+        i += counts[f - 2]
+    floors[storeys].extend(r for r in up if r not in up_beds)   # the lofts, on top
+    for f in range(2, storeys + 1):
+        if floors[f]:
+            continue
+        use = "bedroom" if wing.get("sleeps") != "none" else "storage"
+        base = "Chamber" if use == "bedroom" else "Store room"
+        name, k = base, 2
+        while any(r["name"] == name for fl in floors.values() for r in fl):
+            name, k = f"{base} {k}", k + 1
+        floors[f] = [{"name": name, "share": "small", "purpose": use}]
+    return floors
+
+
+def wing_design(lib, wing, name, b, band, cap, kind=""):
+    """The BuildingDesign of one wing recipe (rl-10): rooms by purpose and
+    share from the wing, split over its floors within ``cap`` (the height
+    rules' cap for the building's kind where it stands, and the four the
+    assembler lays), its wealth the P1 building ``b`` it stands for with the
+    wing's design-8.3 offset applied, its residents and condition ``b``'s own.
+    A wing room whose purpose family matches a room of ``b`` takes ``b``'s
+    name for it (each of ``b``'s names once), so a P1 part keeps its named
+    rooms where the recipe has a wing for them."""
+    from .model import BuildingDesign, RoomSpec, UpperStorey
+    storeys = max(1, min(int(wing.get("storeys") or 1), cap, 4))
+    floors = wing_floor_rooms(lib, wing, storeys)
+
+    # the reconciliation, once: {wing room name -> the P1 room's name}
+    rename, taken = {}, set()
+    if b is not None:
+        for f in sorted(floors):
+            for r in floors[f]:
+                fam = lib.family_of(r.get("purpose"))
+                if fam is None:
+                    continue
+                named = next((o.name for o in b.rooms
+                              if o.name not in taken
+                              and lib.family_of(o.use) == fam), None)
+                if named is not None:
+                    taken.add(named)
+                    rename[r["name"]] = named
+
+    # the wing's room names unique over all its floors (rl-19): a room the
+    # reconciliation renamed must not take a name another floor's room holds,
+    # or the sleepers of both storeys merge into one
+    names_taken = set()
+    for f in sorted(floors):
+        for r in floors[f]:
+            want = rename.get(r["name"], r["name"])
+            if want in names_taken:
+                base, k = want, 2
+                while f"{base} {k}" in names_taken:
+                    k += 1
+                rename[r["name"]] = want = f"{base} {k}"
+            names_taken.add(want)
+
+    def spec(r):
+        use = r.get("purpose") or ""
+        return RoomSpec(name=rename.get(r["name"], r["name"]),
+                        share=r.get("share") or "medium",
+                        purpose=use.replace("_", " "), use=use)
+
+    ground = [spec(r) for r in floors.get(1, [])]
+    uppers = [UpperStorey(storey=f, rooms=[spec(r) for r in floors.get(f, [])])
+              for f in range(2, storeys + 1)]
+    # the connections the ground still names (uppers slot by share alone);
+    # a room the split left unreachable joins the entrance room
+    names = {r.name for r in ground}
+    entry = rename.get((wing.get("entrance") or {}).get("room"), "") or \
+        (ground[0].name if ground else "")
+    conn = []
+    for c in wing.get("connections") or []:
+        a, d = rename.get(c[0], c[0]), rename.get(c[1], c[1])
+        if a in names and d in names and a != d and [a, d] not in conn:
+            conn.append([a, d])
+    linked = {entry}
+    grew = True
+    while grew:
+        grew = False
+        for a, d in conn:
+            if (a in linked) != (d in linked):
+                linked |= {a, d}
+                grew = True
+    for r in ground:
+        if r.name not in linked:
+            conn.append([entry, r.name])
+            linked.add(r.name)
+    tier = wing_wealth_tier(lib, wing,
+                            b.wealth if b is not None and b.wealth in lib.tiers
+                            else "modest")
+    return BuildingDesign(
+        name=name, kind=kind or (b.kind if b is not None else "house"),
+        size_class=b.size_class if b is not None else "small",
+        wall=BAND_WALL.get(band, "wood"), ground=BAND_GROUND.get(band, "wood"),
+        storeys=storeys, couples=b.couples if b is not None else 0,
+        residents=b.residents if b is not None else 0,
+        wealth=tier, condition=(b.condition if b is not None else "") or "kept",
+        status=b.status if b is not None else "",
+        upper=uppers, rooms=ground, connections=conn,
+        entrance_room=entry, entrance_side=wing.get("entry") or "south",
+        stairs_room=entry if storeys > 1 else "",
+        furniture=[], loot_pool=b.loot_pool if b is not None else "")
+
+
+def split_wing_sleepers(lib, designs, wingmap, sources, notes, label):
+    """rl-12: the compound's sleeper budget over its wings by role. Every
+    wing design starts holding its own part's residents (an unmatched wing
+    the gate's), so each part's counts come off first, then go where their
+    role sleeps: the traveller beds the P1 lodging promised to the wing that
+    sleeps guests, the servants' and stable hands' beds to the wing that
+    sleeps staff, the household to the wing that sleeps residents — a part
+    whose own wing declares its sleeping and has the beds keeps its counts,
+    and a role with no wing to receive it falls back over the others, never
+    into a farm wing, whose buildings sleep nobody (rl-15's rule, its note
+    unchanged). A compound with no wing that sleeps anyone keeps its counts
+    where they were. One line notes the split, one per farm building."""
+    def rooms_of(d):
+        return list(d.rooms) + [r for u in d.upper for r in u.rooms]
+
+    def all_farm(d):
+        rooms = rooms_of(d)
+        return bool(rooms) and all(lib.family_of(r.use) in FARM_FAMILIES
+                                   for r in rooms)
+
+    def has_bed(d):
+        return any(lib.family_of(r.use) in SLEEP_FAMILIES for r in rooms_of(d))
+
+    def guest_beds(src):
+        """The traveller beds a P1 part promises: its lodging's unit count."""
+        from .phases import LODGING_WORDS
+        u = getattr(src, "units", None)
+        if u is None or not getattr(u, "count", 0):
+            return 0
+        if kind_phrases_hit(src.kind, LODGING_WORDS) or \
+                kind_phrases_hit(u.name, LODGING_WORDS):
+            return int(u.count)
+        return 0
+
+    def plural(n, word):
+        # "staff" is its own plural; the other role words take the s
+        return f"{n} {word}" + ("" if n == 1 or word == "staff" else "s")
+
+    staff_wing = next((n for n in designs
+                       if wingmap.get(n, {}).get("sleeps") == "staff"), None)
+    guest_wing = next((n for n in designs
+                       if wingmap.get(n, {}).get("sleeps") == "guests"), None)
+    home_wing = next((n for n in designs
+                      if wingmap.get(n, {}).get("sleeps") == "residents"),
+                     guest_wing)
+    if home_wing is None:
+        home_wing = next((n for n in designs if has_bed(designs[n])), None)
+
+    # (source wing, role, residents, couples, guests, destination or None to
+    # stay where the part put them)
+    moves = []
+    for name, d in designs.items():
+        src = sources.get(name)
+        if src is None:
+            continue
+        g = guest_beds(src)
+        r, c = int(src.residents or 0), int(src.couples or 0)
+        if not g and not r and not c:
+            continue
+        wing = wingmap.get(name) or {}
+        if g:
+            dest = name if wing.get("sleeps") == "guests" else guest_wing
+            moves.append((name, "guests", 0, 0, g, dest))
+        if not r and not c:
+            continue
+        if wing.get("purpose") in SERVICE_PURPOSES and not all_farm(d):
+            dest = name if wing.get("sleeps") == "staff" else staff_wing
+            moves.append((name, "staff", r, c, 0, dest))
+        else:
+            dest = name if wing.get("sleeps") == "residents" and has_bed(d) \
+                else home_wing
+            moves.append((name, "household", r, c, 0, dest))
+    if not moves:
+        return
+
+    # every wing's counts came off its own part (an unmatched wing's from the
+    # gate's): the moves hand them back by role below
+    kept = {name: (d.residents, d.couples) for name, d in designs.items()}
+    for d in designs.values():
+        d.residents = d.couples = d.guests = 0
+    roles = {name: [] for name in designs}
+    restored = set()
+    for name, role, r, c, g, dest in moves:
+        if dest is None:
+            # nowhere receives this role: the counts stay where they were
+            if name not in restored:
+                restored.add(name)
+                kr, kc = kept[name]
+                designs[name].residents += kr
+                designs[name].couples += kc
+            continue
+        d = designs[dest]
+        d.residents += r
+        d.couples += c
+        d.guests += g
+        if g:
+            roles[dest].append(plural(g, "guest"))
+        if role == "staff" and r:
+            roles[dest].append(plural(r, "staff"))
+        if role == "household" and r:
+            roles[dest].append(plural(r, "resident"))
+        if c:
+            roles[dest].append(plural(c, "couple"))
+        if role == "household" and dest != name and all_farm(designs[name]):
+            notes.append((label,
+                          f"residents of {name} sleep elsewhere: farm building"))
+    if any(r for r in roles.values()):
+        notes.append((label, "sleepers: " + ", ".join(
+            f"{name} {', '.join(r)}" for name, r in roles.items() if r)))
 
 
 def suite_lines(lib, b, band):
@@ -321,10 +653,38 @@ def _room_band(lib, family, share):
                                     SIZE_ORDER.index(b)))
 
 
-def _sleepers(lib, rooms, residents, couples):
+def _guest_defaults(lib):
+    """{family: (singles, couples)} — the composer's default sleepers, the
+    maximum over each family's recipes, cached on the library for the run."""
+    cached = getattr(lib, "guest_defaults", None)
+    if cached is None:
+        from . import room_groups as RG
+        from .room_composer import _default_sleepers
+        data = RG.load()
+        cached = {}
+        for recipe in data["recipes"].values():
+            fam = recipe.get("family")
+            occ = _default_sleepers(recipe, data["groups"])
+            if fam not in cached or occ > cached[fam]:
+                cached[fam] = occ
+        # a dormitory is a shared room (barracks and crew quarters are the
+        # same family): its recipes count bunks one per sleeper, so the
+        # composer's floor of one would hand an empty dormitory a single
+        # bed — a shared room never sleeps fewer than two
+        if cached.get("dormitory", (0, 0)) < (2, 0):
+            cached["dormitory"] = (2, 0)
+        lib.guest_defaults = cached
+    return cached
+
+
+def _sleepers(lib, rooms, residents, couples, guests=0):
     """{room name: (singles, couples)}: one couple to each master bedroom,
     the other residents shared over the single-bed rooms, a spare bed or two
-    in each guest room."""
+    in each guest room — and the traveller beds a lodging promised (rl-12)
+    shared over those guest rooms on top of the beds they always furnish, so
+    the building sleeps who it said it would. A room for guests or lodgers
+    that no residents were assigned to takes the family's usual occupancy —
+    the beds are always furnished."""
     fam = {r["name"]: lib.family_of(r.get("use")) for r in rooms}
     masters = [r["name"] for r in rooms if fam[r["name"]] == "bedroom.master"]
     singles_rooms = [r["name"] for r in rooms
@@ -340,19 +700,37 @@ def _sleepers(lib, rooms, residents, couples):
             name = singles_rooms[i % len(singles_rooms)]
             s, c = out[name]
             out[name] = (s + 1, c)
+    spare = []
     for r in rooms:
         if r.get("use") in SPARE_PURPOSES:
             out[r["name"]] = (2 if r.get("share") == "large" else 1, 0)
+            spare.append(r["name"])
+        elif out[r["name"]] == (0, 0) and r.get("use") in GUEST_PURPOSES:
+            out[r["name"]] = _guest_defaults(lib).get(fam[r["name"]], (1, 0))
+    for i in range(max(0, int(guests or 0)
+                       - sum(out[name][0] for name in spare))):
+        if not spare:
+            break
+        name = spare[i % len(spare)]
+        s, c = out[name]
+        out[name] = (s + 1, c)
     return out
 
 
 def ensure_sleep_room(design, b, lib, log):
     """A home whose rooms have nowhere to sleep gets a bedroom off its
-    entrance room, so the residents P1 promised have beds."""
+    entrance room, so the residents P1 promised have beds — unless every room
+    is of the farm families, whose buildings never take beds: the residents
+    sleep in the farmhouse, and a compound moves the count there itself."""
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
     if residents <= 0:
         return
     if any(lib.family_of(r.get("use")) in SLEEP_FAMILIES for r in design["rooms"]):
+        return
+    if design["rooms"] and all(lib.family_of(r.get("use")) in FARM_FAMILIES
+                               for r in design["rooms"]):
+        log.append((f"building {b['name']}",
+                    f"residents of {b['name']} sleep elsewhere: farm building"))
         return
     couples = b.get("couples") if isinstance(b.get("couples"), int) else 0
     use = "master_bedroom" if couples and residents <= 2 else "bedroom"
@@ -363,6 +741,92 @@ def ensure_sleep_room(design, b, lib, log):
     entry = (design.get("entrance") or {}).get("room") or design["rooms"][0]["name"]
     design.setdefault("connections", []).append([entry, name])
     log.append((f"building {b['name']}", f"added {name}: {residents} residents had no bedroom"))
+
+
+def dorm_room_specs(n):
+    """The dormitory rooms sleeping ``n`` bunks: one room up to eight sleepers,
+    two (ceil/floor) past that."""
+    caps = [n] if n <= 8 else [(n + 1) // 2, n // 2]
+    return [{"name": "Dormitory" if not k else f"Dormitory {k + 1}",
+             "share": "large" if cap > 4 else "medium",
+             "use": "dormitory", "purpose": "bunks for the night"}
+            for k, cap in enumerate(caps)]
+
+
+def ensure_dorm_room(design, b, lib, log):
+    """A building whose bunks became a dormitory (P1's ``dormitory`` count)
+    sleeps all its residents in dormitory rooms: the design's own stay, else
+    rooms planted off the entrance; either way no bedroom competes for the
+    sleepers, so they all reach the bunks."""
+    n = b.get("dormitory")
+    if not isinstance(n, int) or n <= 0:
+        return
+    fam = {r["name"]: lib.family_of(r.get("use")) for r in design["rooms"]}
+    if not any(f == "dormitory" for f in fam.values()):
+        entry = (design.get("entrance") or {}).get("room") or design["rooms"][0]["name"]
+        for spec in dorm_room_specs(n):
+            name = spec["name"]
+            while any(r["name"] == name for r in design["rooms"]):
+                name += " 2"
+            design["rooms"].append(dict(spec, name=name))
+            design.setdefault("connections", []).append([entry, name])
+            log.append((f"building {b['name']}",
+                        f"added {name} for {n} bunks: the bunks are one room"))
+    for r in list(design["rooms"]):
+        f = fam.get(r["name"])
+        if f in SLEEP_FAMILIES and f != "dormitory" \
+                and r.get("use") not in SPARE_PURPOSES:
+            design["rooms"].remove(r)
+            design["connections"] = [c for c in design.get("connections") or []
+                                     if r["name"] not in c]
+
+
+def ensure_dorm_upper(design, b, lib, registry, band, genre, seed, log):
+    """A dormitory building the floors extension took to two storeys sleeps
+    its bunks on the upper one: the storey spec the floors machinery places,
+    furnished by the library, above the ground floor's common rooms. An
+    upper storey the model already gave with a sleep room keeps its own."""
+    n = b.get("dormitory")
+    if not isinstance(n, int) or n <= 0:
+        return
+    for u in design.get("upper") or []:
+        if isinstance(u, dict) and any(
+                lib.family_of(r.get("use")) == "dormitory"
+                for r in u.get("rooms") or [] if isinstance(r, dict)):
+            return
+    upper = {"rooms": dorm_room_specs(n), "connections": [], "furniture": []}
+    copy = {"name": b["name"], "residents": n, "couples": 0,
+            "wealth": b.get("wealth"), "condition": b.get("condition")}
+    expand_design(lib, registry, upper, copy, band, genre, seed, log,
+                  ensure_beds=False)
+    design.setdefault("upper", []).append(
+        {"storey": 2, "rooms": upper["rooms"], "connections": [],
+         "furniture": upper["furniture"]})
+    log.append((f"building {b['name']}",
+                f"added an upper storey for the {n} bunks over the ground rooms"))
+
+
+def ensure_loft_upper(design, b, lib, registry, band, genre, seed, log):
+    """A barn the floors extension took to two storeys gets a hayloft on the
+    upper one (design 8.1g): hay storage — the ``barn`` purpose — never beds.
+    An upper storey the design already carries keeps its own rooms."""
+    if not kind_phrases_hit(b.get("kind"), LOFT_KINDS):
+        return
+    if any(isinstance(u, dict) and (u.get("rooms") or [])
+           for u in design.get("upper") or []):
+        return
+    upper = {"rooms": [{"name": "Hayloft", "share": "large", "use": "hayloft",
+                        "purpose": "hay storage"}],
+             "connections": [], "furniture": []}
+    copy = {"name": b["name"], "residents": 0, "couples": 0,
+            "wealth": b.get("wealth"), "condition": b.get("condition")}
+    expand_design(lib, registry, upper, copy, band, genre, seed, log,
+                  ensure_beds=False)
+    design.setdefault("upper", []).append(
+        {"storey": 2, "rooms": upper["rooms"], "connections": [],
+         "furniture": upper["furniture"]})
+    log.append((f"building {b['name']}",
+                "added a hayloft over the ground rooms (hay storage, not beds)"))
 
 
 def expand_unit(lib, registry, design, b, band, genre, seed, log, pools=()):
@@ -424,10 +888,16 @@ def expand_fitting(lib, registry, design, b, band, genre, seed, log, ensure_beds
 
 
 def used_templates(designs):
-    """Template names any design's furniture (unit copies included) uses."""
+    """Template names any design's furniture (unit copies and upper storeys
+    included) uses."""
     used = set()
     for d in designs:
-        for f in (d.get("furniture") or []) + ((d.get("unit") or {}).get("furniture") or []):
+        lines = (d.get("furniture") or []) \
+            + ((d.get("unit") or {}).get("furniture") or [])
+        for u in d.get("upper") or []:
+            if isinstance(u, dict):
+                lines += u.get("furniture") or []
+        for f in lines:
             used.add(f.get("template"))
     return used
 
@@ -442,6 +912,7 @@ def expand_design(lib, registry, design, b, band, genre, seed, log, ensure_beds=
     rng = random.Random(f"{seed}|library|{b['name']}")
     pool_names = {str(n) for n in pools if n}
     if ensure_beds:
+        ensure_dorm_room(design, b, lib, log)
         ensure_sleep_room(design, b, lib, log)
     residents = b.get("residents") if isinstance(b.get("residents"), int) else 0
     couples = b.get("couples") if isinstance(b.get("couples"), int) else 0

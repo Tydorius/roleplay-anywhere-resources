@@ -1,0 +1,1802 @@
+{
+  "groups": [
+    {
+      "id": "counter.serve.storage.bulk2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat3",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.common_room",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "game.single",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "game",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "music.single",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "music",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.common_room",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.seat.state.decor.feature",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.state",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "minWealth": "elite"
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat6",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.single",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.common_room",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.common_room",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "weapons.single",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "weapons",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.table.small.seat.lounge2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "game.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "game",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.common_room1",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.common_room",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.seat.lounge2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.common_room",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.common_room1",
+      "family": "common_room",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "music.single.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "music",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.common_room1",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.bulk2.common_room",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.dining.seat3.common_room",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.common_room1",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.dining.single.common_room1",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.dining",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "game.seat4",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "game",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.long.table.small",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "music.single.common_room1",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "music",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.common_room",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.common_room1",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.common_room2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.common_room1",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.common_room1",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.single.common_room2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.common_room2",
+      "family": "common_room",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.common_room1",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.seat.lounge2",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.common_room",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuel.single",
+      "family": "common_room",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.storage.bulk",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.common_room3",
+      "family": "common_room",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single",
+      "family": "common_room",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "common_room.large.a",
+      "family": "common_room",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.bulk2",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.dining.seat3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "heat.single.common_room",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "repeatable",
+          "count": 2,
+          "minWealth": "modest"
+        },
+        {
+          "group": "table.dining.single",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "game.single",
+          "kind": "optional"
+        },
+        {
+          "group": "music.single",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.large.b",
+      "family": "common_room",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "heat.seat.state.decor.feature",
+          "kind": "required"
+        },
+        {
+          "group": "table.dining.seat6",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "storage.big.single.common_room",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "counter.serve.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "light.big.single.common_room",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ],
+          "minWealth": "modest"
+        },
+        {
+          "group": "table.dining.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "music.single",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "weapons.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.large.c",
+      "family": "common_room",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.table.small.seat.lounge2",
+          "kind": "required"
+        },
+        {
+          "group": "counter.serve.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.dining.seat3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "game.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "heat.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "table.dining.single",
+          "kind": "optional"
+        },
+        {
+          "group": "music.single",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.common_room",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.medium.a",
+      "family": "common_room",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.seat.lounge2",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.small.single.common_room",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.common_room",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.common_room1",
+          "kind": "optional",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "books.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "music.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.common_room1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.medium.b",
+      "family": "common_room",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.bulk2.common_room",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.dining.seat3.common_room",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "heat.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.long.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "table.dining.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "game.single",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.medium.c",
+      "family": "common_room",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "game.seat4",
+          "kind": "anchor"
+        },
+        {
+          "group": "seat.long.table.small",
+          "kind": "required"
+        },
+        {
+          "group": "music.single.common_room1",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required"
+        },
+        {
+          "group": "seat.lounge.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.small.a",
+      "family": "common_room",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.single.common_room2",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.small.single.common_room1",
+          "kind": "required"
+        },
+        {
+          "group": "seat.lounge.single.common_room1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "heat.single.common_room2",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.common_room2",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.common_room1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.small.b",
+      "family": "common_room",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "heat.seat.lounge2",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.small.single.common_room1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.common_room",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.common_room2",
+          "kind": "optional"
+        },
+        {
+          "group": "fuel.single",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.common_room1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "common_room.small.c",
+      "family": "common_room",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "counter.serve.storage.bulk",
+          "kind": "anchor"
+        },
+        {
+          "group": "table.dining.seat3.common_room",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.common_room",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "heat.single.common_room3",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.long.single.common_room1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

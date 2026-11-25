@@ -74,6 +74,16 @@ class TestFormat(unittest.TestCase):
         q = settings.questionnaire(a_settings())
         self.assertEqual((q["mode"], q["notes"]), ("short", "keep it cozy"))
 
+    def test_the_room_assembler_is_on_by_default_and_an_explicit_off_stays(self):
+        text = ('{"kind": "%s", "version": 1, "idea": "x"}' % settings.KIND)
+        self.assertIs(settings.loads(text)["room_assembler"], True,
+                      "a file without the key builds with the assembler")
+        self.assertIs(settings.make(idea="x")["room_assembler"], True)
+        gone = json.loads(settings.dumps(a_settings()))
+        del gone["room_assembler"]
+        self.assertIs(settings.check(gone)["room_assembler"], True)
+        self.assertIs(a_settings(room_assembler=False)["room_assembler"], False)
+
 
 class TestRuns(unittest.TestCase):
     def setUp(self):
@@ -87,8 +97,9 @@ class TestRuns(unittest.TestCase):
         api.generate("a mill village", client=ScriptedClient(canned_replies()), out_dir=out,
                      seed=3, library=False, cast=False)
         s = settings.read(os.path.join(out, settings.FILE_NAME))
-        self.assertEqual((s["idea"], s["seed"], s["library"], s["model"]),
-                         ("a mill village", 3, False, "stub-model"))
+        self.assertEqual((s["idea"], s["seed"], s["library"], s["model"],
+                          s["room_assembler"]),
+                         ("a mill village", 3, False, "stub-model", True))
 
     def test_cli_runs_a_settings_file_with_overrides(self):
         path = os.path.join(self.tmp, "s.json")
@@ -110,6 +121,33 @@ class TestRuns(unittest.TestCase):
     def test_cli_needs_an_idea_or_a_settings_file(self):
         with mock.patch("builtins.print"):
             self.assertEqual(cli.main(["generate", "--provider", "p", "--out", self.tmp]), 2)
+
+    def test_cli_room_assembler_flags_and_the_settings_file(self):
+        path = os.path.join(self.tmp, "off.json")
+        settings.write(path, a_settings(extensions=[], room_assembler=False))
+        seen = {}
+
+        def fake_generate(**kw):
+            seen.update(kw)
+            return {"ok": True}
+        cases = [
+            # with --settings the file's value rules unless a flag is given
+            (["generate", "--settings", path, "--provider", "p", "--out", "o"], False),
+            (["generate", "--settings", path, "--room-assembler", "--provider", "p",
+              "--out", "o"], True),
+            (["generate", "--settings", path, "--no-room-assembler", "--provider", "p",
+              "--out", "o"], False),
+            # and with a plain idea it is on unless --no-room-assembler
+            (["generate", "--idea", "x", "--provider", "p", "--out", "o"], True),
+            (["generate", "--idea", "x", "--no-room-assembler", "--provider", "p",
+              "--out", "o"], False),
+        ]
+        with mock.patch.object(cli.api, "generate", fake_generate), \
+                mock.patch("builtins.print"):
+            for argv, want in cases:
+                seen.clear()
+                self.assertEqual(cli.main(argv), 0, argv)
+                self.assertIs(seen["room_assembler"], want, argv)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,1355 @@
+{
+  "groups": [
+    {
+      "id": "books.single.library",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.library1",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat2",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.library",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.library2",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.library",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single.library",
+      "family": "library",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "lectern.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "lectern",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.library3",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.library4",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.light.small.opt",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.library5",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.library1",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat4.light.small.opt",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            2
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.library6",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.library7",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.library1",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "books.single.library8",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.seat.lounge2.light.small.opt",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.library1",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.library1",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.library1",
+      "family": "library",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.single.library1",
+      "family": "library",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.small.seat2.library",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.table.small.light.small",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "heat.single.library",
+      "family": "library",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.library2",
+      "family": "library",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.light.small",
+      "family": "library",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "minWealth": "modest"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.library",
+      "family": "library",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "library.large.a",
+      "family": "library",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "repeatable",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "repeatable",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "table.work.seat2",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "desk.seat.library",
+          "kind": "required"
+        },
+        {
+          "group": "light.big.single.library",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ],
+          "minWealth": "modest"
+        },
+        {
+          "group": "books.single.library2",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.lounge.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "lectern.single.library",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.large.b",
+      "family": "library",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library3",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.library4",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "desk.seat.light.small.opt",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.big.single.library",
+          "kind": "optional",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "light.small.single.library",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "books.single.library5",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.library1",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.library",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.medium.a",
+      "family": "library",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library1",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "table.work.seat4.light.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.library",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "books.single.library6",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.lounge.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.library",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.medium.b",
+      "family": "library",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library7",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "desk.seat.light.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "seat.lounge.single.library1",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.library8",
+          "kind": "optional"
+        },
+        {
+          "group": "table.small.single.library",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.medium.c",
+      "family": "library",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "heat.seat.lounge2.light.small.opt",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "anchor",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "table.small.single.library1",
+          "kind": "required"
+        },
+        {
+          "group": "desk.seat.library1",
+          "kind": "required"
+        },
+        {
+          "group": "decor.floor.single.library1",
+          "kind": "optional",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "books.single.library6",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.feature.single.library1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.small.a",
+      "family": "library",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library1",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.small.seat2.library",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.library",
+          "kind": "optional",
+          "minWealth": "modest"
+        },
+        {
+          "group": "books.single.library6",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.library",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.small.b",
+      "family": "library",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "books.single.library4",
+          "kind": "anchor"
+        },
+        {
+          "group": "books.single.library4",
+          "kind": "required"
+        },
+        {
+          "group": "seat.lounge.table.small.light.small",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.library8",
+          "kind": "optional"
+        },
+        {
+          "group": "heat.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.library2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "library.small.c",
+      "family": "library",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "desk.seat.light.small",
+          "kind": "required"
+        },
+        {
+          "group": "books.single.library1",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "books.single.library6",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.library",
+          "kind": "optional"
+        },
+        {
+          "group": "lectern.single.library",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

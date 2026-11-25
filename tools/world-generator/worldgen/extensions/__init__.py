@@ -1,9 +1,12 @@
 """Optional extensions a run may enable.
 
-Every extension is an opt-in toggle, **off by default**: a run without
-extensions needs no game mods — the base prompts never mention a mod
-feature, and the built zip imports and plays in the unmodded game. The
-registry below is what a UI lists as unchecked toggles.
+Every extension is an opt-in toggle — except ``floors``, which is **on by
+default** (Anywhere RPG 1.0 has floors of its own, so a multi-storey world
+needs no mod): a run turns it off with ``--no-floors`` (``floors=False`` on
+the API). Every other extension is off unless asked for, and a run without
+them needs no game mods — the base prompts never mention a mod feature, and
+the built zip imports and plays in the unmodded game. The registry below is
+what a UI lists as toggles; ``default`` says which start ticked.
 
 An extension adds prompt fragments (``worldgen/prompts/ext/<ext>/<phase>.txt``,
 appended to that phase's prompt when enabled), contract fields for the model
@@ -24,17 +27,18 @@ replaced both mods.
 
 
 class Extension:
-    """One labelled toggle. ``default`` is False for every extension: the
-    plain path must need no mods."""
+    """One labelled toggle. ``default`` is True only for ``floors`` (no mod
+    needed); the plain path for the rest must need no mods."""
 
-    def __init__(self, id, title, mods, description, requires=(), without_mod=None):
+    def __init__(self, id, title, mods, description, requires=(), without_mod=None,
+                 default=False):
         self.id = id
         self.title = title
         self.mods = tuple(mods)            # game mods needed (code-mod-loader names)
         self.description = description
         self.requires = tuple(requires)    # extensions turned on with it
         self.without_mod = without_mod     # what a world built with it is like without its mods
-        self.default = False
+        self.default = bool(default)
 
     def as_dict(self):
         without = self.without_mod
@@ -52,7 +56,7 @@ REGISTRY = (
     Extension("floors", "Floors (upper storeys)", (),
               "Multi-storey buildings: bedrooms and halls upstairs, reached "
               "by stairs, using Anywhere RPG 1.0's own floors; no game mod "
-              "needed."),
+              "needed.", default=True),
     Extension("region-groups", "Region groups", ("region-groups",),
               "A zone may wrap around the map and still act as one region; "
               "wilder zone shapes for large plans."),

@@ -679,6 +679,57 @@
       ]
     },
     {
+      "id": "display.curio",
+      "category": "display",
+      "size": [
+        1,
+        1
+      ],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": "north",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "bands": [
+        "*"
+      ],
+      "onlyGenres": [],
+      "names": {
+        "*": "curio cabinet",
+        "scifi": "showcase cabinet"
+      },
+      "parts": {
+        "frame": "wood",
+        "pane": "glass"
+      },
+      "partsByBand": {
+        "scifi": {
+          "frame": "metal"
+        }
+      },
+      "tags": [
+        "display",
+        "furniture",
+        "decor"
+      ],
+      "container": true,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {frame} {noun} with {pane} shelves front and sides, its small treasures catching the light.",
+        "physical": "Top-down view of a tall {noun} against the top wall: a square {frame.color} {frame} top with a carved cornice, {pane.color} {pane} panels along the front and side edges, tiny objects on the shelves inside."
+      },
+      "aliases": [
+        "whatnot shelf",
+        "cabinet of curiosities"
+      ],
+      "sources": [
+        "claude-authored"
+      ]
+    },
+    {
       "id": "display.pedestal",
       "category": "display",
       "size": [
@@ -1397,6 +1448,53 @@
       ],
       "sources": [
         "claude-authored"
+      ]
+    },
+    {
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "onlyGenres": [],
+      "partsByBand": {},
+      "container": false,
+      "lootPool": null,
+      "sources": [
+        "claude-authored"
+      ],
+      "id": "rack.hitching_rail",
+      "category": "rack",
+      "size": [
+        2,
+        1
+      ],
+      "back": "north",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "bands": [
+        "medieval",
+        "industrial"
+      ],
+      "names": {
+        "*": "hitching rail"
+      },
+      "parts": {
+        "rail": "wood"
+      },
+      "tags": [
+        "rack",
+        "furniture",
+        "horses"
+      ],
+      "text": {
+        "description": "{A:condition} {rail} {noun} worn smooth by reins, a water bucket at one post.",
+        "physical": "Top-down view of a long {noun}: a single {rail.color} {rail} beam on two thick posts, a few iron rings along it, a wooden water bucket beside one post, hoof-churned mud along the front."
+      },
+      "aliases": [
+        "tethering rail",
+        "horse rail"
       ]
     },
     {

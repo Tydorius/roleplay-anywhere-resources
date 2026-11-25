@@ -9,3 +9,21 @@ STOREYS (the floors extension)
 - "numbering": "plain" names the copies Apartment 1, 2, 3 across the floors;
   "storey" numbers each floor's rooms 101, 102 ... 201, 202 (hotel or
   hospital style).
+- A lodging's room count fits its settlement: about 2 rooms for a hamlet,
+  4 for a village, 10 for a town, 24 for a city. An inn in a hamlet is a
+  common hall and two rooms, not a hotel.
+- Bunks and barracks are one dormitory room, not units: give the building
+  "residents" (one per bunk) and let one big room hold the beds.
+- Building heights fit the era and its settlements (the code lowers anything
+  over these): medieval — hamlets and villages single-storey (the inn, tavern,
+  barn, byre, mill, granary, manor house, temple or shrine hall, or the
+  headman's, elder's, chief's or reeve's house may rise to two), towns two,
+  cities three (merchant houses, guildhalls and townhouses three in cities;
+  cathedrals and great temples three; castles, keeps, towers and fortresses
+  four anywhere); industrial — villages two, towns three, cities four
+  (tenements, mills, factories and warehouses four; farmhouses and cottages
+  two); modern — villages two, towns three, cities six (apartment blocks,
+  offices, hotels and hospitals six; houses two; sheds, barns and garages
+  one); science fiction — three decks everywhere (stations, ships and
+  habitats up to six). A barn's upper storey is a hayloft: hay storage, never
+  beds.

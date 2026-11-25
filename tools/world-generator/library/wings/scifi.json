@@ -1,0 +1,71 @@
+{
+  "wings": [
+    {
+      "id": "station.entry",
+      "purpose": "entry",
+      "kinds": ["research station", "lab module", "station"],
+      "bands": ["scifi"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Airlock", "purpose": "airlock", "share": "small"},
+        {"name": "Hub",     "purpose": "lobby",   "share": "medium"}
+      ],
+      "connections": [["Airlock", "Hub"]],
+      "entrance": {"room": "Airlock"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "station.lab",
+      "purpose": "workshop",
+      "kinds": ["lab", "laboratory", "lab module", "research module", "science lab", "biolab"],
+      "bands": ["scifi"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Laboratory", "purpose": "laboratory",  "share": "medium"},
+        {"name": "Data room",  "purpose": "server_room", "share": "small"}
+      ],
+      "connections": [["Laboratory", "Data room"]],
+      "entrance": {"room": "Laboratory"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "station.quarters",
+      "purpose": "sleeping",
+      "kinds": ["quarters", "crew quarters", "berth"],
+      "bands": ["scifi"],
+      "storeys": 1,
+      "entry": "north",
+      "rooms": [
+        {"name": "Crew quarters",    "purpose": "crew_quarters",  "share": "medium"},
+        {"name": "Captain's berth",  "purpose": "master_bedroom", "share": "small"}
+      ],
+      "connections": [["Crew quarters", "Captain's berth"]],
+      "entrance": {"room": "Crew quarters"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "agri.dome",
+      "purpose": "workshop",
+      "kinds": ["agri-dome", "farm module", "hydroponics bay", "vertical farm", "grow deck"],
+      "bands": ["scifi"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Grow bay",       "purpose": "hydroponics_bay", "share": "large"},
+        {"name": "Vat farm",       "purpose": "vat_farm",        "share": "medium"},
+        {"name": "Seed lab",       "purpose": "laboratory",      "share": "small"},
+        {"name": "Nutrient store", "purpose": "storage",         "share": "small"}
+      ],
+      "connections": [["Grow bay", "Vat farm"], ["Grow bay", "Seed lab"],
+                      ["Grow bay", "Nutrient store"]],
+      "entrance": {"room": "Grow bay"},
+      "sleeps": "none",
+      "wealth": "building"
+    }
+  ]
+}

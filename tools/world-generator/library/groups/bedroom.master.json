@@ -1,0 +1,1050 @@
+{
+  "groups": [
+    {
+      "id": "sleep.couple.bedside2",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "sleep.couple",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.storage.big.opt.seat.opt",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true,
+          "minWealth": "elite"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.big.single",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "minWealth": "elite"
+        }
+      ]
+    },
+    {
+      "id": "table.small.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.big.seat.opt.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.seat.lounge.table.small",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "minWealth": "wealthy"
+        },
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.bedroom.master1",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.bedroom.master1",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.storage.big",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "minWealth": "elite"
+        }
+      ]
+    },
+    {
+      "id": "table.small.seat",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "coat.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "coat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.bedroom.master2",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.bedroom.master3",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.storage.small.opt.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "heat.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.lounge.single.bedroom.master1",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.lounge",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.seat.opt",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "bedside.single",
+      "family": "bedroom.master",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.big.single.bedroom.master1",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.big",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.bedroom.master",
+      "family": "bedroom.master",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "bedroom.master.large.a",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.storage.big.opt.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "seat.lounge.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "elite"
+        },
+        {
+          "group": "light.big.single",
+          "kind": "optional",
+          "minWealth": "elite"
+        },
+        {
+          "group": "table.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.large.b",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.seat.opt.bedroom.master",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "elite"
+        },
+        {
+          "group": "heat.seat.lounge.table.small",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "elite"
+        },
+        {
+          "group": "light.big.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "elite"
+        },
+        {
+          "group": "light.small.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.large.c",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.storage.big",
+          "kind": "required"
+        },
+        {
+          "group": "table.small.seat",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single",
+          "kind": "required"
+        },
+        {
+          "group": "seat.lounge.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "light.big.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "elite"
+        },
+        {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master2",
+          "kind": "required",
+          "minWealth": "wealthy"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.medium.a",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.seat.opt.bedroom.master",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master3",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.medium.b",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.storage.small.opt.bedroom.master",
+          "kind": "required"
+        },
+        {
+          "group": "heat.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "seat.lounge.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.bedroom.master3",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.medium.c",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "wash.basin.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.big.single.bedroom.master",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.bedroom.master",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.bedroom.master",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.small.a",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "bedside.single",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.big.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.bedroom.master1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "bedroom.master.small.b",
+      "family": "bedroom.master",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "sleep.couple.bedside2",
+          "kind": "anchor",
+          "count": "couples"
+        },
+        {
+          "group": "storage.big.single.bedroom.master1",
+          "kind": "optional"
+        },
+        {
+          "group": "bedside.single",
+          "kind": "optional"
+        },
+        {
+          "group": "coat.single.bedroom.master",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.bedroom.master",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

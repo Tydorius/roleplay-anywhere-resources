@@ -177,6 +177,30 @@ Programs (like the Scenario Editor) drive the same thing through
 `worldgen/api.py`: `generate()`, `relayout()`, `estimate()`, `frame()` and the
 question bank, with progress events and cancellation.
 
+## Running the tests
+
+`python -m unittest discover -s tests` (from this folder) is the reference
+run — the one the suite is written for. For the same answer in a fraction of
+the time there is a parallel runner:
+
+```
+python run_tests.py                       # whole suite, longest jobs first
+python run_tests.py -j 8                  # eight worker processes
+python run_tests.py test_assembler        # one module
+python run_tests.py test_assembler.TestX  # one class
+```
+
+It counts the tests with unittest's own loader before running anything and
+fails if the jobs ran a different total, prints a line per job as it
+finishes, replays every failing job's full output at the end, and exits 0
+only when everything passed. Job order comes from the last measured times in
+`tests/durations.json`; a job missing from that file runs with the first
+wave. `python run_tests.py --record` rewrites the file with the times just
+measured — run it after adding tests. A module whose recorded time passes
+the runner's split threshold is broken into one job per test class, so one
+slow module cannot stretch the batch. `--timeout N` (minutes, default 30)
+kills a runaway job and counts it as an error.
+
 ## The World Frame: questionnaires, population and systems
 
 A one-line idea is enough, but a short questionnaire shapes the whole world
@@ -330,16 +354,24 @@ A 27B model on a Mac Studio took 3.5 hours; hosted free models took 35 minutes t
   furniture nested in its rooms, too many starting items, residents on a unit
   building. Code also writes the couples' `partner` fields from the cast.
 
-## Extensions (all off by default)
+## Extensions (floors on by default, the rest off)
 
 The default path needs **no game mods**: the zip imports and plays in the
-unmodded game. Each extension opts in with `--ext <id>` (repeatable); the
-ones that need the matching mods from `../code-mod-loader` (this repository)
-installed in the game say so:
+unmodded game. `floors` is **on by default** (Anywhere RPG 1.0 has floors of
+its own, so even the default world may be multi-storey); turn it off with
+`--no-floors` on `generate` and `layout`, `floors=False` on the API, or by
+unticking it in the Scenario Editor's world-generation form (it starts
+ticked). A settings file's `extensions` list is the authority for a
+`--settings` run: floors runs only when the list (or `--ext floors`) says
+so, and `--no-floors` always wins. A plan.json that records its extensions
+keeps exactly what it recorded; one from before the default (no
+`extensions` key) re-rolls with floors on. Every other extension opts in
+with `--ext <id>` (repeatable); the ones that need the matching mods from
+`../code-mod-loader` (this repository) installed in the game say so:
 
 | Extension | What it adds | Game mods needed |
 |---|---|---|
-| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded | none |
+| `floors` | Upper storeys on buildings — bedrooms and halls upstairs, reached by stairs: Anywhere RPG 1.0's own floors, playable unmodded. **On by default** | none |
 | `region-groups` | A zone may wrap around the map and still act as one region | `region-groups` |
 | `lights` | Each light source gets a kind (candle, torch, hearth fire, ember, lantern, electric, neon, screen, magic) and, where the setting calls for it, a colour, written as `arpgMods.lights` | `lights` |
 | `secret-passages` | Now and then a hidden door (a priest hole, a smuggler's den, or one interior doorway in a castle, keep or manor), known to the building's key holders and found in play, written as `arpgMods.secretPassages` | `secret-passages` |
@@ -409,7 +441,16 @@ storeys are floors of their own, and a walkable wall gets its wall-walk
 storey 2 wherever both ends have one — joined to each end's storey by a
 linked passage pair (planes cannot share a door in 1.0), so the towers and
 the gatehouse meet along the walk upstairs. With floors off, a compound is
-ground floor only and plays in the unmodded game.
+ground floor only and plays in the unmodded game. With the room assembler on
+(the default; `--no-room-assembler` turns it off)
+the courtyard is furnished too: the open ground's largest clear rectangle
+takes a room of the library's outdoor `courtyard` family — a stored room
+that fits, else one composed on the spot — and ships as an unwalled
+flagstone region under the compound with its pieces as objects (a statue or
+fountain centrepiece, benches, trees). The gate's approach, the parts'
+doors and a perimeter walk stay clear, and the courtyard paths keep off
+what stands there. With the switch off the courtyard is bare ground,
+exactly as before.
 
 The feasibility answers behind those choices are in
 `reports/012-feasibility.md`, each pinned by builder specs in
@@ -448,11 +489,49 @@ already sleep, and
 `BuildingLayout.residents` reports the total for the population work. Proven
 by `fixtures/apartment-block.plan.json`.
 
-**Taller buildings.** `storeys` runs 1-6 for a unit building or a compound
-part (3 otherwise). A unit building's upper storeys repeat the ground stamp —
+**Taller buildings.** `storeys` runs 1-6 for a unit building, a compound
+part, or a tall kind (a keep, a tenement, an apartment block — 3 otherwise).
+A unit building's upper storeys repeat the ground stamp —
 corridor and stair positions identical, numbering continuing — with no
 per-storey design; each storey is laid out as its own 1.0 floor, so a stack
 of any height fits beside the map.
+
+**Building heights fit the era and the settlement.** One table,
+`STOREY_CAPS` in `worldgen/phases.py`, caps how far a building may rise by
+band and by the settlement it stands in (the zone kinds name the size; a
+building outside every settlement reads the outside column). Kind phrases
+override the default by whole-word match — "keep" hits "castle keep", not
+"keeper's lodge" — and the first hit wins. The cap only lowers: a building
+at or below it keeps the storeys the plan gave it, and with the floors
+extension off none of this applies. A building over its cap is lowered in
+the same P1 pass as the lodging rules, its units re-spread with `perStorey`
+over the storeys that remain; upper rooms that no longer fit move down or
+drop, as the storey rules already do. The table as shipped:
+
+| band | hamlet | village | town | city | outside | kind overrides |
+|---|---|---|---|---|---|---|
+| medieval | 1 | 1 | 2 | 3 | 1 | castle, keep, watchtower, tower, fortress 4 anywhere; cathedral, great temple, basilica 3; merchant house, guildhall, townhouse 2 in towns, 3 in cities; the village anchors (headman, elder, chief, reeve, manor house, inn, tavern, waystation, barn, byre, mill, granary, temple, shrine hall, chapel, church) 2 in hamlets, villages and outside |
+| industrial | 1 | 2 | 3 | 4 | 1 | tenement, mill, factory, warehouse, works 4 in cities; farmhouse, cottage 2 |
+| modern | 1 | 2 | 3 | 6 | 1 | apartment, office, hotel, hospital 6 in cities; house, home, cottage 2; shed, barn, garage, outhouse 1 |
+| scifi | 3 | 3 | 3 | 3 | 3 | station, starship, spaceship, ship, habitat 6 anywhere |
+
+A barn (or byre, or stable with a loft) that stands at two storeys gets a
+hayloft upstairs — hay storage (the `barn` purpose: feed, sacks, crates,
+barrels), never beds — and the shipped medieval `stables.yard` wing's
+Hayloft is the same storage room, not a dormitory.
+
+**Lodging fits its settlement.** A building of a lodging kind (an inn, a
+tavern with rooms, a hostel, a lodge, a boarding house, a waystation, a
+caravanserai — one table for all of them) carries at most 2 units in a hamlet,
+4 in a village, 10 in a town, 24 in a city. The settlement's size comes from
+the zone kinds — the one source — and a lodging outside every settlement (a
+roadside inn) takes the plan's largest. A building whose units are one bed
+each (Bunk, Berth, Bed, Cot, Hammock) is a dormitory: one room sleeping the
+count, split in two past eight beds, not unit copies. With the floors
+extension on, a lodging or dormitory of three or more beds the plan left at
+one storey goes up to two — the unit rows halve, the dormitory sits above the
+ground rooms — through the same storey machinery as any taller building; with
+the extension off, none of this applies and the plan's storeys stand.
 
 **A row of parts** (`"shape": "row"`, `"frontage": "north|south|east|west"`,
 `"front": "street|parking|walkway|none"`) lines parts up side by side facing
@@ -553,6 +632,44 @@ Outdoors, a solid prop keeps one free cell from other solid props where there is
 room, so a row of stalls has ways through. It may never join two separate
 obstacles, wherever it goes. `open_cells_cut_off` in `metrics.json` counts free
 cells nobody can walk to, by the game's own wall rule.
+
+## The room assembler
+
+The room assembler is on by default: `--no-room-assembler` on `generate` or
+`layout` turns it off, a settings file's `"room_assembler": false` keeps it
+off, and `"room_assembler": true` in one that has it off turns it back on. It
+places a one-storey library building out of the room library's own
+fixed rooms instead of packing rectangles: the entrance room first, then every
+room against its parent in the connection tree, doors opening across the walls
+they share, and the outline closed to a rectangle (a room stretched, a larger
+variant, or a filler store) so the building is a solid shape. With it off,
+nothing changes.
+
+A building takes the assembler when it has one storey, no units, is not a
+compound part, and every one of its rooms names a library purpose. Anything
+else — and any room that cannot be picked, placed or closed — falls back to the
+old method with the reason recorded (the summary's `fallbacks` count); a world
+never fails because of the assembler. Rooms are picked by family and purpose,
+wealth tier and size band, seeded by the world, so the same seed builds the
+same house. `library-seed/compare_assembler.py` prints the two methods'
+footprints and room sizes side by side.
+
+A family whose stored rooms all miss — the band, the clearance, the wealth
+tier, the sleepers or the furnishings — does not give the building up: the
+assembler composes candidates live from the family's recipes, under the same
+checks the room generator applies, and a room built that way for a family that
+ships stored rooms is recorded in the run's notes (`metrics.json` `notes`),
+never as a fallback. The band itself is tolerant: a share whose band yields
+nothing takes the family's neighbouring band one step larger first, then one
+step smaller. The bedroom family ships rooms for two singles as well — the
+shared bedrooms and children's lofts — composed under the same rules as the
+one-bed rooms, so a household's children sleep in a room the library drew.
+
+The same switch furnishes a compound's courtyard from the library's outdoor
+families (see "Compounds and zone arrangements"): rooms that stand in the
+open, with no walls, the whole edge an entrance and a clear walk crossing
+between every pair of opposite edges — `library/AUTHORING.md` has the rules
+a hand-authored outdoor room follows.
 
 ## How zones are sized
 

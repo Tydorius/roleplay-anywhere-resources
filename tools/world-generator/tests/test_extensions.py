@@ -47,11 +47,11 @@ class TestExtensionExpansion(unittest.TestCase):
 
 
 class TestRegistry(unittest.TestCase):
-    """The registry is what a UI lists as unchecked toggles: every extension
-    declares id/title/mods/description and defaults to off, and floors
-    needs no game mod."""
+    """The registry is what a UI lists as toggles: every extension declares
+    id/title/mods/description, floors alone defaults on (1.0's own floors,
+    no mod), and floors needs no game mod."""
 
-    def test_every_extension_defaults_off(self):
+    def test_only_floors_defaults_on(self):
         from worldgen.extensions import registry
         exts = registry()
         self.assertTrue(exts)
@@ -60,7 +60,8 @@ class TestRegistry(unittest.TestCase):
                 for key in ("id", "title", "mods", "description",
                             "requires", "withoutMod", "default"):
                     self.assertIn(key, e)
-                self.assertIs(e["default"], False)
+                self.assertIs(e["default"], e["id"] == "floors",
+                              f"{e['id']} defaults {'on' if e['id'] == 'floors' else 'off'}")
                 self.assertIsInstance(e["mods"], list)
                 self.assertTrue(e["title"].strip())
                 self.assertTrue(e["description"].strip())

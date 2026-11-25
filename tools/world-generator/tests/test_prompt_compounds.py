@@ -358,6 +358,282 @@ class TestSanitizeP1Compounds(unittest.TestCase):
                           {b["name"] for z in d["zones"] for b in z["buildings"]})
 
 
+class TestLodgingFitsTheSettlement(unittest.TestCase):
+    """The P1 lodging rules: a lodging's units fit its settlement (one table,
+    from the zone kinds), bunks are one dormitory room, and with the floors
+    extension on a lodging of three or more beds goes up a storey."""
+
+    def p1(self, zone_kind, units, floors=False, bkind="inn"):
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c"},
+             "mapSize": "small",
+             "zones": [{"name": "Z", "kind": zone_kind, "sizeClass": "medium",
+                        "description": "d", "ground": "grass",
+                        "buildings": [{"name": "The Wayfarer's Rest",
+                                       "kind": bkind,
+                                       "sizeClass": "medium", "purpose": "beds",
+                                       "units": units}]}],
+             "roads": []}
+        log = []
+        d = phases.sanitize_p1(d, log, floors=floors)
+        return d["zones"][0]["buildings"][0], [(w, r) for (w, r) in log]
+
+    def test_the_inn_cap_follows_the_settlement_size(self):
+        for size, cap in (("hamlet", 2), ("village", 4), ("town", 10),
+                          ("city", 24)):
+            with self.subTest(size=size):
+                b, log = self.p1(f"a {size}", {"name": "Room", "count": 30,
+                                               "residents": 2})
+                self.assertEqual(b["units"]["count"], cap)
+                self.assertTrue(any(f"units.count 30 -> {cap}" in r
+                                    and size in r for (_w, r) in log), log)
+
+    def test_an_inn_at_or_under_the_cap_keeps_its_units(self):
+        b, log = self.p1("village", {"name": "Room", "count": 4, "residents": 2})
+        self.assertEqual(b["units"]["count"], 4)
+        self.assertFalse(any("lodging fits" in r for (_w, r) in log), log)
+
+    def test_a_roadside_inn_takes_the_plans_largest_settlement(self):
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c"},
+             "mapSize": "small",
+             "zones": [
+                 {"name": "The Road", "kind": "kings road", "sizeClass": "medium",
+                  "description": "d", "ground": "dirt",
+                  "buildings": [{"name": "The Wayfarer's Rest", "kind": "inn",
+                                 "sizeClass": "medium", "purpose": "beds",
+                                 "units": {"name": "Room", "count": 30,
+                                           "residents": 2}}]},
+                 {"name": "Bigton", "kind": "town", "sizeClass": "medium",
+                  "description": "d", "ground": "cobble", "buildings": []}],
+             "roads": []}
+        log = []
+        d = phases.sanitize_p1(d, log, floors=False)
+        b = d["zones"][0]["buildings"][0]
+        self.assertEqual(b["units"]["count"], 10)
+        self.assertTrue(any("town" in r and "lodging fits" in r
+                            for (_w, r) in log), log)
+
+    def test_bunks_become_one_dormitory_room(self):
+        # a hall of bunks (not a lodging word): the bunk rule alone
+        b, log = self.p1("village", {"name": "Bunk", "count": 6, "residents": 1},
+                         bkind="hall")
+        self.assertNotIn("units", b)
+        self.assertEqual(b["residents"], 6)
+        self.assertNotIn("couples", b)
+        self.assertEqual(b["dormitory"], 6)
+        self.assertTrue(any("one dormitory room" in r for (_w, r) in log), log)
+
+    def test_floors_off_leaves_the_building_at_one_storey(self):
+        b, log = self.p1("village", {"name": "Room", "count": 4, "residents": 2},
+                         floors=False)
+        self.assertNotIn("storeys", b)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_floors_on_puts_four_rooms_upstairs(self):
+        b, log = self.p1("village", {"name": "Room", "count": 4, "residents": 2},
+                         floors=True)
+        self.assertEqual(b["units"]["count"], 4)
+        self.assertEqual(b["storeys"], 2)
+        self.assertTrue(any("storeys 1 -> 2" in r for (_w, r) in log), log)
+
+
+class TestStoreysFitTheEra(unittest.TestCase):
+    """The P1 height rules (design 8.1g): one table caps how far a building
+    may rise, by band and by the settlement it stands in. The cap only
+    lowers — the lodging rules may still send beds upstairs, within it —
+    and with the floors extension off none of it applies."""
+
+    def p1(self, zone_kind, bkind, storeys, band, floors=True, units=None):
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c", "band": band},
+             "mapSize": "small",
+             "zones": [{"name": "Z", "kind": zone_kind, "sizeClass": "medium",
+                        "description": "d", "ground": "grass",
+                        "buildings": [{"name": "B", "kind": bkind,
+                                       "sizeClass": "medium", "purpose": "p",
+                                       "storeys": storeys}]}],
+             "roads": []}
+        if units is not None:
+            d["zones"][0]["buildings"][0]["units"] = units
+        log = []
+        d = phases.sanitize_p1(d, log, floors=floors, band=band)
+        return d["zones"][0]["buildings"][0], [(w, r) for (w, r) in log]
+
+    def test_a_village_cottage_is_lowered_to_one_storey(self):
+        b, log = self.p1("village", "cottage", 3, "medieval")
+        self.assertEqual(b["storeys"], 1)
+        self.assertTrue(any("storeys 3 -> 1" in r for (_w, r) in log), log)
+
+    def test_a_village_inn_keeps_its_two_storeys(self):
+        b, log = self.p1("village", "inn", 2, "medieval")
+        self.assertEqual(b["storeys"], 2)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_medieval_city_cottage_is_lowered_to_two(self):
+        b, log = self.p1("city", "cottage", 3, "medieval")
+        self.assertEqual(b["storeys"], 2)
+        self.assertTrue(any("storeys 3 -> 2" in r for (_w, r) in log), log)
+
+    def test_a_city_merchant_house_keeps_three(self):
+        b, log = self.p1("city", "merchant house", 3, "medieval")
+        self.assertEqual(b["storeys"], 3)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_keep_keeps_four_and_the_contract_takes_it(self):
+        b, log = self.p1("hamlet", "keep", 4, "medieval")
+        self.assertEqual(b["storeys"], 4)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+        d = {"name": "W", "worldBackground": "b",
+             "setting": {"era": "e", "technology": "t", "density": "sparse",
+                         "climate": "c"},
+             "mapSize": "small",
+             "zones": [{"name": "Z", "kind": "village", "sizeClass": "medium",
+                        "description": "d", "ground": "grass",
+                        "buildings": [{"name": "B", "kind": "keep",
+                                       "sizeClass": "medium", "purpose": "p",
+                                       "storeys": 4}]}],
+             "roads": []}
+        self.assertFalse([e for e in phases.check_p1(d, floors=True)
+                          if "storeys" in e])
+
+    def test_an_industrial_city_tenement_keeps_four(self):
+        b, log = self.p1("city", "tenement", 4, "industrial")
+        self.assertEqual(b["storeys"], 4)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_modern_city_apartment_block_keeps_six(self):
+        b, log = self.p1("city", "apartment block", 6, "modern")
+        self.assertEqual(b["storeys"], 6)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_a_modern_village_house_is_lowered_to_two(self):
+        b, log = self.p1("village", "house", 3, "modern")
+        self.assertEqual(b["storeys"], 2)
+        self.assertTrue(any("storeys 3 -> 2" in r for (_w, r) in log), log)
+
+    def test_the_table_never_raises_a_building(self):
+        b, log = self.p1("city", "house", 1, "modern")
+        self.assertEqual(b["storeys"], 1)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+    def test_lowering_re_spreads_the_units(self):
+        b, log = self.p1("city", "tenement", 6, "industrial",
+                         units={"name": "Flat", "count": 24, "perStorey": 4,
+                                "residents": 2})
+        self.assertEqual(b["storeys"], 4)
+        self.assertEqual(b["units"]["perStorey"], 6)
+        self.assertTrue(any("storeys 6 -> 4" in r for (_w, r) in log), log)
+
+    def test_floors_off_leaves_the_heights_alone(self):
+        b, log = self.p1("village", "cottage", 3, "medieval", floors=False)
+        self.assertNotIn("storeys", b)
+        self.assertFalse(any("storeys" in r for (_w, r) in log), log)
+
+
+class TestAnInnGoesUpstairs(unittest.TestCase):
+    """The same inn through the layout: two storeys of rooms over a smaller
+    ground floor than one storey of the same four rooms."""
+
+    def inn_plan(self, storeys):
+        p1 = {"name": "W", "worldBackground": "b",
+              "setting": {"era": "medieval", "technology": "timber",
+                          "density": "normal", "climate": "wet"},
+              "mapSize": "small",
+              "zones": [{"name": "Netherford", "kind": "village",
+                         "sizeClass": "medium", "description": "d",
+                         "ground": "grass",
+                         "buildings": [{"name": "The Wayfarer's Rest",
+                                        "kind": "inn", "sizeClass": "medium",
+                                        "purpose": "ale and beds",
+                                        "units": {"name": "Room", "count": 9,
+                                                  "residents": 2}}]}],
+              "roads": []}
+        log = []
+        p1 = phases.sanitize_p1(p1, log, floors=True)
+        zone_b = p1["zones"][0]["buildings"][0]
+        assert zone_b["units"]["count"] == 4 and zone_b["storeys"] == 2
+        zone_b["storeys"] = storeys          # the twin stays one storey
+        return {
+            "name": p1["name"], "worldBackground": p1["worldBackground"],
+            "setting": p1["setting"], "mapSize": p1["mapSize"],
+            "zones": [p1["zones"][0]], "roads": [],
+            "templates": [
+                {"name": "Straw Bed", "size": [1, 2], "walkability": 0,
+                 "forSleep": True, "tags": ["bed"], "description": "A bed.",
+                 "physicalDescription": "a bed", "rule": "along a wall"},
+                {"name": "Oak Table", "size": [2, 1], "walkability": 0,
+                 "tags": ["table"], "description": "A table.",
+                 "physicalDescription": "a table", "rule": "in the middle"},
+                {"name": "Wooden Stool", "size": [1, 1], "walkability": 0,
+                 "tags": ["seat"], "description": "A stool.",
+                 "physicalDescription": "a stool", "rule": "around tables"},
+                {"name": "Clay Hearth", "size": [2, 1], "walkability": 0,
+                 "tags": ["fire"], "description": "A hearth.",
+                 "physicalDescription": "a hearth", "rule": "against a wall"},
+                {"name": "Lamp", "size": [1, 1], "walkability": 0,
+                 "tags": ["light"], "description": "A lamp.",
+                 "physicalDescription": "a lamp", "rule": "anywhere"}],
+            "buildings": [{
+                "name": "The Wayfarer's Rest", "wall": "wood", "ground": "wood",
+                "stairs": {"room": "Common Room"},
+                "rooms": [
+                    {"name": "Common Room", "share": "large",
+                     "purpose": "ale by the fire"},
+                    {"name": "Kitchen", "share": "small",
+                     "purpose": "the pots"}],
+                "connections": [["Common Room", "Kitchen"]],
+                "entrance": {"room": "Common Room", "side": "south"},
+                "unit": {
+                    "rooms": [{"name": "Guest Room", "share": "small",
+                               "purpose": "a bed for the night"}],
+                    "connections": [],
+                    "entrance": {"room": "Guest Room", "side": "south"},
+                    "furniture": [{"template": "Straw Bed", "room": "Guest Room",
+                                   "count": 2, "hint": "corner"}]},
+                "furniture": [
+                    {"template": "Clay Hearth", "room": "Common Room",
+                     "count": 1, "hint": "wall:north"},
+                    {"template": "Oak Table", "room": "Common Room",
+                     "count": 1, "hint": "center"},
+                    {"template": "Wooden Stool", "room": "Common Room",
+                     "count": 2, "hint": "around tables"},
+                    {"template": "Oak Table", "room": "Kitchen",
+                     "count": 1, "hint": "center"}],
+                "yard": None}],
+            "npcs": [],
+            "player": {"name": "Tam Pike", "gender": "male", "role": "pedlar",
+                       "home": "The Wayfarer's Rest", "work": "Netherford",
+                       "description": "A pedlar.",
+                       "physicalDescription": "thin"},
+        }
+
+    def build(self, storeys):
+        import worldgen
+        world = worldgen.run(self.inn_plan(storeys), seed=1,
+                             extensions=("floors",))
+        foot = next(r for r in world.regions
+                    if r.name == "The Wayfarer's Rest").rect
+        return world, foot.w * foot.h
+
+    def test_two_storeys_of_rooms_beat_one_big_floor(self):
+        world, two = self.build(2)
+        self.assertTrue(any(r.name == "The Wayfarer's Rest (upper floor)"
+                            for r in world.regions),
+                        [r.name for r in world.regions])
+        # the copies' numbering continues upstairs: Rooms 3 and 4 are the
+        # upper storey's, and each holds its beds
+        for room in ("Room 3", "Room 4"):
+            beds = [o for o in world.objects if o.region == room
+                    and world.templates[o.template].for_sleep]
+            self.assertTrue(beds, f"no bed in {room}")
+        _world, one = self.build(1)
+        self.assertLess(two, one, f"{two} vs {one}")
+
+
 class TestPromptText(unittest.TestCase):
     def test_p1_prompt_teaches_the_vocabulary(self):
         t = phases._template("p1-world").substitute(rules="", idea="x")
@@ -372,7 +648,8 @@ class TestPromptText(unittest.TestCase):
                     "units", "residents", "void", "frontage",
                     "spineWidth", "linked", "exterior",
                     "Never list or design the copies one by one",
-                    "not templates. Combine shapes freely"):
+                    "not templates. Combine shapes freely",
+                    "fits its settlement", "dormitory room, not units"):
             self.assertIn(bit, t)
         # four setting examples, none of them the only way to build
         for bit in ("castle", "strip mall", "hospital", "starship"):
@@ -383,7 +660,8 @@ class TestPromptText(unittest.TestCase):
                             "prompts", "ext", "floors", "p1-world.txt")
         with open(path, "r", encoding="utf-8") as f:
             frag = f.read()
-        for bit in ("storeys", "perStorey", "numbering", "up to 6"):
+        for bit in ("storeys", "perStorey", "numbering", "up to 6",
+                    "fits its settlement", "dormitory room, not units"):
             self.assertIn(bit, frag)
 
     def test_p3_prompt_carries_the_compound_line(self):

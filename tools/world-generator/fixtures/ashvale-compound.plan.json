@@ -596,5 +596,6 @@
     "work": "Emberwick Village",
     "description": "A traveler wintering at the Gilded Stag: handy with a quill, cagey about the road behind you, curious about the castle's grain count.",
     "physicalDescription": "Lean young traveler, patched wool coat, walking staff, hood down"
-  }
+  },
+  "extensions": []
 }

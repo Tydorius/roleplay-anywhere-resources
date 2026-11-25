@@ -1,0 +1,1206 @@
+{
+  "groups": [
+    {
+      "id": "cook.bake",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "cook",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "bake",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "heat.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "counter.prep.single",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat.opt",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.kitchen",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.kitchen",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.kitchen",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "fuel.single.kitchen",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.kitchen",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "cook.counter.prep2",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "cook",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.kitchen1",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter.serve.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.serve",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.kitchen1",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.kitchen1",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "bake.single",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "bake",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.kitchen",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat.opt.kitchen",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "cook.heat.fuel",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "cook",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "heat",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "counter.prep.wash.basin",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "counter.prep",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.kitchen1",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "cook.wash.basin",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "cook",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "bake.single.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "bake",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.single.kitchen",
+      "family": "kitchen",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "cook.counter.prep2.kitchen",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "cook",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.kitchen2",
+      "family": "kitchen",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.counter.prep.opt",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "counter.prep",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.kitchen2",
+      "family": "kitchen",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "kitchen.large.a",
+      "family": "kitchen",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "cook.bake",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "heat.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "counter.prep.single",
+          "kind": "repeatable",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "table.work.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.kitchen",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.kitchen",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "shelving.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "fuel.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.large.b",
+      "family": "kitchen",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "cook.counter.prep2",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.work.single.kitchen1",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "wash.basin.single.kitchen",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "counter.serve.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.kitchen1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "storage.bulk.single.kitchen1",
+          "kind": "optional"
+        },
+        {
+          "group": "bake.single",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.medium.a",
+      "family": "kitchen",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "cook.counter.prep2",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.kitchen",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.seat.opt.kitchen",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "bake.single",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.kitchen1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.medium.b",
+      "family": "kitchen",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "cook.heat.fuel",
+          "kind": "anchor"
+        },
+        {
+          "group": "counter.prep.wash.basin",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.work.seat.opt.kitchen",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.kitchen1",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.kitchen1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.medium.c",
+      "family": "kitchen",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "cook.wash.basin",
+          "kind": "anchor"
+        },
+        {
+          "group": "counter.prep.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "bake.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.kitchen1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "table.work.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.kitchen1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.small.a",
+      "family": "kitchen",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "cook.counter.prep2.kitchen",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.single.kitchen",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "shelving.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.kitchen2",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.small.b",
+      "family": "kitchen",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "cook.counter.prep2.kitchen",
+          "kind": "anchor"
+        },
+        {
+          "group": "counter.prep.wash.basin",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "bake.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.kitchen2",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.kitchen1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.kitchen1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "kitchen.small.c",
+      "family": "kitchen",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "cook.counter.prep2.kitchen",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.basin.counter.prep.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.kitchen",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.kitchen",
+          "kind": "required",
+          "minWealth": "modest"
+        },
+        {
+          "group": "shelving.single.kitchen2",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.kitchen",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

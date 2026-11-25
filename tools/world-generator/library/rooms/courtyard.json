@@ -1,0 +1,1175 @@
+{
+  "rooms": [
+    {
+      "id": "courtyard.large.a.grand.flush",
+      "family": "courtyard",
+      "sizeBand": "large",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            1
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            5
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            8
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            10,
+            9
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            10
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "east": [
+          0,
+          2,
+          3,
+          4,
+          6,
+          7,
+          8,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.large.hand",
+      "description": "A spacious courtyard, centrepiece against the south wall, a floor rug opposite, a floor rug in the middle of the room, and a floor rug against the east wall."
+    },
+    {
+      "id": "courtyard.large.a.roomy.flush",
+      "family": "courtyard",
+      "sizeBand": "large",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        11,
+        11
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            3
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            4
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            5,
+            5
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            6
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            9,
+            6
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            7
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            4,
+            10
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            10
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.large.hand",
+      "description": "A spacious courtyard, centrepiece in the middle of the room, a floor rug in the middle of the room, a floor rug in the middle of the room, and a floor rug in the middle of the room."
+    },
+    {
+      "id": "courtyard.medium.a.grand.flush",
+      "family": "courtyard",
+      "sizeBand": "medium",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        9,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            0
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            7,
+            4
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "south": [
+          0,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.medium.hand",
+      "description": "A mid-sized courtyard, centrepiece against the south wall, a floor rug opposite, and a floor rug in the middle of the room."
+    },
+    {
+      "id": "courtyard.medium.a.roomy.flush",
+      "family": "courtyard",
+      "sizeBand": "medium",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            1
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            6,
+            4
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          2,
+          3,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.medium.hand",
+      "description": "A mid-sized courtyard, centrepiece in the middle of the room, a floor rug against the east wall, and a floor rug against the east wall."
+    },
+    {
+      "id": "courtyard.medium.a.tight.flush",
+      "family": "courtyard",
+      "sizeBand": "medium",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        7,
+        7
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            0
+          ],
+          "group": "light.small.single.court",
+          "optional": true
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            2
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            2,
+            3
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            3
+          ],
+          "group": "plant.bed.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "decor.feature.seat.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "east": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.medium.hand",
+      "description": "A mid-sized courtyard, centrepiece in the middle of the room, a floor rug against the north wall, a floor rug against the north wall, and a lamp against the north wall."
+    },
+    {
+      "id": "courtyard.small.a.grand.flush",
+      "family": "courtyard",
+      "sizeBand": "small",
+      "clearance": "grand",
+      "style": "flush",
+      "wealth": [
+        "wealthy",
+        "elite"
+      ],
+      "size": [
+        6,
+        4
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            0
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            5,
+            1
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            4,
+            2
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          1,
+          2,
+          3
+        ],
+        "south": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "west": [
+          1,
+          2,
+          3
+        ],
+        "east": [
+          3
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.small.hand",
+      "description": "A small courtyard, bench in the northeast corner, a floor rug in the northwest corner."
+    },
+    {
+      "id": "courtyard.small.a.roomy.flush",
+      "family": "courtyard",
+      "sizeBand": "small",
+      "clearance": "roomy",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest",
+        "wealthy"
+      ],
+      "size": [
+        3,
+        6
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            5
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          2
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "east": [
+          3,
+          4,
+          5
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.small.hand",
+      "description": "A small, narrow courtyard, bench in the northeast corner, a floor rug opposite."
+    },
+    {
+      "id": "courtyard.small.a.tight.flush",
+      "family": "courtyard",
+      "sizeBand": "small",
+      "clearance": "tight",
+      "style": "flush",
+      "wealth": [
+        "poor",
+        "modest"
+      ],
+      "size": [
+        3,
+        5
+      ],
+      "sleeps": {
+        "singles": 0,
+        "couples": 0
+      },
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.feature",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            2
+          ],
+          "group": "statue.seat.court",
+          "optional": false
+        },
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            4
+          ],
+          "group": "plant.tree.single.court",
+          "optional": false
+        }
+      ],
+      "doors": {
+        "north": [
+          0
+        ],
+        "south": [
+          0,
+          2
+        ],
+        "west": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "east": [
+          3,
+          4
+        ]
+      },
+      "stretch": {
+        "x": [],
+        "y": []
+      },
+      "outdoor": true,
+      "symmetric": false,
+      "recipe": "courtyard.small.hand",
+      "description": "A small courtyard, bench in the northeast corner, a floor rug opposite."
+    }
+  ]
+}

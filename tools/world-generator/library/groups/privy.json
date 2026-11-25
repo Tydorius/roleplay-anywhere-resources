@@ -1,0 +1,194 @@
+{
+  "groups": [
+    {
+      "id": "wash.toilet.single.privy",
+      "family": "privy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "wash.toilet.wash.basin.privy",
+      "family": "privy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "waste.single.privy",
+      "family": "privy",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.small.single.privy",
+      "family": "privy",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "light.small.single.privy",
+      "family": "privy",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "privy.small.a",
+      "family": "privy",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.toilet.wash.basin.privy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.small.single.privy",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.privy",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "privy.tiny.a",
+      "family": "privy",
+      "sizeBands": [
+        "stall"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.toilet.single.privy",
+          "kind": "anchor"
+        },
+        {
+          "group": "light.small.single.privy",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.privy",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "privy.tiny.b",
+      "family": "privy",
+      "sizeBands": [
+        "stall",
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "wash.toilet.wash.basin.privy",
+          "kind": "anchor"
+        },
+        {
+          "group": "waste.single.privy",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

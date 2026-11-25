@@ -34,6 +34,20 @@ def size_band(lib, interior):
     return "large"
 
 
+def purpose_for_family(lib, family):
+    """The purpose the world generator furnishes a family's rooms with
+    ("bedroom" -> "bedroom", "bedroom.master" -> "master_bedroom", the room
+    P3 asks for): the purpose named like the family, else the one whose
+    underscored words reversed name it (library.json maps purpose ->
+    family; this is that map walked the other way). None when no purpose
+    maps to the family."""
+    vocab = lib.vocab.get("purposes") or {}
+    if family in vocab:
+        return family
+    flipped = "_".join(reversed(str(family).split(".")))
+    return flipped if flipped in vocab else None
+
+
 def pick_layout(lib, purpose, interior, rng):
     """A layout of the purpose's family that fits the interior: one whose
     min-max range holds it, else the largest whose minimum fits (its grow
@@ -64,12 +78,15 @@ def sleeps_right(role, obj):
 REUSE_SHARE = 0.75   # how often a pick takes an object the world already uses
 
 
-def pick_object(lib, purpose, role, size, band, tier, rng, genre=None, prefer=()):
+def pick_object(lib, purpose, role, size, band, tier, rng, genre=None, prefer=(),
+                only=()):
     """(object, widened): the first bound category with an object for the
     band and tier that fits ``size``; failing that, the nearest other tier.
     (None, False) is a gap. ``prefer`` holds object ids the world already
     uses: most picks take one of those when it fits, so a village's cottages
-    share their beds and the game draws fewer sprites."""
+    share their beds and the game draws fewer sprites. ``only`` holds ids the
+    pick is restricted to (the plan's own objects): a category without one of
+    them is passed over, and an empty intersection everywhere is a gap."""
     roles = ((lib.purposes.get(purpose) or {}).get("roles") or {})
     cats = roles.get(role)
     if cats is None:
@@ -85,7 +102,8 @@ def pick_object(lib, purpose, role, size, band, tier, rng, genre=None, prefer=()
                     and t in o["wealth"]
                     and (size is None or _fits(o["size"], size))
                     and sleeps_right(role, o)
-                    and (not o.get("onlyGenres") or (genre or "") in o["onlyGenres"])]
+                    and (not o.get("onlyGenres") or (genre or "") in o["onlyGenres"])
+                    and (not only or o["id"] in only)]
             if objs:
                 reuse = [o for o in objs if o["id"] in prefer]
                 if reuse and rng.random() < REUSE_SHARE:
@@ -106,6 +124,18 @@ class Templates:
         self.by_name = {}          # template name -> template dict
         self.names = set(taken)    # names already used (P2's own templates included)
         self.sprites = {}          # band -> shipped sprite index
+        self.adopted = {}          # library object id -> a template made elsewhere
+                                   # (the plan's own), reused instead of a fresh one
+
+    def adopt(self, library_id, template):
+        """Reuse a template another registry already made for this library
+        object: its name and words stay the plan's own, so placements under
+        it stay visible to the plan (and its containers to the loot pools)."""
+        if library_id in self.adopted or template["name"] in self.by_name:
+            return
+        self.adopted[library_id] = template
+        self.by_name[template["name"]] = template
+        self.names.add(template["name"])
 
     def get(self, obj, band, tier, condition):
         from .library_art import load_index, sprite_path
@@ -119,6 +149,12 @@ class Templates:
         key = (obj["id"], band, "art" if art else tier, condition)
         if key in self.by_key:
             return self.by_key[key]
+        if obj["id"] in self.adopted:
+            # the plan already carries a template for this object: pick it up
+            # under this key too, so the same object never takes a second name
+            t = self.adopted[obj["id"]]
+            self.by_key[key] = t
+            return t
         rng = random.Random(f"{self.seed}|{'|'.join(key)}")
         text = fill_text(self.lib, obj, band, tier, condition, rng,
                          fixed=(art or {}).get("materials"))
@@ -165,8 +201,9 @@ class Templates:
         return bool(obj.get("container"))
 
     def used_ids(self):
-        """Object ids with a template already."""
-        return {k[0] for k in self.by_key}
+        """Object ids with a template already (adopted ones included, so a
+        pick prefers an object the plan already carries a template for)."""
+        return {k[0] for k in self.by_key} | set(self.adopted)
 
 
 @dataclass

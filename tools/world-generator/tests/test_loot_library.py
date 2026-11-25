@@ -181,6 +181,50 @@ class TestSpecInventories(unittest.TestCase):
         self.assertGreaterEqual(counts["stocked"], 2)
 
 
+class TestAssembledVillageDraws(unittest.TestCase):
+    """rl-22: a compound village the room assembler builds out, carrying a
+    pool named after every library purpose (the shape P2's prompts ask for):
+    every building that places a container stocks at least one of them."""
+
+    def test_every_building_with_a_container_stocks_one(self):
+        from tests.test_recipe_compounds import village_plan
+        stock = ["Bread", "Nails", "Rope"]
+        pools = {p.replace("_", " ").title(): {"items": stock}
+                 for p in LIB.purposes if p not in ("*", "_readme")}
+        plan = village_plan()
+        plan["lootPools"] = pools
+        plan["items"] = [_item(n) for n in stock]
+        # the plan dict is the run's own (no copy): it ends up holding the
+        # winner's injected templates, and the spec reads the same names
+        world = worldgen.run(plan, seed=1)
+        spec = worldgen.build_spec(world, plan)
+        owner = {}
+        for b in world.buildings:
+            for r in b.layout.rooms:
+                owner[r.full_name] = b.layout.design.name
+            for f in getattr(b, "floors", []) or []:
+                for r in f.layout.rooms:
+                    owner[r.full_name] = f.layout.design.name
+        names = {t["name"] for t in plan["templates"] if t.get("container")}
+        counts = {}
+        for t in spec["objectTemplates"]:
+            if t["name"] not in names:
+                continue
+            for p in t.get("placements", []):
+                pos = p["pos"] if isinstance(p, dict) else p
+                building = owner.get(pos[0]) if isinstance(pos[0], str) else None
+                if building is None:
+                    continue    # a yard prop: no building to stock
+                stocked, total = counts.setdefault(building, [0, 0])
+                counts[building] = [stocked + (1 if isinstance(p, dict)
+                                               and p.get("inventory") else 0),
+                                    total + 1]
+        self.assertTrue(counts, "no container placed in any building")
+        for building, (stocked, _total) in sorted(counts.items()):
+            self.assertGreaterEqual(stocked, 1,
+                                    f"{building} placed containers, none stocked")
+
+
 class TestP2PromptCarriesThePurposes(unittest.TestCase):
     def test_on_the_library_names_a_pool_per_purpose_off_it_does_not(self):
         c = library_client()

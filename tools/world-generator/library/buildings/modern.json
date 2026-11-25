@@ -1,0 +1,32 @@
+{
+  "buildings": [
+    {
+      "id": "clinic.spine",
+      "kinds": ["clinic", "clinic wing", "medical practice", "health centre",
+                "health center", "urgent care"],
+      "bands": ["modern"],
+      "shape": "spine",
+      "wings": [
+        {"wing": "clinic.entry",    "side": "south", "main": "Waiting room"},
+        {"wing": "clinic.care",     "side": "north"},
+        {"wing": "clinic.care",     "side": "south"},
+        {"wing": "clinic.service",  "side": "north"}
+      ],
+      "entrance": {"wing": "clinic.entry"}
+    },
+    {
+      "id": "ranch.courtyard",
+      "kinds": ["ranch", "farm", "farmhouse", "farmstead", "feedlot", "homestead"],
+      "bands": ["modern"],
+      "shape": "courtyard",
+      "wings": [
+        {"wing": "ranch.house",  "side": "south", "main": "Living room"},
+        {"wing": "ranch.sheds",  "side": "east"},
+        {"wing": "ranch.sheds",  "side": "west"}
+      ],
+      "outdoor": [{"name": "Riding paddock", "purpose": "paddock", "between": "all"},
+                  {"name": "Feed yard",      "purpose": "farmyard", "between": "wings"}],
+      "entrance": {"wing": "ranch.house"}
+    }
+  ]
+}

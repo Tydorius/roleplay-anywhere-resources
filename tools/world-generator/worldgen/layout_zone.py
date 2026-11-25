@@ -128,6 +128,7 @@ class ZoneOut:
         self.reserved = set()     # path + branch + entrance approach cells
         self.failures = []        # (what, reason) strings
         self.fallbacks = []       # hints that could not be met, placed anywhere free
+        self.notes = []           # run notes (a room the assembler built on the spot)
         self.side_exits = []      # (building or complex, room, cell) added by exits.py
         self.ground_blocked = set()  # what stands on the open ground (see _splits_ground)
         self.solid_props = set()  # cells of the solid props placed so far
@@ -1007,6 +1008,8 @@ def _furnish(out, b, zone, templates, rng):
     layouts = [b.layout] + [u.layout for u in getattr(b.layout, "unit_outs", [])]
     for bl in layouts:
         for room in bl.rooms:
+            if room.furniture is not None:
+                continue        # the room assembler placed this room already
             furniture = [f for f in bl.furniture if f.room == room.base_name]
             unknown = [f for f in bl.furniture
                        if f.room not in {r.base_name for r in bl.rooms}]
@@ -1025,6 +1028,12 @@ def _furnish(out, b, zone, templates, rng):
 
 
 def _record_furniture(out, b):
+    from . import assembler
+    note = assembler.fallback_note(b.layout.design.name)
+    if note is not None:
+        out.fallbacks.append(note)
+    out.notes.extend(assembler.spot_notes(b.layout.design.name,
+                                          b.layout.entrance_side))
     for (t, room_name) in b.layout.dropped:
         out.failures.append((f"piece {t} in {room_name}", "dropped: over the 28x22 building cap"))
     for name in getattr(b.layout, "unit_dropped", []) or []:
@@ -1253,6 +1262,32 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
     inner = rect.interior(1) if rect.w > 2 and rect.h > 2 else rect
     spacing = lot_spacing(zone)
 
+    # `fits` asks about `out.reserved` once per candidate position — a
+    # compound's block scan alone asks thousands of times — and the
+    # reserved set only grows while buildings place, so its cells sit in a
+    # row index (row to an integer whose bit x marks a reserved cell)
+    # rebuilt whenever the set has grown. A lot then meets each of its
+    # rows with one and of its column span against that row's mask — the
+    # same answer `Rect.touches_any` gives.
+    reserved_rows = {}
+    reserved_size = -1
+
+    def reserved_hits(lot):
+        nonlocal reserved_size
+        if len(out.reserved) != reserved_size:
+            rows = {}
+            for (x, y) in out.reserved:
+                rows[y] = rows.get(y, 0) | (1 << x)
+            reserved_rows.clear()
+            reserved_rows.update(rows)
+            reserved_size = len(out.reserved)
+        span = (1 << lot.w) - 1 << lot.x
+        for y in range(lot.y, lot.y + lot.h):
+            m = reserved_rows.get(y)
+            if m and m & span:
+                return True
+        return False
+
     def approach_strip(brect, side):
         """The 1-wide band of cells a door on `side` opens onto."""
         if side in ("north", "south"):
@@ -1267,7 +1302,7 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         for other in placed_lots:
             if other.gap(lot) < spacing:
                 return False
-        if lot.cells() & out.reserved:
+        if reserved_hits(lot):
             return False
         if out.feature is not None and out.feature.intersects(lot):
             return False
@@ -1307,6 +1342,8 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
         _record_furniture(out, b)
 
     for compound in sorted(compounds, key=lambda c: c.name, reverse=True):
+        compound, recipe_notes = layout_compound.expand_recipe(zone, compound)
+        out.failures.extend(recipe_notes)
         fp = layout_compound.compound_footprint(zone, compound, templates)
         pos = _compound_position(zone, rect, out, compound, fp, inner, fits,
                                  rng, mouths)
@@ -1324,8 +1361,8 @@ def _place_buildings(zone, rect, out, rng, templates, mouths=()):
             out.buildings.append(b)
         targets = []
         by_name = {b.layout.design.name: b for b in comp.parts}
-        if compound.shape == "enclosure":
-            for part in compound.parts:
+        if comp.compound.shape == "enclosure":
+            for part in comp.compound.parts:
                 b = by_name.get(part.building)
                 if part.slot_kind != "inside" or b is None:
                     continue

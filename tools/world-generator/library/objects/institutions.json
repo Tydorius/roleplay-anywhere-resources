@@ -324,14 +324,14 @@
       "bands": ["medieval", "industrial", "modern"],
       "onlyGenres": [],
       "names": {"*": "stall", "modern": "horse stall"},
-      "parts": {"walls": "wood", "bedding": "plant"},
+      "parts": {"walls": "wood"},
       "partsByBand": {},
       "tags": ["animal", "furniture"],
       "container": false,
       "lootPool": null,
       "text": {
-        "description": "{A:condition} {noun} of {walls} boards with fresh {bedding} underfoot and a manger at the back.",
-        "physical": "Top-down view of {A:noun}: three {walls.color} {walls} partition walls open at the bottom edge, a manger at the top, {bedding.color} {bedding} covering the floor."
+        "description": "{A:condition} {noun} of {walls} boards with fresh straw underfoot and a manger at the back.",
+        "physical": "Top-down view of {A:noun}: three {walls.color} {walls} partition walls open at the bottom edge, a manger at the top, golden straw covering the floor."
       },
       "aliases": ["loose box", "horse box"],
       "sources": ["claude-authored"]

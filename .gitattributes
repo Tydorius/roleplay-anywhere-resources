@@ -1,3 +1,4 @@
 *.sh text eol=lf
 *.command text eol=lf
 *.bat text eol=crlf
+tools/world-generator/library/**/*.json text eol=lf

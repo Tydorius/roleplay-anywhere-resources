@@ -1,0 +1,1225 @@
+{
+  "groups": [
+    {
+      "id": "grow.single",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.work.work.tool",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse1",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse2",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "utility.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.material.single",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.material",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse3",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "utility.single.greenhouse1",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse4",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse5",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "computer.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse6",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "decor.feature.seat.long",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.feature",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat.long",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse7",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "decor.floor.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "table.work.single.greenhouse1",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse8",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.single.greenhouse9",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.work.work.tool.seat.opt",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "east",
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "grow.machine",
+      "family": "greenhouse",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "grow",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "machine.single.greenhouse",
+      "family": "greenhouse",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "machine",
+          "size": [
+            3,
+            3
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "machine",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "greenhouse.large.a",
+      "family": "greenhouse",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "grow.single",
+          "kind": "anchor",
+          "count": 3
+        },
+        {
+          "group": "grow.single",
+          "kind": "repeatable",
+          "count": 3
+        },
+        {
+          "group": "grow.single.greenhouse",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "table.work.work.tool",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "grow.single.greenhouse1",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse2",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.large.b",
+      "family": "greenhouse",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse3",
+          "kind": "anchor",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "work.tool.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "utility.single.greenhouse1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse4",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse5",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.cold.single",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.large.c",
+      "family": "greenhouse",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse6",
+          "kind": "anchor",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "grow.single.greenhouse6",
+          "kind": "repeatable",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "decor.feature.seat.long",
+          "kind": "optional",
+          "minWealth": "wealthy"
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "decor.floor.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.medium.a",
+      "family": "greenhouse",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "grow.single",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "grow.single",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "table.work.work.tool",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "grow.single.greenhouse2",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.medium.b",
+      "family": "greenhouse",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "grow.single.greenhouse6",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "table.work.single.greenhouse1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.medium.c",
+      "family": "greenhouse",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse8",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "grow.single",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "work.tool.single",
+          "kind": "required"
+        },
+        {
+          "group": "utility.single.greenhouse1",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse2",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.cold.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.small.a",
+      "family": "greenhouse",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "grow.single",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "grow.single.greenhouse2",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.small.b",
+      "family": "greenhouse",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "anchor"
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.small.c",
+      "family": "greenhouse",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "grow.single.greenhouse6",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "table.work.work.tool.seat.opt",
+          "kind": "required"
+        },
+        {
+          "group": "storage.small.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "grow.single.greenhouse7",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.vat_farm.a",
+      "family": "greenhouse",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "anchor"
+        },
+        {
+          "group": "grow.machine",
+          "kind": "required"
+        },
+        {
+          "group": "work.tool.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "greenhouse.vat_farm.b",
+      "family": "greenhouse",
+      "sizeBands": [
+        "medium",
+        "large"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "grow.single.greenhouse9",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "grow.machine",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "machine.single.greenhouse",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.greenhouse",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.cold.single.greenhouse",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

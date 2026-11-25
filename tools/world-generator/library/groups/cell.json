@@ -1,0 +1,410 @@
+{
+  "groups": [
+    {
+      "id": "cell.bed.storage.small.opt",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "cell.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "wash.toilet.wash.basin",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "seat.single.cell",
+      "family": "cell",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.cell",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "seat.long.single.cell",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "waste.single",
+      "family": "cell",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "cell.bed.single",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "cell.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.toilet.single",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.toilet",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "cell.bed.single.cell",
+      "family": "cell",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "cell.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "cell.small.a",
+      "family": "cell",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "cell.bed.storage.small.opt",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "wash.toilet.wash.basin",
+          "kind": "required"
+        },
+        {
+          "group": "seat.single.cell",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cell.small.b",
+      "family": "cell",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "cell.bed.storage.small.opt",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.toilet.wash.basin",
+          "kind": "required"
+        },
+        {
+          "group": "desk.seat.cell",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cell.small.c",
+      "family": "cell",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.single",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "wash.toilet.wash.basin",
+          "kind": "required"
+        },
+        {
+          "group": "seat.long.single.cell",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cell.tiny.a",
+      "family": "cell",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "cell.bed.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.toilet.single",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "cell.tiny.b",
+      "family": "cell",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "cell.bed.single.cell",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.toilet.single",
+          "kind": "required"
+        }
+      ]
+    },
+    {
+      "layout": "cell.tiny.c",
+      "family": "cell",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "seat.long.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "wash.toilet.single",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}

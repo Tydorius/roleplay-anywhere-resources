@@ -196,6 +196,48 @@ colours. A material name is a short phrase that reads well before a noun ("rough
 
 One adjective per material class and condition, with `*` as the fallback. `kept` is always `""`.
 
+## Size bands per family: `library.json` → `familySizeBands`
+
+```json
+{
+  "bedroom": {
+    "bands": [
+      {"name": "narrow", "cells": [8, 14], "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
+      {"name": "tiny",   "cells": [1, 11]},
+      {"name": "small",  "cells": [12, 24]},
+      {"name": "medium", "cells": [25, 48]},
+      {"name": "large",  "cells": [49, 400]}
+    ]
+  },
+  "privy": {
+    "maxFloorPerPiece": 2,
+    "bands": [
+      {"name": "stall", "cells": [2, 4]},
+      {"name": "small", "cells": [5, 8]}
+    ]
+  }
+}
+```
+
+- A family listed here uses **only its own bands** — in layouts' and recipes' `sizeBands`, in room
+  ids (`bedroom.narrow.a.tight.flush`) and in every check. Every other family shares `sizeBands`.
+- A room's band is the **first entry whose cell range — and aspect range, when given — holds it**,
+  so list the pickier band first: a 5×2 bedroom (10 cells, 5:2) reads `narrow`, not `tiny`.
+- **`aspect`** is `[lo, hi]` (hi at most 4): the long side may read `lo`–`hi` times the short. A
+  band's own window may stretch past the family's usual 2-to-1 cap — that is how a 5:2 servants'
+  room stands — but only inside the band.
+- **`maxFloorPerPiece`** (the family's, or a band's overriding it) caps a room's free floor cells
+  per placed piece at any clearance: a privy with one toilet and 15 free cells is rejected.
+- The composer **never pads a room up to a band**. A recipe that cannot reach its band at a
+  clearance ships no room there and the generator prints why.
+- Recipes (and luxury pool entries) must name bands **of their own family** — a bedroom recipe
+  naming `stall` is an error, and so is a bedroom recipe still naming `tiny` after the family's
+  table drops it.
+
+**Closets** (`closet` family) follow the reach-in rule on top: bands `reach` (1–2 cells, a lined
+cupboard) and `walkin` (3–4); doors on **one side only**; a walk-in needs a door on that side, a
+reach-in needs no door cell and no free floor at all — its pieces are used from the doorway.
+
 ## Layouts: `layouts/<family>.json`
 
 ```json
@@ -225,7 +267,9 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 
 - **`id`** is `<family>.<size band>.<letter>`, unique.
 - **`family`** is the file's family from `library.json`. **`sizeBands`** are the bands the layout
-  serves (`library.json` → `sizeBands`, by interior area).
+  serves, always from the shared `library.json` → `sizeBands` table (a family's own bands — see
+  [Size bands per family](#size-bands-per-family-libraryjson--familysizebands) — belong to its
+  recipes and rooms, not its layouts).
 - **`minInterior`** and **`maxInterior`** are the interior `[w, h]` it works in, the wall ring
   excluded. The layout must work at `minInterior` with the door on any wall.
 - **Slots:**
@@ -249,11 +293,232 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 - **Sleep:** bedroom layouts use `sleep` with `"singles"`, `bedroom.master` uses one
   `sleep.couple` with `"couples"`, dormitories use rows of `sleep` with `"singles"`. Kitchens,
   dining rooms and common rooms never have sleep slots. A `hut` has one sleeping corner.
+- **Wash:** a `washroom` holds all three fixtures — toilet, bath and basin — a `privy` is the
+  toilet alone (it may keep a basin, never a bath) and a `bath` room the bath (never a toilet);
+  `fixed_rooms.py` checks the pairing. The privy family is also the outhouse: a latrine, a
+  garderobe, a water closet — the assembler places those as outbuildings later, by era and
+  wealth.
 - **Variety:** 2–4 layouts per size band a family really uses (a dormitory has no tiny band, a
   washroom no large one). Make variants genuinely different: a different wall for the main
   piece, a centred versus a wall-hugging arrangement, an L versus a straight run.
 - The layout is generic. The purpose binds roles to categories, so one workshop layout serves a
   forge and a fabricator bay.
+
+## Access: `library.json` → `roleAccess`
+
+A piece of furniture is only furniture if a person can stand somewhere to use it. Each role
+carries an access rule in `library.json`'s `roleAccess` table, and the rules resolve to
+**access cells** — the cells someone must be able to reach to use the piece:
+
+- `both-long` — every long side needs its own cell (all four sides when the piece is square
+  and stands free): a double bed standing free.
+- `one-long` — one of the long sides is enough: single beds, child beds, sickbeds, cell beds.
+- `front` — the side opposite the piece's `back`; any one side when it has no back: seats,
+  chests, wardrobes, shelves, displays, bedides.
+- `any` — any one side: tables and desks.
+- `none` — nothing: lights, decor and optional pieces (an optional piece is never a
+  constraint, whatever its role).
+
+Every role in `roles` must carry one of the five; `library check` and `library groups` flag a
+missing entry. A rule may carry a `relax` — `{"wealth": ["poor"], "clearance": ["tight"],
+"to": "one-long"}` — that applies only when a room's `wealth` is exactly the relax's tiers
+and its clearance one of its own (a room for poor and modest must satisfy modest). The
+shipped relax is `sleep.couple` (both-long) dropping to one-long for a poor, tight room.
+
+The rules resolve to constraints of cells, each `{"cells": [[x, y], ...], "need": n}`:
+
+- A **mandatory** constraint is one cell with `need` 1 — that cell must stand free and
+  reached. A **limited** constraint is a choice of cells with `need` 1 — one of them is
+  enough.
+- Each side contributes one cell: the side's **foot end**, the end away from the piece's
+  `back` (a bed is entered at the foot); the side's middle cell when there is no back — of
+  two middle cells the lower-left one, the western of a horizontal pair, the southern of a
+  vertical. `front` uses the middle cell of the side opposite the back.
+- **A bed lying lengthwise** — its `back` on one of its long sides — is used from the
+  opposite long side alone, one limited constraint over that side's cells, whatever its
+  rule says. A double bed lying lengthwise keeps this at every wealth.
+- **A bedside locks a bed side:** a bedside standing beside a one-long bed's head on one
+  long side makes that side's foot cell mandatory and drops the constraint on the other long
+  side entirely (each sleeper gets in on their own side).
+- **Seats:** a seat's front is its access cell, and a seat whose own group holds no table,
+  desk, counter, game table, work surface or control to face must `back` a wall — the
+  checker rejects a lone seat facing nothing.
+- Cells covered by a piece of the same group drop out of a constraint; a constraint emptied
+  that way stays and fails — the group would be blocking its own use.
+
+A room's checker needs each constraint to keep its `need` of cells inside the room, free of
+furniture and the open style's filler, and reached from a door. Access cells are
+constraints, not space: they may overlap another group's access cells, the clearance gap
+between groups and the ring around an open filler — but never furniture, walls or the
+filler itself. The composer works the same rule from its own side: a candidate placement
+that breaks a constraint is rejected the way an unreachable piece is.
+
+**Reach-in closets** turn the rule around: their pieces' access cells lie outside the room,
+and those cells — all on one side — are the closet's door cells. `derive()` writes them into
+`doors`, the checker requires at least one door cell for every closet (reach-in and walk-in
+alike), and every shelf, store and utility piece in a reach-in backs the wall opposite its
+door.
+
+## Groups: `groups/<family>.json`
+
+Furniture groups are the fixed clusters the layouts describe through their `beside:`/`around:`
+anchors — a bed with its bedside tables, a table with its chairs — moving as one piece. Each
+file holds the family's groups and one recipe per layout, naming the groups it needs.
+
+```json
+{
+  "groups": [
+    {
+      "id": "sleep.couple.bedside2",
+      "family": "bedroom.master",
+      "wall": "back",
+      "use": ["south"],
+      "pieces": [
+        {"role": "sleep.couple", "size": [2, 2], "at": [1, 0], "back": "north"},
+        {"role": "bedside", "size": [1, 1], "at": [0, 0]},
+        {"role": "bedside", "size": [1, 1], "at": [3, 0]}
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "bedroom.master.small.a",
+      "family": "bedroom.master",
+      "sizeBands": ["small"],
+      "groups": [
+        {"group": "sleep.couple.bedside2", "kind": "anchor", "count": "couples"},
+        {"group": "light.small.single", "kind": "optional"}
+      ]
+    }
+  ]
+}
+```
+
+- **Groups:** `id` is unique across all files. `wall` is `back` (against a wall), `corner`
+  (two walls) or `none` (stands free). `use` lists the sides people stand or sit at. `pieces`
+  never overlap and touch edge to edge as one shape. They are placed north-facing: `at` is a
+  cell offset from the group's top left, `size` is the placed footprint (a piece turned onto
+  the east or west side carries its turned size), and a wall-bound piece backs `north` on
+  row 0. A piece may be `optional` or carry a `minWealth`.
+- **Access:** a group's usability derives from its pieces' roles (see the Access section);
+  a hand group may also carry `"access"` — a list of `{"cells": [[x, y], ...], "need": n,
+  "replaces": [piece indexes]}` entries in group coordinates standing in for the derived
+  constraints of the pieces `replaces` names. The cells must lie in the ring around the
+  group (its bounding box grown by one cell on every side), off its own furniture and off
+  the walls its `wall` stands on, and `need` may not top the cell count. Only hand work may
+  carry `access` — the group needs `"source": "hand"` — and the converter never writes one.
+- **Recipes:** one per layout, with `layout`, `family` and `sizeBands` copied from it. Each
+  entry names a `group` with a `kind` — `anchor` (exactly one, the layout's main piece),
+  `required`, `optional` or `repeatable` (as many as fit) — plus the source slot's `count`
+  and `minWealth` when it had them.
+- The files are generated from the layouts by `library-seed/layouts_to_groups.py` and may be
+  hand-edited afterwards. `python -m worldgen library groups` checks them; the rules above
+  are what it enforces.
+- Hand work carries `"source": "hand"` — on a group, a whole recipe, or a single recipe entry —
+  and the converter keeps whatever bears it verbatim (a converted group that would take a hand
+  group's id is dropped instead), so re-running the seed never sweeps a hand edit away. The
+  checker accepts `hand` and no other source.
+- `groups/luxury.json` is hand-authored — the converter never writes or deletes it. Its groups
+  follow the rules above with every piece carrying a `minWealth` of `wealthy` or `elite`, and
+  its `pools` map names each private family's groups with the size bands they suit: at grand
+  clearance the composer offers the family's pool as extra optional furniture, each group only
+  in the bands its entry lists. Every pool group also carries a `kind` — one or more of
+  `seating`, `hearth`, `work`, `decor`, `display`, `books` and `storage` — which the composer's
+  grand-room limits count it against (the fireplace seating is both `hearth` and `seating`).
+  The checker holds pools to the same account — the groups must exist, the family, bands and
+  kind must be known, and every piece must carry the wealth.
+
+## Rooms: `rooms/<family>.json`
+
+Fixed rooms are composed furniture: whole rooms of placed groups — a bed with its
+bedside, a chest, a lamp — checked and turned as one shape. There is no wall ring: every
+cell is floor, the walls are the room's edges, and a wall-bound piece stands flush against
+the edge it backs. Each file holds the family's rooms, one per size band, clearance and
+style the composer found a clear layout for.
+
+```json
+{
+  "id": "bedroom.small.1.tight",
+  "family": "bedroom",
+  "sizeBand": "small",
+  "clearance": "tight",
+  "style": "flush",
+  "wealth": ["poor", "modest"],
+  "size": [6, 3],
+  "sleeps": {"singles": 1, "couples": 0},
+  "pieces": [
+    {"role": "light.small", "size": [1, 1], "at": [0, 0], "group": "light.small.single"},
+    {"role": "bedside", "size": [1, 1], "at": [2, 0], "group": "sleep.bedside.storage.small.opt"},
+    {"role": "sleep", "size": [1, 2], "at": [3, 0], "back": "north", "group": "sleep.bedside.storage.small.opt"},
+    {"role": "seat", "size": [1, 1], "at": [5, 0], "group": "storage.big.seat.opt", "optional": true},
+    {"role": "storage.small", "size": [1, 1], "at": [2, 1], "group": "sleep.bedside.storage.small.opt", "optional": true},
+    {"role": "storage.big", "size": [1, 2], "at": [5, 1], "back": "east", "group": "storage.big.seat.opt"},
+    {"role": "decor.floor", "size": [1, 1], "at": [0, 2], "group": "decor.floor.single.bedroom", "optional": true}
+  ],
+  "doors": {"north": [1, 4], "south": [1, 2, 3, 4], "west": [1]},
+  "stretch": {"x": [0, 1, 2, 3, 4, 5], "y": [3]},
+  "outdoor": false,
+  "symmetric": false,
+  "recipe": "bedroom.small.a",
+  "description": "A small bedroom room (6x3) of 4 furniture groups at tight spacing."
+}
+```
+
+- **Room:** `id` is unique across all files. `clearance` is `tight`, `roomy` or `grand`
+  (1, 2 or 3 clear cells kept between groups); `style` is `flush` or `open`. `wealth`
+  lists the tiers the room furnishes. `size` is the room in cells and `sizeBand` must fit
+  its area. `sleeps` counts the beds, `outdoor` and `symmetric` flag what they name,
+  `recipe` names the source recipe and `description` is one sentence.
+- **Pieces:** each is a group's piece placed into the room — `role`, `size` and `at`
+  cell, `back` on a wall-bound piece (flush against that edge, facing in), `group` naming
+  the group it came from, `optional` when the room still works without it. Pieces never
+  overlap, and every piece keeps its access constraints satisfied — each needs its `need`
+  of cells (from the role's `roleAccess` rule, or the group's hand `access` list) inside
+  the room, free of furniture and reached from a door. Lights, decor and optional pieces
+  carry no constraints.
+- **Doors:** per side, the cell offsets along that wall that can take one — free edge
+  cells only, on at least two sides, every door opening into one connected free area.
+- **Stretch:** `x` columns and `y` rows where an empty line can be inserted to grow the
+  room; each line must sit clear of pieces and leave the room valid once inserted.
+- **Open style:** the roomier variant records a `filler` — the clear middle's `at` and
+  `size`, at least 2x2.
+- The files are composed from the group recipes by `worldgen/room_composer.py` and may be
+  hand-edited afterwards. `python -m worldgen library rooms` checks them; the rules above
+  are what it enforces. `worldgen.fixed_rooms.rotate` turns a stored room to any side —
+  four quarter turns return it unchanged.
+- **Hand work:** a room may carry `"source": "hand"` (a person made or re-laid it out),
+  `"edited": [...]` (the fields of `wealth`, `description`, `symmetric`, `retired` a person
+  set, kept on regeneration) and `"retired": true` (out of use but kept in the file, so its
+  id's letter is never reused). Regenerating a family keeps a hand or retired room exactly as
+  it stands and drops any generated room equal to it after a turn or mirror; world generation
+  and the assembler skip retired rooms (`worldgen.fixed_rooms.active`).
+- **Two-sleeper bedrooms:** `bedroom.json` carries the composer's second pass — the same
+  recipes composed for `sleeps {"singles": 2}` (two beds, each on its own access cells),
+  under the same rules and the same dedupe, their ids continuing the letter sequence. A
+  `description` says "for two" only of these rooms; a hand room or an older room that
+  happens to sleep two keeps its own description untouched.
+- **Outdoor rooms:** a family whose `familySizeBands` spec carries `"outdoor": true` (the
+  courtyard, garden and yard families) stands in the open, and its rooms live by their own
+  rules: no piece backs a side (there is no wall to pin it to), the style is `flush` alone,
+  and the whole edge is the entrance — `doors` lists every free edge cell, and every side
+  keeps at least one, so a clear walkway crosses the room between every pair of opposite
+  edges. The dead-floor and empty-edge-line rules do not apply (open ground is walked
+  wherever it likes), and a seat belongs to the court's centrepiece as it does to a table:
+  `decor.feature` counts among the roles a seat faces. Behind `--room-assembler` a
+  compound's courtyard is furnished from the courtyard family — a stored room that fits,
+  else one composed on the spot — shipped as an unwalled region with the room's pieces as
+  objects.
+- **The assembler:** one-storey library buildings can be placed from these rooms whole
+  (`--room-assembler`, `worldgen/assembler.py`). What helps it place a family: door offsets
+  on three or four sides (a room with doors on one side can only end a wing), stretch lines
+  for growing into a leftover strip, and a variant one cell up in each axis at the same
+  clearance and wealth — without one, a strip beside the room can force the building back
+  to the old method. The assembler never gives a family up for want of a stored room: when
+  every stored room misses (band, clearance, wealth tier, sleepers or furnishings) it
+  composes candidates from the family's recipes on the spot — the same checks as the
+  generator — and tries the family's neighbouring band one step larger, then one smaller,
+  before falling back. A stored room that fits always comes first, so good coverage of a
+  family's bands and sleeper counts is what keeps buildings on the library's own rooms.
 
 ## Purposes: `purposes.json`
 
@@ -273,7 +538,10 @@ One adjective per material class and condition, with `*` as the fallback. `kept`
 
 Every purpose in `library.json` gets an entry. Each role binds to categories in order of
 preference. `*` holds the defaults a purpose inherits. A purpose must bind every role that its
-family's layouts use, directly or through `*`.
+family's layouts use, directly or through `*`. A binding may also name object ids
+(`["hearth.fireplace", "hearth.holo_fire"]`) to pin exact objects: `heat` is any heater (radiator,
+brazier, woodstove) while `hearth` is the fireplace people gather around, bound by id so the
+outdoor fire pits stay out.
 
 ## Suites: `suites/<band>.json`
 
@@ -308,3 +576,110 @@ family's layouts use, directly or through `*`.
   couple the building usually holds, `bedroom` or `dormitory` rooms for the rest.
 - **`connections`**: pairs of room names; every room must be reachable from the entrance room.
 - Name rooms the way the setting would ("Taproom", "Galley", "Crew bunks").
+
+## Wings: `wings/<band>.json`
+
+A wing is a rectangular, walled block of one to eight rooms serving one purpose in a larger
+building (design 8.1). The rooms, connections and entrance are the suite's shape one level
+down; a building recipe places whole wings.
+
+```json
+{
+  "wings": [
+    {
+      "id": "sleeping.inn",
+      "purpose": "sleeping",
+      "kinds": ["inn", "coaching inn", "hostelry", "posting house"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "east",
+      "rooms": [
+        {"name": "Landing",          "purpose": "hallway",      "share": "small"},
+        {"name": "Guest chamber",    "purpose": "guest_room",   "share": "small"},
+        {"name": "Best chamber",     "purpose": "guest_room",   "share": "small"},
+        {"name": "Keepers' chamber", "purpose": "master_bedroom", "share": "small"}
+      ],
+      "connections": [["Landing", "Guest chamber"], ["Landing", "Best chamber"],
+                      ["Landing", "Keepers' chamber"]],
+      "entrance": {"room": "Landing"},
+      "sleeps": "guests",
+      "wealth": "building"
+    }
+  ]
+}
+```
+
+- **`id`** is `<kind>.<variant>`, unique across all wings. **`kinds`**: the building kinds the
+  wing suits, lower case (documentation for now; buildings pick wings by id).
+- **`purpose`** is the wing-purpose vocabulary: `entry`, `common_rooms`, `sleeping`,
+  `servants`, `kitchen_storage`, `stables`, `barracks`, `ward`, `chapel`, `shop`, `workshop`.
+- **`storeys`** 1-6 (the upper floors are partitioned inside the wing's outline);
+  **`entry`** the side its entrance faces (a courtyard wing faces in).
+- **`rooms`** use `library.json` purposes, exactly like suites; **`connections`** and
+  **`entrance`** follow the suite rules (every room reachable from the entrance room).
+- **`sleeps`** decides the wing's bed count: `guests` (the settlement's lodging size),
+  `residents` (the building's residents), `staff` (those left over) or `none`. A wing that
+  sleeps somebody needs a room in a sleep family. Write the full set of guest rooms for an
+  inn's sleeping wing; the assembler caps the room count by the settlement's size when it
+  expands the wing (rl-06b's lodging cap), so a hamlet's inn simply keeps fewer of them.
+- **`wealth`** (design 8.3) is the wing's tier against the building's: an integer offset
+  −3 to 1 stepping down the tiers (`elite` → `wealthy` → `modest` → `poor`), a fixed tier
+  name, or `"building"` for the building's own. A wing that keeps quiet takes a default
+  offset from its purpose — `servants` −2, `barracks` −1, `kitchen_storage` −1, `stables`
+  −2 — and the checker reports every default it applies.
+
+## Buildings: `buildings/<band>.json`
+
+A building recipe composes wings and outdoor rooms into one walled shape (design 8.2). Its
+wings are references: each names a wing recipe and the side of the shape it stands on.
+
+```json
+{
+  "buildings": [
+    {
+      "id": "inn.courtyard",
+      "kinds": ["inn", "coaching inn", "caravanserai", "hostelry", "wayside inn",
+                "posting house", "roadhouse"],
+      "bands": ["medieval", "industrial"],
+      "shape": "courtyard",
+      "wings": [
+        {"wing": "inn.front",    "side": "south", "main": "Taproom"},
+        {"wing": "stables.yard", "side": "east"},
+        {"wing": "sleeping.inn", "side": "west"}
+      ],
+      "outdoor": [{"name": "Inn yard", "purpose": "courtyard", "between": "all"}],
+      "entrance": {"wing": "inn.front"}
+    }
+  ]
+}
+```
+
+- **`id`** is `<kind>.<variant>`, unique across all buildings. **`kinds`** answers P1's
+  building kind by whole words, the `suite_by_kind` rule: `building_by_kind` matches the
+  kind and its last word, and the most specific recipe wins — the matched phrase with the
+  most words ("coaching inn" beats "inn"). A kind string may belong to only one recipe per
+  band; nothing matches and the building stays a flat suite.
+- **`shape`** and its sides:
+
+  | shape | wings and sides |
+  |---|---|
+  | `block` | one wing, any side |
+  | `row` | two or more wings sharing one side (the front) |
+  | `l` | two wings on perpendicular sides |
+  | `u` | three wings on three sides |
+  | `courtyard` | three or four wings on distinct sides, and an outdoor room |
+  | `spine` | two or more wings flanking one axis (north/south or east/west) |
+
+- **`wings`**: `wing` is a wing recipe id, and the wing's `bands` must cover the building's;
+  `side` defaults to `south`. The same wing recipe may stand twice (a spine's matching
+  flanks). `main` optionally names the wing room that is the building's main room (the
+  taproom of an inn); it must be a room of that wing.
+- **`outdoor`**: unwalled rooms — courtyards, gardens, yards — placed in the space the shape
+  leaves: `between: "all"` fills the whole enclosed middle, `"wings"` the inner corner the
+  named wings enclose. `purpose` is `courtyard`, `garden` or `yard` (a short list held in the
+  checker until the outdoor-room families land in `library.json`).
+- **`entrance`** names the wing the way in.
+
+Nothing consumes these files yet: the assembler and the compound machinery take up wing
+recipes in later phases, and until then a building that matches a recipe still lays out as a
+flat suite.

@@ -1,0 +1,1309 @@
+{
+  "groups": [
+    {
+      "id": "work.primary.seat2",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.secondary.single",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.secondary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.laboratory",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "waste.single.laboratory",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.primary.single",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "computer.single.laboratory",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.material.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.material",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.small.single.laboratory",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.primary.seat",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "table.work.seat.opt.laboratory",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "north",
+        "east",
+        "south",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.material.single.laboratory1",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.material",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single.laboratory1",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.laboratory1",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.big.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.big",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.secondary.single.laboratory",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.secondary",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.primary.single.laboratory",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "computer.seat",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "computer",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.cold.single.laboratory2",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "utility.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "utility",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "server.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "server",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "security.single.laboratory",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "security",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.laboratory1",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.primary.seat3",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            3
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single.laboratory1",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "books.single.laboratory",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.primary.work.secondary",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.secondary",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "books.single.laboratory1",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "books",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.laboratory1",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.primary.work.secondary.seat",
+      "family": "laboratory",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "work.secondary",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "work.primary.seat.laboratory",
+      "family": "laboratory",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.primary",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.laboratory",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "work.tool.single.laboratory2",
+      "family": "laboratory",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "work.tool",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "laboratory.large.a",
+      "family": "laboratory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat2",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "work.secondary.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "wash.basin.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "work.primary.single",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.small.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.large.b",
+      "family": "laboratory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "work.secondary.single",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "table.work.seat.opt.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "work.material.single.laboratory1",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "light.big.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.large.c",
+      "family": "laboratory",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "work.secondary.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "work.primary.single.laboratory",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "computer.seat",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.cold.single.laboratory2",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.tool.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "utility.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "security.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.medium.a",
+      "family": "laboratory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.secondary.single",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "computer.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.medium.b",
+      "family": "laboratory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat3",
+          "kind": "anchor"
+        },
+        {
+          "group": "work.secondary.single",
+          "kind": "required"
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.tool.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.medium.c",
+      "family": "laboratory",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "computer.seat",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "work.primary.work.secondary",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "waste.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "server.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.laboratory1",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.small.a",
+      "family": "laboratory",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.work.secondary.seat",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.laboratory",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "work.material.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.laboratory",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.small.b",
+      "family": "laboratory",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat.laboratory",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.laboratory",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "work.material.single.laboratory1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "books.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "work.tool.single.laboratory2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "laboratory.small.c",
+      "family": "laboratory",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "work.primary.seat",
+          "kind": "anchor"
+        },
+        {
+          "group": "work.secondary.single",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.single.laboratory",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.laboratory1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.laboratory1",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

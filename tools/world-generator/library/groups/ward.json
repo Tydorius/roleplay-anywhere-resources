@@ -1,0 +1,763 @@
+{
+  "groups": [
+    {
+      "id": "med.bed.med.screen.opt",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.bed.bedside.opt",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "desk.seat.ward",
+      "family": "ward",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "med.supply.single.ward",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.supply",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.ward",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "med.bed.single.ward",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "east",
+        "west"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "light.small.single.ward",
+      "family": "ward",
+      "wall": "corner",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.bed.bedside.med.screen.seat.opt",
+      "family": "ward",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "wash.basin.single.ward1",
+      "family": "ward",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "wash.basin",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "med.station.single",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.station",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "waste.single.ward",
+      "family": "ward",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.bed.med.screen.bedside.opt",
+      "family": "ward",
+      "wall": "none",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ]
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.ward",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "waste.single.ward1",
+      "family": "ward",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "waste",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "desk.single.ward",
+      "family": "ward",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "desk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "med.bed.med.screen.bedside.opt.ward",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "east"
+      ],
+      "pieces": [
+        {
+          "role": "med.bed",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "med.screen",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "bedside",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            1
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "seat.single.ward1",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true,
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "med.supply.single.ward1",
+      "family": "ward",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "med.supply",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "ward.large.a",
+      "family": "ward",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.med.screen.opt",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "med.bed.bedside.opt",
+          "kind": "repeatable",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "desk.seat.ward",
+          "kind": "required"
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "wash.basin.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "med.bed.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "med.bed.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.ward",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "ward.large.b",
+      "family": "ward",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.bedside.med.screen.seat.opt",
+          "kind": "anchor",
+          "count": [
+            4,
+            5
+          ]
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "desk.seat.ward",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.ward1",
+          "kind": "required"
+        },
+        {
+          "group": "med.bed.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "med.station.single",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.ward",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "ward.large.c",
+      "family": "ward",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.med.screen.bedside.opt",
+          "kind": "anchor",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "wash.basin.single.ward1",
+          "kind": "required"
+        },
+        {
+          "group": "seat.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.ward1",
+          "kind": "optional"
+        },
+        {
+          "group": "med.bed.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "desk.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.ward",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "ward.medium.a",
+      "family": "ward",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.med.screen.bedside.opt.ward",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.ward1",
+          "kind": "optional"
+        },
+        {
+          "group": "seat.single.ward1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.ward",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "ward.medium.b",
+      "family": "ward",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.med.screen.bedside.opt.ward",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "med.bed.med.screen.opt",
+          "kind": "repeatable",
+          "count": 2
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "required"
+        },
+        {
+          "group": "seat.single.ward",
+          "kind": "optional"
+        },
+        {
+          "group": "wash.basin.single.ward1",
+          "kind": "required"
+        },
+        {
+          "group": "light.small.single.ward",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "ward.medium.c",
+      "family": "ward",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "med.bed.med.screen.bedside.opt.ward",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "desk.seat.ward",
+          "kind": "required"
+        },
+        {
+          "group": "med.supply.single.ward",
+          "kind": "required"
+        },
+        {
+          "group": "wash.basin.single.ward1",
+          "kind": "optional"
+        },
+        {
+          "group": "med.supply.single.ward1",
+          "kind": "optional"
+        },
+        {
+          "group": "waste.single.ward",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

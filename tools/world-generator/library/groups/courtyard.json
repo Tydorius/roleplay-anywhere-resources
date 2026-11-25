@@ -1,0 +1,178 @@
+{
+  "groups": [
+    {
+      "id": "statue.seat.court",
+      "family": "courtyard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [2, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "decor.feature",
+          "size": [1, 1],
+          "at": [1, 1]
+        },
+        {
+          "role": "seat.long",
+          "size": [2, 1],
+          "at": [0, 2]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "decor.feature.seat.court",
+      "family": "courtyard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "seat.long",
+          "size": [2, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "decor.feature",
+          "size": [2, 2],
+          "at": [1, 1]
+        },
+        {
+          "role": "seat.long",
+          "size": [2, 1],
+          "at": [0, 3]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "plant.tree.single.court",
+      "family": "courtyard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [1, 1],
+          "at": [0, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "plant.bed.court",
+      "family": "courtyard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "decor.floor",
+          "size": [1, 1],
+          "at": [0, 0]
+        },
+        {
+          "role": "decor.floor",
+          "size": [1, 1],
+          "at": [1, 0]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "light.small.single.court",
+      "family": "courtyard",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "light.small",
+          "size": [1, 1],
+          "at": [0, 0],
+          "optional": true
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "courtyard.small.hand",
+      "family": "courtyard",
+      "sizeBands": ["small"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "statue.seat.court",
+          "kind": "anchor"
+        },
+        {
+          "group": "plant.tree.single.court",
+          "kind": "repeatable",
+          "count": [1, 2]
+        },
+        {
+          "group": "light.small.single.court",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "courtyard.medium.hand",
+      "family": "courtyard",
+      "sizeBands": ["medium"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "decor.feature.seat.court",
+          "kind": "anchor"
+        },
+        {
+          "group": "plant.tree.single.court",
+          "kind": "repeatable",
+          "count": [2, 3]
+        },
+        {
+          "group": "plant.bed.court",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.court",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "courtyard.large.hand",
+      "family": "courtyard",
+      "sizeBands": ["large"],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "decor.feature.seat.court",
+          "kind": "anchor"
+        },
+        {
+          "group": "plant.tree.single.court",
+          "kind": "repeatable",
+          "count": [3, 5]
+        },
+        {
+          "group": "plant.bed.court",
+          "kind": "repeatable",
+          "count": [2, 4]
+        },
+        {
+          "group": "light.small.single.court",
+          "kind": "optional"
+        },
+        {
+          "group": "light.small.single.court",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

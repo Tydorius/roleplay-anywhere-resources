@@ -1,0 +1,337 @@
+{
+  "groups": [
+    {
+      "id": "dairy.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "dairy",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "dairy",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ]
+        },
+        {
+          "role": "dairy",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "storage.cold.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "storage.cold",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "table.work.dairy",
+      "family": "dairy",
+      "wall": "none",
+      "use": [],
+      "pieces": [
+        {
+          "role": "table.work",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        },
+        {
+          "role": "seat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            1,
+            1
+          ]
+        },
+        {
+          "role": "dairy",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            3,
+            0
+          ]
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "milking.row3.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            2,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    },
+    {
+      "id": "milking.row2.dairy",
+      "family": "dairy",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        },
+        {
+          "role": "milking.stall",
+          "size": [
+            1,
+            2
+          ],
+          "at": [
+            1,
+            0
+          ],
+          "back": "north"
+        }
+      ],
+      "source": "hand"
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "dairy.small.a",
+      "family": "dairy",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "dairy.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.dairy",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dairy.creamery.a",
+      "family": "dairy",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "dairy.dairy",
+          "kind": "anchor",
+          "count": 2
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dairy.parlour.a",
+      "family": "dairy",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "table.work.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "dairy.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "layout": "dairy.parlour.b",
+      "family": "dairy",
+      "sizeBands": [
+        "medium"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "milking.row3.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
+        },
+        {
+          "group": "table.work.dairy",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "dairy.stalls.a",
+      "family": "dairy",
+      "sizeBands": [
+        "small"
+      ],
+      "source": "hand",
+      "groups": [
+        {
+          "group": "milking.row2.dairy",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.cold.dairy",
+          "kind": "required"
+        }
+      ]
+    }
+  ]
+}

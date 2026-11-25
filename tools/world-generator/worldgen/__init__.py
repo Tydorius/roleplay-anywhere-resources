@@ -69,6 +69,7 @@ class World:
         self.reserved = set()
         self.failures = []
         self.fallbacks = []
+        self.notes = []           # run notes (rooms the assembler built on the spot)
         self.side_exits = []
         self.default_ground = ("grass", "grass")   # the plan's dominant wild ground
         self.metrics = {}
@@ -87,9 +88,32 @@ class World:
         self.water_marks = False       # the plan itself marks water anywhere
 
 
-def _most_private_room(world, b):
+def _room_use(design, room):
+    """The library purpose a placed room's design spec gives it ('' when the
+    plan wrote the room by hand)."""
+    return next((r.use for r in design.rooms if r.name == room.base_name), "")
+
+
+def _farm_room_uses(world):
+    """The library purpose keys of the farm families' rooms (byre, hayloft,
+    vat farm...), read from the shipped library's purpose-to-family map: a bed
+    never lands in a farm room — the residents sleep in the farmhouse. Empty
+    when no room in the world came from the library, so plain plans never
+    load it."""
+    if not any(r.use for b in world.buildings
+               for d in [b.layout.design]
+               + [f.layout.design for f in getattr(b, "floors", []) or []]
+               for r in d.rooms):
+        return frozenset()
+    from .library_plan import FARM_FAMILIES, load as library_load
+    purposes = library_load().vocab.get("purposes", {})
+    return frozenset(u for u, fam in purposes.items() if fam in FARM_FAMILIES)
+
+
+def _most_private_room(world, b, farm_uses=frozenset()):
     """The room a bed belongs in: one named or purposed for sleeping, else the
-    room farthest from the entrance door."""
+    room farthest from the entrance door — never a farm family's room, so
+    None when every room is one (its residents sleep in the farmhouse)."""
     import re
     bl = b.layout
     door = bl.entrance_door
@@ -103,7 +127,8 @@ def _most_private_room(world, b):
         cx, cy = room.rect.center()
         return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
 
-    return max(bl.rooms, key=score)
+    rooms = [r for r in bl.rooms if _room_use(bl.design, r) not in farm_uses]
+    return max(rooms, key=score) if rooms else None
 
 
 def _bed_template(world, plan_data):
@@ -224,9 +249,11 @@ def _couples_by_home(plan):
     return out
 
 
-def _rooms_by_privacy(world, b):
+def _rooms_by_privacy(world, b, farm_uses=frozenset()):
     """A building's rooms (ground and uppers), most private first: one named
-    or purposed for sleeping, else the farthest from the entrance door."""
+    or purposed for sleeping, else the farthest from the entrance door. A farm
+    family's room is never on the list — its residents sleep in the
+    farmhouse."""
     import re
     bl = b.layout
     door = bl.entrance_door
@@ -241,9 +268,11 @@ def _rooms_by_privacy(world, b):
         cx, cy = room.rect.center()
         return (1, float(abs(cx - door[0]) + abs(cy - door[1])))
 
-    rooms = [(r, bl.design) for r in bl.rooms]
+    rooms = [(r, bl.design) for r in bl.rooms
+             if _room_use(bl.design, r) not in farm_uses]
     for f in getattr(b, "floors", []) or []:
-        rooms += [(r, f.layout.design) for r in f.layout.rooms]
+        rooms += [(r, f.layout.design) for r in f.layout.rooms
+                  if _room_use(f.layout.design, r) not in farm_uses]
     return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]
 
 
@@ -255,20 +284,27 @@ def _double_beds_in(world, building):
     return n
 
 
-def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
+def _ensure_couple_beds(world, plan, plan_data, home_name, pairs,
+                        farm_uses=frozenset()):
     """One double bed per couple the plan promises this home, added in its
     most private room that has space when the furniture holds none (two
-    single beds and a recorded failure when nothing fits a double), then the
-    home's sleep assignment re-run so both partners share the double room."""
+    single beds and a recorded failure when nothing fits a double; a noted
+    pass when every room is a farm family's), then the home's sleep
+    assignment re-run so both partners share the double room."""
     home = next((b for b in world.buildings
                  if b.layout.design.name == home_name), None)
     if home is None:
         return
     want = getattr(home.layout.design, "couples", 0) or 0
     while _double_beds_in(world, home) < want:
+        rooms = _rooms_by_privacy(world, home, farm_uses)
+        if not rooms:
+            world.notes.append((f"double bed for {home_name}",
+                                f"residents of {home_name} sleep elsewhere: farm building"))
+            return
         tmpl = _double_template(world, plan_data)
         placed = None
-        for room in _rooms_by_privacy(world, home):
+        for room in rooms:
             pos = _place_bed(world, room, tmpl)
             if pos is not None:
                 room.furniture.placements.append((tmpl.name, pos))
@@ -278,7 +314,7 @@ def _ensure_couple_beds(world, plan, plan_data, home_name, pairs):
         if placed is None:
             single = _bed_template(world, plan_data)
             room = None
-            for r in _rooms_by_privacy(world, home):
+            for r in rooms:
                 pos = _place_bed(world, r, single)
                 if pos is not None:
                     r.furniture.placements.append((single.name, pos))
@@ -304,9 +340,11 @@ def _ensure_beds(world, plan, plan_data):
     fullest bedded room when its beds are all taken (they stay home, crowded,
     when that room has no free cell), else in its most private room. A
     bedless home borrows the nearest bedded building of its household (the
-    same zone) first."""
+    same zone) first. A farm family's room never takes a bed — its residents
+    sleep in the farmhouse, noted when the world gave them nowhere else."""
+    farm_uses = _farm_room_uses(world)
     for home_name, pairs in _couples_by_home(plan).items():
-        _ensure_couple_beds(world, plan, plan_data, home_name, pairs)
+        _ensure_couple_beds(world, plan, plan_data, home_name, pairs, farm_uses)
     for person in plan.npcs + [plan.player]:
         if world.sleep_assign.get(person.name) is not None:
             continue   # the layout assigned them a bed of their own
@@ -321,7 +359,11 @@ def _ensure_beds(world, plan, plan_data):
                 and schedule_mod.sleep_room(world, b.layout.design.name) is not None
                 for b in world.buildings):
             continue   # the schedule will point at the household's bed
-        room = full or _most_private_room(world, home)
+        room = full or _most_private_room(world, home, farm_uses)
+        if room is None:
+            world.notes.append((f"bed for {person.name}",
+                                f"residents of {person.home} sleep elsewhere: farm building"))
+            continue
         tmpl = _bed_template(world, plan_data)
         pos = _place_bed(world, room, tmpl)
         if pos is None:
@@ -745,7 +787,7 @@ def _piece_direction(primary, piece):
     return "NorthWest" if dy > 0 else "SouthWest"
 
 
-def run(plan_data, seed=1, extensions=()):
+def run(plan_data, seed=1, extensions=(), room_assembler=True):
     import copy
     from .extensions import BY_ID, expand
     plan = parse_plan(plan_data)
@@ -760,10 +802,24 @@ def run(plan_data, seed=1, extensions=()):
     # caller's dict ends up holding the winner's — a discarded pass must not
     # leave its sizes behind (a shorter slab than the strip it must cover).
     base = copy.deepcopy(plan_data)
+    # the room assembler's compose caches live for the whole run, not one
+    # attempt: a growth pass composes no room the first attempt already
+    # composed (worldgen/assembler.py)
+    from . import assembler
+    store = assembler.new_store() if room_assembler else None
 
     def attempt(weight_scale=None):
         data = copy.deepcopy(base)
-        return _build_world(plan, data, seed, exts, weight_scale), data
+        # the room assembler is plan-wide state the build reads as it lays
+        # library buildings out (worldgen/assembler.py, on by default)
+        if room_assembler:
+            assembler.activate(plan, data, data.get("name", "world"), None,
+                               store)
+        try:
+            return _build_world(plan, data, seed, exts, weight_scale), data
+        finally:
+            if room_assembler:
+                assembler.deactivate()
 
     world, winner = attempt()
     # content sizing is a target, not a limit: a zone that dropped a building
@@ -904,6 +960,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
     world.seed = seed
     world.extensions = exts
     world.templates = {t.name: t for t in plan.templates}
+    from . import assembler
+    if assembler.active() is not None:
+        # the assembler injects the templates its rooms picked into the
+        # world's live table as it builds
+        assembler.active().world_templates = world.templates
 
     m = layout_map.layout_map(plan, rng, extensions=exts, weight_scale=weight_scale)
     world.grid = m.grid
@@ -1024,6 +1085,7 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.failures.extend([(w, r) if i == 0 else (f"{w} [{piece_label}]", r)
                                    for (w, r) in zout.failures])
             world.fallbacks.extend(zout.fallbacks)
+            world.notes.extend(zout.notes)
             world.side_exits.extend(zout.side_exits)
             if zout.spine_rects:
                 g, tex = zout.spine_ground
@@ -1094,7 +1156,53 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                     world.solid_walls |= {
                         (x, y) for x in range(strip.pos[0], strip.pos[0] + strip.size[0])
                         for y in range(strip.pos[1], strip.pos[1] + strip.size[1])}
+                court = getattr(comp, "court", None)
+                court_rect = None
+                if court is not None:
+                    # the furnished courtyard: the library room's ground as an
+                    # unwalled region under the compound, its pieces as
+                    # objects picked from the registry the assemblies use —
+                    # the wall strips' own pattern (intentional solids the
+                    # checks know)
+                    from . import assembler, library_rooms
+                    ctx = assembler.active()
+                    if ctx is not None:
+                        room, (cx, cy) = court["room"], court["at"]
+                        fname = f"{comp.name} Courtyard"
+                        court_rect = Rect(cx, cy, room["size"][0], room["size"][1])
+                        world.regions.append(RegionOut(
+                            fname, court_rect,
+                            "yard", parent=comp.name,
+                            ground="stone", ground_texture="cobblestone",
+                            ambience={"day": "nature_outdoors", "night": "crickets"},
+                            description=room.get("description")
+                            or f"The courtyard of {comp.name}."))
+                        purpose = library_rooms.purpose_for_family(
+                            ctx.lib, room.get("family")) or "courtyard"
+                        tier = (room.get("wealth") or ["modest"])[-1]
+                        for i, piece in enumerate(room.get("pieces") or []):
+                            rng = random.Random(
+                                f"{ctx.world_seed}|courtyard|{comp.name}|"
+                                f"{i}|{piece.get('role')}")
+                            tmpl, rot, _reason = assembler._pick_exact(
+                                ctx, purpose, piece, tier, "kept", rng)
+                            if tmpl is None:
+                                continue    # a gap in the objects: the court
+                                            # keeps its ground without this piece
+                            px, py = piece.get("at") or [0, 0]
+                            pos = (cx + px, cy + py)
+                            world.objects.append(ObjectOut(tmpl["name"], pos,
+                                                           fname, rot=rot))
+                            tw, th = tmpl["size"][0], tmpl["size"][1]
+                            world.solid_walls |= {
+                                (x, y) for x in range(pos[0], pos[0] + tw)
+                                for y in range(pos[1], pos[1] + th)}
+                        assembler._inject_templates(world.templates)
                 for j, pr in enumerate(comp.paths):
+                    if court_rect is not None and court_rect.intersects(pr):
+                        # the path's ground through the furnished court is the
+                        # court's own flagstone now
+                        continue
                     world.regions.append(RegionOut(
                         f"{comp.name} Path" + (f" {j + 1}" if j else ""), pr,
                         "path", parent=comp.name, ground="dirt", ground_texture="dirt",
@@ -1154,11 +1262,15 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
                         # equal-sized child region would duplicate its name
                         breg.ambience = amb
                     else:
+                        # an assembled building opens exactly the door cells
+                        # its aligned seams picked; the old path leaves the
+                        # doors to the builder's auto-connect
                         reg = RegionOut(room.full_name, room.rect, "room", parent=building_name,
                                         wall=design.wall, ground="wood", ground_texture="floorboards",
                                         ambience=amb,
                                         description=next((r.purpose for r in design.rooms
-                                                          if r.name == room.base_name), ""))
+                                                          if r.name == room.base_name), ""),
+                                        doors=set(room.doors) if getattr(bl, "assembled", None) else None)
                         reg.entrance_door = bl.entrance_door if (bl.entrance_room is room) else None
                         world.regions.append(reg)
                     for (tname, pos) in room.furniture.placements:
@@ -1240,6 +1352,11 @@ def _build_world(plan, plan_data, seed, exts, weight_scale=None):
             world.player = c
 
     checks.run_checks(world)
+    ctx = assembler.active()
+    if ctx is not None:
+        # how each storey band partition split (rl-21) — a metric only:
+        # run_checks just built world.metrics fresh, so it lands here
+        world.metrics["storey_splits"] = dict(ctx.storey_splits)
     return world
 
 

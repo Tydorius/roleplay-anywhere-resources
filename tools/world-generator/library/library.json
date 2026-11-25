@@ -72,6 +72,92 @@
       400
     ]
   },
+  "familySizeBands": {
+    "_readme": "size bands a family uses instead of the shared sizeBands: a room's band is the first entry whose cell range (and aspect range, when given) holds it, so put the pickier band first; maxFloorPerPiece caps a room's free floor cells per placed piece, a band's own value overriding the family's",
+    "bedroom": {
+      "bands": [
+        {"name": "narrow", "cells": [8, 14], "aspect": [2.5, 3.5], "maxFloorPerPiece": 2},
+        {"name": "tiny", "cells": [1, 11]},
+        {"name": "small", "cells": [12, 24]},
+        {"name": "medium", "cells": [25, 48]},
+        {"name": "large", "cells": [49, 400]},
+        {"name": "servant", "cells": [6, 6], "aspect": [1.5, 1.5]}
+      ]
+    },
+    "privy": {
+      "maxFloorPerPiece": 2,
+      "bands": [
+        {"name": "stall", "cells": [2, 4]},
+        {"name": "small", "cells": [5, 8]}
+      ]
+    },
+    "closet": {
+      "maxFloorPerPiece": 2,
+      "bands": [
+        {"name": "reach", "cells": [1, 2]},
+        {"name": "walkin", "cells": [3, 4], "aspect": [1, 4]}
+      ]
+    },
+    "courtyard": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [12, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
+    },
+    "garden": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [9, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
+    },
+    "yard": {
+      "outdoor": true,
+      "bands": [
+        {"name": "small", "cells": [9, 48]},
+        {"name": "medium", "cells": [49, 120]},
+        {"name": "large", "cells": [121, 400]}
+      ]
+    },
+    "barn": {
+      "maxFloorPerPiece": 8,
+      "bands": [
+        {"name": "small", "cells": [25, 48], "aspect": [1, 3]},
+        {"name": "large", "cells": [49, 120], "aspect": [1, 3]}
+      ]
+    },
+    "dairy": {
+      "maxFloorPerPiece": 3,
+      "bands": [
+        {"name": "small", "cells": [6, 16]},
+        {"name": "medium", "cells": [17, 32]}
+      ]
+    },
+    "granary": {
+      "bands": [
+        {"name": "small", "cells": [8, 24], "aspect": [1, 3]},
+        {"name": "medium", "cells": [25, 48], "aspect": [1, 3]}
+      ]
+    },
+    "pigsty": {
+      "maxFloorPerPiece": 3,
+      "bands": [
+        {"name": "tiny", "cells": [4, 10]},
+        {"name": "small", "cells": [11, 20]}
+      ]
+    },
+    "henhouse": {
+      "maxFloorPerPiece": 4,
+      "bands": [
+        {"name": "tiny", "cells": [4, 10]},
+        {"name": "small", "cells": [11, 24]},
+        {"name": "large", "cells": [25, 48]}
+      ]
+    }
+  },
   "categories": {
     "bed": "anything people sleep on: pallets, bedrolls, beds, bunks, hammocks, cots, sleep pods",
     "crib": "a cot or cradle for a baby",
@@ -138,12 +224,19 @@
     "hospital_bed": "a hospital or infirmary bed",
     "cell_bed": "a cell bunk or prison cot fixed to the wall",
     "gym": "exercise equipment: weights bench, treadmill, punch bag, training dummy",
-    "hydroponics": "a hydroponic tray, grow bed or planting table",
+    "hydroponics": "a hydroponic tray, grow bed, grow tower or planting table, and grown-goods tanks: algae vats, vat-meat culture",
     "feed": "animal feed and stalls: hay bales, troughs, mangers",
     "firewood": "a stack of firewood or fuel",
     "coffin": "a coffin, sarcophagus or bier",
     "security": "security fixtures: detectors, turnstiles, gun lockers",
-    "utility": "ladders, mop buckets, generators, pipes and other building plant"
+    "utility": "ladders, mop buckets, generators, pipes and other building plant",
+    "pen": "animal pens and folds: hurdle panels, pen fences and gates",
+    "coop": "housing for small stock: chicken coops, hutches, dovecotes, beehives",
+    "dairy": "dairy equipment: churns, milk cans, cream separators, milk tanks",
+    "milking_stall": "a stall where one cow is milked: tie stalls, stanchion stalls, milking stands",
+    "farm_machine": "parked agricultural machines: ploughs, harrows, drills, reapers, tractors, combines",
+    "granary": "grain and feed bins: raised granary bins, hopper bins, silo pieces",
+    "muck": "a muck heap, dung pile or compost heap"
   },
   "roles": {
     "sleep": "where one person sleeps (count singles)",
@@ -167,6 +260,7 @@
     "counter.prep": "a kitchen worktop",
     "display": "goods or exhibits on show",
     "heat": "a hearth, fireplace, brazier or heater",
+    "hearth": "a fireplace or hearth people gather around: open fire, fireplace, gas or electric fireplace, holo-hearth",
     "cook": "a stove, range or galley unit",
     "bake": "an oven",
     "wash.basin": "a sink or washstand",
@@ -208,7 +302,83 @@
     "weapons": "a weapon rack or gun locker",
     "security": "a security fixture",
     "utility": "building plant: ladder, generator, mop bucket",
-    "coffin": "a coffin or bier"
+    "coffin": "a coffin or bier",
+    "animal.pen": "a pen, fold or hurdle run for stock",
+    "storage.hay": "hay and straw stored: ricks, stacks, loose-piled lofts",
+    "dairy": "the dairy's main station: churn, separator, milk cans",
+    "milking.stall": "one cow's milking stall: rails, feed trough, cluster",
+    "machine": "a parked machine or implement"
+  },
+  "roleAccess": {
+    "sleep": "one-long",
+    "sleep.couple": {"rule": "both-long", "relax": {"wealth": ["poor"], "clearance": ["tight"], "to": "one-long"}},
+    "sleep.child": "one-long",
+    "bedside": "front",
+    "storage.big": "front",
+    "storage.small": "front",
+    "storage.bulk": "front",
+    "storage.cold": "front",
+    "shelving": "front",
+    "seat": "front",
+    "seat.long": "front",
+    "seat.lounge": "front",
+    "seat.state": "front",
+    "table.dining": "any",
+    "table.small": "any",
+    "table.work": "any",
+    "desk": "any",
+    "counter.serve": "front",
+    "counter.prep": "front",
+    "display": "front",
+    "heat": "front",
+    "hearth": "front",
+    "cook": "front",
+    "bake": "front",
+    "wash.basin": "front",
+    "wash.bath": "one-long",
+    "wash.toilet": "front",
+    "laundry.wash": "front",
+    "laundry.dry": "front",
+    "light.small": "none",
+    "light.big": "none",
+    "decor.floor": "none",
+    "decor.feature": "none",
+    "work.primary": "front",
+    "work.secondary": "front",
+    "work.tool": "front",
+    "work.material": "front",
+    "teach": "front",
+    "lectern": "front",
+    "altar": "front",
+    "devotion": "front",
+    "books": "front",
+    "music": "front",
+    "game": "front",
+    "screen": "front",
+    "radio": "front",
+    "computer": "front",
+    "control": "front",
+    "server": "front",
+    "med.bed": "one-long",
+    "med.station": "front",
+    "med.supply": "front",
+    "med.screen": "front",
+    "cell.bed": "one-long",
+    "exercise": "front",
+    "grow": "front",
+    "animal": "front",
+    "fuel": "front",
+    "waste": "front",
+    "coat": "front",
+    "weapons": "front",
+    "security": "front",
+    "utility": "front",
+    "coffin": "front",
+    "animal.pen": "none",
+    "storage.hay": "front",
+    "dairy": "front",
+    "milking.stall": "front",
+    "machine": "none"
   },
   "families": {
     "bedroom": "a room for one or a few people to sleep, singles",
@@ -222,6 +392,9 @@
     "storage": "goods stored: pantry, cellar, store room, warehouse bay",
     "office": "desk work",
     "washroom": "washing and toilets",
+    "privy": "a toilet on its own: an outhouse, latrine, garderobe or water closet",
+    "bath": "bathing: a tub or shower, a basin and a bench, no toilet",
+    "closet": "a small closed store room: a clothes, linen, broom or pantry closet",
     "workshop": "a trade's work stations: smithy, carpentry, tailor, fabricator bay",
     "chapel": "worship: altar and seats facing it",
     "classroom": "teaching: desks facing a board",
@@ -236,7 +409,15 @@
     "gym": "exercise and training",
     "greenhouse": "growing plants indoors",
     "stable": "animals in stalls",
-    "passage": "a way through: corridor, entrance hall, lobby, airlock"
+    "passage": "a way through: corridor, entrance hall, lobby, airlock",
+    "courtyard": "an unwalled outdoor room: a castle or house court, a cloister garth, an inn yard",
+    "garden": "a planted outdoor room: a garden, a herb garden, an orchard corner",
+    "yard": "a working outdoor room: a farmyard, a yard of troughs, carts and stacks",
+    "barn": "a farm's big shed: a threshing floor, hay bays, stock and parked machines",
+    "dairy": "milk set and churned: churns, milk cans, a butter bench",
+    "granary": "grain and feed kept dry: bins in rows, sacks, a scale bench",
+    "pigsty": "a one-room pig shelter: a hut, a trough, a muck corner",
+    "henhouse": "roosting and laying: perches, nest boxes, a pop hole"
   },
   "purposes": {
     "bedroom": "bedroom",
@@ -308,9 +489,61 @@
     "airlock": "passage",
     "server_room": "control",
     "mill": "workshop",
-    "barn": "storage",
+    "barn": "barn",
     "scullery": "kitchen",
-    "vestry": "storage"
+    "vestry": "storage",
+    "privy": "privy",
+    "outhouse": "privy",
+    "latrine": "privy",
+    "garderobe": "privy",
+    "water_closet": "privy",
+    "bath": "bath",
+    "closet": "closet",
+    "clothes_closet": "closet",
+    "linen_closet": "closet",
+    "broom_closet": "closet",
+    "courtyard": "courtyard",
+    "cloister": "courtyard",
+    "inn_yard": "courtyard",
+    "garden": "garden",
+    "herb_garden": "garden",
+    "yard": "yard",
+    "farmyard": "yard",
+    "byre": "stable",
+    "cowshed": "stable",
+    "oxhouse": "stable",
+    "threshing_floor": "barn",
+    "cart_shed": "barn",
+    "implement_shed": "barn",
+    "machine_shed": "barn",
+    "hayloft": "barn",
+    "dairy": "dairy",
+    "creamery": "dairy",
+    "milk_house": "dairy",
+    "milking_parlour": "dairy",
+    "granary": "granary",
+    "silo_room": "granary",
+    "pigsty": "pigsty",
+    "pig_pen": "pigsty",
+    "henhouse": "henhouse",
+    "chicken_house": "henhouse",
+    "coop_room": "henhouse",
+    "paddock": "yard",
+    "fold": "yard",
+    "pen_room": "yard",
+    "apiary": "garden",
+    "orchard": "garden",
+    "kitchen_garden": "garden",
+    "vegetable_garden": "garden",
+    "vat_farm": "greenhouse",
+    "tack_room": "storage"
+  },
+  "purposeFit": {
+    "_readme": "Which recipes and stored rooms a purpose may take, by role: requires lists roles at least one of which a fit must carry; forbids lists roles a fit must carry none of. A purpose with no entry here is free to use any recipe.",
+    "living_room": { "forbids": ["counter.serve", "storage.bulk"] },
+    "lounge": { "forbids": ["counter.serve", "storage.bulk"] },
+    "taproom": { "requires": ["counter.serve"] },
+    "hayloft": { "requires": ["storage.hay"], "forbids": ["machine", "animal", "sleep", "sleep.couple"] }
   },
   "anchors": {
     "_readme": "Combine with +, e.g. wall:far+corner. far/side/near are relative to the room's main door.",

@@ -1,0 +1,71 @@
+{
+  "buildings": [
+    {
+      "id": "inn.courtyard",
+      "kinds": ["inn", "coaching inn", "caravanserai", "hostelry", "wayside inn",
+                "posting house", "roadhouse"],
+      "bands": ["medieval", "industrial"],
+      "shape": "courtyard",
+      "wings": [
+        {"wing": "inn.front",     "side": "south", "main": "Taproom"},
+        {"wing": "stables.loft",  "side": "east"},
+        {"wing": "sleeping.inn",  "side": "west"},
+        {"wing": "brew.house",    "side": "north"}
+      ],
+      "outdoor": [{"name": "Inn yard", "purpose": "courtyard", "between": "all"}],
+      "entrance": {"wing": "inn.front"}
+    },
+    {
+      "id": "merchant.house",
+      "kinds": ["townhouse", "town house", "merchant's house", "burgher's house",
+                "guildsman's house"],
+      "bands": ["medieval"],
+      "shape": "l",
+      "wings": [
+        {"wing": "merchant.shop",    "side": "south", "main": "Shop"},
+        {"wing": "merchant.living",  "side": "east"}
+      ],
+      "outdoor": [{"name": "Yard", "purpose": "yard", "between": "wings"}],
+      "entrance": {"wing": "merchant.shop"}
+    },
+    {
+      "id": "manor.u",
+      "kinds": ["manor", "manor house", "manor hall", "lord's hall", "great house", "estate"],
+      "bands": ["medieval"],
+      "shape": "u",
+      "wings": [
+        {"wing": "manor.hall",     "side": "south", "main": "Great hall"},
+        {"wing": "manor.family",   "side": "west"},
+        {"wing": "manor.service",  "side": "east"}
+      ],
+      "outdoor": [{"name": "Garden", "purpose": "garden", "between": "all"}],
+      "entrance": {"wing": "manor.hall"}
+    },
+    {
+      "id": "farmstead.l",
+      "kinds": ["farmstead", "farmhouse", "grange", "homestead", "farm"],
+      "bands": ["medieval"],
+      "shape": "l",
+      "wings": [
+        {"wing": "farm.house", "side": "south", "main": "Hall"},
+        {"wing": "farm.barn",  "side": "east"}
+      ],
+      "outdoor": [{"name": "Farmyard", "purpose": "yard", "between": "wings"}],
+      "entrance": {"wing": "farm.house"}
+    },
+    {
+      "id": "castle.courtyard",
+      "kinds": ["castle", "keep", "fortress", "stronghold", "citadel", "fort"],
+      "bands": ["medieval"],
+      "shape": "courtyard",
+      "wings": [
+        {"wing": "castle.hall",     "side": "south", "main": "Great hall"},
+        {"wing": "castle.keep",     "side": "north"},
+        {"wing": "castle.barracks", "side": "east"},
+        {"wing": "stables.yard",    "side": "west"}
+      ],
+      "outdoor": [{"name": "Castle yard", "purpose": "courtyard", "between": "all"}],
+      "entrance": {"wing": "castle.hall"}
+    }
+  ]
+}

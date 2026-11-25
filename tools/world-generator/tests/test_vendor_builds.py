@@ -63,8 +63,11 @@ class VendoredBuilds(unittest.TestCase):
                 data.pop("extensions", None)   # a no-extension build ignores the plan's own
             out = os.path.join(self.tmp, f"{len(self.built):02d}-"
                                          f"{os.path.splitext(name)[0]}")
+            # the () pair is a deliberate no-extension build (its key was
+            # popped, so the floors default would otherwise turn floors on)
             self.built[key] = api._layout_and_build(data, seed=1, out_dir=out,
-                                                    extra_exts=exts)
+                                                    extra_exts=exts,
+                                                    floors=bool(exts))
         return self.built[key]
 
     def _scenario(self, summary):

@@ -10,7 +10,7 @@
 <header>
   <div class="bar">
     <h1>Scenario Editor</h1>
-    <div class="tabs"><button id="tabMap" class="on">Map</button><button id="tabImages">Images</button></div>
+    <div class="tabs"><button id="tabMap" class="on">Map</button><button id="tabImages">Images</button><button id="tabRooms" hidden>Rooms</button></div>
     <label class="inline">Scenario <select id="source"></select></label>
     <button id="newWorld" title="Generate a whole world from a one-line idea (your own model provider and key)">New world…</button>
     <button id="asToggle" title="Chat with your own model: it edits the open scenario, one undo step per change">Assistant</button>
@@ -76,6 +76,39 @@
   <aside class="side right insp" id="inspector"><p class="hint">Click something on the map to see it here.</p></aside>
 </div>
 <iframe id="images" title="Images" hidden></iframe>
+<div class="work" id="roomsView" hidden>
+  <aside class="side">
+    <div class="rm-bar">
+      <select id="rmFamily" title="The room family to browse"></select>
+      <button id="rmGroupsBtn" class="mini" title="The family's recipes, groups and luxury pool instead of one room">Groups</button>
+    </div>
+    <div class="rm-filters">
+      <select id="rmBand" title="Room size band"></select>
+      <select id="rmClearance" title="Clearance: the gap the room keeps between groups"></select>
+      <select id="rmStyle" title="flush: as composed · open: wall groups pushed out with a filler in the middle"></select>
+      <select id="rmTier" title="Wealth tiers the room serves"></select>
+      <input type="search" id="rmSearch" placeholder="Search id or text" title="Search room ids and descriptions">
+    </div>
+    <div class="rm-list" id="rmList" tabindex="0" aria-label="Rooms"></div>
+  </aside>
+  <div class="rm-mid" id="rmMid">
+    <div class="rm-toolbar" id="rmToolbar">
+      <label class="inline">Look <select id="rmLook" title="Plan colours, or each piece's sprite in an art band"></select></label>
+      <span class="spacer"></span>
+      <button id="rmTurnL" class="mini" title="Turn a quarter turn anti-clockwise (preview only)">↺</button>
+      <span class="rm-turncount" id="rmTurns" title="Preview turn">0°</span>
+      <button id="rmTurnR" class="mini" title="Turn a quarter turn clockwise (preview only)">↻</button>
+      <button id="rmMirror" class="mini" title="Mirror the room (preview only)">Mirror</button>
+    </div>
+    <div class="rm-planwrap">
+      <canvas id="rmPlan"></canvas>
+      <div class="rm-tip" id="rmTip" hidden></div>
+    </div>
+    <div class="rm-siblings" id="rmSiblings" aria-label="Other rooms of the same recipe"></div>
+    <div class="rm-groups" id="rmGroupsPage" hidden></div>
+  </div>
+  <aside class="side right" id="rmDetails"><p class="hint">Pick a room on the left.</p></aside>
+</div>
 <dialog id="dlg"></dialog>
 <div class="toast" id="toast"></div>
 <script src="/mapops.js"></script>
@@ -88,6 +121,7 @@
 <script src="/inspector.js"></script>
 <script src="/refsui.js"></script>
 <script src="/worldgen.js"></script>
+<script src="/rooms.js"></script>
 <script src="/design.js"></script>
 <script src="/assistant_tools.js"></script>
 <script src="/assistant.js"></script>

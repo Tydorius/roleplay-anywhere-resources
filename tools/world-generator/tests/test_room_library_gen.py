@@ -1,0 +1,644 @@
+"""The generated room library: the shipped bedroom, master bedroom,
+washroom, privy, bath and closet rooms load and check clean, stay inside
+the family's aspect cap — a band's own aspect window may stretch it —
+with no dead floor, hold the wash families' fixtures (a washroom all
+three, a privy no bath, a bath room no toilet), every recipe of those
+families keeps at least one tight flush room except the two washroom
+recipes the generator skips for lacking a bath, every grand room carries
+a luxury group from its family's pool within the per-kind limits, never
+doubles a desk, bed or fire (a servants' room's two beds aside), has more
+pieces than its roomy sibling and stays at or under 8 cells of floor per
+piece and within the grand area ratio of its roomy sibling, every open
+room's filler stays off every edge and holds its clearance cap, the
+two-to-one aspect and the centre, no room wastes more than one line along
+a wall, the generator comes back the same for the same seed, and ids are
+unique and follow the family.band.letter.clearance.style pattern. Hand
+work in a temp copy of the files survives regeneration: a hand room is
+kept as it stands with its letter taken, its generated duplicate dropped,
+a surviving room's edited description kept, and a second run changes
+nothing."""
+import importlib.util
+import json
+import math
+import os
+import re
+import shutil
+import tempfile
+import unittest
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+GEN = os.path.dirname(HERE)
+
+from worldgen import fixed_rooms as FR      # noqa: E402
+from worldgen import library as WL          # noqa: E402
+from worldgen import room_composer as RC    # noqa: E402
+from worldgen import room_groups as RG      # noqa: E402
+
+FAMILIES = ("bedroom", "bedroom.master", "washroom", "privy", "bath", "closet")
+ID_PATTERN = re.compile(
+    r"\.(tiny|small|medium|large|narrow|stall|reach|walkin)\.([a-z])\."
+    r"(tight|roomy|grand)\.(flush|open)$")
+
+_SPEC = importlib.util.spec_from_file_location(
+    "generate_rooms", os.path.join(GEN, "library-seed", "generate_rooms.py"))
+generate_rooms = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(generate_rooms)
+
+
+def empty_edge_lines(room):
+    """How many full lines sit empty along each wall (the consecutive rows
+    from the north, and so on, with no piece and no filler cell on them)."""
+    w, h = room["size"]
+    taken = {(x, y) for p in room["pieces"]
+             for x in range(p["at"][0], p["at"][0] + p["size"][0])
+             for y in range(p["at"][1], p["at"][1] + p["size"][1])}
+    f = room.get("filler")
+    if f:
+        fx, fy = f["at"]
+        fw, fh = f["size"]
+        taken |= {(x, y) for x in range(fx, fx + fw) for y in range(fy, fy + fh)}
+    rows = [not any((x, y) in taken for x in range(w)) for y in range(h)]
+    cols = [not any((x, y) in taken for y in range(h)) for x in range(w)]
+
+    def leading(line):
+        n = 0
+        for v in line:
+            if not v:
+                break
+            n += 1
+        return n
+
+    return {"north": leading(rows), "south": leading(reversed(rows)),
+            "west": leading(cols), "east": leading(reversed(cols))}
+
+
+class TestShippedRooms(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(GEN, "library", "rooms", "bedroom.json"),
+                  encoding="utf-8") as fh:
+            cls.bedrooms = json.load(fh)["rooms"]
+        with open(os.path.join(GEN, "library", "rooms", "bedroom.master.json"),
+                  encoding="utf-8") as fh:
+            cls.masters = json.load(fh)["rooms"]
+        with open(os.path.join(GEN, "library", "rooms", "washroom.json"),
+                  encoding="utf-8") as fh:
+            cls.washrooms = json.load(fh)["rooms"]
+        with open(os.path.join(GEN, "library", "rooms", "privy.json"),
+                  encoding="utf-8") as fh:
+            cls.privies = json.load(fh)["rooms"]
+        with open(os.path.join(GEN, "library", "rooms", "bath.json"),
+                  encoding="utf-8") as fh:
+            cls.baths = json.load(fh)["rooms"]
+        with open(os.path.join(GEN, "library", "rooms", "closet.json"),
+                  encoding="utf-8") as fh:
+            cls.closets = json.load(fh)["rooms"]
+
+    def test_the_shipped_rooms_load_and_check_clean(self):
+        rooms = FR.load()
+        self.assertGreater(len(rooms), 0)
+        self.assertEqual(FR.check(rooms, RG.load(), WL.load()), [])
+
+    def test_every_shipped_room_passes_the_access_rules(self):
+        """Each room on its own: every access constraint keeps its need of
+        cells, no seat faces nothing and every closet has its door."""
+        data, lib = RG.load(), WL.load()
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                with self.subTest(room=room["id"]):
+                    errors = [e for e in FR.check([room], data, lib)
+                              if "access cell" in e or "faces nothing" in e
+                              or "needs a door" in e]
+                    self.assertEqual(errors, [])
+
+    def test_every_shipped_room_stays_inside_the_aspect_cap(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                w, h = room["size"]
+                # a family's own band may stretch the cap past the family's
+                cap = RC.aspect_cap(room["family"])
+                for band in FR.family_bands(room["family"]):
+                    if band["name"] == room["sizeBand"] and band["aspect"]:
+                        cap = max(cap, band["aspect"][1])
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(
+                        max(w, h), cap * min(w, h),
+                        f"{w}x{h}: the long side may be at most "
+                        f"{cap:g}x the short side")
+
+    def test_no_shipped_room_has_dead_floor(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                with self.subTest(room=room["id"]):
+                    self.assertEqual(FR.dead_cells(room), [])
+
+    def test_every_washroom_holds_all_three_fixtures(self):
+        for room in self.washrooms:
+            roles = {p["role"] for p in room["pieces"]}
+            with self.subTest(room=room["id"]):
+                self.assertTrue({"wash.toilet", "wash.bath", "wash.basin"}
+                                <= roles, sorted(roles))
+
+    def test_every_privy_holds_a_toilet_and_no_bath(self):
+        for room in self.privies:
+            roles = {p["role"] for p in room["pieces"]}
+            with self.subTest(room=room["id"]):
+                self.assertIn("wash.toilet", roles)
+                self.assertNotIn("wash.bath", roles)
+
+    def test_every_bath_room_holds_a_bath_and_no_toilet(self):
+        for room in self.baths:
+            roles = {p["role"] for p in room["pieces"]}
+            with self.subTest(room=room["id"]):
+                self.assertIn("wash.bath", roles)
+                self.assertNotIn("wash.toilet", roles)
+
+    def test_every_recipe_keeps_a_tight_flush_room(self):
+        data = RG.load()
+        recipes = {r["layout"] for r in data["recipes"].values()
+                   if r.get("family") in FAMILIES}
+        kept = {r["recipe"] for rooms in (self.bedrooms, self.masters,
+                                          self.washrooms, self.privies,
+                                          self.baths, self.closets)
+                for r in rooms
+                if r["clearance"] == "tight" and r["style"] == "flush"}
+        # the two washroom recipes whose groups cannot give a room all
+        # three fixtures are skipped whole (their rooms are the privy's)
+        skipped = {"washroom.tiny.a", "washroom.tiny.c"}
+        self.assertEqual(recipes - kept, skipped,
+                         f"recipes without a tight flush room: "
+                         f"{sorted(recipes - kept)}")
+
+    def test_every_grand_room_keeps_a_luxury_group(self):
+        data = RG.load()
+        pools = {fam: {e["group"] for e in entries}
+                 for fam, entries in (data.get("pools") or {}).items()}
+        for rooms, fam in ((self.bedrooms, "bedroom"),
+                           (self.masters, "bedroom.master"),
+                           (self.washrooms, "washroom"),
+                           (self.privies, "privy"),
+                           (self.baths, "bath"),
+                           (self.closets, "closet")):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertTrue(
+                        any(p.get("group") in pools.get(fam, ())
+                            for p in room["pieces"]),
+                        "no piece comes from the family's luxury pool")
+
+    def test_grand_rooms_stay_within_the_luxury_limits(self):
+        data = RG.load()
+        kinds_of = {gid: RG.luxury_kinds(g) for gid, g in data["groups"].items()}
+        pools = {fam: {e["group"] for e in entries}
+                 for fam, entries in (data.get("pools") or {}).items()}
+        for rooms, fam in ((self.bedrooms, "bedroom"),
+                           (self.masters, "bedroom.master"),
+                           (self.washrooms, "washroom"),
+                           (self.privies, "privy"),
+                           (self.baths, "bath"),
+                           (self.closets, "closet")):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                counts, decor_pieces = {}, 0
+                for gid in {p.get("group") for p in room["pieces"]} & pools[fam]:
+                    for kind in kinds_of[gid]:
+                        counts[kind] = counts.get(kind, 0) + 1
+                    if "decor" in kinds_of[gid]:
+                        decor_pieces += sum(1 for p in room["pieces"]
+                                            if p.get("group") == gid)
+                for kind, n in counts.items():
+                    with self.subTest(room=room["id"], kind=kind):
+                        self.assertLessEqual(n, RC.LUXURY_LIMITS[kind],
+                                             f"{n} groups of {kind}")
+                with self.subTest(room=room["id"], kind="decor pieces"):
+                    self.assertLessEqual(decor_pieces, RC.LUXURY_DECOR_PIECES)
+
+    def test_no_room_doubles_a_desk_bed_or_fire(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                desks = sum(1 for p in room["pieces"] if p["role"] == "desk")
+                beds = sum(1 for p in room["pieces"]
+                           if p["role"] in ("sleep", "sleep.couple"))
+                fires = sum(1 for p in room["pieces"]
+                            if p["role"] in ("heat", "hearth"))
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(desks, 1, f"{desks} desks")
+                    # a servants' room sleeps one bed per single sleeper
+                    self.assertLessEqual(
+                        beds, max(1, room["sleeps"]["singles"]),
+                        f"{beds} beds for {room['sleeps']['singles']} "
+                        f"singles")
+                    self.assertLessEqual(fires, 1, f"{fires} fires")
+
+    def test_grand_rooms_stay_within_the_area_ratio(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            # the roomy sibling is the same recipe, style and sleeper count
+            # (the bedroom family ships one-bed and two-bed rooms)
+            def sibling(r):
+                return (r["recipe"], r["style"],
+                        (r.get("sleeps") or {}).get("singles", 0))
+            roomy = {sibling(r): r["size"][0] * r["size"][1]
+                     for r in rooms if r["clearance"] == "roomy"}
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertIn(sibling(room), roomy,
+                                  "no roomy sibling to size against")
+                    w, h = room["size"]
+                    cap = math.ceil(RC.GRAND_AREA_RATIO
+                                    * roomy[sibling(room)])
+                    self.assertLessEqual(w * h, cap,
+                                         f"{w}x{h} = {w * h} cells over the "
+                                         f"cap of {cap}")
+
+    def test_every_grand_room_outranks_its_roomy_sibling(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            def sibling(r):
+                return (r["recipe"], r["style"],
+                        (r.get("sleeps") or {}).get("singles", 0))
+            roomy = {sibling(r): len(r["pieces"])
+                     for r in rooms if r["clearance"] == "roomy"}
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                with self.subTest(room=room["id"]):
+                    self.assertIn(sibling(room), roomy,
+                                  "no roomy sibling to outdo")
+                    self.assertGreater(
+                        len(room["pieces"]),
+                        roomy[sibling(room)])
+
+    def test_every_grand_room_stays_under_eight_cells_per_piece(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                if room["clearance"] != "grand":
+                    continue
+                w, h = room["size"]
+                with self.subTest(room=room["id"]):
+                    self.assertLessEqual(
+                        w * h, 8 * len(room["pieces"]),
+                        f"{w * h} cells over {len(room['pieces'])} pieces = "
+                        f"{w * h / len(room['pieces']):.1f} cells per piece")
+
+    def test_open_fillers_stay_off_every_edge(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                if room["style"] != "open":
+                    continue
+                with self.subTest(room=room["id"]):
+                    fx, fy = room["filler"]["at"]
+                    fw, fh = room["filler"]["size"]
+                    w, h = room["size"]
+                    self.assertGreaterEqual(fw, 2)
+                    self.assertGreaterEqual(fh, 2)
+                    self.assertGreater(fx, 0)
+                    self.assertGreater(fy, 0)
+                    self.assertLess(fx + fw, w)
+                    self.assertLess(fy + fh, h)
+
+    def test_open_fillers_hold_the_cap_aspect_and_centre(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                if room["style"] != "open":
+                    continue
+                with self.subTest(room=room["id"]):
+                    fx, fy = room["filler"]["at"]
+                    fw, fh = room["filler"]["size"]
+                    w, h = room["size"]
+                    hi, lo = RC.FILLER_MAX[room["clearance"]]
+                    self.assertLessEqual(max(fw, fh), hi,
+                                         f"{fw}x{fh}: over the "
+                                         f"{room['clearance']} cap {hi}x{lo}")
+                    self.assertLessEqual(min(fw, fh), lo)
+                    self.assertLessEqual(max(fw, fh),
+                                         RC.FILLER_ASPECT * min(fw, fh),
+                                         f"{fw}x{fh}: long side over "
+                                         f"{RC.FILLER_ASPECT:g}x the short")
+                    self.assertLessEqual(abs(fx - (w - fx - fw)), 1,
+                                         "west and east wall distances "
+                                         "differ by more than 1")
+                    self.assertLessEqual(abs(fy - (h - fy - fh)), 1,
+                                         "north and south wall distances "
+                                         "differ by more than 1")
+
+    def test_no_room_wastes_more_than_one_line_along_a_wall(self):
+        for rooms in (self.bedrooms, self.masters, self.washrooms,
+                      self.privies, self.baths, self.closets):
+            for room in rooms:
+                counts = empty_edge_lines(room)
+                for side, k in counts.items():
+                    with self.subTest(room=room["id"], side=side):
+                        self.assertLessEqual(k, 1)
+
+    def test_ids_are_unique_and_follow_the_pattern(self):
+        seen = {}
+        for fam, rooms in (("bedroom", self.bedrooms),
+                           ("bedroom.master", self.masters),
+                           ("washroom", self.washrooms),
+                           ("privy", self.privies),
+                           ("bath", self.baths),
+                           ("closet", self.closets)):
+            for room in rooms:
+                with self.subTest(room=room["id"]):
+                    self.assertTrue(room["id"].startswith(fam + "."),
+                                    room["id"])
+                    m = ID_PATTERN.search(room["id"])
+                    self.assertTrue(m, room["id"])
+                    self.assertEqual(m.group(1), room["sizeBand"])
+                    self.assertEqual(m.group(3), room["clearance"])
+                    self.assertEqual(m.group(4), room["style"])
+                    self.assertNotIn(room["id"], seen)
+                    seen[room["id"]] = fam
+        self.assertEqual(len(seen),
+                         sum(map(len, (self.bedrooms, self.masters,
+                                       self.washrooms, self.privies,
+                                       self.baths, self.closets))))
+
+
+class TestTwoSleeperBedrooms(unittest.TestCase):
+    """The second pass: the bedroom recipes composed for two singles — the
+    two-bed rooms a shared bedroom or a children's loft asks for."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(os.path.join(GEN, "library", "rooms", "bedroom.json"),
+                  encoding="utf-8") as fh:
+            cls.bedrooms = json.load(fh)["rooms"]
+
+    def two_sleeper_rooms(self):
+        return [r for r in self.bedrooms
+                if (r.get("sleeps") or {}).get("singles") == 2
+                and (r.get("sleeps") or {}).get("couples") == 0]
+
+    def test_two_sleeper_rooms_ship_at_small_and_medium(self):
+        bands = {r["sizeBand"] for r in self.two_sleeper_rooms()}
+        self.assertIn("small", bands, bands)
+        self.assertIn("medium", bands, bands)
+
+    def test_every_two_sleeper_room_sleeps_two_singles_in_two_beds(self):
+        for room in self.two_sleeper_rooms():
+            with self.subTest(room=room["id"]):
+                self.assertEqual(room["sleeps"],
+                                 {"singles": 2, "couples": 0})
+                beds = [p for p in room["pieces"] if p["role"] == "sleep"]
+                self.assertEqual(len(beds), 2,
+                                 "two beds for two singles")
+
+    def test_every_two_sleeper_room_keeps_the_access_rules(self):
+        """Both beds sit on cells their access constraints keep clear, each
+        on its own the way the assembler lays it."""
+        data, lib = RG.load(), WL.load()
+        for room in self.two_sleeper_rooms():
+            with self.subTest(room=room["id"]):
+                errors = [e for e in FR.check([room], data, lib)
+                          if "access cell" in e or "faces nothing" in e
+                          or "needs a door" in e]
+                self.assertEqual(errors, [])
+
+    def test_one_sleeper_rooms_come_out_unchanged(self):
+        """The first pass keeps its shape: one bed for one single, and "for
+        two" marks only the second pass's rooms (the shipped servants' room
+        sleeps two without ever saying so)."""
+        ones = [r for r in self.bedrooms
+                if (r.get("sleeps") or {}).get("singles") == 1]
+        self.assertGreater(len(ones), 0)
+        for room in ones:
+            with self.subTest(room=room["id"]):
+                self.assertEqual(room["sleeps"],
+                                 {"singles": 1, "couples": 0})
+                self.assertNotIn("for two", room.get("description", ""))
+        servants = [r for r in self.bedrooms
+                    if r["id"] == "bedroom.narrow.a.tight.flush"]
+        self.assertEqual(len(servants), 1)
+        self.assertEqual(servants[0]["sleeps"],
+                         {"singles": 2, "couples": 0})
+        self.assertNotIn("for two", servants[0]["description"])
+        for room in self.two_sleeper_rooms():
+            if room.get("_fortwo") is not None:      # never shipped
+                self.fail(room["id"])
+
+
+class TestFamilyBandRooms(unittest.TestCase):
+    """The rooms the per-family bands ship: every privy stays inside its
+    stall or small band (never a 4x4), every closet inside reach or walk-in,
+    the servants' room reads narrow with both beds and its chest on one
+    long wall and a clear floor row along the other, the servant's room
+    holds at most nine cells, and the composer returns no room at all —
+    with a reason — when a band cannot be reached without padding the room
+    up to it."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.data = RG.load()
+        for name, attr in (("privy", "privies"), ("closet", "closets"),
+                           ("bedroom", "bedrooms")):
+            with open(os.path.join(GEN, "library", "rooms", f"{name}.json"),
+                      encoding="utf-8") as fh:
+                setattr(cls, attr, json.load(fh)["rooms"])
+
+    def test_every_privy_stays_inside_its_bands(self):
+        for room in self.privies:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertNotEqual([w, h], [4, 4])
+                lo, hi = {"stall": (2, 4), "small": (5, 8)}[room["sizeBand"]]
+                self.assertTrue(lo <= w * h <= hi, f"{w}x{h}")
+
+    def test_every_closet_stays_inside_its_bands(self):
+        for room in self.closets:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                lo, hi = {"reach": (1, 2), "walkin": (3, 4)}[room["sizeBand"]]
+                self.assertTrue(lo <= w * h <= hi, f"{w}x{h}")
+
+    def test_the_servants_room_is_narrow_with_a_clear_row(self):
+        rooms = [r for r in self.bedrooms if r["recipe"] == "bedroom.servants"]
+        self.assertTrue(rooms, "no servants' room shipped")
+        for room in rooms:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertEqual(room["sizeBand"], "narrow")
+                self.assertEqual(room["sleeps"]["singles"], 2)
+                beds = [p for p in room["pieces"] if p["role"] == "sleep"]
+                store = [p for p in room["pieces"]
+                         if p["role"] == "storage.small"]
+                self.assertEqual(len(beds), 2, "two single beds")
+                self.assertEqual(len(store), 1, "one chest between them")
+                # the beds and the chest share one long wall, the beds
+                # lying lengthwise (their long side on that wall)
+                ys = {p["at"][1] for p in beds + store}
+                xs = {p["at"][0] for p in beds + store}
+                if len(ys) == 1:
+                    row, clear = next(iter(ys)), h - 1 - next(iter(ys))
+                    line = {(p["at"][0], p["at"][1]) for p in beds + store}
+                    self.assertLess(len(line), w, "not along a long wall")
+                    for b in beds:
+                        self.assertGreater(b["size"][0], b["size"][1],
+                                           "bed not lying lengthwise")
+                else:
+                    self.assertEqual(len(xs), 1, "pieces on neither one row "
+                                                 "nor one column")
+                    row, clear = next(iter(xs)), w - 1 - next(iter(xs))
+                    for b in beds:
+                        self.assertGreater(b["size"][1], b["size"][0],
+                                           "bed not lying lengthwise")
+                occupied = {(p["at"][0], p["at"][1]) for p in room["pieces"]}
+                span = range(h) if len(ys) == 1 else range(w)
+                for k in span:
+                    spot = (k, clear) if len(ys) == 1 else (clear, k)
+                    self.assertNotIn(spot, occupied,
+                                     f"the floor row at {spot} is not clear")
+
+    def test_the_servant_room_stays_under_ten_cells(self):
+        rooms = [r for r in self.bedrooms if r["recipe"] == "bedroom.servant"]
+        self.assertTrue(rooms, "no servant's room shipped")
+        for room in rooms:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertLessEqual(w * h, 9, f"{w}x{h}")
+
+    def test_the_servant_room_is_2x3_with_the_beds_long_side_on_a_wall(self):
+        rooms = [r for r in self.bedrooms if r["recipe"] == "bedroom.servant"]
+        self.assertTrue(rooms, "no servant's room shipped")
+        for room in rooms:
+            w, h = room["size"]
+            with self.subTest(room=room["id"]):
+                self.assertEqual(sorted(room["size"]), [2, 3], f"{w}x{h}")
+                bed = next(p for p in room["pieces"]
+                           if p["role"] == "sleep")
+                bx, by, bw, bh = bed["at"] + bed["size"]
+                # the bed lies lengthwise, its long side against a wall
+                self.assertGreater(max(bw, bh), min(bw, bh),
+                                   "bed not lying lengthwise")
+                on_wall = ((bw > bh and (by == 0 or by + bh == h))
+                           or (bh > bw and (bx == 0 or bx + bw == w)))
+                self.assertTrue(on_wall, json.dumps(bed))
+
+    def test_the_composer_returns_no_room_when_a_band_cannot_be_reached(self):
+        # the servant's recipe (a bed, a bedside, a chest) cannot fill a
+        # medium band at tight clearance — the composer never pads a room
+        # up to a band, so it returns nothing and says why
+        rooms, reason = generate_rooms.compose_recipe(
+            self.data["recipes"]["bedroom.servant"], "bedroom", self.data,
+            "tight", "flush", "oak", size_band="medium")
+        self.assertEqual(rooms, [])
+        self.assertTrue(reason, "no reason printed for the empty result")
+
+
+class TestGenerator(unittest.TestCase):
+    def test_generating_twice_comes_back_the_same(self):
+        rooms, drops = generate_rooms.generate()
+        again, drops_again = generate_rooms.generate()
+        self.assertEqual(json.dumps(rooms, sort_keys=True),
+                         json.dumps(again, sort_keys=True))
+        self.assertEqual(drops, drops_again)
+
+
+class TestHandRooms(unittest.TestCase):
+    """Hand work in a temp copy of the shipped rooms: a "source": "hand"
+    room survives a regeneration unchanged with its id's letter taken, a
+    generated room equal to it after any turn or mirror is dropped in its
+    favour, a generated room whose id survives keeps the fields in its
+    "edited" list, and regenerating the generated files changes nothing."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.rooms_dir = os.path.join(tmp.name, "rooms")
+        os.makedirs(self.rooms_dir)
+        for fam in FAMILIES:
+            shutil.copyfile(
+                os.path.join(GEN, "library", "rooms", f"{fam}.json"),
+                os.path.join(self.rooms_dir, f"{fam}.json"))
+
+    def shipped(self, fam):
+        with open(os.path.join(self.rooms_dir, f"{fam}.json"),
+                  encoding="utf-8") as fh:
+            return json.load(fh)["rooms"]
+
+    def write(self, fam, rooms):
+        with open(os.path.join(self.rooms_dir, f"{fam}.json"), "w",
+                  encoding="utf-8", newline="\n") as fh:
+            json.dump({"rooms": rooms}, fh, indent=2, ensure_ascii=False)
+            fh.write("\n")
+
+    def hand_copy(self, rooms):
+        """The family's first shipped room as a hand room under a free letter
+        of its own band, clearance and style."""
+        hand = json.loads(json.dumps(rooms[0]))
+        bits = hand["id"].split(".")
+        bits[2] = "z"
+        hand["id"] = ".".join(bits)
+        hand["source"] = "hand"
+        hand["description"] = "A hand-made room."
+        return hand
+
+    def test_a_hand_room_survives_unchanged_and_keeps_its_letter(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        by_id = {r["id"]: r for r in out["bedroom"]}
+        self.assertIn(hand["id"], by_id)
+        self.assertEqual(by_id[hand["id"]], hand)
+        group = (hand["sizeBand"], hand["clearance"], hand["style"])
+        zs = [r for r in out["bedroom"]
+              if (r["sizeBand"], r["clearance"], r["style"]) == group
+              and r["id"].split(".")[2] == "z"]
+        self.assertEqual(len(zs), 1, "another room took the hand room's letter")
+
+    def test_a_generated_duplicate_of_a_hand_room_is_dropped(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        shape = generate_rooms.canonical(hand)
+        alike = [r["id"] for r in out["bedroom"]
+                 if generate_rooms.canonical(r) == shape]
+        self.assertEqual(alike, [hand["id"]])
+
+    def test_a_surviving_room_keeps_its_edited_description(self):
+        rooms = self.shipped("bedroom")
+        target = json.loads(json.dumps(rooms[0]))
+        target["edited"] = ["description"]
+        target["description"] = "Described by hand."
+        rooms[0] = target
+        self.write("bedroom", rooms)
+        out, _drops = generate_rooms.generate(["bedroom"],
+                                              rooms_dir=self.rooms_dir)
+        by_id = {r["id"]: r for r in out["bedroom"]}
+        self.assertIn(target["id"], by_id)
+        self.assertEqual(by_id[target["id"]]["description"],
+                         "Described by hand.")
+        self.assertEqual(by_id[target["id"]]["edited"], ["description"])
+
+    def test_generating_the_generated_files_changes_nothing(self):
+        rooms = self.shipped("bedroom")
+        hand = self.hand_copy(rooms)
+        self.write("bedroom", rooms + [hand])
+        first, _drops = generate_rooms.generate(["bedroom"],
+                                                rooms_dir=self.rooms_dir)
+        self.write("bedroom", first["bedroom"])
+        second, _drops_again = generate_rooms.generate(["bedroom"],
+                                                       rooms_dir=self.rooms_dir)
+        self.assertEqual(json.dumps(first, sort_keys=True),
+                         json.dumps(second, sort_keys=True))
+
+
+if __name__ == "__main__":
+    unittest.main()

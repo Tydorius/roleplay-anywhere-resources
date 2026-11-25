@@ -361,6 +361,30 @@
       "sources": ["dnd-srd", "wikipedia-furniture"]
     },
     {
+      "id": "decor.vase",
+      "category": "decor",
+      "size": [1, 1],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": ["modest", "wealthy", "elite"],
+      "bands": ["*"],
+      "onlyGenres": [],
+      "names": {"*": "floor vase", "medieval": "urn", "scifi": "display vase"},
+      "parts": {"body": "ceramic"},
+      "partsByBand": {"scifi": {"body": "synthetic"}},
+      "tags": ["decor"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} tall {body} {noun} standing on the floor, holding a spray of dried stems.",
+        "physical": "Top-down view of a tall {noun}: a round {body.color} {body} mouth with a narrow neck and flared foot, a few dried stems crossing out of the opening."
+      },
+      "aliases": ["floor urn", "tall vase"],
+      "sources": ["claude-authored"]
+    },
+    {
       "id": "decor.armour",
       "category": "decor",
       "size": [1, 1],
@@ -455,6 +479,30 @@
       },
       "aliases": [],
       "sources": ["pa-fandom"]
+    },
+    {
+      "id": "decor.well",
+      "category": "decor",
+      "size": [2, 2],
+      "walkability": 0,
+      "forSleep": false,
+      "light": 0,
+      "back": null,
+      "wealth": ["poor", "modest", "wealthy"],
+      "bands": ["medieval", "industrial"],
+      "onlyGenres": [],
+      "names": {"*": "well"},
+      "parts": {"wall": "stone", "roof": "wood"},
+      "partsByBand": {},
+      "tags": ["decor", "well", "centrepiece", "water"],
+      "container": false,
+      "lootPool": null,
+      "text": {
+        "description": "{A:condition} {wall} {noun} under a pitched {roof} roof as wide as the well, a bucket on a rope and a wet ring of ground around it.",
+        "physical": "Top-down view of a round {noun}, seen from directly above: a large pitched {roof.color} {roof} roof as wide as the well, its two sloped halves meeting at a ridge straight across the middle and covering most of it; a ring of {wall.color} {wall} blocks showing round the roof's edges; a wooden bucket on the rim."
+      },
+      "aliases": ["village well", "wellhead"],
+      "sources": ["claude-authored"]
     },
     {
       "id": "decor.painting",

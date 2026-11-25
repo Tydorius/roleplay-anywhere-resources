@@ -1,0 +1,278 @@
+{
+  "wings": [
+    {
+      "id": "inn.front",
+      "purpose": "common_rooms",
+      "kinds": ["inn", "coaching inn", "hostelry", "tavern"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Taproom", "purpose": "taproom", "share": "large"},
+        {"name": "Kitchen", "purpose": "kitchen", "share": "medium"},
+        {"name": "Pantry",  "purpose": "pantry",  "share": "small"}
+      ],
+      "connections": [["Taproom", "Kitchen"], ["Kitchen", "Pantry"]],
+      "entrance": {"room": "Taproom"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "stables.yard",
+      "purpose": "stables",
+      "kinds": ["inn", "coaching inn", "stable", "stables", "livery", "farmstead", "manor", "castle", "keep"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Stable",     "purpose": "stable",    "share": "large"},
+        {"name": "Tack room",  "purpose": "storage",   "share": "small"},
+        {"name": "Hayloft",    "purpose": "hayloft",   "share": "small"}
+      ],
+      "connections": [["Stable", "Tack room"], ["Stable", "Hayloft"]],
+      "entrance": {"room": "Stable"},
+      "sleeps": "none"
+    },
+    {
+      "id": "stables.loft",
+      "purpose": "stables",
+      "kinds": ["inn", "coaching inn", "posting house", "stable", "stables", "livery"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Stable",     "purpose": "stable",    "share": "large"},
+        {"name": "Tack room",  "purpose": "storage",   "share": "small"},
+        {"name": "Loft",       "purpose": "barracks",  "share": "medium"}
+      ],
+      "connections": [["Stable", "Tack room"], ["Stable", "Loft"]],
+      "entrance": {"room": "Stable"},
+      "sleeps": "staff",
+      "wealth": -2
+    },
+    {
+      "id": "sleeping.inn",
+      "purpose": "sleeping",
+      "kinds": ["inn", "coaching inn", "hostelry", "posting house"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 2,
+      "entry": "east",
+      "rooms": [
+        {"name": "Landing",            "purpose": "hallway",        "share": "medium"},
+        {"name": "Guest chamber",      "purpose": "guest_room",     "share": "small"},
+        {"name": "Best chamber",       "purpose": "guest_room",     "share": "small"},
+        {"name": "Keepers' chamber",   "purpose": "master_bedroom", "share": "medium"}
+      ],
+      "connections": [["Landing", "Guest chamber"], ["Landing", "Best chamber"],
+                      ["Landing", "Keepers' chamber"]],
+      "entrance": {"room": "Landing"},
+      "sleeps": "guests",
+      "wealth": "building"
+    },
+    {
+      "id": "brew.house",
+      "purpose": "workshop",
+      "kinds": ["brewery", "brewhouse", "brew house", "malthouse"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Brewhouse",  "purpose": "brewery", "share": "large"},
+        {"name": "Store room", "purpose": "storage",  "share": "small"}
+      ],
+      "connections": [["Brewhouse", "Store room"]],
+      "entrance": {"room": "Brewhouse"},
+      "sleeps": "none",
+      "wealth": -1
+    },
+    {
+      "id": "merchant.shop",
+      "purpose": "shop",
+      "kinds": ["townhouse", "merchant's house", "shop", "store"],
+      "bands": ["medieval"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Shop",           "purpose": "shop",   "share": "medium"},
+        {"name": "Counting room",  "purpose": "study",  "share": "small"},
+        {"name": "Store room",     "purpose": "storage", "share": "small"}
+      ],
+      "connections": [["Shop", "Counting room"], ["Shop", "Store room"]],
+      "entrance": {"room": "Shop"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "merchant.living",
+      "purpose": "sleeping",
+      "kinds": ["townhouse", "merchant's house", "house"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Hall",               "purpose": "living_room",    "share": "medium"},
+        {"name": "Kitchen",            "purpose": "kitchen",        "share": "small"},
+        {"name": "Master bedchamber",  "purpose": "master_bedroom", "share": "small"},
+        {"name": "Bedchamber",         "purpose": "bedroom",        "share": "small"}
+      ],
+      "connections": [["Hall", "Kitchen"], ["Hall", "Master bedchamber"], ["Hall", "Bedchamber"]],
+      "entrance": {"room": "Hall"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "manor.hall",
+      "purpose": "common_rooms",
+      "kinds": ["manor", "manor house", "manor hall", "lord's hall", "great house"],
+      "bands": ["medieval"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Great hall", "purpose": "great_hall",   "share": "large"},
+        {"name": "Parlour",    "purpose": "living_room",  "share": "small"}
+      ],
+      "connections": [["Great hall", "Parlour"]],
+      "entrance": {"room": "Great hall"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "manor.family",
+      "purpose": "sleeping",
+      "kinds": ["manor", "manor house", "lord's hall"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Great chamber", "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Bedchamber",    "purpose": "bedroom",        "share": "small"},
+        {"name": "Nursery",       "purpose": "nursery",       "share": "small"}
+      ],
+      "connections": [["Great chamber", "Bedchamber"], ["Great chamber", "Nursery"]],
+      "entrance": {"room": "Great chamber"},
+      "sleeps": "residents",
+      "wealth": 1
+    },
+    {
+      "id": "manor.service",
+      "purpose": "servants",
+      "kinds": ["manor", "manor house", "great house"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Kitchen",         "purpose": "kitchen",        "share": "large"},
+        {"name": "Pantry",          "purpose": "pantry",         "share": "small"},
+        {"name": "Servants' room",  "purpose": "servants_room",  "share": "small"},
+        {"name": "Maids' room",     "purpose": "servants_room",  "share": "small"}
+      ],
+      "connections": [["Kitchen", "Pantry"], ["Kitchen", "Servants' room"],
+                      ["Kitchen", "Maids' room"]],
+      "entrance": {"room": "Kitchen"},
+      "sleeps": "staff"
+    },
+    {
+      "id": "castle.hall",
+      "purpose": "common_rooms",
+      "kinds": ["castle", "keep", "fortress", "stronghold"],
+      "bands": ["medieval"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Great hall", "purpose": "great_hall", "share": "large"},
+        {"name": "Chapel",     "purpose": "chapel",    "share": "small"}
+      ],
+      "connections": [["Great hall", "Chapel"]],
+      "entrance": {"room": "Great hall"},
+      "sleeps": "none",
+      "wealth": "building"
+    },
+    {
+      "id": "castle.keep",
+      "purpose": "sleeping",
+      "kinds": ["castle", "keep", "donjon"],
+      "bands": ["medieval"],
+      "storeys": 4,
+      "entry": "south",
+      "rooms": [
+        {"name": "Great chamber", "purpose": "master_bedroom", "share": "medium"},
+        {"name": "Chamber",       "purpose": "bedroom",        "share": "small"},
+        {"name": "Guardroom",     "purpose": "guardroom",      "share": "small"}
+      ],
+      "connections": [["Great chamber", "Chamber"], ["Great chamber", "Guardroom"]],
+      "entrance": {"room": "Great chamber"},
+      "sleeps": "residents",
+      "wealth": 1
+    },
+    {
+      "id": "castle.barracks",
+      "purpose": "barracks",
+      "kinds": ["castle", "keep", "garrison", "barracks"],
+      "bands": ["medieval"],
+      "storeys": 1,
+      "entry": "west",
+      "rooms": [
+        {"name": "Barracks room", "purpose": "barracks", "share": "large"},
+        {"name": "Armoury",       "purpose": "armoury",  "share": "small"}
+      ],
+      "connections": [["Barracks room", "Armoury"]],
+      "entrance": {"room": "Barracks room"},
+      "sleeps": "residents"
+    },
+    {
+      "id": "farm.house",
+      "purpose": "common_rooms",
+      "kinds": ["farmstead", "farmhouse", "grange", "homestead", "farm"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Hall",        "purpose": "living_room", "share": "medium"},
+        {"name": "Kitchen",     "purpose": "kitchen",     "share": "small"},
+        {"name": "Dairy",       "purpose": "dairy",       "share": "small"},
+        {"name": "Bedchamber",  "purpose": "bedroom",     "share": "small"}
+      ],
+      "connections": [["Hall", "Kitchen"], ["Kitchen", "Dairy"], ["Hall", "Bedchamber"]],
+      "entrance": {"room": "Hall"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "farm.longhouse",
+      "purpose": "common_rooms",
+      "kinds": ["longhouse", "long house", "byre house", "byre-house", "farmhouse"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "south",
+      "rooms": [
+        {"name": "Hall",       "purpose": "living_room", "share": "medium"},
+        {"name": "Kitchen",    "purpose": "kitchen",     "share": "small"},
+        {"name": "Bedchamber", "purpose": "bedroom",     "share": "small"},
+        {"name": "Byre",       "purpose": "byre",        "share": "medium"},
+        {"name": "Barn",       "purpose": "barn",        "share": "small"},
+        {"name": "Hayloft",    "purpose": "hayloft",     "share": "small"}
+      ],
+      "connections": [["Hall", "Kitchen"], ["Hall", "Bedchamber"], ["Hall", "Byre"],
+                      ["Byre", "Barn"], ["Byre", "Hayloft"]],
+      "entrance": {"room": "Hall"},
+      "sleeps": "residents",
+      "wealth": "building"
+    },
+    {
+      "id": "farm.barn",
+      "purpose": "stables",
+      "kinds": ["farmstead", "farm", "barn", "byre"],
+      "bands": ["medieval"],
+      "storeys": 2,
+      "entry": "west",
+      "rooms": [
+        {"name": "Barn",    "purpose": "barn",    "share": "large"},
+        {"name": "Byre",    "purpose": "stable",  "share": "medium"},
+        {"name": "Hayloft", "purpose": "hayloft", "share": "small"}
+      ],
+      "connections": [["Barn", "Byre"], ["Barn", "Hayloft"]],
+      "entrance": {"room": "Barn"},
+      "sleeps": "none"
+    }
+  ]
+}
