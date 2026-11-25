@@ -45,6 +45,11 @@ def _generate_args(args):
                 "room_assembler": (bool(s.get("room_assembler"))
                                    if getattr(args, "room_assembler", None) is None
                                    else getattr(args, "room_assembler", None)),
+                # the settings file's cellars choice rules unless the flag
+                # turns them off, the same hand the other switches get
+                "basements": (bool(s.get("basements"))
+                              if getattr(args, "basements", None) is None
+                              else bool(getattr(args, "basements", None))),
                 "frame": s.get("frame"),
                 "questionnaire": settings_mod.questionnaire(s)}
     if not args.idea:
@@ -56,7 +61,9 @@ def _generate_args(args):
             "library": args.library is not False,
             "item_library": args.item_library is not False,
             # on by default; only --no-room-assembler turns it off
-            "room_assembler": getattr(args, "room_assembler", None) is not False}
+            "room_assembler": getattr(args, "room_assembler", None) is not False,
+            # cellars too: on by default, --no-basements folds them up
+            "basements": getattr(args, "basements", None) is not False}
 
 
 def main(argv=None):
@@ -73,6 +80,10 @@ def main(argv=None):
                      help="turn the floors extension off (it is on by default; "
                           "a plan that records its extensions keeps what it "
                           "recorded unless this is given)")
+    lay.add_argument("--no-basements", dest="basements", action="store_false",
+                     default=None,
+                     help="keep every room on the ground floor: cellars fold "
+                          "back into the buildings above them (on by default)")
     lay.add_argument("--room-assembler", dest="room_assembler", action="store_true",
                      default=None,
                      help="place library buildings from the room library's "
@@ -110,6 +121,12 @@ def main(argv=None):
                      help="turn the floors extension off (it is on by default; "
                           "with --settings the file's list rules unless this "
                           "is given)")
+    gen.add_argument("--no-basements", dest="basements", action="store_false",
+                     default=None,
+                     help="keep every room on the ground floor: cellars fold "
+                          "back into the buildings above them (on by default; "
+                          "with --settings the file's choice rules unless "
+                          "this is given)")
     gen.add_argument("--room-assembler", dest="room_assembler", action="store_true",
                      default=None,
                      help="place library buildings from the room library's "
@@ -221,7 +238,8 @@ def main(argv=None):
                                    out_dir=args.out, progress=_print_event, emit=print,
                                    room_assembler=(getattr(args, "room_assembler", None)
                                                     is not False),
-                                   floors=not args.no_floors)
+                                   floors=not args.no_floors,
+                                   basements=getattr(args, "basements", None) is not False)
         else:
             summary = api.generate(provider=args.provider, out_dir=args.out,
                                    progress=_print_event, providers_path=args.providers,
