@@ -1,7 +1,7 @@
 """The mechanical equipment (library/objects/mechanical.json): the file loads
 through the library and the checker stays clean, every object carries a name
 and fillable text for each of its bands, and the two containers and the one
-1x2 piece are the ones the list says they are."""
+two-cell piece are the ones the list says they are."""
 import random
 import unittest
 
@@ -83,12 +83,12 @@ class TestMechanicalEquipment(unittest.TestCase):
                 o = self.lib.objects[oid]
                 self.assertEqual(o["container"], oid in ("bin.coal", "shelf.preserving"))
 
-    def test_the_canning_station_is_the_only_1x2(self):
+    def test_the_canning_bench_is_the_only_two_cell(self):
         for oid in IDS:
             with self.subTest(object=oid):
                 o = self.lib.objects[oid]
-                self.assertIn(o["size"], ([1, 1], [1, 2]))
-                self.assertEqual(o["size"] == [1, 2], oid == "workbench.canning")
+                self.assertIn(o["size"], ([1, 1], [2, 1]))
+                self.assertEqual(o["size"] == [2, 1], oid == "workbench.canning")
 
 
 if __name__ == "__main__":

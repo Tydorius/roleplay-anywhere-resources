@@ -124,7 +124,7 @@
     {
       "id": "workbench.canning",
       "category": "workbench",
-      "size": [1, 2],
+      "size": [2, 1],
       "walkability": 0,
       "forSleep": false,
       "light": 0,
