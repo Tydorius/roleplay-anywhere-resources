@@ -70,6 +70,22 @@
       "wealth": "building"
     },
     {
+      "id": "brew.house",
+      "purpose": "workshop",
+      "kinds": ["brewery", "brewhouse", "brew house", "malthouse"],
+      "bands": ["medieval", "industrial"],
+      "storeys": 1,
+      "entry": "south",
+      "rooms": [
+        {"name": "Brewhouse",  "purpose": "brewery", "share": "large"},
+        {"name": "Store room", "purpose": "storage",  "share": "small"}
+      ],
+      "connections": [["Brewhouse", "Store room"]],
+      "entrance": {"room": "Brewhouse"},
+      "sleeps": "none",
+      "wealth": -1
+    },
+    {
       "id": "merchant.shop",
       "purpose": "shop",
       "kinds": ["townhouse", "merchant's house", "shop", "store"],

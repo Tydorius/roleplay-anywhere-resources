@@ -286,11 +286,12 @@ class TestCourtyardInnFromRecipe(unittest.TestCase):
 
     def test_the_recipe_decides_the_part_list(self):
         self.assertEqual([b.layout.design.name for b in self.comp.parts],
-                         ["The Gilded Stag", "Stable Range", "Guest Range"])
-        self.assertIn(("compound The Gilded Stag Inn",
-                       "part Brew House dropped: recipe inn.courtyard "
-                       "has no wing for a brewery"),
-                      self.world.failures, self.world.failures)
+                         ["The Gilded Stag", "Stable Range", "Guest Range",
+                          "Brew House"])
+        self.assertNotIn(("compound The Gilded Stag Inn",
+                          "part Brew House dropped: recipe inn.courtyard "
+                          "has no wing for a brewery"),
+                         self.world.failures, self.world.failures)
 
     def test_the_front_range_assembles_with_the_p1_names(self):
         bl = part(self.comp, "The Gilded Stag")
