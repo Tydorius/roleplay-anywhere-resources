@@ -131,7 +131,7 @@
       ]
     },
     {
-      "id": "shelving.single",
+      "id": "shelving.single.classroom",
       "family": "classroom",
       "wall": "back",
       "use": [
@@ -404,7 +404,7 @@
       ]
     },
     {
-      "id": "shelving.single.classroom",
+      "id": "shelving.single.classroom1",
       "family": "classroom",
       "wall": "back",
       "use": [
@@ -857,7 +857,7 @@
       ]
     },
     {
-      "id": "shelving.single.classroom1",
+      "id": "shelving.single.classroom2",
       "family": "classroom",
       "wall": "corner",
       "use": [
@@ -919,7 +919,7 @@
           "kind": "optional"
         },
         {
-          "group": "shelving.single",
+          "group": "shelving.single.classroom",
           "kind": "optional"
         },
         {
@@ -991,7 +991,7 @@
           ]
         },
         {
-          "group": "shelving.single.classroom",
+          "group": "shelving.single.classroom1",
           "kind": "repeatable",
           "count": [
             1,
@@ -1044,7 +1044,7 @@
           "kind": "optional"
         },
         {
-          "group": "shelving.single",
+          "group": "shelving.single.classroom",
           "kind": "optional"
         },
         {
@@ -1085,7 +1085,7 @@
           "kind": "optional"
         },
         {
-          "group": "shelving.single",
+          "group": "shelving.single.classroom",
           "kind": "optional"
         },
         {
@@ -1218,7 +1218,7 @@
           "kind": "required"
         },
         {
-          "group": "shelving.single.classroom1",
+          "group": "shelving.single.classroom2",
           "kind": "optional"
         },
         {

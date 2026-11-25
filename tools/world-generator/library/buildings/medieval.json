@@ -13,6 +13,13 @@
         {"wing": "brew.house",    "side": "north"}
       ],
       "outdoor": [{"name": "Inn yard", "purpose": "courtyard", "between": "all"}],
+      "basement": {
+        "rooms": [
+          {"name": "Cellar", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"wing": "inn.front"}
     },
     {

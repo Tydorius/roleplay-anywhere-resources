@@ -1,0 +1,212 @@
+{
+ "layouts": [
+  {
+   "id": "cellar.tiny.a",
+   "family": "cellar",
+   "sizeBands": ["tiny"],
+   "minInterior": [3, 3],
+   "maxInterior": [3, 3],
+   "slots": [
+    {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:far",
+     "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.tiny.b",
+   "family": "cellar",
+   "sizeBands": ["tiny"],
+   "minInterior": [2, 4],
+   "maxInterior": [2, 5],
+   "slots": [
+    {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [1, 2], "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1],
+     "anchor": "wall:far+corner"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.tiny.c",
+   "family": "cellar",
+   "sizeBands": ["tiny"],
+   "minInterior": [3, 3],
+   "maxInterior": [3, 3],
+   "slots": [
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner",
+     "count": [1, 2]},
+    {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "wall:side",
+     "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [1, 1], "anchor": "wall:far", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.small.a",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 5],
+   "maxInterior": [4, 6],
+   "slots": [
+    {"id": "left", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [2, 3], "back": "wall"},
+    {"id": "right", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [2, 3], "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1],
+     "anchor": "wall:far+corner", "count": [1, 2]}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ]
+  },
+  {
+   "id": "cellar.small.b",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 4],
+   "maxInterior": [6, 4],
+   "slots": [
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner",
+     "count": [2, 3]},
+    {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:far",
+     "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.small.c",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 4],
+   "maxInterior": [5, 4],
+   "slots": [
+    {"id": "block", "role": "storage.bulk", "size": [2, 2], "anchor": "center"},
+    {"id": "shelf", "role": "shelving", "size": [2, 1], "anchor": "wall:side",
+     "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.medium.a",
+   "family": "cellar",
+   "sizeBands": ["medium"],
+   "minInterior": [5, 6],
+   "maxInterior": [6, 8],
+   "slots": [
+    {"id": "left", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [3, 5], "back": "wall"},
+    {"id": "right", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [3, 5], "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1],
+     "anchor": "wall:far+corner", "count": [1, 2]}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ]
+  },
+  {
+   "id": "cellar.medium.b",
+   "family": "cellar",
+   "sizeBands": ["medium"],
+   "minInterior": [6, 6],
+   "maxInterior": [8, 6],
+   "slots": [
+    {"id": "island", "role": "shelving", "size": [3, 1], "anchor": "center",
+     "count": [1, 2]},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner",
+     "count": [2, 4]},
+    {"id": "far", "role": "shelving", "size": [2, 1], "anchor": "row:far",
+     "count": [1, 2], "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ]
+  },
+  {
+   "id": "cellar.medium.c",
+   "family": "cellar",
+   "sizeBands": ["medium"],
+   "minInterior": [5, 6],
+   "maxInterior": [6, 8],
+   "slots": [
+    {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:far",
+     "count": [3, 4], "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner",
+     "count": [2, 3]}
+   ],
+   "grow": [
+    {"role": "shelving", "size": [2, 1], "anchor": "wall:side", "back": "wall"},
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ]
+  },
+  {
+   "id": "cellar.large.a",
+   "family": "cellar",
+   "sizeBands": ["large"],
+   "minInterior": [8, 7],
+   "maxInterior": [14, 12],
+   "slots": [
+    {"id": "rows", "role": "shelving", "size": [4, 1], "anchor": "center",
+     "count": [2, 3]},
+    {"id": "far", "role": "shelving", "size": [2, 1], "anchor": "row:far",
+     "count": [2, 3], "back": "wall"},
+    {"id": "bulk", "role": "storage.bulk", "size": [1, 1], "anchor": "corner",
+     "count": [2, 4]}
+   ],
+   "grow": [
+    {"role": "shelving", "size": [4, 1], "anchor": "center"},
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "corner"}
+   ]
+  },
+  {
+   "id": "cellar.large.b",
+   "family": "cellar",
+   "sizeBands": ["large"],
+   "minInterior": [8, 8],
+   "maxInterior": [14, 12],
+   "slots": [
+    {"id": "blocks", "role": "storage.bulk", "size": [2, 2], "anchor": "corner",
+     "count": [2, 4]},
+    {"id": "shelves", "role": "shelving", "size": [2, 1], "anchor": "row:side",
+     "count": [2, 3], "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [2, 2], "anchor": "center"},
+    {"role": "shelving", "size": [2, 1], "anchor": "wall:far", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.large.c",
+   "family": "cellar",
+   "sizeBands": ["large"],
+   "minInterior": [7, 7],
+   "maxInterior": [12, 10],
+   "slots": [
+    {"id": "farrow", "role": "storage.bulk", "size": [1, 1], "anchor": "row:far",
+     "count": [4, 6]},
+    {"id": "siderow", "role": "storage.bulk", "size": [1, 1],
+     "anchor": "row:side", "count": [4, 6]},
+    {"id": "shelves", "role": "shelving", "size": [2, 1], "anchor": "wall:side",
+     "count": [1, 2], "back": "wall"}
+   ],
+   "grow": [
+    {"role": "storage.bulk", "size": [1, 1], "anchor": "center"}
+   ]
+  }
+ ]
+}

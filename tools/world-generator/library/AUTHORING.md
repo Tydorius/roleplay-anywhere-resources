@@ -575,6 +575,13 @@ outdoor fire pits stay out.
   `large` (its part of the floor). Beds for the residents must exist: one `master_bedroom` per
   couple the building usually holds, `bedroom` or `dormitory` rooms for the rest.
 - **`connections`**: pairs of room names; every room must be reachable from the entrance room.
+- **`basement`** (optional): rooms kept below the ground. `rooms` (one to four) follow the
+  suite rules (`purpose` from `library.json`, `share` as above); `connections` pairs basement
+  room names — the stairs stand in `stairRoom`, a named room of the suite's own `rooms` (the
+  entrance room when left out), so basement rooms connect to each other, not to the ground
+  floor. The generator builds one
+  cellar plane under the building (`"(cellar)"`, `"(basement)"` or `"(sublevel)"` by band)
+  linked by a two-way stair portal; `--no-basements` folds the rooms back onto the ground.
 - Name rooms the way the setting would ("Taproom", "Galley", "Crew bunks").
 
 ## Wings: `wings/<band>.json`
@@ -679,6 +686,12 @@ wings are references: each names a wing recipe and the side of the shape it stan
   named wings enclose. `purpose` is `courtyard`, `garden` or `yard` (a short list held in the
   checker until the outdoor-room families land in `library.json`).
 - **`entrance`** names the wing the way in.
+- **`basement`** (optional): rooms kept below the ground, laid out like a wing's — `rooms`
+  (one to four, each `name`, `purpose` from `library.json`, `share`), `connections` pairing
+  basement room names, and `stairRoom` naming a room of one of the recipe's wings: the wing
+  holding that room carries the cellar plane under it, linked by a two-way stair portal
+  (`--no-basements` folds the rooms back into that wing). `stairRoom` is optional in the
+  data; the kitchen or great-room wing is picked when it is left out.
 
 Nothing consumes these files yet: the assembler and the compound machinery take up wing
 recipes in later phases, and until then a building that matches a recipe still lays out as a

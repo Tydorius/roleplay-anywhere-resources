@@ -400,12 +400,22 @@ def _build_cellar(world, plan_data, b, rect, stairs, rng):
         purpose=f"the {word} below {design.name}", wall=design.wall,
         ground=design.ground, rooms=base.rooms, connections=base.connections,
         entrance_room=base.rooms[0].name if base.rooms else "",
-        entrance_side=design.entrance_side, furniture=base.furniture)
+        entrance_side=design.entrance_side, furniture=base.furniture,
+        wealth=design.wealth, condition=design.condition,
+        loot_pool=design.loot_pool)
     layout = assembler.wing_build(cellar, (rect.x, rect.y), (rect.w, rect.h),
                                   templates=world.templates)
     if layout is None:
         layout = layout_rooms(cellar, rect, rng, world.templates,
                               furniture=base.furniture)
+    else:
+        # a cellar is sealed: the entrance-side door the assembly opened on
+        # the target ring is the same build-time fiction a storey's is —
+        # strip it from the rooms so no opening sits on the plane's border
+        # (the stairs are the only way in)
+        ring = _ring(layout.rect)
+        for room in layout.rooms:
+            room.doors -= ring
     names = {r.base_name for r in layout.rooms}
     for f in layout.furniture:
         if f.room not in names:

@@ -1,0 +1,1318 @@
+{
+ "rooms": [
+  {
+   "id": "cellar.small.a.tight",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    5,
+    3
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.a",
+   "description": "A small cellar: shelving along the north wall, barrels and sacks below.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage1"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      0
+     ],
+     "group": "storage.bulk.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "group": "sack.stack"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      1,
+      2
+     ],
+     "group": "sack.stack"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      2
+     ],
+     "group": "storage.bulk.single.storage"
+    }
+   ],
+   "doors": {
+    "north": [
+     2,
+     3
+    ],
+    "south": [
+     2,
+     3
+    ],
+    "west": [
+     1
+    ],
+    "east": [
+     1
+    ]
+   },
+   "stretch": {
+    "x": [
+     0,
+     5
+    ],
+    "y": [
+     1,
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.a.roomy",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    5,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.a",
+   "description": "A small cellar: a long shelf on the north wall, casks racked along the south.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    }
+   ],
+   "doors": {
+    "north": [
+     4
+    ],
+    "south": [
+     4
+    ],
+    "west": [
+     1,
+     2
+    ],
+    "east": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "stretch": {
+    "x": [
+     0
+    ],
+    "y": [
+     1,
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.a.grand",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    6,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.a",
+   "description": "A well-kept cellar: shelving along the north wall, casks racked along the south.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      4,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage1"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      4,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [],
+    "west": [
+     1,
+     2
+    ],
+    "east": [
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     0,
+     4,
+     6
+    ],
+    "y": [
+     1,
+     2,
+     3
+    ]
+   }
+  },
+  {
+   "id": "cellar.medium.a.tight",
+   "family": "cellar",
+   "sizeBand": "medium",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    7,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.medium.a",
+   "description": "A working cellar: shelving both long walls, sacked grain in the corner.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      5,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage1"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "south",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      6,
+      3
+     ],
+     "group": "sack.stack"
+    }
+   ],
+   "doors": {
+    "north": [
+     4
+    ],
+    "south": [
+     4,
+     5
+    ],
+    "west": [
+     1,
+     2
+    ],
+    "east": [
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     0,
+     7
+    ],
+    "y": []
+   }
+  },
+  {
+   "id": "cellar.medium.a.roomy",
+   "family": "cellar",
+   "sizeBand": "medium",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    7,
+    5
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.medium.a",
+   "description": "A roomy cellar: shelves on the north wall, casks two deep along the south.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      5,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage1"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      6,
+      4
+     ],
+     "group": "storage.bulk.single.storage"
+    }
+   ],
+   "doors": {
+    "north": [
+     4
+    ],
+    "south": [
+     4,
+     5
+    ],
+    "west": [
+     1,
+     2,
+     3
+    ],
+    "east": [
+     1,
+     2,
+     3
+    ]
+   },
+   "stretch": {
+    "x": [
+     0,
+     4,
+     5,
+     7
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.medium.a.grand",
+   "family": "cellar",
+   "sizeBand": "medium",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    8,
+    6
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.medium.a",
+   "description": "A great vaulted cellar: long shelving north and south, casks racked between.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      4,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      5
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      5
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      4,
+      5
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      6,
+      5
+     ],
+     "back": "south",
+     "group": "shelving.single.storage1"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [],
+    "west": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "east": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   "stretch": {
+    "x": [
+     0,
+     4,
+     8
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   }
+  },
+  {
+   "id": "cellar.medium.b.tight",
+   "family": "cellar",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    5,
+    5
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.medium.b",
+   "description": "A working cellar: shelf along the vault, sacks mid-floor, casks double-banked below.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      1,
+      2
+     ],
+     "group": "sack.stack"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      2
+     ],
+     "group": "sack.stack"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      3,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    }
+   ],
+   "doors": {
+    "north": [
+     4
+    ],
+    "south": [
+     2
+    ],
+    "west": [
+     1,
+     2,
+     3
+    ],
+    "east": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "medium",
+   "stretch": {
+    "x": [],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.b.tight",
+   "family": "cellar",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    4,
+    4
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.b",
+   "description": "A squat cellar: a short shelf up top, casks and a sack below.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      1,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage1"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      3
+     ],
+     "group": "sack.stack"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     3
+    ],
+    "south": [
+     2
+    ],
+    "west": [
+     0,
+     1,
+     2
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "small",
+   "stretch": {
+    "x": [],
+    "y": []
+   }
+  },
+  {
+   "id": "cellar.small.b.roomy",
+   "family": "cellar",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    4,
+    5
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.b",
+   "description": "A narrow cellar: one long shelf, casks racked along the bottom.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      4
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [],
+    "west": [
+     1,
+     2,
+     3
+    ],
+    "east": [
+     1,
+     2,
+     3
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "small",
+   "stretch": {
+    "x": [
+     0,
+     4
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.c.roomy",
+   "family": "cellar",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    6,
+    3
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.c",
+   "description": "A wide low cellar: shelves under the vault, casks and a sack along the wall.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      3,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      3,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage5"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      5,
+      2
+     ],
+     "group": "sack.stack"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [
+     2,
+     3,
+     4
+    ],
+    "west": [
+     1
+    ],
+    "east": [
+     1
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "small",
+   "stretch": {
+    "x": [],
+    "y": [
+     1,
+     2
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.b.grand",
+   "family": "cellar",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    4,
+    6
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.small.b",
+   "description": "A tall narrow cellar: racked shelf above, a run of casks at the foot.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      5
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      5
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      1
+     ],
+     "group": "sack.stack"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [],
+    "west": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "east": [
+     2,
+     3,
+     4
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "small",
+   "stretch": {
+    "x": [
+     0,
+     4
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   }
+  },
+  {
+   "id": "cellar.medium.b.roomy",
+   "family": "cellar",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    5,
+    7
+   ],
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "storage.medium.b",
+   "description": "A deep cellar: shelves above, a sack mid-floor, casks racked along the foot.",
+   "pieces": [
+    {
+     "role": "shelving",
+     "size": [
+      4,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      0
+     ],
+     "back": "north",
+     "group": "shelving.single.storage6"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      3
+     ],
+     "group": "sack.stack"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      6
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      2,
+      6
+     ],
+     "back": "south",
+     "group": "storage.bulk.storage.bulk"
+    },
+    {
+     "role": "storage.bulk",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      6
+     ],
+     "group": "sack.stack"
+    }
+   ],
+   "doors": {
+    "north": [],
+    "south": [],
+    "west": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "east": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "sizeBand": "medium",
+   "stretch": {
+    "x": [],
+    "y": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ]
+   }
+  }
+ ]
+}

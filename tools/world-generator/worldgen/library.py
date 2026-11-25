@@ -522,6 +522,29 @@ def _check_suite(lib, s, err, warn):
         for n in names:
             if n not in seen:
                 err(f"{where}: room {n} can't be reached from the entrance")
+    base = s.get("basement")
+    if base is not None:
+        bwhere = f"{where} basement"
+        brooms = base.get("rooms") if isinstance(base, dict) else None
+        if not isinstance(brooms, list) or not 1 <= len(brooms) <= 4:
+            err(f"{bwhere}: must hold one to four rooms")
+        else:
+            bnames = [x.get("name") for x in brooms]
+            for d, n in Counter(bnames).items():
+                if n > 1:
+                    err(f"{bwhere}: room name {d!r} repeats")
+            for x in brooms:
+                p = x.get("purpose")
+                if p != "custom" and p not in lib.vocab.get("purposes", {}):
+                    err(f"{bwhere}: room {x.get('name')} has unknown purpose {p!r}")
+                if x.get("share") not in SHARES:
+                    err(f"{bwhere}: room {x.get('name')} share must be one of {SHARES}")
+            for c in base.get("connections") or []:
+                if not (isinstance(c, list) and len(c) == 2
+                        and c[0] in bnames and c[1] in bnames):
+                    err(f"{bwhere}: connection {c} names a missing room")
+            if base.get("stairRoom") and base.get("stairRoom") not in names:
+                err(f"{bwhere}: stairRoom {base.get('stairRoom')!r} names no ground room")
     sleeps = [x for x in rooms if lib.family_of(x.get("purpose")) in SLEEP_FAMILIES]
     if r[1] > 0 and not sleeps:
         err(f"{where}: {r[1]} residents but no room to sleep in")
@@ -755,6 +778,25 @@ def _check_building(lib, b, err, warn):
     start = (b.get("entrance") or {}).get("wing")
     if start not in [e.get("wing") for e in wings if isinstance(e, dict)]:
         err(f"{where}: entrance wing {start!r} is not a wing of this building")
+    base = b.get("basement")
+    if base is not None:
+        bwhere = f"{where} basement"
+        brooms = base.get("rooms") if isinstance(base, dict) else None
+        if not isinstance(brooms, list) or not 1 <= len(brooms) <= 4:
+            err(f"{bwhere}: must hold one to four rooms")
+        else:
+            wrooms = [r.get("name") for e in wings if isinstance(e, dict)
+                      for r in (lib.wings.get(e.get("wing")) or {}).get("rooms") or []]
+            for x in brooms:
+                p = x.get("purpose")
+                if p != "custom" and p not in lib.vocab.get("purposes", {}):
+                    err(f"{bwhere}: room {x.get('name')} has unknown purpose {p!r}")
+                if x.get("share") not in SHARES:
+                    err(f"{bwhere}: room {x.get('name')} share must be one of {SHARES}")
+            if base.get("stairRoom") and base["stairRoom"] not in wrooms:
+                # a stair room no wing names resolves by family at build time
+                warn(f"{bwhere}: stairRoom {base['stairRoom']!r} is not a wing "
+                     f"room; the kitchen or great room it hangs off is picked")
 
 
 def check_buildings(lib, err, warn):
