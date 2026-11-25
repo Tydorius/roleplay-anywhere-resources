@@ -2,9 +2,9 @@
 
 Community resources for Anywhere RPG (Roleplay Anywhere).
 
-> **Game version:** `main` is built and tested for **Anywhere RPG 1.0**, currently on Steam's alpha
-> track (build 26557354). Alpha updates can change the config files and code these resources depend
-> on, so check each folder's README for what to re-check after an update.
+> **Game version:** `main` follows the game's alpha track; the code-mod loader is built and tested
+> for **Anywhere RPG 1.2** (build 26671108). Alpha updates can change the config files and code
+> these resources depend on, so check each folder's README for what to re-check after an update.
 
 > **Playing 0.18?** The 0.18 versions stay on the
 > [`0.18` branch](https://github.com/Tydorius/roleplay-anywhere-resources/tree/0.18) and in the
