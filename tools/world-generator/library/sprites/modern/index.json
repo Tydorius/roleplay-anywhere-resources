@@ -970,8 +970,8 @@
    "physical": "Top-down view of a bulk milk tank: a long grey powder-coated steel bulk tank with a gauge panel along one side, an icy sheen over the manhole.",
    "reviewed": true
   },
-  "dairy.milking_stall": {
-   "template": "Aluminium milking stall [dairy.milking_stall]",
+  "milking_stall.tie": {
+   "template": "Aluminium milking stall [milking_stall.tie]",
    "tier": "modest",
    "condition": "kept",
    "materials": {

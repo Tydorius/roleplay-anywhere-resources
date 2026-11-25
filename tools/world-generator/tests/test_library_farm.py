@@ -594,7 +594,7 @@ INDUSTRIAL_FARM_OBJECTS = (
 MODERN_FARM_OBJECTS = (
     ("farm_machine.tractor", "farm_machine", [2, 3], None, ["poor", "modest"]),
     ("farm_machine.combine", "farm_machine", [4, 3], None, ["wealthy", "elite"]),
-    ("dairy.milking_stall", "milking_stall", [1, 2], "north", ["poor", "modest"]),
+    ("milking_stall.tie", "milking_stall", [1, 2], "north", ["poor", "modest"]),
     ("dairy.milk_tank", "dairy", [2, 1], "north", ["poor", "modest"]),
     ("granary.silo", "granary", [2, 2], None, ["poor", "modest"]),
     ("feed.tube_feeder", "feed", [1, 1], None, ["poor", "modest"]),
@@ -733,7 +733,7 @@ class TestMachineShedAndParlourRooms(unittest.TestCase):
         self.assertTrue(rooms, "no parlour room holds a 1x2 milking stall")
         ids = {o["id"] for o in L.candidates(
             self.lib, "dairy", "milking.stall", [1, 2], "modern", "poor")}
-        self.assertIn("dairy.milking_stall", ids)
+        self.assertIn("milking_stall.tie", ids)
 
     def test_the_industrial_dairy_separates_in_its_stored_rooms(self):
         """The dairy rooms rl-14b shipped need no new recipe: their dairy
@@ -1061,7 +1061,7 @@ class TestTheMilkingStall(unittest.TestCase):
 
     def test_parlour_stalls_is_gone_and_the_stall_loads(self):
         self.assertNotIn("dairy.parlour_stalls", self.lib.objects)
-        o = self.lib.objects["dairy.milking_stall"]
+        o = self.lib.objects["milking_stall.tie"]
         self.assertEqual(o["aliases"],
                          ["milking stall", "milking stalls", "parlour stalls"])
         access = self.lib.vocab["roleAccess"]
@@ -1073,7 +1073,7 @@ class TestTheMilkingStall(unittest.TestCase):
             ids = {o["id"] for t in self.lib.tiers for o in L.candidates(
                 self.lib, purpose, "milking.stall", [1, 2], "modern", t)}
             with self.subTest(purpose=purpose):
-                self.assertIn("dairy.milking_stall", ids)
+                self.assertIn("milking_stall.tie", ids)
         for band in ("medieval", "industrial", "scifi"):
             ids = {o["id"] for t in self.lib.tiers for o in L.candidates(
                 self.lib, "dairy", "milking.stall", None, band, t)}
@@ -1122,14 +1122,14 @@ class TestTheMilkingStall(unittest.TestCase):
         from worldgen import library_art
         idx = library_art.load_index("modern")
         self.assertNotIn("dairy.parlour_stalls", idx)
-        entry = idx.get("dairy.milking_stall")
+        entry = idx.get("milking_stall.tie")
         self.assertIsNotNone(entry, "the modern index has no milking stall")
         self.assertTrue(entry.get("reviewed"))
         self.assertIn("milking stall", entry.get("physical", ""))
-        o = self.lib.objects["dairy.milking_stall"]
+        o = self.lib.objects["milking_stall.tie"]
         self.assertEqual(set(entry.get("materials", {})), set(o["parts"]))
         self.assertTrue(os.path.exists(
-            library_art.sprite_path("modern", "dairy.milking_stall")))
+            library_art.sprite_path("modern", "milking_stall.tie")))
         self.assertFalse(os.path.exists(
             library_art.sprite_path("modern", "dairy.parlour_stalls")))
 

@@ -697,7 +697,7 @@
       "sources": ["claude-authored"]
     },
     {
-      "id": "dairy.milking_stall",
+      "id": "milking_stall.tie",
       "category": "milking_stall",
       "size": [1, 2],
       "walkability": 0,
