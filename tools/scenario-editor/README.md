@@ -176,11 +176,23 @@ The dialog's steps:
   as a new workspace; the old one stays untouched. A framed world keeps its frame: the plan
   carries it, so the re-roll never asks the questionnaire again.
 
+![The New world dialog: the room library, item library and room assembler options, all on by default](media/scenario_editor_new-world-library.png)
+
+With those defaults, a generated village's rooms, wings and courtyards all come from the
+library — the inn's courtyard close-up shows the front range and taproom, the stables, the
+guest range and the brewery wing around its yard:
+
+![A generated village, every building assembled from the room library's rooms and wings](media/scenario_editor_assembled-village.png)
+
+![The inn's courtyard up close, its four wings around the yard](media/scenario_editor_inn-courtyard.png)
+
 ## Rooms tab
 
 The third tab (it stays hidden until the generator's room library ships) browses that library
 and works its rooms by hand — every save runs the library's own checker first, so a broken
 room never reaches a file.
+
+![The Rooms tab: family and filters on the left, the plan preview in the middle, and the room's details on the right](media/scenario_editor_rooms-browse.png)
 
 - **Browse:** pick a family (bedroom, bedroom.master, washroom), narrow the list by size band,
   clearance, style, wealth tier or a search over ids and descriptions; a red `!` marks a room
@@ -197,6 +209,8 @@ room never reaches a file.
 - **Look:** switch from Plan colours to an art band (medieval, modern…) to see the sprite the
   world generator would place for each piece, turned so its back faces the wall; a piece with
   no sprite in the band stays a colour block.
+
+  ![The same room in the Look view: each piece drawn as its medieval sprite, backs to the walls](media/scenario_editor_rooms-look.png)
 - **Details** on the right: id, recipe, size, clearance, style, sleeps, symmetric, outdoor and
   the description, plus the editable fields — **wealth** (the tiers a room serves, by tick
   box), **description**, **symmetric** and **retired**. Changing one flags it `edited`, so the
@@ -213,6 +227,8 @@ room never reaches a file.
   from a recipe** starts from the recipe's anchor group in the smallest room it fits, and both
   are marked `source: "hand"`: regeneration never changes or removes them. Any layout you keep
   marks the room `source: "hand"` too.
+
+  ![The plan mid-edit: the toolbar of layout controls and the room's pieces outlined on the grid](media/scenario_editor_rooms-edit.png)
 - **Add any group** (the layout editor's **Add group…**): the picker lists, under headings, the
   groups this room has lost since editing began (first place to look when putting one back),
   the recipe's groups of any kind, the family's luxury pool, and every other group in the

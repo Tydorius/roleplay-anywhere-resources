@@ -171,6 +171,8 @@ python image_gallery.py
   matched for you and can be changed under *Encoders and VAE*. Your choices are kept in
   `image_gallery.settings.json`.
 - **Edit prompt** changes the description for that one image only; the scenario isn't changed. The edit stays in this browser through a Reload, a workspace switch or a page reload, and **Reset text** goes back to the scenario's own description. If the scenario's own description changes later, the old edit is dropped (a notice names the images) so it never hides the corrected text.
+
+  ![A card with its edit panel open: the description box and the Reset text button beside it](media/image-gallery-4.png)
 - **Portraits** get a subject: "one woman", "one man", "one girl", "one boy" or "one creature",
   read from the character's gender, age and animation, which you can override. It is worded for
   the model: booru tags (`1girl, solo` against `2girls, multiple girls`) for Illustrious, Pony
