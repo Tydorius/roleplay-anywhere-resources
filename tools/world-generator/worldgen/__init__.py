@@ -271,6 +271,8 @@ def _rooms_by_privacy(world, b, farm_uses=frozenset()):
     rooms = [(r, bl.design) for r in bl.rooms
              if _room_use(bl.design, r) not in farm_uses]
     for f in getattr(b, "floors", []) or []:
+        if f.storey == 0:
+            continue   # nobody beds down in the cellar, however far it sits
         rooms += [(r, f.layout.design) for r in f.layout.rooms
                   if _room_use(f.layout.design, r) not in farm_uses]
     return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]

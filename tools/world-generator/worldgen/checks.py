@@ -173,6 +173,12 @@ def _floors_checks(world, blocked):
         above = regions.get(f.above)
         if above is None:
             issues.append(f"{f.region_name}: above region {f.above!r} does not exist")
+        elif f.storey == 0:
+            # a cellar assembles into the footprint it hangs under and the
+            # closers may leave it smaller — never larger
+            if f.rect.w > above.rect.w or f.rect.h > above.rect.h:
+                issues.append(f"{f.region_name} is {f.rect.w}x{f.rect.h} but sits "
+                              f"under {f.above} at {above.rect.w}x{above.rect.h}")
         elif (f.rect.w, f.rect.h) != (above.rect.w, above.rect.h):
             issues.append(f"{f.region_name} is {f.rect.w}x{f.rect.h} but sits over "
                           f"{f.above} at {above.rect.w}x{above.rect.h}")
@@ -886,7 +892,8 @@ def run_checks(world):
 
     # ---- upper storeys, their stairs portals and openings
     floors_metrics = {
-        "floors": len(getattr(world, "floors", []) or []),
+        "floors": sum(1 for f in getattr(world, "floors", []) or [] if f.storey >= 2),
+        "cellars": sum(1 for f in getattr(world, "floors", []) or [] if f.storey == 0),
         "portals": len(getattr(world, "portals", []) or []),
         "issues": _floors_checks(world, blocked) if getattr(world, "floors", None) else [],
     }
