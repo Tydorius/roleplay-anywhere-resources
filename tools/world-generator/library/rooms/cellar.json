@@ -1313,6 +1313,1123 @@
      6
     ]
    }
+  },
+  {
+   "id": "cellar.small.d.tight",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    4,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.d",
+   "description": "A boiler room: the furnace on the back wall, the coal bin wedged in the corner, a shelf for the fitter's tools.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "fuel",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      3
+     ],
+     "group": "fuel.single"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1,
+     3
+    ],
+    "south": [
+     1,
+     2
+    ],
+    "west": [
+     0,
+     2
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [],
+    "y": [
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.d.roomy",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    5,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.d",
+   "description": "A boiler room with room to work: the furnace on the back wall, twin shelves of fittings, the coal bin by the door.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "fuel",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      3
+     ],
+     "group": "fuel.single.cellar"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1,
+     3,
+     4
+    ],
+    "south": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "west": [
+     0,
+     3
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     2
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.d.grand",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    6,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.d",
+   "description": "A broad boiler room: the furnace on the back wall, coal binned along the corner, shelving run down the side for the engineer's stores.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "fuel",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      5,
+      3
+     ],
+     "group": "fuel.single"
+    },
+    {
+     "role": "fuel",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      3
+     ],
+     "group": "fuel.single.cellar"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1,
+     3,
+     4,
+     5
+    ],
+    "south": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "west": [
+     0,
+     3
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     2,
+     3,
+     4,
+     5,
+     6
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.e.tight",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    4,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.e",
+   "description": "A utility room: the furnace and water heater shoulder to shoulder on the back wall, a shelf by the side.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "hot_water",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "hot_water.single"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      1,
+      3
+     ],
+     "back": "south",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      3
+     ],
+     "back": "south",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1
+    ],
+    "south": [
+     0,
+     2
+    ],
+    "west": [
+     0,
+     2,
+     3
+    ],
+    "east": [
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     2,
+     3,
+     4
+    ],
+    "y": []
+   }
+  },
+  {
+   "id": "cellar.small.e.roomy",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    4,
+    5
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.e",
+   "description": "A utility room: the furnace and water heater on the back wall, shelving run down the side for the household stores.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "hot_water",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "hot_water.single"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      4
+     ],
+     "back": "south",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1
+    ],
+    "south": [
+     0,
+     1,
+     2
+    ],
+    "west": [
+     0,
+     4
+    ],
+    "east": [
+     1,
+     2,
+     3
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.e.grand",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    6,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.e",
+   "description": "A large utility room: the furnace and a pair of water heaters along the back wall, deep shelving down one side.",
+   "pieces": [
+    {
+     "role": "heat",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "heat.single.cellar"
+    },
+    {
+     "role": "hot_water",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "hot_water.single.cellar"
+    },
+    {
+     "role": "hot_water",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      0
+     ],
+     "back": "north",
+     "group": "hot_water.single.cellar"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      1
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     1,
+     5
+    ],
+    "south": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "west": [
+     0
+    ],
+    "east": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     2,
+     3,
+     4
+    ],
+    "y": []
+   }
+  },
+  {
+   "id": "cellar.small.f.tight",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "tight",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest"
+   ],
+   "size": [
+    4,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.f",
+   "description": "A preserving cellar: the canning bench against the back wall, a jar shelf beside it, spare shelving down the side.",
+   "pieces": [
+    {
+     "role": "preserving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      0,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single"
+    },
+    {
+     "role": "preserving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      2,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single.cellar"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      3
+     ],
+     "back": "east",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     3
+    ],
+    "south": [
+     1,
+     2
+    ],
+    "west": [
+     1
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [],
+    "y": [
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.f.roomy",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "roomy",
+   "style": "flush",
+   "wealth": [
+    "poor",
+    "modest",
+    "wealthy"
+   ],
+   "size": [
+    5,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.f",
+   "description": "A preserving cellar: a long canning bench under the back wall, jars racked beside it, shelves run down the side.",
+   "pieces": [
+    {
+     "role": "preserving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      1,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single"
+    },
+    {
+     "role": "preserving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single.cellar1"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      4,
+      3
+     ],
+     "back": "east",
+     "group": "shelving.single.cellar3"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     4
+    ],
+    "south": [
+     1,
+     2,
+     3
+    ],
+    "west": [
+     0,
+     1
+    ],
+    "east": [
+     0,
+     1,
+     2
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     3,
+     4
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
+  },
+  {
+   "id": "cellar.small.f.grand",
+   "family": "cellar",
+   "sizeBand": "small",
+   "clearance": "grand",
+   "style": "flush",
+   "wealth": [
+    "wealthy",
+    "elite"
+   ],
+   "size": [
+    6,
+    4
+   ],
+   "sleeps": {
+    "singles": 0,
+    "couples": 0
+   },
+   "outdoor": false,
+   "symmetric": false,
+   "source": "hand",
+   "recipe": "cellar.small.f",
+   "description": "A broad preserving cellar: the canning bench centred on the back wall, jar shelves beside it, shelving down both sides.",
+   "pieces": [
+    {
+     "role": "preserving",
+     "size": [
+      2,
+      1
+     ],
+     "at": [
+      1,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single"
+    },
+    {
+     "role": "preserving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      3,
+      0
+     ],
+     "back": "north",
+     "group": "preserving.single.cellar"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      2
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar5"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      0,
+      3
+     ],
+     "back": "west",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      5,
+      1
+     ],
+     "back": "east",
+     "group": "shelving.single.cellar3"
+    },
+    {
+     "role": "shelving",
+     "size": [
+      1,
+      1
+     ],
+     "at": [
+      5,
+      2
+     ],
+     "back": "east",
+     "group": "shelving.single.cellar5"
+    }
+   ],
+   "doors": {
+    "north": [
+     0,
+     4,
+     5
+    ],
+    "south": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "west": [
+     0,
+     1
+    ],
+    "east": [
+     0,
+     3
+    ]
+   },
+   "stretch": {
+    "x": [
+     1,
+     3,
+     4,
+     5
+    ],
+    "y": [
+     1,
+     2,
+     3,
+     4
+    ]
+   }
   }
  ]
 }

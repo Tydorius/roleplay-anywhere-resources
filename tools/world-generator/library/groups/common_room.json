@@ -1285,7 +1285,7 @@
       ]
     },
     {
-      "id": "fuel.single",
+      "id": "fuel.single.common_room",
       "family": "common_room",
       "wall": "none",
       "use": [
@@ -1751,7 +1751,7 @@
           "kind": "optional"
         },
         {
-          "group": "fuel.single",
+          "group": "fuel.single.common_room",
           "kind": "optional"
         },
         {
