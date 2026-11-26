@@ -97,6 +97,17 @@
    "physical": "Top-down view of a square washing machine: a chrome-plated steel top with a detergent drawer and dials along the back edge, the round white frosted glass porthole door showing at the bottom edge.",
    "reviewed": true
   },
+  "appliance.water_heater": {
+   "template": "Chrome-plated steel water heater [appliance.water_heater]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "casing": "chrome-plated steel",
+    "pipe": "powder-coated steel"
+   },
+   "physical": "Top-down view of a water heater: a round tank filling the cell, a domed chrome-plated steel lid, the black powder-coated steel vent pipe at the back edge, a ring burner at the bottom edge.",
+   "reviewed": true
+  },
   "barrel.cask_rack": {
    "template": "Beech-effect laminate wine cask rack [barrel.cask_rack]",
    "tier": "modest",
@@ -968,18 +979,6 @@
     "tank": "powder-coated steel"
    },
    "physical": "Top-down view of a bulk milk tank: a long grey powder-coated steel bulk tank with a gauge panel along one side, an icy sheen over the manhole.",
-   "reviewed": true
-  },
-  "milking_stall.tie": {
-   "template": "Aluminium milking stall [milking_stall.tie]",
-   "tier": "modest",
-   "condition": "kept",
-   "materials": {
-    "cluster": "powder-coated steel",
-    "rails": "aluminium",
-    "trough": "powder-coated steel"
-   },
-   "physical": "Top-down view of a milking stall: silver aluminium rails up both long sides, a grey powder-coated steel feed trough across the head end, a black rubber mat floor, a grey powder-coated steel milking cluster hung on an arm at the side.",
    "reviewed": true
   },
   "decor.aquarium": {
@@ -1898,6 +1897,18 @@
    "physical": "Top-down view of a privacy curtain: a long thin line of charcoal microfibre folds on a chrome-plated steel rail, small wheeled feet at each end.",
    "reviewed": true
   },
+  "milking_stall.tie": {
+   "template": "Aluminium milking stall [milking_stall.tie]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "cluster": "powder-coated steel",
+    "rails": "aluminium",
+    "trough": "powder-coated steel"
+   },
+   "physical": "Top-down view of a milking stall: silver aluminium rails up both long sides, a grey powder-coated steel feed trough across the head end, a black rubber mat floor, a grey powder-coated steel milking cluster hung on an arm at the side.",
+   "reviewed": true
+  },
   "mill.grindstone": {
    "template": "Chrome-plated steel bench grinder [mill.grindstone]",
    "tier": "modest",
@@ -2334,6 +2345,17 @@
    "physical": "Top-down view of a pantry shelf two cells wide: pale pine veneer shelf edge along the bottom, rows of smoked toughened glass jars and tied bundles, back against the top edge.",
    "reviewed": true
   },
+  "shelf.preserving": {
+   "template": "Beech-effect laminate preserving shelf [shelf.preserving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "beech-effect laminate",
+    "jar": "toughened glass"
+   },
+   "physical": "Top-down view of a preserving shelf: a light brown beech-effect laminate shelf edge along the bottom, close rows of smoked toughened glass jar lids edge to edge, back against the top edge.",
+   "reviewed": true
+  },
   "shelf.utility": {
    "template": "Powder-coated steel wire shelving unit [shelf.utility]",
    "tier": "modest",
@@ -2671,6 +2693,17 @@
    "physical": "Top-down view of a boiler against the top wall: a round silver aluminium drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge.",
    "reviewed": true
   },
+  "utility.gas_furnace": {
+   "template": "Chrome-plated steel gas furnace [utility.gas_furnace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "casing": "chrome-plated steel",
+    "vent": "aluminium"
+   },
+   "physical": "Top-down view of a gas furnace: a low boxy chrome-plated steel cabinet with louvered vents, a round burner port on the front face, the matt grey aluminium vent pipe running into the back edge.",
+   "reviewed": true
+  },
   "utility.generator": {
    "template": "Aluminium generator [utility.generator]",
    "tier": "modest",
@@ -2732,6 +2765,18 @@
     "handle": "aluminium"
    },
    "physical": "Top-down view of a wardrobe two cells wide: flat sage painted mdf top with a hatbox at one end, double doors with aluminium handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.canning": {
+   "template": "Frosted glass canning station [workbench.canning]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "jar": "frosted glass",
+    "kettle": "aluminium",
+    "top": "painted mdf"
+   },
+   "physical": "Top-down view of a canning station two cells long: a white painted mdf bench run with a round matt grey aluminium kettle set in at one end, racks of empty white frosted glass jars along the front edge, a towel and tongs at the other end.",
    "reviewed": true
   },
   "workbench.cutting_table": {

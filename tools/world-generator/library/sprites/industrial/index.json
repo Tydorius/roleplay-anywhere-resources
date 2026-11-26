@@ -88,6 +88,17 @@
    "physical": "Top-down view of a radiator against the top wall: a narrow grey sheet steel block of ribbed fins, a valve knob at one end, pipes vanishing into the floor.",
    "reviewed": true
   },
+  "appliance.water_heater": {
+   "template": "Enamelled iron copper cylinder [appliance.water_heater]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "casing": "enamelled iron",
+    "pipe": "enamelled iron"
+   },
+   "physical": "Top-down view of a copper cylinder: a round tank filling the cell, a domed dark green enamelled iron lid, the dark green enamelled iron vent pipe at the back edge, a ring burner at the bottom edge.",
+   "reviewed": true
+  },
   "barrel.cask_rack": {
    "template": "Stained beech cask stillage [barrel.cask_rack]",
    "tier": "modest",
@@ -338,6 +349,17 @@
     "seat": "terrazzo"
    },
    "physical": "Top-down view of a solid marble bench: a smooth speckled terrazzo slab with scrolled ends at left and right.",
+   "reviewed": true
+  },
+  "bin.coal": {
+   "template": "Stained beech coal bin [bin.coal]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "stained beech",
+    "rim": "enamelled iron"
+   },
+   "physical": "Top-down view of a coal bin: a square open-topped mid-brown stained beech box with enamelled iron banding at the rim, black coal lumps inside, a shovel handle laid across one corner.",
    "reviewed": true
   },
   "bin.dumpster": {
@@ -2377,6 +2399,17 @@
    "physical": "Top-down view of a pantry shelf two cells wide: chestnut stained beech shelf edge along the bottom, rows of white glazed fireclay jars and tied bundles, back against the top edge.",
    "reviewed": true
   },
+  "shelf.preserving": {
+   "template": "Stained beech preserving shelf [shelf.preserving]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "frame": "stained beech",
+    "jar": "pressed glass"
+   },
+   "physical": "Top-down view of a preserving shelf: a mid-brown stained beech shelf edge along the bottom, close rows of clear pressed glass jar lids edge to edge, back against the top edge.",
+   "reviewed": true
+  },
   "shelf.utility": {
    "template": "Sheet steel iron shelf [shelf.utility]",
    "tier": "modest",
@@ -2749,6 +2782,17 @@
    "physical": "Top-down view of a coal boiler against the top wall: a round grey sheet steel drum with pipes and valves rising at the back, a small glowing fire door or pilot window at the bottom edge.",
    "reviewed": true
   },
+  "utility.coal_furnace": {
+   "template": "Sheet steel coal furnace [utility.coal_furnace]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "body": "sheet steel",
+    "flue": "sheet steel"
+   },
+   "physical": "Top-down view of a coal furnace: a squat square grey sheet steel body with riveted seams, a hinged firebox door on the bottom edge, the grey sheet steel flue pipe rising from the back edge.",
+   "reviewed": true
+  },
   "utility.ladder": {
    "template": "Stained beech stepladder [utility.ladder]",
    "tier": "modest",
@@ -2768,6 +2812,17 @@
     "handle": "stained beech"
    },
    "physical": "Top-down view of a metal bucket: a round dark grey cast iron bucket full of murky grey-brown water, a thick rim with a small mid-brown stained beech roller wringer clamped to one side, no mop and no handle.",
+   "reviewed": true
+  },
+  "utility.steam_boiler": {
+   "template": "Plate glass steam boiler [utility.steam_boiler]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "gauge": "plate glass",
+    "shell": "cast iron"
+   },
+   "physical": "Top-down view of a steam boiler: a round black cast iron drum with riveted seams, a small clear plate glass gauge on the front face, pipes rising over the back edge, the firebox door at the bottom edge.",
    "reviewed": true
   },
   "utility.wind_pump": {
@@ -2811,6 +2866,18 @@
     "handle": "enamelled iron"
    },
    "physical": "Top-down view of a wardrobe two cells wide: flat honey bentwood top with a hatbox at one end, double doors with enamelled iron handles along the bottom edge, back against the top edge.",
+   "reviewed": true
+  },
+  "workbench.canning": {
+   "template": "Pressed glass canning station [workbench.canning]",
+   "tier": "modest",
+   "condition": "kept",
+   "materials": {
+    "jar": "pressed glass",
+    "kettle": "cast iron",
+    "top": "bentwood"
+   },
+   "physical": "Top-down view of a canning station two cells long: a honey bentwood bench run with a round black cast iron kettle set in at one end, racks of empty amber pressed glass jars along the front edge, a towel and tongs at the other end.",
    "reviewed": true
   },
   "workbench.cutting_table": {
