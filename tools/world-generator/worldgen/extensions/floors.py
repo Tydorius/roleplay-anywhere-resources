@@ -45,6 +45,13 @@ STORY_SUFFIX = {2: "upper floor", 3: "top floor"}
 CELLAR_WORDS = {"medieval": "cellar", "industrial": "cellar",
                 "modern": "basement", "scifi": "sublevel"}
 
+# what the floor below the ground is paved with, by band: flagstone under the
+# older bands, poured concrete under a modern one (the band's own word above
+# names the plane either way)
+CELLAR_GROUND = {"medieval": ("stone", "flagstone-light"),
+                 "industrial": ("stone", "flagstone-light"),
+                 "modern": ("stone", "concrete")}
+
 
 def _cellar_word(plan_data):
     """The band's own word for the floor below the ground (the plan's setting
@@ -469,12 +476,17 @@ def _build_cellar(world, plan_data, b, rect, stairs, rng):
     single = len(layout.rooms) == 1 and layout.rooms[0].rect == layout.rect
     f.builder_door = layout.entrance_door \
         or (layout.rect.x, layout.rect.y + (layout.rect.h - 1) // 2)
+    # the floor follows its band: flagstone under the older buildings,
+    # concrete under a modern one
+    ground, texture = CELLAR_GROUND.get(
+        ((plan_data.get("setting") or {}).get("band")) or "",
+        CELLAR_GROUND["medieval"])
     # sealed like a storey: a cellar has no opening on its outer border —
     # its only way in and out is its stair (the builder_door is the same
     # build-time fiction a storey's is)
     cellar_reg = RegionOut(region_name, layout.rect, "building", parent=None,
-                           wall=design.wall, ground="stone",
-                           ground_texture="flagstone-light",
+                           wall=design.wall, ground=ground,
+                           ground_texture=texture,
                            ambience={"day": "quiet_indoor"},
                            description=f"The {word} below {design.name}.",
                            doors=set())
@@ -493,8 +505,8 @@ def _build_cellar(world, plan_data, b, rect, stairs, rng):
             # (an assembled cellar's fillers included)
             purposes = {r.name: r.purpose for r in layout.design.rooms}
             reg = RegionOut(room.full_name, room.rect, "room", parent=region_name,
-                            wall=design.wall, ground="stone",
-                            ground_texture="flagstone-light",
+                            wall=design.wall, ground=ground,
+                            ground_texture=texture,
                             ambience=amb,
                             description=purposes.get(room.base_name, ""),
                             doors=set(room.doors) if getattr(layout, "assembled", None) else None)

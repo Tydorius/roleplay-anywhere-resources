@@ -163,6 +163,17 @@
           "Garage"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Utility room",
+            "purpose": "utility_room",
+            "share": "small"
+          }
+        ],
+        "connections": [],
+        "stairRoom": "Hallway"
+      },
       "entrance": {
         "room": "Living room"
       }
@@ -266,6 +277,27 @@
           "Bathroom"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Utility room",
+            "purpose": "utility_room",
+            "share": "small"
+          },
+          {
+            "name": "Stores cellar",
+            "purpose": "cellar",
+            "share": "small"
+          }
+        ],
+        "connections": [
+          [
+            "Utility room",
+            "Stores cellar"
+          ]
+        ],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {
         "room": "Living room"
       }
@@ -447,6 +479,17 @@
           "Back office"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Stock cellar",
+            "purpose": "cellar",
+            "share": "small"
+          }
+        ],
+        "connections": [],
+        "stairRoom": "Stock room"
+      },
       "entrance": {
         "room": "Sales floor"
       }
@@ -678,6 +721,17 @@
           "Restrooms"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Stores cellar",
+            "purpose": "cellar",
+            "share": "small"
+          }
+        ],
+        "connections": [],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {
         "room": "Dining room"
       }
@@ -1498,6 +1552,17 @@
           "Restroom"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Boiler room",
+            "purpose": "boiler_room",
+            "share": "small"
+          }
+        ],
+        "connections": [],
+        "stairRoom": "Back room"
+      },
       "entrance": {
         "room": "Wash floor"
       }
@@ -2021,6 +2086,17 @@
           "Machine shed"
         ]
       ],
+      "basement": {
+        "rooms": [
+          {
+            "name": "Preserving cellar",
+            "purpose": "preserving_cellar",
+            "share": "small"
+          }
+        ],
+        "connections": [],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {
         "room": "Living room"
       }

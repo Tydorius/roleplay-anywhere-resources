@@ -574,6 +574,61 @@
         "rack.wine",
         "shelf.pantry",
         "shelf"
+      ],
+      "heat": [
+        "utility.steam_boiler",
+        "utility.coal_furnace",
+        "utility.gas_furnace",
+        "appliance.water_heater",
+        "hearth.woodstove",
+        "appliance.climate_unit",
+        "stove",
+        "hearth"
+      ],
+      "fuel": [
+        "bin.coal",
+        "firewood",
+        "crate"
+      ],
+      "hot_water": [
+        "appliance.water_heater"
+      ],
+      "preserving": [
+        "workbench.canning",
+        "shelf.preserving"
+      ]
+    }
+  },
+  "boiler_room": {
+    "roles": {
+      "hot_water": [
+        "appliance.water_heater"
+      ],
+      "preserving": [
+        "workbench.canning",
+        "shelf.preserving"
+      ]
+    }
+  },
+  "utility_room": {
+    "roles": {
+      "hot_water": [
+        "appliance.water_heater"
+      ],
+      "preserving": [
+        "workbench.canning",
+        "shelf.preserving"
+      ]
+    }
+  },
+  "preserving_cellar": {
+    "roles": {
+      "hot_water": [
+        "appliance.water_heater"
+      ],
+      "preserving": [
+        "workbench.canning",
+        "shelf.preserving"
       ]
     }
   },

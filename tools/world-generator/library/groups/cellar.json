@@ -282,6 +282,71 @@
       ]
     },
     {
+      "id": "heat.single.cellar",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "heat",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "fuel.single",
+      "family": "cellar",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fuel.single.cellar",
+      "family": "cellar",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "fuel",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
       "id": "shelving.single.cellar5",
       "family": "cellar",
       "wall": "back",
@@ -291,6 +356,108 @@
       "pieces": [
         {
           "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "hot_water.single",
+      "family": "cellar",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "hot_water",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "hot_water.single.cellar",
+      "family": "cellar",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "hot_water",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "preserving.single",
+      "family": "cellar",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "preserving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "preserving.single.cellar",
+      "family": "cellar",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "preserving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "preserving.single.cellar1",
+      "family": "cellar",
+      "wall": "back",
+      "use": [],
+      "pieces": [
+        {
+          "role": "preserving",
           "size": [
             1,
             1
@@ -611,6 +778,101 @@
         },
         {
           "group": "shelving.single.cellar2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.d",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "heat.single.cellar",
+          "kind": "anchor"
+        },
+        {
+          "group": "fuel.single",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "required"
+        },
+        {
+          "group": "fuel.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.e",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "heat.single.cellar",
+          "kind": "anchor"
+        },
+        {
+          "group": "hot_water.single",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "hot_water.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.f",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "preserving.single",
+          "kind": "anchor"
+        },
+        {
+          "group": "preserving.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "preserving.single.cellar1",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
           "kind": "optional"
         }
       ]

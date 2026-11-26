@@ -102,6 +102,63 @@
    ]
   },
   {
+   "id": "cellar.small.d",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 4],
+   "maxInterior": [5, 4],
+   "slots": [
+    {"id": "furnace", "role": "heat", "size": [1, 1], "anchor": "wall:far",
+     "back": "wall", "optional": true},
+    {"id": "coal", "role": "fuel", "size": [1, 1], "anchor": "corner",
+     "optional": true},
+    {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "wall:side",
+     "back": "wall"}
+   ],
+   "grow": [
+    {"role": "fuel", "size": [1, 1], "anchor": "corner"},
+    {"role": "shelving", "size": [1, 1], "anchor": "wall:side", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.small.e",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 4],
+   "maxInterior": [4, 5],
+   "slots": [
+    {"id": "furnace", "role": "heat", "size": [1, 1], "anchor": "wall:far",
+     "back": "wall", "optional": true},
+    {"id": "heater", "role": "hot_water", "size": [1, 1], "anchor": "wall:side",
+     "back": "wall", "optional": true},
+    {"id": "shelf", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [1, 2], "back": "wall"}
+   ],
+   "grow": [
+    {"role": "hot_water", "size": [1, 1], "anchor": "wall:side", "back": "wall"},
+    {"role": "shelving", "size": [1, 1], "anchor": "row:side", "back": "wall"}
+   ]
+  },
+  {
+   "id": "cellar.small.f",
+   "family": "cellar",
+   "sizeBands": ["small"],
+   "minInterior": [4, 4],
+   "maxInterior": [5, 5],
+   "slots": [
+    {"id": "bench", "role": "preserving", "size": [2, 1], "anchor": "wall:far",
+     "back": "wall", "optional": true},
+    {"id": "jars", "role": "preserving", "size": [1, 1], "anchor": "wall:side",
+     "back": "wall", "optional": true},
+    {"id": "shelves", "role": "shelving", "size": [1, 1], "anchor": "row:side",
+     "count": [2, 3], "back": "wall"}
+   ],
+   "grow": [
+    {"role": "preserving", "size": [1, 1], "anchor": "wall:far", "back": "wall"},
+    {"role": "shelving", "size": [1, 1], "anchor": "row:side", "back": "wall"}
+   ]
+  },
+  {
    "id": "cellar.medium.a",
    "family": "cellar",
    "sizeBands": ["medium"],

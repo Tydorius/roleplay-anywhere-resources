@@ -49,6 +49,14 @@
         ["Kitchen", "Servants' quarters"], ["Entrance hall", "Study"],
         ["Entrance hall", "Master bedroom"], ["Master bedroom", "Nursery"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Wine cellar", "purpose": "cellar", "share": "small"},
+          {"name": "Stores", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [["Wine cellar", "Stores"]],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"room": "Entrance hall"}
     },
     {
@@ -88,6 +96,13 @@
         ["Upstairs hall", "Front room to let"], ["Upstairs hall", "Back room to let"],
         ["Upstairs hall", "Proprietor's room"], ["Storeroom", "Barkeep's room"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Cellar", "purpose": "cellar", "share": "medium"}
+        ],
+        "connections": [],
+        "stairRoom": "Barroom"
+      },
       "entrance": {"room": "Barroom"}
     },
     {
@@ -112,6 +127,14 @@
         ["Kitchen", "Staff rooms"], ["Lobby", "Guest room"], ["Lobby", "Best suite"],
         ["Lobby", "Manager's quarters"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Boiler room", "purpose": "boiler_room", "share": "small"},
+          {"name": "Coal cellar", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [["Boiler room", "Coal cellar"]],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"room": "Lobby"}
     },
     {
@@ -136,6 +159,14 @@
         ["Parlour", "Front lodgings"], ["Parlour", "Back lodgings"], ["Back lodgings", "Attic room"],
         ["Kitchen", "Washroom"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Boiler room", "purpose": "boiler_room", "share": "small"},
+          {"name": "Coal cellar", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [["Boiler room", "Coal cellar"]],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"room": "Parlour"}
     },
     {
@@ -172,6 +203,14 @@
         ["Factory floor", "Machine shop"], ["Factory floor", "Stores"],
         ["Factory floor", "Foreman's office"], ["Factory floor", "Wash house"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Boiler room", "purpose": "boiler_room", "share": "small"},
+          {"name": "Stores cellar", "purpose": "cellar", "share": "medium"}
+        ],
+        "connections": [["Boiler room", "Stores cellar"]],
+        "stairRoom": "Factory floor"
+      },
       "entrance": {"room": "Factory floor"}
     },
     {
@@ -187,6 +226,13 @@
         {"name": "Stores",        "purpose": "storage",  "share": "small"}
       ],
       "connections": [["Front counter", "Workshop"], ["Workshop", "Stores"]],
+      "basement": {
+        "rooms": [
+          {"name": "Workshop cellar", "purpose": "cellar", "share": "medium"}
+        ],
+        "connections": [],
+        "stairRoom": "Workshop"
+      },
       "entrance": {"room": "Front counter"}
     },
     {
@@ -285,6 +331,13 @@
         ["Front counter", "Editor's office"], ["Front counter", "Composing room"],
         ["Composing room", "Press room"], ["Press room", "Paper store"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Paper store cellar", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [],
+        "stairRoom": "Press room"
+      },
       "entrance": {"room": "Front counter"}
     },
     {
@@ -354,6 +407,14 @@
         {"name": "Master's study",  "purpose": "study",     "share": "small"}
       ],
       "connections": [["Cloakroom", "Schoolroom"], ["Schoolroom", "Master's study"]],
+      "basement": {
+        "rooms": [
+          {"name": "Furnace room", "purpose": "boiler_room", "share": "small"},
+          {"name": "Coal store", "purpose": "cellar", "share": "small"}
+        ],
+        "connections": [["Furnace room", "Coal store"]],
+        "stairRoom": "Cloakroom"
+      },
       "entrance": {"room": "Cloakroom"}
     },
     {
@@ -373,6 +434,13 @@
       ],
       "connections": [["Parlour", "Kitchen"], ["Parlour", "Bedchamber"],
                       ["Parlour", "Dairy"], ["Dairy", "Barn"], ["Barn", "Granary"]],
+      "basement": {
+        "rooms": [
+          {"name": "Preserving cellar", "purpose": "preserving_cellar", "share": "small"}
+        ],
+        "connections": [],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"room": "Parlour"}
     }
   ]
