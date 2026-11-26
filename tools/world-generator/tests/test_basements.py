@@ -20,8 +20,16 @@ from worldgen.vendor import scenario_checks
 FIXTURES = os.path.join(os.path.dirname(__file__), "..", "fixtures")
 INN = "The Green Dragon Inn"
 CELLAR = f"{INN} (cellar)"
+BASEMENT = f"{INN} (basement)"
 POOL_ITEMS = ["Bread", "Cask of ale", "Wax candle", "Sack of flour",
               "Bottle of wine", "Wheel of cheese"]
+# the mechanical equipment a below-ground room grows by band: heating, fuel,
+# hot water, preserving — none of it may reach a medieval cellar
+MECH = ("boiler", "furnace", "coal bin", "water heater", "canning",
+        "preserving shelf")
+BOILER_POOL = ["Iron pipe", "Coil of wire", "Lump of coal", "Oil can"]
+UTILITY_POOL = ["Spare fuse", "Duct tape", "Tool box", "Light bulb"]
+PRESERVE_POOL = ["Jar of jam", "Bag of sugar", "Jar of pickles"]
 
 
 def load(name):
@@ -40,21 +48,41 @@ def plan_items(names):
 def inn_with_cellar():
     """The village fixture with its inn laid out from the coaching-inn
     suite, cellar below the kitchen, and a cellar loot pool in the plan."""
+    return suite_with_cellar("inn.coaching", "medieval",
+                             {"Cellar": POOL_ITEMS})
+
+
+def suite_with_cellar(suite_id, band, pools):
+    """The village fixture with its inn laid out from ``suite_id`` in
+    ``band`` — a suite whose basement, when it keeps one, builds below the
+    ground — and the loot pools the plan's rooms draw from."""
     data = load("village.json")
-    data["setting"]["band"] = "medieval"
+    data["setting"]["band"] = band
     lib = library_load()
     for i, b in enumerate(data["buildings"]):
         if str(b.get("name", "")) == INN:
             design = library_plan.design_from_suite(
-                lib.suites["inn.coaching"], b, "medieval", random.Random(1))
+                lib.suites[suite_id], b, band, random.Random(1))
             library_plan.trim_rooms(lib, design, b)
             design["name"] = b["name"]
             design["kind"] = b.get("kind", "inn")
             data["buildings"][i] = design
             break
-    data["items"] = plan_items(POOL_ITEMS)
-    data["lootPools"] = {"Cellar": {"items": POOL_ITEMS}}
+    names = sorted({n for items in pools.values() for n in items})
+    data["items"] = plan_items(names)
+    data["lootPools"] = {name: {"items": items}
+                         for name, items in pools.items()}
     return data
+
+
+def _build(data, tmp):
+    """The built scenario for ``data``: (summary, scenario dict, its path)."""
+    summary = api._layout_and_build(data, seed=1, out_dir=tmp,
+                                    extra_exts=("floors",))
+    path = os.path.join(summary["out"], summary["zip"][:-len(".zip")],
+                        "scenario.json")
+    with open(path, "r", encoding="utf-8") as f:
+        return summary, json.load(f), path
 
 
 def _inside(entity, region):
@@ -134,6 +162,13 @@ class TestInnCellar(unittest.TestCase):
         allowed = set(POOL_ITEMS)
         names = {templates[i["templateId"]] for e in stocked for i in e["inventory"]}
         self.assertTrue(names <= allowed, names - allowed)
+
+    def test_the_medieval_cellar_grows_no_mechanical_equipment(self):
+        cellar = self._region(CELLAR)
+        names = [e["name"].lower() for e in self._objects()
+                 if _inside(e, cellar)]
+        hit = [n for n in names if any(m in n for m in MECH)]
+        self.assertEqual(hit, [], "mechanical equipment below a medieval inn")
 
     def test_the_vendored_checker_reports_no_errors(self):
         scn, media = scenario_checks.load(self.path)
@@ -256,6 +291,245 @@ class TestFloorsOff(unittest.TestCase):
         self.assertFalse([r for r in self.scn["regions"] if r.get("pocket")])
         self.assertTrue(any("floors off" in line for line in self.lines),
                         "the summary never notes the skipped cellars")
+
+
+class TestIndustrialBoilerCellar(unittest.TestCase):
+    """Brief rl-26: the village schoolhouse's boiler-room cellar — the
+    furnace room and coal store build at level -1, the mechanical equipment
+    stands in them, and each room's containers stock from its own purpose's
+    pool, not the plain cellar's."""
+
+    POOLS = {"Boiler room": BOILER_POOL, "Cellar": POOL_ITEMS}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="worldgen-boiler-cellar-")
+        cls.summary, cls.scn, cls.path = _build(
+            suite_with_cellar("schoolhouse.village", "industrial", cls.POOLS),
+            cls.tmp)
+        with open(os.path.join(cls.summary["out"], "metrics.json"),
+                  "r", encoding="utf-8") as f:
+            cls.metrics = json.load(f)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def _region(self, name):
+        return next(r for r in self.scn["regions"] if r["name"] == name)
+
+    def _objects(self):
+        return [e for e in self.scn["entities"] if e.get("type") == "object"]
+
+    def test_the_build_is_ok(self):
+        self.assertTrue(self.summary["ok"], self.summary)
+        self.assertEqual(self.summary["validator_errors"], 0, self.summary)
+        self.assertEqual(self.metrics["floors"]["issues"], [])
+
+    def test_the_boiler_room_is_a_pocket_below_the_schoolhouse(self):
+        plane = self._region(CELLAR)
+        inn = self._region(INN)
+        self.assertEqual(plane["pocket"], {"anchor": inn["id"], "level": -1})
+        self.assertTrue(plane["wall"], "the cellar plane must be walled")
+        self.assertEqual(plane["openings"], [], "the plane must be sealed")
+
+    def test_the_cellar_floor_follows_its_band(self):
+        plane = self._region(CELLAR)
+        self.assertEqual(plane["ground"], "stone")
+        self.assertEqual(plane["groundTexture"], "flagstone-light")
+
+    def test_the_boiler_room_grows_its_equipment(self):
+        plane = self._region(CELLAR)
+        names = " | ".join(e["name"].lower() for e in self._objects()
+                           if _inside(e, plane))
+        self.assertTrue("boiler" in names or "furnace" in names,
+                        f"no heating equipment in the cellar: {names}")
+        self.assertIn("coal bin", names, "no coal bin in the cellar")
+
+    def test_each_room_stocks_from_its_own_pool(self):
+        templates = {t["id"]: t["name"] for t in self.scn["itemTemplates"]}
+        for room, pool in ((f"{CELLAR} Furnace room", BOILER_POOL),
+                           (f"{CELLAR} Coal store", POOL_ITEMS)):
+            region = self._region(room)
+            stocked = [e for e in self._objects()
+                       if _inside(e, region) and e.get("inventory")]
+            self.assertTrue(stocked, f"no container in {room} drew from a pool")
+            names = {templates[i["templateId"]] for e in stocked
+                     for i in e["inventory"]}
+            self.assertTrue(names <= set(pool),
+                            f"{room} drew outside its pool: {names - set(pool)}")
+
+    def test_the_vendored_checker_reports_no_errors(self):
+        scn, media = scenario_checks.load(self.path)
+        found = scenario_checks.check(scn, media)
+        errors = [f["msg"] for f in found if f["level"] == "error"]
+        self.assertEqual(errors, [], errors)
+
+
+class TestModernUtilityBasement(unittest.TestCase):
+    """Brief rl-26: the modern family house's utility basement — the gas
+    furnace and water heater stand at level -1 over a concrete floor, and
+    the utility room's containers stock from its own pool."""
+
+    POOLS = {"Utility room": UTILITY_POOL, "Cellar": POOL_ITEMS}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="worldgen-utility-basement-")
+        cls.summary, cls.scn, cls.path = _build(
+            suite_with_cellar("house.modern_family", "modern", cls.POOLS),
+            cls.tmp)
+        with open(os.path.join(cls.summary["out"], "metrics.json"),
+                  "r", encoding="utf-8") as f:
+            cls.metrics = json.load(f)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def _region(self, name):
+        return next(r for r in self.scn["regions"] if r["name"] == name)
+
+    def _objects(self):
+        return [e for e in self.scn["entities"] if e.get("type") == "object"]
+
+    def test_the_build_is_ok(self):
+        self.assertTrue(self.summary["ok"], self.summary)
+        self.assertEqual(self.summary["validator_errors"], 0, self.summary)
+        self.assertEqual(self.metrics["floors"]["issues"], [])
+
+    def test_the_utility_room_is_a_pocket_below_the_house(self):
+        plane = self._region(BASEMENT)
+        inn = self._region(INN)
+        self.assertEqual(plane["pocket"], {"anchor": inn["id"], "level": -1})
+        self.assertTrue(plane["wall"], "the basement plane must be walled")
+        self.assertEqual(plane["openings"], [], "the plane must be sealed")
+
+    def test_the_basement_floor_follows_its_band(self):
+        plane = self._region(BASEMENT)
+        self.assertEqual(plane["ground"], "stone")
+        self.assertEqual(plane["groundTexture"], "concrete")
+
+    def test_the_utility_room_grows_its_equipment(self):
+        plane = self._region(BASEMENT)
+        names = " | ".join(e["name"].lower() for e in self._objects()
+                           if _inside(e, plane))
+        self.assertIn("gas furnace", names,
+                      f"no gas furnace in the basement: {names}")
+        self.assertIn("water heater", names,
+                      "no water heater in the basement")
+
+    def test_the_utility_room_stocks_from_its_own_pool(self):
+        region = self._region(f"{BASEMENT} Utility room")
+        templates = {t["id"]: t["name"] for t in self.scn["itemTemplates"]}
+        stocked = [e for e in self._objects()
+                   if _inside(e, region) and e.get("inventory")]
+        self.assertTrue(stocked, "no utility-room container drew from a pool")
+        names = {templates[i["templateId"]] for e in stocked
+                 for i in e["inventory"]}
+        self.assertTrue(names <= set(UTILITY_POOL),
+                        names - set(UTILITY_POOL))
+
+    def test_the_vendored_checker_reports_no_errors(self):
+        scn, media = scenario_checks.load(self.path)
+        found = scenario_checks.check(scn, media)
+        errors = [f["msg"] for f in found if f["level"] == "error"]
+        self.assertEqual(errors, [], errors)
+
+
+class TestModernPreservingCellar(unittest.TestCase):
+    """Brief rl-26: the ranch's preserving cellar — the canning bench and
+    the preserving shelf stand at level -1, stocked for putting food by."""
+
+    POOLS = {"Preserving cellar": PRESERVE_POOL, "Cellar": POOL_ITEMS}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="worldgen-preserving-cellar-")
+        cls.summary, cls.scn, _ = _build(
+            suite_with_cellar("farm.ranch", "modern", cls.POOLS), cls.tmp)
+        with open(os.path.join(cls.summary["out"], "metrics.json"),
+                  "r", encoding="utf-8") as f:
+            cls.metrics = json.load(f)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def _region(self, name):
+        return next(r for r in self.scn["regions"] if r["name"] == name)
+
+    def _objects(self):
+        return [e for e in self.scn["entities"] if e.get("type") == "object"]
+
+    def test_the_build_is_ok(self):
+        self.assertTrue(self.summary["ok"], self.summary)
+        self.assertEqual(self.summary["validator_errors"], 0, self.summary)
+        self.assertEqual(self.metrics["floors"]["issues"], [])
+
+    def test_the_preserving_cellar_grows_its_bench_and_shelf(self):
+        plane = self._region(BASEMENT)
+        names = " | ".join(e["name"].lower() for e in self._objects()
+                           if _inside(e, plane))
+        self.assertIn("canning", names,
+                      f"no canning bench in the cellar: {names}")
+        self.assertIn("preserving shelf", names,
+                      "no preserving shelf in the cellar")
+
+    def test_the_preserving_cellar_stocks_from_its_own_pool(self):
+        region = self._region(f"{BASEMENT} Preserving cellar")
+        templates = {t["id"]: t["name"] for t in self.scn["itemTemplates"]}
+        stocked = [e for e in self._objects()
+                   if _inside(e, region) and e.get("inventory")]
+        self.assertTrue(stocked,
+                        "no preserving-cellar container drew from a pool")
+        names = {templates[i["templateId"]] for e in stocked
+                 for i in e["inventory"]}
+        self.assertTrue(names <= set(PRESERVE_POOL),
+                        names - set(PRESERVE_POOL))
+
+
+class TestSwitchOffOtherBands(unittest.TestCase):
+    """--no-basements folds the industrial and modern basements back onto
+    the ground floor, one suite per band."""
+
+    CASES = [("schoolhouse.village", "industrial",
+              {"Boiler room": BOILER_POOL, "Cellar": POOL_ITEMS,
+               "Utility room": UTILITY_POOL}),
+             ("house.modern_family", "modern",
+              {"Boiler room": BOILER_POOL, "Cellar": POOL_ITEMS,
+               "Utility room": UTILITY_POOL})]
+    FOLDED = {"industrial": ["Furnace room", "Coal store"],
+              "modern": ["Utility room"]}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.mkdtemp(prefix="worldgen-basements-off-bands-")
+        cls.scns = []
+        for suite_id, band, pools in cls.CASES:
+            data = suite_with_cellar(suite_id, band, pools)
+            data["basements"] = False
+            cls.scns.append(_build(data, cls.tmp)[1])
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.tmp, ignore_errors=True)
+
+    def test_no_pocket_and_the_rooms_back_on_the_ground(self):
+        for (suite_id, band, _pools), scn in zip(self.CASES, self.scns):
+            self.assertFalse([r for r in scn["regions"] if r.get("pocket")],
+                             suite_id)
+            inn = next(r for r in scn["regions"] if r["name"] == INN)
+            ix, iy = inn["position"]
+            iw, ih = inn["size"]
+            for room in self.FOLDED[band]:
+                ground = next(r for r in scn["regions"]
+                              if r["name"] == f"{INN} {room}")
+                gx, gy = ground["position"]
+                gw, gh = ground["size"]
+                self.assertTrue(ix <= gx and gx + gw <= ix + iw
+                                and iy <= gy and gy + gh <= iy + ih,
+                                f"{room} did not fold back inside the inn")
 
 
 if __name__ == "__main__":
