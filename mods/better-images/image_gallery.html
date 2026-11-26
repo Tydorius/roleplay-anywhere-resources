@@ -145,6 +145,7 @@ dialog.crop::backdrop { background: rgba(0,0,0,.5); }
       <button class="chip" data-q="review" title="A finished result waiting for Keep or Discard">Needs review <span id="reviewCount"></span></button>
       <button class="chip" data-q="todo" title="Everything without a kept image: missing, generating and waiting for review together">Hide approved</button>
     </span>
+    <button id="regenMissing" hidden title="Queue every never-generated card in this workspace"></button>
     <span class="spacer"></span>
     <span class="hint" id="queueInfo"></span>
     <button id="selAll">Select shown</button>
@@ -355,15 +356,19 @@ function updateBar() {
   const mine = S.jobs.filter(j => j.source === source());
   const n = st => mine.filter(j => j.state === st).length;
   const run = n("running"), wait = n("pending");
-  const ready = S.items.filter(i => i.job?.state === "done").length;  // current right after a Keep, before the next poll
+  const ready = S.items.filter(i => i.job?.state === "done");  // current right after a Keep, before the next poll
+  const selReady = ready.filter(i => S.selected.has(i.id));
   const cq = S.comfyQueue || {};
   const total = (cq.running || 0) + (cq.pending || 0);
   $("queueInfo").textContent = S.pollError || [
     run && `${run} generating`, wait && `${wait} waiting`,
     total > run + wait && `ComfyUI queue ${total} in all`].filter(Boolean).join(" · ");
-  $("keepAll").hidden = !ready;
-  $("reviewCount").textContent = ready ? `(${ready})` : "";
-  $("keepAll").textContent = `Keep all ready (${ready})`;
+  $("keepAll").hidden = !(S.selected.size ? selReady.length : ready.length);
+  $("reviewCount").textContent = ready.length ? `(${ready.length})` : "";
+  $("keepAll").textContent = S.selected.size ? `Keep selected (${selReady.length})` : `Keep all ready (${ready.length})`;
+  const missing = S.items.filter(QFILTERS.missing);
+  $("regenMissing").hidden = !missing.length;
+  $("regenMissing").textContent = `Regenerate missing (${missing.length})`;
 }
 
 function thumbUrl(it) {
@@ -714,13 +719,28 @@ $("regenSel").onclick = async () => {
 };
 async function keepReady(auto) {
   S.keeping = true;
-  const ready = S.items.filter(i => i.job?.state === "done");
+  // with cards selected, keep only those (skipping any that aren't finished); otherwise every ready one
+  const pool = !auto && S.selected.size ? S.items.filter(i => S.selected.has(i.id)) : S.items;
+  const ready = pool.filter(i => i.job?.state === "done");
+  const notReady = pool.filter(i => i.job?.state !== "done").map(i => i.name || i.id);
   let saved = 0;
   for (const i of ready) if (await keep(i, true)) saved++;
   S.keeping = false;
-  toast(`${auto ? "Kept automatically" : "Saved"}: ${saved} of ${ready.length}. ${isWork() ? "Download the zip to take them to the game." : "Reload the scenario in the game to see them."}`);
+  const skipped = notReady.length ? ` Not ready, left for now: ${notReady.slice(0, 4).join(", ")}${notReady.length > 4 ? ` and ${notReady.length - 4} more` : ""}.` : "";
+  toast(`${auto ? "Kept automatically" : "Saved"}: ${saved} of ${ready.length}.${skipped} ${isWork() ? "Download the zip to take them to the game." : "Reload the scenario in the game to see them."}`);
 }
 $("keepAll").onclick = () => { if (!S.keeping) keepReady(false); };
+$("regenMissing").onclick = async () => {
+  if ($("regenMissing").disabled) return;
+  $("regenMissing").disabled = true;
+  try {
+    const list = S.items.filter(QFILTERS.missing);
+    let queued = 0;
+    for (const i of list) { await submit(i); queued += i.error ? 0 : 1; }
+    toast(`Queued ${queued} missing image${queued === 1 ? "" : "s"} on ComfyUI.`);
+  } finally { $("regenMissing").disabled = false; }
+  updateBar();
+};
 $("autoKeep").checked = recall("autoKeep") === "1";
 $("autoKeep").onchange = () => { remember("autoKeep", $("autoKeep").checked ? "1" : "0"); if ($("autoKeep").checked) schedulePoll(0); };
 
