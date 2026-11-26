@@ -4,8 +4,8 @@ JSON file they can send to someone else, who loads it to run the same world.
 The launcher, the CLI and the Scenario Editor all read and write this format,
 and every generation writes one as ``settings.json`` in its run folder. It
 holds the form (mode, idea, questionnaire answers, notes, residents), the
-build choices (seed, extensions, room library, item library, room assembler)
-and, when there is one, the
+build choices (seed, extensions, room library, item library, room assembler,
+cellars) and, when there is one, the
 approved World Frame, so a re-run can skip framing. The model name is kept as
 a note only. No provider name, URL or API key is ever written.
 
@@ -37,7 +37,7 @@ class SettingsError(ValueError):
 
 def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
          extensions=(), library=True, item_library=True, room_assembler=True,
-         frame=None, clarify=None, model=None):
+         basements=True, frame=None, clarify=None, model=None):
     """A settings dict, checked the same way a loaded file is."""
     data = {"kind": KIND, "version": VERSION,
             "saved": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -45,7 +45,8 @@ def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
             "population": population, "notes": notes or "", "seed": seed,
             "extensions": list(extensions or ()), "library": bool(library),
             "item_library": bool(item_library),
-            "room_assembler": bool(room_assembler)}
+            "room_assembler": bool(room_assembler),
+            "basements": bool(basements)}
     if frame:
         data["frame"] = frame
     if clarify:
@@ -56,13 +57,14 @@ def make(mode="quick", idea="", answers=None, population=None, notes="", seed=1,
 
 
 def from_run(idea, seed, extensions, library, frame=None, questionnaire=None,
-             item_library=True, room_assembler=True, model=None):
+             item_library=True, room_assembler=True, basements=True, model=None):
     """The settings of one generate() call."""
     q = questionnaire or {}
     return make(mode=q.get("mode") or "quick", idea=idea, answers=q.get("answers"),
                 population=q.get("population"), notes=q.get("notes") or "", seed=seed,
                 extensions=extensions, library=library, item_library=item_library,
-                room_assembler=room_assembler, frame=frame, model=model)
+                room_assembler=room_assembler, basements=basements, frame=frame,
+                model=model)
 
 
 def check(data):
@@ -123,7 +125,8 @@ def check(data):
            "seed": seed, "extensions": exts,
            "library": bool(data.get("library", True)),
            "item_library": bool(data.get("item_library", True)),
-           "room_assembler": bool(data.get("room_assembler", True))}
+           "room_assembler": bool(data.get("room_assembler", True)),
+           "basements": bool(data.get("basements", True))}
     if not (out["idea"] or out["answers"] or frame):
         raise SettingsError("the settings have no idea, no answers and no frame: "
                             "nothing to build a world from")

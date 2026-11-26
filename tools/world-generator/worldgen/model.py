@@ -216,6 +216,7 @@ class BuildingDesign:
     condition: str = ""                                # P1: kept/worn/...
     status: str = ""                                   # P1b: home, staffed, vacant...
     upper: list = field(default_factory=list)          # [UpperStorey]
+    basement: object = None                            # Basement or None
     rooms: list = field(default_factory=list)          # [RoomSpec]
     connections: list = field(default_factory=list)    # [[roomA, roomB]]
     entrance_room: str = ""
@@ -241,6 +242,17 @@ class UpperStorey:
     connections: list = field(default_factory=list)    # [[roomA, roomB]]
     furniture: list = field(default_factory=list)      # [FurniturePlan]
     opening: object = None                              # OpeningSpec or None
+
+
+@dataclass
+class Basement:
+    """One below-ground storey of a building (floors extension): the rooms
+    the cellar holds, how they connect, any furniture lines, and the ground
+    room its stairs rise from."""
+    rooms: list = field(default_factory=list)          # [RoomSpec]
+    connections: list = field(default_factory=list)    # [[roomA, roomB]]
+    furniture: list = field(default_factory=list)      # [FurniturePlan]
+    stair_room: str = ""                               # ground room the stairs rise from
 
 
 @dataclass
@@ -697,6 +709,26 @@ def _free_room_name(name, busy):
     return f"{name} {k}"
 
 
+def _parse_basement(g):
+    """Basement from a design's "basement" entry, or None when it has none.
+    Parsed like one more storey of rooms; the stair room names a ground
+    room, not a room of the cellar."""
+    base = g.get("basement")
+    if not isinstance(base, dict):
+        return None
+    rooms = [_parse_roomspec(r) for r in base.get("rooms", []) if isinstance(r, dict)]
+    if not rooms:
+        return None
+    return Basement(
+        rooms=rooms,
+        connections=[list(c) for c in base.get("connections", [])],
+        furniture=[FurniturePlan(template=f.get("template"), room=f.get("room", ""),
+                                 count=int(f.get("count", 1)), hint=f.get("hint", ""),
+                                 loot_pool=f.get("lootPool", "") or "")
+                   for f in base.get("furniture", []) if isinstance(f, dict)],
+        stair_room=base.get("stairRoom", "") or "")
+
+
 def _parse_upper(specs, storeys, ground_rooms):
     """[UpperStorey] from a design's "upper" entries, in storey order, keeping
     only storeys 2..storeys. Room names come out unique over the whole
@@ -787,6 +819,7 @@ def _parse_building(d, designs):
         storeys=max(1 + len(upper), storeys) if units else 1 + len(upper),
         stairs_room=stairs_room if upper else "",
         upper=upper,
+        basement=_parse_basement(g),
         units=units,
         couples=(0 if units else max(0, int(d.get("couples", 0) or 0))),
         residents=max(0, int(d.get("residents", 0) or 0)),

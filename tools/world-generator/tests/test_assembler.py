@@ -767,11 +767,14 @@ class TestAWingFillsItsTarget(unittest.TestCase):
 
     def test_an_over_large_target_reports_the_rectangle_it_grew_to(self):
         from worldgen import assembler
-        bl = assembler.wing_build(self.design, (0, 0), (30, 20))
+        # the cellar family's rooms pack tighter than the old storage picks,
+        # so the wing meets a 30-wide target whole; the under-fill it must
+        # report sits one step further out
+        bl = assembler.wing_build(self.design, (0, 0), (33, 20))
         self.assertIsNotNone(bl, assembler.fallback_note("Wing Hall"))
-        self.assertEqual((bl.rect.w, bl.rect.h), (29, 20))
+        self.assertEqual((bl.rect.w, bl.rect.h), (32, 20))
         notes = assembler.spot_notes("Wing Hall", "south")
-        self.assertTrue(any("fills 29x20 of the 30x20 target" in note
+        self.assertTrue(any("fills 32x20 of the 33x20 target" in note
                             for (_label, note) in notes), notes)
 
     def test_a_door_pin_no_room_can_honour_falls_back_with_the_reason(self):

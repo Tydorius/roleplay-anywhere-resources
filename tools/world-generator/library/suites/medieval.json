@@ -124,7 +124,6 @@
       "rooms": [
         {"name": "Taproom",           "purpose": "taproom",        "share": "large"},
         {"name": "Kitchen",           "purpose": "kitchen",        "share": "medium"},
-        {"name": "Cellar",            "purpose": "cellar",         "share": "small"},
         {"name": "Guest chamber",     "purpose": "guest_room",     "share": "small"},
         {"name": "Best chamber",      "purpose": "guest_room",     "share": "small"},
         {"name": "Travellers' loft",  "purpose": "dormitory",      "share": "medium"},
@@ -132,10 +131,17 @@
         {"name": "Potboys' room",     "purpose": "servants_room",  "share": "small"}
       ],
       "connections": [
-        ["Taproom", "Kitchen"], ["Kitchen", "Cellar"], ["Taproom", "Guest chamber"],
+        ["Taproom", "Kitchen"], ["Taproom", "Guest chamber"],
         ["Taproom", "Best chamber"], ["Taproom", "Travellers' loft"],
         ["Kitchen", "Keepers' chamber"], ["Kitchen", "Potboys' room"]
       ],
+      "basement": {
+        "rooms": [
+          {"name": "Cellar",          "purpose": "cellar",         "share": "small"}
+        ],
+        "connections": [],
+        "stairRoom": "Kitchen"
+      },
       "entrance": {"room": "Taproom"}
     },
     {
@@ -148,10 +154,16 @@
       "rooms": [
         {"name": "Taproom",      "purpose": "taproom",        "share": "large"},
         {"name": "Snug",         "purpose": "common_room",    "share": "small"},
-        {"name": "Cellar",       "purpose": "cellar",         "share": "small"},
         {"name": "Back chamber", "purpose": "master_bedroom", "share": "small"}
       ],
-      "connections": [["Taproom", "Snug"], ["Taproom", "Cellar"], ["Taproom", "Back chamber"]],
+      "connections": [["Taproom", "Snug"], ["Taproom", "Back chamber"]],
+      "basement": {
+        "rooms": [
+          {"name": "Cellar",     "purpose": "cellar",         "share": "small"}
+        ],
+        "connections": [],
+        "stairRoom": "Taproom"
+      },
       "entrance": {"room": "Taproom"}
     },
     {
@@ -234,10 +246,16 @@
       "rooms": [
         {"name": "Brewhouse",   "purpose": "brewery", "share": "large"},
         {"name": "Malt loft",   "purpose": "storage", "share": "medium"},
-        {"name": "Cask cellar", "purpose": "cellar",  "share": "medium"},
         {"name": "Tally room",  "purpose": "office",  "share": "small"}
       ],
-      "connections": [["Brewhouse", "Malt loft"], ["Brewhouse", "Cask cellar"], ["Brewhouse", "Tally room"]],
+      "connections": [["Brewhouse", "Malt loft"], ["Brewhouse", "Tally room"]],
+      "basement": {
+        "rooms": [
+          {"name": "Cask cellar", "purpose": "cellar",  "share": "medium"}
+        ],
+        "connections": [],
+        "stairRoom": "Brewhouse"
+      },
       "entrance": {"room": "Brewhouse"}
     },
     {

@@ -209,16 +209,33 @@ def trim_rooms(lib, design, b, limit=MAX_ROOMS):
 
 
 def design_from_suite(suite, b, band, rng):
-    """A P3-shaped design made from a suite, for a building that skips P3."""
+    """A P3-shaped design made from a suite, for a building that skips P3.
+    A suite whose basement holds rooms gives the design its basement — the
+    cellar rooms parse like one more storey (model.py) and the floors
+    extension builds the plane below the ground; the basements switch, off,
+    folds them back onto the ground before anything is laid out
+    (worldgen.run)."""
     rooms = [{"name": r["name"], "share": r["share"], "use": r["purpose"],
               "purpose": r["purpose"].replace("_", " ")} for r in suite["rooms"]]
-    return {"name": b["name"], "wall": BAND_WALL.get(band, "wood"),
-            "ground": BAND_GROUND.get(band, "wood"),
-            "rooms": rooms,
-            "connections": [list(c) for c in suite.get("connections", [])],
-            "entrance": {"room": suite["entrance"]["room"],
+    design = {"name": b["name"], "wall": BAND_WALL.get(band, "wood"),
+              "ground": BAND_GROUND.get(band, "wood"),
+              "rooms": rooms,
+              "connections": [list(c) for c in suite.get("connections", [])],
+              "entrance": {"room": suite["entrance"]["room"],
                          "side": rng.choice(("north", "south", "east", "west"))},
-            "furniture": [], "yard": None, "suite": suite["id"]}
+              "furniture": [], "yard": None, "suite": suite["id"]}
+    base = suite.get("basement") if isinstance(suite.get("basement"), dict) else {}
+    base_rooms = [r for r in base.get("rooms") or []
+                  if isinstance(r, dict) and r.get("name")]
+    if base_rooms:
+        design["basement"] = {
+            "rooms": [{"name": r["name"], "share": r.get("share") or "small",
+                       "use": r.get("purpose") or "",
+                       "purpose": (r.get("purpose") or "").replace("_", " ")}
+                      for r in base_rooms],
+            "connections": [list(c) for c in base.get("connections") or []],
+            "stairRoom": str(base.get("stairRoom") or "")}
+    return design
 
 
 # --------------------------------------------------------- wings (rl-10, 8.3)
@@ -388,6 +405,68 @@ def wing_design(lib, wing, name, b, band, cap, kind=""):
         entrance_room=entry, entrance_side=wing.get("entry") or "south",
         stairs_room=entry if storeys > 1 else "",
         furniture=[], loot_pool=b.loot_pool if b is not None else "")
+
+
+# the families a recipe's stair room resolves to when it names no room of
+# the wing the cellar hangs off: the kitchen first, then the great rooms
+STAIR_ROOM_FAMILIES = ("kitchen", "common_room", "dining")
+
+
+def attach_recipe_basement(lib, designs, base, basements=True):
+    """A building recipe's basement on the wing it hangs off (rl-25): the
+    wing whose ground rooms name the stair room, else the first wing with a
+    kitchen, a common room or a dining room, else the wing with the most
+    ground rooms. The stair room resolves the same way inside that wing.
+    With cellars off the rooms join the wing's ground floor instead,
+    connected to the stair room, so the building keeps them above ground."""
+    from .model import Basement, RoomSpec
+    stair = str(base.get("stairRoom") or "")
+    holder = None
+    if stair:
+        holder = next((d for d in designs.values()
+                       if stair in {r.name for r in d.rooms}), None)
+    if holder is None:
+        for fam in STAIR_ROOM_FAMILIES:
+            holder = next((d for d in designs.values()
+                           if any(lib.family_of(r.use) == fam for r in d.rooms)), None)
+            if holder is not None:
+                break
+    if holder is None and designs:
+        holder = max(designs.values(), key=lambda d: len(d.rooms))
+    if holder is None:
+        return
+    rooms = [RoomSpec(name=str(r["name"]), share=str(r.get("share") or "small"),
+                      purpose=str(r.get("purpose") or "").replace("_", " "),
+                      use=str(r.get("purpose") or ""), loot_pool=holder.loot_pool)
+             for r in base.get("rooms") or []
+             if isinstance(r, dict) and r.get("name")]
+    if not rooms:
+        return
+    names = {r.name for r in holder.rooms}
+    if stair not in names:
+        stair = ""
+        for fam in STAIR_ROOM_FAMILIES:
+            stair = next((r.name for r in holder.rooms
+                          if lib.family_of(r.use) == fam), "")
+            if stair:
+                break
+    if not stair and holder.rooms:
+        stair = holder.entrance_room if holder.entrance_room in names \
+            else holder.rooms[0].name
+    if not basements:
+        for r in rooms:
+            if r.name in names:
+                continue        # a name the ground already holds stays there
+            holder.rooms.append(r)
+            names.add(r.name)
+            if stair and stair != r.name and [stair, r.name] not in holder.connections:
+                holder.connections.append([stair, r.name])
+        return
+    holder.basement = Basement(
+        rooms=rooms,
+        connections=[list(c) for c in base.get("connections") or []
+                     if isinstance(c, list) and len(c) == 2],
+        furniture=[], stair_room=stair)
 
 
 def split_wing_sleepers(lib, designs, wingmap, sources, notes, label):
@@ -594,12 +673,15 @@ def _check_rooms(d, building_name, lib):
 
 
 def fill_from_suite(d, lib, b, band, rng):
-    """A reply that names a suite but leaves out its rooms takes the suite's."""
+    """A reply that names a suite but leaves out its rooms takes the suite's
+    — basement included, when the suite keeps one below the ground."""
     suite = lib.suites.get(d.get("suite"))
     if suite and not d.get("rooms"):
         base = trim_rooms(lib, design_from_suite(suite, b, band, rng), b)
         for k in ("rooms", "connections", "entrance"):
             d[k] = base[k]
+        if "basement" in base:
+            d["basement"] = base["basement"]
     return d
 
 

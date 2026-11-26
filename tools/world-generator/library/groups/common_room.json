@@ -1362,7 +1362,7 @@
       ]
     },
     {
-      "id": "storage.bulk.single",
+      "id": "storage.bulk.single.common_room",
       "family": "common_room",
       "wall": "corner",
       "use": [
@@ -1793,7 +1793,7 @@
           "kind": "optional"
         },
         {
-          "group": "storage.bulk.single",
+          "group": "storage.bulk.single.common_room",
           "kind": "optional"
         }
       ]

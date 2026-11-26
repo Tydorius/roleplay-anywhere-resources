@@ -52,7 +52,7 @@ def _check_extensions(extensions):
 def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
              progress=None, cancel=None, providers_path=None, client=None,
              emit=None, frame=None, questionnaire=None, cast=True, library=True,
-             item_library=True, room_assembler=True, floors=True):
+             item_library=True, room_assembler=True, floors=True, basements=True):
     """Run the model phases on ``idea`` and build the scenario in ``out_dir``.
 
     ``provider`` names an entry in providers.json; tests may pass a
@@ -62,10 +62,12 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
     a frame runs P0 first. Both are kept on plan.json, so a re-roll never
     asks again. ``floors`` is the floors extension's default (on; pass False
     for a single-storey world — the CLI's ``--no-floors``); the plan always
-    records the extension set it ran with, so a re-roll keeps it. Raises
-    llm.LLMError for an unusable provider, phases.PhaseError when P0/P1/P2
-    cannot be salvaged, and Cancelled when ``cancel()`` turns true. Returns
-    the summary dict."""
+    records the extension set it ran with, so a re-roll keeps it. ``basements``
+    is the cellars default (on; pass False — the CLI's ``--no-basements`` — to
+    keep every room on the ground floor); the plan records it the same way.
+    Raises llm.LLMError for an unusable provider, phases.PhaseError when
+    P0/P1/P2 cannot be salvaged, and Cancelled when ``cancel()`` turns true.
+    Returns the summary dict."""
     extensions = _check_extensions(extensions)
     if floors and "floors" not in extensions:
         extensions = extensions + ("floors",)
@@ -75,13 +77,14 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
         client = llm.Client(provider, log_dir=os.path.join(out_dir, "llm"), **kwargs)
     _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire,
                     getattr(client, "model", None), emit, item_library=item_library,
-                    room_assembler=room_assembler)
+                    room_assembler=room_assembler, basements=basements)
     t0 = time.time()
     plan, stats = phases.run_phases(idea, client, extensions=extensions, library=library,
                                     item_library=item_library,
                                     progress=progress, cancel=cancel,
                                     frame=frame, questionnaire=questionnaire, cast=cast)
     plan["extensions"] = sorted(set(plan.get("extensions", [])) | set(extensions))
+    plan["basements"] = bool(basements)
     phases.write_plan(plan, os.path.join(out_dir, "plan.json"))
     minutes = round((time.time() - t0) / 60.0, 1)
     _phase_report(client, stats, minutes, emit)
@@ -89,11 +92,11 @@ def generate(idea, provider=None, extensions=(), seed=1, out_dir="out/world",
                              extra_exts=extensions,
                              gen=(client, stats, minutes, idea),
                              progress=progress, cancel=cancel, emit=emit,
-                             room_assembler=room_assembler)
+                             room_assembler=room_assembler, basements=basements)
 
 
 def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnaire, model,
-                    emit=None, item_library=True, room_assembler=True):
+                    emit=None, item_library=True, room_assembler=True, basements=True):
     """settings.json in the run folder, before the first model call, so even a
     run that fails leaves the choices behind for someone to look at. Never
     fails the run."""
@@ -102,7 +105,7 @@ def _write_settings(out_dir, idea, seed, extensions, library, frame, questionnai
         os.makedirs(out_dir, exist_ok=True)
         data = settings.from_run(idea, seed, extensions, library, frame=frame,
                                  questionnaire=questionnaire, item_library=item_library,
-                                 room_assembler=room_assembler,
+                                 room_assembler=room_assembler, basements=basements,
                                  model=model if isinstance(model, str) else None)
         settings.write(os.path.join(out_dir, settings.FILE_NAME), data)
     except (OSError, ValueError) as e:
@@ -134,12 +137,15 @@ def frame(mode, idea="", answers=None, population=None, clarify=None,
 
 
 def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
-             cancel=None, emit=None, room_assembler=True, floors=True):
+             cancel=None, emit=None, room_assembler=True, floors=True,
+             basements=True):
     """Lay out a saved plan (plan.json) again and rebuild the scenario. No
     model calls happen: a different seed re-places the same world. A plan
     that records its extensions keeps exactly what it recorded; one that
     records none gets the floors default (``floors=False``, the CLI's
-    ``--no-floors``, keeps any plan single-storey). Returns the summary
+    ``--no-floors``, keeps any plan single-storey). ``basements=False`` (the
+    CLI's ``--no-basements``) folds a plan's cellars back onto the ground
+    floor whatever the plan recorded. Returns the summary
     dict; raises Cancelled when ``cancel()`` turns true."""
     extensions = _check_extensions(extensions)
     if out_dir is None:
@@ -150,7 +156,8 @@ def relayout(plan_path, seed=1, extensions=(), out_dir=None, progress=None,
     return _layout_and_build(plan_data, seed=seed, out_dir=out_dir,
                              extra_exts=tuple(extensions or ()),
                              progress=progress, cancel=cancel, emit=emit,
-                             room_assembler=room_assembler, floors=floors)
+                             room_assembler=room_assembler, floors=floors,
+                             basements=basements)
 
 
 def estimate(idea_or_plan):
@@ -250,7 +257,7 @@ def _container_counts(spec, plan_data):
 
 def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
                       progress=None, cancel=None, emit=None, room_assembler=True,
-                      floors=True):
+                      floors=True, basements=True):
     """Layout, checks, spec, then the vendored builder, validator and
     renderer. ``gen`` carries the generate-run context (client, stats,
     minutes, idea) for the summary; relayout passes None.
@@ -259,7 +266,10 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     plan that records its extensions keeps exactly what it recorded; one
     that records none (a plan from before the floors default) gets floors
     on — unless ``floors`` is False, which takes floors off whatever the
-    plan says (the ``--no-floors`` switch)."""
+    plan says (the ``--no-floors`` switch). Cellars follow the same rule:
+    the plan's own ``"basements"`` record rules, and ``basements=False``
+    (the ``--no-basements`` switch) folds every cellar back onto the ground
+    floor whatever the plan says."""
     from .extensions import expand
     recorded = plan_data.get("extensions")
     if not isinstance(recorded, list):
@@ -269,6 +279,10 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
         exts.discard("floors")
     elif recorded is None:
         exts.add("floors")
+    if not basements:
+        plan_data["basements"] = False
+    else:
+        plan_data.setdefault("basements", True)
     _progress(progress, "layout", "placing roads, zones, buildings and people", gen)
     if cancel is not None and cancel():
         raise Cancelled("cancelled before layout")
@@ -281,7 +295,7 @@ def _layout_and_build(plan_data, seed, out_dir, extra_exts=(), gen=None,
     sw.write_spec(out_dir, spec)
     from worldgen import checks as checks_mod
     checks_mod.write_metrics(os.path.join(out_dir, "metrics.json"), world.metrics)
-    _summary_text(world, spec, seed, emit, plan_data)
+    _summary_text(world, spec, seed, emit, plan_data, floors_on="floors" in exts)
 
     _progress(progress, "build", "building and validating the scenario", gen)
     builder = os.path.join(VENDOR_DIR, "build_scenario.py")
@@ -442,7 +456,7 @@ def _phase_report(client, stats, minutes, emit):
     emit("\n".join(lines))
 
 
-def _summary_text(world, spec, seed, emit, plan_data=None):
+def _summary_text(world, spec, seed, emit, plan_data=None, floors_on=True):
     """The after-build block the CLI prints (world shape and check totals)."""
     if emit is None:
         return
@@ -514,8 +528,11 @@ def _summary_text(world, spec, seed, emit, plan_data=None):
                               for h in p.get("homes") or [])
             lines.append(f"  - {p['name']}: {homes}")
     fl = world.metrics.get("floors") or {}
-    if fl.get("floors"):
-        lines.append(f"upper storeys {fl['floors']}  portal pairs {fl['portals']}  "
+    if not floors_on:
+        lines.append("floors off: upper storeys and cellars skipped")
+    elif fl.get("floors") or fl.get("cellars"):
+        lines.append(f"upper storeys {fl['floors']}  cellars {fl['cellars']}  "
+                     f"portal pairs {fl['portals']}  "
                      f"floors checks: {'ok' if not fl.get('issues') else fl['issues']}")
     st = world.metrics.get("stairs") or {}
     if st.get("dropped") or st.get("ruined"):

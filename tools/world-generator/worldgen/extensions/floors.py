@@ -22,6 +22,13 @@ A compound's wall walk (the storey above a walkable wall) is a floor too,
 reached like any other: a walkable 1x1 passage object in the walk and one
 in each tower's storey, linked as a portal pair the way stairs are — planes
 cannot share a door in 1.0.
+
+A basement is one more plane, below the ground (level -1): a design whose
+library suite or building recipe declares one gets a sealed cellar plane
+assembled like a wing into a target rectangle under the building — the wing
+that holds its stair room — with a stair in that ground room and a stair on
+the plane, linked as a portal pair. The plane's name and its portal carry
+the band's own word for it (a cellar, a basement, a sublevel).
 """
 from ..layout_building import layout_rooms
 from ..layout_room import layout_room
@@ -32,6 +39,19 @@ FLOOR_Y = 1        # the floors' row: a south build-time door keeps a cell to op
 BOUNDARY_COLOR = "#171614"     # the game's out-of-bounds void (the void zones' tint)
 
 STORY_SUFFIX = {2: "upper floor", 3: "top floor"}
+
+# what a band calls the floor below the ground: the plane and its portal are
+# named with it ("<Building> (cellar)", "<Building> Cellar Stairs")
+CELLAR_WORDS = {"medieval": "cellar", "industrial": "cellar",
+                "modern": "basement", "scifi": "sublevel"}
+
+
+def _cellar_word(plan_data):
+    """The band's own word for the floor below the ground (the plan's setting
+    carries the band the library phase stamped; an unknown band keeps the
+    medieval word)."""
+    band = ((plan_data.get("setting") or {}).get("band")) or ""
+    return CELLAR_WORDS.get(band, "cellar")
 
 
 class FloorOut:
@@ -58,18 +78,24 @@ class FloorOut:
 
 
 def apply(world, plan_data, rng):
-    """Place every multi-storey building's upper storeys. Runs after the
-    zone loop, before the schedules choose where people sleep. Each storey
-    is its own 1.0 floor plane east of the play area (first at the map's
-    width + FLOOR_GAP, then FLOOR_GAP apart, any y >= 0), and a walkable
-    compound wall gets a wall-walk storey wherever both parts it joins have
-    a storey 2, linked to them by passage portals."""
+    """Place every multi-storey building's upper storeys and every declared
+    basement. Runs after the zone loop, before the schedules choose where
+    people sleep. Each storey is its own 1.0 floor plane east of the play
+    area (first at the map's width + FLOOR_GAP, then FLOOR_GAP apart, any
+    y >= 0), and a walkable compound wall gets a wall-walk storey wherever
+    both parts it joins have a storey 2, linked to them by passage portals.
+    A basement holds one more plane below the ground (storey 0, level -1),
+    built the same way and sealed like a storey."""
     if "floors" not in world.extensions:
         return
     singles = []    # [(BuildingOut, [UpperStorey or None])]
     groups = {}     # compound name -> ([BuildingOut-with-uppers], CompoundOut)
+    cellars = []    # [BuildingOut] — designs that declared a basement
     for b in world.buildings:
         d = b.layout.design
+        if plan_data.get("basements", True) and getattr(d, "basement", None) \
+                and d.basement.rooms:
+            cellars.append(b)
         if d.storeys < 2 or (not d.upper and not getattr(d, "units", None)):
             continue
         # a unit building's upper storeys repeat its ground stamp: no
@@ -88,12 +114,15 @@ def apply(world, plan_data, rng):
                                               if c.name == comp)))[0].append((b, uppers))
         else:
             singles.append((b, uppers))
-    if not singles and not groups:
+    if not singles and not groups and not cellars:
         return
     stairs = {id(b): _stair_templates(world, plan_data, b.layout.design.name)
               for (b, _u) in singles}
     for (bs, _comp) in groups.values():
         for (b, _u) in bs:
+            stairs[id(b)] = _stair_templates(world, plan_data, b.layout.design.name)
+    for b in cellars:
+        if id(b) not in stairs:
             stairs[id(b)] = _stair_templates(world, plan_data, b.layout.design.name)
 
     # ---- the floors: one spot per storey, east of the play area, FLOOR_GAP
@@ -125,6 +154,15 @@ def apply(world, plan_data, rng):
             walks.append((comp, corridor, r))
             x += r.w + FLOOR_GAP
 
+    # a basement's spot: the target rectangle its cellar assembles into,
+    # under the building (or the wing that holds its stair room) — the same
+    # east march, after every storey and walk
+    cellar_rects = {}
+    for b in cellars:
+        r = Rect(x, FLOOR_Y, b.layout.rect.w, b.layout.rect.h)
+        cellar_rects[id(b)] = r
+        x += r.w + FLOOR_GAP
+
     world.walk_links = []   # [(walk pad, end pad)] — the passage pairs
     for (b, uppers) in singles:
         _build_storeys(world, b, uppers, rects[id(b)], stairs[id(b)], rng)
@@ -137,8 +175,10 @@ def apply(world, plan_data, rng):
         if all(any(f.storey == 2 for f in getattr(b, "floors", []) or [])
                for b in _walk_ends(comp, corridor)):
             _build_wall_walk(world, comp, corridor, r)
+    for b in cellars:
+        _build_cellar(world, plan_data, b, cellar_rects[id(b)], stairs[id(b)], rng)
     _link_walks(world, plan_data)
-    _name_stairs(world)
+    _name_stairs(world, plan_data)
 
 
 def _walk_ends(comp, corridor, storey=2):
@@ -324,6 +364,161 @@ def _build_storeys(world, b, uppers, rects, stairs, rng):
     world.objects.extend(objects)
     world.floors.extend(floors)
     b.floors = floors
+
+
+def _build_cellar(world, plan_data, b, rect, stairs, rng):
+    """Lay out one building's basement (storey 0, level -1) and commit it the
+    way a storey commits: a sealed cellar plane assembled like a wing into a
+    target rectangle the size of the building's footprint, a stair in the
+    ground room the design names and a stair on the plane, linked as a portal
+    pair. A cellar whose stairs find no cell stays unbuilt — one failure
+    line, and the building keeps the ground it has."""
+    from .. import ObjectOut, RegionOut, assembler
+
+    bl = b.layout
+    design = bl.design
+    base = design.basement
+    word = _cellar_word(plan_data)
+    region_name = f"{design.name} ({word})"
+    t_up, t_down = stairs
+
+    # the ground room the cellar's stair rises from: the room the design
+    # names, else the storeys' own stairs room, else the entrance room — the
+    # fallback the uppers take, noted the same way
+    g_room = bl.room_by_base(base.stair_room)
+    if g_room is None:
+        g_room = _stairs_room(bl)
+        world.fallbacks.append((f"cellar of {design.name}",
+                                f"stair room {base.stair_room!r} is not a ground room; "
+                                f"the stairs rise from {g_room.base_name!r}"))
+
+    # the cellar plane: assembled like a wing into the footprint's rectangle
+    # (the closers may leave the plane smaller, inside it); the old path
+    # lays the rooms out itself
+    cellar = BuildingDesign(
+        name=region_name, kind=design.kind, size_class=design.size_class,
+        purpose=f"the {word} below {design.name}", wall=design.wall,
+        ground=design.ground, rooms=base.rooms, connections=base.connections,
+        entrance_room=base.rooms[0].name if base.rooms else "",
+        entrance_side=design.entrance_side, furniture=base.furniture,
+        wealth=design.wealth, condition=design.condition,
+        loot_pool=design.loot_pool)
+    layout = assembler.wing_build(cellar, (rect.x, rect.y), (rect.w, rect.h),
+                                  templates=world.templates)
+    if layout is None:
+        layout = layout_rooms(cellar, rect, rng, world.templates,
+                              furniture=base.furniture)
+    else:
+        # a cellar is sealed: the entrance-side door the assembly opened on
+        # the target ring is the same build-time fiction a storey's is —
+        # strip it from the rooms so no opening sits on the plane's border
+        # (the stairs are the only way in)
+        ring = _ring(layout.rect)
+        for room in layout.rooms:
+            room.doors -= ring
+    names = {r.base_name for r in layout.rooms}
+    for f in layout.furniture:
+        if f.room not in names:
+            world.failures.append((f"piece {f.template} in {region_name}",
+                                   f"room {f.room!r} not in the cellar"))
+    for room in layout.rooms:
+        if room.furniture is not None:
+            # an assembled cellar's furniture sits at the fixed cells its
+            # rooms' pieces name; only the old path scatters here
+            continue
+        furniture = [f for f in layout.furniture if f.room == room.base_name]
+        room.furniture = layout_room(room.rect, sorted(room.doors), furniture,
+                                     world.templates, rng)
+        for (t, n, reason) in room.furniture.failures:
+            world.failures.append((f"piece {t} in {region_name} {room.base_name}",
+                                   f"placed {n} of the requested count: {reason}"))
+        for (t, reason) in room.furniture.fallbacks:
+            world.fallbacks.append((f"piece {t} in {region_name} {room.base_name}",
+                                    reason))
+
+    # the stairs: down in the named ground room (never on a stair already
+    # there — the uppers may have placed theirs), up on the plane under it,
+    # mirroring how a storey's stair pairs with the one below
+    avoid = set()
+    if getattr(bl, "stair_cell", None) is not None:
+        avoid.add(bl.stair_cell)
+    for room in bl.rooms:
+        for (t, pos) in (room.furniture.placements if room.furniture else []):
+            if "stairs" in t:
+                avoid.add(pos)
+    cell = _pick_stair_cell(world, [g_room], avoid=avoid) \
+        or _pick_stair_cell(world, [g_room], avoid=avoid, relax=True) \
+        or _pick_stair_cell(world, bl.rooms, avoid=avoid, relax=True)
+    if cell is None:
+        world.failures.append((f"cellar of {design.name}",
+                               "no free cell for the stairs on the ground floor; "
+                               "built without its cellar"))
+        return
+    prefer = (layout.rect.x + (cell[0] - bl.rect.x),
+              layout.rect.y + (cell[1] - bl.rect.y))
+    ccell = _pick_stair_cell(world, layout.rooms, prefer=prefer) \
+        or _pick_stair_cell(world, layout.rooms, prefer=prefer, relax=True)
+    if ccell is None:
+        world.failures.append((f"cellar of {design.name}",
+                               f"no free cell for the stairs in {region_name}; "
+                               f"built without its cellar"))
+        return
+
+    regions, objects = [], []
+    f = FloorOut(design.name, 0, region_name, design.name, layout.rect, layout)
+    single = len(layout.rooms) == 1 and layout.rooms[0].rect == layout.rect
+    f.builder_door = layout.entrance_door \
+        or (layout.rect.x, layout.rect.y + (layout.rect.h - 1) // 2)
+    # sealed like a storey: a cellar has no opening on its outer border —
+    # its only way in and out is its stair (the builder_door is the same
+    # build-time fiction a storey's is)
+    cellar_reg = RegionOut(region_name, layout.rect, "building", parent=None,
+                           wall=design.wall, ground="stone",
+                           ground_texture="flagstone-light",
+                           ambience={"day": "quiet_indoor"},
+                           description=f"The {word} below {design.name}.",
+                           doors=set())
+    regions.append(cellar_reg)
+    for room in layout.rooms:
+        room.full_name = region_name if single else f"{region_name} {room.base_name}"
+        amb = {"day": "quiet_indoor"}
+        for (t, _p) in room.furniture.placements:
+            if "light" in world.templates[t].tags and world.templates[t].walkability <= 0:
+                amb = {"day": "fireplace"}
+                break
+        if single:
+            cellar_reg.ambience = amb
+        else:
+            # the layout's own design carries the placed rooms' purposes
+            # (an assembled cellar's fillers included)
+            purposes = {r.name: r.purpose for r in layout.design.rooms}
+            reg = RegionOut(room.full_name, room.rect, "room", parent=region_name,
+                            wall=design.wall, ground="stone",
+                            ground_texture="flagstone-light",
+                            ambience=amb,
+                            description=purposes.get(room.base_name, ""),
+                            doors=set(room.doors) if getattr(layout, "assembled", None) else None)
+            reg.entrance_door = None   # sealed: no exterior door below ground
+            regions.append(reg)
+        for (tname, pos) in room.furniture.placements:
+            objects.append(ObjectOut(tname, pos, room.full_name,
+                                     room.furniture.rot(tname, pos)))
+
+    # the stair pair: the ground stair reads as the way down, the cellar's
+    # as the way back up — the same two objects a storey's portal links
+    f.stair_below_up = (t_down.name, cell)
+    f.stair_down = (t_up.name, ccell)
+    g_room.furniture.placements.append((t_down.name, cell))
+    objects.append(ObjectOut(t_down.name, cell, g_room.full_name))
+    c_room = _room_holding(layout, ccell)
+    c_room.furniture.placements.append((t_up.name, ccell))
+    objects.append(ObjectOut(t_up.name, ccell, c_room.full_name))
+
+    world.regions.extend(regions)
+    world.objects.extend(objects)
+    world.floors.append(f)
+    b.floors = sorted((getattr(b, "floors", None) or []) + [f],
+                      key=lambda fl: fl.storey)
 
 
 # ------------------------------------------------------------------ geometry
@@ -610,13 +805,14 @@ def _link_walks(world, plan_data):
                 world.walk_links.append(((wt, wcell), (t, cell)))
 
 
-def _name_stairs(world):
+def _name_stairs(world, plan_data):
     """Give every stair and passage object its builder entity name
     ("<template> <i>", numbered per template in placement order, exactly as
     build_scenario.py numbers them) and link the pairs as two-way portals:
     the up stair on the storey below to the down stair on the storey above,
     and each wall walk's passage pads to their partners — two different
-    objects every time, so no pad is ever the end of two portals."""
+    objects every time, so no pad is ever the end of two portals. A cellar's
+    portal carries the band's own word for it, not a storey range."""
     counts, names = {}, {}
     for o in world.objects:
         counts[o.template] = counts.get(o.template, 0) + 1
@@ -635,8 +831,12 @@ def _name_stairs(world):
             world.failures.append((f"stairs of {f.building}",
                                    "a stair object has no builder name"))
             continue
+        if f.storey == 0:
+            name = f"{f.building} {_cellar_word(plan_data).title()} Stairs"
+        else:
+            name = f"{f.building} Stairs {f.storey - 1}-{f.storey}"
         world.portals.append({
-            "name": f"{f.building} Stairs {f.storey - 1}-{f.storey}",
+            "name": name,
             "from": {"object": f.stair_below_up_object},
             "to": {"object": f.stair_down_object},
             "twoWay": True,

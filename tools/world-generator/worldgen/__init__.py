@@ -271,6 +271,8 @@ def _rooms_by_privacy(world, b, farm_uses=frozenset()):
     rooms = [(r, bl.design) for r in bl.rooms
              if _room_use(bl.design, r) not in farm_uses]
     for f in getattr(b, "floors", []) or []:
+        if f.storey == 0:
+            continue   # nobody beds down in the cellar, however far it sits
         rooms += [(r, f.layout.design) for r in f.layout.rooms
                   if _room_use(f.layout.design, r) not in farm_uses]
     return [r for (r, _d) in sorted(rooms, key=score, reverse=True)]
@@ -787,10 +789,43 @@ def _piece_direction(primary, piece):
     return "NorthWest" if dy > 0 else "SouthWest"
 
 
+def _cellars_to_ground(plan):
+    """Fold every design's basement back onto its ground floor (the
+    basements switch, off): the cellar rooms join the ground rooms,
+    connected to the stair room they name — the entrance room when they
+    name none the ground holds — and the design keeps no basement, so the
+    floors extension has nothing to build below the ground."""
+    for z in plan.zones:
+        for d in z.buildings:
+            base = getattr(d, "basement", None)
+            if base is None or not base.rooms:
+                continue
+            names = {r.name for r in d.rooms}
+            stair = base.stair_room if base.stair_room in names else ""
+            if not stair:
+                stair = d.entrance_room if d.entrance_room in names \
+                    else (d.rooms[0].name if d.rooms else "")
+            for r in base.rooms:
+                if r.name in names:
+                    continue        # a name the ground already holds stays there
+                d.rooms.append(r)
+                names.add(r.name)
+                if stair and stair != r.name and [stair, r.name] not in d.connections:
+                    d.connections.append([stair, r.name])
+            for c in base.connections:
+                if (isinstance(c, (list, tuple)) and len(c) == 2
+                        and c[0] in names and c[1] in names and c[0] != c[1]
+                        and list(c) not in d.connections):
+                    d.connections.append(list(c))
+            d.basement = None
+
+
 def run(plan_data, seed=1, extensions=(), room_assembler=True):
     import copy
     from .extensions import BY_ID, expand
     plan = parse_plan(plan_data)
+    if not plan_data.get("basements", True):
+        _cellars_to_ground(plan)
     given = set(extensions) | {e for e in plan_data.get("extensions", [])
                                if isinstance(e, str)}
     # a plan.json from an older generator may name a retired extension id

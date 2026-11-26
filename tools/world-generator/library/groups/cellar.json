@@ -1,0 +1,702 @@
+{
+  "groups": [
+    {
+      "id": "shelving.single",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single",
+      "family": "cellar",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar1",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            4,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar",
+      "family": "cellar",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar1",
+      "family": "cellar",
+      "wall": "corner",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar2",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar2",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            2,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar3",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar4",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "optional": true
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar3",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north"
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar4",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            3,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "storage.bulk.single.cellar5",
+      "family": "cellar",
+      "wall": "none",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "storage.bulk",
+          "size": [
+            2,
+            2
+          ],
+          "at": [
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "shelving.single.cellar5",
+      "family": "cellar",
+      "wall": "back",
+      "use": [
+        "south"
+      ],
+      "pieces": [
+        {
+          "role": "shelving",
+          "size": [
+            1,
+            1
+          ],
+          "at": [
+            0,
+            0
+          ],
+          "back": "north",
+          "optional": true
+        }
+      ]
+    }
+  ],
+  "recipes": [
+    {
+      "layout": "cellar.large.a",
+      "family": "cellar",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "shelving.single.cellar1",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.large.b",
+      "family": "cellar",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.single.cellar1",
+          "kind": "anchor",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar2",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.large.c",
+      "family": "cellar",
+      "sizeBands": [
+        "large"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.single.cellar3",
+          "kind": "anchor",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            4,
+            6
+          ]
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar4",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.medium.a",
+      "family": "cellar",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "anchor",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            3,
+            5
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.medium.b",
+      "family": "cellar",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar4",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            4
+          ]
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.medium.c",
+      "family": "cellar",
+      "sizeBands": [
+        "medium"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "anchor",
+          "count": [
+            3,
+            4
+          ]
+        },
+        {
+          "group": "storage.bulk.single",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "shelving.single.cellar2",
+          "kind": "optional"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.a",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar3",
+          "kind": "repeatable",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.b",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.single",
+          "kind": "anchor",
+          "count": [
+            2,
+            3
+          ]
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.small.c",
+      "family": "cellar",
+      "sizeBands": [
+        "small"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.single.cellar5",
+          "kind": "anchor"
+        },
+        {
+          "group": "shelving.single.cellar",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar2",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.tiny.a",
+      "family": "cellar",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar",
+          "kind": "anchor"
+        },
+        {
+          "group": "storage.bulk.single",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.tiny.b",
+      "family": "cellar",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "storage.bulk.single.cellar3",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
+          "kind": "optional"
+        }
+      ]
+    },
+    {
+      "layout": "cellar.tiny.c",
+      "family": "cellar",
+      "sizeBands": [
+        "tiny"
+      ],
+      "groups": [
+        {
+          "group": "storage.bulk.single",
+          "kind": "anchor",
+          "count": [
+            1,
+            2
+          ]
+        },
+        {
+          "group": "shelving.single.cellar3",
+          "kind": "required"
+        },
+        {
+          "group": "storage.bulk.single.cellar",
+          "kind": "optional"
+        },
+        {
+          "group": "shelving.single.cellar5",
+          "kind": "optional"
+        }
+      ]
+    }
+  ]
+}

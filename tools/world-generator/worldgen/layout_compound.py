@@ -306,6 +306,11 @@ def _recipe_compound(zone, compound):
     library_plan.split_wing_sleepers(ctx.lib, designs, wingmap, sources, notes,
                                      f"compound {compound.name}")
     _move_farm_residents(ctx.lib, designs, notes, f"compound {compound.name}")
+    if isinstance(recipe.get("basement"), dict) and recipe["basement"].get("rooms"):
+        # rl-25: the recipe's cellar on the wing its stair room sits in —
+        # or back onto that wing's ground when the basements switch is off
+        library_plan.attach_recipe_basement(ctx.lib, designs, recipe["basement"],
+                                            ctx.plan_data.get("basements", True))
     new.recipe_data = {"wings": wingmap, "extra": designs, "recipe": recipe}
     return new, designs, wingmap, notes, recipe
 
