@@ -3063,10 +3063,10 @@ def _building_layout(asm, origin):
     partitions (``upper_asm``) and the ground stair cell with them, for the
     floors extension to collect when it runs."""
     ox, oy = origin
-    box = _bbox(asm.rooms)   # a wing's rooms need not touch the target's origin
-    w, h = box.w, box.h
+    box = _bbox(asm.rooms)   # a wing's rooms need not touch the target's
+    w, h = box.w, box.h      # origin: the plane spans their box, at its corner
     design = dataclasses.replace(asm.design, furniture=list(asm.lines))
-    b = BuildingLayout(design, Rect(ox, oy, w, h))
+    b = BuildingLayout(design, Rect(ox + box.x, oy + box.y, w, h))
     b.assembled = True
     b.stair_cell = (asm.stair_cell[0] + ox, asm.stair_cell[1] + oy) \
         if asm.stair_cell else None
