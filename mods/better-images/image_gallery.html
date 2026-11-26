@@ -54,6 +54,7 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
 .chip { border-radius: 999px; padding: 4px 12px; }
 .chip.on { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.qseg { display: inline-flex; gap: 4px; flex-wrap: wrap; }
 .spacer { flex: 1; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; display: flex; flex-direction: column; }
@@ -138,8 +139,12 @@ dialog.crop::backdrop { background: rgba(0,0,0,.5); }
   <div class="toolbar">
     <span id="chips"></span>
     <input type="search" id="search" placeholder="Search names and descriptions">
-    <label class="inline"><input type="checkbox" id="missingOnly"> Missing only</label>
-    <label class="inline" title="Only new images waiting for Keep or Discard"><input type="checkbox" id="reviewOnly"> Needs review <span id="reviewCount"></span></label>
+    <span class="qseg" id="qfilters" title="One at a time: what the grid shows besides the image-type chips">
+      <button class="chip on" data-q="all">All</button>
+      <button class="chip" data-q="missing" title="No image, nothing generating, no result waiting: never generated at all">Missing</button>
+      <button class="chip" data-q="review" title="A finished result waiting for Keep or Discard">Needs review <span id="reviewCount"></span></button>
+      <button class="chip" data-q="todo" title="Everything without a kept image: missing, generating and waiting for review together">Hide approved</button>
+    </span>
     <span class="spacer"></span>
     <span class="hint" id="queueInfo"></span>
     <button id="selAll">Select shown</button>
@@ -161,7 +166,7 @@ const PROFILE_LABEL = {...KIND_LABEL, portrait: "People", creature: "Creatures"}
 const SUBJECT_LABEL = {auto: "Subject: automatic", woman: "One woman", man: "One man", girl: "One girl", boy: "One boy",
   person: "One person", creature: "One creature", spirit: "A spirit or light", none: "No subject words", custom: "Custom prompt…"};
 const S = {settings: null, sources: [], kinds: [], subjects: [], menu: null, items: [], fmt: "",
-           filter: "all", selected: new Set(), jobs: [], comfyQueue: null, pollError: null};
+           filter: "all", qfilter: "all", selected: new Set(), jobs: [], comfyQueue: null, pollError: null};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
 
@@ -310,8 +315,7 @@ async function loadItems() {
 function matches(i) {
   const q = $("search").value.trim().toLowerCase();
   return (S.filter === "all" || i.kind === S.filter)
-    && (!$("missingOnly").checked || !i.file)
-    && (!$("reviewOnly").checked || i.job?.state === "done")
+    && QFILTERS[S.qfilter](i)
     && (!q || i.name.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
 }
 const shown = () => S.items.filter(matches);
@@ -335,6 +339,15 @@ function renderGrid() {
 
 const clock = s => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 const active = j => j && (j.state === "pending" || j.state === "running");
+// One filter at a time. "Missing" is never-generated only — no kept file, nothing generating, no
+// unreviewed result — so cards mid-generation are no longer "missing". "Hide approved" is
+// everything that still needs you: missing, in flight and waiting for review together.
+const QFILTERS = {
+  all: () => true,
+  missing: i => !i.file && !active(i.job) && i.job?.state !== "done",
+  review: i => i.job?.state === "done",
+  todo: i => !i.file,
+};
 
 function updateBar() {
   $("regenSel").disabled = !S.selected.size;
@@ -686,8 +699,12 @@ $("toWork").onclick = async () => {
   } catch (e) { toast(e.message); }
 };
 $("search").oninput = renderGrid;
-$("missingOnly").onchange = renderGrid;
-$("reviewOnly").onchange = renderGrid;
+function setQFilter(f) {
+  S.qfilter = f;
+  for (const b of $("qfilters").querySelectorAll("button")) b.classList.toggle("on", b.dataset.q === f);
+  renderGrid();
+}
+for (const b of $("qfilters").querySelectorAll("button")) b.onclick = () => setQFilter(b.dataset.q);
 $("selAll").onclick = () => { for (const i of shown()) S.selected.add(i.id); renderGrid(); };
 $("selNone").onclick = () => { S.selected.clear(); renderGrid(); };
 $("regenSel").onclick = async () => {
