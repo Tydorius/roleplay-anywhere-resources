@@ -2,7 +2,7 @@
 
     python -m unittest discover -s mods/better-images/tests
 """
-import json, sys, tempfile, threading, unittest, urllib.request
+import json, sys, tempfile, threading, unittest, urllib.error, urllib.request
 from pathlib import Path
 from unittest import mock
 from urllib.parse import parse_qs
@@ -129,6 +129,10 @@ def running_job(pid):
             "meta": {"seed": 7}, "imgs": [], "pngs": {}, "misses": 0}
 
 
+def pending_job(pid, iid="npc_alys"):
+    return {**running_job(pid), "id": iid, "state": "pending", "position": 3, "started": None}
+
+
 class Variations(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -195,7 +199,7 @@ class Variations(unittest.TestCase):
         queue = lambda url, path, body=None, timeout=60: json.dumps({"prompt_id": "B"}).encode()
         with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})), \
                 mock.patch.object(ig, "comfy", queue):
-            ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
+            ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"}, replace=True)
         self.assertEqual(set(ig.JOBS), {"B"})
         self.assertIn("A", ig.load_state())
         ig.JOBS.pop("B"); ig.mark_reviewed("B")  # the new result discarded
@@ -225,6 +229,151 @@ class Variations(unittest.TestCase):
         self.assertEqual((self.ws / "media" / "npc_alys" / "npc_alys-portrait.webp").read_bytes(), webp)
         self.assertNotIn("P", ig.JOBS)
         self.assertEqual(ig.load_state(), {"P"})
+
+
+class SubmitGuard(unittest.TestCase):
+    """One job per image: submit() refuses a second while one is generating or waiting for review;
+    Retry (replace) still swaps a finished result out and discards the old one."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        root = Path(self.tmp.name)
+        self.patches = [mock.patch.object(ig, "STATE", root / "state.json"),
+                        mock.patch.dict(ig.JOBS, clear=True)]
+        for p in self.patches:
+            p.start()
+
+    def tearDown(self):
+        for p in reversed(self.patches):
+            p.stop()
+        self.tmp.cleanup()
+
+    def no_comfy(self):
+        def boom(url, path, body=None, timeout=60):
+            raise AssertionError("nothing may reach ComfyUI when submit refuses")
+        return boom
+
+    def test_refuses_while_the_same_image_is_generating(self):
+        ig.JOBS["P"] = running_job("P")
+        with mock.patch.object(ig, "comfy", self.no_comfy()):
+            with self.assertRaises(ValueError) as cm:
+                ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
+        self.assertIn("already generating", str(cm.exception))
+
+    def test_refuses_a_finished_result_unless_the_client_replaces_it(self):
+        ig.JOBS["P"] = {**running_job("P"), "state": "done"}
+        with mock.patch.object(ig, "comfy", self.no_comfy()):
+            with self.assertRaises(ValueError) as cm:
+                ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
+        self.assertIn("waiting for review", str(cm.exception))
+        # Retry says replace: the old result is discarded and only the new job remains
+        queue = lambda url, path, body=None, timeout=60: json.dumps({"prompt_id": "B"}).encode()
+        with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})), \
+                mock.patch.object(ig, "comfy", queue):
+            ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"}, replace=True)
+        self.assertEqual(set(ig.JOBS), {"B"})
+        self.assertIn("P", ig.load_state())
+
+    def test_an_errored_job_does_not_block_a_new_one(self):
+        ig.JOBS["P"] = {**running_job("P"), "state": "error", "error": "ComfyUI error: x"}
+        queue = lambda url, path, body=None, timeout=60: json.dumps({"prompt_id": "B"}).encode()
+        with mock.patch.object(ig, "build", return_value=({}, {"seed": 8})), \
+                mock.patch.object(ig, "comfy", queue):
+            ig.submit({"source": "work/x", "id": "npc_alys", "kind": "portrait"}, {"comfy": "http://comfy"})
+        self.assertEqual(set(ig.JOBS), {"B"})
+        self.assertIn("P", ig.load_state())
+
+
+class FakeQueue:
+    """Stands in for ig.comfy around a ComfyUI queue: /queue lists it, {"delete": ...} drains it,
+    /prompt re-posts an entry and answers with a fresh prompt id. An entry's tag carries the pid
+    it was posted for, so tests can follow who was re-posted in what order."""
+
+    def __init__(self, pending=(), running=(), fail=()):
+        self.entries = {pid: [k, pid, {"wf": pid}, {"anywhere_rpg_gallery": {"id": pid}}]
+                        for k, pid in enumerate(pending)}
+        self.running = {pid: [0, pid, {}, {}, []] for pid in running}
+        self.calls, self.fail = [], set(fail)
+
+    def __call__(self, url, path, body=None, timeout=60):
+        self.calls.append((path, body))
+        if path == "/queue" and body is None:
+            return json.dumps({"queue_running": list(self.running.values()),
+                               "queue_pending": sorted(self.entries.values(), key=lambda e: e[0])}).encode()
+        if path == "/queue":
+            for pid in body["delete"]:
+                self.entries.pop(pid, None)
+            return b"{}"
+        if path == "/prompt":
+            pid = body["extra_data"]["anywhere_rpg_gallery"]["id"]
+            if pid in self.fail:
+                self.fail.discard(pid)
+                raise urllib.error.URLError("comfy down")
+            new = "new" + pid
+            self.entries[new] = [100 + len(self.entries), new, body["prompt"], body["extra_data"]]
+            return json.dumps({"prompt_id": new}).encode()
+        raise AssertionError("unexpected ComfyUI call " + path)
+
+    @property
+    def posted(self):  # every /prompt attempt, in order
+        return [c[1]["extra_data"]["anywhere_rpg_gallery"]["id"] for c in self.calls if c[0] == "/prompt"]
+
+    @property
+    def deletes(self):
+        return [c[1]["delete"] for c in self.calls if c[0] == "/queue" and c[1] is not None]
+
+    def order(self):  # the queue as ComfyUI would run it after all this
+        return [e[1] for e in sorted(self.entries.values(), key=lambda e: e[0])]
+
+
+class Priority(unittest.TestCase):
+    def setUp(self):
+        self.patches = [mock.patch.dict(ig.JOBS, clear=True)]
+        for p in self.patches:
+            p.start()
+
+    def tearDown(self):
+        for p in reversed(self.patches):
+            p.stop()
+
+    def test_a_waiting_job_moves_just_behind_the_running_one(self):
+        ig.JOBS["A"] = pending_job("A", "otpl_bed")
+        ig.JOBS["C"] = pending_job("C", "npc_alys")
+        fake = FakeQueue(pending=["A", "B", "C", "D"], running=["R"])
+        with mock.patch.object(ig, "comfy", fake):
+            r = ig.prioritize("C")
+        self.assertEqual(fake.posted, ["C", "A", "B", "D"])      # the chosen job first, the rest in order
+        self.assertEqual(fake.deletes, [["A", "B", "C", "D"]])   # the whole pending queue was drained
+        self.assertEqual(fake.order(), ["newC", "newA", "newB", "newD"])
+        self.assertEqual(r["pid"], "newC")
+        self.assertEqual(set(ig.JOBS), {"newA", "newC"})         # every tracked job remapped to its new pid
+        self.assertEqual((ig.JOBS["newC"]["id"], ig.JOBS["newC"]["state"], ig.JOBS["newC"]["position"]),
+                         ("npc_alys", "pending", 3))             # tracking kept, only the pid changed
+        self.assertEqual(ig.JOBS["newA"]["id"], "otpl_bed")
+
+    def test_running_finished_or_unknown_jobs_are_refused(self):
+        ig.JOBS["R"] = running_job("R")
+        with mock.patch.object(ig, "comfy", FakeQueue(pending=["A"], running=["R"])):
+            with self.assertRaises(ValueError):
+                ig.prioritize("R")
+        ig.JOBS["P"] = {**running_job("P"), "state": "done"}
+        with mock.patch.object(ig, "comfy", FakeQueue(pending=["A"])):
+            with self.assertRaises(ValueError):
+                ig.prioritize("P")
+        with mock.patch.object(ig, "comfy", FakeQueue(pending=["A"])):
+            with self.assertRaises(LookupError):
+                ig.prioritize("ZZ")
+
+    def test_a_failed_repost_still_puts_the_rest_back(self):
+        ig.JOBS["C"] = pending_job("C")
+        fake = FakeQueue(pending=["A", "B", "C", "D"], fail={"C"})
+        with mock.patch.object(ig, "comfy", fake):
+            with self.assertRaises(RuntimeError) as cm:
+                ig.prioritize("C")
+        self.assertEqual(fake.posted, ["C", "A", "B", "D"])      # the chosen job was tried first, failed...
+        self.assertEqual(fake.order(), ["newA", "newB", "newD"])  # ...and the rest went back, in order
+        self.assertEqual(set(ig.JOBS), {"C"})                    # the lost job stays tracked, to error out on later polls
+        self.assertIn("3 of 4", str(cm.exception))               # ...and the failure is reported
 
 
 class BatchSize(unittest.TestCase):

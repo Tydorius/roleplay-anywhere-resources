@@ -440,8 +440,16 @@ def build(req, settings, url):
                 "variations": [{"seed": seed, "batch_index": k} for k in range(n)]}
 
 
-def submit(req, settings):
-    """Queues one image on ComfyUI and returns the job; poll_jobs() follows it from there."""
+def submit(req, settings, replace=False):
+    """Queues one image on ComfyUI and returns the job; poll_jobs() follows it from there.
+    One job per image: refuses while the same image is already generating, and a finished result
+    is replaced only when the caller says so (Retry), so a second prompt is never drawn."""
+    with _jobs_lock:
+        prior = [j for j in JOBS.values() if j["source"] == req["source"] and j["id"] == req["id"]]
+    if any(j["state"] in ("pending", "running") for j in prior):
+        raise ValueError("already generating — wait or Generate first")
+    if any(j["state"] == "done" for j in prior) and not replace:
+        raise ValueError("a finished result is waiting for review — Retry replaces it")
     url = settings["comfy"]
     wf, meta = build(req, settings, url)
     try:
@@ -624,6 +632,44 @@ def cancel(pid):
         JOBS.pop(pid, None)
 
 
+def prioritize(pid):
+    """Moves a waiting job to just behind whatever is running (Generate first). ComfyUI cannot
+    reorder its queue, so the pending queue is drained and re-posted with that job first. Every
+    re-post comes back with a new prompt id, so each tracked job's pid is remapped in JOBS (state
+    and position tracking kept); the tag in extra_data is re-posted unchanged, so the result is
+    still harvested by tag. If a re-post fails, the rest are still put back in order and the
+    failure is reported — a job is never lost silently."""
+    with _jobs_lock:
+        j = JOBS.get(pid)
+    if not j:
+        raise LookupError("no such job")
+    q = json.loads(comfy(j["url"], "/queue"))
+    running = {e[1] for e in q.get("queue_running", [])}
+    pending = sorted(q.get("queue_pending", []), key=lambda e: e[0])
+    waiting = {e[1] for e in pending}
+    if pid in running or pid not in waiting:
+        raise ValueError("that job is running or finished already")
+    order = [next(e for e in pending if e[1] == pid)] + [e for e in pending if e[1] != pid]
+    comfy(j["url"], "/queue", {"delete": sorted(waiting)})  # drain, then re-post in the new order
+    remap, why = {}, None
+    for e in order:
+        try:
+            r = json.loads(comfy(j["url"], "/prompt", {"prompt": e[2], "extra_data": e[3]}))
+            remap[e[1]] = r["prompt_id"]
+        except (urllib.error.URLError, OSError, ValueError) as ex:
+            why = why or str(ex)
+    with _jobs_lock:
+        for old, new in remap.items():
+            job = JOBS.pop(old, None)
+            if job is not None:
+                job["pid"] = new
+                JOBS[new] = job
+    if why:
+        raise RuntimeError(f"ComfyUI refused while re-queuing ({why}); "
+                           f"{len(remap)} of {len(order)} jobs were put back")
+    return {"ok": True, "pid": remap.get(pid)}
+
+
 # ---------------------------------------------------------------- writing images
 def image_path(src, iid, kind):
     if not ID_RE.match(iid) or kind not in sim.KINDS:
@@ -756,7 +802,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("bad family or kind")
                 if not find_source(self.store, req.get("source", "")) or not ID_RE.match(req.get("id", "")):
                     raise ValueError("bad source or id")
-                return self.send(200, submit(req, load_settings()))
+                return self.send(200, submit(req, load_settings(), replace=bool(req.get("replace"))))
             if u.path == "/api/forget":  # kept or discarded
                 with _jobs_lock:
                     JOBS.pop(q["pid"][0], None)
@@ -778,6 +824,9 @@ class Handler(BaseHTTPRequestHandler):
             if u.path == "/api/cancel":
                 cancel(q["pid"][0])
                 return self.send(200, {"ok": True})
+            if u.path == "/api/priority":  # Generate first: move a waiting job just behind what's running
+                req = json.loads(self.body() or b"{}")
+                return self.send(200, prioritize(req.get("pid") or ""))
             if u.path in ("/api/save", "/api/delete"):
                 src = self.source(q)
                 iid, kind = q["id"][0], q["kind"][0]

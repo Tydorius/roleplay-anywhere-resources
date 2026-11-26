@@ -88,6 +88,20 @@ details.models > summary { cursor: pointer; font-weight: 600; }
 .thumb .pick, .thumb .tag { z-index: 1; }
 .models-grid .vsel { margin-top: 6px; display: block; }
 .thumb.drop { outline: 3px dashed var(--accent); outline-offset: -6px; }
+#queueToggle { position: fixed; top: 96px; right: 0; z-index: 9; writing-mode: vertical-rl; padding: 12px 5px; border-radius: 8px 0 0 8px; border-right: none; transition: right .2s; }
+body.qopen #queueToggle { right: min(300px, 85vw); }
+#queuePanel { position: fixed; top: 0; right: 0; bottom: 0; width: 300px; max-width: 85vw; background: var(--panel); border-left: 1px solid var(--line); box-shadow: -6px 0 18px rgba(0,0,0,.12); transform: translateX(100%); transition: transform .2s; z-index: 8; display: flex; flex-direction: column; }
+body.qopen #queuePanel { transform: none; }
+.qhead { padding: 14px 16px 10px; font-weight: 600; border-bottom: 1px solid var(--line); }
+.qbody { flex: 1; overflow-y: auto; padding: 4px 10px 16px; }
+.qsec { margin-top: 12px; }
+.qsec h3 { margin: 0 0 4px; font-size: 11px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.qentry { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; width: 100%; text-align: left; background: none; border: 1px solid transparent; padding: 5px 6px; border-radius: 6px; font: inherit; }
+.qentry:hover { background: var(--chip); }
+.qentry .qn { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qentry .qm { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.qempty { color: var(--muted); font-size: 12px; padding: 1px 6px; }
+.card.flash { outline: 3px solid var(--warn); outline-offset: -1px; }
 dialog.crop { border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: var(--ink); padding: 0; width: min(760px, calc(100vw - 32px)); }
 dialog.crop::backdrop { background: rgba(0,0,0,.5); }
 .crop-head { padding: 14px 18px 4px; }
@@ -152,11 +166,14 @@ dialog.crop::backdrop { background: rgba(0,0,0,.5); }
     <button id="selNone">Clear</button>
     <label class="inline" title="Save each new image as soon as it finishes, without reviewing it"><input type="checkbox" id="autoKeep"> Keep automatically</label>
     <button id="keepAll" hidden>Keep all ready</button>
+    <button id="prioSel" hidden title="Move the selected waiting jobs to just behind whatever is running"></button>
     <button id="regenSel" class="primary" disabled>Regenerate selected</button>
   </div>
   <p class="hint" id="emptyHint"></p>
   <div class="grid" id="grid"></div>
 </main>
+<button id="queueToggle" title="Show or hide the queue of jobs on ComfyUI">Queue</button>
+<aside id="queuePanel"><div class="qhead">Queue</div><div class="qbody" id="queueBody"></div></aside>
 <div class="toast" id="toast"></div>
 <input type="file" id="imgFile" accept="image/*" hidden>
 <dialog class="crop" id="crop"></dialog>
@@ -369,6 +386,10 @@ function updateBar() {
   const missing = S.items.filter(QFILTERS.missing);
   $("regenMissing").hidden = !missing.length;
   $("regenMissing").textContent = `Regenerate missing (${missing.length})`;
+  const selPend = S.items.filter(i => S.selected.has(i.id) && i.job?.state === "pending");
+  $("prioSel").hidden = !selPend.length;
+  if (selPend.length) $("prioSel").textContent = `Generate selected first (${selPend.length})`;
+  renderQueue();
 }
 
 function thumbUrl(it) {
@@ -416,8 +437,8 @@ function card(it) {
       <div class="actions">
         ${st === "done"
           ? `<button class="primary" data-a="keep">Keep</button><button data-a="regen">Retry</button><button data-a="forget">Discard</button>`
-          : active(job) ? `<button class="danger" data-a="cancel">Cancel</button>`
-          : `<button class="primary" data-a="regen" ${it.sending ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
+          : active(job) ? `<button class="danger" data-a="cancel">Cancel</button>${st === "pending" ? `<button data-a="prio" title="Move this job to just behind whatever is running on ComfyUI">⚡ First</button>` : ""}`
+          : `<button class="primary" data-a="regen" ${it.sending || active(job) ? "disabled" : ""}>${it.file ? "Regenerate" : "Generate"}</button>
              <button data-a="browse" title="Use an image of your own (or drop one on the picture)">Browse…</button>
              <button data-a="edit">${it.editing ? "Done" : "Edit prompt"}</button>
              ${st === "error" ? `<button data-a="forget">Dismiss</button>` : ""}
@@ -462,7 +483,16 @@ async function act(it, a) {
   if (a === "edit") { it.editing = !it.editing; return redraw(it); }
   if (a === "resetdesc") { setEditDesc(it, null); return redraw(it); }
   if (a === "browse") { const inp = $("imgFile"); inp.onchange = () => { const f = inp.files[0]; inp.value = ""; if (f) openCrop(it, f); }; return inp.click(); }
-  if (a === "regen") return submit(it);
+  if (a === "regen") return submit(it, it.job?.state === "done");  // Retry on a result: replace and discard it
+  if (a === "prio") {
+    try {
+      await api("/api/priority", {method: "POST", body: JSON.stringify({pid: it.job.pid})});
+      it.error = null;
+      toast("Moved to just behind what's running.");
+    } catch (e) { it.error = e.message; }
+    redraw(it); schedulePoll(300);
+    return;
+  }
   if (a === "keep") return keep(it);
   if (a === "forget" || a === "cancel") {
     const pid = it.job.pid;
@@ -494,14 +524,15 @@ async function fillCustom(it, from) {  // a custom prompt starting from another 
 const subjectOf = it => it.subjectSel === "custom" ? it.customFrom : it.subjectSel && it.subjectSel !== "auto" ? it.subjectSel : it.subject;
 const profile = it => it.kind === "portrait" && subjectOf(it) === "creature" ? "creature" : it.kind;
 
-async function submit(it) {
+async function submit(it, replace) {
   const kind = it.kind, prof = profile(it), cfg = S.settings.kinds[prof];
   it.sending = true; it.error = null; redraw(it);
   try {
     it.job = await api("/api/submit", {method: "POST", body: JSON.stringify({
       source: source(), id: it.id, kind, family: cfg.family, files: famFiles(prof), desc: it.editDesc ?? it.desc,
       aspect: it.aspect, subject: it.subjectSel || "auto", autoSubject: it.subject, promptFormat: S.fmt,
-      customPrompt: it.customPrompt, customNegative: it.customNegative, variations: cfg.variations || 1})});
+      customPrompt: it.customPrompt, customNegative: it.customNegative, variations: cfg.variations || 1,
+      replace: replace || undefined})});  // only a Retry says replace: swap out a waiting result
     it.pick = null;
   } catch (e) { it.error = e.message; }
   it.sending = false; redraw(it); schedulePoll(500);
@@ -715,7 +746,16 @@ $("selNone").onclick = () => { S.selected.clear(); renderGrid(); };
 $("regenSel").onclick = async () => {
   const picked = S.items.filter(i => S.selected.has(i.id) && !active(i.job) && !i.sending);
   S.selected.clear(); renderGrid();
-  for (const i of picked) await submit(i);  // each is queued on ComfyUI at once; ComfyUI runs them in order
+  for (const i of picked) await submit(i, i.job?.state === "done");  // each is queued on ComfyUI at once; ComfyUI runs them in order
+};
+$("prioSel").onclick = async () => {
+  const picked = S.items.filter(i => S.selected.has(i.id) && i.job?.state === "pending")
+    .sort((a, b) => (b.job.position ?? 1e9) - (a.job.position ?? 1e9));  // back to front, so they land in queue order
+  for (const i of picked) {
+    try { await api("/api/priority", {method: "POST", body: JSON.stringify({pid: i.job.pid})}); }
+    catch (e) { i.error = e.message; redraw(i); }
+  }
+  schedulePoll(300);
 };
 async function keepReady(auto) {
   S.keeping = true;
@@ -743,6 +783,46 @@ $("regenMissing").onclick = async () => {
 };
 $("autoKeep").checked = recall("autoKeep") === "1";
 $("autoKeep").onchange = () => { remember("autoKeep", $("autoKeep").checked ? "1" : "0"); if ($("autoKeep").checked) schedulePoll(0); };
+
+// ---------------------------------------------------------------- queue panel
+function itemName(j) {
+  if (j.source === source()) { const it = S.items.find(i => i.id === j.id); if (it) return it.name || it.id; }
+  return j.id;  // another workspace's job: only its id is known here
+}
+
+function renderQueue() {
+  const jobs = S.jobs.filter(j => j.state !== "error");
+  $("queueToggle").textContent = jobs.length ? `Queue (${jobs.length})` : "Queue";
+  const sect = (title, entries) => `<div class="qsec"><h3>${title}</h3>${entries.length
+    ? entries.map(([j, meta]) => `<button class="qentry" data-src="${esc(j.source)}" data-id="${esc(j.id)}"${j.state === "done" ? ' data-rv="1"' : ""}>`
+        + `<span class="qn">${esc(itemName(j))}</span><span class="qm">${esc(meta)}</span></button>`).join("")
+    : `<div class="qempty">—</div>`}</div>`;
+  $("queueBody").innerHTML = !jobs.length ? `<div class="qempty">Nothing queued.</div>`
+    : sect("Running", S.jobs.filter(j => j.state === "running").map(j => [j, clock(j.elapsed)]))
+    + sect("Queued", S.jobs.filter(j => j.state === "pending").sort((a, b) => (a.position ?? 99) - (b.position ?? 99))
+        .map(j => [j, `#${j.position ?? "?"} · waited ${clock(j.waited)}`]))
+    + sect("Ready to keep", S.jobs.filter(j => j.state === "done").map(j => [j, "done"]));
+  for (const e of $("queueBody").querySelectorAll(".qentry"))
+    e.onclick = () => jumpTo(e.dataset.src, e.dataset.id, e.dataset.rv === "1");
+}
+
+async function jumpTo(src, id, review) {  // load that entry's workspace, then scroll to its card
+  if (review) { S.filter = "all"; renderChips(); setQFilter("review"); }
+  if (source() !== src) {
+    $("source").value = src; remember("source", src); sourceButtons(); S.selected.clear(); S.items = [];
+    await loadItems().catch(e => toast(e.message));
+  }
+  await poll();
+  let c = document.getElementById("c-" + id);
+  if (!c && (S.filter !== "all" || S.qfilter !== "all")) {  // a filter still hides it: widen and retry
+    S.filter = "all"; renderChips(); setQFilter("all"); c = document.getElementById("c-" + id);
+  }
+  if (c) { c.scrollIntoView({behavior: "smooth", block: "center"}); c.classList.add("flash"); setTimeout(() => c.classList.remove("flash"), 1500); }
+}
+
+const setPanelOpen = open => { document.body.classList.toggle("qopen", open); remember("panel", open ? "1" : "0"); };
+$("queueToggle").onclick = () => setPanelOpen(!document.body.classList.contains("qopen"));
+setPanelOpen(recall("panel") === "1");
 
 (async () => {
   const st = await api("/api/state");
